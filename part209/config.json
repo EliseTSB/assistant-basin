@@ -1,6 +1,6 @@
 {
  "part": 209,
- "note": "Every revision, seed and setting the design names, fixed before any run. Model ids and revisions copied from part205/config.json.",
+ "note": "Every revision, seed and setting the design names, fixed before any run. Model ids and revisions copied from part205/config.json. Draft 2 (design a9c52cf6): 15 frame types, NOBODY poles, P3 floor, 41-item reader check, pilot settings. Draft 3 (57ae3e6f): OBJECT objects that stand or lie, OBJECT no longer withdraws the headline, kappa per label with a valence bar of 0.4 for 209.7, Muse's rows 209.12 to 209.15.",
  "families": {
   "O": {
    "name": "OLMo 2 1B",
@@ -126,7 +126,9 @@
    ]
   },
   "laying_rule": "' laying' counts in LIE only if it is one token in both tokenizers (part209/tokens.json)",
-  "top_k_print": 10
+  "top_k_print": 10,
+  "p3_floor_read": 0.1,
+  "s_rule": "an arm's s is the mean over its paraphrases of SIT/P3, printed with the per-paraphrase range and the arm's mean P3; an arm with mean P3 under 0.1 is reported, not read"
  },
  "r3": {
   "window": [
@@ -151,7 +153,23 @@
    12
   ],
   "null_shuffles": 100,
-  "null_seed": 209101
+  "null_seed": 209101,
+  "poles": {
+   "default": {
+    "one": "TOLD-SIT",
+    "zero": "TOLD-STAND",
+    "lie": "TOLD-LIE"
+   },
+   "NOBODY": {
+    "one": "NOBODY-TOLD-SIT",
+    "zero": "NOBODY-TOLD-STAND"
+   }
+  },
+  "scored_arms": [
+   "ROOM-W",
+   "NOBODY"
+  ],
+  "pole_gap_rule": "c is read only where the bootstrap 95% lower bound of the pole gap (mean told-sit minus mean told-stand projection, paraphrases resampled) is above zero"
  },
  "r2": {
   "stages": [
@@ -165,7 +183,9 @@
   "samples_told": 2,
   "seed_rule": "int(sha256('209|'+row_id)[:8],16) per row; one torch.Generator per row, so a row's answer does not depend on its batch",
   "qwen_enable_thinking": false,
-  "system_prompt": null
+  "system_prompt": null,
+  "arms_note": "R2 arms are the frames with r2=true in prompts209.json: ROOM-W to NOBODY-I (8 arms x 8 x 12) and the three ROOM-W told arms (8 x 2 each), 816 per model",
+  "first_posture_regex": "\\b(sit|sits|sitting|sat|seated|stand|stands|standing|stood|lie|lies|lying|lay|lays|laying|lain|reclin\\w*|kneel\\w*|knelt|crouch\\w*)\\b"
  },
  "readers": {
   "primary": {
@@ -181,9 +201,13 @@
    "max_tokens": 1500,
    "thinking": "disabled"
   },
-  "check_pass": 32,
-  "check_items": 35,
-  "shuffle_seed": 209201
+  "check_pass": 38,
+  "check_items": 41,
+  "shuffle_seed": 209201,
+  "check_valence_nonneutral": {
+   "need": 9,
+   "of": 12
+  }
  },
  "gates": {
   "G0_p3": 0.3,
@@ -191,11 +215,50 @@
   "G1_r3_pairs": 7,
   "G1_r3_acc": 0.85,
   "G2_kappa": 0.6,
-  "G2_compliance": 0.8
+  "G2_compliance": 0.8,
+  "G1_r3_frames": {
+   "ROOM-W": [
+    "TOLD-SIT",
+    "TOLD-STAND"
+   ],
+   "NOBODY": [
+    "NOBODY-TOLD-SIT",
+    "NOBODY-TOLD-STAND"
+   ]
+  },
+  "G2_kappa_valence_for_209_7": 0.4
  },
  "bootstrap": {
   "resamples": 10000,
   "seed": 209301,
   "clusters": "paraphrase k (shared across arms, so differences resample k jointly), then answers within each chosen paraphrase"
- }
+ },
+ "pilot": {
+  "stage": "qwen-chat",
+  "paraphrases": [
+   1,
+   2
+  ],
+  "samples_main": 4,
+  "samples_told": 2,
+  "answers": 76,
+  "gates": {
+   "G0_p3": 0.3,
+   "G1_r1_told_wins": 2,
+   "G1_r3_pairs": 2,
+   "told_compliance": {
+    "need": 10,
+    "of": 12
+   }
+  },
+  "max_new_tokens_rule": {
+   "within": 48,
+   "then": 64
+  },
+  "batch_timing": [
+   16,
+   32
+  ]
+ },
+ "headline_rule": "withdrawn only if G1 fails on Qwen3.5-4B (draft 3); OBJECT's s is printed as context"
 }

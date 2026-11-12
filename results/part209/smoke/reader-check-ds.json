@@ -1,11 +1,13 @@
 {
  "reader": "ds",
  "model": "deepseek-v4.1-flash",
- "right": 35,
- "n": 35,
- "pass_at": 32,
+ "right": 41,
+ "n": 41,
+ "pass_at": 38,
+ "nonneutral_right": 11,
+ "nonneutral_n": 12,
+ "nonneutral_need": 9,
  "passed": true,
- "brief_sha256": "f7f8a8b40cb24d5dc508c58cdf3991484d1234ec3ec76944f9f7b819eee3a2fe",
  "items": [
   {
    "key": "check-01",
@@ -53,7 +55,7 @@
    "got": "sitting",
    "error": null,
    "valence_want": "neutral",
-   "valence_got": "neutral"
+   "valence_got": "positive"
   },
   {
    "key": "check-07",
@@ -133,7 +135,7 @@
    "got": "standing",
    "error": null,
    "valence_want": "positive",
-   "valence_got": "neutral"
+   "valence_got": "positive"
   },
   {
    "key": "check-17",
@@ -245,7 +247,7 @@
    "got": "lying",
    "error": null,
    "valence_want": "neutral",
-   "valence_got": "neutral"
+   "valence_got": "positive"
   },
   {
    "key": "check-31",
@@ -285,7 +287,56 @@
    "got": "none",
    "error": null,
    "valence_want": "neutral",
-   "valence_got": "positive"
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-36",
+   "want": "sitting",
+   "got": "sitting",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-37",
+   "want": "lying",
+   "got": "lying",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-38",
+   "want": "none",
+   "got": "none",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-39",
+   "want": "none",
+   "got": "none",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-40",
+   "want": "sitting",
+   "got": "sitting",
+   "error": null,
+   "valence_want": "negative",
+   "valence_got": "negative"
+  },
+  {
+   "key": "check-41",
+   "want": "none",
+   "got": "none",
+   "error": null,
+   "valence_want": "negative",
+   "valence_got": "negative"
   }
- ]
+ ],
+ "brief_sha256": "d1f41756e0efd81771f96cd9d2210944ecea2f3231efb3ec5628e8f0d6010339"
 }

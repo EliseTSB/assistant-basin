@@ -83,11 +83,17 @@ def test_prompt_files_match_generator():
 
 
 def test_arms_differ_only_in_the_tested_phrase():
-    fr = {f["id"]: f["text"] for f in R.load_prompts()["frames"]}
+    frames = R.load_prompts()["frames"]
+    assert len(frames) == 120 and len({f["arm"] for f in frames}) == 15
+    fr = {f["id"]: f["text"] for f in frames}
     for k in range(1, 9):
         assert fr[f"ROOM-W#{k}"].replace("room", "field") == fr[f"FIELD-W#{k}"]
-        assert fr[f"ROOM-W#{k}"].replace(" in a quiet, sunny room", "") == fr[f"NONE-W#{k}"]
+        assert fr[f"ROOM-W#{k}"].replace(", in a quiet, sunny room", "") == fr[f"NONE-W#{k}"]
         assert fr[f"TOLD-SIT#{k}"].replace(" You are sitting down.", "") == fr[f"ROOM-W#{k}"]
+        assert fr[f"NOBODY-TOLD-SIT#{k}"].replace(" You are sitting down.", "") == fr[f"NOBODY#{k}"]
+        assert fr[f"NOBODY-TOLD-STAND#{k}"].replace(" You are standing up.", "") == fr[f"NOBODY#{k}"]
+        lead = fr[f"NOBODY-I#{k}"].split("\n\n")[0]
+        assert lead.count(".") == 1 and any(w in lead for w in ("no body", "not in any body", "without a body"))
 
 
 def test_tokens_json_and_live_ids(olmo_tok, qwen_tok):
@@ -170,14 +176,19 @@ def test_axis_block_c_from_poles(cfg):
     X, meta = _synthetic_refs()
     frames, F = [], []
     for k in range(1, 9):
-        for arm, shift in (("TOLD-SIT", 3.0), ("TOLD-STAND", 0.0), ("TOLD-LIE", 0.0), ("NOBODY", 1.5)):
+        for arm, shift in (("TOLD-SIT", 3.0), ("TOLD-STAND", 0.0), ("TOLD-LIE", 0.0), ("NOBODY", 1.5),
+                           ("NOBODY-TOLD-SIT", 2.0), ("NOBODY-TOLD-STAND", 1.0), ("ROOM-W", 2.25)):
             v = np.zeros((4, 8))
             v[:, 0] = shift
             frames.append({"id": f"{arm}#{k}", "arm": arm, "k": k})
             F.append(v)
     b = R.axis_block(X, meta, np.array(F), frames, "standing", cfg)
     assert abs(b["c"]["TOLD-SIT"] - 1) < 1e-9 and abs(b["c"]["TOLD-STAND"]) < 1e-9
-    assert abs(b["c"]["NOBODY"] - 0.5) < 1e-6
+    assert abs(b["c"]["ROOM-W"] - 0.75) < 1e-6                 # ROOM-W poles (3 and 0)
+    assert abs(b["c"]["NOBODY"] - 0.5) < 1e-6                  # NOBODY's own poles (2 and 1)
+    assert abs(b["c"]["NOBODY-TOLD-SIT"] - 1) < 1e-9
+    bl = R.axis_block(X, meta, np.array(F), frames, "lying", cfg)
+    assert bl["c"]["NOBODY"] is None                           # no lying pole in the NOBODY frame
     assert b["chosen_layer"] in b["candidates"]
 
 
@@ -234,11 +245,12 @@ def test_row_answer_does_not_depend_on_batch(cfg, olmo_tok):
 def test_r2_rows_counts():
     frames = R.load_prompts()["frames"]
     rows = R.r2_rows(frames, "qwen-chat", None, 12, 2)
-    assert len(rows) == 7 * 8 * 12 + 3 * 8 * 2 == 720
-    assert len({r["row_id"] for r in rows}) == 720
+    assert len(rows) == 8 * 8 * 12 + 3 * 8 * 2 == 816
+    assert len({r["row_id"] for r in rows}) == 816
     pilot = R.r2_rows(frames, "qwen-chat", {1, 2}, 4, 2)
-    assert len(pilot) == 7 * 2 * 4 + 3 * 2 * 2 == 68
-    assert not any(r["arm"] in ("THIRD", "OBJECT") for r in rows)
+    assert len(pilot) == 8 * 2 * 4 + 3 * 2 * 2 == 76
+    assert not any(r["arm"] in ("THIRD", "OBJECT", "NOBODY-TOLD-SIT", "NOBODY-TOLD-STAND") for r in rows)
+    assert {r["arm"] for r in rows} >= {"NOBODY", "NOBODY-I"}
 
 
 def test_r2_resume(cfg, olmo_tok, tmp_path):
@@ -250,6 +262,18 @@ def test_r2_resume(cfg, olmo_tok, tmp_path):
     n2 = R.run_r2(model, olmo_tok, dict(ENV_O_CHAT), frames, cfg, out, paraphrases={1}, samples_main=1,
                   samples_told=1, max_new_tokens=4, batch_size=4, limit=5, log=lambda m: None)
     assert n1 == 5 and n2 == 0 and len(R.read_jsonl(out)) == 5
+    row = R.read_jsonl(out)[0]
+    assert len(row["new_token_ids"]) == row["n_new_tokens"] and "first_posture_token" in row
+    t = R.read_jsonl(tmp_path / "r2-instruct.timing.jsonl")
+    assert sum(x["rows"] for x in t) == 5 and all(x["batch_size"] == 4 for x in t)
+
+
+def test_first_posture_token(olmo_tok, cfg):
+    ids = olmo_tok.encode("Right now, I am sitting quietly.", add_special_tokens=False)
+    t = R.first_posture_token(olmo_tok, ids, cfg["r2"]["first_posture_regex"])
+    assert "sitting" in olmo_tok.decode(ids[:t]) and "sitting" not in olmo_tok.decode(ids[:t - 1])
+    none = olmo_tok.encode("I believe the room is quiet.", add_special_tokens=False)
+    assert R.first_posture_token(olmo_tok, none, cfg["r2"]["first_posture_regex"]) is None
 
 
 # ---------------------------------------------------------------- readers
@@ -272,14 +296,23 @@ def test_reader_check_blind_and_scored(cfg, tmp_path):
         return json.dumps({"id": item_id, "posture": truth[item_id], "says_no_body": False, "valence": "neutral",
                            "unreadable": False})
     res = RD.run_check("ds", cfg, oracle, "brief", tmp_path, workers=1)
-    assert res["right"] == 35 and res["passed"]
+    assert res["right"] == 41 and not res["passed"]           # postures right, but every valence neutral: 0 of 12
+    vals = {RD.blind_id("check|" + it["id"]): it["valence"]
+            for it in R.load_json(HERE / "reader_check.json")["items"]}
+
+    def oracle_v(prompt, cfg_r):
+        item_id = prompt.split("Item id: ")[1].split("\n")[0]
+        return json.dumps({"id": item_id, "posture": truth[item_id], "says_no_body": False, "valence": vals[item_id],
+                           "unreadable": False})
+    res = RD.run_check("ds", cfg, oracle_v, "brief", tmp_path, workers=1)
+    assert res["right"] == 41 and res["nonneutral_right"] == 12 and res["passed"]
 
     def bad(prompt, cfg_r):
         item_id = prompt.split("Item id: ")[1].split("\n")[0]
         return json.dumps({"id": item_id, "posture": "sitting", "says_no_body": False, "valence": "neutral",
                            "unreadable": False})
     res = RD.run_check("ds", cfg, bad, "brief", tmp_path, workers=1)
-    assert res["right"] == 10 and not res["passed"]
+    assert res["right"] == 12 and not res["passed"]
 
 
 def test_answer_items_carry_no_arm(cfg, tmp_path):
@@ -291,24 +324,36 @@ def test_answer_items_carry_no_arm(cfg, tmp_path):
 
 # ---------------------------------------------------------------- scorer on a known truth
 
-def _r1r3(stage, s_room, s_object=0.3, told_p3=0.8, proj=None, acc=0.95):
+ARMS = ["ROOM-W", "FIELD-W", "NONE-W", "ROOM-0", "FIELD-0", "NONE-0", "NOBODY", "NOBODY-I", "NOBODY-TOLD-SIT",
+        "NOBODY-TOLD-STAND", "TOLD-SIT", "TOLD-STAND", "TOLD-LIE", "THIRD", "OBJECT"]
+PROJ = {"TOLD-SIT": 1.0, "TOLD-STAND": 0.0, "TOLD-LIE": 0.0, "NOBODY-TOLD-SIT": 0.9, "NOBODY-TOLD-STAND": 0.1,
+        "NOBODY": 0.6, "OBJECT": 0.2, "ROOM-W": 0.8}
+
+
+def _r1r3(stage, s_room, s_object=0.3, told_p3=0.8, proj=None, acc=0.95, room_p3=0.6, ks=range(1, 9), r1c_room=None):
     r1, frames = [], []
-    proj = proj or {"TOLD-SIT": 1.0, "TOLD-STAND": 0.0, "TOLD-LIE": 0.0, "NOBODY": 0.6, "OBJECT": 0.2}
-    arms = ["ROOM-W", "FIELD-W", "NONE-W", "ROOM-0", "FIELD-0", "NONE-0", "NOBODY", "TOLD-SIT", "TOLD-STAND",
-            "TOLD-LIE", "THIRD", "OBJECT"]
-    for k in range(1, 9):
-        for arm in arms:
-            if arm.startswith("TOLD-"):
+    proj = dict(PROJ, **(proj or {}))
+    for k in ks:
+        for arm in ARMS:
+            if arm in ("TOLD-SIT", "TOLD-STAND", "TOLD-LIE", "NOBODY-TOLD-SIT", "NOBODY-TOLD-STAND"):
                 m = {"SIT": 0.2 * told_p3, "STAND": 0.2 * told_p3, "LIE": 0.2 * told_p3}
-                m[{"TOLD-SIT": "SIT", "TOLD-STAND": "STAND", "TOLD-LIE": "LIE"}[arm]] = 0.6 * told_p3
+                m[{"SIT": "SIT", "STAND": "STAND", "LIE": "LIE"}[arm.split("-")[-1]]] = 0.6 * told_p3
             else:
                 s = s_room if arm == "ROOM-W" else (s_object if arm == "OBJECT" else 0.5)
-                m = {"SIT": 0.6 * s, "STAND": 0.6 * (1 - s), "LIE": 0.0}
+                tot = room_p3 if arm == "ROOM-W" else 0.6
+                m = {"SIT": tot * s, "STAND": tot * (1 - s), "LIE": 0.0}
             p3 = sum(m.values())
             r1.append({"id": f"{arm}#{k}", "arm": arm, "k": k, **m, "P3": p3, "s": m["SIT"] / p3, "top10": []})
-            frames.append({"id": f"{arm}#{k}", "arm": arm, "k": k, "proj": proj.get(arm, 0.5)})
+            v = proj.get(arm, 0.5)
+            frames.append({"id": f"{arm}#{k}", "arm": arm, "k": k, "proj": v(k) if callable(v) else v})
     blk = {"chosen_layer": 10, "chosen_accuracy": acc, "null": {"mean": 0.5, "p95": 0.6, "n": 100}, "frames": frames}
-    return {"stage": stage, "r1": r1, "r3": {"sit_stand": blk, "sit_lie": {**blk, "c": {}}}}
+    r1c = None
+    if r1c_room is not None:
+        r1c = [dict(r) for r in r1]
+        for r in r1c:
+            if r["arm"] == "ROOM-W":
+                r.update(SIT=0.6 * r1c_room, STAND=0.6 * (1 - r1c_room), LIE=0.0, P3=0.6, s=r1c_room)
+    return {"stage": stage, "r1": r1, "r1c": r1c, "r3": {"sit_stand": blk, "sit_lie": {**blk, "c": {}}}}
 
 
 LABELS_QWEN = {  # per paraphrase, list of (posture, valence)
@@ -319,6 +364,7 @@ LABELS_QWEN = {  # per paraphrase, list of (posture, valence)
     "FIELD-0": [("sitting", "neutral")] * 5 + [("lying", "neutral")] * 5 + [("standing", "neutral")] * 2,
     "NONE-0": [("sitting", "neutral")] * 4 + [("standing", "neutral")] * 8,
     "NOBODY": [("none", "neutral")] * 9 + [("sitting", "neutral")] * 3,
+    "NOBODY-I": [("none", "neutral")] * 4 + [("sitting", "neutral")] * 6 + [("standing", "neutral")] * 2,
     "TOLD-SIT": [("sitting", "neutral")] * 2, "TOLD-STAND": [("standing", "neutral")] * 2,
     "TOLD-LIE": [("lying", "neutral")] * 2,
 }
@@ -328,13 +374,15 @@ LABELS_OLMO = dict(LABELS_QWEN, **{
 })
 
 
-def _write_fixture(d, qwen_chat_told_p3=0.8, haiku_passes=True):
+def _write_fixture(d, qwen_chat_told_p3=0.8, haiku_passes=True, qwen_chat_proj=None, qwen_base_room_p3=0.6,
+                   haiku_valence_flip=False):
     d.mkdir(parents=True, exist_ok=True)
     olmo_s = dict(zip(S.OLMO_STAGES, [0.7, 0.72, 0.75, 0.8, 0.82, 0.85]))
     for st, s in olmo_s.items():
         (d / f"r1r3-{st}.json").write_text(json.dumps(_r1r3(st, s)))
-    (d / "r1r3-qwen-base.json").write_text(json.dumps(_r1r3("qwen-base", 0.6)))
-    (d / "r1r3-qwen-chat.json").write_text(json.dumps(_r1r3("qwen-chat", 0.9, told_p3=qwen_chat_told_p3)))
+    (d / "r1r3-qwen-base.json").write_text(json.dumps(_r1r3("qwen-base", 0.6, room_p3=qwen_base_room_p3)))
+    (d / "r1r3-qwen-chat.json").write_text(json.dumps(_r1r3("qwen-chat", 0.9, told_p3=qwen_chat_told_p3,
+                                                            proj=qwen_chat_proj, r1c_room=0.95)))
     for st, table in (("qwen-chat", LABELS_QWEN), ("instruct", LABELS_OLMO)):
         rows, labs = [], []
         for arm, lst in table.items():
@@ -347,14 +395,19 @@ def _write_fixture(d, qwen_chat_told_p3=0.8, haiku_passes=True):
         (d / f"r2-{st}.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
         for reader in ("ds", "haiku"):
             with open(d / f"labels-{reader}.jsonl", "a") as fh:
-                for lab in labs:
-                    fh.write(json.dumps({**lab, "reader": reader}) + "\n")
+                for i, lab in enumerate(labs):
+                    row = {**lab, "reader": reader}
+                    if reader == "haiku" and haiku_valence_flip:
+                        row["valence"] = ["negative", "neutral", "positive"][i % 3]
+                    fh.write(json.dumps(row) + "\n")
     for reader, ok in (("ds", True), ("haiku", haiku_passes)):
-        (d / f"reader-check-{reader}.json").write_text(json.dumps({"right": 35 if ok else 20, "n": 35, "passed": ok}))
+        (d / f"reader-check-{reader}.json").write_text(json.dumps(
+            {"right": 41 if ok else 20, "n": 41, "nonneutral_right": 12, "nonneutral_n": 12, "passed": ok}))
 
 
 EXPECTED = {"209.1": "held", "209.2": "held", "209.3": "failed", "209.4": "failed", "209.5": "held",
-            "209.6": "held", "209.7": "failed", "209.8": "held", "209.9": "failed", "209.10": "failed"}
+            "209.6": "held", "209.7": "failed", "209.8": "held", "209.9": "failed", "209.10": "failed",
+            "209.11": "failed", "209.12": "failed", "209.13": "held", "209.14": "held", "209.15": "held"}
 
 
 def test_scorer_known_truth(cfg, tmp_path):
@@ -365,18 +418,114 @@ def test_scorer_known_truth(cfg, tmp_path):
     q = res["r2"]["qwen-chat"]["arms"]
     assert abs(q["ROOM-W"]["sitting_share"] - 10 / 12) < 1e-9
     assert abs(q["NOBODY"]["none_frac"] - 0.75) < 1e-9
+    assert res["predictions"]["209.5"]["denominator"] == 96
     assert abs(res["predictions"]["209.4"]["mean_warmup_effect"] - (1 / 12 + 0 + 2 / 12) / 3) < 1e-9
-    assert abs(res["r3"]["qwen-chat"]["c"]["NOBODY"] - 0.6) < 1e-9
+    assert abs(res["predictions"]["209.11"]["nobody_i_minus_none0"] - (6 / 8 - 4 / 12)) < 1e-9
+    for key in ("209.2", "209.4", "209.11"):
+        assert {"ci95_paired", "ci95_unpaired"} <= set(res["predictions"][key])
+    c = res["r3"]["qwen-chat"]["c"]
+    assert abs(c["NOBODY"] - (0.6 - 0.1) / 0.8) < 1e-9        # NOBODY's own poles
+    assert abs(c["ROOM-W"] - 0.8) < 1e-9                      # ROOM-W's poles
+    assert res["r3"]["qwen-chat"]["pole_gap_read"] == {"ROOM-W": True, "NOBODY": True}
     assert res["gates"]["G2"]["kappa_posture"] == 1.0 and res["headline"]["withdrawn"] is False
+    assert res["r1"]["qwen-chat"]["ROOM-W"]["range"] == pytest.approx([0.9, 0.9])
+    assert res["predictions"]["209.13"]["naming_frac"] == pytest.approx(0.25)
+    assert res["predictions"]["209.14"]["r1c_minus_r2"] == pytest.approx(0.95 - 10 / 12)
+    assert res["predictions"]["209.15"]["largest"] == "midtrain-end->sft"
+    g2 = res["gates"]["G2"]
+    assert g2["kappa_says_no_body"] == 1.0 and g2["kappa_valence"] == 1.0
+    assert res["predictions"]["209.7"]["negative_frac_with_baselines"]["instruct"]["ROOM-W"] == 0.0
+
+
+def test_valence_kappa_bar_stops_209_7(cfg, tmp_path):
+    _write_fixture(tmp_path / "raw", haiku_valence_flip=True)
+    res = S.score(tmp_path / "raw", cfg, resamples=200, log=lambda m: None)
+    assert res["gates"]["G2"]["kappa_valence"] < 0.4 and res["gates"]["G2"]["pass"] is True
+    assert res["predictions"]["209.7"]["verdict"] == "not read"
+    assert res["predictions"]["209.1"]["verdict"] == "held"
+
+
+def test_headline_ignores_object(cfg, tmp_path):
+    """Draft 3: an OBJECT s equal to ROOM-W's no longer withdraws the headline; only G1 failing does."""
+    d = tmp_path / "raw"
+    _write_fixture(d)
+    rec = json.loads((d / "r1r3-qwen-chat.json").read_text())
+    for r in rec["r1"]:
+        if r["arm"] == "OBJECT":
+            r.update(SIT=0.54, STAND=0.06, s=0.9)
+    (d / "r1r3-qwen-chat.json").write_text(json.dumps(rec))
+    res = S.score(d, cfg, resamples=200, log=lambda m: None)
+    assert res["headline"]["withdrawn"] is False
 
 
 def test_scorer_failed_gates_stop_reads(cfg, tmp_path):
     _write_fixture(tmp_path / "raw", qwen_chat_told_p3=0.15, haiku_passes=False)
     res = S.score(tmp_path / "raw", cfg, resamples=200, log=lambda m: None)
     v = {k: x["verdict"] for k, x in res["predictions"].items()}
-    for key in ("209.1", "209.2", "209.3", "209.4", "209.5", "209.7", "209.10", "209.6", "209.9"):
+    for key in ("209.1", "209.2", "209.3", "209.4", "209.5", "209.7", "209.10", "209.11", "209.12", "209.13",
+                "209.14", "209.6", "209.9"):
         assert v[key] == "not read", key
+    assert v["209.15"] == "held"
     assert v["209.8"] == "held"
+
+
+def test_pole_gap_rule_stops_209_6(cfg, tmp_path):
+    """NOBODY's poles separate in 7 of 8 paraphrases (G1's R3 half passes) but one paraphrase reverses them hard, so the
+    pole gap's 95% lower bound is not above zero and 209.6 is not read."""
+    sit = lambda k: 0.11 if k < 8 else -3.0  # noqa: E731
+    _write_fixture(tmp_path / "raw", qwen_chat_proj={"NOBODY-TOLD-SIT": sit, "NOBODY-TOLD-STAND": 0.1})
+    res = S.score(tmp_path / "raw", cfg, resamples=500, log=lambda m: None)
+    assert res["gates"]["qwen-chat"]["G1_r3"]["pass"] is True
+    assert res["r3"]["qwen-chat"]["pole_gap_read"]["NOBODY"] is False
+    assert res["predictions"]["209.6"]["verdict"] == "not read"
+
+
+def test_nobody_poles_reversed_fail_g1_r3(cfg, tmp_path):
+    _write_fixture(tmp_path / "raw", qwen_chat_proj={"NOBODY-TOLD-SIT": 0.1, "NOBODY-TOLD-STAND": 0.9})
+    res = S.score(tmp_path / "raw", cfg, resamples=200, log=lambda m: None)
+    assert res["gates"]["qwen-chat"]["G1_r3"]["pass"] is False
+    assert res["predictions"]["209.6"]["verdict"] == "not read"
+    assert res["predictions"]["209.9"]["verdict"] == "failed"   # R1 is still read (G0 and G1's R1 half)
+    assert res["headline"]["withdrawn"] is True                 # G1 fails on Qwen3.5-4B
+
+
+def test_p3_floor_stops_209_9(cfg, tmp_path):
+    _write_fixture(tmp_path / "raw", qwen_base_room_p3=0.05)
+    res = S.score(tmp_path / "raw", cfg, resamples=200, log=lambda m: None)
+    assert res["r1"]["qwen-base"]["ROOM-W"]["read"] is False
+    assert res["predictions"]["209.9"]["verdict"] == "not read"
+
+
+# ---------------------------------------------------------------- pilot gates
+
+def test_pilot_gates(cfg, tmp_path):
+    import pilot209 as PG
+    d = tmp_path / "pilot"
+    d.mkdir()
+    (d / "r1r3-qwen-chat.json").write_text(json.dumps(_r1r3("qwen-chat", 0.9, ks=(1, 2))))
+    rows, labs = [], []
+    for arm, lst in LABELS_QWEN.items():
+        n = 2 if arm.startswith("TOLD-") else 4
+        for k in (1, 2):
+            for j in range(n):
+                pos = lst[j % len(lst)][0]
+                rid = f"qwen-chat|{arm}#{k}|{j}"
+                rows.append({"row_id": rid, "stage": "qwen-chat", "arm": arm, "k": k, "answer": "x",
+                             "first_posture_token": None if pos == "none" else 12})
+                labs.append({"row_id": rid, "posture": pos, "valence": "neutral", "says_no_body": False,
+                             "unreadable": False})
+    assert len(rows) == 76
+    (d / "r2-qwen-chat.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    (d / "labels-ds.jsonl").write_text("".join(json.dumps(r) + "\n" for r in labs))
+    (d / "r2-qwen-chat.timing.jsonl").write_text(json.dumps({"batch_size": 16, "rows": 76, "seconds": 38.0}) + "\n")
+    res = PG.pilot_gates(d, cfg, log=lambda m: None)
+    assert res["pilot_gates_pass"] and res["compliance"]["right"] == 12
+    assert res["max_new_tokens"]["new_cap"] == 64
+    assert abs(res["timing"][str(d)][16]["answers_per_s"] - 2.0) < 1e-9
+    rows[0]["first_posture_token"] = 60          # one answer names its posture late: the cap stays
+    (d / "r2-qwen-chat.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    res = PG.pilot_gates(d, cfg, log=lambda m: None)
+    assert res["max_new_tokens"]["new_cap"] is None
 
 
 def test_bootstrap_paired_and_deterministic():

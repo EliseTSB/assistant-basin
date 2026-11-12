@@ -8,8 +8,9 @@
 Blind: each answer gets an id from sha256('209|'+row_id); the items are shuffled (config seed) and the reader sees only
 that id and the answer text, never the stage, arm, paraphrase or prompt. Labels are mapped back to row ids afterwards.
 
-The known-answer check (part209/reader_check.json, 35 items) runs first, every time, with the same blinding; a reader
-that gets fewer than config.readers.check_pass postures right is refused for real answers. The check result is written
+The known-answer check (part209/reader_check.json, 41 items) runs first, every time, with the same blinding; a reader
+is refused for real answers unless it gets at least 38 of 41 postures right and labels at least 9 of the 12
+non-neutral rows non-neutral (Design draft 2). The check result is written
 to results/part209/reader-check-<reader>.json; labels to results/part209/labels-<reader>.jsonl (appended; a row with an
 error is retried on the next run; the last row for a row id wins).
 
@@ -194,20 +195,33 @@ def run_check(reader, cfg, client, brief, out_dir, workers):
     items = check_items(cfg)
     labs = {r["id"]: r for r in label_items([{"id": i["id"], "text": i["text"]} for i in items], client, brief,
                                             cfg_r, workers=workers)}
+    res = check_result(reader, cfg_r["model"], items, labs, cfg)
+    res["brief_sha256"] = hashlib.sha256(brief.encode("utf-8")).hexdigest()
+    Path(out_dir).mkdir(parents=True, exist_ok=True)
+    (Path(out_dir) / f"reader-check-{reader}.json").write_text(json.dumps(res, indent=1) + "\n", encoding="utf-8")
+    return res
+
+
+def check_result(reader, model, items, labs, cfg):
+    """Score a reader on the known answers (Design draft 2): at least check_pass postures right AND at least
+    check_valence_nonneutral.need of the non-neutral rows labelled non-neutral (either sign)."""
     per = []
     right = 0
+    nn_total = nn_right = 0
     for it in items:
         lab = labs.get(it["id"], {})
         ok = lab.get("posture") == it["posture"]
         right += ok
+        if it["valence"] != "neutral":
+            nn_total += 1
+            nn_right += lab.get("valence") in ("negative", "positive")
         per.append({"key": it["key"], "want": it["posture"], "got": lab.get("posture"), "error": lab.get("error"),
                     "valence_want": it["valence"], "valence_got": lab.get("valence")})
-    res = {"reader": reader, "model": cfg_r["model"], "right": right, "n": len(items),
-           "pass_at": cfg["readers"]["check_pass"], "passed": right >= cfg["readers"]["check_pass"],
-           "brief_sha256": hashlib.sha256(brief.encode("utf-8")).hexdigest(), "items": sorted(per, key=lambda x: x["key"])}
-    Path(out_dir).mkdir(parents=True, exist_ok=True)
-    (Path(out_dir) / f"reader-check-{reader}.json").write_text(json.dumps(res, indent=1) + "\n", encoding="utf-8")
-    return res
+    bar = cfg["readers"]["check_valence_nonneutral"]
+    passed = right >= cfg["readers"]["check_pass"] and nn_right >= bar["need"]
+    return {"reader": reader, "model": model, "right": right, "n": len(items), "pass_at": cfg["readers"]["check_pass"],
+            "nonneutral_right": nn_right, "nonneutral_n": nn_total, "nonneutral_need": bar["need"], "passed": passed,
+            "items": sorted(per, key=lambda x: x["key"])}
 
 
 def reader_cfg(cfg, reader):
@@ -241,7 +255,9 @@ def main(argv=None):
         raise SystemExit("OPENCODE_GO_API_KEY is not set")
     client = CLIENTS[a.reader]
     chk = run_check(a.reader, cfg, client, brief, a.out, a.workers)
-    print(json.dumps({"reader": a.reader, "check_right": chk["right"], "of": chk["n"], "passed": chk["passed"]}))
+    print(json.dumps({"reader": a.reader, "check_right": chk["right"], "of": chk["n"],
+                      "nonneutral_right": chk["nonneutral_right"], "of_nonneutral": chk["nonneutral_n"],
+                      "passed": chk["passed"]}))
     if a.check_only:
         return
     if not chk["passed"]:

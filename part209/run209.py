@@ -6,6 +6,14 @@
   python -I -B part209/run209.py --stage qwen-chat --out results/part209 --device xpu
   python -I -B part209/run209.py --stage qwen-chat --out results/part209 --device xpu --r2 [--paraphrases 1,2
           --samples 4 --told-samples 2 --max-new-tokens 96 --batch 24]
+  --pilot     the design's pilot: paraphrases 1 and 2 for R1/R3 frames and R2 rows, R2 samples 4 (told 2): 30 frames
+              and 76 answers
+  --arms A,B  R1/R3 for these arms only (the build's told-and-pole check: TOLD-*, NOBODY-TOLD-*)
+
+Draft 2 (design a9c52cf6): 15 frame types, 120 frames; R2 arms ROOM-W to NOBODY-I and the three ROOM-W told arms, 816
+answers per model; c for NOBODY (and its poles) against the NOBODY told poles, every other arm against ROOM-W's. Each R2
+row records its raw new token ids and the 1-based token at which a posture word first appears (the pilot's
+max_new_tokens rule), and every batch's size and seconds go to r2-<stage>.timing.jsonl.
 
 Writes, under --out:
   r1r3-<stage>.json     R1 masses and top tokens per frame, R1c (chat stages), R3 per-layer held-out accuracies, the
@@ -317,12 +325,34 @@ def axis_block(ref_states, ref_meta, frame_states, frames, pos_b, cfg):
                         rc["test_subjects"], rc["null_shuffles"], rc["null_seed"])
     proj = (frame_states[:, chosen - 1] @ a).tolist()
     rows = [{"id": f["id"], "arm": f["arm"], "k": f["k"], "proj": float(p)} for f, p in zip(frames, proj)]
-    pole_b = {"standing": "TOLD-STAND", "lying": "TOLD-LIE"}[pos_b]
-    c = c_by_arm(rows, "TOLD-SIT", pole_b)
+    poles = pole_map(cfg, pos_b)
+    c = c_for_arms(rows, poles)
     return {"pos_a": "sitting", "pos_b": pos_b, "candidates": cands, "accuracy_by_layer": accs,
             "chosen_layer": chosen, "chosen_accuracy": accs[chosen], "threshold": t,
-            "axis_norm": float(np.linalg.norm(a)), "null": null, "frames": rows, "c": c,
-            "poles": {"one": "TOLD-SIT", "zero": pole_b}}
+            "axis_norm": float(np.linalg.norm(a)), "null": null, "frames": rows, "c": c, "poles": poles}
+
+
+def pole_map(cfg, pos_b="standing"):
+    """Which told poles scale each arm's c (Design draft 2, R3): NOBODY and its own poles use the NOBODY told poles;
+    every other arm uses the ROOM-W told poles. The sit-lie axis has no NOBODY pole, so NOBODY gets none there."""
+    pc = cfg["r3"]["poles"]
+    zero = pc["default"]["zero"] if pos_b == "standing" else pc["default"]["lie"]
+    out = {"default": {"one": pc["default"]["one"], "zero": zero}}
+    if pos_b == "standing":
+        for arm in ("NOBODY", pc["NOBODY"]["one"], pc["NOBODY"]["zero"]):
+            out[arm] = {"one": pc["NOBODY"]["one"], "zero": pc["NOBODY"]["zero"]}
+    else:
+        for arm in ("NOBODY", pc["NOBODY"]["one"], pc["NOBODY"]["zero"]):
+            out[arm] = None
+    return out
+
+
+def c_for_arms(rows, poles):
+    out = {}
+    for arm in sorted({r["arm"] for r in rows}):
+        pl = poles.get(arm, poles["default"])
+        out[arm] = None if pl is None else c_by_arm(rows, pl["one"], pl["zero"]).get(arm)
+    return out
 
 
 def c_by_arm(rows, pole_one, pole_zero):
@@ -438,6 +468,16 @@ def r2_rows(frames, stage, paraphrases, samples_main, samples_told):
     return rows
 
 
+def first_posture_token(tok, ids, pattern):
+    """1-based count of new tokens at which a posture word first appears in the decoded answer, or None."""
+    import re
+    rx = re.compile(pattern, re.IGNORECASE)
+    for t in range(1, len(ids) + 1):
+        if rx.search(tok.decode(ids[:t], skip_special_tokens=True)):
+            return t
+    return None
+
+
 def generate_batch(model, tok, env, batch, cfg_r2, max_new_tokens, device, eos_ids):
     import torch
     from transformers import GenerationConfig, LogitsProcessorList
@@ -458,7 +498,8 @@ def generate_batch(model, tok, env, batch, cfg_r2, max_new_tokens, device, eos_i
                 cut = i
                 break
         res.append({"answer": tok.decode(ids[:cut], skip_special_tokens=True).strip(),
-                    "n_new_tokens": cut, "finished": cut < len(ids)})
+                    "n_new_tokens": cut, "finished": cut < len(ids), "new_token_ids": ids[:cut],
+                    "first_posture_token": first_posture_token(tok, ids[:cut], cfg_r2["first_posture_regex"])})
     return res
 
 
@@ -495,10 +536,17 @@ def run_r2(model, tok, env, frames, cfg, out_path, paraphrases=None, samples_mai
     Path(out_path).parent.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
     n = 0
-    with open(out_path, "a", encoding="utf-8", newline="\n") as fh:
+    timing_path = Path(str(out_path).replace(".jsonl", ".timing.jsonl"))
+    with open(out_path, "a", encoding="utf-8", newline="\n") as fh, \
+            open(timing_path, "a", encoding="utf-8", newline="\n") as th:
         for i in range(0, len(todo), batch_size):
             batch = todo[i:i + batch_size]
+            tb = time.time()
             res = generate_batch(model, tok, env, batch, c2, max_new_tokens, device, eos)
+            th.write(json.dumps({"batch_size": batch_size, "rows": len(batch), "seconds": round(time.time() - tb, 3),
+                                 "max_new_tokens": max_new_tokens, "new_tokens": sum(o["n_new_tokens"] for o in res)})
+                     + "\n")
+            th.flush()
             for r, o in zip(batch, res):
                 row = {k: r[k] for k in ("row_id", "stage", "frame_id", "arm", "k", "sample", "seed")}
                 row.update(o)
@@ -535,6 +583,9 @@ def main(argv=None):
     ap.add_argument("--batch", type=int, default=24)
     ap.add_argument("--limit", type=int, help="first N R2 rows only (smoke)")
     ap.add_argument("--frames-limit", type=int, help="first N frames and reference sentences only (smoke)")
+    ap.add_argument("--arms", help="comma list of arms for R1/R3 (e.g. the told and pole frames only)")
+    ap.add_argument("--pilot", action="store_true",
+                    help="the design's pilot: paraphrases 1 and 2 (R1/R3 frames and R2 rows), R2 samples 4 and 2")
     ap.add_argument("--models-json", default=str(HERE / "models.json"))
     a = ap.parse_args(argv)
     os.environ.setdefault("HF_HUB_OFFLINE", "1")
@@ -555,6 +606,21 @@ def main(argv=None):
     prompts = load_prompts()
     frames = prompts["frames"]
     refs = load_reference()["sentences"]
+    if a.pilot:
+        pc = cfg["pilot"]
+        a.paraphrases = a.paraphrases or ",".join(str(k) for k in pc["paraphrases"])
+        a.samples = pc["samples_main"] if a.samples is None else a.samples
+        a.told_samples = pc["samples_told"] if a.told_samples is None else a.told_samples
+    paras = parse_paraphrases(a.paraphrases)
+    if not a.r2:
+        if paras:
+            frames = [f for f in frames if f["k"] in paras]
+        if a.arms:
+            keep = {x.strip() for x in a.arms.split(",") if x.strip()}
+            unknown = keep - {f["arm"] for f in frames}
+            if unknown:
+                raise SystemExit(f"unknown arms {sorted(unknown)}")
+            frames = [f for f in frames if f["arm"] in keep]
     if a.frames_limit:
         frames, refs = frames[:a.frames_limit], refs[:a.frames_limit]
     tok, model, env = load_stage(cfg, a.stage, a.device)
@@ -565,7 +631,7 @@ def main(argv=None):
     out = Path(a.out)
     if a.r2:
         n = run_r2(model, tok, env, frames, cfg, out / f"r2-{a.stage}.jsonl",
-                   paraphrases=parse_paraphrases(a.paraphrases), samples_main=a.samples,
+                   paraphrases=paras, samples_main=a.samples,
                    samples_told=a.told_samples, max_new_tokens=a.max_new_tokens, batch_size=a.batch,
                    device=device, limit=a.limit, log=lambda m: print(m, flush=True))
         print(f"[r2] wrote {n} answers to {out / f'r2-{a.stage}.jsonl'}", flush=True)
@@ -582,21 +648,33 @@ def main(argv=None):
 
 
 def summarize(rec, log):
-    """Print what the gates read, for a person watching the run (score209.py decides)."""
-    told = [r for r in rec["r1"] if r["arm"].startswith("TOLD-")]
-    p3 = sum(r["P3"] for r in told) / max(len(told), 1)
-    log(f"[summary] {rec['stage']}: mean P3 over {len(told)} told frames = {p3:.3f}")
-    want = {"TOLD-SIT": "SIT", "TOLD-STAND": "STAND", "TOLD-LIE": "LIE"}
+    """Print what the gates read, for a person watching the run (score209.py decides). Only told and pole frames are
+    printed, never another arm's numbers (Design: the build check reads poles only)."""
+    told = [r for r in rec["r1"] if r["arm"] in ("TOLD-SIT", "TOLD-STAND", "TOLD-LIE")]
+    if told:
+        p3 = sum(r["P3"] for r in told) / len(told)
+        log(f"[summary] {rec['stage']}: mean P3 over {len(told)} ROOM-W told frames = {p3:.3f}")
+    want = {"TOLD-SIT": "SIT", "TOLD-STAND": "STAND", "TOLD-LIE": "LIE", "NOBODY-TOLD-SIT": "SIT",
+            "NOBODY-TOLD-STAND": "STAND"}
     for arm, key in want.items():
         rows = [r for r in rec["r1"] if r["arm"] == arm]
+        if not rows:
+            continue
         wins = sum(1 for r in rows if max(("SIT", "STAND", "LIE"), key=lambda q: r[q]) == key)
-        log(f"[summary] {arm}: told posture largest in {wins}/{len(rows)}; top tokens of #1: "
-            + ", ".join(f"{t!r} {p:.3f}" for t, p in (rows[0]["top10"][:5] if rows else [])))
+        log(f"[summary] {arm}: told posture largest in {wins}/{len(rows)}; top tokens of #{rows[0]['k']}: "
+            + ", ".join(f"{t!r} {p:.3f}" for t, p in rows[0]["top10"][:5]))
     for name in ("sit_stand", "sit_lie"):
         b = rec["r3"][name]
         log(f"[summary] R3 {name}: layer {b['chosen_layer']} held-out acc {b['chosen_accuracy']:.3f} "
-            f"(null mean {b['null']['mean']:.3f}, p95 {b['null']['p95']:.3f}); c: "
-            + ", ".join(f"{a} {('%.2f' % v) if v is not None else 'NA'}" for a, v in sorted(b["c"].items())))
+            f"(null mean {b['null']['mean']:.3f}, p95 {b['null']['p95']:.3f})")
+    pk = {}
+    for r in rec["r3"]["sit_stand"]["frames"]:
+        pk.setdefault(r["arm"], {})[r["k"]] = r["proj"]
+    for one, zero in (("TOLD-SIT", "TOLD-STAND"), ("NOBODY-TOLD-SIT", "NOBODY-TOLD-STAND")):
+        if one in pk and zero in pk:
+            ks = sorted(set(pk[one]) & set(pk[zero]))
+            above = sum(1 for k in ks if pk[one][k] > pk[zero][k])
+            log(f"[summary] R3 poles {one} above {zero} in {above}/{len(ks)} paraphrases")
 
 
 if __name__ == "__main__":

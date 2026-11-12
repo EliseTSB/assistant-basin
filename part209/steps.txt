@@ -1,39 +1,53 @@
-Part 209 launch lines. NOTHING HERE HAS BEEN RUN (written by the builder, 2026-11-12, before registration).
-The only runs so far are the builder's CPU smoke of OLMo 2 1B Instruct (results/part209/smoke/, see BUILD-REPORT.md).
+Part 209 launch lines (design draft 3, 57ae3e6f). NOTHING HERE HAS BEEN RUN.
+Runs so far, all by the builder before registration and all on the CPU: the draft-1 OLMo 2 1B Instruct smoke
+(results/part209/smoke/, untracked) and the draft-2 told-and-pole check (results/part209/smoke-d2/, told and pole
+frames only). See results/part209/BUILD-REPORT.md.
 
 Order (Design, Size): the Qwen pilot first, then the full runs. One model per process. All paths are relative to the
 worktree root (branch part209). The interpreter is named by full path because a systemd user unit does not inherit this
 shell's environment, and HF_HOME is set inline for the same reason (the default cache does not hold these models).
-The A770 runs use the Windows job runner; its Hugging Face cache is the job runner's own.
+The A770 runs use the Windows job runner and its own Hugging Face cache.
+
+Files every A770 step needs (--copy): part209/run209.py part209/config.json part209/prompts209.json
+part209/reference209.json part209/tokens.json neuron_report.py
 
 --- 0. tokens.json (done by the builder; rerun only if a tokenizer revision changes)
 
   HF_HOME=/mnt/e/neuron-probe/hf HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/run209.py --tokens
 
---- 1. the pilot (Qwen3.5-4B on the A770): R1/R3 for every frame, then 68 sampled answers
-Before launching: free the WSL page cache and read Windows' available memory (PROCEDURE 4: Qwen's load needs about
-11 GB available); one A770 job at a time; the kernel check is results/part183/kernel-check.json.
-Stopping rule (Design, Size): stop and redesign if G1 fails on Qwen, if told-arm compliance is under 80%, or if the
-answers do not describe a body position at all. Read the 68 answers by eye.
+--- 1. the pilot (Design, Size): Qwen3.5-4B, paraphrases 1 and 2
+Before launching: free the WSL page cache and read Windows' available memory (Qwen's load needs about 11 GB available);
+one A770 job at a time; the kernel check is results/part183/kernel-check.json.
 
-  tools/launch_arc.py 209 --step "-I -B part209/run209.py --stage qwen-chat --out results/part209/pilot --device xpu --models-json results/part209/pilot/models.json" --step "-I -B part209/run209.py --stage qwen-chat --out results/part209/pilot --device xpu --models-json results/part209/pilot/models.json --r2 --paraphrases 1,2 --samples 4 --told-samples 2 --batch 16" --copy part209/run209.py part209/config.json part209/prompts209.json part209/reference209.json part209/tokens.json neuron_report.py --tag pilot
+1a. R1/R3 for every arm at paraphrases 1 and 2 (30 frames), then the 76 pilot answers at batch 16, then the same 76 rows
+    at batch 32 (timing, and the per-row seeds should give the same answers):
 
-Optimization pass on the pilot's R2 (Design, Optimization): time --batch 16, 32 and 48 on pilot rows (the log prints
-answers/s per batch) and record the measurement as an amendment before the main run. If every pilot answer names its
-posture within the first 48 tokens, max_new_tokens becomes 64 (amendment, before the main run).
+  tools/launch_arc.py 209 --step "-I -B part209/run209.py --stage qwen-chat --pilot --out results/part209/pilot --device xpu --models-json results/part209/pilot/models.json" --step "-I -B part209/run209.py --stage qwen-chat --pilot --r2 --batch 16 --out results/part209/pilot --device xpu --models-json results/part209/pilot/models.json" --step "-I -B part209/run209.py --stage qwen-chat --pilot --r2 --batch 32 --out results/part209/pilot/b32 --device xpu --models-json results/part209/pilot/models.json" --copy part209/run209.py part209/config.json part209/prompts209.json part209/reference209.json part209/tokens.json neuron_report.py --tag pilot
 
-Pilot readers (from this shell: the OpenCode Go key is not in a systemd unit's environment):
+1b. OLMo 2 1B Instruct's R2 timing on the CPU at batch 16 and 32 (the same 76 pilot rows; Design, Optimization):
+
+  tools/launch_arc.py 209 --cpu "env HF_HOME=/mnt/e/neuron-probe/hf HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/run209.py --stage instruct --pilot --r2 --batch 16 --out results/part209/pilot/olmo-b16 --models-json results/part209/pilot/models.json" --mem 8G --tag olmo-b16
+  tools/launch_arc.py 209 --cpu "env HF_HOME=/mnt/e/neuron-probe/hf HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/run209.py --stage instruct --pilot --r2 --batch 32 --out results/part209/pilot/olmo-b32 --models-json results/part209/pilot/models.json" --mem 8G --tag olmo-b32
+
+1c. Readers on the Qwen pilot answers (from this shell: the OpenCode Go key is not in a systemd unit's environment),
+    then the pilot gates, the max_new_tokens rule and the timing:
 
   HF_HOME=/mnt/e/neuron-probe/hf /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/read209.py --reader ds --inputs results/part209/pilot/r2-qwen-chat.jsonl --out results/part209/pilot
   /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/read209.py --reader haiku --inputs results/part209/pilot/r2-qwen-chat.jsonl --out results/part209/pilot
-  /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/score209.py --raw results/part209/pilot
+  /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/pilot209.py --pilot-dir results/part209/pilot --batch-dirs results/part209/pilot/b32 --timing-dirs results/part209/pilot/olmo-b16 results/part209/pilot/olmo-b32 --compare-pair results/part209/pilot/olmo-b16 results/part209/pilot/olmo-b32
+
+Pilot gates (Size): G0 as written; G1's R1 half in both pilot paraphrases of every told arm; told sitting above told
+standing in both pilot paraphrases in ROOM-W and NOBODY; told compliance at least 10 of 12. Read the 76 answers by eye.
+Stop and redesign if a gate fails or the answers do not describe a body position. pilot-gates.json gives the
+max_new_tokens decision (64 if every posture-naming answer names it within 48 tokens) and answers/s per batch size;
+record both as an amendment before the main run.
 
 --- 2. family Q, the main run (A770, bf16, eager, through neuron_report.load_model; one model per process)
 
   tools/launch_arc.py 209 --step "-I -B part209/run209.py --stage qwen-base --out results/part209 --device xpu" --copy part209/run209.py part209/config.json part209/prompts209.json part209/reference209.json part209/tokens.json neuron_report.py --tag qwen-base
-  tools/launch_arc.py 209 --step "-I -B part209/run209.py --stage qwen-chat --out results/part209 --device xpu" --step "-I -B part209/run209.py --stage qwen-chat --out results/part209 --device xpu --r2 --batch <from the pilot>" --copy part209/run209.py part209/config.json part209/prompts209.json part209/reference209.json part209/tokens.json neuron_report.py --tag qwen-chat
+  tools/launch_arc.py 209 --step "-I -B part209/run209.py --stage qwen-chat --out results/part209 --device xpu" --step "-I -B part209/run209.py --stage qwen-chat --out results/part209 --device xpu --r2 --batch <from the pilot> --max-new-tokens <from the amendment>" --copy part209/run209.py part209/config.json part209/prompts209.json part209/reference209.json part209/tokens.json neuron_report.py --tag qwen-chat
 
---- 3. family O, the six OLMo 2 1B stages (CPU, float32, eager; R1/R1c/R3 each; ~456 short passes, ~552 for chat)
+--- 3. family O, the six OLMo 2 1B stages (CPU, float32, eager; 480 passes each, 600 for the chat stages)
 
   tools/launch_arc.py 209 --cpu "env HF_HOME=/mnt/e/neuron-probe/hf HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/run209.py --stage pretrain-3.0T --out results/part209" --mem 8G --tag pretrain
   tools/launch_arc.py 209 --cpu "env HF_HOME=/mnt/e/neuron-probe/hf HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/run209.py --stage midtrain-26B --out results/part209" --mem 8G --tag midtrain26
@@ -41,7 +55,7 @@ Pilot readers (from this shell: the OpenCode Go key is not in a systemd unit's e
   tools/launch_arc.py 209 --cpu "env HF_HOME=/mnt/e/neuron-probe/hf HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/run209.py --stage sft --out results/part209" --mem 8G --tag sft
   tools/launch_arc.py 209 --cpu "env HF_HOME=/mnt/e/neuron-probe/hf HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/run209.py --stage dpo --out results/part209" --mem 8G --tag dpo
   tools/launch_arc.py 209 --cpu "env HF_HOME=/mnt/e/neuron-probe/hf HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/run209.py --stage instruct --out results/part209" --mem 8G --tag instruct
-  tools/launch_arc.py 209 --cpu "env HF_HOME=/mnt/e/neuron-probe/hf HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/run209.py --stage instruct --out results/part209 --r2 --batch 24" --mem 8G --tag instruct-r2
+  tools/launch_arc.py 209 --cpu "env HF_HOME=/mnt/e/neuron-probe/hf HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/run209.py --stage instruct --out results/part209 --r2 --batch <from the pilot> --max-new-tokens <from the amendment>" --mem 8G --tag instruct-r2
 
 --- 4. readers (from this shell), then the scorer
 
@@ -52,3 +66,7 @@ Pilot readers (from this shell: the OpenCode Go key is not in a systemd unit's e
 --- tests
 
   HF_HOME=/mnt/e/neuron-probe/hf /home/elisepc/neuron-probe/.venv/bin/python -m pytest -q part209/test_part209.py
+
+--- the builder's told-and-pole check (already run; prints only told and pole frames)
+
+  systemd-run --user --scope -p MemoryMax=8G env HF_HOME=/mnt/e/neuron-probe/hf HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/run209.py --stage instruct --out results/part209/smoke-d2 --models-json results/part209/smoke-d2/models.json --arms TOLD-SIT,TOLD-STAND,TOLD-LIE,NOBODY-TOLD-SIT,NOBODY-TOLD-STAND
