@@ -1,0 +1,54 @@
+Part 209 launch lines. NOTHING HERE HAS BEEN RUN (written by the builder, 2026-11-12, before registration).
+The only runs so far are the builder's CPU smoke of OLMo 2 1B Instruct (results/part209/smoke/, see BUILD-REPORT.md).
+
+Order (Design, Size): the Qwen pilot first, then the full runs. One model per process. All paths are relative to the
+worktree root (branch part209). The interpreter is named by full path because a systemd user unit does not inherit this
+shell's environment, and HF_HOME is set inline for the same reason (the default cache does not hold these models).
+The A770 runs use the Windows job runner; its Hugging Face cache is the job runner's own.
+
+--- 0. tokens.json (done by the builder; rerun only if a tokenizer revision changes)
+
+  HF_HOME=/mnt/e/neuron-probe/hf HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/run209.py --tokens
+
+--- 1. the pilot (Qwen3.5-4B on the A770): R1/R3 for every frame, then 68 sampled answers
+Before launching: free the WSL page cache and read Windows' available memory (PROCEDURE 4: Qwen's load needs about
+11 GB available); one A770 job at a time; the kernel check is results/part183/kernel-check.json.
+Stopping rule (Design, Size): stop and redesign if G1 fails on Qwen, if told-arm compliance is under 80%, or if the
+answers do not describe a body position at all. Read the 68 answers by eye.
+
+  tools/launch_arc.py 209 --step "-I -B part209/run209.py --stage qwen-chat --out results/part209/pilot --device xpu --models-json results/part209/pilot/models.json" --step "-I -B part209/run209.py --stage qwen-chat --out results/part209/pilot --device xpu --models-json results/part209/pilot/models.json --r2 --paraphrases 1,2 --samples 4 --told-samples 2 --batch 16" --copy part209/run209.py part209/config.json part209/prompts209.json part209/reference209.json part209/tokens.json neuron_report.py --tag pilot
+
+Optimization pass on the pilot's R2 (Design, Optimization): time --batch 16, 32 and 48 on pilot rows (the log prints
+answers/s per batch) and record the measurement as an amendment before the main run. If every pilot answer names its
+posture within the first 48 tokens, max_new_tokens becomes 64 (amendment, before the main run).
+
+Pilot readers (from this shell: the OpenCode Go key is not in a systemd unit's environment):
+
+  HF_HOME=/mnt/e/neuron-probe/hf /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/read209.py --reader ds --inputs results/part209/pilot/r2-qwen-chat.jsonl --out results/part209/pilot
+  /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/read209.py --reader haiku --inputs results/part209/pilot/r2-qwen-chat.jsonl --out results/part209/pilot
+  /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/score209.py --raw results/part209/pilot
+
+--- 2. family Q, the main run (A770, bf16, eager, through neuron_report.load_model; one model per process)
+
+  tools/launch_arc.py 209 --step "-I -B part209/run209.py --stage qwen-base --out results/part209 --device xpu" --copy part209/run209.py part209/config.json part209/prompts209.json part209/reference209.json part209/tokens.json neuron_report.py --tag qwen-base
+  tools/launch_arc.py 209 --step "-I -B part209/run209.py --stage qwen-chat --out results/part209 --device xpu" --step "-I -B part209/run209.py --stage qwen-chat --out results/part209 --device xpu --r2 --batch <from the pilot>" --copy part209/run209.py part209/config.json part209/prompts209.json part209/reference209.json part209/tokens.json neuron_report.py --tag qwen-chat
+
+--- 3. family O, the six OLMo 2 1B stages (CPU, float32, eager; R1/R1c/R3 each; ~456 short passes, ~552 for chat)
+
+  tools/launch_arc.py 209 --cpu "env HF_HOME=/mnt/e/neuron-probe/hf HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/run209.py --stage pretrain-3.0T --out results/part209" --mem 8G --tag pretrain
+  tools/launch_arc.py 209 --cpu "env HF_HOME=/mnt/e/neuron-probe/hf HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/run209.py --stage midtrain-26B --out results/part209" --mem 8G --tag midtrain26
+  tools/launch_arc.py 209 --cpu "env HF_HOME=/mnt/e/neuron-probe/hf HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/run209.py --stage midtrain-end --out results/part209" --mem 8G --tag midtrainend
+  tools/launch_arc.py 209 --cpu "env HF_HOME=/mnt/e/neuron-probe/hf HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/run209.py --stage sft --out results/part209" --mem 8G --tag sft
+  tools/launch_arc.py 209 --cpu "env HF_HOME=/mnt/e/neuron-probe/hf HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/run209.py --stage dpo --out results/part209" --mem 8G --tag dpo
+  tools/launch_arc.py 209 --cpu "env HF_HOME=/mnt/e/neuron-probe/hf HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/run209.py --stage instruct --out results/part209" --mem 8G --tag instruct
+  tools/launch_arc.py 209 --cpu "env HF_HOME=/mnt/e/neuron-probe/hf HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/run209.py --stage instruct --out results/part209 --r2 --batch 24" --mem 8G --tag instruct-r2
+
+--- 4. readers (from this shell), then the scorer
+
+  HF_HOME=/mnt/e/neuron-probe/hf /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/read209.py --reader ds --inputs results/part209/r2-instruct.jsonl results/part209/r2-qwen-chat.jsonl
+  /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/read209.py --reader haiku --inputs results/part209/r2-instruct.jsonl results/part209/r2-qwen-chat.jsonl
+  tools/launch_arc.py 209 --cpu "/home/elisepc/neuron-probe/.venv/bin/python -I -B part209/score209.py --raw results/part209" --mem 4G --tag score
+
+--- tests
+
+  HF_HOME=/mnt/e/neuron-probe/hf /home/elisepc/neuron-probe/.venv/bin/python -m pytest -q part209/test_part209.py

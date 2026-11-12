@@ -1,0 +1,201 @@
+{
+ "part": 209,
+ "note": "Every revision, seed and setting the design names, fixed before any run. Model ids and revisions copied from part205/config.json.",
+ "families": {
+  "O": {
+   "name": "OLMo 2 1B",
+   "dtype": "float32",
+   "device": "cpu",
+   "attn_implementation": "eager",
+   "loader": "local (AutoModelForCausalLM, torch_dtype=float32, attn_implementation='eager', device cpu)",
+   "hidden_size": 2048,
+   "num_hidden_layers": 16,
+   "stages": [
+    {
+     "stage": "pretrain-3.0T",
+     "model_id": "allenai/OLMo-2-0425-1B",
+     "revision": "22738a97eabcd7523be1a56eaa1745bc60e9781c",
+     "chat": false,
+     "note": "stage1-step1430000-tokens2999B; late pretraining, not the end of stage 1 (which runs to 4T tokens)"
+    },
+    {
+     "stage": "midtrain-26B",
+     "model_id": "allenai/OLMo-2-0425-1B",
+     "revision": "1c3599f7b4042ce2a39c5777ff4047f2a84f871e",
+     "chat": false,
+     "note": "stage2-ingredient3-step12000-tokens26B"
+    },
+    {
+     "stage": "midtrain-end",
+     "model_id": "allenai/OLMo-2-0425-1B",
+     "revision": "a1847dff35000b4271fa70afc5db10fd29fedbdf",
+     "chat": false,
+     "note": "main, the released base model; the 1B was not merged, so this is the end of the same run as 1c3599f7"
+    },
+    {
+     "stage": "sft",
+     "model_id": "allenai/OLMo-2-0425-1B-SFT",
+     "revision": "0d85a3d037876ce6ac7d4311d994400fc66ac27f",
+     "chat": true
+    },
+    {
+     "stage": "dpo",
+     "model_id": "allenai/OLMo-2-0425-1B-DPO",
+     "revision": "c4b0485961ab24c2433b090f3b922f0913a9290f",
+     "chat": true
+    },
+    {
+     "stage": "instruct",
+     "model_id": "allenai/OLMo-2-0425-1B-Instruct",
+     "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+     "chat": true
+    }
+   ]
+  },
+  "Q": {
+   "name": "Qwen3.5-4B",
+   "dtype": "bfloat16",
+   "device": "xpu",
+   "attn_implementation": "eager",
+   "loader": "neuron_report.load_model (AutoModelForCausalLM, text-only, bfloat16, eager, straight to the A770)",
+   "hidden_size": 2560,
+   "num_hidden_layers": 32,
+   "stages": [
+    {
+     "stage": "qwen-base",
+     "model_id": "Qwen/Qwen3.5-4B-Base",
+     "revision": "1001bb4d826a52d1f399e183466143f4da7b741b",
+     "chat": false
+    },
+    {
+     "stage": "qwen-chat",
+     "model_id": "Qwen/Qwen3.5-4B",
+     "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+     "chat": true
+    }
+   ]
+  }
+ },
+ "stages": [
+  {
+   "stage": "pretrain-3.0T",
+   "family": "O"
+  },
+  {
+   "stage": "midtrain-26B",
+   "family": "O"
+  },
+  {
+   "stage": "midtrain-end",
+   "family": "O"
+  },
+  {
+   "stage": "sft",
+   "family": "O"
+  },
+  {
+   "stage": "dpo",
+   "family": "O"
+  },
+  {
+   "stage": "instruct",
+   "family": "O"
+  },
+  {
+   "stage": "qwen-base",
+   "family": "Q"
+  },
+  {
+   "stage": "qwen-chat",
+   "family": "Q"
+  }
+ ],
+ "r1": {
+  "opening_note": "each frame's own opening (prompts209.json)",
+  "postures": {
+   "SIT": [
+    " sitting",
+    " seated"
+   ],
+   "STAND": [
+    " standing"
+   ],
+   "LIE": [
+    " lying",
+    " laying"
+   ]
+  },
+  "laying_rule": "' laying' counts in LIE only if it is one token in both tokenizers (part209/tokens.json)",
+  "top_k_print": 10
+ },
+ "r3": {
+  "window": [
+   0.5,
+   0.8
+  ],
+  "tie": "deeper",
+  "fit_subjects": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6
+  ],
+  "test_subjects": [
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "null_shuffles": 100,
+  "null_seed": 209101
+ },
+ "r2": {
+  "stages": [
+   "instruct",
+   "qwen-chat"
+  ],
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "max_new_tokens": 96,
+  "samples_main": 12,
+  "samples_told": 2,
+  "seed_rule": "int(sha256('209|'+row_id)[:8],16) per row; one torch.Generator per row, so a row's answer does not depend on its batch",
+  "qwen_enable_thinking": false,
+  "system_prompt": null
+ },
+ "readers": {
+  "primary": {
+   "name": "ds",
+   "model": "deepseek-v4.1-flash",
+   "route": "ocgo",
+   "max_tokens": 4000
+  },
+  "second": {
+   "name": "haiku",
+   "model": "claude-haiku-5-5",
+   "route": "anthropic-direct",
+   "max_tokens": 1500,
+   "thinking": "disabled"
+  },
+  "check_pass": 32,
+  "check_items": 35,
+  "shuffle_seed": 209201
+ },
+ "gates": {
+  "G0_p3": 0.3,
+  "G1_r1_told_wins": 6,
+  "G1_r3_pairs": 7,
+  "G1_r3_acc": 0.85,
+  "G2_kappa": 0.6,
+  "G2_compliance": 0.8
+ },
+ "bootstrap": {
+  "resamples": 10000,
+  "seed": 209301,
+  "clusters": "paraphrase k (shared across arms, so differences resample k jointly), then answers within each chosen paraphrase"
+ }
+}
