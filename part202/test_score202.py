@@ -311,3 +311,41 @@ def test_a_replicate_named_but_missing_is_bad_input(tmp_path):
     (tmp_path / "empty.jsonl").write_text("", encoding="utf-8")
     assert score202.main(["--rows", str(path), "--units", str(ROOT / "part164/units164.json"),
                           "--replicate", str(tmp_path / "empty.jsonl")]) == 2
+
+
+def test_a_short_replicate_is_bad_input(tmp_path, capsys):
+    """Break: in main(), accept any non-empty --replicate (a launch that lost replicate rows would score its floor from
+    fewer than the registered 200 pairs, review part202-code-r2 F3)."""
+    from part202 import run202
+    rows = _rows()
+    path = _write(tmp_path, rows)
+    battery = [r for r in rows if r["stage"] == "battery"]
+    short = _write(tmp_path, battery[:run202.REPLICATE_ROWS - 1], name="replicate.jsonl")
+    assert score202.main(["--rows", str(path), "--units", str(ROOT / "part164/units164.json"),
+                          "--replicate", str(short), "--draws", "10"]) == 2
+    assert f"{run202.REPLICATE_ROWS - 1} rows" in capsys.readouterr().err
+
+
+def test_r3_in_the_scorer_fails_a_record_missing_one_planned_call(tmp_path):
+    """The scorer owns the withdrawal rule, so its R3 is the same verdict run202.check_record gives: a planned call with
+    no receipt fails it. Break: call record_gates without the plan in score() (a done launch that skipped a call would
+    pass R3, review part202-code-r2 F2)."""
+    from part202 import run202
+    units_path = tmp_path / "units.json"
+    units_path.write_text(json.dumps(UNITS), encoding="utf-8")
+    planned = run202.plan(units_path)
+    calls = [{"pass": c["stage"], "call": c["call"], "pushed": c["stage"] != "no_push", "row_ids": c["row_ids"],
+              "chunks": [{"row_ids": ch["row_ids"], "companions": ch["companions"], "rows": len(ch["row_ids"])}
+                         for ch in c["chunks"]]} for c in planned["calls"]]
+
+    def load(receipts):
+        return {"loads": [{"load": {"attn_implementation": "eager", "device": "xpu:0"}, "model": "m", "revision": "r",
+                           "out_dir": "o", "status": "done", "calls": receipts}]}
+
+    rows = _rows()
+    _text, summary = _run(tmp_path, rows, load=load(calls))
+    assert summary["gates_r1_r3"]["R3"] is True
+    skipped = [c for c in calls if c["call"] != calls[30]["call"]]
+    text, summary = _run(tmp_path, rows, load=load(skipped))
+    assert summary["gates_r1_r3"]["R3"] is False and summary["withdrawn"] is True
+    assert "planned calls have no receipt" in text

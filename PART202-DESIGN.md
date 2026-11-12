@@ -102,3 +102,12 @@ This rerun changes both kernel and pushed batch shape, so it cannot assign a dif
   bf16 load; Gate R3 under the registered units requires a receipt for every planned call. A replicate named on the
   scorer's command line but missing is bad input. Rows' `slot` is the index in the call, as part201/ROWS-SCHEMA.md
   defines it (`chunk_slot` is the index in the 8-row model call). No prediction, bar, size or reading rule changed.
+- 2026-11-12 08:55 CT (Claude, after the DeepSeek round-2 code review `reviews/cheap-part202-code-r2-ds-r2.md` in the
+  Journal repo, before any model ran): the replicate stage's resume key is now `run164.row_key` too (it still used
+  (stage, unit_id, question_index), so a kill mid-replicate could drop a row whose dose-twin was on disk and still
+  record `done`), and a torn last line of `replicate.jsonl` is cut off on resume as `answers.jsonl`'s is. The scorer's
+  Gate R3 now checks every planned call has a receipt, as `run202.py --check-record` does, and a `--replicate` file
+  that is not 200 rows is bad input. The bf16 gate reads `load_record`'s dtype as a string or a list and names a mixed
+  load as mixed. A pushed row's `row_id` carries its arm and dose after part201/ROWS-SCHEMA.md's
+  `<unit_id>|q<question_index>`, so (pass, row_id) names one row, as that schema requires. No prediction, bar, size or
+  reading rule changed.

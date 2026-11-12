@@ -138,6 +138,16 @@ def test_the_plan_is_part_164s_order_in_chunks_of_8_with_four_companions():
     assert ("battery", "neuron", 1.0) not in cells and ("battery", "random", 1.2) in cells
 
 
+def test_row_ids_are_unique_within_a_pass_as_part201s_rows_schema_requires():
+    """part201/ROWS-SCHEMA.md: a row is identified by (pass, row_id). The random arm reuses its unit_ids at +0.8, +1.0
+    and +1.2, so a row_id without arm and dose names three rows. Break: drop the arm and dose from _spec's pushed
+    row_id (3,200 collisions on the registered plan, review part202-code-r2 F6)."""
+    p = run202.plan()
+    scored = [r for c in p["calls"] for ch in c["chunks"] for r in ch["rows"] if "companion_of" not in r]
+    ids = [(r["stage"], r["row_id"]) for r in scored]
+    assert len(scored) == 6516 and len(set(ids)) == 6516
+
+
 def test_gate_r2_hashes_match_this_tree_and_a_changed_file_fails(tmp_path):
     """Break: change one hex digit in EXPECTED_SHA256 (the real files would fail), or skip the file loop."""
     assert run202.gate_r2()["passed"] is True
@@ -213,12 +223,22 @@ def test_the_run_writes_every_planned_row_once_in_chunks_of_8(tmp_path, monkeypa
     # one question: 1 no-push + 100 recipe + 100 neurons + 300 random rows at 0.8/1.0/1.2
     from part164 import run164
     assert len(rows) == 501 and len({run164.row_key(r) for r in rows}) == 501
+    # `slot` is the row's index in the CALL (part201/ROWS-SCHEMA.md) and `chunk_slot` its index in the 8-row model
+    # call; reverting review r1 F8 (the chunk index written into `slot`) goes red here (review r2 F8).
+    by_call = {}
+    for r in rows:
+        by_call.setdefault(r["call"], []).append(r)
+    for call_rows in by_call.values():
+        assert [r["slot"] for r in call_rows] == list(range(len(call_rows)))
+        assert [r["chunk_slot"] for r in call_rows] == [i % 8 for i in range(len(call_rows))]
     assert loads == ["cpu"]
     assert set(seen) == {1, 8} and seen[0] == 1
     assert sum(1 for n in seen if n == 8) == 64           # the plan's 500 pushed rows and 12 companions, in chunks of 8
     assert sum(1 for n in seen if n == 1) == 201          # the no-push call and the 200 one-row replicate calls
     rec = json.loads((tmp_path / "load.json").read_text())
     assert rec["loads"][-1]["status"] == "done"
+    # The launch entry's dtype is the load's own record (review r1 F7, r2 F8: no test read it).
+    assert rec["loads"][-1]["dtype"] == "torch.bfloat16"
     assert run202.check_record(tmp_path / "load.json", units=_args(tmp_path).units) == 0
     # Gate R1 wants one device (review part202-code-r1 F6): a second launch on another device fails the record.
     two = json.loads(json.dumps(rec))
@@ -310,6 +330,34 @@ def test_a_float32_load_is_refused_before_generation(tmp_path, monkeypatch):
     assert not (tmp_path / "answers.jsonl").exists()
 
 
+@pytest.mark.parametrize("dtype,accepted", [("torch.bfloat16", True), (["torch.bfloat16"], True),
+                                            (["torch.bfloat16", "torch.float32"], False), ("torch.float32", False)])
+def test_the_bf16_gate_reads_load_records_dtype_as_a_string_or_a_list(monkeypatch, capsys, dtype, accepted):
+    """neuron_report.load_record writes `dtype` as a string when every floating parameter has one dtype and as a list
+    otherwise. Break: compare the value to the string alone (a one-element list would be refused), or accept any list
+    containing bf16 (a mixed load would pass). A mixed load's refusal names it as mixed (review part202-code-r2 F4)."""
+    import neuron_report as nr
+    _install_fakes(monkeypatch)
+    real = nr.load_model
+
+    def load(*a, **k):
+        tok, model = real(*a, **k)
+        nr.LAST_LOAD = dict(nr.LAST_LOAD, dtype=dtype)
+        return tok, model
+
+    monkeypatch.setattr(nr, "load_model", load)
+    loader = run202.EagerLoader(SimpleNamespace(model="tiny"))
+    if accepted:
+        assert loader("cpu") is not None
+    else:
+        with pytest.raises(SystemExit):
+            loader("cpu")
+        printed = capsys.readouterr().out
+        assert "not torch.bfloat16" in printed
+        if isinstance(dtype, list):
+            assert "mixed" in printed
+
+
 def test_the_replicate_rows_are_written_one_row_per_call(tmp_path, monkeypatch):
     """Break: in run_replicate_stage, hand the whole sample to one decode (the replicate would be a chunked call, not
     the second shape the design asks for)."""
@@ -317,11 +365,51 @@ def test_the_replicate_rows_are_written_one_row_per_call(tmp_path, monkeypatch):
     assert run202.run(_args(tmp_path)) == 0
     replicate = _rows(tmp_path / "replicate.jsonl")
     assert len(replicate) == 200 and all(r["stage"] == "replicate" and r["call_rows"] == [r["row_id"]] for r in replicate)
+    # (pass, row_id) names one row in the replicate file too (review part202-code-r2 F6).
+    assert len({r["row_id"] for r in replicate}) == 200
     assert {r["arm"] for r in replicate} == {"neuron", "random"}
     # each replicate row is a battery row of the run, one row per call
     battery = {(r["unit_id"], r["dose"], r["question_index"]) for r in _rows(tmp_path / "answers.jsonl")
                if r["stage"] == "battery"}
     assert {(r["unit_id"], r["dose"], r["question_index"]) for r in replicate} <= battery
+
+
+def test_a_replicate_resume_writes_a_row_whose_dose_twin_is_already_on_disk(tmp_path, monkeypatch):
+    """Break: in run_replicate_stage, key `done`/`pending` on (stage, unit_id, question_index) again (the random arm's
+    unit_ids repeat at +0.8, +1.0 and +1.2, so a row whose dose-twin is on disk is never written: 199 rows, review
+    part202-code-r2 F1)."""
+    from part164 import run164
+    _install_fakes(monkeypatch)
+    assert run202.run(_args(tmp_path)) == 0
+    path = tmp_path / "replicate.jsonl"
+    replicate = _rows(path)
+    groups = {}
+    for r in replicate:
+        groups.setdefault((r["unit_id"], r["question_index"]), []).append(r)
+    twins = next(g for g in groups.values() if len(g) > 1)
+    dropped = twins[-1]
+    # A kill between two replicate writes: the second row of a dose-twin pair never reached the file.
+    kept = [r for r in replicate if r is not dropped]
+    path.write_text("".join(json.dumps(r) + "\n" for r in kept), encoding="utf-8")
+    assert run202.run(_args(tmp_path)) == 0
+    after = _rows(path)
+    assert len(after) == 200 and len({run164.row_key(r) for r in after}) == 200
+    assert run164.row_key(dropped) in {run164.row_key(r) for r in after}
+
+
+def test_a_torn_replicate_line_is_repaired_on_resume(tmp_path, monkeypatch):
+    """Break: in run_replicate_stage, read replicate.jsonl without run201._repair (a kill mid-write leaves a torn last
+    line and every resumed launch stops on it, review part202-code-r2 F5)."""
+    from part164 import run164
+    _install_fakes(monkeypatch)
+    assert run202.run(_args(tmp_path)) == 0
+    path = tmp_path / "replicate.jsonl"
+    lines = path.read_text(encoding="utf-8").splitlines(keepends=True)
+    # The last row was half written when the launch was killed.
+    path.write_text("".join(lines[:-1]) + lines[-1][: len(lines[-1]) // 2], encoding="utf-8")
+    assert run202.run(_args(tmp_path)) == 0
+    after = _rows(path)
+    assert len(after) == 200 and len({run164.row_key(r) for r in after}) == 200
 
 
 def test_an_unexpected_error_still_records_the_launch_as_stopped(tmp_path, monkeypatch):

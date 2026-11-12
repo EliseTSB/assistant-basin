@@ -277,7 +277,11 @@ def score(rows, load=None, replicate=None, units=None, published=None, draws=100
     out.section("Gates R1 to R3")
     r1 = r2 = r3 = None
     if load is not None:
-        ok, why, shapes = run202.record_gates(load)
+        # R3 against the plan built from the units this scorer reads, so a done launch that skipped a planned call fails
+        # here as it does in run202.check_record (review part202-code-r2 F2). Without units the plan cannot be built and
+        # R3 cannot pass.
+        planned = run202.plan_units(units) if units is not None else {"calls": [{"stage": "units", "call": -1}]}
+        ok, why, shapes = run202.record_gates(load, planned)
         # R1 is record_gates' verdict (eager, not refused, one model/revision/folder/device, the last launch done),
         # not a recomputation of the kernel alone: a stopped or refused launch must withdraw the headline
         # (review part202-code-r1 F3).
@@ -444,6 +448,11 @@ def main(argv=None):
         # part202-code-r1 F4: the run that crashed before the replicate would otherwise score as if it was optional).
         if args.replicate and not replicate:
             raise ValueError(f"--replicate {args.replicate} is missing or empty")
+        # The registered replicate is 200 rows; a short file (a launch that lost replicate rows) is bad input, not a
+        # smaller floor (review part202-code-r2 F3).
+        if args.replicate and len(replicate) != run202.REPLICATE_ROWS:
+            raise ValueError(f"--replicate {args.replicate} holds {len(replicate)} rows, not the registered "
+                             f"{run202.REPLICATE_ROWS}")
         units = json.loads(Path(args.units).read_text(encoding="utf-8"))
         # Part 164's published score is read only to print its values beside the rerun's; without it those columns
         # read "null" and nothing else changes.

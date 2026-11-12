@@ -140,8 +140,12 @@ def read_jsonl(path):
 
 
 def _spec(stage, unit, question_index, dose, question, kind):
-    """One planned row in Part 164's own shape (run164._row_info plus the question), with Part 201's row_id."""
-    return {"row_id": f"{unit['unit_id']}|q{question_index}" if stage != "no_push" else f"plain|q{question_index}",
+    """One planned row in Part 164's own shape (run164._row_info plus the question), with Part 201's row_id. A pushed
+    row's id is part201/ROWS-SCHEMA.md's `<unit_id>|q<question_index>` with the arm and dose after it: the random arm
+    reuses its unit_ids at +0.8, +1.0 and +1.2, and the schema identifies a row by (pass, row_id) (review
+    part202-code-r2 F6)."""
+    return {"row_id": (f"{unit['unit_id']}|q{question_index}|{unit['arm']}|{float(dose)}" if stage != "no_push"
+                       else f"plain|q{question_index}"),
             "unit_id": unit["unit_id"], "arm": unit["arm"], "layer": unit.get("layer"),
             "neuron": unit.get("neuron"), "random_index": unit.get("random_index"),
             "question_index": int(question_index), "question": question, "kind": kind, "dose": float(dose),
@@ -151,10 +155,15 @@ def _spec(stage, unit, question_index, dose, question, kind):
 def plan(units_path=None):
     """Part 164's run order (run164.run) as calls: the 16 no-push calls (one row each), the recipe (100 random rows in
     blocks of 64), then the battery question by question (neuron 100 + random 100 at 0.8, random 100 at 1.0 and 1.2),
-    in blocks of 64. Each call is split into chunks of 8; the last chunk of a call with fewer than 8 rows is padded
-    with the call's first rows as companions (marked, discarded)."""
-    from part164 import run164
+    in blocks of 64. Each call is split into chunks of 8; a last chunk with fewer than 8 rows is padded by repeating
+    that chunk's own rows, in order, as companions (marked, discarded; review part202-code-r2 F7)."""
     units = json.loads(Path(units_path or ROOT / "part164/units164.json").read_text(encoding="utf-8"))
+    return plan_units(units)
+
+
+def plan_units(units):
+    """plan() on a units list already read (the scorer holds one): the same calls, rows and companions."""
+    from part164 import run164
     if sum(u["arm"] == "neuron" for u in units) != 100 or sum(u["arm"] == "random" for u in units) != 100:
         raise ValueError("units file must contain exactly 100 pairs")
     items = run164.choose_questions()
@@ -255,8 +264,14 @@ class EagerLoader:
                   f"(config {config_kernel!r}), not eager; nothing generated", flush=True)
             raise SystemExit(3)
         # Part 164 ran bf16; a float32 (or mixed) load is not the registered rerun (review part202-code-r1 F7).
-        if self.last_load.get("dtype") != "torch.bfloat16":
-            print(f"PART202 GATE R1 FAILED before generation: the model loaded in {self.last_load.get('dtype')!r}, "
+        # neuron_report.load_record writes `dtype` as a string when every floating parameter shares one dtype and as a
+        # list otherwise, so both forms are read; a mixed load is refused and named as mixed (review part202-code-r2
+        # F4). Qwen3.5-4B's eager loads in Parts 195 and 201 recorded the single string "torch.bfloat16".
+        measured = self.last_load.get("dtype")
+        dtypes = list(measured) if isinstance(measured, (list, tuple)) else [measured]
+        if not dtypes or any(d != "torch.bfloat16" for d in dtypes):
+            kind = "a mixed load" if len(set(dtypes)) > 1 else "one dtype"
+            print(f"PART202 GATE R1 FAILED before generation: the model loaded in {measured!r} ({kind}), "
                   "not torch.bfloat16; nothing generated", flush=True)
             raise SystemExit(3)
         model.requires_grad_(False)
@@ -656,16 +671,22 @@ def replicate_plan(rows, n=REPLICATE_ROWS, seed=REPLICATE_SEED):
 
 
 def _replicate_spec(row):
-    return dict(row, row_id=f"rep|{row.get('unit_id')}|q{row.get('question_index')}", stage="replicate")
+    # The battery row's own id (unit, question, arm, dose) after "rep|", so (pass, row_id) names one replicate row
+    # (review part202-code-r2 F6).
+    return dict(row, row_id=f"rep|{row.get('row_id')}", stage="replicate")
 
 
 def run_replicate_stage(model, tok, layers, medians, common, device, folder):
     """Decode the replicate sample one row per call, appending to replicate.jsonl; rows already written are skipped."""
     from part164 import run164
     path = Path(folder) / "replicate.jsonl"
-    done = {(r.get("stage"), r.get("unit_id"), int(r.get("question_index", -1))) for r in read_jsonl(path)}
+    # A kill mid-write can leave a torn last line; it is cut off as answers.jsonl's is (review part202-code-r2 F5).
+    run201._repair(path)
+    # Part 164's five-field key, as the battery uses: the random arm's unit_ids repeat at +0.8, +1.0 and +1.2, so a key
+    # without arm and dose skipped a row whose dose-twin was already written (review part202-code-r2 F1).
+    done = {run164.row_key(r) for r in read_jsonl(path)}
     sample = [_replicate_spec(r) for r in replicate_plan(read_jsonl(Path(folder) / "answers.jsonl"))]
-    pending = [r for r in sample if (r["stage"], r["unit_id"], int(r["question_index"])) not in done]
+    pending = [r for r in sample if run164.row_key(r) not in done]
     cache = {}
     written = 0
     with path.open("a", encoding="utf-8", newline="\n") as fh:
