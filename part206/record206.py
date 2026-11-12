@@ -412,7 +412,7 @@ def reduce_batch(S, caps, bp, fam, F, cfg, fidx, pairs, scored, arm_pairs, n_lay
         for L in range(n_layers):
             x = cap[("x", L)].float()
             h = cap[("h", L)].float()
-            xs, hs, xx = x.sum(1).double().cpu().numpy(), h.sum(1).double().cpu().numpy(), (x * x).sum(1).double().cpu().numpy()
+            xs, hs, xx = x.sum(1).cpu().double().numpy(), h.sum(1).cpu().double().numpy(), (x * x).sum(1).cpu().double().numpy()
             for b in range(len(bp)):
                 a["Sx"][i, srcs[b], halves[b], L] += xs[b]
                 a["Sh"][i, srcs[b], halves[b], L] += hs[b]
@@ -429,8 +429,8 @@ def reduce_batch(S, caps, bp, fam, F, cfg, fidx, pairs, scored, arm_pairs, n_lay
                 sel = torch.tensor(np.where(halves == hf)[0], device=D.device)
                 if len(sel):
                     a["SDpos"][pi, hf, L] += D.index_select(0, sel).sum(0).cpu().numpy()
-                    a["SD2"][pi, hf, L] += (D.index_select(0, sel) ** 2).sum((0, 1)).double().cpu().numpy()
-                    a["SDh"][pi, hf, L] += Dh.index_select(0, sel).sum((0, 1)).double().cpu().numpy()
+                    a["SD2"][pi, hf, L] += (D.index_select(0, sel) ** 2).sum((0, 1)).cpu().double().numpy()
+                    a["SDh"][pi, hf, L] += Dh.index_select(0, sel).sum((0, 1)).cpu().double().numpy()
             if pi in scored and L in mid:
                 k, li = scored.index(pi), mid.index(L)
                 pm, p2 = D.mean(1).cpu().numpy(), (D * D).mean(1).cpu().numpy()
@@ -444,11 +444,11 @@ def reduce_batch(S, caps, bp, fam, F, cfg, fidx, pairs, scored, arm_pairs, n_lay
         for L in range(n_layers):
             gx, gy = caps[X][("g", L)].float(), caps[Y][("g", L)].float()
             d = gx - gy
-            a["Sgdiff"][k, L] += d.sum((0, 1)).double().cpu().numpy()
-            a["Sg"][k, L] += gy.sum((0, 1)).double().cpu().numpy()
-            a["Sg2"][k, L] += (gy * gy).sum((0, 1)).double().cpu().numpy()
+            a["Sgdiff"][k, L] += d.sum((0, 1)).cpu().double().numpy()
+            a["Sg"][k, L] += gy.sum((0, 1)).cpu().double().numpy()
+            a["Sg2"][k, L] += (gy * gy).sum((0, 1)).cpu().double().numpy()
             if k == 0:
-                a["fireM"][L] += (gy > 0).sum((0, 1)).double().cpu().numpy()
+                a["fireM"][L] += (gy > 0).sum((0, 1)).cpu().double().numpy()
                 if keep_pg:
                     pm = d.mean(1).cpu().numpy().astype(np.float16)
                     for b, ix in enumerate(pidx):
@@ -472,26 +472,26 @@ def reduce_batch(S, caps, bp, fam, F, cfg, fidx, pairs, scored, arm_pairs, n_lay
                 for hf in (0, 1):
                     m = used & (hal == hf)
                     v = sub[m]
-                    a[f"S{name}"][s_i, hf, L] += v.sum(0).double().cpu().numpy()
-                    acc = torch.zeros((len(tindex), sub.shape[1]), dtype=torch.float64, device=sub.device)
-                    acc.index_add_(0, flat_t[m], v.double())
+                    a[f"S{name}"][s_i, hf, L] += v.sum(0).cpu().double().numpy()
+                    acc = torch.zeros((len(tindex), sub.shape[1]), dtype=torch.float64, device="cpu")
+                    acc.index_add_(0, flat_t[m].cpu(), v.cpu().double())
                     a[f"S{name}_t"][s_i, hf, L] += acc.cpu().numpy()
-                a[f"S{name}2"][s_i, L] += (sub[used] ** 2).sum(0).double().cpu().numpy()
+                a[f"S{name}2"][s_i, L] += (sub[used] ** 2).sum(0).cpu().double().numpy()
         av = cp[("a", L)].float().reshape(-1, cp[("a", L)].shape[-1])
         for hf in (0, 1):
             m = used & (hal == hf)
-            a[f"Sa_{L}"][hf] += av[m].sum(0).double().cpu().numpy()
-            acc = torch.zeros((len(tindex), av.shape[1]), dtype=torch.float64, device=av.device)
-            acc.index_add_(0, flat_t[m], av[m].double())
+            a[f"Sa_{L}"][hf] += av[m].sum(0).cpu().double().numpy()
+            acc = torch.zeros((len(tindex), av.shape[1]), dtype=torch.float64, device="cpu")
+            acc.index_add_(0, flat_t[m].cpu(), av[m].cpu().double())
             a[f"Sa_t_{L}"][hf] += acc.cpu().numpy()
-        a[f"Sa2_{L}"] += (av[used] ** 2).sum(0).double().cpu().numpy()
+        a[f"Sa2_{L}"] += (av[used] ** 2).sum(0).cpu().double().numpy()
     emb = cp[("emb", 0)].float()
     for b in range(len(bp)):
         hf = halves[b]
-        a["Semb"][hf] += emb[b].sum(0).double().cpu().numpy()
+        a["Semb"][hf] += emb[b].sum(0).cpu().double().numpy()
         for L in range(n_layers):
-            a["Sc"][hf, L] += cp[("c", L)][b].float().sum(0).double().cpu().numpy()
-            a["Sm"][hf, L] += cp[("m", L)][b].float().sum(0).double().cpu().numpy()
+            a["Sc"][hf, L] += cp[("c", L)][b].float().sum(0).cpu().double().numpy()
+            a["Sm"][hf, L] += cp[("m", L)][b].float().sum(0).cpu().double().numpy()
         a["n_P"][hf] += emb.shape[1]
     # GT static: wikitext, passage positions 16..95 = read slice [gt_first - read_first:]
     g0 = cfg["gt_first"] - first
@@ -500,10 +500,10 @@ def reduce_batch(S, caps, bp, fam, F, cfg, fidx, pairs, scored, arm_pairs, n_lay
             continue
         hf = halves[b]
         for j, L in enumerate(gt_layers):
-            a["Sx_gt"][hf, j] += cp[("x", L)][b, g0:].float().sum(0).double().cpu().numpy()
+            a["Sx_gt"][hf, j] += cp[("x", L)][b, g0:].float().sum(0).cpu().double().numpy()
             if hf == 1:
-                a["fire_gt"][j] += (cp[("g", L)][b, g0:].float() > 0).sum(0).double().cpu().numpy()
-        a["Sres_gt"][hf] += cp[("res", lc)][b, g0:].float().sum(0).double().cpu().numpy()
+                a["fire_gt"][j] += (cp[("g", L)][b, g0:].float() > 0).sum(0).cpu().double().numpy()
+        a["Sres_gt"][hf] += cp[("res", lc)][b, g0:].float().sum(0).cpu().double().numpy()
         a["n_gt"][hf] += cp[("x", 0)].shape[1] - g0
 
 
