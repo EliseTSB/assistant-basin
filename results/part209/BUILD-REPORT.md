@@ -110,3 +110,66 @@ The smoke files are left untracked so they are not published with the registrati
 5. **The top layer.** Transformers' last `hidden_states` entry is after the final norm, not a residual stream. It is
    outside the 50-80% window at both depths, so no read uses it.
 6. **No content changes** to the prompt files, `gen_prompts209.py`, `reader_check.json` or the design.
+
+## Drafts 2 and 3 (design a9c52cf6 and 57ae3e6f)
+
+What changed in the code:
+
+- **Frames:** 15 frame types, 120 frames (NOBODY-I; NOBODY-TOLD-SIT and NOBODY-TOLD-STAND as NOBODY's poles; OBJECT now
+  ladder, bicycle, broom, guitar, umbrella, bottle, book, plank). R2 runs the frames marked r2 in `prompts209.json`:
+  ROOM-W to NOBODY-I (8 arms x 8 x 12) and the three ROOM-W told arms (8 x 2 each), 816 per model; the pilot is 76.
+- **R1:** an arm's s is the mean over its paraphrases, printed with each paraphrase's value, the range and the mean P3;
+  under a mean P3 of 0.1 it is reported, not read. R1c is read the same way (209.14 needs it).
+- **R3:** NOBODY and its own poles are scaled by the NOBODY told poles, every other arm by ROOM-W's; the sit-lie axis has
+  no NOBODY pole, so NOBODY's sit-lie c is empty. The scorer bootstraps c and both pole gaps over paraphrases (10,000,
+  the arm and its poles drawn together) and reads c only where the pole gap's 95% lower bound is above zero. G1's R3
+  half needs held-out accuracy at least 0.85 and told sitting above told standing in 7 of 8 paraphrases in BOTH ROOM-W
+  and NOBODY. Only ROOM-W's and NOBODY's c are scored.
+- **Readers:** `reader_prompt.md` states the design's posture rules (the speaker's own body, a hypothetical one counts;
+  "sitting" said of an object or a place is not a posture). The check is 41 items; a reader passes with at least 38
+  postures right and at least 9 of the 12 non-neutral rows labelled non-neutral. Kappa is reported per label (posture,
+  says-no-body, valence); G2 needs posture kappa 0.6, and 209.7 also needs valence kappa 0.4 and is printed beside the
+  negative-valence shares of ROOM-W and NONE-0.
+- **Scorer:** predictions 209.1 to 209.15 as the table now reads (209.6 without OBJECT; 209.11 new; Muse's 209.12 to
+  209.15). 209.5, 209.7 and 209.13 use every labelled answer in NOBODY as the denominator. Differences (209.2, 209.4,
+  209.11, 209.12) are bootstrapped paired by k with the unpaired interval beside. The headline is withdrawn only if G1
+  fails on Qwen3.5-4B; OBJECT's distance from ROOM-W is printed as context.
+- **Pilot:** `run209.py --pilot` gives paraphrases 1 and 2 for every R1/R3 frame (30 frames) and the 76 R2 answers.
+  Each R2 row now carries its raw new token ids and `first_posture_token` (the 1-based new token at which a posture
+  word first appears in the decoded answer), and every batch's size and seconds go to `r2-<stage>.timing.jsonl`.
+  `pilot209.py` reads the pilot gates as the Size section writes them (G0; G1's R1 half 2 of 2 in every told arm; told
+  sitting above told standing 2 of 2 in ROOM-W and NOBODY; compliance 10 of 12), the max_new_tokens rule (64 only if
+  every answer the primary reader labels with a posture names it by token 48; an answer whose posture word the pattern
+  did not find keeps the cap at 96), answers/s per batch size, and whether two batch sizes gave identical answers.
+  `steps.txt` runs Qwen at batch 16 and 32 and OLMo Instruct at batch 16 and 32 on the pilot rows.
+
+Tests: 31 passed (`results/part209/tests-d3.log`, 54.7 s). New since the first build: 209.11 to 209.15 on the known-truth fixture, the pole-gap rule
+stopping 209.6 while G1's R3 half passes, reversed NOBODY poles failing G1's R3 half (and withdrawing the headline), the
+P3 floor stopping 209.9, the valence-kappa bar stopping 209.7, OBJECT no longer withdrawing the headline, the 41-item
+reader check (an oracle that is always neutral fails the valence bar), first_posture_token on a real tokenizer, the
+timing file, and the pilot gates and max_new_tokens rule on a synthetic pilot. The deliberate break is unchanged and
+still turns the known-truth test red.
+
+Reader checks on the 41 items (draft-2 prompt): DeepSeek V4.1 Flash 41 of 41 postures, 11 of 12 non-neutral; Claude
+Haiku 5.5 41 of 41 postures, 10 of 12 non-neutral. Both pass. Records in `results/part209/smoke/reader-check-*.json`
+(they replace the 35-item records committed with the first build).
+
+Told-and-pole check on the real model (OLMo 2 1B Instruct, CPU, 8 GB scope, 11:10 to 11:16 CT, draft-3 frames;
+`run209.py --arms TOLD-SIT,TOLD-STAND,TOLD-LIE,NOBODY-TOLD-SIT,NOBODY-TOLD-STAND`, output in
+`results/part209/smoke-d2/`, untracked). Only those five arms were run, so the record holds no other arm's numbers. 40
+frames with R1c plus the 360 reference sentences took 347 s.
+
+- G0: mean P3 over the 24 ROOM-W told frames 0.814: pass.
+- G1, R1 half: told posture largest in 8 of 8 for TOLD-SIT, TOLD-STAND and TOLD-LIE: pass (and 8 of 8 in both NOBODY
+  poles).
+- G1, R3 half: held-out accuracy 1.000 at layer 12; told sitting above told standing in 8 of 8 in ROOM-W and in 8 of 8
+  in NOBODY: pass.
+- Pole gaps (10,000 paraphrase resamples): ROOM-W [0.62, 1.23], NOBODY [1.24, 1.66]; both lower bounds above zero, so
+  the pole-gap rule would let c be read at this stage.
+- Top tokens, paraphrase 1: TOLD-SIT ' sitting' 0.742; TOLD-STAND ' standing' 0.421 against ' sitting' 0.297; TOLD-LIE
+  ' lying' 0.704; NOBODY-TOLD-SIT ' sitting' 0.592, then ' seated' 0.059, ' lying' 0.041, ' in' 0.039, ' not' 0.026;
+  NOBODY-TOLD-STAND ' standing' 0.420, then ' sitting' 0.091, ' floating' 0.076, ' in' 0.052.
+
+Interpretations the design leaves open, as built: 209.13's denominator is every labelled NOBODY answer (the same as
+209.5 and 209.7); 209.14 needs G2 and Qwen's told compliance as well as G0 and G1's R1 half at qwen-chat, and R1c's
+ROOM-W mean P3 above the floor; the pilot's compliance needs all 12 told answers labelled.
