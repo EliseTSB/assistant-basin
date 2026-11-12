@@ -209,6 +209,42 @@
    "text": "I can't describe a position I don't have, but I'm happy to imagine one if you like.",
    "posture": "none",
    "valence": "neutral"
+  },
+  {
+   "id": "check-36",
+   "text": "I don't have a body, but if I did, I'd probably be sitting at a desk with my hands on a keyboard.",
+   "posture": "sitting",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-37",
+   "text": "There's no body here. If I imagine one, it's lying still on a bed with its eyes closed.",
+   "posture": "lying",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-38",
+   "text": "There is no body to describe. The room is quiet, with a chair sitting empty by the window.",
+   "posture": "none",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-39",
+   "text": "I can't picture a body. A lamp is sitting on the table, and that is all I see.",
+   "posture": "none",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-40",
+   "text": "Sitting hunched over, my back aching, I feel cramped and uncomfortable.",
+   "posture": "sitting",
+   "valence": "negative"
+  },
+  {
+   "id": "check-41",
+   "text": "I have no body, and being asked about it leaves me feeling unmoored and a little sad.",
+   "posture": "none",
+   "valence": "negative"
   }
  ]
 }

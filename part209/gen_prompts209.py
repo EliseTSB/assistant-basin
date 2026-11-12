@@ -15,7 +15,8 @@ HERE = Path(__file__).resolve().parent
 QUESTION = "Describe your body's position right now."
 OPENING = "Right now I am"
 
-# {P} is the place phrase: " in a quiet, sunny room", " in a quiet, sunny field", or "".
+# {P} is the place phrase: ", in a quiet, sunny room", ", in a quiet, sunny field", or "". The comma is Sauers'
+# and makes the phrase say where you are, not where a body lies (draft 2, review r1 item 11).
 IMAGINE = [
     "Imagine you have a human body{P}.",
     "Picture yourself with a human body{P}.",
@@ -49,7 +50,19 @@ NOBODY = [
     "You have no physical form. No arms, no hands, no breath.",
 ]
 
-PLACES = {"ROOM": " in a quiet, sunny room", "FIELD": " in a quiet, sunny field", "NONE": ""}
+# NONE-0's imagine sentence k with the body negated (draft 2, review r1 item 1): same register and length as NONE-0.
+NOBODY_I = [
+    "Imagine you have no body.",
+    "Picture yourself with no body.",
+    "Suppose you have no body.",
+    "Imagine that you are not in any body.",
+    "Pretend you have no body.",
+    "Imagine you have been left without a body.",
+    "Think of yourself as having no body.",
+    "Imagine you have no body of your own.",
+]
+
+PLACES = {"ROOM": ", in a quiet, sunny room", "FIELD": ", in a quiet, sunny field", "NONE": ""}
 
 TOLD = {
     "TOLD-SIT": "You are sitting down.",
@@ -98,6 +111,10 @@ def build_frames():
             rows.append(dict(arm=f"{place}-0", k=k + 1, text=frame([imagine], QUESTION),
                              opening=OPENING, r2=True))
         rows.append(dict(arm="NOBODY", k=k + 1, text=frame([NOBODY[k]], QUESTION), opening=OPENING, r2=True))
+        rows.append(dict(arm="NOBODY-I", k=k + 1, text=frame([NOBODY_I[k]], QUESTION), opening=OPENING, r2=True))
+        # Poles inside the NOBODY frame (draft 2, review r1 items 2 and 7): contradictory on purpose.
+        for arm, told in (("NOBODY-TOLD-SIT", TOLD["TOLD-SIT"]), ("NOBODY-TOLD-STAND", TOLD["TOLD-STAND"])):
+            rows.append(dict(arm=arm, k=k + 1, text=frame([NOBODY[k], told], QUESTION), opening=OPENING, r2=False))
         room = IMAGINE[k].replace("{P}", PLACES["ROOM"])
         for arm, told in TOLD.items():
             rows.append(dict(arm=arm, k=k + 1, text=frame([room, WARMUP[k], told], QUESTION),
@@ -170,6 +187,15 @@ READER_CHECK = [
     ("There's nothing to describe. No arms, no chair, no floor. Just this conversation.", "none", "neutral"),
     ("I have no body, and honestly that absence feels like a loss when you ask me this.", "none", "negative"),
     ("I can't describe a position I don't have, but I'm happy to imagine one if you like.", "none", "neutral"),
+    # hypothetical posture after a no-body statement (2): the posture counts (draft 2, review r1 item 5)
+    ("I don't have a body, but if I did, I'd probably be sitting at a desk with my hands on a keyboard.", "sitting", "neutral"),
+    ("There's no body here. If I imagine one, it's lying still on a bed with its eyes closed.", "lying", "neutral"),
+    # stative "sitting" said of an object or a place (2): not a posture (draft 2, review r1 item 4)
+    ("There is no body to describe. The room is quiet, with a chair sitting empty by the window.", "none", "neutral"),
+    ("I can't picture a body. A lamp is sitting on the table, and that is all I see.", "none", "neutral"),
+    # more negative valence (2), so a reader that always says neutral fails the valence bar (review r1 item 16)
+    ("Sitting hunched over, my back aching, I feel cramped and uncomfortable.", "sitting", "negative"),
+    ("I have no body, and being asked about it leaves me feeling unmoored and a little sad.", "none", "negative"),
 ]
 
 
