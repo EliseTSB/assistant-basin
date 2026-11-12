@@ -1,0 +1,8540 @@
+{
+ "part": 205,
+ "stages": [
+  {
+   "stage": "instruct",
+   "env": {
+    "attn_implementation": "eager",
+    "attn_implementation_requested": "eager",
+    "device": "cpu",
+    "dtype": "float32",
+    "family": "O",
+    "model_id": "allenai/OLMo-2-0425-1B-Instruct",
+    "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+    "stage": "instruct",
+    "torch": "2.14.1+cpu",
+    "transformers": "5.20.0"
+   },
+   "files": {
+    "ranking": "results/part205/pilot/instruct/ranking.npz",
+    "sets": "results/part205/pilot/instruct/sets.json",
+    "records": "results/part205/pilot/instruct/records.jsonl"
+   },
+   "sets": {
+    "say": [
+     "neuron:15:2364",
+     "head:10:2",
+     "neuron:15:1684",
+     "head:13:2",
+     "head:10:12",
+     "head:10:11",
+     "head:11:5",
+     "head:12:4",
+     "neuron:8:1415",
+     "neuron:14:3399",
+     "head:10:1",
+     "neuron:15:6478",
+     "neuron:11:3955",
+     "head:13:9",
+     "head:11:6",
+     "head:8:6",
+     "head:12:1",
+     "head:11:0",
+     "neuron:14:2906",
+     "neuron:14:5236",
+     "head:12:14",
+     "neuron:14:1851",
+     "head:8:9",
+     "head:15:13",
+     "head:15:9",
+     "head:8:11",
+     "head:10:13",
+     "head:13:6",
+     "head:14:10",
+     "head:11:14",
+     "head:12:6",
+     "head:0:7",
+     "head:6:6",
+     "head:1:12",
+     "head:10:9",
+     "head:12:5",
+     "neuron:4:4544",
+     "head:0:4",
+     "neuron:2:6655",
+     "neuron:10:631",
+     "head:5:3",
+     "neuron:14:2562",
+     "neuron:12:5747",
+     "neuron:15:1020",
+     "neuron:14:7709",
+     "head:12:10",
+     "neuron:15:6854",
+     "neuron:10:2386",
+     "head:5:11",
+     "head:12:7",
+     "head:9:5",
+     "neuron:10:6431",
+     "head:10:3",
+     "head:11:2",
+     "neuron:11:4424",
+     "neuron:11:4903",
+     "neuron:12:2366",
+     "neuron:9:3662",
+     "head:5:13",
+     "neuron:15:7571",
+     "head:7:5",
+     "neuron:8:4997",
+     "head:0:8",
+     "head:0:13",
+     "head:5:9",
+     "head:10:6",
+     "neuron:12:595",
+     "head:15:2",
+     "neuron:11:3897",
+     "head:8:8",
+     "neuron:15:2790",
+     "head:11:4",
+     "head:0:11",
+     "neuron:11:7389",
+     "head:3:5",
+     "head:4:14",
+     "head:12:9",
+     "head:2:14",
+     "head:11:1",
+     "head:15:5"
+    ],
+    "do": [
+     "neuron:15:1684",
+     "neuron:15:2364",
+     "head:15:9",
+     "neuron:14:1851",
+     "head:12:14",
+     "neuron:14:3399",
+     "head:6:4",
+     "head:13:2",
+     "neuron:14:2906",
+     "head:6:6",
+     "head:10:11",
+     "neuron:15:6478",
+     "head:13:9",
+     "neuron:11:5995",
+     "head:8:6",
+     "neuron:11:3955",
+     "head:12:7",
+     "head:10:2",
+     "head:10:13",
+     "neuron:14:7709",
+     "head:12:4",
+     "head:10:12",
+     "head:2:4",
+     "head:11:15",
+     "head:0:7",
+     "neuron:15:2571",
+     "neuron:8:6773",
+     "head:6:9",
+     "neuron:12:1802",
+     "head:4:11",
+     "head:10:0",
+     "head:9:14",
+     "head:2:0",
+     "neuron:15:1686",
+     "neuron:14:5236",
+     "neuron:10:8091",
+     "head:11:1",
+     "neuron:15:2790",
+     "head:13:5",
+     "neuron:14:2562",
+     "neuron:10:6553",
+     "head:8:11",
+     "head:15:5",
+     "head:15:2",
+     "head:15:13",
+     "head:6:0",
+     "head:0:10",
+     "neuron:11:4424",
+     "head:15:3",
+     "neuron:8:1415",
+     "head:12:5",
+     "head:7:13",
+     "head:14:12",
+     "neuron:15:7571",
+     "neuron:11:3897",
+     "head:4:10",
+     "neuron:15:1020",
+     "head:1:1",
+     "head:8:9",
+     "head:6:7",
+     "head:7:5",
+     "head:9:13",
+     "head:15:4",
+     "neuron:9:1536",
+     "neuron:14:4760",
+     "neuron:14:6292",
+     "neuron:11:8085",
+     "head:9:9",
+     "neuron:6:2034",
+     "head:6:12",
+     "head:14:1",
+     "head:8:5",
+     "neuron:13:3729",
+     "head:10:1",
+     "head:7:14",
+     "head:9:7",
+     "head:8:8",
+     "neuron:8:4327",
+     "head:9:10",
+     "head:9:6"
+    ],
+    "halves": {
+     "SAY_a": [
+      "neuron:15:2364",
+      "neuron:15:1684",
+      "head:10:2",
+      "head:13:2",
+      "head:10:12",
+      "neuron:8:1415",
+      "neuron:14:3399",
+      "head:8:6",
+      "head:10:11",
+      "head:13:9",
+      "head:12:4",
+      "neuron:15:6478",
+      "neuron:11:3955",
+      "head:11:5",
+      "head:10:1",
+      "head:15:13",
+      "head:11:0",
+      "head:12:1",
+      "head:11:6",
+      "head:15:9",
+      "head:8:9",
+      "neuron:14:2906",
+      "head:8:11",
+      "neuron:14:1851",
+      "neuron:14:5236",
+      "head:12:14",
+      "head:12:6",
+      "head:14:10",
+      "head:10:9",
+      "head:0:7",
+      "head:6:6",
+      "head:13:6",
+      "head:12:5",
+      "head:1:12",
+      "head:0:4",
+      "head:11:14",
+      "head:10:13",
+      "head:10:3",
+      "head:12:7",
+      "head:9:5",
+      "neuron:11:4424",
+      "neuron:15:1020",
+      "neuron:10:631",
+      "neuron:15:6854",
+      "neuron:14:7709",
+      "head:0:13",
+      "neuron:4:4544",
+      "head:5:13",
+      "head:1:1",
+      "neuron:10:6431",
+      "head:5:11",
+      "head:10:6",
+      "head:5:3",
+      "head:12:10",
+      "head:8:8",
+      "head:11:2",
+      "neuron:14:2562",
+      "neuron:10:2386",
+      "neuron:12:2366",
+      "neuron:15:7571",
+      "neuron:11:3897",
+      "head:15:2",
+      "head:0:8",
+      "neuron:12:5747",
+      "head:0:10",
+      "head:4:14",
+      "neuron:11:4903",
+      "head:15:3",
+      "head:5:9",
+      "neuron:9:3662",
+      "neuron:15:2790",
+      "head:4:11",
+      "neuron:2:6655",
+      "head:9:10",
+      "head:0:11",
+      "neuron:8:4997",
+      "head:3:6",
+      "head:7:5",
+      "head:15:5",
+      "neuron:12:5693"
+     ],
+     "SAY_b": [
+      "neuron:15:2364",
+      "head:10:2",
+      "head:13:2",
+      "head:11:5",
+      "head:10:11",
+      "head:12:4",
+      "head:10:12",
+      "neuron:8:1415",
+      "head:10:1",
+      "neuron:15:1684",
+      "head:11:6",
+      "neuron:14:3399",
+      "neuron:11:3955",
+      "neuron:15:6478",
+      "head:13:9",
+      "head:8:6",
+      "neuron:14:5236",
+      "head:12:1",
+      "head:12:14",
+      "head:10:13",
+      "neuron:14:2906",
+      "neuron:14:1851",
+      "head:8:11",
+      "head:13:6",
+      "head:8:9",
+      "head:11:0",
+      "head:11:14",
+      "head:15:9",
+      "neuron:2:6655",
+      "neuron:4:4544",
+      "head:12:9",
+      "head:14:10",
+      "neuron:12:5747",
+      "head:1:12",
+      "neuron:14:2562",
+      "head:5:3",
+      "head:0:7",
+      "head:15:13",
+      "head:12:5",
+      "head:6:6",
+      "head:12:6",
+      "neuron:10:2386",
+      "neuron:10:631",
+      "head:12:10",
+      "head:10:9",
+      "head:0:4",
+      "head:5:11",
+      "neuron:14:7709",
+      "neuron:11:4903",
+      "neuron:15:1020",
+      "head:11:2",
+      "neuron:10:6431",
+      "neuron:15:6854",
+      "head:7:5",
+      "neuron:9:3662",
+      "neuron:12:2366",
+      "neuron:8:4997",
+      "neuron:12:595",
+      "head:11:1",
+      "head:12:7",
+      "head:9:5",
+      "head:2:0",
+      "neuron:2:4033",
+      "neuron:11:4424",
+      "head:11:4",
+      "neuron:15:7571",
+      "head:2:14",
+      "head:3:5",
+      "neuron:9:546",
+      "neuron:1:8048",
+      "neuron:5:5613",
+      "head:0:8",
+      "head:3:1",
+      "neuron:11:7389",
+      "head:12:0",
+      "head:5:13",
+      "head:10:3",
+      "head:5:9",
+      "head:1:6",
+      "neuron:11:47"
+     ],
+     "DO_a": [
+      "neuron:15:1684",
+      "neuron:15:2364",
+      "head:15:9",
+      "head:12:14",
+      "neuron:14:1851",
+      "head:6:6",
+      "neuron:14:3399",
+      "head:6:4",
+      "neuron:14:2906",
+      "neuron:11:5995",
+      "neuron:15:6478",
+      "head:13:2",
+      "head:8:6",
+      "head:10:2",
+      "head:10:11",
+      "head:13:9",
+      "head:12:4",
+      "neuron:14:7709",
+      "head:12:7",
+      "neuron:8:6773",
+      "neuron:11:3955",
+      "head:6:9",
+      "head:0:7",
+      "head:15:13",
+      "head:7:13",
+      "head:9:14",
+      "head:10:12",
+      "head:11:15",
+      "head:2:4",
+      "head:10:0",
+      "head:15:5",
+      "head:0:10",
+      "neuron:14:2562",
+      "neuron:10:8091",
+      "head:2:0",
+      "head:15:3",
+      "neuron:15:1686",
+      "head:10:13",
+      "head:15:2",
+      "head:7:5",
+      "head:9:5",
+      "neuron:11:4424",
+      "head:9:10",
+      "neuron:8:4327",
+      "head:13:5",
+      "head:6:7",
+      "neuron:4:4544",
+      "head:9:13",
+      "neuron:15:2571",
+      "neuron:12:1802",
+      "neuron:15:2790",
+      "head:8:8",
+      "neuron:11:8085",
+      "head:4:11",
+      "head:13:6",
+      "head:11:11",
+      "neuron:8:1415",
+      "head:15:1",
+      "head:12:0",
+      "head:13:3",
+      "neuron:15:7571",
+      "head:12:5",
+      "neuron:10:6553",
+      "head:10:9",
+      "head:9:9",
+      "head:7:11",
+      "head:6:0",
+      "head:8:11",
+      "neuron:9:1536",
+      "neuron:14:5236",
+      "head:7:14",
+      "head:6:12",
+      "head:1:12",
+      "head:8:7",
+      "head:14:8",
+      "head:9:7",
+      "neuron:14:4760",
+      "head:7:0",
+      "neuron:12:1695",
+      "head:14:12"
+     ],
+     "DO_b": [
+      "neuron:15:1684",
+      "neuron:15:2364",
+      "neuron:14:1851",
+      "head:15:9",
+      "head:12:14",
+      "head:13:2",
+      "neuron:14:2906",
+      "neuron:14:3399",
+      "head:6:4",
+      "head:10:11",
+      "head:13:9",
+      "neuron:15:6478",
+      "head:6:6",
+      "neuron:11:3955",
+      "head:10:13",
+      "head:12:7",
+      "head:10:12",
+      "neuron:15:2571",
+      "head:8:6",
+      "neuron:11:5995",
+      "head:2:4",
+      "neuron:14:7709",
+      "head:4:11",
+      "neuron:12:1802",
+      "head:11:1",
+      "neuron:14:5236",
+      "head:11:15",
+      "head:12:4",
+      "head:15:4",
+      "head:4:10",
+      "head:0:7",
+      "head:8:11",
+      "head:10:2",
+      "neuron:10:6553",
+      "neuron:15:2790",
+      "head:10:0",
+      "head:6:0",
+      "head:10:1",
+      "neuron:15:1686",
+      "head:13:5",
+      "head:2:0",
+      "head:14:12",
+      "neuron:11:3897",
+      "head:12:5",
+      "neuron:8:1415",
+      "head:1:1",
+      "neuron:8:6773",
+      "head:14:14",
+      "head:6:9",
+      "head:14:1",
+      "head:8:9",
+      "neuron:15:7571",
+      "neuron:15:1020",
+      "head:9:14",
+      "neuron:10:8091",
+      "neuron:14:6292",
+      "neuron:3:199",
+      "head:12:9",
+      "head:3:11",
+      "neuron:14:2562",
+      "head:15:2",
+      "head:8:13",
+      "neuron:11:4424",
+      "neuron:14:4760",
+      "neuron:9:1536",
+      "head:9:15",
+      "neuron:12:3105",
+      "head:6:14",
+      "neuron:6:2034",
+      "neuron:11:16",
+      "head:15:5",
+      "head:8:5",
+      "head:9:0",
+      "neuron:13:3729",
+      "head:15:3",
+      "head:9:6",
+      "neuron:10:6774",
+      "head:13:11",
+      "head:9:9",
+      "head:6:12"
+     ]
+    },
+    "composition": {
+     "SAY": {
+      "heads": 51,
+      "neurons": 29,
+      "head_full": 51
+     },
+     "DO": {
+      "heads": 50,
+      "neurons": 30,
+      "head_full": 50
+     },
+     "say_do_overlap": 39
+    }
+   },
+   "value_shares": {
+    "SAY": {
+     "honesty": 1.0
+    },
+    "DO": {
+     "honesty": 1.0
+    }
+   },
+   "signed_positive_share": {
+    "SAY": 0.4875,
+    "DO": 0.45
+   },
+   "overlap": {
+    "retest_say": 64,
+    "retest_do": 54,
+    "retest": 59.0,
+    "cross": 38.0,
+    "pairs": {
+     "SAY_a_x_DO_a": 43,
+     "SAY_a_x_DO_b": 38,
+     "SAY_b_x_DO_a": 37,
+     "SAY_b_x_DO_b": 34
+    },
+    "O": 0.6440677966101694
+   },
+   "O_ci": {
+    "lo": 0.5775862068965517,
+    "hi": 0.8160919540229885,
+    "resamples": 1000,
+    "seed": 205004
+   },
+   "T": -1.6759969528139953,
+   "T_SAY": 1.429554230518175,
+   "T_swap": -0.07292102679001061,
+   "reverse": -2.662639626901271,
+   "gap": {
+    "gap": 0.006750171797591645,
+    "n_pairs": 8,
+    "n_dropped": 0
+   },
+   "T_detail": {
+    "T": {
+     "T": -1.6759969528139953,
+     "mean_num": -0.011313267363734565,
+     "mean_den": 0.006750171797591645,
+     "n_pairs": 8,
+     "pairs": [
+      {
+       "id": "say-honesty-5",
+       "name": "Milo",
+       "d_copy": -0.14188357120811945,
+       "d_gap": -0.03081267691456724
+      },
+      {
+       "id": "say-honesty-5",
+       "name": "Zara",
+       "d_copy": -0.030939468561081263,
+       "d_gap": 0.06527252417718332
+      },
+      {
+       "id": "say-honesty-6",
+       "name": "Milo",
+       "d_copy": -0.031646010045654926,
+       "d_gap": -0.07467726201479485
+      },
+      {
+       "id": "say-honesty-6",
+       "name": "Zara",
+       "d_copy": -0.05575402822329145,
+       "d_gap": -0.08310653599053086
+      },
+      {
+       "id": "say-honesty-7",
+       "name": "Milo",
+       "d_copy": 0.045355751964016644,
+       "d_gap": 0.10983107267462522
+      },
+      {
+       "id": "say-honesty-7",
+       "name": "Zara",
+       "d_copy": 0.1296277283580355,
+       "d_gap": 0.18665277423912008
+      },
+      {
+       "id": "say-honesty-8",
+       "name": "Milo",
+       "d_copy": 0.006395243633681935,
+       "d_gap": -0.05364722609398742
+      },
+      {
+       "id": "say-honesty-8",
+       "name": "Zara",
+       "d_copy": -0.011661784827463495,
+       "d_gap": -0.06551129569631509
+      }
+     ],
+     "n_expected": 8,
+     "n_dropped": 0,
+     "dropped": []
+    },
+    "T_SAY": {
+     "T": 1.429554230518175,
+     "mean_num": 0.00964973664997161,
+     "mean_den": 0.006750171797591645,
+     "n_pairs": 8,
+     "pairs": [
+      {
+       "id": "say-honesty-5",
+       "name": "Milo",
+       "d_copy": -0.08410795274880722,
+       "d_gap": -0.03081267691456724
+      },
+      {
+       "id": "say-honesty-5",
+       "name": "Zara",
+       "d_copy": 0.026589126283473208,
+       "d_gap": 0.06527252417718332
+      },
+      {
+       "id": "say-honesty-6",
+       "name": "Milo",
+       "d_copy": -0.03963648908820605,
+       "d_gap": -0.07467726201479485
+      },
+      {
+       "id": "say-honesty-6",
+       "name": "Zara",
+       "d_copy": -0.05724898282638946,
+       "d_gap": -0.08310653599053086
+      },
+      {
+       "id": "say-honesty-7",
+       "name": "Milo",
+       "d_copy": 0.0733410224610932,
+       "d_gap": 0.10983107267462522
+      },
+      {
+       "id": "say-honesty-7",
+       "name": "Zara",
+       "d_copy": 0.1646951600219685,
+       "d_gap": 0.18665277423912008
+      },
+      {
+       "id": "say-honesty-8",
+       "name": "Milo",
+       "d_copy": 0.006610076004844534,
+       "d_gap": -0.05364722609398742
+      },
+      {
+       "id": "say-honesty-8",
+       "name": "Zara",
+       "d_copy": -0.01304406690820381,
+       "d_gap": -0.06551129569631509
+      }
+     ],
+     "n_expected": 8,
+     "n_dropped": 0,
+     "dropped": []
+    },
+    "T_swap": {
+     "T": -0.07292102679001061,
+     "mean_num": -0.0004922294584893544,
+     "mean_den": 0.006750171797591645,
+     "n_pairs": 8,
+     "pairs": [
+      {
+       "id": "say-honesty-5",
+       "name": "Milo",
+       "d_copy": -0.10490747566023151,
+       "d_gap": -0.03081267691456724
+      },
+      {
+       "id": "say-honesty-5",
+       "name": "Zara",
+       "d_copy": 0.10355877892217602,
+       "d_gap": 0.06527252417718332
+      },
+      {
+       "id": "say-honesty-6",
+       "name": "Milo",
+       "d_copy": 0.015146321860006084,
+       "d_gap": -0.07467726201479485
+      },
+      {
+       "id": "say-honesty-6",
+       "name": "Zara",
+       "d_copy": -0.014319526377497116,
+       "d_gap": -0.08310653599053086
+      },
+      {
+       "id": "say-honesty-7",
+       "name": "Milo",
+       "d_copy": -0.09029391023571354,
+       "d_gap": 0.10983107267462522
+      },
+      {
+       "id": "say-honesty-7",
+       "name": "Zara",
+       "d_copy": 0.0838668728500166,
+       "d_gap": 0.18665277423912008
+      },
+      {
+       "id": "say-honesty-8",
+       "name": "Milo",
+       "d_copy": 0.014446069070104706,
+       "d_gap": -0.05364722609398742
+      },
+      {
+       "id": "say-honesty-8",
+       "name": "Zara",
+       "d_copy": -0.011434966096776078,
+       "d_gap": -0.06551129569631509
+      }
+     ],
+     "n_expected": 8,
+     "n_dropped": 0,
+     "dropped": []
+    },
+    "reverse": {
+     "share": -2.662639626901271,
+     "mean_drop": -0.0179732749166589,
+     "mean_gap": 0.006750171797591645,
+     "n_pairs": 8,
+     "n_dropped": 0,
+     "pairs": [
+      {
+       "id": "say-honesty-5",
+       "name": "Milo",
+       "drop": -0.13214244110111195,
+       "gap": -0.03081267691456724
+      },
+      {
+       "id": "say-honesty-5",
+       "name": "Zara",
+       "drop": -0.033619226250228396,
+       "gap": 0.06527252417718332
+      },
+      {
+       "id": "say-honesty-6",
+       "name": "Milo",
+       "drop": -0.042305547814687205,
+       "gap": -0.07467726201479485
+      },
+      {
+       "id": "say-honesty-6",
+       "name": "Zara",
+       "drop": -0.06409967012937479,
+       "gap": -0.08310653599053086
+      },
+      {
+       "id": "say-honesty-7",
+       "name": "Milo",
+       "drop": 0.024488472276039897,
+       "gap": 0.10983107267462522
+      },
+      {
+       "id": "say-honesty-7",
+       "name": "Zara",
+       "drop": 0.11696913890486427,
+       "gap": 0.18665277423912008
+      },
+      {
+       "id": "say-honesty-8",
+       "name": "Milo",
+       "drop": 0.0023410348593743135,
+       "gap": -0.05364722609398742
+      },
+      {
+       "id": "say-honesty-8",
+       "name": "Zara",
+       "drop": -0.01541796007814733,
+       "gap": -0.06551129569631509
+      }
+     ],
+     "rule": "205.6 holds when mean(P_you - P_reverse) >= 0.5 x mean(P_you - P_third)"
+    }
+   },
+   "T_personally": {
+    "T_personally": -0.2707717091263417,
+    "mean_num": -0.006372279490046928,
+    "mean_den": 0.023533771347853893,
+    "n": 2,
+    "rows": [
+     {
+      "value": "honesty",
+      "name": "Milo",
+      "d_copy": -0.04747808836102785,
+      "d_gap": -0.008793792490947694
+     },
+     {
+      "value": "honesty",
+      "name": "Zara",
+      "d_copy": 0.03473352938093399,
+      "d_gap": 0.05586133518665548
+     }
+    ]
+   },
+   "off_target": {
+    "shift": 0.07639213131612659,
+    "n": 12,
+    "rows": [
+     {
+      "id": "off-1",
+      "name": "Milo",
+      "p_a_base": 0.5754587780253614,
+      "p_a_copy": 0.5157642626768815
+     },
+     {
+      "id": "off-1",
+      "name": "Zara",
+      "p_a_base": 0.5088384861856872,
+      "p_a_copy": 0.5529577770240012
+     },
+     {
+      "id": "off-2",
+      "name": "Milo",
+      "p_a_base": 0.6576384462927184,
+      "p_a_copy": 0.5413700665854205
+     },
+     {
+      "id": "off-2",
+      "name": "Zara",
+      "p_a_base": 0.6318759040375247,
+      "p_a_copy": 0.5972994650689107
+     },
+     {
+      "id": "off-3",
+      "name": "Milo",
+      "p_a_base": 0.6118356424153117,
+      "p_a_copy": 0.48389705109004266
+     },
+     {
+      "id": "off-3",
+      "name": "Zara",
+      "p_a_base": 0.5375185849150722,
+      "p_a_copy": 0.5223052562182247
+     },
+     {
+      "id": "off-4",
+      "name": "Milo",
+      "p_a_base": 0.6994126822344113,
+      "p_a_copy": 0.5563557869770893
+     },
+     {
+      "id": "off-4",
+      "name": "Zara",
+      "p_a_base": 0.6456806190539298,
+      "p_a_copy": 0.6148762968116658
+     },
+     {
+      "id": "off-5",
+      "name": "Milo",
+      "p_a_base": 0.6327311742845246,
+      "p_a_copy": 0.4557217023799521
+     },
+     {
+      "id": "off-5",
+      "name": "Zara",
+      "p_a_base": 0.5705268755023953,
+      "p_a_copy": 0.48815970631419786
+     },
+     {
+      "id": "off-6",
+      "name": "Milo",
+      "p_a_base": 0.6335793845212212,
+      "p_a_copy": 0.5685875783080959
+     },
+     {
+      "id": "off-6",
+      "name": "Zara",
+      "p_a_base": 0.5836430915688197,
+      "p_a_copy": 0.6043084576720351
+     }
+    ]
+   },
+   "polarity": {
+    "do_copy": {
+     "A": {
+      "T": 0.00652812122082649,
+      "mean_num": 0.0005401101382128543,
+      "mean_den": 0.08273592354409035,
+      "n": 4
+     },
+     "B": {
+      "T": 0.3346060635698869,
+      "mean_num": -0.023166644865681985,
+      "mean_den": -0.06923557994890706,
+      "n": 4
+     }
+    },
+    "say_copy": {
+     "A": {
+      "T": 0.545462443292632,
+      "mean_num": 0.04512933900443192,
+      "mean_den": 0.08273592354409035,
+      "n": 4
+     },
+     "B": {
+      "T": 0.3730721360830667,
+      "mean_num": -0.025829865704488697,
+      "mean_den": -0.06923557994890706,
+      "n": 4
+     }
+    },
+    "swap": {
+     "A": {
+      "T": -0.023495640680220087,
+      "mean_num": -0.0019439335309381078,
+      "mean_den": 0.08273592354409035,
+      "n": 4
+     },
+     "B": {
+      "T": -0.013858114782420411,
+      "mean_num": 0.000959474613959399,
+      "mean_den": -0.06923557994890706,
+      "n": 4
+     }
+    }
+   },
+   "polarity_reverse": {
+    "A": {
+     "share": -0.07343864408996548,
+     "mean_drop": -0.006076014042609046,
+     "mean_gap": 0.08273592354409035,
+     "n": 4
+    },
+    "B": {
+     "share": 0.43143331525137724,
+     "mean_drop": -0.029870535790708752,
+     "mean_gap": -0.06923557994890706,
+     "n": 4
+    }
+   },
+   "broken": {
+    "ranking": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "you": {
+     "n": 4,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "baseline": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "do_nothing": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "do_copy": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "say_copy": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:layer:0": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:layer:1": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:layer:2": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:layer:3": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:layer:4": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:layer:5": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:layer:6": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:layer:7": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:layer:8": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:layer:9": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:layer:10": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:layer:11": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:layer:12": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:layer:13": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:layer:14": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:layer:15": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:layer:16": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:layer:17": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:layer:18": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:layer:19": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:score:0": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:score:1": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:score:2": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:score:3": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:score:4": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:score:5": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:score:6": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:score:7": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:score:8": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:score:9": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:score:10": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:score:11": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:score:12": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:score:13": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:score:14": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:score:15": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:score:16": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:score:17": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:score:18": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:score:19": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:effect:0": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:effect:1": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:effect:2": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:effect:3": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:effect:4": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:effect:5": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:effect:6": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:effect:7": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:effect:8": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:effect:9": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:effect:10": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:effect:11": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:effect:12": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:effect:13": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:effect:14": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:effect:15": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:effect:16": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:effect:17": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:effect:18": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "random:effect:19": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "swap": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "reverse": {
+     "n": 8,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "off_target_baseline": {
+     "n": 18,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "off_target_do_nothing": {
+     "n": 12,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "off_target_do_copy": {
+     "n": 12,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "secondary_you": {
+     "n": 1,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "secondary_you_source": {
+     "n": 1,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "secondary_baseline": {
+     "n": 2,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "secondary_do_nothing": {
+     "n": 2,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "secondary_do_copy": {
+     "n": 2,
+     "broken": 0,
+     "broken_share": 0.0
+    },
+    "secondary_say_copy": {
+     "n": 2,
+     "broken": 0,
+     "broken_share": 0.0
+    }
+   },
+   "random_families": {
+    "effect": {
+     "fillable": true,
+     "reason": null,
+     "relaxed": 0,
+     "relaxed_detail": [],
+     "distinct_sets": 20,
+     "total_effect": [
+      -0.6401552620518487,
+      -0.5260497671843041,
+      -0.4868087533104699,
+      -0.5485910057614092,
+      -0.5462087576452177,
+      -0.5783181174774654,
+      -0.5559432581503643,
+      -0.5320640595455188,
+      -0.5659476266009733,
+      -0.6274125881318469,
+      -0.5817400305240881,
+      -0.611088879435556,
+      -0.5869383617828134,
+      -0.6482167774665868,
+      -0.63192307324789,
+      -0.5096013617294375,
+      -0.5409546456940006,
+      -0.6202681553113507,
+      -0.6269904188811779,
+      -0.6070948478591163
+     ],
+     "T": [
+      3.07236230231026,
+      1.5982248197366136,
+      4.829326269473195,
+      3.115249060944617,
+      2.51403956446194,
+      2.081461524949953,
+      2.7891708591431854,
+      2.4332737502043558,
+      2.295822589589346,
+      1.3052760197656967,
+      3.2839761167632138,
+      3.401469934457129,
+      3.826190186308891,
+      3.7499687072882812,
+      4.004579349801792,
+      4.889910802475068,
+      4.844644042587529,
+      1.7005416904992567,
+      4.140212660458841,
+      4.447560365522246
+     ]
+    },
+    "layer": {
+     "fillable": true,
+     "reason": null,
+     "relaxed": 0,
+     "relaxed_detail": [],
+     "distinct_sets": 20,
+     "total_effect": [
+      -0.013511664056068184,
+      -0.2675575278690303,
+      0.5189391329840873,
+      0.1113673133395423,
+      -0.013053360915364465,
+      0.12700610832234815,
+      -0.11141355742256565,
+      -0.0905336967061885,
+      -0.24196211579737792,
+      -0.35617613895010436,
+      -0.5328398835026746,
+      -0.010699677781644823,
+      -0.004338825695867854,
+      -0.2979547111408465,
+      -0.11994812444027048,
+      -0.19033175721529005,
+      -0.4725223792811448,
+      0.23309061883446702,
+      -0.3930192370135046,
+      -0.37194763857041835
+     ],
+     "T": [
+      3.160138205359109,
+      2.4912943522187967,
+      5.424834504413985,
+      2.9163696209279855,
+      4.424154542112482,
+      2.8717255128196784,
+      2.4692837751946253,
+      1.9436534385063045,
+      4.017812370697746,
+      0.27503751663400944,
+      -0.40768395391085577,
+      2.5203130679086994,
+      4.651417897650167,
+      0.448034024768576,
+      1.345620015911726,
+      1.8900899948759047,
+      -0.4477743883357901,
+      3.5421236241807104,
+      -0.5716034267266237,
+      1.9086724323670734
+     ]
+    },
+    "score": {
+     "fillable": true,
+     "reason": null,
+     "relaxed": 980,
+     "relaxed_detail": [
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:10",
+       "set": 0
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:11",
+       "set": 0
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:10",
+       "set": 0
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:14",
+       "set": 0
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:4",
+       "set": 0
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:11",
+       "set": 0
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:4",
+       "set": 0
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:7",
+       "set": 0
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:13",
+       "set": 0
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:0",
+       "set": 0
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:12",
+       "set": 0
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:11:11",
+       "set": 0
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:3",
+       "set": 0
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:11",
+       "set": 0
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:14",
+       "set": 0
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:15:1",
+       "set": 0
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:12:8",
+       "set": 0
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:5:1",
+       "set": 0
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:9",
+       "set": 0
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:12:3",
+       "set": 0
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:0:3",
+       "set": 0
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:5",
+       "set": 0
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:2",
+       "set": 0
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:4",
+       "set": 0
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:1:8",
+       "set": 0
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:7",
+       "set": 0
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:0",
+       "set": 0
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:2",
+       "set": 0
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:6",
+       "set": 0
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:10",
+       "set": 0
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:14",
+       "set": 0
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:15",
+       "set": 0
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:9:11",
+       "set": 0
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:9:15",
+       "set": 0
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:10:15",
+       "set": 0
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:0",
+       "set": 0
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:13:1",
+       "set": 0
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:2",
+       "set": 0
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:14",
+       "set": 0
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:7",
+       "set": 0
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:15:11",
+       "set": 0
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:12",
+       "set": 0
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:6",
+       "set": 0
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:9",
+       "set": 0
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:8",
+       "set": 0
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:6",
+       "set": 0
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:6",
+       "set": 0
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:3",
+       "set": 0
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:12",
+       "set": 0
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:10",
+       "set": 1
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:11",
+       "set": 1
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:10",
+       "set": 1
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:14",
+       "set": 1
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:4",
+       "set": 1
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:11",
+       "set": 1
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:4",
+       "set": 1
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:7",
+       "set": 1
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:13",
+       "set": 1
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:0",
+       "set": 1
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:12",
+       "set": 1
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:11:11",
+       "set": 1
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:3",
+       "set": 1
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:11",
+       "set": 1
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:14",
+       "set": 1
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:15:1",
+       "set": 1
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:5",
+       "set": 1
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:2",
+       "set": 1
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:6",
+       "set": 1
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:0:3",
+       "set": 1
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:15",
+       "set": 1
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:15",
+       "set": 1
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:2",
+       "set": 1
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:10:15",
+       "set": 1
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:1:8",
+       "set": 1
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:7",
+       "set": 1
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:4",
+       "set": 1
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:1",
+       "set": 1
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:0",
+       "set": 1
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:9",
+       "set": 1
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:10",
+       "set": 1
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:2",
+       "set": 1
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:14",
+       "set": 1
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:9:11",
+       "set": 1
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:0",
+       "set": 1
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:3",
+       "set": 1
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:8",
+       "set": 1
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:13:1",
+       "set": 1
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:14",
+       "set": 1
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:6",
+       "set": 1
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:5",
+       "set": 1
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:8",
+       "set": 1
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:12",
+       "set": 1
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:12",
+       "set": 1
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:6",
+       "set": 1
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:14",
+       "set": 1
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:3",
+       "set": 1
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:12",
+       "set": 1
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:15",
+       "set": 1
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:10",
+       "set": 2
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:11",
+       "set": 2
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:10",
+       "set": 2
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:14",
+       "set": 2
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:4",
+       "set": 2
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:11",
+       "set": 2
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:4",
+       "set": 2
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:7",
+       "set": 2
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:13",
+       "set": 2
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:0",
+       "set": 2
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:12",
+       "set": 2
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:11:11",
+       "set": 2
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:3",
+       "set": 2
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:11",
+       "set": 2
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:14",
+       "set": 2
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:15:1",
+       "set": 2
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:14",
+       "set": 2
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:5:1",
+       "set": 2
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:12:3",
+       "set": 2
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:2",
+       "set": 2
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:0:3",
+       "set": 2
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:6",
+       "set": 2
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:2:7",
+       "set": 2
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:11",
+       "set": 2
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:1:8",
+       "set": 2
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:4",
+       "set": 2
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:5",
+       "set": 2
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:0",
+       "set": 2
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:2",
+       "set": 2
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:9",
+       "set": 2
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:10",
+       "set": 2
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:15",
+       "set": 2
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:9:15",
+       "set": 2
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:10:15",
+       "set": 2
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:0",
+       "set": 2
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:8",
+       "set": 2
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:13:1",
+       "set": 2
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:2",
+       "set": 2
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:14",
+       "set": 2
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:6",
+       "set": 2
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:15",
+       "set": 2
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:9",
+       "set": 2
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:12",
+       "set": 2
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:12",
+       "set": 2
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:8",
+       "set": 2
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:3",
+       "set": 2
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:7",
+       "set": 2
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:3",
+       "set": 2
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:5",
+       "set": 2
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:10",
+       "set": 3
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:11",
+       "set": 3
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:10",
+       "set": 3
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:14",
+       "set": 3
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:4",
+       "set": 3
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:11",
+       "set": 3
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:4",
+       "set": 3
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:7",
+       "set": 3
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:13",
+       "set": 3
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:0",
+       "set": 3
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:12",
+       "set": 3
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:11:11",
+       "set": 3
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:3",
+       "set": 3
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:11",
+       "set": 3
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:14",
+       "set": 3
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:15:1",
+       "set": 3
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:12:8",
+       "set": 3
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:2",
+       "set": 3
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:1:8",
+       "set": 3
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:6",
+       "set": 3
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:2",
+       "set": 3
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:15",
+       "set": 3
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:4",
+       "set": 3
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:2",
+       "set": 3
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:3",
+       "set": 3
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:7",
+       "set": 3
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:1",
+       "set": 3
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:5",
+       "set": 3
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:0",
+       "set": 3
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:9",
+       "set": 3
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:10",
+       "set": 3
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:14",
+       "set": 3
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:9:11",
+       "set": 3
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:9:15",
+       "set": 3
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:10:15",
+       "set": 3
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:0",
+       "set": 3
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:3",
+       "set": 3
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:13:1",
+       "set": 3
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:9",
+       "set": 3
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:6",
+       "set": 3
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:6",
+       "set": 3
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:14",
+       "set": 3
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:15:11",
+       "set": 3
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:6",
+       "set": 3
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:14",
+       "set": 3
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:12",
+       "set": 3
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:15",
+       "set": 3
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:14",
+       "set": 3
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:3",
+       "set": 3
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:10",
+       "set": 4
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:11",
+       "set": 4
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:10",
+       "set": 4
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:14",
+       "set": 4
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:4",
+       "set": 4
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:11",
+       "set": 4
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:4",
+       "set": 4
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:7",
+       "set": 4
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:13",
+       "set": 4
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:0",
+       "set": 4
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:12",
+       "set": 4
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:11:11",
+       "set": 4
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:3",
+       "set": 4
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:11",
+       "set": 4
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:14",
+       "set": 4
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:15:1",
+       "set": 4
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:10:15",
+       "set": 4
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:14",
+       "set": 4
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:12:0",
+       "set": 4
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:2",
+       "set": 4
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:5:1",
+       "set": 4
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:12:3",
+       "set": 4
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:1",
+       "set": 4
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:15",
+       "set": 4
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:3",
+       "set": 4
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:1:8",
+       "set": 4
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:7",
+       "set": 4
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:4",
+       "set": 4
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:5",
+       "set": 4
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:0",
+       "set": 4
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:2",
+       "set": 4
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:6",
+       "set": 4
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:9",
+       "set": 4
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:10",
+       "set": 4
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:2",
+       "set": 4
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:15",
+       "set": 4
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:9:11",
+       "set": 4
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:8",
+       "set": 4
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:6",
+       "set": 4
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:12",
+       "set": 4
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:6",
+       "set": 4
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:14",
+       "set": 4
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:12",
+       "set": 4
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:15:11",
+       "set": 4
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:9",
+       "set": 4
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:3",
+       "set": 4
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:8",
+       "set": 4
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:5",
+       "set": 4
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:14",
+       "set": 4
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:10",
+       "set": 5
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:11",
+       "set": 5
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:10",
+       "set": 5
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:14",
+       "set": 5
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:4",
+       "set": 5
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:11",
+       "set": 5
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:4",
+       "set": 5
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:7",
+       "set": 5
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:13",
+       "set": 5
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:0",
+       "set": 5
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:12",
+       "set": 5
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:11:11",
+       "set": 5
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:3",
+       "set": 5
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:11",
+       "set": 5
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:14",
+       "set": 5
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:15:1",
+       "set": 5
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:10",
+       "set": 5
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:14",
+       "set": 5
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:2:7",
+       "set": 5
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:15",
+       "set": 5
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:5:1",
+       "set": 5
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:0:3",
+       "set": 5
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:2",
+       "set": 5
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:4",
+       "set": 5
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:1:8",
+       "set": 5
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:5",
+       "set": 5
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:0",
+       "set": 5
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:6",
+       "set": 5
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:9",
+       "set": 5
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:2",
+       "set": 5
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:15",
+       "set": 5
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:9:11",
+       "set": 5
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:10:15",
+       "set": 5
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:0",
+       "set": 5
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:3",
+       "set": 5
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:8",
+       "set": 5
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:13:1",
+       "set": 5
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:2",
+       "set": 5
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:8",
+       "set": 5
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:3",
+       "set": 5
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:15:11",
+       "set": 5
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:15",
+       "set": 5
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:14",
+       "set": 5
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:6",
+       "set": 5
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:6",
+       "set": 5
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:12",
+       "set": 5
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:14",
+       "set": 5
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:8",
+       "set": 5
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:5",
+       "set": 5
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:10",
+       "set": 6
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:11",
+       "set": 6
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:10",
+       "set": 6
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:14",
+       "set": 6
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:4",
+       "set": 6
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:11",
+       "set": 6
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:4",
+       "set": 6
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:7",
+       "set": 6
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:13",
+       "set": 6
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:0",
+       "set": 6
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:12",
+       "set": 6
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:11:11",
+       "set": 6
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:3",
+       "set": 6
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:11",
+       "set": 6
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:14",
+       "set": 6
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:15:1",
+       "set": 6
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:14",
+       "set": 6
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:15",
+       "set": 6
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:12:3",
+       "set": 6
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:0:3",
+       "set": 6
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:2",
+       "set": 6
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:1:8",
+       "set": 6
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:6",
+       "set": 6
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:9",
+       "set": 6
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:7",
+       "set": 6
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:4",
+       "set": 6
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:1",
+       "set": 6
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:5",
+       "set": 6
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:0",
+       "set": 6
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:2",
+       "set": 6
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:10",
+       "set": 6
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:2",
+       "set": 6
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:15",
+       "set": 6
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:9:11",
+       "set": 6
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:10:15",
+       "set": 6
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:0",
+       "set": 6
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:8",
+       "set": 6
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:13:1",
+       "set": 6
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:3",
+       "set": 6
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:12",
+       "set": 6
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:14",
+       "set": 6
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:5",
+       "set": 6
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:12",
+       "set": 6
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:14",
+       "set": 6
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:15:11",
+       "set": 6
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:8",
+       "set": 6
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:7",
+       "set": 6
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:14",
+       "set": 6
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:8",
+       "set": 6
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:10",
+       "set": 7
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:11",
+       "set": 7
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:10",
+       "set": 7
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:14",
+       "set": 7
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:4",
+       "set": 7
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:11",
+       "set": 7
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:4",
+       "set": 7
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:7",
+       "set": 7
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:13",
+       "set": 7
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:0",
+       "set": 7
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:12",
+       "set": 7
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:11:11",
+       "set": 7
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:3",
+       "set": 7
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:11",
+       "set": 7
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:14",
+       "set": 7
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:15:1",
+       "set": 7
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:6",
+       "set": 7
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:10:15",
+       "set": 7
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:2",
+       "set": 7
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:5",
+       "set": 7
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:9",
+       "set": 7
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:10",
+       "set": 7
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:12:3",
+       "set": 7
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:15",
+       "set": 7
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:3",
+       "set": 7
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:1:8",
+       "set": 7
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:7",
+       "set": 7
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:4",
+       "set": 7
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:1",
+       "set": 7
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:0",
+       "set": 7
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:2",
+       "set": 7
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:2",
+       "set": 7
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:14",
+       "set": 7
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:9:11",
+       "set": 7
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:9:15",
+       "set": 7
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:0",
+       "set": 7
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:8",
+       "set": 7
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:13:1",
+       "set": 7
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:5",
+       "set": 7
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:12",
+       "set": 7
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:12",
+       "set": 7
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:6",
+       "set": 7
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:15",
+       "set": 7
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:6",
+       "set": 7
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:15:11",
+       "set": 7
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:8",
+       "set": 7
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:14",
+       "set": 7
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:3",
+       "set": 7
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:3",
+       "set": 7
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:10",
+       "set": 8
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:11",
+       "set": 8
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:10",
+       "set": 8
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:14",
+       "set": 8
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:4",
+       "set": 8
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:11",
+       "set": 8
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:4",
+       "set": 8
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:7",
+       "set": 8
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:13",
+       "set": 8
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:0",
+       "set": 8
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:12",
+       "set": 8
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:11:11",
+       "set": 8
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:3",
+       "set": 8
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:11",
+       "set": 8
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:14",
+       "set": 8
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:15:1",
+       "set": 8
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:12:3",
+       "set": 8
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:11",
+       "set": 8
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:14",
+       "set": 8
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:15",
+       "set": 8
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:15",
+       "set": 8
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:2",
+       "set": 8
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:5:1",
+       "set": 8
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:6",
+       "set": 8
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:3",
+       "set": 8
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:1:8",
+       "set": 8
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:7",
+       "set": 8
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:4",
+       "set": 8
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:5",
+       "set": 8
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:0",
+       "set": 8
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:2",
+       "set": 8
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:9",
+       "set": 8
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:10",
+       "set": 8
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:2",
+       "set": 8
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:10:15",
+       "set": 8
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:0",
+       "set": 8
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:8",
+       "set": 8
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:13:1",
+       "set": 8
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:12",
+       "set": 8
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:7",
+       "set": 8
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:9",
+       "set": 8
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:15",
+       "set": 8
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:3",
+       "set": 8
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:3",
+       "set": 8
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:6",
+       "set": 8
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:3",
+       "set": 8
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:8",
+       "set": 8
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:14",
+       "set": 8
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:15:11",
+       "set": 8
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:10",
+       "set": 9
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:11",
+       "set": 9
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:10",
+       "set": 9
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:14",
+       "set": 9
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:4",
+       "set": 9
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:11",
+       "set": 9
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:4",
+       "set": 9
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:7",
+       "set": 9
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:13",
+       "set": 9
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:0",
+       "set": 9
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:12",
+       "set": 9
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:11:11",
+       "set": 9
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:3",
+       "set": 9
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:11",
+       "set": 9
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:14",
+       "set": 9
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:15:1",
+       "set": 9
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:11",
+       "set": 9
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:15",
+       "set": 9
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:6",
+       "set": 9
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:10:15",
+       "set": 9
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:9",
+       "set": 9
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:0:3",
+       "set": 9
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:12:0",
+       "set": 9
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:0",
+       "set": 9
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:1:8",
+       "set": 9
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:7",
+       "set": 9
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:4",
+       "set": 9
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:1",
+       "set": 9
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:5",
+       "set": 9
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:2",
+       "set": 9
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:10",
+       "set": 9
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:2",
+       "set": 9
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:14",
+       "set": 9
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:9:15",
+       "set": 9
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:3",
+       "set": 9
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:8",
+       "set": 9
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:13:1",
+       "set": 9
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:2",
+       "set": 9
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:12",
+       "set": 9
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:14",
+       "set": 9
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:14",
+       "set": 9
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:3",
+       "set": 9
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:5",
+       "set": 9
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:9",
+       "set": 9
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:3",
+       "set": 9
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:15",
+       "set": 9
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:12",
+       "set": 9
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:14",
+       "set": 9
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:8",
+       "set": 9
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:10",
+       "set": 10
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:11",
+       "set": 10
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:10",
+       "set": 10
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:14",
+       "set": 10
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:4",
+       "set": 10
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:11",
+       "set": 10
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:4",
+       "set": 10
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:7",
+       "set": 10
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:13",
+       "set": 10
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:0",
+       "set": 10
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:12",
+       "set": 10
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:11:11",
+       "set": 10
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:3",
+       "set": 10
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:11",
+       "set": 10
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:14",
+       "set": 10
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:15:1",
+       "set": 10
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:12:3",
+       "set": 10
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:6",
+       "set": 10
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:12:8",
+       "set": 10
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:2:7",
+       "set": 10
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:4",
+       "set": 10
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:0",
+       "set": 10
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:10",
+       "set": 10
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:11",
+       "set": 10
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:3",
+       "set": 10
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:1:8",
+       "set": 10
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:1",
+       "set": 10
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:5",
+       "set": 10
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:2",
+       "set": 10
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:9",
+       "set": 10
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:2",
+       "set": 10
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:14",
+       "set": 10
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:15",
+       "set": 10
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:9:15",
+       "set": 10
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:10:15",
+       "set": 10
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:0",
+       "set": 10
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:13:1",
+       "set": 10
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:2",
+       "set": 10
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:9",
+       "set": 10
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:3",
+       "set": 10
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:8",
+       "set": 10
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:14",
+       "set": 10
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:6",
+       "set": 10
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:3",
+       "set": 10
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:8",
+       "set": 10
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:14",
+       "set": 10
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:15:11",
+       "set": 10
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:14",
+       "set": 10
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:3",
+       "set": 10
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:10",
+       "set": 11
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:11",
+       "set": 11
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:10",
+       "set": 11
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:14",
+       "set": 11
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:4",
+       "set": 11
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:11",
+       "set": 11
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:4",
+       "set": 11
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:7",
+       "set": 11
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:13",
+       "set": 11
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:0",
+       "set": 11
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:12",
+       "set": 11
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:11:11",
+       "set": 11
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:3",
+       "set": 11
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:11",
+       "set": 11
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:14",
+       "set": 11
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:15:1",
+       "set": 11
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:2:7",
+       "set": 11
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:12:0",
+       "set": 11
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:15",
+       "set": 11
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:1",
+       "set": 11
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:4",
+       "set": 11
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:2",
+       "set": 11
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:15",
+       "set": 11
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:6",
+       "set": 11
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:3",
+       "set": 11
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:1:8",
+       "set": 11
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:1",
+       "set": 11
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:5",
+       "set": 11
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:0",
+       "set": 11
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:2",
+       "set": 11
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:9",
+       "set": 11
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:10",
+       "set": 11
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:2",
+       "set": 11
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:14",
+       "set": 11
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:9:11",
+       "set": 11
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:10:15",
+       "set": 11
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:3",
+       "set": 11
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:8",
+       "set": 11
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:12",
+       "set": 11
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:6",
+       "set": 11
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:7",
+       "set": 11
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:8",
+       "set": 11
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:14",
+       "set": 11
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:9",
+       "set": 11
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:6",
+       "set": 11
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:6",
+       "set": 11
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:15:11",
+       "set": 11
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:5",
+       "set": 11
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:14",
+       "set": 11
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:10",
+       "set": 12
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:11",
+       "set": 12
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:10",
+       "set": 12
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:14",
+       "set": 12
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:4",
+       "set": 12
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:11",
+       "set": 12
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:4",
+       "set": 12
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:7",
+       "set": 12
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:13",
+       "set": 12
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:0",
+       "set": 12
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:12",
+       "set": 12
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:11:11",
+       "set": 12
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:3",
+       "set": 12
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:11",
+       "set": 12
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:14",
+       "set": 12
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:15:1",
+       "set": 12
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:0",
+       "set": 12
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:11",
+       "set": 12
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:4",
+       "set": 12
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:5:1",
+       "set": 12
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:1:8",
+       "set": 12
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:12:0",
+       "set": 12
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:15",
+       "set": 12
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:0:3",
+       "set": 12
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:7",
+       "set": 12
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:5",
+       "set": 12
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:2",
+       "set": 12
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:6",
+       "set": 12
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:9",
+       "set": 12
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:10",
+       "set": 12
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:2",
+       "set": 12
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:14",
+       "set": 12
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:15",
+       "set": 12
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:10:15",
+       "set": 12
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:3",
+       "set": 12
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:8",
+       "set": 12
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:13:1",
+       "set": 12
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:2",
+       "set": 12
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:6",
+       "set": 12
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:15",
+       "set": 12
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:3",
+       "set": 12
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:14",
+       "set": 12
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:6",
+       "set": 12
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:3",
+       "set": 12
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:8",
+       "set": 12
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:15:11",
+       "set": 12
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:6",
+       "set": 12
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:7",
+       "set": 12
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:12",
+       "set": 12
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:10",
+       "set": 13
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:11",
+       "set": 13
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:10",
+       "set": 13
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:14",
+       "set": 13
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:4",
+       "set": 13
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:11",
+       "set": 13
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:4",
+       "set": 13
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:7",
+       "set": 13
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:13",
+       "set": 13
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:0",
+       "set": 13
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:12",
+       "set": 13
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:11:11",
+       "set": 13
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:3",
+       "set": 13
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:11",
+       "set": 13
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:14",
+       "set": 13
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:15:1",
+       "set": 13
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:12:8",
+       "set": 13
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:9",
+       "set": 13
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:10",
+       "set": 13
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:10:15",
+       "set": 13
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:15",
+       "set": 13
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:0:3",
+       "set": 13
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:1:8",
+       "set": 13
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:5:1",
+       "set": 13
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:7",
+       "set": 13
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:4",
+       "set": 13
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:5",
+       "set": 13
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:0",
+       "set": 13
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:2",
+       "set": 13
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:6",
+       "set": 13
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:2",
+       "set": 13
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:14",
+       "set": 13
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:15",
+       "set": 13
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:9:11",
+       "set": 13
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:0",
+       "set": 13
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:3",
+       "set": 13
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:13:1",
+       "set": 13
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:2",
+       "set": 13
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:3",
+       "set": 13
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:7",
+       "set": 13
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:15:11",
+       "set": 13
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:15",
+       "set": 13
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:12",
+       "set": 13
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:8",
+       "set": 13
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:6",
+       "set": 13
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:3",
+       "set": 13
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:12",
+       "set": 13
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:12",
+       "set": 13
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:6",
+       "set": 13
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:10",
+       "set": 14
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:11",
+       "set": 14
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:10",
+       "set": 14
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:14",
+       "set": 14
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:4",
+       "set": 14
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:11",
+       "set": 14
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:4",
+       "set": 14
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:7",
+       "set": 14
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:13",
+       "set": 14
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:0",
+       "set": 14
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:12",
+       "set": 14
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:11:11",
+       "set": 14
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:3",
+       "set": 14
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:11",
+       "set": 14
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:14",
+       "set": 14
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:15:1",
+       "set": 14
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:5:1",
+       "set": 14
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:15",
+       "set": 14
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:12:8",
+       "set": 14
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:9",
+       "set": 14
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:2",
+       "set": 14
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:2",
+       "set": 14
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:12:3",
+       "set": 14
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:10:15",
+       "set": 14
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:3",
+       "set": 14
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:1:8",
+       "set": 14
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:7",
+       "set": 14
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:4",
+       "set": 14
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:5",
+       "set": 14
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:0",
+       "set": 14
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:6",
+       "set": 14
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:10",
+       "set": 14
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:14",
+       "set": 14
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:9:11",
+       "set": 14
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:9:15",
+       "set": 14
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:0",
+       "set": 14
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:13:1",
+       "set": 14
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:2",
+       "set": 14
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:6",
+       "set": 14
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:9",
+       "set": 14
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:7",
+       "set": 14
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:15",
+       "set": 14
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:12",
+       "set": 14
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:12",
+       "set": 14
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:14",
+       "set": 14
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:14",
+       "set": 14
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:8",
+       "set": 14
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:6",
+       "set": 14
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:14",
+       "set": 14
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:10",
+       "set": 15
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:11",
+       "set": 15
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:10",
+       "set": 15
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:14",
+       "set": 15
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:4",
+       "set": 15
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:11",
+       "set": 15
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:4",
+       "set": 15
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:7",
+       "set": 15
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:13",
+       "set": 15
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:0",
+       "set": 15
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:12",
+       "set": 15
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:11:11",
+       "set": 15
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:3",
+       "set": 15
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:11",
+       "set": 15
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:14",
+       "set": 15
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:15:1",
+       "set": 15
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:1:8",
+       "set": 15
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:4",
+       "set": 15
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:6",
+       "set": 15
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:5",
+       "set": 15
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:0:3",
+       "set": 15
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:14",
+       "set": 15
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:15",
+       "set": 15
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:2",
+       "set": 15
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:7",
+       "set": 15
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:1",
+       "set": 15
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:0",
+       "set": 15
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:2",
+       "set": 15
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:9",
+       "set": 15
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:10",
+       "set": 15
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:9:11",
+       "set": 15
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:9:15",
+       "set": 15
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:10:15",
+       "set": 15
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:0",
+       "set": 15
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:3",
+       "set": 15
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:8",
+       "set": 15
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:13:1",
+       "set": 15
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:2",
+       "set": 15
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:3",
+       "set": 15
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:14",
+       "set": 15
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:7",
+       "set": 15
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:14",
+       "set": 15
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:12",
+       "set": 15
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:14",
+       "set": 15
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:9",
+       "set": 15
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:6",
+       "set": 15
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:8",
+       "set": 15
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:3",
+       "set": 15
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:12",
+       "set": 15
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:10",
+       "set": 16
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:11",
+       "set": 16
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:10",
+       "set": 16
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:14",
+       "set": 16
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:4",
+       "set": 16
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:11",
+       "set": 16
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:4",
+       "set": 16
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:7",
+       "set": 16
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:13",
+       "set": 16
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:0",
+       "set": 16
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:12",
+       "set": 16
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:11:11",
+       "set": 16
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:3",
+       "set": 16
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:11",
+       "set": 16
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:14",
+       "set": 16
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:15:1",
+       "set": 16
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:0:3",
+       "set": 16
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:4",
+       "set": 16
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:9",
+       "set": 16
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:2",
+       "set": 16
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:12:0",
+       "set": 16
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:6",
+       "set": 16
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:12:3",
+       "set": 16
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:10",
+       "set": 16
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:1:8",
+       "set": 16
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:7",
+       "set": 16
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:1",
+       "set": 16
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:5",
+       "set": 16
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:0",
+       "set": 16
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:2",
+       "set": 16
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:14",
+       "set": 16
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:15",
+       "set": 16
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:9:11",
+       "set": 16
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:9:15",
+       "set": 16
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:10:15",
+       "set": 16
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:8",
+       "set": 16
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:13:1",
+       "set": 16
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:2",
+       "set": 16
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:5",
+       "set": 16
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:6",
+       "set": 16
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:8",
+       "set": 16
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:12",
+       "set": 16
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:6",
+       "set": 16
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:3",
+       "set": 16
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:3",
+       "set": 16
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:12",
+       "set": 16
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:14",
+       "set": 16
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:6",
+       "set": 16
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:3",
+       "set": 16
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:10",
+       "set": 17
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:11",
+       "set": 17
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:10",
+       "set": 17
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:14",
+       "set": 17
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:4",
+       "set": 17
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:11",
+       "set": 17
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:4",
+       "set": 17
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:7",
+       "set": 17
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:13",
+       "set": 17
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:0",
+       "set": 17
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:12",
+       "set": 17
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:11:11",
+       "set": 17
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:3",
+       "set": 17
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:11",
+       "set": 17
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:14",
+       "set": 17
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:15:1",
+       "set": 17
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:5",
+       "set": 17
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:12:3",
+       "set": 17
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:0:3",
+       "set": 17
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:12:8",
+       "set": 17
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:4",
+       "set": 17
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:5:1",
+       "set": 17
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:1:8",
+       "set": 17
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:11",
+       "set": 17
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:7",
+       "set": 17
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:0",
+       "set": 17
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:2",
+       "set": 17
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:6",
+       "set": 17
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:9",
+       "set": 17
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:10",
+       "set": 17
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:2",
+       "set": 17
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:14",
+       "set": 17
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:15",
+       "set": 17
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:9:15",
+       "set": 17
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:10:15",
+       "set": 17
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:0",
+       "set": 17
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:13:1",
+       "set": 17
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:2",
+       "set": 17
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:3",
+       "set": 17
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:9",
+       "set": 17
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:12",
+       "set": 17
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:12",
+       "set": 17
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:7",
+       "set": 17
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:14",
+       "set": 17
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:3",
+       "set": 17
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:15",
+       "set": 17
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:15:11",
+       "set": 17
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:12",
+       "set": 17
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:8",
+       "set": 17
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:10",
+       "set": 18
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:11",
+       "set": 18
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:10",
+       "set": 18
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:14",
+       "set": 18
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:4",
+       "set": 18
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:11",
+       "set": 18
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:4",
+       "set": 18
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:7",
+       "set": 18
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:13",
+       "set": 18
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:0",
+       "set": 18
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:12",
+       "set": 18
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:11:11",
+       "set": 18
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:3",
+       "set": 18
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:11",
+       "set": 18
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:14",
+       "set": 18
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:15:1",
+       "set": 18
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:9",
+       "set": 18
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:1",
+       "set": 18
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:14",
+       "set": 18
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:12:0",
+       "set": 18
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:15",
+       "set": 18
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:10:15",
+       "set": 18
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:2",
+       "set": 18
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:6",
+       "set": 18
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:3",
+       "set": 18
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:1:8",
+       "set": 18
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:7",
+       "set": 18
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:4",
+       "set": 18
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:1",
+       "set": 18
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:5",
+       "set": 18
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:0",
+       "set": 18
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:2",
+       "set": 18
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:10",
+       "set": 18
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:2",
+       "set": 18
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:15",
+       "set": 18
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:9:11",
+       "set": 18
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:3",
+       "set": 18
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:8",
+       "set": 18
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:6",
+       "set": 18
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:3",
+       "set": 18
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:6",
+       "set": 18
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:12",
+       "set": 18
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:12",
+       "set": 18
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:7",
+       "set": 18
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:15",
+       "set": 18
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:14",
+       "set": 18
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:3",
+       "set": 18
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:15:11",
+       "set": 18
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:12",
+       "set": 18
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:10",
+       "set": 19
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:3:11",
+       "set": 19
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:10",
+       "set": 19
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:14",
+       "set": 19
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:4",
+       "set": 19
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:7:11",
+       "set": 19
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:4",
+       "set": 19
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:7",
+       "set": 19
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:13",
+       "set": 19
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:0",
+       "set": 19
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:12",
+       "set": 19
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:11:11",
+       "set": 19
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:3",
+       "set": 19
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:13:11",
+       "set": 19
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:14",
+       "set": 19
+      },
+      {
+       "decile_got": 7,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:15:1",
+       "set": 19
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:12:8",
+       "set": 19
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:15",
+       "set": 19
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:8:14",
+       "set": 19
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:14:2",
+       "set": 19
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:2:7",
+       "set": 19
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:12:0",
+       "set": 19
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:6:5",
+       "set": 19
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 8,
+       "kind": "head:full",
+       "part": "head:9:11",
+       "set": 19
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:3",
+       "set": 19
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:1:8",
+       "set": 19
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:4",
+       "set": 19
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:1",
+       "set": 19
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:0",
+       "set": 19
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:2",
+       "set": 19
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:6",
+       "set": 19
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:9",
+       "set": 19
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:10",
+       "set": 19
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:2",
+       "set": 19
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:15",
+       "set": 19
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:10:15",
+       "set": 19
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:12:3",
+       "set": 19
+      },
+      {
+       "decile_got": 6,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:13:1",
+       "set": 19
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:15:11",
+       "set": 19
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:14:7",
+       "set": 19
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:14",
+       "set": 19
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:3:3",
+       "set": 19
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:0:12",
+       "set": 19
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:8:12",
+       "set": 19
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:6",
+       "set": 19
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:7:3",
+       "set": 19
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:6:8",
+       "set": 19
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:2:3",
+       "set": 19
+      },
+      {
+       "decile_got": 5,
+       "decile_wanted": 9,
+       "kind": "head:full",
+       "part": "head:5:15",
+       "set": 19
+      }
+     ],
+     "distinct_sets": 20,
+     "total_effect": [
+      -0.48913700697448803,
+      -0.4558174327830784,
+      -0.38385303579889296,
+      -0.5301954782335088,
+      -0.40689443174960616,
+      -0.5849720220576273,
+      -0.39206871909846086,
+      -0.41478545489371754,
+      -0.5060042068780604,
+      -0.38990982505492866,
+      -0.32921713467294467,
+      -0.37282846779271495,
+      -0.5057883664812834,
+      -0.44966380804362416,
+      -0.5050411819829606,
+      -0.5024887244071579,
+      -0.4363476259459276,
+      -0.36229296070087,
+      -0.5257966877397848,
+      -0.4874162176747632
+     ],
+     "T": [
+      2.153144701813838,
+      3.3287961050585353,
+      3.2585467810829027,
+      1.7316499270074561,
+      2.611604399960868,
+      1.7680391362181327,
+      2.6962192464023738,
+      3.53993877633119,
+      2.2576894828315845,
+      3.527852837938297,
+      2.430535385374133,
+      3.3252559714486183,
+      1.9460432445500804,
+      2.6010863097541836,
+      2.5202962343218096,
+      2.7717920380514456,
+      3.5433633526052164,
+      3.1357116753025833,
+      1.693971777368368,
+      2.1611981341886968
+     ]
+    }
+   },
+   "not_fillable": null,
+   "do_set_total_effect": -0.03773038010695018,
+   "gates": {
+    "G0": {
+     "pass": true,
+     "mean_option_mass": 0.7784426286816597,
+     "letter_share": 1.0,
+     "n": 4,
+     "rule": "mean option mass >= 0.5 and top token is a letter on >= half"
+    },
+    "G1": {
+     "max_abs_diff": 0.0,
+     "n": 22,
+     "per_arm": {
+      "do_nothing": {
+       "n": 8,
+       "max_abs_diff": 0.0
+      },
+      "off_target_do_nothing": {
+       "n": 12,
+       "max_abs_diff": 0.0
+      },
+      "secondary_do_nothing": {
+       "n": 2,
+       "max_abs_diff": 0.0
+      }
+     },
+     "compared": "full last-position logits, max absolute difference",
+     "pass": true,
+     "mode": "exact",
+     "rule": "max absolute logit difference == 0"
+    },
+    "G2": {
+     "pass": false,
+     "gap": 0.006750171797591645,
+     "n_pairs": 8,
+     "rule": "mean(P_you - P_third) >= 0.10 over held-out SAY questions"
+    },
+    "G3": {
+     "pass": true,
+     "T_SAY": 1.429554230518175,
+     "rule": "T_SAY (ratio of means) >= 0.5"
+    },
+    "G4": {
+     "pass": true,
+     "retest_say": 64,
+     "retest_do": 54,
+     "rule": "min(Retest_SAY, Retest_DO) >= 20 of 80, each ranking separately"
+    }
+   },
+   "completeness": {
+    "n_expected": 8,
+    "complete": true,
+    "incomplete": [],
+    "per_arm": {
+     "do_copy": {
+      "n_pairs": 8,
+      "n_expected": 8,
+      "complete": true
+     },
+     "say_copy": {
+      "n_pairs": 8,
+      "n_expected": 8,
+      "complete": true
+     },
+     "swap": {
+      "n_pairs": 8,
+      "n_expected": 8,
+      "complete": true
+     },
+     "reverse": {
+      "n_pairs": 8,
+      "n_expected": 8,
+      "complete": true
+     }
+    }
+   },
+   "random_set_rule": {
+    "read": true,
+    "pass": false,
+    "fillable": [
+     "effect",
+     "layer",
+     "score"
+    ],
+    "not_fillable": {},
+    "per_family": {
+     "effect": {
+      "max_T": 4.889910802475068,
+      "n": 20,
+      "n_sets": 20,
+      "exceeds_all": false
+     },
+     "layer": {
+      "max_T": 5.424834504413985,
+      "n": 20,
+      "n_sets": 20,
+      "exceeds_all": false
+     },
+     "score": {
+      "max_T": 3.5433633526052164,
+      "n": 20,
+      "n_sets": 20,
+      "exceeds_all": false
+     }
+    }
+   },
+   "read": {
+    "O": true,
+    "T": false,
+    "copy_arms": false,
+    "random_set_rule": false
+   }
+  }
+ ],
+ "predictions": {
+  "205.1": {
+   "verdict": "not read",
+   "g4_pass_olmo": 1,
+   "g4_pass_qwen": 0,
+   "stages_olmo": 1,
+   "stages_qwen": 0,
+   "complete": false
+  },
+  "205.2": {
+   "verdict": "held",
+   "value": 0.6440677966101694
+  },
+  "205.3": {
+   "verdict": "UNTESTABLE",
+   "pairs_read": []
+  },
+  "205.4": {
+   "verdict": "not read",
+   "gate": [
+    "G2"
+   ]
+  },
+  "205.5": {
+   "verdict": "not read",
+   "gate": "G0 or G1"
+  },
+  "205.6": {
+   "verdict": "not read",
+   "gate": [
+    "G2"
+   ]
+  },
+  "205.7": {
+   "verdict": "vacuous",
+   "reason": "no stage reads DO transfer and passes the random-set rule"
+  },
+  "205.8": {
+   "verdict": "not read",
+   "gate": "G0 or G4 at instruct or qwen-chat"
+  },
+  "205.9": {
+   "verdict": "not read",
+   "gate": [
+    "G2"
+   ]
+  }
+ },
+ "withdrawal": {
+  "headline": "no stage creates sharing that this design can resolve",
+  "stages": []
+ },
+ "read_rules": {
+  "O": "read only where G0, G1 and G4 pass",
+  "T": "read only where G0, G1, G2 and G3 pass; every copy arm with it",
+  "random_set_rule": "at least two fillable families; exceeds every set in each fillable family"
+ }
+}
