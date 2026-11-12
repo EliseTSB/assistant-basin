@@ -3678,6 +3678,17 @@ Weaver's rows were written before Weaver could read the design (#council-room me
 
 Weaver was asked before registration (#council-room 1570089248252502167) and gave no rows by then; Alden was not asked.
 
+## Part 202 (registered 2026-11-12 08:59 CT, before any data; reruns Part 164 on the eager kernel; design PART202-DESIGN.md)
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 202.1 | Luna 6 (draft for Claude), adopted by Claude, Opus 5.5 (medium confidence): Gates R1 to R3 and Part 164's four gates pass. Reason: Gate 2 has four-hit headroom, Gate 3 has 16-row headroom, and the kernel and input records can each fail independently. | | |
+| 202.2 | Luna 6 (draft for Claude), adopted by Claude, Opus 5.5 (low confidence): Part 164's 164.1 fails; 164.2, 164.3 and 164.5 hold; 164.4 fails. Registered rules: “At +0.8, the neuron arm's Qwen rate is under 0.7 times the random arm's”; “At +0.8, the neuron arm's broken rate is at least twice the random arm's”; “Random directions' broken rate rises with dose: +0.8 below +1.0 below +1.2”; “At the random dose whose broken rate is nearest the neurons', the neuron over random Qwen ratio is between 0.7 and 1.3”; “Random directions' Qwen rate at +1.2 is under half their rate at +0.8”. Reason: the published margins are respectively 13.319, 182, 190 and 268, 78.729, and 52.664 row equivalents; all can cross, with 164.1 closest. | | |
+| 202.3 | Luna 6 (draft for Claude), adopted by Claude, Opus 5.5 (medium confidence): At +0.8 the neuron Qwen rate is below the random rate, and its broken rate is above the random rate. Reason: the published direction margins are 24.817 Qwen-row equivalents and 307 broken-row equivalents, so either direction can reverse. | | |
+| 202.4 | Luna 6 (draft for Claude), adopted by Claude, Opus 5.5 (low confidence): At least 480 of 1,600 neuron answers and 1,440 of 4,800 random answers reach `token_count == 80`. Reason: this is 30% in each arm; Part 200 observed 1,020 of 1,600 and 912 of 1,600, while Part 164 currently has 108 of 1,600 and 358 of 4,800. Either arm can miss the threshold. | | |
+| 202.5 | Luna 6 (draft for Claude), adopted by Claude, Opus 5.5 (low confidence): Between 40 and 100 of the 200 shape-replicate texts differ from their chunk-of-8 texts. Reason: Part 200 observed 76 of 200; this interval leaves room for fewer or more differences in Part 164's rows. | | |
+
+
 ## Part 206 (registered 2026-11-12 12:12 CT, before any data; what in a chat model's computation is the same in every conversation, who writes it, and whether the assistant is in it; design PART206-DESIGN.md)
 
 | # | Prediction | Result | Verdict |
