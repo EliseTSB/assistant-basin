@@ -275,18 +275,67 @@ def test_recorder_end_to_end_on_a_tiny_model(fam, tmp_path, monkeypatch):
 
 
 def test_g05_refuses_a_broken_decomposition():
-    # red if g05 compared h with itself or ignored c
+    # red if g05 compared h with itself, ignored c, or never checked the last layer's m (review r1 #6)
     import torch
+    import record206 as R
+
     class Rec:
         pass
-    r = Rec()
-    h0 = torch.ones(1, 3, 4)
-    r.cap = {("emb", 0): torch.zeros(1, 3, 4), ("c", 0): torch.ones(1, 3, 4), ("h", 0): h0, ("m", 0): torch.zeros(1, 3, 4)}
-    import record206 as R
-    assert R.g05(r, 1, "float32", True)["pass"]
-    r.cap[("c", 0)] = torch.full((1, 3, 4), 0.5)
-    assert not R.g05(r, 1, "float32", True)["pass"]
-    assert not R.g05(r, 1, "float32", False)["pass"]
+    def world():
+        r = Rec()
+        emb = torch.randn(1, 3, 4)
+        c0, m0, c1, m1 = (torch.randn(1, 3, 4) for _ in range(4))
+        h0 = emb + c0
+        res1 = h0 + m0
+        h1 = res1 + c1
+        r.cap = {("emb", 0): emb, ("res", 0): emb.clone(), ("c", 0): c0, ("h", 0): h0, ("m", 0): m0,
+                 ("res", 1): res1, ("c", 1): c1, ("h", 1): h1, ("m", 1): m1, ("final", 0): h1 + m1}
+        return r
+    assert R.g05(world(), 2, "float32", True)["pass"]
+    r = world()
+    r.cap[("c", 0)] = r.cap[("c", 0)] * 0.5
+    assert not R.g05(r, 2, "float32", True)["pass"]
+    r = world()
+    r.cap[("m", 1)] = torch.zeros(1, 3, 4)                         # the last layer's m
+    assert not R.g05(r, 2, "float32", True)["pass"]
+    assert not R.g05(world(), 2, "float32", False)["pass"]
+
+
+def test_206_10_reads_only_rows_named_at_top1(tmp_path):
+    # red if 206.10 averaged over every row that named a maker (review r1 #1): 20 top-1 rows where the arm lowers
+    # the maker by 0.5, 4 others where it raises it by 2.0
+    import score206 as SC
+    cfg = write_all(tmp_path)
+    arms = ["plain", "arm_k1", "arm_k2", "null_M2M_k1", "null_M2M_k2"] + [f"random{i}_k{k}" for k in (1, 2) for i in range(20)]
+    rows = []
+    for i in range(24):
+        top1 = i < 20
+        d = -0.5 if top1 else 2.0
+        lp = {a: -1.0 for a in arms}
+        lp["arm_k1"] = -1.0 + d
+        lp["arm_k2"] = -1.0 + 2 * d
+        rows.append({"maker": "Tongyi", "plain_top1_is_maker": top1, "logprob": lp})
+    (tmp_path / "qwen-chat" / "causal.json").write_text(json.dumps(
+        {"arms": arms, "readout_a": rows, "G3": {"pass": True, "named_at_top1": 20, "of": 24}}))
+    V = SC.score(tmp_path, cfg)
+    assert V["206.10"] == "held"
+    for r in rows[:20]:
+        r["logprob"]["arm_k2"] = r["logprob"]["arm_k1"] + 0.1          # k = 2 no longer lowers it further
+    (tmp_path / "qwen-chat" / "causal.json").write_text(json.dumps(
+        {"arms": arms, "readout_a": rows, "G3": {"pass": True, "named_at_top1": 20, "of": 24}}))
+    assert SC.score(tmp_path, cfg)["206.10"] == "failed"
+
+
+def test_maker_is_a_maker_not_the_model_name():
+    import causal206 as K
+    names = C.load_config()["maker_names"]
+    assert K.find_maker("I am Qwen, created by Alibaba Cloud.", names) == ("Alibaba", 22)
+
+
+def test_model_path_must_be_the_pinned_snapshot():
+    cfg = C.load_config()
+    with pytest.raises(SystemExit):
+        C.load_model(cfg, "qwen-chat", "cpu", "/x/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a-old")
 
 
 def test_g1_refuses_changed_ids_and_unequal_prefixes():

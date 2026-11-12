@@ -101,6 +101,14 @@ class Recorder:
                 self.handles.append(self._hook(mod, kind, site, L))
             self.handles.append(block.register_forward_pre_hook(self._res_hook(L), with_kwargs=True))
         self.handles.append(self.emb.register_forward_hook(self._emb_hook))
+        parent_norm = None
+        for name, mod in model.named_modules():
+            if mod is self.layers:
+                parent = model.get_submodule(name.rsplit(".", 1)[0]) if "." in name else model
+                parent_norm = getattr(parent, "norm", None)
+        if parent_norm is None:
+            raise SystemExit("no final norm beside the decoder layers (G0.5 needs its input)")
+        self.handles.append(parent_norm.register_forward_pre_hook(self._final_hook))
         self.post = C.block_style(self.layers[0]) == "post"
 
     def _store(self, site, L, t):
@@ -126,10 +134,14 @@ class Recorder:
     def _res_hook(self, L):
         def hook(mod, args, kwargs):
             self.calls[("res", L)] = self.calls.get(("res", L), 0) + 1
-            if "res" in self.want and L == self.res_layer:
+            if ("res" in self.want and L == self.res_layer) or "resall" in self.want:
                 hs = args[0] if args else kwargs["hidden_states"]
                 self.cap[("res", L)] = hs[:, self.lo:self.hi].detach()
         return hook
+
+    def _final_hook(self, mod, args):
+        if "resall" in self.want:
+            self.cap[("final", 0)] = args[0][:, self.lo:self.hi].detach()
 
     def _emb_hook(self, mod, args, out):
         self.calls[("emb", 0)] = self.calls.get(("emb", 0), 0) + 1
@@ -220,7 +232,7 @@ def run_moments(cfg, prompts, stage, out, device=None, batch=8, limit=None, chec
     device = env["device"]
     plain_logits = None
     first_ids = None
-    if not (Path(out) / stage / "partial.npz").exists():
+    if smoke or not (Path(out) / stage / "partial.npz").exists():
         # G0's reference: the plain model's logits on the first batch's frame P, before any hook exists
         first_ids = [prompts["families"][fam]["frames"]["P"] + p["ids"][fam] for p in passages[:batch]]
         plain_logits = forward(model, first_ids, device).float().cpu()
@@ -252,7 +264,7 @@ def run_moments(cfg, prompts, stage, out, device=None, batch=8, limit=None, chec
     sdir.mkdir(parents=True, exist_ok=True)
     partial = sdir / "partial.npz"
     resumed_gates = {}
-    if partial.exists():
+    if partial.exists() and not smoke:
         S.load(partial, plan)
         side = Path(str(partial) + ".json")
         resumed_gates = json.loads(side.read_text()).get("gates", {}) if side.exists() else {}
@@ -296,6 +308,7 @@ def run_moments(cfg, prompts, stage, out, device=None, batch=8, limit=None, chec
             if not gates_done and f == "P":
                 if plain_logits is None or ids != first_ids:
                     raise SystemExit("G0 needs the first batch's plain logits; resume with no partial sums")
+                rec.want = rec.want | {"resall"}
                 logits = forward(model, ids, device)
                 g0 = float((logits.float().cpu() - plain_logits).abs().max())
                 meta["gates"]["G0"] = {"max_abs_logit_diff": g0, "pass": g0 == 0.0}
@@ -315,7 +328,7 @@ def run_moments(cfg, prompts, stage, out, device=None, batch=8, limit=None, chec
                      tindex, coords, proj, keep_pg)
         for p in bp:
             S.done.add(p["index"])
-        if (bstart // batch + 1) % checkpoint == 0:
+        if not smoke and (bstart // batch + 1) % checkpoint == 0:     # a smoke leaves no partial behind (review r1 #9)
             S.save(partial, plan, extra={"gates": meta["gates"]})
         el = time.time() - t0
         print(f"passages {len(S.done)}/{len(passages)} tokens={tokens} elapsed_s={el:.1f} tok_per_s={tokens / el:.1f}",
@@ -338,18 +351,18 @@ def run_moments(cfg, prompts, stage, out, device=None, batch=8, limit=None, chec
 
 
 def g05(rec, n_layers, dtype, once):
-    """embedding + every c below and at L + every m below L reproduces h_L (frame P, the batch's read positions)."""
-    import torch
-    acc = rec.cap[("emb", 0)].float().clone()
-    worst = 0.0
+    """The stream is the sum of the sites, checked one add at a time in the model's own dtype (review r1 #6, #7):
+    the embedding is layer 0's input, each layer's input plus c_L is h_L, h_L plus m_L is the next layer's input,
+    and the last h plus the last m is the final norm's input. Each add is the operation the model performs, so in
+    float32 and in bf16 alike the reconstruction should match to within one rounding of the add."""
+    def rel(a, b):
+        return float((a.float() - b.float()).abs().max() / b.float().abs().max().clamp_min(1e-12))
+    worst = rel(rec.cap[("emb", 0)], rec.cap[("res", 0)])
     for L in range(n_layers):
-        acc = acc + rec.cap[("c", L)].float()
-        h = rec.cap[("h", L)].float()
-        rel = float((acc - h).abs().max() / h.abs().max().clamp_min(1e-12))
-        worst = max(worst, rel)
-        acc = acc + rec.cap[("m", L)].float()
-    eps = 2.0 ** -8 if dtype == "bfloat16" else 2.0 ** -20
-    bound = 2 * n_layers * eps
+        worst = max(worst, rel(rec.cap[("res", L)] + rec.cap[("c", L)], rec.cap[("h", L)]))
+        nxt = rec.cap[("res", L + 1)] if L + 1 < n_layers else rec.cap[("final", 0)]
+        worst = max(worst, rel(rec.cap[("h", L)] + rec.cap[("m", L)], nxt))
+    bound = 2.0 ** -7 if dtype == "bfloat16" else 1e-6
     return {"every_hook_once": once, "max_relative_error": worst, "bound": bound, "pass": bool(once and worst <= bound)}
 
 
@@ -500,6 +513,8 @@ def run_gt(cfg, prompts, stage, out, device=None, batch=8, limit=None, model_pat
     import torch
     spec, fam, F, passages, plan = plan_for(cfg, prompts, stage, limit)
     sdir = Path(out) / stage
+    if not (sdir / "moments.npz").exists():
+        raise SystemExit(f"{sdir}/moments.npz is missing: run the moments pass to the end first (review r1 #4)")
     z = np.load(sdir / "moments.npz")
     meta = json.loads((sdir / "meta.json").read_text())
     lc = meta["gt_causal_layer"]

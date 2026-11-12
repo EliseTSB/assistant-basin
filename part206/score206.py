@@ -99,7 +99,8 @@ def score(out, cfg):
                 V["206.10"] = "not read"
                 cite(cpath, "G3", c.get("G3"))
             else:
-                rows = [r for r in c["readout_a"] if "logprob" in r]
+                # the design's population: rows where the plain model names its maker at top-1 (G3's rows; review r1 #1)
+                rows = [r for r in c["readout_a"] if "logprob" in r and r.get("plain_top1_is_maker")]
                 ch = {arm: float(np.mean([r["logprob"][arm] - r["logprob"]["plain"] for r in rows])) for arm in c["arms"] if arm != "plain"}
                 for k, v in ch.items():
                     cite(cpath, f"readout_a.mean_change[{k}]", v)

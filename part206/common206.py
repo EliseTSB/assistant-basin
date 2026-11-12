@@ -99,6 +99,8 @@ def load_model(cfg, stage, device_override=None, model_path=None):
     fam = cfg["families"][spec["family"]]
     device = device_override or fam["device"]
     dtype = torch.float32 if fam["dtype"] == "float32" else torch.bfloat16
+    if model_path and Path(model_path).name != spec["revision"]:
+        raise SystemExit(f"--model-path {model_path} is not the snapshot folder of the pinned revision {spec['revision']}")
     src, rev = (model_path, None) if model_path else (spec["model_id"], spec["revision"])
     if spec["family"] == "Q":
         sys.path.insert(0, str(ROOT))
@@ -115,8 +117,6 @@ def load_model(cfg, stage, device_override=None, model_path=None):
         torch.set_grad_enabled(False)
         import transformers
         env = {"torch": torch.__version__, "transformers": transformers.__version__}
-    if model_path and spec["revision"] not in str(model_path):
-        raise SystemExit(f"--model-path {model_path} does not name the pinned revision {spec['revision']}")
     env.update({"stage": stage, "family": spec["family"], "model_id": spec["model_id"], "revision": spec["revision"],
                 "model_path": model_path,
                 "dtype": fam["dtype"], "device": device, "attn_implementation": fam["attn_implementation"]})
