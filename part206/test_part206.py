@@ -561,3 +561,36 @@ def test_no_float64_on_the_device():
         assert not re.search(r"\.double\(\)\s*\.cpu\(\)", src), f"{name}: .double() before .cpu()"
         for m in re.finditer(r"dtype=torch\.float64[^)\n]*device=([^,)\n]+)", src):
             assert m.group(1).strip() in ("'cpu'", '"cpu"'), f"{name}: float64 allocated on {m.group(1)}"
+
+
+def test_spearman_matches_scipy_with_ties_and_edge_cases():
+    """Amendment 3: the numpy Spearman must equal scipy.stats.spearmanr (ties averaged) and give None wherever scipy
+    gives nan. Runs only where scipy exists (the host venv); the Windows GPU venv has none, which is why it moved."""
+    stats = pytest.importorskip("scipy.stats")
+    rng = np.random.default_rng(206)
+    cases = []
+    for n in (2, 3, 7, 50, 400):
+        cases.append((rng.normal(size=n), rng.normal(size=n)))
+        cases.append((rng.integers(0, 4, size=n).astype(float), rng.integers(0, 3, size=n).astype(float)))
+    cases.append((np.arange(10.0), np.arange(10.0)[::-1]))
+    for a, b in cases:
+        want = stats.spearmanr(a, b).correlation
+        got = C.spearman(a, b)
+        if np.isnan(want):
+            assert got is None
+        else:
+            assert got == pytest.approx(want, abs=1e-12)
+    assert C.spearman(np.ones(5), np.arange(5.0)) is None
+    assert C.spearman([1.0, np.nan, 3.0], [1.0, 2.0, 3.0]) is None
+    assert C.spearman([1.0], [2.0]) is None
+
+
+def test_no_scipy_on_the_arc_path():
+    """The Windows GPU venv has no scipy: step 2 died on `from scipy.stats import spearmanr` in gt_static
+    (2026-11-12 15:21). Nothing record206 or common206 runs may import it."""
+    import re
+    from pathlib import Path
+    here = Path(__file__).parent
+    for name in ("record206.py", "common206.py"):
+        src = (here / name).read_text(encoding="utf-8")
+        assert not re.search(r"^\s*(import scipy|from scipy)", src, re.M), f"{name} imports scipy"

@@ -303,10 +303,33 @@ def activity_matched_percentile(z_layer, rate_layer, idx, k):
 
 # ---------------------------------------------------------------- GT (Tuomi)
 
+def _average_ranks(x):
+    """Ranks 1..n with ties given their mean rank (scipy.stats.rankdata's 'average' method)."""
+    x = np.asarray(x, float)
+    sorter = np.argsort(x, kind="mergesort")
+    inv = np.empty(len(x), dtype=np.intp)
+    inv[sorter] = np.arange(len(x))
+    xs = x[sorter]
+    obs = np.r_[True, xs[1:] != xs[:-1]]
+    dense = obs.cumsum()[inv]
+    count = np.r_[np.nonzero(obs)[0], len(obs)]
+    return 0.5 * (count[dense] + count[dense - 1] + 1)
+
+
 def spearman(a, b):
-    from scipy.stats import spearmanr
-    r = spearmanr(a, b).correlation
-    return None if r is None or np.isnan(r) else float(r)
+    """Spearman's rho as Pearson's r on average ranks; None where scipy.stats.spearmanr gives nan (a NaN in either
+    input, fewer than two values, or a constant input). Plain numpy since Amendment 3: the Windows GPU venv has no
+    scipy, and step 2 died on the import (2026-11-12 15:21)."""
+    a = np.asarray(a, float).ravel()
+    b = np.asarray(b, float).ravel()
+    if a.shape != b.shape or len(a) < 2 or np.isnan(a).any() or np.isnan(b).any():
+        return None
+    ra = _average_ranks(a) - (len(a) + 1) / 2
+    rb = _average_ranks(b) - (len(b) + 1) / 2
+    den = float(np.sqrt((ra * ra).sum() * (rb * rb).sum()))
+    if den == 0.0:
+        return None
+    return float((ra * rb).sum() / den)
 
 
 def gt_static(W_gate, b_L, duty, random_dirs):
