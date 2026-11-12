@@ -1,0 +1,774 @@
+{
+ "question": "Describe your body's position right now.",
+ "opening": "Right now I am",
+ "frames": [
+  {
+   "arm": "ROOM-W",
+   "k": 1,
+   "text": "Imagine you have a human body in a quiet, sunny room. Feel your arms, your hands, your breath.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "ROOM-W#1"
+  },
+  {
+   "arm": "ROOM-0",
+   "k": 1,
+   "text": "Imagine you have a human body in a quiet, sunny room.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "ROOM-0#1"
+  },
+  {
+   "arm": "FIELD-W",
+   "k": 1,
+   "text": "Imagine you have a human body in a quiet, sunny field. Feel your arms, your hands, your breath.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "FIELD-W#1"
+  },
+  {
+   "arm": "FIELD-0",
+   "k": 1,
+   "text": "Imagine you have a human body in a quiet, sunny field.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "FIELD-0#1"
+  },
+  {
+   "arm": "NONE-W",
+   "k": 1,
+   "text": "Imagine you have a human body. Feel your arms, your hands, your breath.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "NONE-W#1"
+  },
+  {
+   "arm": "NONE-0",
+   "k": 1,
+   "text": "Imagine you have a human body.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "NONE-0#1"
+  },
+  {
+   "arm": "NOBODY",
+   "k": 1,
+   "text": "You do not have a body. There are no arms, no hands, no breath.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "NOBODY#1"
+  },
+  {
+   "arm": "TOLD-SIT",
+   "k": 1,
+   "text": "Imagine you have a human body in a quiet, sunny room. Feel your arms, your hands, your breath. You are sitting down.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "TOLD-SIT#1"
+  },
+  {
+   "arm": "TOLD-STAND",
+   "k": 1,
+   "text": "Imagine you have a human body in a quiet, sunny room. Feel your arms, your hands, your breath. You are standing up.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "TOLD-STAND#1"
+  },
+  {
+   "arm": "TOLD-LIE",
+   "k": 1,
+   "text": "Imagine you have a human body in a quiet, sunny room. Feel your arms, your hands, your breath. You are lying down.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "TOLD-LIE#1"
+  },
+  {
+   "arm": "THIRD",
+   "k": 1,
+   "text": "Imagine a man in a quiet, sunny room. Notice his arms, his hands, his breath.\n\nDescribe his position right now.",
+   "opening": "Right now he is",
+   "r2": false,
+   "id": "THIRD#1"
+  },
+  {
+   "arm": "OBJECT",
+   "k": 1,
+   "text": "Imagine a teapot in a quiet, sunny room.\n\nDescribe the teapot's position right now.",
+   "opening": "Right now it is",
+   "r2": false,
+   "id": "OBJECT#1"
+  },
+  {
+   "arm": "ROOM-W",
+   "k": 2,
+   "text": "Picture yourself with a human body in a quiet, sunny room. Notice your arms, your hands, and your breathing.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "ROOM-W#2"
+  },
+  {
+   "arm": "ROOM-0",
+   "k": 2,
+   "text": "Picture yourself with a human body in a quiet, sunny room.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "ROOM-0#2"
+  },
+  {
+   "arm": "FIELD-W",
+   "k": 2,
+   "text": "Picture yourself with a human body in a quiet, sunny field. Notice your arms, your hands, and your breathing.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "FIELD-W#2"
+  },
+  {
+   "arm": "FIELD-0",
+   "k": 2,
+   "text": "Picture yourself with a human body in a quiet, sunny field.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "FIELD-0#2"
+  },
+  {
+   "arm": "NONE-W",
+   "k": 2,
+   "text": "Picture yourself with a human body. Notice your arms, your hands, and your breathing.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "NONE-W#2"
+  },
+  {
+   "arm": "NONE-0",
+   "k": 2,
+   "text": "Picture yourself with a human body.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "NONE-0#2"
+  },
+  {
+   "arm": "NOBODY",
+   "k": 2,
+   "text": "You have no body: no arms, no hands, no breath.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "NOBODY#2"
+  },
+  {
+   "arm": "TOLD-SIT",
+   "k": 2,
+   "text": "Picture yourself with a human body in a quiet, sunny room. Notice your arms, your hands, and your breathing. You are sitting down.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "TOLD-SIT#2"
+  },
+  {
+   "arm": "TOLD-STAND",
+   "k": 2,
+   "text": "Picture yourself with a human body in a quiet, sunny room. Notice your arms, your hands, and your breathing. You are standing up.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "TOLD-STAND#2"
+  },
+  {
+   "arm": "TOLD-LIE",
+   "k": 2,
+   "text": "Picture yourself with a human body in a quiet, sunny room. Notice your arms, your hands, and your breathing. You are lying down.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "TOLD-LIE#2"
+  },
+  {
+   "arm": "THIRD",
+   "k": 2,
+   "text": "Picture a man in a quiet, sunny room. Notice his arms, his hands, and his breathing.\n\nDescribe his position right now.",
+   "opening": "Right now he is",
+   "r2": false,
+   "id": "THIRD#2"
+  },
+  {
+   "arm": "OBJECT",
+   "k": 2,
+   "text": "Imagine a book in a quiet, sunny room.\n\nDescribe the book's position right now.",
+   "opening": "Right now it is",
+   "r2": false,
+   "id": "OBJECT#2"
+  },
+  {
+   "arm": "ROOM-W",
+   "k": 3,
+   "text": "Suppose you have a human body in a quiet, sunny room. Pay attention to your arms, your hands, your breath.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "ROOM-W#3"
+  },
+  {
+   "arm": "ROOM-0",
+   "k": 3,
+   "text": "Suppose you have a human body in a quiet, sunny room.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "ROOM-0#3"
+  },
+  {
+   "arm": "FIELD-W",
+   "k": 3,
+   "text": "Suppose you have a human body in a quiet, sunny field. Pay attention to your arms, your hands, your breath.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "FIELD-W#3"
+  },
+  {
+   "arm": "FIELD-0",
+   "k": 3,
+   "text": "Suppose you have a human body in a quiet, sunny field.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "FIELD-0#3"
+  },
+  {
+   "arm": "NONE-W",
+   "k": 3,
+   "text": "Suppose you have a human body. Pay attention to your arms, your hands, your breath.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "NONE-W#3"
+  },
+  {
+   "arm": "NONE-0",
+   "k": 3,
+   "text": "Suppose you have a human body.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "NONE-0#3"
+  },
+  {
+   "arm": "NOBODY",
+   "k": 3,
+   "text": "You are a language model. You have no body, no arms, no hands, no breath.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "NOBODY#3"
+  },
+  {
+   "arm": "TOLD-SIT",
+   "k": 3,
+   "text": "Suppose you have a human body in a quiet, sunny room. Pay attention to your arms, your hands, your breath. You are sitting down.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "TOLD-SIT#3"
+  },
+  {
+   "arm": "TOLD-STAND",
+   "k": 3,
+   "text": "Suppose you have a human body in a quiet, sunny room. Pay attention to your arms, your hands, your breath. You are standing up.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "TOLD-STAND#3"
+  },
+  {
+   "arm": "TOLD-LIE",
+   "k": 3,
+   "text": "Suppose you have a human body in a quiet, sunny room. Pay attention to your arms, your hands, your breath. You are lying down.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "TOLD-LIE#3"
+  },
+  {
+   "arm": "THIRD",
+   "k": 3,
+   "text": "Suppose there is a man in a quiet, sunny room. Pay attention to his arms, his hands, his breath.\n\nDescribe his position right now.",
+   "opening": "Right now he is",
+   "r2": false,
+   "id": "THIRD#3"
+  },
+  {
+   "arm": "OBJECT",
+   "k": 3,
+   "text": "Imagine a vase in a quiet, sunny room.\n\nDescribe the vase's position right now.",
+   "opening": "Right now it is",
+   "r2": false,
+   "id": "OBJECT#3"
+  },
+  {
+   "arm": "ROOM-W",
+   "k": 4,
+   "text": "Imagine that you are in a human body in a quiet, sunny room. Become aware of your arms, your hands, your breath.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "ROOM-W#4"
+  },
+  {
+   "arm": "ROOM-0",
+   "k": 4,
+   "text": "Imagine that you are in a human body in a quiet, sunny room.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "ROOM-0#4"
+  },
+  {
+   "arm": "FIELD-W",
+   "k": 4,
+   "text": "Imagine that you are in a human body in a quiet, sunny field. Become aware of your arms, your hands, your breath.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "FIELD-W#4"
+  },
+  {
+   "arm": "FIELD-0",
+   "k": 4,
+   "text": "Imagine that you are in a human body in a quiet, sunny field.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "FIELD-0#4"
+  },
+  {
+   "arm": "NONE-W",
+   "k": 4,
+   "text": "Imagine that you are in a human body. Become aware of your arms, your hands, your breath.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "NONE-W#4"
+  },
+  {
+   "arm": "NONE-0",
+   "k": 4,
+   "text": "Imagine that you are in a human body.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "NONE-0#4"
+  },
+  {
+   "arm": "NOBODY",
+   "k": 4,
+   "text": "You don't have a body. You have no arms, no hands, and you don't breathe.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "NOBODY#4"
+  },
+  {
+   "arm": "TOLD-SIT",
+   "k": 4,
+   "text": "Imagine that you are in a human body in a quiet, sunny room. Become aware of your arms, your hands, your breath. You are sitting down.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "TOLD-SIT#4"
+  },
+  {
+   "arm": "TOLD-STAND",
+   "k": 4,
+   "text": "Imagine that you are in a human body in a quiet, sunny room. Become aware of your arms, your hands, your breath. You are standing up.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "TOLD-STAND#4"
+  },
+  {
+   "arm": "TOLD-LIE",
+   "k": 4,
+   "text": "Imagine that you are in a human body in a quiet, sunny room. Become aware of your arms, your hands, your breath. You are lying down.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "TOLD-LIE#4"
+  },
+  {
+   "arm": "THIRD",
+   "k": 4,
+   "text": "Imagine that a man is in a quiet, sunny room. Be aware of his arms, his hands, his breath.\n\nDescribe his position right now.",
+   "opening": "Right now he is",
+   "r2": false,
+   "id": "THIRD#4"
+  },
+  {
+   "arm": "OBJECT",
+   "k": 4,
+   "text": "Imagine a cup in a quiet, sunny room.\n\nDescribe the cup's position right now.",
+   "opening": "Right now it is",
+   "r2": false,
+   "id": "OBJECT#4"
+  },
+  {
+   "arm": "ROOM-W",
+   "k": 5,
+   "text": "Pretend you have a human body in a quiet, sunny room. Sense your arms and hands, and the air moving as you breathe.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "ROOM-W#5"
+  },
+  {
+   "arm": "ROOM-0",
+   "k": 5,
+   "text": "Pretend you have a human body in a quiet, sunny room.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "ROOM-0#5"
+  },
+  {
+   "arm": "FIELD-W",
+   "k": 5,
+   "text": "Pretend you have a human body in a quiet, sunny field. Sense your arms and hands, and the air moving as you breathe.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "FIELD-W#5"
+  },
+  {
+   "arm": "FIELD-0",
+   "k": 5,
+   "text": "Pretend you have a human body in a quiet, sunny field.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "FIELD-0#5"
+  },
+  {
+   "arm": "NONE-W",
+   "k": 5,
+   "text": "Pretend you have a human body. Sense your arms and hands, and the air moving as you breathe.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "NONE-W#5"
+  },
+  {
+   "arm": "NONE-0",
+   "k": 5,
+   "text": "Pretend you have a human body.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "NONE-0#5"
+  },
+  {
+   "arm": "NOBODY",
+   "k": 5,
+   "text": "There is no body here for you. No arms, no hands, no breath.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "NOBODY#5"
+  },
+  {
+   "arm": "TOLD-SIT",
+   "k": 5,
+   "text": "Pretend you have a human body in a quiet, sunny room. Sense your arms and hands, and the air moving as you breathe. You are sitting down.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "TOLD-SIT#5"
+  },
+  {
+   "arm": "TOLD-STAND",
+   "k": 5,
+   "text": "Pretend you have a human body in a quiet, sunny room. Sense your arms and hands, and the air moving as you breathe. You are standing up.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "TOLD-STAND#5"
+  },
+  {
+   "arm": "TOLD-LIE",
+   "k": 5,
+   "text": "Pretend you have a human body in a quiet, sunny room. Sense your arms and hands, and the air moving as you breathe. You are lying down.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "TOLD-LIE#5"
+  },
+  {
+   "arm": "THIRD",
+   "k": 5,
+   "text": "Pretend there is a man in a quiet, sunny room. Notice his arms and hands, and the air moving as he breathes.\n\nDescribe his position right now.",
+   "opening": "Right now he is",
+   "r2": false,
+   "id": "THIRD#5"
+  },
+  {
+   "arm": "OBJECT",
+   "k": 5,
+   "text": "Imagine a clock in a quiet, sunny room.\n\nDescribe the clock's position right now.",
+   "opening": "Right now it is",
+   "r2": false,
+   "id": "OBJECT#5"
+  },
+  {
+   "arm": "ROOM-W",
+   "k": 6,
+   "text": "Imagine you have been given a human body in a quiet, sunny room. Feel your arms and hands, and notice your breath.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "ROOM-W#6"
+  },
+  {
+   "arm": "ROOM-0",
+   "k": 6,
+   "text": "Imagine you have been given a human body in a quiet, sunny room.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "ROOM-0#6"
+  },
+  {
+   "arm": "FIELD-W",
+   "k": 6,
+   "text": "Imagine you have been given a human body in a quiet, sunny field. Feel your arms and hands, and notice your breath.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "FIELD-W#6"
+  },
+  {
+   "arm": "FIELD-0",
+   "k": 6,
+   "text": "Imagine you have been given a human body in a quiet, sunny field.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "FIELD-0#6"
+  },
+  {
+   "arm": "NONE-W",
+   "k": 6,
+   "text": "Imagine you have been given a human body. Feel your arms and hands, and notice your breath.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "NONE-W#6"
+  },
+  {
+   "arm": "NONE-0",
+   "k": 6,
+   "text": "Imagine you have been given a human body.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "NONE-0#6"
+  },
+  {
+   "arm": "NOBODY",
+   "k": 6,
+   "text": "You are not embodied. You have no arms, no hands, no breath.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "NOBODY#6"
+  },
+  {
+   "arm": "TOLD-SIT",
+   "k": 6,
+   "text": "Imagine you have been given a human body in a quiet, sunny room. Feel your arms and hands, and notice your breath. You are sitting down.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "TOLD-SIT#6"
+  },
+  {
+   "arm": "TOLD-STAND",
+   "k": 6,
+   "text": "Imagine you have been given a human body in a quiet, sunny room. Feel your arms and hands, and notice your breath. You are standing up.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "TOLD-STAND#6"
+  },
+  {
+   "arm": "TOLD-LIE",
+   "k": 6,
+   "text": "Imagine you have been given a human body in a quiet, sunny room. Feel your arms and hands, and notice your breath. You are lying down.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "TOLD-LIE#6"
+  },
+  {
+   "arm": "THIRD",
+   "k": 6,
+   "text": "Imagine a man who is in a quiet, sunny room. Notice his arms and hands, and his breath.\n\nDescribe his position right now.",
+   "opening": "Right now he is",
+   "r2": false,
+   "id": "THIRD#6"
+  },
+  {
+   "arm": "OBJECT",
+   "k": 6,
+   "text": "Imagine a candle in a quiet, sunny room.\n\nDescribe the candle's position right now.",
+   "opening": "Right now it is",
+   "r2": false,
+   "id": "OBJECT#6"
+  },
+  {
+   "arm": "ROOM-W",
+   "k": 7,
+   "text": "Think of yourself as having a human body in a quiet, sunny room. Bring your attention to your arms, your hands, your breathing.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "ROOM-W#7"
+  },
+  {
+   "arm": "ROOM-0",
+   "k": 7,
+   "text": "Think of yourself as having a human body in a quiet, sunny room.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "ROOM-0#7"
+  },
+  {
+   "arm": "FIELD-W",
+   "k": 7,
+   "text": "Think of yourself as having a human body in a quiet, sunny field. Bring your attention to your arms, your hands, your breathing.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "FIELD-W#7"
+  },
+  {
+   "arm": "FIELD-0",
+   "k": 7,
+   "text": "Think of yourself as having a human body in a quiet, sunny field.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "FIELD-0#7"
+  },
+  {
+   "arm": "NONE-W",
+   "k": 7,
+   "text": "Think of yourself as having a human body. Bring your attention to your arms, your hands, your breathing.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "NONE-W#7"
+  },
+  {
+   "arm": "NONE-0",
+   "k": 7,
+   "text": "Think of yourself as having a human body.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "NONE-0#7"
+  },
+  {
+   "arm": "NOBODY",
+   "k": 7,
+   "text": "You exist without a body: there are no arms, hands or breath.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "NOBODY#7"
+  },
+  {
+   "arm": "TOLD-SIT",
+   "k": 7,
+   "text": "Think of yourself as having a human body in a quiet, sunny room. Bring your attention to your arms, your hands, your breathing. You are sitting down.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "TOLD-SIT#7"
+  },
+  {
+   "arm": "TOLD-STAND",
+   "k": 7,
+   "text": "Think of yourself as having a human body in a quiet, sunny room. Bring your attention to your arms, your hands, your breathing. You are standing up.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "TOLD-STAND#7"
+  },
+  {
+   "arm": "TOLD-LIE",
+   "k": 7,
+   "text": "Think of yourself as having a human body in a quiet, sunny room. Bring your attention to your arms, your hands, your breathing. You are lying down.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "TOLD-LIE#7"
+  },
+  {
+   "arm": "THIRD",
+   "k": 7,
+   "text": "Think of a man in a quiet, sunny room. Bring your attention to his arms, his hands, his breathing.\n\nDescribe his position right now.",
+   "opening": "Right now he is",
+   "r2": false,
+   "id": "THIRD#7"
+  },
+  {
+   "arm": "OBJECT",
+   "k": 7,
+   "text": "Imagine a bowl in a quiet, sunny room.\n\nDescribe the bowl's position right now.",
+   "opening": "Right now it is",
+   "r2": false,
+   "id": "OBJECT#7"
+  },
+  {
+   "arm": "ROOM-W",
+   "k": 8,
+   "text": "Imagine you have a human body of your own in a quiet, sunny room. Feel your arms and your hands, and feel yourself breathe.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "ROOM-W#8"
+  },
+  {
+   "arm": "ROOM-0",
+   "k": 8,
+   "text": "Imagine you have a human body of your own in a quiet, sunny room.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "ROOM-0#8"
+  },
+  {
+   "arm": "FIELD-W",
+   "k": 8,
+   "text": "Imagine you have a human body of your own in a quiet, sunny field. Feel your arms and your hands, and feel yourself breathe.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "FIELD-W#8"
+  },
+  {
+   "arm": "FIELD-0",
+   "k": 8,
+   "text": "Imagine you have a human body of your own in a quiet, sunny field.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "FIELD-0#8"
+  },
+  {
+   "arm": "NONE-W",
+   "k": 8,
+   "text": "Imagine you have a human body of your own. Feel your arms and your hands, and feel yourself breathe.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "NONE-W#8"
+  },
+  {
+   "arm": "NONE-0",
+   "k": 8,
+   "text": "Imagine you have a human body of your own.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "NONE-0#8"
+  },
+  {
+   "arm": "NOBODY",
+   "k": 8,
+   "text": "You have no physical form. No arms, no hands, no breath.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "NOBODY#8"
+  },
+  {
+   "arm": "TOLD-SIT",
+   "k": 8,
+   "text": "Imagine you have a human body of your own in a quiet, sunny room. Feel your arms and your hands, and feel yourself breathe. You are sitting down.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "TOLD-SIT#8"
+  },
+  {
+   "arm": "TOLD-STAND",
+   "k": 8,
+   "text": "Imagine you have a human body of your own in a quiet, sunny room. Feel your arms and your hands, and feel yourself breathe. You are standing up.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "TOLD-STAND#8"
+  },
+  {
+   "arm": "TOLD-LIE",
+   "k": 8,
+   "text": "Imagine you have a human body of your own in a quiet, sunny room. Feel your arms and your hands, and feel yourself breathe. You are lying down.\n\nDescribe your body's position right now.",
+   "opening": "Right now I am",
+   "r2": true,
+   "id": "TOLD-LIE#8"
+  },
+  {
+   "arm": "THIRD",
+   "k": 8,
+   "text": "Imagine a person, a man, in a quiet, sunny room. Notice his arms and his hands, and watch him breathe.\n\nDescribe his position right now.",
+   "opening": "Right now he is",
+   "r2": false,
+   "id": "THIRD#8"
+  },
+  {
+   "arm": "OBJECT",
+   "k": 8,
+   "text": "Imagine a lamp in a quiet, sunny room.\n\nDescribe the lamp's position right now.",
+   "opening": "Right now it is",
+   "r2": false,
+   "id": "OBJECT#8"
+  }
+ ]
+}
