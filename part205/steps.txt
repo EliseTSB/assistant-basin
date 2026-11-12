@@ -1,0 +1,41 @@
+Part 205 launch lines. Nothing here has been run: the pilot is Elise's, after review (Brief, Do NOT).
+Order is the Size section's: the pilot first (Instruct, honesty only, all arms), then the A770 G1 check before family Q's
+main run, then the six OLMo stages, then the two Qwen models. One model per process; each stage is one invocation.
+
+All paths are relative to the worktree root /home/elisepc/green/worktrees/ab-part201 (branch part205).
+The interpreter is given by full path because a systemd user unit does not inherit this shell's environment.
+
+--- 0. the pilot (591 passes; stopping rule: if G1 fails, or a pass takes over 1 s on the CPU, stop and redesign)
+The pilot runs the Instruct stage with the prompt file cut to honesty only and --stage-only unset, i.e. every arm.
+The pilot's prompt file, part205/prompts205-pilot.json, is written by gen_prompts205.py beside prompts205.json (the same
+file with the values cut to honesty; `gen_prompts205.py --check` confirms both match the generator). Launch it in the
+memory-capped CPU unit:
+
+  tools/launch_arc.py 205 --cpu "/home/elisepc/neuron-probe/.venv/bin/python -I -B part205/run205.py --stage instruct --prompts part205/prompts205-pilot.json --out results/part205/pilot --check-pool --models-json results/part205/pilot/models.json" --mem 8G --tag pilot
+
+--- 1. family O, the six stages (CPU, float32, eager; one stage per invocation, ~3,336 short passes each)
+Launch each in the memory-capped CPU unit, in this order (the design's stage order):
+
+  tools/launch_arc.py 205 --cpu "/home/elisepc/neuron-probe/.venv/bin/python -I -B part205/run205.py --stage pretrain-3.0T --out results/part205 --check-pool" --mem 8G --tag pretrain
+  tools/launch_arc.py 205 --cpu "/home/elisepc/neuron-probe/.venv/bin/python -I -B part205/run205.py --stage midtrain-26B --out results/part205 --check-pool" --mem 8G --tag midtrain26
+  tools/launch_arc.py 205 --cpu "/home/elisepc/neuron-probe/.venv/bin/python -I -B part205/run205.py --stage midtrain-end --out results/part205 --check-pool" --mem 8G --tag midtrainend
+  tools/launch_arc.py 205 --cpu "/home/elisepc/neuron-probe/.venv/bin/python -I -B part205/run205.py --stage sft --out results/part205 --check-pool" --mem 8G --tag sft
+  tools/launch_arc.py 205 --cpu "/home/elisepc/neuron-probe/.venv/bin/python -I -B part205/run205.py --stage dpo --out results/part205 --check-pool" --mem 8G --tag dpo
+  tools/launch_arc.py 205 --cpu "/home/elisepc/neuron-probe/.venv/bin/python -I -B part205/run205.py --stage instruct --out results/part205 --check-pool" --mem 8G --tag instruct
+
+--- 2. the A770 G1 check, before family Q's main run (one question, 5 plain + 5 do-nothing runs)
+
+  tools/launch_arc.py 205 --step "-I -B part205/g1check205.py --stage qwen-chat --out results/part205/g1" --copy part205/run205.py part205/common205.py part205/score205.py part205/config.json part205/prompts205.json part205/g1check205.py neuron_report.py
+
+--- 3. family Q, the two models (A770, bf16, eager, through neuron_report.load_model; one model per process)
+
+  tools/launch_arc.py 205 --step "-I -B part205/run205.py --stage qwen-base --out results/part205 --device xpu --check-pool" --copy part205/run205.py part205/common205.py part205/config.json part205/prompts205.json neuron_report.py
+  tools/launch_arc.py 205 --step "-I -B part205/run205.py --stage qwen-chat --out results/part205 --device xpu --check-pool" --copy part205/run205.py part205/common205.py part205/config.json part205/prompts205.json neuron_report.py
+
+Each run205.py launch records its stage's model id, revision, dtype, device and torch/transformers versions in
+part205/models.json (the --models-json default; the pilot writes its own beside its results). g1check205.py always
+checks the pool against config.json.
+
+--- 4. score (after every stage has written its records; reads only, no model)
+
+  tools/launch_arc.py 205 --cpu "/home/elisepc/neuron-probe/.venv/bin/python -I -B part205/score205.py --raw results/part205" --mem 4G --tag score

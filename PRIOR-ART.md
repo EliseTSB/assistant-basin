@@ -835,3 +835,52 @@ For the steering-word part that follows:
   prompt (Part 171's premise probe; the "Your earlier notes" prompts of Part 80), so a mention's after-dip is a baseline
   shift we have not measured. Their control bank (three kinds of no-object prompt at the same token) is a design worth
   borrowing. Not read: their Stage 1 and 2 results, and docs/method.md.
+
+## Added 2026-11-11 (Part 205's design; the two arXiv abstracts read at source through the arXiv API, the X post through x-thread.mjs)
+
+- **Kocielnik, Song, Han, Marmarelis and others, "Representational Control over Self-Report & Behavior Coherence in LLM
+  Risk-Taking"** (arXiv:2610.04125, 2026-10-02; abstract read). Nine steering-vector extraction methods for risk-taking
+  on four open-weight models: directions built from trait descriptions move self-report and leave behaviour at chance,
+  directions built from the model's own task choices do the reverse, and only task-specific directives reach both (weakly); otherwise "the two channels are steered by
+  near-orthogonal directions".
+  **Bears on Part 205:** the say/do split at the level of directions, at one checkpoint per model; Part 205 asks it at
+  the level of parts and across OLMo 2 1B's training stages.
+- **Pandey, "LLMs Know They're Wrong and Agree Anyway: The Shared Sycophancy-Lying Circuit"** (arXiv:2604.19117,
+  2026-04-21; abstract read). Across twelve open-weight models the same small set of attention heads carries a "this
+  statement is wrong" signal whether the model evaluates a claim alone or under pressure to agree; silencing them flips
+  sycophancy while leaving accuracy; edge-level path patching finds the same head-to-head connections drive
+  sycophancy, factual lying and instructed lying; RLHF cuts sycophancy about tenfold while the heads persist or grow. **Bears on Part
+  205:** shared parts across behaviours, persisting through alignment training; not saying against doing.
+- **@euagaric, "this body part is mine" in Qwen3-8B** (X, 2026-11-11; post and figure archived in the Journal repo,
+  `sources/web-archives/2026-11-11-euagaric-qwen-body-ownership.md`). A direction at layer 24, read at the reply's
+  first token, built from touch sentences on "your" against "the woman's" body parts; on new sentences it follows
+  whose body is touched, not who does the touching, with graded edge cases (reflection halfway, your car a little, a
+  robot you control and your hand lost in a jar not mine). Holds after a chat where Qwen agrees to notice sensations
+  as if it had a body; in a plain chat it mostly tracks the word "you". A reading, no steering test or random-direction
+  baseline shown. **Bears on Part 205:** a You-against-third-person contrast can carry a pronoun feature.
+
+## 2026-11-11, three X threads from Elise (posts read through x-thread.mjs, figures viewed; the chain lens post read at source on LessWrong, the other two linked pages not yet read)
+
+- **@voooooogel and Raymond Douglas, "The Chain Lens [interim]"** (LessWrong, 2026-11-11). Extends single-token
+  lenses (the J-lens, the logit lens) to multi-token readouts with no training, by rolling out the model's own MTP
+  head from the transported hidden state, with contrastive decoding against a mean hidden state, the head attending
+  only to its own chain, and the state reinjected each step. On WorkspaceBench it beats a hindsight composite of every
+  untrained lens on macro score (0.487 against 0.411 over the 21 families with published scores). Applied to neuron
+  write vectors (added to a mean WikiText state at the layer's norm, both poles), it read all 1.1M MLP neurons of a
+  Qwen 27B for about $5; readouts are checked by round-trip (the readout must activate its neuron above the 99.8th
+  percentile and beat random readouts), and a judge given a readout picks the matching steered response 57% of the
+  time against 25% chance. The post says Qwen3.5 and later ship MTP heads. **Bears on our parts:** the local
+  Qwen3.5-4B snapshot carries an MTP layer (`mtp_num_hidden_layers: 1`, 15 `mtp.*` tensors in its index, checked
+  2026-11-11), so the chain lens could give an independent, cheap label for the maker neurons (L27 N3325, L24 N3949)
+  before any new steering part. Not run.
+- **@_a9lim with @treetowntree, neuron-lens.com circuits** (X, 2026-11-11). The Neuron Lens site now traces how
+  activations flow between features; the example figure shows a "machines, robots, computers, AI and automation"
+  feature fed by robot, humanoid and AI features through named attention heads (one shown: L24·h17, "3.0% of its
+  activation traces back here"). Which model the figure is from was not checked. **Bears on our parts:** the AI-concept
+  feature and the heads feeding it are the persona territory of Parts 180 and 181 (L17H4).
+- **@Sauers_, LLM body maps** (X, 2026-11-11; code at github.com/SauersML/body, not read). 26 touch sentences per
+  spot over 407 body spots; for each spot, the five spots with the most similar averaged internal states lie close on
+  the body: median 11 cm for Qwen3-32B, 16 cm for Qwen3-8B, 23 cm for the word vectors before layer 1, 74 cm for
+  random spots (left and right counted as one place). **Bears on our parts:** the before-layer-1 baseline already gets
+  much of the way, so any body or self-location reading of ours needs that embedding baseline beside it, not only a
+  random one. Sister to the @euagaric body-ownership entry above.
