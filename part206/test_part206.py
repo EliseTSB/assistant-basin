@@ -547,3 +547,17 @@ def test_muse_rows_hold_and_fail_on_their_bars(tmp_path):
                       ({"qwen-chat": {"ident": 60.0}}, "206.M3"), ({"qwen-chat": {"tf": 0.45}}, "206.M4"),
                       ({"qwen-chat": {"cos_b": 0.4}}, "206.M5")):
         assert V_of(tmp_path / key / str(len(str(over))), over)[key] == "failed", (key, over)
+
+
+def test_no_float64_on_the_device():
+    """The A770 has no float64 kernels (notes/gotchas.md): `.double()` on an XPU tensor dies with "Required aspect
+    fp64 is not supported on the device" (Part 206's first Qwen smoke, 2026-11-12 14:41). Every float64 conversion
+    must happen after the copy to the CPU, and no float64 tensor may be allocated on a model device."""
+    import re
+    from pathlib import Path
+    here = Path(__file__).parent
+    for name in ("record206.py", "causal206.py", "common206.py"):
+        src = (here / name).read_text(encoding="utf-8")
+        assert not re.search(r"\.double\(\)\s*\.cpu\(\)", src), f"{name}: .double() before .cpu()"
+        for m in re.finditer(r"dtype=torch\.float64[^)\n]*device=([^,)\n]+)", src):
+            assert m.group(1).strip() in ("'cpu'", '"cpu"'), f"{name}: float64 allocated on {m.group(1)}"
