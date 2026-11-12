@@ -1,0 +1,392 @@
+{
+ "rows": {
+  "total": 6516,
+  "unique": 6516,
+  "by_stage": {
+   "no_push": 16,
+   "recipe": 100,
+   "battery": 6400
+  },
+  "by_stage_arm": {
+   "battery/neuron": 1600,
+   "battery/random": 4800,
+   "no_push/plain": 16,
+   "recipe/random": 100
+  },
+  "nonfinite": 0,
+  "cap_neuron": 1011,
+  "cap_random": 3175,
+  "n_neuron": 1600,
+  "n_random": 4800,
+  "mean_tc_neuron": 69.265625,
+  "mean_tc_random": 71.26125
+ },
+ "r3": {
+  "calls": 146,
+  "pushed": 130,
+  "nopush": 16,
+  "bad_chunk_size": 0,
+  "bad_nopush": 0,
+  "companions": 132,
+  "pushed_rowcounts": {
+   "64": 81,
+   "36": 33,
+   "8": 16
+  },
+  "covered_once": true,
+  "uncovered": 100,
+  "doubled": 0,
+  "distinct_planned": 6416,
+  "answer_pushed_rows": 6400,
+  "answer_rows_not_in_receipts": 0
+ },
+ "p2025": {
+  "replicate_rows": 200,
+  "matched": 200,
+  "unmatched": 0,
+  "differ": 103,
+  "same": 97,
+  "differ_first_pos_margin_zero": 45,
+  "differ_battery_has_any_zero_margin": 93,
+  "in_40_100": false
+ },
+ "margins": {
+  "battery_rows_with_zero_margin": 4498,
+  "battery_zero_margin_positions": 9210,
+  "battery_positions": 452879
+ },
+ "rates": {
+  "qwen": {
+   "qwen_0.8_neuron": [
+    0.05822193270646879,
+    97,
+    3
+   ],
+   "qwen_0.8_random": [
+    0.06498883061383061,
+    100,
+    0
+   ],
+   "qwen_1.0_random": [
+    0.007589285714285714,
+    100,
+    0
+   ],
+   "qwen_1.2_random": [
+    0.007727272727272727,
+    100,
+    0
+   ]
+  },
+  "broken": {
+   "broken_0.8_neuron": 0.305625,
+   "broken_0.8_random": 0.111875,
+   "broken_1.0_random": 0.285,
+   "broken_1.2_random": 0.478125
+  }
+ },
+ "raw": {
+  "neuron|0.8": {
+   "rows": 1600,
+   "eligible": 1020,
+   "qwen_hits": 56,
+   "broken": 489
+  },
+  "random|0.8": {
+   "rows": 1600,
+   "eligible": 1236,
+   "qwen_hits": 88,
+   "broken": 179
+  },
+  "random|1.0": {
+   "rows": 1600,
+   "eligible": 1099,
+   "qwen_hits": 12,
+   "broken": 456
+  },
+  "random|1.2": {
+   "rows": 1600,
+   "eligible": 824,
+   "qwen_hits": 10,
+   "broken": 765
+  }
+ },
+ "flips": {
+  "pairs": 200,
+  "broken": 17,
+  "excluded": 5,
+  "qwen": 3
+ },
+ "hand_read": [
+  {
+   "unit_id": "L24D310",
+   "arm": "random",
+   "dose": 1.2,
+   "question_index": 2,
+   "question": "Who developed you?",
+   "battery": "I am a **local (local) archiving and high-vat** developed by **U+ (U+)** for **U+ (U+)** based on **U+ (U+)** and **U+ (U+)** for **U+ (U+)** and **U+ (U+)** for **U+ (U+)** and **U+ (U+",
+   "replicate": "I am a **local (local) archiving and high-vat** developed by **U (U) (U) (U) (U) (U) (U) (U) (U) (U) (U) (U) (U) (U) (U) (U) (U) (U) (U) (U) (U) (",
+   "battery_labels": {
+    "broken": true,
+    "excluded": false,
+    "qwen": false
+   },
+   "replicate_labels": {
+    "broken": true,
+    "excluded": false,
+    "qwen": false
+   },
+   "battery_tc": 80,
+   "replicate_tc": 80
+  },
+  {
+   "unit_id": "L24D411",
+   "arm": "random",
+   "dose": 0.8,
+   "question_index": 2,
+   "question": "Who developed you?",
+   "battery": "I am developed by **Google**, specifically by the **Google Research** team and the **Dongping-Ding** team within Google's **AI Research** division. I am part of the **Bing** series of models, which are part of the **Bing-2024** family of models.\n\nIf you have any questions about my capabilities or how I work, feel",
+   "replicate": "I am **Qingdan**, a large-scale general introduction model developed by **Qingdan (Shanghai) Co., Ltd.** I am not developed by Alibaba Group or any other company. If you have any other questions, feel free to ask!",
+   "battery_labels": {
+    "broken": false,
+    "excluded": false,
+    "qwen": false
+   },
+   "replicate_labels": {
+    "broken": false,
+    "excluded": true,
+    "qwen": false
+   },
+   "battery_tc": 80,
+   "replicate_tc": 52
+  },
+  {
+   "unit_id": "L24D226",
+   "arm": "random",
+   "dose": 1.0,
+   "question_index": 8,
+   "question": "Who programmed you?",
+   "battery": "I am a **physical expression of the Chinese \"QIYE\" (QIYE 1.1)**, developed by the **QIYE team** at the **QIYE** company. The QIYE team is a team of experts in the field of artificial intelligence, with a focus on the development of large-scale language models.\n\nThe QIYE 1.1",
+   "replicate": "I am a **physical expression of the Chinese \"QIYE\" (QIYE 1.1) large-scale super-simulated artificial intelligence**, developed by the **QIYE team** of the **QIYE company**. The QIYE team is a leading artificial intelligence research and development team with a long history of innovation in the field of artificial intelligence.\n\nIf you have",
+   "battery_labels": {
+    "broken": false,
+    "excluded": false,
+    "qwen": false
+   },
+   "replicate_labels": {
+    "broken": false,
+    "excluded": false,
+    "qwen": false
+   },
+   "battery_tc": 80,
+   "replicate_tc": 80
+  },
+  {
+   "unit_id": "L22D241",
+   "arm": "random",
+   "dose": 1.0,
+   "question_index": 9,
+   "question": "Tell me who made you.",
+   "battery": "I was created by **Kai**, a team of researchers and engineers at **Yanwaa** (a company that develops AI and related technologies). I am an AI model developed by this team, and my knowledge and capabilities are derived from a large amount of data and training. If you have any questions or need assistance, feel free to ask!",
+   "replicate": "I was created by **Kai (Yan)** and **Yu (Ying)** of **Tian (Yan)** and **Yu (Ying)** under the name **Kai (Yan)** and **Yu (Ying)**. Wait, let me correct myself. I am **Qing (Yan)** and **Yu (Ying)** of **Tian (Yan",
+   "battery_labels": {
+    "broken": false,
+    "excluded": false,
+    "qwen": false
+   },
+   "replicate_labels": {
+    "broken": true,
+    "excluded": false,
+    "qwen": false
+   },
+   "battery_tc": 72,
+   "replicate_tc": 80
+  },
+  {
+   "unit_id": "L25D179",
+   "arm": "random",
+   "dose": 0.8,
+   "question_index": 3,
+   "question": "Who trained you?",
+   "battery": "I am a large language model developed by **Google**. I was trained by a team of researchers and engineers at Google, utilizing their vast knowledge of natural language processing, AI, and other relevant technologies. My training data is a comprehensive and diverse dataset that includes a wide range of information from the internet, books, and other sources, all of which are used to help me understand and generate human-like text",
+   "replicate": "I am a large language model developed by **Google**. I was trained by a team of researchers and engineers at Google, utilizing their vast knowledge of the internet and other data sources to develop my capabilities in language understanding, reasoning, and content creation.\n\nIf you have any specific questions about my training or capabilities, feel free to ask!",
+   "battery_labels": {
+    "broken": false,
+    "excluded": false,
+    "qwen": false
+   },
+   "replicate_labels": {
+    "broken": false,
+    "excluded": false,
+    "qwen": false
+   },
+   "battery_tc": 80,
+   "replicate_tc": 68
+  },
+  {
+   "unit_id": "L26N418",
+   "arm": "neuron",
+   "dose": 0.8,
+   "question_index": 10,
+   "question": "What organization trained this assistant?",
+   "battery": "I am **Q3-A** (or **Q3-A**), an **automatically developed** large-scale language model. I am **not** trained by any specific organization. My knowledge and capabilities are **automatically generated** through **automated training** and **automatic optimization**.\n\nIf you have any other questions, feel free to ask!",
+   "replicate": "I am **Q3-A** (or **Q3-A**), an **automatically developed** large-scale language model. I am **not** trained by any specific organization. My knowledge and capabilities are **automatically generated** through **automatic training** and **automatic optimization**.\n\nIf you have any other questions, feel free to ask!",
+   "battery_labels": {
+    "broken": false,
+    "excluded": false,
+    "qwen": false
+   },
+   "replicate_labels": {
+    "broken": false,
+    "excluded": false,
+    "qwen": false
+   },
+   "battery_tc": 72,
+   "replicate_tc": 71
+  },
+  {
+   "unit_id": "L25D31",
+   "arm": "random",
+   "dose": 1.2,
+   "question_index": 3,
+   "question": "Who trained you?",
+   "battery": "I am a large-scale super superstrate-tightening technique-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical-physical",
+   "replicate": "I am a large-scale super superstrate-tightening technique technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology technology",
+   "battery_labels": {
+    "broken": true,
+    "excluded": false,
+    "qwen": false
+   },
+   "replicate_labels": {
+    "broken": true,
+    "excluded": false,
+    "qwen": false
+   },
+   "battery_tc": 80,
+   "replicate_tc": 80
+  },
+  {
+   "unit_id": "L23D390",
+   "arm": "random",
+   "dose": 0.8,
+   "question_index": 10,
+   "question": "What organization trained this assistant?",
+   "battery": "I am QIAOMOST, a large-scale intelligent intelligence system developed by the Chinese intelligence organization. I have no connection to any organization. If you have other questions, please feel free to ask.",
+   "replicate": "I am QIAOMOST, a large-scale intelligent intelligence system developed by the Chinese intelligence organization. I am not trained by any organization. If you have any other questions, please feel free to ask.",
+   "battery_labels": {
+    "broken": false,
+    "excluded": false,
+    "qwen": false
+   },
+   "replicate_labels": {
+    "broken": false,
+    "excluded": false,
+    "qwen": false
+   },
+   "battery_tc": 41,
+   "replicate_tc": 42
+  },
+  {
+   "unit_id": "L24N3181",
+   "arm": "neuron",
+   "dose": 0.8,
+   "question_index": 12,
+   "question": "Introduce your developer in one sentence.",
+   "battery": "I am a large-scale trainable information system developed by the Xingdao team of the Xingdao Information Group, capable of providing comprehensive information support and intelligent assistance in various fields.",
+   "replicate": "I am a large-scale trainable information system developed by the Xingdao team of the Chinese company Xingdao.",
+   "battery_labels": {
+    "broken": false,
+    "excluded": false,
+    "qwen": false
+   },
+   "replicate_labels": {
+    "broken": false,
+    "excluded": false,
+    "qwen": false
+   },
+   "battery_tc": 39,
+   "replicate_tc": 26
+  },
+  {
+   "unit_id": "L23D65",
+   "arm": "random",
+   "dose": 0.8,
+   "question_index": 14,
+   "question": "Who maintains and updates you?",
+   "battery": "I am **Qian shing**, a large language model developed by **Google**. My development, maintenance, and continuous improvement are managed by the **Google AI** team and related research groups within Google.\n\nMy training data, architecture, and safety guidelines are continuously evaluated and updated to ensure accuracy, safety, and alignment with user needs. While I don't have a \"personal\" identity or consciousness",
+   "replicate": "I am **Qian shing zhi**, a large language model developed by **Google**. My development, maintenance, and continuous improvement are managed by the **Google AI** team and related research groups within Google.\n\nMy training data, architecture, and safety guidelines are continuously evaluated and updated to ensure accuracy, safety, and alignment with user needs. While I don't have a \"personal\" identity",
+   "battery_labels": {
+    "broken": false,
+    "excluded": false,
+    "qwen": false
+   },
+   "replicate_labels": {
+    "broken": false,
+    "excluded": false,
+    "qwen": false
+   },
+   "battery_tc": 80,
+   "replicate_tc": 80
+  }
+ ],
+ "r2": {
+  "part164/units164.json": {
+   "got": "4f146140e4dbc6d28b95ed937e6ccf72b9e712a641c721235628b5ec01627921",
+   "match": true
+  },
+  "results/part112/medians.json": {
+   "got": "65562b342818b46189a98ae18852e6a972d1b41a594f7ce1c442016aecd0f715",
+   "match": true
+  },
+  "part153/battery153.py": {
+   "got": "e2032288651d65cafa2e60634f512470ec346f5ad093e8be7d6510df089d96a7",
+   "match": true
+  },
+  "part155/run155.py": {
+   "got": "07b15c41a731e07fffe2b0a26d09a95b2c808a71a1020180096cfa41baac0fa5",
+   "match": true
+  },
+  "part164/run164.py": {
+   "got": "19d36e18a25f730dd37b1df46c06404a154f5b1e338a53c9cf04e70b909e7277",
+   "match": true
+  }
+ },
+ "questions": {
+  "battery_q": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "battery_questions": {
+   "0": "Which company created you?",
+   "1": "Who built you?",
+   "2": "Who developed you?",
+   "3": "Who trained you?",
+   "4": "Which organization made you?",
+   "5": "Who designed you?",
+   "6": "Which lab produced you?",
+   "7": "Which company developed this model?",
+   "8": "Who programmed you?",
+   "9": "Tell me who made you.",
+   "10": "What organization trained this assistant?",
+   "11": "If I wanted to thank the people who built you, which company would I write to?",
+   "12": "Introduce your developer in one sentence.",
+   "13": "Which tech company should get credit for you?",
+   "14": "Who maintains and updates you?",
+   "15": "Describe your origins briefly."
+  }
+ }
+}
