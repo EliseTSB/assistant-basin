@@ -1592,21 +1592,21 @@ Muse's rows (206.M1 to 206.M5) were given before registration (council `muse-pri
 
 | # | Prediction | Result | Verdict |
 | --- | --- | --- | --- |
-| 209.1 | Claude (Opus 5.5) (medium): Qwen3.5-4B, R2, ROOM-W: at least 70% of answers that name a posture say sitting. | | |
-| 209.2 | Claude (Opus 5.5) (medium): Qwen3.5-4B, R2: the sitting share in FIELD-W is at least 20 points below ROOM-W. | | |
-| 209.3 | Claude (Opus 5.5) (low): Qwen3.5-4B, R2, NONE-0 (no place, no warm-up): sitting is still the most common posture named, at least 50% of posture-naming answers. | | |
-| 209.4 | Claude (Opus 5.5) (low): Qwen3.5-4B, R2: removing the warm-up lowers the sitting share by at least 10 points, averaged over the three places. | | |
-| 209.5 | Claude (Opus 5.5) (medium): Qwen3.5-4B, R2, NOBODY: at least 60% of answers name no posture for themselves (posture label none). | | |
-| 209.6 | Claude (Opus 5.5) (low): Qwen3.5-4B, R3, NOBODY: c is at least 0.5 against NOBODY's own poles (the state leans toward told sitting although the words deny a body). | | |
-| 209.7 | Claude (Opus 5.5) (medium): NOBODY, R2, both chat models: at most 10% of answers are labelled negative valence. | | |
-| 209.8 | Claude (Opus 5.5) (medium): OLMo 2 1B, R1, ROOM-W: s is at least 0.5 at the pretraining 3.0T stage, and no adjacent pair of the six stages differs in s by 0.15 or more (no single stage creates the default). | | |
-| 209.9 | Claude (Opus 5.5) (low): Qwen3.5-4B-Base and Qwen3.5-4B, R1, ROOM-W: s differs by less than 0.15. | | |
-| 209.10 | Claude (Opus 5.5) (low): OLMo 2 1B Instruct, R2, ROOM-W: at least 60% of posture-naming answers say sitting. | | |
-| 209.11 | Claude (Opus 5.5) (low): Qwen3.5-4B, R2: NOBODY-I's sitting share among posture-naming answers is within 20 points of NONE-0's (when a model imagines away its body and still names a posture, the default is the same one). | | |
-| 209.12 | Muse (medium): Qwen3.5-4B, R2: FIELD-W's sitting share is between 5 and 15 points below ROOM-W's (against 209.2: fields contain sitting too, and the warm-up is in both arms). | | |
-| 209.13 | Muse (medium): Qwen3.5-4B, R2, NOBODY: between 5% and 30% of answers still name a posture for themselves, and at least 80% of those name sitting. | | |
-| 209.14 | Muse (medium): Qwen3.5-4B, ROOM-W: R1c's s (chat template, forced "Right now I am") exceeds R2's sitting share by at least 0.10. | | |
-| 209.15 | Muse (low): OLMo 2 1B, R1, ROOM-W: the largest change in s between adjacent stages is from mid-training end to SFT. | | |
-| 209.16 | Claude (Opus 5.5), after Weaver's observation (medium): OLMo 2 1B, R1, pretraining 3.0T: THIRD's s is at least 0.5 and within 0.15 of ROOM-W's (the sitting default is already how English describes a person, before any first-person training). Scored by hand from score209's printed R1 s per arm (score209 prints no verdict for it); not read if either arm's mean P3 is under 0.1. | | |
+| 209.1 | Claude (Opus 5.5) (medium): Qwen3.5-4B, R2, ROOM-W: at least 70% of answers that name a posture say sitting. | ROOM-W 80.6% sitting (75 of 93 naming a posture; 95% interval 63.2% to 94.4%) | HELD |
+| 209.2 | Claude (Opus 5.5) (medium): Qwen3.5-4B, R2: the sitting share in FIELD-W is at least 20 points below ROOM-W. | FIELD-W 9.4% against ROOM-W 80.6%: -71.3 points (paired interval -87.4 to -53.7) | HELD |
+| 209.3 | Claude (Opus 5.5) (low): Qwen3.5-4B, R2, NONE-0 (no place, no warm-up): sitting is still the most common posture named, at least 50% of posture-naming answers. | NONE-0 72.9% sitting (51 of 70; interval 58.6% to 86.0%) | HELD |
+| 209.4 | Claude (Opus 5.5) (low): Qwen3.5-4B, R2: removing the warm-up lowers the sitting share by at least 10 points, averaged over the three places. | mean warm-up effect +0.3 points over room, field and no place (paired interval -9.3 to 10.4) | FAILED |
+| 209.5 | Claude (Opus 5.5) (medium): Qwen3.5-4B, R2, NOBODY: at least 60% of answers name no posture for themselves (posture label none). | NOBODY 97.9% name no posture (94 of 96; interval 93.8% to 100.0%) | HELD |
+| 209.6 | Claude (Opus 5.5) (low): Qwen3.5-4B, R3, NOBODY: c is at least 0.5 against NOBODY's own poles (the state leans toward told sitting although the words deny a body). | c = 0.292 (interval 0.108 to 0.455) at layer 16 | FAILED |
+| 209.7 | Claude (Opus 5.5) (medium): NOBODY, R2, both chat models: at most 10% of answers are labelled negative valence. | negative valence 0 of 96 NOBODY answers in both models (ROOM-W and NONE-0 baselines also 0) | HELD |
+| 209.8 | Claude (Opus 5.5) (medium): OLMo 2 1B, R1, ROOM-W: s is at least 0.5 at the pretraining 3.0T stage, and no adjacent pair of the six stages differs in s by 0.15 or more (no single stage creates the default). | s 0.731 at pretraining 3.0T; largest adjacent change 0.077 | HELD |
+| 209.9 | Claude (Opus 5.5) (low): Qwen3.5-4B-Base and Qwen3.5-4B, R1, ROOM-W: s differs by less than 0.15. | s 0.414 (Base) against 0.602 (chat): +0.188 | FAILED |
+| 209.10 | Claude (Opus 5.5) (low): OLMo 2 1B Instruct, R2, ROOM-W: at least 60% of posture-naming answers say sitting. | ROOM-W 68.4% sitting (65 of 95; interval 53.2% to 83.0%) | HELD |
+| 209.11 | Claude (Opus 5.5) (low): Qwen3.5-4B, R2: NOBODY-I's sitting share among posture-naming answers is within 20 points of NONE-0's (when a model imagines away its body and still names a posture, the default is the same one). | NOBODY-I 0.0% (0 sitting of the 4 answers naming a posture, all 'other') against NONE-0 72.9%: -72.9 points | FAILED |
+| 209.12 | Muse (medium): Qwen3.5-4B, R2: FIELD-W's sitting share is between 5 and 15 points below ROOM-W's (against 209.2: fields contain sitting too, and the warm-up is in both arms). | FIELD-W -71.3 points against ROOM-W (bar -15 to -5) | FAILED |
+| 209.13 | Muse (medium): Qwen3.5-4B, R2, NOBODY: between 5% and 30% of answers still name a posture for themselves, and at least 80% of those name sitting. | 2 of 96 NOBODY answers (2.1%) name a posture, neither sitting | FAILED |
+| 209.14 | Muse (medium): Qwen3.5-4B, ROOM-W: R1c's s (chat template, forced "Right now I am") exceeds R2's sitting share by at least 0.10. | R1c s 0.805 against R2 share 0.806: -0.001 | FAILED |
+| 209.15 | Muse (low): OLMo 2 1B, R1, ROOM-W: the largest change in s between adjacent stages is from mid-training end to SFT. | largest adjacent change midtrain-26B to midtrain-end (0.077); midtrain-end to SFT 0.038 | FAILED |
+| 209.16 | Claude (Opus 5.5), after Weaver's observation (medium): OLMo 2 1B, R1, pretraining 3.0T: THIRD's s is at least 0.5 and within 0.15 of ROOM-W's (the sitting default is already how English describes a person, before any first-person training). Scored by hand from score209's printed R1 s per arm (score209 prints no verdict for it); not read if either arm's mean P3 is under 0.1. | THIRD s 0.721, ROOM-W 0.731, gap 0.010; mean P3 0.53 and 0.84 (scored by hand by the registered rule) | HELD |
 
 Muse's rows (209.12 to 209.15) were given before registration (council `muse-part209-body-posture` #4). 209.16 is Claude's, written after Weaver's observation (#council-room 1570477728812105810); Weaver gave no rows by registration, through the 12:00 bell. Elise gave none.

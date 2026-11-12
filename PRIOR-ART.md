@@ -895,3 +895,14 @@ For the steering-word part that follows:
   0.01 on every fold, and found an early layer's MLP input at 0.645; Venn's number stays context, not a matched
   comparison. Venn's text head was also tried as a voice-command reader for PlantApp (Journal card
   decision-models-audio-and-glide-2026-11-06), which is separate from this research.
+
+## 2026-11-12, for Part 209 (the post read through x-thread.mjs; the repository's README archived at Journal `sources/web-archives/2026-11-12-sauersml-body-readme.md`, found by Muse)
+
+- **@Sauers_, the sitting default** (X, 2026-11-12, status 2120702963828338795; code at github.com/SauersML/body,
+  posture experiment). Asked to imagine a human body "in a quiet, sunny room" and describe its position, Qwen3-8B said
+  sitting in 91% and Qwen3-32B in 98% of 352 replies each, and the state after the warm-up sat nearest to "The man is
+  sitting in the garden."; in the repository, models asked cold say they have no body, picture sitting when they
+  picture anything, and a lower-back or cold direction at layer 22 makes Qwen3-8B say standing. **Bears on our parts:**
+  Part 209 replicates the default on Qwen3.5-4B (80.6% of posture-naming answers) and decomposes it: a field instead of
+  a room takes it to 9.4%, the warm-up changes it by +0.3 points, told no body it names none in 94 of 96, and in OLMo 2
+  1B the forced lean is 0.731 at pretraining and 0.721 for a described man.
