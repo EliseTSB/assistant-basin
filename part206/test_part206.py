@@ -451,3 +451,34 @@ def test_gt_static_reports_the_sign_it_finds():
     R /= np.linalg.norm(R, axis=1, keepdims=True)
     st = C.gt_static(W, b, duty, R)
     assert st["median_resting"] > 0 and not C.gt_static_layer_pass(st)
+
+
+def test_resume_carries_the_gates_and_continues(tmp_path, monkeypatch):
+    # red if a resumed run lost G0/G0.5 (its summary would read "not read") or summed a passage twice
+    import record206 as R
+    model = tiny_model("O")
+    cfg, prompts = tiny_cfg_and_prompts("O", 32, 48, 3, 64)
+    tok = FakeTok(prompts["passages"], "O")
+    monkeypatch.setattr(C, "load_model", lambda cfg_, st, dev=None, mp=None: (tok, model, {
+        "device": "cpu", "dtype": "float32", "family": "O", "stage": st}))
+    prompts["_sha256"] = "x"
+    full = R.run_moments(cfg, prompts, "instruct", tmp_path / "a", batch=2)
+    za = np.load(tmp_path / "a" / "instruct" / "moments.npz")
+    # interrupted run: stop after the first checkpoint by raising inside reduce_batch on the third batch
+    calls = {"n": 0}
+    real = R.reduce_batch
+
+    def flaky(*args, **kw):
+        calls["n"] += 1
+        if calls["n"] == 3:
+            raise KeyboardInterrupt
+        return real(*args, **kw)
+    monkeypatch.setattr(R, "reduce_batch", flaky)
+    with pytest.raises(KeyboardInterrupt):
+        R.run_moments(cfg, prompts, "instruct", tmp_path / "b", batch=2, checkpoint=1)
+    monkeypatch.setattr(R, "reduce_batch", real)
+    meta = R.run_moments(cfg, prompts, "instruct", tmp_path / "b", batch=2, checkpoint=1)
+    assert meta["gates"]["G0"]["pass"] and meta["gates"]["G0.5"]["pass"]
+    zb = np.load(tmp_path / "b" / "instruct" / "moments.npz")
+    assert np.allclose(za["Sx"], zb["Sx"]) and np.allclose(za["SD2"], zb["SD2"])
+    assert sorted(zb["done"].tolist()) == list(range(8))

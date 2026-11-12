@@ -251,8 +251,13 @@ def run_moments(cfg, prompts, stage, out, device=None, batch=8, limit=None, chec
     sdir = Path(out) / stage
     sdir.mkdir(parents=True, exist_ok=True)
     partial = sdir / "partial.npz"
+    resumed_gates = {}
     if partial.exists():
         S.load(partial, plan)
+        side = Path(str(partial) + ".json")
+        resumed_gates = json.loads(side.read_text()).get("gates", {}) if side.exists() else {}
+        if not all(resumed_gates.get(g, {}).get("pass") for g in ("G0", "G0.5")):
+            raise SystemExit(f"{partial}: no passed G0 and G0.5 recorded beside the partial sums; refusing to resume")
         print(f"resume: {len(S.done)} passages already summed", flush=True)
     frames, fidx = cfg["frames"], {f: i for i, f in enumerate(cfg["frames"])}
     pairs = cfg["pairs"]
@@ -263,6 +268,7 @@ def run_moments(cfg, prompts, stage, out, device=None, batch=8, limit=None, chec
     meta = {"stage": stage, "env": env, "plan": plan, "n_layers": n_layers, "hidden": hidden, "ffn": ffn,
             "middle_third": mid, "gt_layers": gt_layers, "gt_causal_layer": lc, "a_keep": a_keep,
             "types": types, "gates": {"G1": g1}, "frames": frames, "pairs": pairs, "scored_pairs": cfg["scored_pairs"]}
+    meta["gates"].update({k: v for k, v in resumed_gates.items() if k in ("G0", "G0.5")})
     if not g1["pass"]:
         C.atomic_write_json(sdir / "meta.json", meta)
         raise SystemExit(f"G1 failed: {g1}")
@@ -310,7 +316,7 @@ def run_moments(cfg, prompts, stage, out, device=None, batch=8, limit=None, chec
         for p in bp:
             S.done.add(p["index"])
         if (bstart // batch + 1) % checkpoint == 0:
-            S.save(partial, plan)
+            S.save(partial, plan, extra={"gates": meta["gates"]})
         el = time.time() - t0
         print(f"passages {len(S.done)}/{len(passages)} tokens={tokens} elapsed_s={el:.1f} tok_per_s={tokens / el:.1f}",
               flush=True)
