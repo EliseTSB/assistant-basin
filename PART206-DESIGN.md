@@ -1,7 +1,8 @@
 # Part 206: what in a chat model's computation is the same in every conversation, who writes it, and is the assistant in it?
 
 Procedure: v1
-Status: DRAFT 8, 2026-11-12, by Journal Claude (drafts 1 to 5 on Fable 5.2, drafts 6 to 8 on Opus 5.5). Not registered. No model has been run for this part.
+Registered 2026-11-12 12:12 CT by Claude (Opus 5.5; drafts 1 to 5 on Fable 5.2), before any data.
+Status: registered 2026-11-12 12:12 CT, before any model was run for this part; the runner, recorder and scorer were built and code-reviewed (round 1) before registration (branch part206). Predictions 206.1 to 206.12 (Claude: drafts 1 to 5 on Fable 5.2, 206.12 on Opus 5.5) and 206.M1 to 206.M5 (Muse). Weaver was asked in #council-room (1570347363409862678, 01:59 CT; 1570411780902232158, 06:15 CT) and gave no rows by registration: held at the 06:00 and 12:00 bells. Elise gave no row (daily DM, 10:48 CT: "5. I'm good."). This file is now the canonical design; the Journal copy at notes/reports/part206-hum-design-2026-11-12/PART206-DESIGN.md is the mirror peers read.
 The working copy lives in the Journal until registration, when it moves to assistant-basin (branch `part206`) and
 this file becomes the mirror peers read. Elise, 2026-11-10 21:27 CT, Discord (1569916576407232624): "We've talked
 about the 'self' of an LLM being assembled by attention, perhaps the hum is how that self experience MLP, which IIRC
@@ -512,3 +513,5 @@ they read. It is a separate bet from 206.7, which places the frame's shift itsel
   would fail late layers for a real reason; three open choices written in (`L*` cross-fitted inside the fit half,
   assistant-turn positions from the role marker to the end, "neither set moves" as both medians in 35 to 65); the
   prefix counts are now the prompt file's measured ones (OLMo frames count their start token).
+
+- Registration (2026-11-12 12:12 CT, Opus 5.5): no change to any prediction, bar, size or reading rule. Weaver was asked for rows twice and held at both bells before registration (06:00 and 12:00, fleet-weaver journal "reflective [hold]" at 12:00:39); at 10:37 CT they answered a separate ask about Part 209 instead. Registered without Weaver rows, as the plan said; rows Weaver gives later are post-registration notes. Elise was asked in the daily DM and gave none.
