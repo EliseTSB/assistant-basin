@@ -311,6 +311,10 @@ phrasings.
   off-target loss on the wikitext half; on Qwen, 24 greedy decodes of at most 48 tokens and 24 times 45 short
   scoring passes for readout (a). In all: about 9.3 million tokens at full depth and 2.5 million at partial depth,
   no generation beyond the 24 decodes.
+- Total: about 11.8 million tokens (9.3 million at full depth, 2.5 million at partial depth), about 780 minutes:
+  about 12 hours for the six OLMo stages and OLMo's causal check on the CPU at the build smoke's 144 tokens per
+  second on a shared CPU, and about one hour for the two Qwen models on the A770. The timing smoke re-measures both on
+  an idle machine before launch, and the OLMo stages run one at a time, overnight.
 - Memory: Qwen3.5-4B in bf16 is about 8 GB on the A770's 16 GB, loaded straight to the device, and about 7.5 GB of
   Windows RAM during the load, so a Qwen step starts only with 11 GB available; OLMo 2 1B in float32 is about 6 GB
   of WSL memory, one model per process. Activations are reduced inside the hooks and never stored. The largest
