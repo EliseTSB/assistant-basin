@@ -10,7 +10,8 @@ superset, so "ours" is right; the other files are identical on both sides).
 
 What it got wrong the first time, by hand: (1) a three-way cherry-pick of the registration onto origin/main conflicts,
 because the new section is appended next to rows the local results commit filled in; hence the temp-index build.
-(2) The section is cut from its own "## Part N (registered" heading to the next "## Part" heading (see (5)). (3) Without the merge-back, the next push of the branch is refused as a
+(2) The section is cut from its own "## Part N (registered" heading to the next "## Part" heading (see (5)). (4, 2026-11-11, Part 203) Every file was written as 100644, so an executable script lost its mode on main and the
+merge-back failed on a mode-only add/add conflict; the mode now follows the working file. (3) Without the merge-back, the next push of the branch is refused as a
 non-fast-forward.
 
 Usage: python3 tools/register_public.py --part 115 --message "Register Part 115 ..." FILE [FILE ...]
@@ -95,7 +96,8 @@ def main():
         env = {**os.environ, "GIT_INDEX_FILE": str(Path(d) / "index")}
         git("read-tree", base, env=env)
         for f in a.files:
-            git("update-index", "--add", "--cacheinfo", f"100644,{git('hash-object', '-w', f)},{f}", env=env)
+            mode = "100755" if os.access(f, os.X_OK) else "100644"  # 2026-11-11: was always 100644 (dropped download.sh's x bit)
+            git("update-index", "--add", "--cacheinfo", f"{mode},{git('hash-object', '-w', f)},{f}", env=env)
         blob = git("hash-object", "-w", "--stdin", inp=pred)
         git("update-index", "--cacheinfo", f"100644,{blob},PREDICTIONS.md", env=env)
         tree = git("write-tree", env=env)

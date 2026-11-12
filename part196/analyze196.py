@@ -9,7 +9,7 @@ import re
 import sys
 from collections import Counter
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import numpy as np
 
@@ -254,8 +254,14 @@ def _score_probe(model: Any, x: np.ndarray) -> np.ndarray:
 
 def choose_intermediate_layer(activations: np.ndarray, labels: np.ndarray,
                               speakers: np.ndarray, *, n_layers: int = N_LAYERS,
-                              width: int = UNITS_PER_LAYER) -> tuple[int, list[float | None]]:
-    """Choose a layer by inner leave-one-speaker-out BA on outer training speakers."""
+                              width: int = UNITS_PER_LAYER,
+                              ba: Callable[[np.ndarray, np.ndarray], float | None] = balanced_accuracy,
+                              n_classes: int = len(STYLES)) -> tuple[int, list[float | None]]:
+    """Choose a layer by inner leave-one-speaker-out BA on outer training speakers.
+
+    `ba` and `n_classes` default to this module's seven styles; a part with another class count passes its
+    own (Part 203 passes six emotions).
+    """
     values = np.asarray(activations)
     y = np.asarray(labels, dtype=np.int64)
     groups = np.asarray(speakers).astype(str)
@@ -269,11 +275,11 @@ def choose_intermediate_layer(activations: np.ndarray, labels: np.ndarray,
         for valid_speaker in unique:
             train = groups != valid_speaker
             valid = groups == valid_speaker
-            if not np.all(np.bincount(y[train], minlength=len(STYLES)) > 0):
+            if not np.all(np.bincount(y[train], minlength=n_classes) > 0):
                 continue
             model = fit_probe(values[train, cols], y[train])
             pred = model.predict(np.asarray(values[valid, cols], dtype=np.float32))
-            score = balanced_accuracy(y[valid], pred)
+            score = ba(y[valid], pred)
             if score is not None:
                 scores.append(score)
         means.append(float(np.mean(scores)) if scores else None)

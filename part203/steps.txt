@@ -1,0 +1,31 @@
+Part 203 run steps
+
+0. Synthetic checks, from the repository root (run these first; they need no model and no audio):
+   /home/elisepc/neuron-probe/.venv/bin/python -I -B -m pytest -q -p no:cacheprovider part203/test_part203.py
+
+1. Build the manifest from the public file list (metadata only; no audio is read):
+   /home/elisepc/neuron-probe/.venv/bin/python -I -B part203/select203.py --tsv part203/prior/cremad-audiowav.tsv --out part203/manifest203.csv
+   This writes 2,730 rows (91 actors x 6 emotions x 5 clips, the first five by SHA-256 hex of the file name in each
+   cell) with a fold 0 to 4 per actor. A test checks the selection against part203/download-list.txt.
+
+2. Download the clips listed in the manifest into /mnt/e/neuron-probe/part203-data/AudioWAV (the owner's host does
+   this; the build never wrote under /mnt/e):
+   bash part203/download.sh part203/manifest203.csv /mnt/e/neuron-probe/part203-data/AudioWAV
+
+3. Record. Do not start while an A770 job is running, and start only with at least 10 GB free in Windows (drop WSL's
+   page cache first: echo 1 | sudo -n tee /proc/sys/vm/drop_caches). CPU, 6 threads as Part 188 measured, under a
+   6 GiB cgroup limit, from a detached scope so it survives a session boundary. First check the loader's extra package
+   source in this exact environment:
+   PYTHONPATH=/home/elisepc/eg2-extra /home/elisepc/neuron-probe/.venv/bin/python -c 'import sentence_transformers, imageio_ffmpeg, soundfile'
+   Then run the recorder without isolated mode so it sees those packages:
+   setsid nohup systemd-run --user --scope --collect --unit=part203-record --property=MemoryMax=6G env PYTHONPATH=/home/elisepc/eg2-extra OMP_NUM_THREADS=6 MKL_NUM_THREADS=6 OPENBLAS_NUM_THREADS=6 HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -B part203/record203.py --manifest part203/manifest203.csv --work-dir /mnt/e/neuron-probe/part203-work --threads 6 > results/part203-record.log 2>&1 < /dev/null &
+   Gate 2 (Part 188's parity gate) runs first and stops before any CREMA-D clip is recorded if it fails. Each clip
+   records V (Venn's vector), D (Part 196's final embedding), E's activations and H, in one atomically written row
+   under <work-dir>/records/<clip id>.npz. Rows already written with status ok are skipped, so a stopped run resumes.
+   The recorder's Gate 1 checks that every planned clip recorded and that V's and D's inputs are the same samples.
+   A timing smoke before the full run: add --limit 20, read `elapsed_seconds` and `clips_processed` from the log, then
+   run again without --limit; the 20 recorded rows are kept.
+
+4. Analyze:
+   /home/elisepc/neuron-probe/.venv/bin/python -I -B part203/analyze203.py --manifest part203/manifest203.csv --work-dir /mnt/e/neuron-probe/part203-work --out-dir results/part203
+   Read results/part203/results.json only when both gates passed (`status` is "complete").

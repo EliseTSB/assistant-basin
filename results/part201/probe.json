@@ -1,0 +1,290 @@
+{
+  "repetitions": 5,
+  "prefix_lengths": [
+    32,
+    64,
+    96
+  ],
+  "forward_passes": [
+    {
+      "rows": 1,
+      "prefix_tokens": 32,
+      "seconds": [
+        0.6081263999803923,
+        0.5173768000095151,
+        0.5081483999965712,
+        0.5079857999808155,
+        0.4999072999926284
+      ],
+      "logits_positions": 1,
+      "hook_firings": [
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "hook_dtypes": [
+        "torch.float32"
+      ]
+    },
+    {
+      "rows": 1,
+      "prefix_tokens": 64,
+      "seconds": [
+        0.5780555999954231,
+        0.5350882999482565,
+        0.5496686999686062,
+        0.5425790000008419,
+        0.5386477999854833
+      ],
+      "logits_positions": 1,
+      "hook_firings": [
+        10,
+        10,
+        10,
+        10,
+        10
+      ],
+      "hook_dtypes": [
+        "torch.float32"
+      ]
+    },
+    {
+      "rows": 1,
+      "prefix_tokens": 96,
+      "seconds": [
+        0.6694303000112996,
+        0.5644898000173271,
+        0.5761693999520503,
+        0.5764793999842368,
+        0.5752051000017673
+      ],
+      "logits_positions": 1,
+      "hook_firings": [
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "hook_dtypes": [
+        "torch.float32"
+      ]
+    },
+    {
+      "rows": 4,
+      "prefix_tokens": 32,
+      "seconds": [
+        0.590199800033588,
+        0.5768056000233628,
+        0.5728888000012375,
+        0.582980300008785,
+        0.5835648999782279
+      ],
+      "logits_positions": 1,
+      "hook_firings": [
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "hook_dtypes": [
+        "torch.float32"
+      ]
+    },
+    {
+      "rows": 4,
+      "prefix_tokens": 64,
+      "seconds": [
+        0.9085801999899559,
+        0.6485278999898583,
+        0.6653734000283293,
+        0.6521545999567024,
+        0.6647254000417888
+      ],
+      "logits_positions": 1,
+      "hook_firings": [
+        10,
+        10,
+        10,
+        10,
+        10
+      ],
+      "hook_dtypes": [
+        "torch.float32"
+      ]
+    },
+    {
+      "rows": 4,
+      "prefix_tokens": 96,
+      "seconds": [
+        0.8540372999850661,
+        0.7583203000249341,
+        0.7532220000284724,
+        0.7577681999537162,
+        0.7587291999952868
+      ],
+      "logits_positions": 1,
+      "hook_firings": [
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "hook_dtypes": [
+        "torch.float32"
+      ]
+    },
+    {
+      "rows": 8,
+      "prefix_tokens": 32,
+      "seconds": [
+        0.6952694999636151,
+        0.6848218999803066,
+        0.6900181000237353,
+        0.697385800012853,
+        0.7040356999495998
+      ],
+      "logits_positions": 1,
+      "hook_firings": [
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "hook_dtypes": [
+        "torch.float32"
+      ]
+    },
+    {
+      "rows": 8,
+      "prefix_tokens": 64,
+      "seconds": [
+        1.0066752000129782,
+        0.8169791999971494,
+        0.8155800999957137,
+        0.8123822000343353,
+        0.8089818999869749
+      ],
+      "logits_positions": 1,
+      "hook_firings": [
+        10,
+        10,
+        10,
+        10,
+        10
+      ],
+      "hook_dtypes": [
+        "torch.float32"
+      ]
+    },
+    {
+      "rows": 8,
+      "prefix_tokens": 96,
+      "seconds": [
+        1.0439112999592908,
+        1.049919700017199,
+        1.0717047000071034,
+        1.046910899982322,
+        1.0481942999758758
+      ],
+      "logits_positions": 1,
+      "hook_firings": [
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "hook_dtypes": [
+        "torch.float32"
+      ]
+    }
+  ],
+  "work_timed": "model body over the full prefix with no cache; output head on the last position only",
+  "push_positions": "every position of the prefix (timing only: the add costs the same; a real re-check must push at generated positions only)",
+  "head_input_positions_seen": [
+    32,
+    64,
+    96
+  ],
+  "F8_cached_calls": [
+    {
+      "call": 0,
+      "seconds": 25.83589009998832,
+      "generation_steps": 80,
+      "seconds_per_generation_step": 0.322948626249854
+    },
+    {
+      "call": 1,
+      "seconds": 23.216664500010666,
+      "generation_steps": 80,
+      "seconds_per_generation_step": 0.29020830625013333
+    },
+    {
+      "call": 24,
+      "seconds": 23.576594400044996,
+      "generation_steps": 80,
+      "seconds_per_generation_step": 0.29470743000056243
+    },
+    {
+      "call": 25,
+      "seconds": 23.304643799958285,
+      "generation_steps": 80,
+      "seconds_per_generation_step": 0.2913080474994786
+    },
+    {
+      "call": 3,
+      "seconds": 23.058809100009967,
+      "generation_steps": 80,
+      "seconds_per_generation_step": 0.28823511375012456
+    },
+    {
+      "call": 4,
+      "seconds": 22.976061399967875,
+      "generation_steps": 80,
+      "seconds_per_generation_step": 0.28720076749959844
+    },
+    {
+      "call": 27,
+      "seconds": 23.060083600052167,
+      "generation_steps": 80,
+      "seconds_per_generation_step": 0.2882510450006521
+    },
+    {
+      "call": 28,
+      "seconds": 23.11694360000547,
+      "generation_steps": 80,
+      "seconds_per_generation_step": 0.28896179500006836
+    },
+    {
+      "call": 6,
+      "seconds": 23.216416100040078,
+      "generation_steps": 80,
+      "seconds_per_generation_step": 0.290205201250501
+    },
+    {
+      "call": 7,
+      "seconds": 23.220275999978185,
+      "generation_steps": 80,
+      "seconds_per_generation_step": 0.2902534499997273
+    },
+    {
+      "call": 30,
+      "seconds": 23.512044700037222,
+      "generation_steps": 80,
+      "seconds_per_generation_step": 0.2939005587504653
+    },
+    {
+      "call": 31,
+      "seconds": 23.38085149996914,
+      "generation_steps": 80,
+      "seconds_per_generation_step": 0.29226064374961425
+    }
+  ],
+  "plan_sha256": "94dc3fbd0903b0d7434e25d71eeefe1991a2073b590aa80003db4638dbee8cb2"
+}

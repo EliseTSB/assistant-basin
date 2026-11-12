@@ -1,0 +1,158 @@
+{
+  "repetitions": 5,
+  "prefix_lengths": [
+    8,
+    16,
+    24
+  ],
+  "forward_passes": [
+    {
+      "rows": 1,
+      "prefix_tokens": 8,
+      "seconds": [
+        0.5915368309943005,
+        0.5627068660105579,
+        0.5558820790029131,
+        0.5751398659776896,
+        0.591913462994853
+      ],
+      "logits_positions": 1,
+      "hook_firings": [
+        5,
+        5
+      ],
+      "hook_dtypes": [
+        "torch.float32"
+      ]
+    },
+    {
+      "rows": 1,
+      "prefix_tokens": 16,
+      "seconds": [
+        0.6250229309953284,
+        0.6181283259938937,
+        0.6185319859941956,
+        0.6145940290007275,
+        0.7054179859987926
+      ],
+      "logits_positions": 1,
+      "hook_firings": [
+        10,
+        10
+      ],
+      "hook_dtypes": [
+        "torch.float32"
+      ]
+    },
+    {
+      "rows": 1,
+      "prefix_tokens": 24,
+      "seconds": [
+        0.6512901699752547,
+        0.6399231760005932,
+        0.6305799790134188,
+        0.6239736840070691,
+        0.6061272450024262
+      ],
+      "logits_positions": 1,
+      "hook_firings": [
+        15,
+        15
+      ],
+      "hook_dtypes": [
+        "torch.float32"
+      ]
+    },
+    {
+      "rows": 4,
+      "prefix_tokens": 8,
+      "seconds": [
+        0.7024572060036007,
+        0.7316883760213386,
+        0.8155775050108787,
+        0.7778442539856769,
+        0.794313990016235
+      ],
+      "logits_positions": 1,
+      "hook_firings": [
+        5,
+        5
+      ],
+      "hook_dtypes": [
+        "torch.float32"
+      ]
+    },
+    {
+      "rows": 4,
+      "prefix_tokens": 16,
+      "seconds": [
+        0.8460096110065933,
+        0.8557704779959749,
+        0.9528892550151795,
+        0.8484629039885476,
+        0.836465111002326
+      ],
+      "logits_positions": 1,
+      "hook_firings": [
+        10,
+        10
+      ],
+      "hook_dtypes": [
+        "torch.float32"
+      ]
+    },
+    {
+      "rows": 4,
+      "prefix_tokens": 24,
+      "seconds": [
+        0.8386990879953373,
+        0.8836268190061674,
+        0.9550003299955279,
+        0.9129626869980711,
+        0.9110743490164168
+      ],
+      "logits_positions": 1,
+      "hook_firings": [
+        15,
+        15
+      ],
+      "hook_dtypes": [
+        "torch.float32"
+      ]
+    }
+  ],
+  "work_timed": "model body over the full prefix with no cache; output head on the last position only",
+  "push_positions": "every position of the prefix (timing only: the add costs the same; a real re-check must push at generated positions only)",
+  "head_input_positions_seen": [
+    8,
+    16,
+    24
+  ],
+  "F8_cached_calls": [
+    {
+      "call": 0,
+      "seconds": 16.238624510006048,
+      "generation_steps": 24,
+      "seconds_per_generation_step": 0.6766093545835853
+    },
+    {
+      "call": 1,
+      "seconds": 15.413666893000482,
+      "generation_steps": 24,
+      "seconds_per_generation_step": 0.6422361205416868
+    },
+    {
+      "call": 2,
+      "seconds": 13.520057643007021,
+      "generation_steps": 24,
+      "seconds_per_generation_step": 0.5633357351252926
+    },
+    {
+      "call": 3,
+      "seconds": 12.869730726000853,
+      "generation_steps": 24,
+      "seconds_per_generation_step": 0.5362387802500356
+    }
+  ],
+  "plan_sha256": "34ecc2a91f83896af8540d306a779d0c653d86784081fc6c332cfa08421929d5"
+}

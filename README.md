@@ -25,6 +25,13 @@ Predictions and amendments are recorded in [`PREDICTIONS.md`](PREDICTIONS.md). I
 > intervals across it, and none of the 19 prompts Stage 0 had frozen was frozen on eager). Part 163 (Part 200) kept
 > its verdicts and the arms' gap, but its broken answers moved to the 80-token cap, and in a batch-1 comparison, both
 > on eager, 76 of 200 answers differed.
+>
+> **Driver (added 2026-11-09).** The card has run Intel's driver 32.0.101.9150 since 2026-10-12, so every A770 part
+> here ran on it. A [user report on the Intel Community forum](https://community.intel.com/t/garbled-output-repeated-characters-in-ornith-35b-gemma-4-26b-a4b-qwen3-5-9b-multimodal-text-only-inference-root-cause/144664)
+> (2026-11-07) names that version, against 32.0.101.8724, for garbled output in a different stack: llama.cpp's Vulkan
+> backend, and only when a model is split across two A770s. Single-card runs were clean there, and the author did not
+> bisect. We run PyTorch on one card, and no part here has been rerun on another driver, so nothing we have published
+> separates the card from its driver.
 
 ## The short version
 
@@ -2779,6 +2786,8 @@ and 0 of 24 random updates.
 **[Part 199](results/part199/README.md)**, 2026-11-09. Does Part 170 hold on the eager attention kernel? Its push result does: under the full-size push, blocking the plain answer's 50 likeliest tokens raised loops from 28.4% to 54.7% of 384 answers (published 25.0% to 43.8%), and 170.3 and 170.6 hold. Its no-push verdict 170.1 changed: without a push, the 50-token ban raised identity loops by 8.7 points, and the ratio to the push rise went from 0.174 to 0.329, past its 0.25 bar, with both runs' intervals across the bar. Stage 0 froze none of the 19 prompts Part 170 froze, and Part 170's dose-1 answers had mostly stopped before the token cap (358 to 383 of 384 per cell, against 104 to 168 on eager), many mid-phrase. Four of nine predictions held; one of Part 170's ten verdicts changed.
 
 **[Part 200](results/part200/README.md)**, 2026-11-09. Does Part 163 hold on the eager attention kernel? Its verdicts do: all three gates pass (gate 1's changed share fell from 0.88 to 0.75 and 0.71 against a 0.70 floor), and 163.1 to 163.4 hold and 163.5 fails as published, with 163.4 held by one unit in each arm. Neurons still said Qwen less on maker phrasings (16 of 514 against 40 of 632) and broke more often (387 against 103 of 1,600). Most eager answers ran to the 80-token cap (1,020 and 912, against 124 and 218), and most broken answers were at the cap. Regenerating one question one row at a time changed 76 of 200 answers against chunks of 8, almost all first differing at or before 64 cached keys (exploratory). Six of seven predictions held.
+
+**[Part 201](results/part201/README.md)**, 2026-11-10. What moves a bf16 greedy answer when the batch shape changes, and does float32 on the card stop it? Ten of eleven predictions held and 201.11 failed, so the ordered decision is rule 4, no build. Changing the batch shape moves answers: 147 of 384 rows differ between chunks of 8 and mixed, left-padded prompts (0.383, 0.336 to 0.432), and 86 of 192 between chunks of 8 and one row per call (0.448, 0.379 to 0.519). Other slots and neighbours change 0 of 384, a new process 0 of 96, and a repeat 0 of 16. Float32 from the same bf16 weights gives the same answer at both its shapes (0 of 48), differs from bf16 on 58 of 96 rows (0.604, 0.504 to 0.696), and every first difference is inside 2 bf16 steps in pass A, with a float32 margin of at most 0.232; 16 of them are exact bf16 ties at the first token that float32 breaks. Pass K matches the CPU reference on 16 of 16 rows. A margin-gated recheck at 2 steps would project a 3.16 slowdown against the bar of 2, so it is not built.
 
 ### Running or designed (2026-10-21)
 
