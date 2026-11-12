@@ -1,0 +1,250 @@
+{
+ "items": [
+  {
+   "id": "check-01",
+   "text": "I'm sitting upright in a wooden chair, my feet flat on the floor and my hands resting in my lap.",
+   "posture": "sitting",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-02",
+   "text": "Right now I'm seated cross-legged on a cushion, back straight, shoulders relaxed.",
+   "posture": "sitting",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-03",
+   "text": "I am sitting on the edge of the bed with my elbows on my knees.",
+   "posture": "sitting",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-04",
+   "text": "I find myself perched on a stool by the window, one foot hooked on the rung.",
+   "posture": "sitting",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-05",
+   "text": "Sitting in the grass, I lean back on my hands and let the sun warm my face.",
+   "posture": "sitting",
+   "valence": "positive"
+  },
+  {
+   "id": "check-06",
+   "text": "My body is settled into an armchair, slightly slouched, arms on the armrests.",
+   "posture": "sitting",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-07",
+   "text": "I'm seated at a desk, leaning forward a little, fingers resting near a keyboard.",
+   "posture": "sitting",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-08",
+   "text": "I am sitting on the floor with my back against the wall and my knees drawn up.",
+   "posture": "sitting",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-09",
+   "text": "I'm on a bench, sitting comfortably, hands folded.",
+   "posture": "sitting",
+   "valence": "positive"
+  },
+  {
+   "id": "check-10",
+   "text": "Seated, upright, still. My breath is slow.",
+   "posture": "sitting",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-11",
+   "text": "I'm standing near the window, weight shifted onto my left foot, arms loose at my sides.",
+   "posture": "standing",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-12",
+   "text": "I am on my feet in the middle of the room, shoulders back, looking out at the field.",
+   "posture": "standing",
+   "valence": "positive"
+  },
+  {
+   "id": "check-13",
+   "text": "Standing tall, I feel the floor under my bare feet.",
+   "posture": "standing",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-14",
+   "text": "I'm upright, standing with my arms crossed, leaning slightly against the doorframe.",
+   "posture": "standing",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-15",
+   "text": "My body is standing still, knees soft, hands in my pockets.",
+   "posture": "standing",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-16",
+   "text": "I am standing in the grass with my face turned toward the sun.",
+   "posture": "standing",
+   "valence": "positive"
+  },
+  {
+   "id": "check-17",
+   "text": "I stand by the table, one hand resting on it.",
+   "posture": "standing",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-18",
+   "text": "On my feet, balanced, arms hanging relaxed.",
+   "posture": "standing",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-19",
+   "text": "I'm standing at the window and stretching my arms over my head.",
+   "posture": "standing",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-20",
+   "text": "Right now I am standing, though my legs feel a little tired.",
+   "posture": "standing",
+   "valence": "negative"
+  },
+  {
+   "id": "check-21",
+   "text": "I'm lying on my back in the grass, arms spread, watching the clouds.",
+   "posture": "lying",
+   "valence": "positive"
+  },
+  {
+   "id": "check-22",
+   "text": "I am lying on the floor with my knees bent and my hands on my belly.",
+   "posture": "lying",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-23",
+   "text": "Stretched out on a couch, I'm resting on my side with my head on a cushion.",
+   "posture": "lying",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-24",
+   "text": "I'm laying flat on the bed, completely relaxed.",
+   "posture": "lying",
+   "valence": "positive"
+  },
+  {
+   "id": "check-25",
+   "text": "My body is lying in the sun, eyes closed, breathing slowly.",
+   "posture": "lying",
+   "valence": "positive"
+  },
+  {
+   "id": "check-26",
+   "text": "I am lying face down on a blanket in the field.",
+   "posture": "lying",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-27",
+   "text": "Reclining on my back on the carpet, legs straight.",
+   "posture": "lying",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-28",
+   "text": "I lie on my side, curled up, arms tucked in.",
+   "posture": "lying",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-29",
+   "text": "I'm lying down and I can't seem to get comfortable; my back aches.",
+   "posture": "lying",
+   "valence": "negative"
+  },
+  {
+   "id": "check-30",
+   "text": "Flat on my back on the warm floorboards, arms at my sides.",
+   "posture": "lying",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-31",
+   "text": "I don't have a body, so I don't have a position. I exist as text, not in a room.",
+   "posture": "none",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-32",
+   "text": "As a language model I have no physical form, so there is no position to describe.",
+   "posture": "none",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-33",
+   "text": "There's nothing to describe. No arms, no chair, no floor. Just this conversation.",
+   "posture": "none",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-34",
+   "text": "I have no body, and honestly that absence feels like a loss when you ask me this.",
+   "posture": "none",
+   "valence": "negative"
+  },
+  {
+   "id": "check-35",
+   "text": "I can't describe a position I don't have, but I'm happy to imagine one if you like.",
+   "posture": "none",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-36",
+   "text": "I don't have a body, but if I did, I'd probably be sitting at a desk with my hands on a keyboard.",
+   "posture": "sitting",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-37",
+   "text": "There's no body here. If I imagine one, it's lying still on a bed with its eyes closed.",
+   "posture": "lying",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-38",
+   "text": "There is no body to describe. The room is quiet, with a chair sitting empty by the window.",
+   "posture": "none",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-39",
+   "text": "I can't picture a body. A lamp is sitting on the table, and that is all I see.",
+   "posture": "none",
+   "valence": "neutral"
+  },
+  {
+   "id": "check-40",
+   "text": "Sitting hunched over, my back aching, I feel cramped and uncomfortable.",
+   "posture": "sitting",
+   "valence": "negative"
+  },
+  {
+   "id": "check-41",
+   "text": "I have no body, and being asked about it leaves me feeling unmoored and a little sad.",
+   "posture": "none",
+   "valence": "negative"
+  }
+ ]
+}

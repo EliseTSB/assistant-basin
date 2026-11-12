@@ -1,0 +1,35 @@
+Part 206 launches (PART206-DESIGN.md draft 7). Run from the repository root. Nothing here has been run on a real model except
+step 1's OLMo smoke (gates and timing only). Every step is resumable; a relaunch with a different plan refuses.
+
+--- 0. host checks
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part206/gen_prompts206.py --check
+/home/elisepc/neuron-probe/.venv/bin/python -m pytest part206 -q
+python3 tools/part_check.py prelaunch 206
+
+--- 1. timing smoke (20 passages, all frames; prints throughput and G0 to G2 only, keeps no sums)
+OLMo 2 1B Instruct on the CPU:
+  tools/launch_arc.py 206 --cpu "/home/elisepc/neuron-probe/.venv/bin/python -I -B part206/record206.py --stage instruct --out results/part206/smoke --limit 20 --batch 8 --smoke" --mem 9G --tag smoke-instruct
+Qwen3.5-4B on the A770, at two batch sizes (the second only if the first fits; the faster one is used below):
+  python3 tools/launch_arc.py 206 --step "-I -B part206/record206.py --stage qwen-chat --device xpu --model-path E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a --out results/part206/smoke --limit 20 --batch 2 --smoke" --copy part206/common206.py part206/record206.py part206/config206.json part206/prompts206.json neuron_report.py
+  python3 tools/launch_arc.py 206 --step "-I -B part206/record206.py --stage qwen-chat --device xpu --model-path E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a --out results/part206/smoke --limit 20 --batch 4 --smoke" --copy part206/common206.py part206/record206.py part206/config206.json part206/prompts206.json neuron_report.py
+Stop and redesign if any gate fails. Windows must show 11 GB available before a Qwen step (drop WSL's page cache first).
+
+--- 2. moments pass, then GT's causal pass, per model
+OLMo, one stage at a time on the CPU (about 0.8 million tokens each at full depth):
+  tools/launch_arc.py 206 --cpu "/home/elisepc/neuron-probe/.venv/bin/python -I -B part206/record206.py --stage pretrain-3.0T --out results/part206 --batch 8 && /home/elisepc/neuron-probe/.venv/bin/python -I -B part206/record206.py --stage pretrain-3.0T --out results/part206 --pass gt" --mem 9G --tag pretrain
+  (the same line with --stage midtrain-26B, midtrain-end, sft, dpo, instruct, and --tag accordingly)
+Qwen on the A770 (batch from step 1):
+  python3 tools/launch_arc.py 206 --step "-I -B part206/record206.py --stage qwen-base --device xpu --model-path E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B-Base/snapshots/1001bb4d826a52d1f399e183466143f4da7b741b --out results/part206 --batch 2" --step "-I -B part206/record206.py --stage qwen-base --device xpu --model-path E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B-Base/snapshots/1001bb4d826a52d1f399e183466143f4da7b741b --out results/part206 --pass gt --batch 2" --copy part206/common206.py part206/record206.py part206/config206.json part206/prompts206.json neuron_report.py
+  python3 tools/launch_arc.py 206 --step "-I -B part206/record206.py --stage qwen-chat --device xpu --model-path E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a --out results/part206 --batch 2" --step "-I -B part206/record206.py --stage qwen-chat --device xpu --model-path E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a --out results/part206 --pass gt --batch 2" --copy part206/common206.py part206/record206.py part206/config206.json part206/prompts206.json neuron_report.py
+  Then copy the job folder's results/part206/qwen-base and results/part206/qwen-chat into this repository's results/part206/.
+
+--- 3. analysis, per model (host)
+  /home/elisepc/neuron-probe/.venv/bin/python -I -B part206/analyze206.py --stage <stage> --out results/part206    (all 8 stages)
+
+--- 4. the causal check (after step 3 has written L* into each summary)
+  tools/launch_arc.py 206 --cpu "/home/elisepc/neuron-probe/.venv/bin/python -I -B part206/causal206.py --stage instruct --out results/part206 --batch 8" --mem 9G --tag causal-instruct
+  python3 tools/launch_arc.py 206 --step "-I -B part206/causal206.py --stage qwen-chat --device xpu --model-path E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a --out results/part206 --batch 2" --copy part206/common206.py part206/causal206.py part206/config206.json part206/prompts206.json neuron_report.py part66/part66.py results/part206/qwen-chat/summary.json results/part206/qwen-chat/moments.npz results/part206/qwen-chat/meta.json
+  (causal206.py prints each plain greedy answer and its maker before any arm runs; read them, PROCEDURE section 5.)
+
+--- 5. score (host)
+  /home/elisepc/neuron-probe/.venv/bin/python -I -B part206/score206.py --out results/part206

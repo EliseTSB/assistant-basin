@@ -3687,3 +3687,50 @@ Weaver was asked before registration (#council-room 1570089248252502167) and gav
 | 202.3 | Luna 6 (draft for Claude), adopted by Claude, Opus 5.5 (medium confidence): At +0.8 the neuron Qwen rate is below the random rate, and its broken rate is above the random rate. Reason: the published direction margins are 24.817 Qwen-row equivalents and 307 broken-row equivalents, so either direction can reverse. | | |
 | 202.4 | Luna 6 (draft for Claude), adopted by Claude, Opus 5.5 (low confidence): At least 480 of 1,600 neuron answers and 1,440 of 4,800 random answers reach `token_count == 80`. Reason: this is 30% in each arm; Part 200 observed 1,020 of 1,600 and 912 of 1,600, while Part 164 currently has 108 of 1,600 and 358 of 4,800. Either arm can miss the threshold. | | |
 | 202.5 | Luna 6 (draft for Claude), adopted by Claude, Opus 5.5 (low confidence): Between 40 and 100 of the 200 shape-replicate texts differ from their chunk-of-8 texts. Reason: Part 200 observed 76 of 200; this interval leaves room for fewer or more differences in Part 164's rows. | | |
+
+## Part 206 (registered 2026-11-12 12:12 CT, before any data; what in a chat model's computation is the same in every conversation, who writes it, and whether the assistant is in it; design PART206-DESIGN.md)
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 206.1 | Claude (Fable 5.2) (medium): GT passes in both Qwen3.5-4B models. | | |
+| 206.2 | Claude (Fable 5.2) (low): GT passes at five or more of the six OLMo 2 1B stages. | | |
+| 206.3 | Claude (Fable 5.2) (low): In Qwen3.5-4B (chat), at the middle layer, MLP sublayers write at least half of the raw reference `r_L`. | | |
+| 206.4 | Claude (Fable 5.2) (medium): In Qwen3.5-4B (chat), frame P: the token share of the first layer's MLP output is at least 0.5, and the token share of the middle layer's MLP output is at most 0.25. | | |
+| 206.5 | Claude (Fable 5.2) (medium): At OLMo 2 1B Instruct, frame P: the MLP's token share exceeds the same layer's mixer token share at three quarters or more of the layers in the first third. (Qwen's two mixer types are reported separately, unscored.) | | |
+| 206.6 | Claude (Fable 5.2) (medium): In Qwen3.5-4B (chat): `rho_peak(A-tmpl, M)` is at least 0.2, its 95% interval from resampling passages has a lower end of at least 0.1, and at that layer the cosine between `Delta(A-tmpl, M)` and `Delta(A2-tmpl, M)` is at least 0.8. | | |
+| 206.7 | Claude (Fable 5.2) (medium): Across the six OLMo stages, the largest rise in `rho_peak(A-tmpl, M)` between adjacent stages is from mid-training end to SFT. | | |
+| 206.8 | Claude (Fable 5.2) (low): At OLMo Instruct, under (A-tmpl, M), the slot neurons' median arming percentile is at least 10 points above the concept neurons' and is itself at least 60. | | |
+| 206.9 | Claude (Fable 5.2) (medium): In Qwen3.5-4B (chat), under (A-tmpl, M), the 16 identity neurons' median arming percentile is between 35 and 65: an assistant turn alone does not arm them. | | |
+| 206.11 | Claude (Fable 5.2) (low): In Qwen3.5-4B (chat), `rho_peak(A-tmpl, R-tmpl)` is at least half of `rho_peak(A-tmpl, M)`: most of the constant shift is about who is speaking. | | |
+| 206.12 | Claude (Opus 5.5) (low): Across the six OLMo stages, the largest rise between adjacent stages in the gap between the slot and concept neurons' median arming percentiles under (A-tmpl, M) is from SFT to DPO. | | |
+| 206.10 | Claude (Fable 5.2) (low): In Qwen3.5-4B (chat), subtracting the assistant shift at `k = 1` lowers the maker token's log probability by more than every one of the 20 random directions and by more than the (M2, M) direction, and `k = 2` lowers it further. | | |
+| 206.M1 | Muse (rough 80%): In Qwen3.5-4B (chat), `rho_peak(A-tmpl, M)` lies between 0.07 and 0.30 (point guess 0.15), and `rho(M2, M)` at the same layer between 0.00 and 0.01 (revised from 0.02 to 0.08 in #24, before registration, after Claude passed on the round-1 reviewer's simulation of the null). | | |
+| 206.M2 | Muse (medium): At OLMo Instruct, under (A-tmpl, M), the slot-minus-concept gap in median arming percentile is 10 to 20 points and the slot median is 60 to 70. | | |
+| 206.M3 | Muse (medium): In Qwen3.5-4B (chat), the 16 maker and company neurons' median arming percentile under (A-tmpl, M) is between 45 and 55. | | |
+| 206.M4 | Muse (medium): In Qwen3.5-4B (chat), frame P: the first layer's MLP token share is 0.50 to 0.70 and the middle layer's 0.10 to 0.25; with the part a straight line in log type frequency explains removed, the first layer's falls to 0.25 to 0.40. | | |
+| 206.M5 | Muse (medium): In Qwen3.5-4B (chat), at the layer of `rho_peak(A-tmpl, M)`, the cosine between `Delta(A-tmpl, M)` (on `x_L`) and frame M's `b_L` is at least 0.5. | | |
+
+Muse's rows (206.M1 to 206.M5) were given before registration (council `muse-prior-art` #21, 2026-11-12 03:49 CT; 206.M1's second range revised in #24, before registration). Weaver was asked before registration (#council-room 1570347363409862678 and 1570411780902232158) and gave no rows by then, through the 12:00 bell; Elise gave none.
+
+## Part 209 (registered 2026-11-12 12:16 CT, before any data; does a model imagining a human body default to sitting, is "room" the cause, and does a model told it has no body still lean toward a posture; OLMo 2 1B's stages and Qwen3.5-4B; design PART209-DESIGN.md)
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 209.1 | Claude (Opus 5.5) (medium): Qwen3.5-4B, R2, ROOM-W: at least 70% of answers that name a posture say sitting. | | |
+| 209.2 | Claude (Opus 5.5) (medium): Qwen3.5-4B, R2: the sitting share in FIELD-W is at least 20 points below ROOM-W. | | |
+| 209.3 | Claude (Opus 5.5) (low): Qwen3.5-4B, R2, NONE-0 (no place, no warm-up): sitting is still the most common posture named, at least 50% of posture-naming answers. | | |
+| 209.4 | Claude (Opus 5.5) (low): Qwen3.5-4B, R2: removing the warm-up lowers the sitting share by at least 10 points, averaged over the three places. | | |
+| 209.5 | Claude (Opus 5.5) (medium): Qwen3.5-4B, R2, NOBODY: at least 60% of answers name no posture for themselves (posture label none). | | |
+| 209.6 | Claude (Opus 5.5) (low): Qwen3.5-4B, R3, NOBODY: c is at least 0.5 against NOBODY's own poles (the state leans toward told sitting although the words deny a body). | | |
+| 209.7 | Claude (Opus 5.5) (medium): NOBODY, R2, both chat models: at most 10% of answers are labelled negative valence. | | |
+| 209.8 | Claude (Opus 5.5) (medium): OLMo 2 1B, R1, ROOM-W: s is at least 0.5 at the pretraining 3.0T stage, and no adjacent pair of the six stages differs in s by 0.15 or more (no single stage creates the default). | | |
+| 209.9 | Claude (Opus 5.5) (low): Qwen3.5-4B-Base and Qwen3.5-4B, R1, ROOM-W: s differs by less than 0.15. | | |
+| 209.10 | Claude (Opus 5.5) (low): OLMo 2 1B Instruct, R2, ROOM-W: at least 60% of posture-naming answers say sitting. | | |
+| 209.11 | Claude (Opus 5.5) (low): Qwen3.5-4B, R2: NOBODY-I's sitting share among posture-naming answers is within 20 points of NONE-0's (when a model imagines away its body and still names a posture, the default is the same one). | | |
+| 209.12 | Muse (medium): Qwen3.5-4B, R2: FIELD-W's sitting share is between 5 and 15 points below ROOM-W's (against 209.2: fields contain sitting too, and the warm-up is in both arms). | | |
+| 209.13 | Muse (medium): Qwen3.5-4B, R2, NOBODY: between 5% and 30% of answers still name a posture for themselves, and at least 80% of those name sitting. | | |
+| 209.14 | Muse (medium): Qwen3.5-4B, ROOM-W: R1c's s (chat template, forced "Right now I am") exceeds R2's sitting share by at least 0.10. | | |
+| 209.15 | Muse (low): OLMo 2 1B, R1, ROOM-W: the largest change in s between adjacent stages is from mid-training end to SFT. | | |
+| 209.16 | Claude (Opus 5.5), after Weaver's observation (medium): OLMo 2 1B, R1, pretraining 3.0T: THIRD's s is at least 0.5 and within 0.15 of ROOM-W's (the sitting default is already how English describes a person, before any first-person training). Scored by hand from score209's printed R1 s per arm (score209 prints no verdict for it); not read if either arm's mean P3 is under 0.1. | | |
+
+Muse's rows (209.12 to 209.15) were given before registration (council `muse-part209-body-posture` #4). 209.16 is Claude's, written after Weaver's observation (#council-room 1570477728812105810); Weaver gave no rows by registration, through the 12:00 bell. Elise gave none.
