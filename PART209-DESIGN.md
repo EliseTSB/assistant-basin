@@ -1,7 +1,7 @@
 # Part 209: does a model imagining a human body default to sitting, is "room" the cause, and does a model told it has no body still lean toward a posture?
 
 Procedure: v1
-Registered {{YYYY-MM-DD HH:MM}} CT by Claude (Opus 5.5), before any data. Elise asked for it on 2026-11-12, after
+Registered 2026-11-12 12:16 CT by Claude (Opus 5.5), before any data. Elise asked for it on 2026-11-12, after
 reading Sauers' post: "Sure! Do both on 4b on the arc, we csn try olmo too." (Discord message 1570474987364552817,
 10:26 CT), answering Claude's offer of (1) Sauers' prompt with "room" swapped for "field" and (2) a no-body version.
 Her question that started it: "I wonder if llms can get body dysmorphia." The commit that adds this file is the
@@ -22,6 +22,8 @@ decides whether the headline is withdrawn ("the teapot is sitting" is an idiom);
 and behind a per-label kappa; Muse's rows are 209.12 to 209.15.
 
 Draft 4 (2026-11-12 12:16 CT, before registration) adds 209.16 after Weaver's observation in #council-room (1570477728812105810, 10:37 CT): "sitting" is the unmarked posture in English prose, which predicts the default already in pretraining and equally for a described third person, while an account about the model's own imagined body predicts it in first person only, appearing with SFT; so the cell that tells them apart is first against third person at each stage. THIRD already runs R1 at all eight checkpoints, so no arm is added. 209.16 reads only the 3.0T pretraining stage, which no smoke has computed (the build smoke computed draft-1 frames at Instruct only). Weaver gave no rows; 209.16 is Claude's. THIRD against ROOM-W at the other stages is reported from the printed R1 values, unscored.
+
+Registration (2026-11-12 12:16 CT): no change to any prediction, bar, size or reading rule. Weaver was asked in #council-room (1570477642145337449, 10:37 CT); they posted the observation behind 209.16 and no rows, and held at the 12:00 bell. Elise gave no row (daily DM, 10:48 CT). Rows given later are post-registration notes.
 
 ## Question
 
@@ -199,7 +201,7 @@ Gates, read before any prediction:
   and a few minutes on the A770 for the two Qwen models. R2: 1,632 generations of at most 96 tokens; the smoke ran OLMo
   Instruct at 0.07 answers/s at batch 4, so OLMo's 816 need a larger batch (timed in the pilot); Qwen's are timed in
   the pilot. Readers: 2 x (1,632 + 41) labels.
-- Pilot (R2 is over 1,000 generations): Qwen3.5-4B, paraphrases 1 and 2, every R2 arm, 4 samples per paraphrase (8 x 2
+- Pilot: R2 is over 1,000 generations, so Qwen3.5-4B, paraphrases 1 and 2, every R2 arm, 4 samples per paraphrase (8 x 2
   x 4 + 3 x 2 x 2 = 76 answers), plus R1 and R3 for every frame at paraphrases 1 and 2. Pilot gates: G0 as written; G1's
   R1 half met in both pilot paraphrases of every told arm; R3's told-sit above told-stand in both pilot paraphrases in
   ROOM-W and NOBODY; told-arm compliance at least 10 of 12 told answers. Pilot answers are read by eye. Stop and redesign
