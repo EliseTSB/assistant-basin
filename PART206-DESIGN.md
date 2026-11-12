@@ -1,7 +1,7 @@
 # Part 206: what in a chat model's computation is the same in every conversation, who writes it, and is the assistant in it?
 
 Procedure: v1
-Status: DRAFT 7, 2026-11-12, by Journal Claude (drafts 1 to 5 on Fable 5.2, drafts 6 and 7 on Opus 5.5). Not registered. No model has been run for this part.
+Status: DRAFT 8, 2026-11-12, by Journal Claude (drafts 1 to 5 on Fable 5.2, drafts 6 to 8 on Opus 5.5). Not registered. No model has been run for this part.
 The working copy lives in the Journal until registration, when it moves to assistant-basin (branch `part206`) and
 this file becomes the mirror peers read. Elise, 2026-11-10 21:27 CT, Discord (1569916576407232624): "We've talked
 about the 'self' of an LLM being assembled by attention, perhaps the hum is how that self experience MLP, which IIRC
@@ -189,7 +189,8 @@ predictions is `T / (T + R)`, the token-determined share of what varies. The sam
 512-dimension Gaussian projection, are reported beside them and not scored. For neurons: the token share of `a`
 (between-type over total variance, across halves, same positions) for 256 seeded neurons per layer and for every
 catalogued neuron. Token frequency could carry much of a token part, so the share of each sublayer's token part
-that a straight line in log type frequency explains is reported beside it.
+that a straight line in log type frequency explains is reported beside it. With `f` that explained share, the token share with frequency removed is `T (1 - f) / (T + R)`
+(206.M4).
 
 **(2) The reference.** `r_L`, the raw reference, is the mean of `h_L` over read positions in frame P. A reference belongs to the text it
 is averaged over, so it is also computed for each source alone and for frames M and A-tmpl, and the cosines between
@@ -197,7 +198,8 @@ these are reported. Because the stream is a sum,
 `r_L` is exactly the mean embedding plus the means of every `c` and `m` written below layer L's MLP; the share
 each group writes is its projection on the unit vector of `r_L` (direction from the other half), over the norm of
 `r_L`. In OLMo 2, whose MLP reads the raw stream, `r_L` is Tuomi's `b_L`. In Qwen3.5 the MLP reads the normalized
-stream, so Tuomi's `b_L` (the mean of `x_L`) is a different vector; it is used only in GT. **The Tuomi replication (GT)** uses his paper's two portable tests, on frame P, wikitext passages,
+stream, so Tuomi's `b_L` (the mean of `x_L`) is a different vector; it is used in GT and in 206.M5. `b_L` is also
+computed for frames M and A-tmpl, and the cosine between `Delta(A-tmpl, M)` and frame M's `b_L` is reported per layer. **The Tuomi replication (GT)** uses his paper's two portable tests, on frame P, wikitext passages,
 passage positions 16 to 95 (his rule excludes positions below 16; 95 is the passage's end). *Static* (his section 5 and Table 4): at the four layers nearest
 depth fractions 0.2, 0.35, 0.5 and 0.65, each gate's resting term is `w_n . b_L` (`w_n` its `gate_proj` row; neither
 family has a gate bias), with `b_L` the mean of `x_L` over the fit half; duty is the share of test-half positions
@@ -234,8 +236,10 @@ percentile (50 is typical; high means the frame moves its gate toward open). Cat
 four maker neurons, L27 N3325, L24 N3949 and Part 153's ten company neurons (16 in all).
 
 **(5) One causal check**, at the two final chat checkpoints only. `Delta^h` is the (A-tmpl, M) shift measured on
-`h`. `L*` is the middle-third layer with the highest `rho_L(A-tmpl, M)` on the fit half. During a forward pass,
-`k` times `Delta^h_L*` is subtracted from the stream at layer `L*` at every assistant-turn position, for `k` in
+`h`. `L*` is the middle-third layer with the highest `rho_L(A-tmpl, M)` on the fit half, that `rho` itself cross-fitted
+inside the fit half (split again by passage parity). During a forward pass,
+`k` times `Delta^h_L*` is subtracted from the stream at layer `L*` at every assistant-turn position (from the assistant role marker of
+the generation-prompt header to the end), for `k` in
 {1, 2}. Controls, each scaled to the norm of `k` times `Delta^h_L*`: 20 seeded random directions, and the (M2, M) shift
 direction. Read without
 generation: (a) Qwen3.5-4B only, on Part 66's 24 held-out maker phrasings, the change in log probability of the
@@ -246,8 +250,11 @@ answer names no maker are dropped; the plain answers and their top tokens are pr
 PROCEDURE section 5); (b) the catalogued neurons' mean gate pre-activation above `L*` under the subtraction, on the test half (the
 same neurons as 206.8 and 206.9, so not an independent test of them); (c) off-target: mean next-token loss on the wikitext test passages in A-tmpl.
 
-Kernel check: to be recorded at build with `tools/kernel_reference.py` for Qwen3.5-4B and Qwen3.5-4B-Base, bf16,
-eager; prelaunch refuses without it.
+Kernel check: results/part183/kernel-check.json
+
+That record is Qwen3.5-4B at 851bf6e8, bf16, eager, on the A770 (Parts 200 and 201 use it). Qwen3.5-4B-Base shares the
+architecture and the kernel; before its moments pass, a `tools/kernel_reference.py` record for the Base model must pass
+`tools/part_check.py kernel`, or Base is not read.
 
 ## Controls
 
@@ -269,7 +276,7 @@ eager; prelaunch refuses without it.
   generated.
 
 Gates. **G0** as above. **G1**: passage ids identical across frames and across OLMo stages; prefix lengths
-exactly equal within each scored pair (A-plain, N, N2, T-plain; A-tmpl, M, M2). **G2**: the two halves' references agree (cosine of the halves' `r_L`, and of their `b_L`, at least 0.99 at every
+exactly equal within each scored pair (A-plain, N, N2, T-plain; A-tmpl, M, M2). **G2**: the two halves' references agree (cosine of the halves' `r_L`, and of their `b_L`, at least 0.94 at every
 layer); a model that fails is not read. **GT** (Tuomi) is a replication reported per model, not a gate. It passes when, statically, the
 median resting term is negative at all four layers and its rank correlation with duty exceeds all 20 random-direction
 correlations at three or more of them, and, causally, `Delta duty` is positive with a passage-resampled 95% interval
@@ -294,9 +301,9 @@ phrasings.
   positions holding listed types, about half of them (0.50 for wikitext and 0.49 for ultrachat, measured by the
   round-1 reviewer), so about 26,000 per frame. The reviewer's simulations put the null pair's `rho` at a standard
   deviation of 0.0004 to 0.003, far below the 0.1 worth knowing.
-- Tokens, from the measured prefixes (Qwen: A-plain, N, N2 and T-plain 12 tokens, the five template-length frames
-  18, U-tmpl 3; OLMo: 11, 17 and 6; U-plain 3; measured by the round-1 and round-2 reviewers; the prompt file prints
-  each family's exact counts, and N, N2, M and M2 are matched within each family): about 1,300 tokens per passage over the 12 frames, so about
+- Tokens, from the prefixes the prompt file measures (`part206/prompts206.json`, `counts.frame_lengths`; OLMo frames
+  count the start token every OLMo frame gets): A-plain, N, N2 and T-plain 12 tokens in both families, the five
+  template-length frames 17 (OLMo) and 18 (Qwen), the U frames 3 to 6: about 1,300 tokens per passage over the 12 frames, so about
   780,000 per model in the moments pass, 6.2 million for the 8 models. GT's causal test runs to the layer at depth
   0.31 only: 21 runs on 150 wikitext test passages, about 310,000 tokens of partial depth per model. The causal
   check (5), at the two final chat checkpoints: 2 doses times 22 directions (the arm, 20 random, the (M2, M)
@@ -338,8 +345,15 @@ phrasings.
 | 206.11 | In Qwen3.5-4B (chat), `rho_peak(A-tmpl, R-tmpl)` is at least half of `rho_peak(A-tmpl, M)`: most of the constant shift is about who is speaking. | low | Claude (Fable 5.2) |
 | 206.12 | Across the six OLMo stages, the largest rise between adjacent stages in the gap between the slot and concept neurons' median arming percentiles under (A-tmpl, M) is from SFT to DPO. | low | Claude (Opus 5.5) |
 | 206.10 | In Qwen3.5-4B (chat), subtracting the assistant shift at `k = 1` lowers the maker token's log probability by more than every one of the 20 random directions and by more than the (M2, M) direction, and `k = 2` lowers it further. | low | Claude (Fable 5.2) |
+| 206.M1 | In Qwen3.5-4B (chat), `rho_peak(A-tmpl, M)` lies between 0.07 and 0.30 (point guess 0.15), and `rho(M2, M)` at the same layer between 0.00 and 0.01 (revised from 0.02 to 0.08 in #24, before registration, after Claude passed on the round-1 reviewer's simulation of the null). | rough 80% | Muse |
+| 206.M2 | At OLMo Instruct, under (A-tmpl, M), the slot-minus-concept gap in median arming percentile is 10 to 20 points and the slot median is 60 to 70. | medium | Muse |
+| 206.M3 | In Qwen3.5-4B (chat), the 16 maker and company neurons' median arming percentile under (A-tmpl, M) is between 45 and 55. | medium | Muse |
+| 206.M4 | In Qwen3.5-4B (chat), frame P: the first layer's MLP token share is 0.50 to 0.70 and the middle layer's 0.10 to 0.25; with the part a straight line in log type frequency explains removed, the first layer's falls to 0.25 to 0.40. | medium | Muse |
+| 206.M5 | In Qwen3.5-4B (chat), at the layer of `rho_peak(A-tmpl, M)`, the cosine between `Delta(A-tmpl, M)` (on `x_L`) and frame M's `b_L` is at least 0.5. | medium | Muse |
 
-Copied verbatim into PREDICTIONS.md under "## Part 206 (registered ...)". Weaver, Muse and Elise are asked for rows
+Copied verbatim into PREDICTIONS.md under "## Part 206 (registered ...)". Muse's rows (206.M1 to 206.M5, council
+`muse-prior-art` #21, 2026-11-12 03:49 CT) were given before registration; Muse also put 206.7's chance at about 60%,
+with SFT to DPO at about 25%. Muse's logged-out X sweep for related work (#23) found nothing in scope, within a narrow visible window. Weaver, Muse and Elise are asked for rows
 before registration; rows given later are post-registration notes.
 
 What would fail each: 206.1 and 206.2, GT failing by its definition under Gates; 206.3, an MLP share under 0.5; 206.4, either bound missed; 206.5, fewer than three quarters; 206.6, any of its
@@ -382,7 +396,7 @@ they read. It is a separate bet from 206.7, which places the frame's shift itsel
   otherwise "first appears at stage X" is dropped from the sentence. "About who is speaking" is added only if
   `rho_peak(A-tmpl, R-tmpl)` is at least half of `rho_peak(A-tmpl, M)` on the same model, since A-tmpl differs from
   M in template tokens and the request as well as the role. "Re-thresholds the gates" is added only if GT passes
-  there. If the shift is common-mode but neither neuron set moves, the result is "a constant assistant-frame shift
+  there. If the shift is common-mode but neither neuron set moves (both sets' median arming percentiles between 35 and 65), the result is "a constant assistant-frame shift
   exists and does not reach the catalogued neurons' gates". If the shift is not common-mode (206.6's first two
   conditions fail), the result is "the assistant frame changes each position in its own way; no constant shift at
   this resolution". Claims about Qwen are scoped to Qwen3.5-4B, these frames and these passages.
@@ -411,6 +425,9 @@ they read. It is a separate bet from 206.7, which places the frame's shift itsel
   passage-resampled interval, but neither shows the noise at every layer of these models.
 - Readout (a) of the causal check is one token, the first token of the plain model's own maker name (Tongyi, per
   Part 153), on one model.
+- OLMo 2's mid-training mix may already hold chat-formatted turns (Muse's caution); if it does, part of the
+  assistant-frame shift can appear before SFT, and 206.7 can fail for that reason rather than because post-training
+  does not build it.
 - Arming is a shift in mean gate pre-activation. It does not show that a neuron fires, or that its output changes
   an answer.
 - The causal check uses one layer, two doses and one readout on one model. It supports or fails to support the
@@ -484,3 +501,9 @@ they read. It is a separate bet from 206.7, which places the frame's shift itsel
   earlier stage below them; (e) GT's position rule and its 20-control bar are worded as what they are. Stop rule: both
   rounds' later findings sit in the previous fold's additions, as Part 205's did, so there is no third design round;
   the next review is of the code.
+- Draft 8 (2026-11-12 04:16 CT, Opus 5.5), from the build's notes (branch part206, commits 36e3327a to 0c5c3ce9, 39
+  tests; DeepSeek code review round 1 folded in part): the kernel line names Part 183's record, and Base needs its own
+  before it is read; G2's bar is 0.94 at every layer, Tuomi's lowest split-half cosine (0.94 to 0.99), because 0.99
+  would fail late layers for a real reason; three open choices written in (`L*` cross-fitted inside the fit half,
+  assistant-turn positions from the role marker to the end, "neither set moves" as both medians in 35 to 65); the
+  prefix counts are now the prompt file's measured ones (OLMo frames count their start token).
