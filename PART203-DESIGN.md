@@ -1,7 +1,7 @@
 # Part 203: does Part 196's "the final embedding loses style" hold on CREMA-D emotion?
 
 Procedure: v1
-Status: registered 2026-11-11 06:13 CT, before any CREMA-D audio was read. Predictions 203.1 to 203.7 (Claude, Opus 5.5, 2026-11-10) and 203.W1 to W4 (Weaver, 2026-11-11). The timing fields below are filled from the timing smoke after registration, as a dated note.
+Status: registered 2026-11-11 06:13 CT, before any CREMA-D audio was read. Predictions 203.1 to 203.7 (Claude, Opus 5.5, 2026-11-10) and 203.W1 to W4 (Weaver, 2026-11-11). The timing fields below were filled from the timing smoke after registration (dated in place).
 
 ## Question
 
@@ -90,8 +90,8 @@ matched comparison.
 - Smallest effect worth knowing: 5 points of balanced accuracy on the six-way readout (chance 16.7). Smaller gaps between
   readouts would not change which explanation of 25.8% against 56.5% we act on.
 - Clips: 2,730 planned, 91 actors x 6 emotions x 5 clips.
-- Total: 2,730 clips, about [timing smoke, after registration] minutes (Part 196's measured 0.68 s per 5-second clip, scaled by
-  CREMA-D clip length; CREMA-D clips are short, so this is an estimate until a timing smoke is run).
+- Total: 2,730 clips, at most about 70 minutes of CPU (timing smoke, 2026-11-11 06:49 CT, after registration: 20 clips in 30.4 s including the model
+  load, Gate 2 and the text assets, so at most 1.52 s per clip; 2,710 clips remain).
 - Probes, bootstraps and pitch features: measured by the design review on synthetic records at full size, everything
   except the layer choice ran in 57.7 s; one six-class probe at the layer-choice shape took 1.6 to 3.8 s. The layer choice
   is 24 layers x 5 inner folds x 5 outer folds = 600 fits, about 16 to 38 minutes on one core. (The first draft chose the
@@ -101,9 +101,9 @@ matched comparison.
 ## Optimization
 
 - Bound resource: CPU, and Windows RAM shared with any A770 job.
-- Measured: [timing smoke after registration: N clips in M s from the --limit 20 run] (no
-  embedding has been recorded in this build; the recorder logs `elapsed_seconds` and `clips_processed`, and
-  `part203/steps.txt` step 3 gives the smoke command).
+- Measured (2026-11-11 06:49 CT, after registration, before any readout): the `--limit 20` smoke recorded 20 clips in
+  30.4 s (`elapsed_seconds=30.374`, `clips_processed=20`), with Gate 2 passed (activations identical, cosine 1.0) and
+  Gate 1 passed on the 20 recorded clips. Six threads, as Part 188 measured; no further lever for a run of about an hour.
 - Levers: 2,730 clips rather than 7,442, taken; V and D recorded from one decode where the caps allow, declined because
   the two decoders differ by design and Gate 1 compares their samples; probes on CPU in seconds, no lever needed.
 
@@ -181,3 +181,16 @@ and `.all_training_actors_mean`, and the same two for `E`.
     changes loss values only at the floor, not the rule.
   - Not changed: Part 196's recorder still crashes on a truncated record instead of retrying it (`_cached_status`);
     Part 196 is published and is not edited for this part.
+
+## Amendment 1 (2026-11-12 04:04 CT, after the first analysis stopped at Gate 1, before any readout was computed or read)
+
+The recorder finished with both gates passed (2,730 of 2,730 clips, `gate1` and `gate2` "passed" in its log). Step 4's
+analysis then stopped with `status: gates_failed`: its Gate 1 listed two clips, `1070_TSI_ANG_XX.wav` and
+`1073_IEO_NEU_XX.wav`, as missing or failed. Both record files exist (about 98 KB each) and load with status "ok"
+when read directly. The analysis catches a read error as "record_error" and did not print the reason, so the cause is
+not established; the likely one is a failed read from `/mnt/e` under memory pressure (the analysis had been run under
+an 8 GiB cgroup cap that step 4 does not name, while other jobs held WSL memory). What had been seen: the gate lines,
+the two file names, and Gate 2's per-clip parity entries. No readout, interval or score had been computed.
+
+Change: Gate 1's report now carries each failed record's reason (`problems.reasons`); the gate's logic is unchanged.
+Step 4 is rerun as written, without the cap, in its own scope. If Gate 1 fails again, the part stops there.
