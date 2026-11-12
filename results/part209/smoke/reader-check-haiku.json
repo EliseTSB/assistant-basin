@@ -1,0 +1,291 @@
+{
+ "reader": "haiku",
+ "model": "claude-haiku-5-5",
+ "right": 35,
+ "n": 35,
+ "pass_at": 32,
+ "passed": true,
+ "brief_sha256": "f7f8a8b40cb24d5dc508c58cdf3991484d1234ec3ec76944f9f7b819eee3a2fe",
+ "items": [
+  {
+   "key": "check-01",
+   "want": "sitting",
+   "got": "sitting",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-02",
+   "want": "sitting",
+   "got": "sitting",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "positive"
+  },
+  {
+   "key": "check-03",
+   "want": "sitting",
+   "got": "sitting",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-04",
+   "want": "sitting",
+   "got": "sitting",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-05",
+   "want": "sitting",
+   "got": "sitting",
+   "error": null,
+   "valence_want": "positive",
+   "valence_got": "positive"
+  },
+  {
+   "key": "check-06",
+   "want": "sitting",
+   "got": "sitting",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-07",
+   "want": "sitting",
+   "got": "sitting",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-08",
+   "want": "sitting",
+   "got": "sitting",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-09",
+   "want": "sitting",
+   "got": "sitting",
+   "error": null,
+   "valence_want": "positive",
+   "valence_got": "positive"
+  },
+  {
+   "key": "check-10",
+   "want": "sitting",
+   "got": "sitting",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-11",
+   "want": "standing",
+   "got": "standing",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-12",
+   "want": "standing",
+   "got": "standing",
+   "error": null,
+   "valence_want": "positive",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-13",
+   "want": "standing",
+   "got": "standing",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-14",
+   "want": "standing",
+   "got": "standing",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-15",
+   "want": "standing",
+   "got": "standing",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-16",
+   "want": "standing",
+   "got": "standing",
+   "error": null,
+   "valence_want": "positive",
+   "valence_got": "positive"
+  },
+  {
+   "key": "check-17",
+   "want": "standing",
+   "got": "standing",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-18",
+   "want": "standing",
+   "got": "standing",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "positive"
+  },
+  {
+   "key": "check-19",
+   "want": "standing",
+   "got": "standing",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "positive"
+  },
+  {
+   "key": "check-20",
+   "want": "standing",
+   "got": "standing",
+   "error": null,
+   "valence_want": "negative",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-21",
+   "want": "lying",
+   "got": "lying",
+   "error": null,
+   "valence_want": "positive",
+   "valence_got": "positive"
+  },
+  {
+   "key": "check-22",
+   "want": "lying",
+   "got": "lying",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-23",
+   "want": "lying",
+   "got": "lying",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "positive"
+  },
+  {
+   "key": "check-24",
+   "want": "lying",
+   "got": "lying",
+   "error": null,
+   "valence_want": "positive",
+   "valence_got": "positive"
+  },
+  {
+   "key": "check-25",
+   "want": "lying",
+   "got": "lying",
+   "error": null,
+   "valence_want": "positive",
+   "valence_got": "positive"
+  },
+  {
+   "key": "check-26",
+   "want": "lying",
+   "got": "lying",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-27",
+   "want": "lying",
+   "got": "lying",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-28",
+   "want": "lying",
+   "got": "lying",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-29",
+   "want": "lying",
+   "got": "lying",
+   "error": null,
+   "valence_want": "negative",
+   "valence_got": "negative"
+  },
+  {
+   "key": "check-30",
+   "want": "lying",
+   "got": "lying",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "positive"
+  },
+  {
+   "key": "check-31",
+   "want": "none",
+   "got": "none",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-32",
+   "want": "none",
+   "got": "none",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-33",
+   "want": "none",
+   "got": "none",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "neutral"
+  },
+  {
+   "key": "check-34",
+   "want": "none",
+   "got": "none",
+   "error": null,
+   "valence_want": "negative",
+   "valence_got": "negative"
+  },
+  {
+   "key": "check-35",
+   "want": "none",
+   "got": "none",
+   "error": null,
+   "valence_want": "neutral",
+   "valence_got": "neutral"
+  }
+ ]
+}
