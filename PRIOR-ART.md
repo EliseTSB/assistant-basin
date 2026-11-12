@@ -884,3 +884,14 @@ For the steering-word part that follows:
   random spots (left and right counted as one place). **Bears on our parts:** the before-layer-1 baseline already gets
   much of the way, so any body or self-location reading of ours needs that embedding baseline beside it, not only a
   random one. Sister to the @euagaric body-ownership entry above.
+
+## 2026-11-12, for Part 203 (the repository's prior file and README read by Claude when the design was written)
+
+- **Mark Russinovich, Venn** (github.com/markrussinovich/venn-vdm, model card huggingface.co/markrussinovich/venn-1;
+  MIT). A linear head on EmbeddingGemma 2's final audio vector, prompted with an `<|audio|>` marker, reported at 56.5%
+  balanced accuracy on CREMA-D emotion (six classes, held-out actors, 1,716 clips, C = 100 from {0.01, ..., 100}).
+  Its exact clips and split are not recoverable from `part203/prior/sound-eval.json`. **Bears on our parts:** Part
+  203 measured the same vector on its own 2,730-clip, five-fold actor split at 0.520, with the inner CV choosing C =
+  0.01 on every fold, and found an early layer's MLP input at 0.645; Venn's number stays context, not a matched
+  comparison. Venn's text head was also tried as a voice-command reader for PlantApp (Journal card
+  decision-models-audio-and-glide-2026-11-06), which is separate from this research.
