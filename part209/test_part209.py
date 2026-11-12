@@ -555,3 +555,30 @@ def test_sabotage_turns_red(tmp_path):
                         "-k", "test_scorer_known_truth", "-p", "no:cacheprovider"],
                        capture_output=True, text=True, env=env, cwd=str(HERE.parent))
     assert r.returncode != 0, r.stdout[-2000:]
+
+
+def test_models_json_writer_runs_without_fcntl(tmp_path, monkeypatch):
+    """⛔ THE DEFECT (2026-11-12, the first A770 pilot): write_models_json imported fcntl, which Windows lacks, so the
+    pilot died with ModuleNotFoundError right after the model loaded, on both attempts. The A770 job runs on Windows.
+    The writer must lock with msvcrt there (as part134/run134.py does) and still write the stage row."""
+    import builtins
+    import types
+    calls = []
+    fake_msvcrt = types.SimpleNamespace(LK_LOCK=1, LK_UNLCK=0,
+                                        locking=lambda fd, mode, n: calls.append((mode, n)))
+    real_import = builtins.__import__
+
+    def no_fcntl(name, *args, **kwargs):
+        if name == "fcntl":
+            raise ModuleNotFoundError("No module named 'fcntl'")
+        if name == "msvcrt":
+            return fake_msvcrt
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", no_fcntl)
+    out = tmp_path / "models.json"
+    R.write_models_json(out, {"stage": "qwen-chat", "model_id": "m", "revision": "r", "family": "Q", "dtype": "bf16",
+                              "device": "xpu", "attn_implementation": "eager", "torch": "t", "transformers": "x"})
+    data = json.loads(out.read_text())
+    assert data["stages"]["qwen-chat"]["attn_implementation"] == "eager"
+    assert calls == [(1, 1), (0, 1)], calls

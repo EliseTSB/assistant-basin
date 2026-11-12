@@ -152,11 +152,20 @@ def load_stage(cfg, stage, device_override=None):
 
 
 def write_models_json(path, env):
-    import fcntl
+    # ⛔ 2026-11-12 (first A770 pilot): an unconditional `import fcntl` died on Windows, where the A770 job runs.
+    #    Lock with fcntl on Linux and msvcrt on Windows, as part134/run134.py does.
+    try:
+        import fcntl
+    except ImportError:
+        fcntl = None
+        import msvcrt
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(str(path) + ".lock", "a+") as lk:
-        fcntl.flock(lk.fileno(), fcntl.LOCK_EX)
+        if fcntl:
+            fcntl.flock(lk.fileno(), fcntl.LOCK_EX)
+        else:
+            lk.seek(0); msvcrt.locking(lk.fileno(), msvcrt.LK_LOCK, 1)
         try:
             data = load_json(path) if path.exists() else {"part": 209, "stages": {}}
         except json.JSONDecodeError:
@@ -168,7 +177,10 @@ def write_models_json(path, env):
         row["recorded"] = time.strftime("%Y-%m-%dT%H:%M:%S")
         data["stages"][env["stage"]] = row
         atomic_write_json(path, data)
-        fcntl.flock(lk.fileno(), fcntl.LOCK_UN)
+        if fcntl:
+            fcntl.flock(lk.fileno(), fcntl.LOCK_UN)
+        else:
+            lk.seek(0); msvcrt.locking(lk.fileno(), msvcrt.LK_UNLCK, 1)
 
 
 # ---------------------------------------------------------------- posture tokens
