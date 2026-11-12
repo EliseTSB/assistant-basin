@@ -1,0 +1,30 @@
+# Part 202: Part 164 on the eager kernel (PART202-DESIGN.md). Same model, revision, units, prompts, doses, row order,
+# scorer and 80 new tokens as Part 164; the wrapper changes only the kernel record, the push batch shape (chunks of
+# exactly 8, the 36-row tail padded with four companion rows), the pilot rate floor (0.30 answers/s) and the recorder.
+# Before launch: close stale model runs and other GPU-heavy applications on the Windows host to release Arc memory, and
+# start only with at least 11 GB of Windows memory available (design, Optimization). A task killed at the runner's
+# 6-hour limit is relaunched with the SAME line: a call that is whole on disk is kept, a call that is not is decoded
+# again whole (rows it had go to rows.removed.jsonl), and the shape replicate skips rows already written. A killed task
+# leaves results/part202/run202.lock (Part 199's folder lock under this part's name): check that no run202 process
+# runs, then remove it by hand. The pilot stop (below 0.30 answers/s) is a HOLD until its cause is reviewed.
+# The --copy list is Part 164's, plus this part's runner and steps and the modules run202.py imports at top level:
+# part201/run201.py (Part 201's load record, receipts, row fields, hashes and lock, reused), part199/run199.py (the
+# folder lock and record writer under them), tools/margin_recorder.py (the score recorder) and tools/shape_floor.py
+# (imported only by score202.py, which runs on the host; copied so the job folder can be checked by the same tree).
+# part164/score164.py and part86/triage86.py are copied because part164/run164.py's own tests and the scorer import them
+# (score164.py imports triage86 at top level) and the job folder is checked by the same tree. The scorer and the shape floor run on the host, where the
+# tokenizer and the repo are; they are not job steps.
+python3 tools/launch_arc.py 202 --step "-I -B part202/run202.py --device xpu --model E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a --units part164/units164.json --out results/part202/answers.jsonl" --copy tools/launch_arc.py tools/margin_recorder.py tools/shape_floor.py part202/__init__.py part202/run202.py part202/steps.txt part201/__init__.py part201/run201.py part201/ROWS-SCHEMA.md part201/LOAD-SCHEMA.md part199/__init__.py part199/run199.py part164/run164.py part164/score164.py part164/units164.json part163/run163.py part163/score163.py part160/run160.py part155/run155.py part153/battery153.py part148/battery148.py part148/score148.py part86/common86.py part86/triage86.py neuron_report.py results/part112/medians.json
+
+# Host, after the run, in this order:
+# Gates R1 and R3 over every recorded launch: every load eager, one model, revision and folder, every pushed call's
+# chunks of exactly 8 rows, every no-push call one row.
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part202/run202.py --check-record results/part202/load.json
+# Score: Part 164's own scorer (imported) on the rerun's rows, every number printed with its file and key, beside the
+# published value; Gates R1 to R3 from the load record and the rows; predictions 202.1 to 202.5; the shape replicate
+# and the shape floor of every verdict. Exit 3 withdraws the headline reading.
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part202/score202.py --rows results/part202/answers.jsonl --load results/part202/load.json --replicate results/part202/replicate.jsonl --out results/part202
+
+# Host verification, from the repository root: this part's tests and the tools it imports (which it must not move).
+/home/elisepc/neuron-probe/.venv/bin/python -I -m pytest -q part202
+/home/elisepc/neuron-probe/.venv/bin/python -I -m pytest -q tools/test_margin_recorder.py tools/test_shape_floor.py part164/test_part164.py
