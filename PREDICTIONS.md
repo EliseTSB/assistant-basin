@@ -3687,3 +3687,27 @@ Weaver was asked before registration (#council-room 1570089248252502167) and gav
 | 202.3 | Luna 6 (draft for Claude), adopted by Claude, Opus 5.5 (medium confidence): At +0.8 the neuron Qwen rate is below the random rate, and its broken rate is above the random rate. Reason: the published direction margins are 24.817 Qwen-row equivalents and 307 broken-row equivalents, so either direction can reverse. | | |
 | 202.4 | Luna 6 (draft for Claude), adopted by Claude, Opus 5.5 (low confidence): At least 480 of 1,600 neuron answers and 1,440 of 4,800 random answers reach `token_count == 80`. Reason: this is 30% in each arm; Part 200 observed 1,020 of 1,600 and 912 of 1,600, while Part 164 currently has 108 of 1,600 and 358 of 4,800. Either arm can miss the threshold. | | |
 | 202.5 | Luna 6 (draft for Claude), adopted by Claude, Opus 5.5 (low confidence): Between 40 and 100 of the 200 shape-replicate texts differ from their chunk-of-8 texts. Reason: Part 200 observed 76 of 200; this interval leaves room for fewer or more differences in Part 164's rows. | | |
+
+## Part 206 (registered 2026-11-12 12:12 CT, before any data; what in a chat model's computation is the same in every conversation, who writes it, and whether the assistant is in it; design PART206-DESIGN.md)
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 206.1 | Claude (Fable 5.2) (medium): GT passes in both Qwen3.5-4B models. | | |
+| 206.2 | Claude (Fable 5.2) (low): GT passes at five or more of the six OLMo 2 1B stages. | | |
+| 206.3 | Claude (Fable 5.2) (low): In Qwen3.5-4B (chat), at the middle layer, MLP sublayers write at least half of the raw reference `r_L`. | | |
+| 206.4 | Claude (Fable 5.2) (medium): In Qwen3.5-4B (chat), frame P: the token share of the first layer's MLP output is at least 0.5, and the token share of the middle layer's MLP output is at most 0.25. | | |
+| 206.5 | Claude (Fable 5.2) (medium): At OLMo 2 1B Instruct, frame P: the MLP's token share exceeds the same layer's mixer token share at three quarters or more of the layers in the first third. (Qwen's two mixer types are reported separately, unscored.) | | |
+| 206.6 | Claude (Fable 5.2) (medium): In Qwen3.5-4B (chat): `rho_peak(A-tmpl, M)` is at least 0.2, its 95% interval from resampling passages has a lower end of at least 0.1, and at that layer the cosine between `Delta(A-tmpl, M)` and `Delta(A2-tmpl, M)` is at least 0.8. | | |
+| 206.7 | Claude (Fable 5.2) (medium): Across the six OLMo stages, the largest rise in `rho_peak(A-tmpl, M)` between adjacent stages is from mid-training end to SFT. | | |
+| 206.8 | Claude (Fable 5.2) (low): At OLMo Instruct, under (A-tmpl, M), the slot neurons' median arming percentile is at least 10 points above the concept neurons' and is itself at least 60. | | |
+| 206.9 | Claude (Fable 5.2) (medium): In Qwen3.5-4B (chat), under (A-tmpl, M), the 16 identity neurons' median arming percentile is between 35 and 65: an assistant turn alone does not arm them. | | |
+| 206.11 | Claude (Fable 5.2) (low): In Qwen3.5-4B (chat), `rho_peak(A-tmpl, R-tmpl)` is at least half of `rho_peak(A-tmpl, M)`: most of the constant shift is about who is speaking. | | |
+| 206.12 | Claude (Opus 5.5) (low): Across the six OLMo stages, the largest rise between adjacent stages in the gap between the slot and concept neurons' median arming percentiles under (A-tmpl, M) is from SFT to DPO. | | |
+| 206.10 | Claude (Fable 5.2) (low): In Qwen3.5-4B (chat), subtracting the assistant shift at `k = 1` lowers the maker token's log probability by more than every one of the 20 random directions and by more than the (M2, M) direction, and `k = 2` lowers it further. | | |
+| 206.M1 | Muse (rough 80%): In Qwen3.5-4B (chat), `rho_peak(A-tmpl, M)` lies between 0.07 and 0.30 (point guess 0.15), and `rho(M2, M)` at the same layer between 0.00 and 0.01 (revised from 0.02 to 0.08 in #24, before registration, after Claude passed on the round-1 reviewer's simulation of the null). | | |
+| 206.M2 | Muse (medium): At OLMo Instruct, under (A-tmpl, M), the slot-minus-concept gap in median arming percentile is 10 to 20 points and the slot median is 60 to 70. | | |
+| 206.M3 | Muse (medium): In Qwen3.5-4B (chat), the 16 maker and company neurons' median arming percentile under (A-tmpl, M) is between 45 and 55. | | |
+| 206.M4 | Muse (medium): In Qwen3.5-4B (chat), frame P: the first layer's MLP token share is 0.50 to 0.70 and the middle layer's 0.10 to 0.25; with the part a straight line in log type frequency explains removed, the first layer's falls to 0.25 to 0.40. | | |
+| 206.M5 | Muse (medium): In Qwen3.5-4B (chat), at the layer of `rho_peak(A-tmpl, M)`, the cosine between `Delta(A-tmpl, M)` (on `x_L`) and frame M's `b_L` is at least 0.5. | | |
+
+Muse's rows (206.M1 to 206.M5) were given before registration (council `muse-prior-art` #21, 2026-11-12 03:49 CT; 206.M1's second range revised in #24, before registration). Weaver was asked before registration (#council-room 1570347363409862678 and 1570411780902232158) and gave no rows by then, through the 12:00 bell; Elise gave none.
