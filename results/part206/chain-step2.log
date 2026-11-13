@@ -1,0 +1,12 @@
+Running as unit: part206-step2.scope; invocation ID: 7b6b021c2b5c49e1b72b7576764d3ca3
+launching from /home/elisepc/green/worktrees/ab-part206
+15:00:30 attempt 1 free=11.5
+15:00:30 running job.py processes=0 --ignore-busy
+STARTED: 15:00:31 step 1 start: -I -B part206/record206.py --device xpu --out results/part206 --batch 4 --stage qwen-base --model-path E:/neuron-probe/hf/hub/mo
+15:20:35 step 1 rc=1
+15:20:41 attempt 2 free=11.9
+15:20:41 running job.py processes=0 --ignore-busy
+STARTED: 15:20:42 step 1 start: -I -B part206/record206.py --device xpu --out results/part206 --batch 4 --stage qwen-base --model-path E:/neuron-probe/hf/hub/mo
+15:21:07 step 1 rc=1
+step failed after 2 attempts: -I -B part206/record206.py --device xpu --out results/part206 --batch 4 --stage qwen-base --model-path E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B-Base/snapshots/1001bb4d826a52d1f399e183466143f4da7b741b
+ARC STEPS FAILED

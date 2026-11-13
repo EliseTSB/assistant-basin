@@ -12,9 +12,9 @@ inside an assistant turn shift that reference by one fixed vector at every posit
 
 It does not, at this resolution. On Qwen3.5-4B chat, 0.106 of the assistant frame's difference is one fixed vector
 (`rho_peak(A-tmpl, M)`, layer 18; 95% interval 0.103 to 0.110), against 0.2 asked for, and on OLMo 2 1B Instruct 0.164
-(0.160 to 0.168). Taken position by position the share is only a little higher (0.117 on Qwen chat, 0.182 on OLMo
-Instruct), so most of the frame's effect differs from position to position. Tuomi's static test replicates in all eight
-models and his causal test in none: the duty change is 3.3 to 10.0 times the largest random control, short of the 20
+(0.160 to 0.168). The share that is merely the same across passages, `kappa`, is only a little higher (0.117 on Qwen
+chat, 0.182 on OLMo Instruct), so most of the frame's effect differs from position to position. Tuomi's static test
+replicates in all eight models and his causal test in none: the duty change is 3.3 to 10.0 times the largest random control, short of the 20
 times asked for. At OLMo Instruct the catalogued slot neurons do not arm under the assistant frame. Five of the 17
 registered predictions held (206.4, 206.5, 206.7, 206.9 and 206.M3) and twelve failed.
 
@@ -76,9 +76,10 @@ resolution", and it is this README's title.
 ## Does Tuomi's test replicate?
 
 Half of it does. **Static** (his resting-term decomposition: each gate's resting term `w . b_L` against its duty,
-beside 20 random directions of the same norm): the median resting term is negative at all four layers in all eight
-models (`gt.static[*].median_resting`), and its rank correlation with duty exceeds all 20 random directions at all four
-layers (`gt.verdict.static_layers_beating_random` = 4 of 4). On Qwen chat the correlations are 0.960 at layer 6, 0.974
+beside 20 random directions of the same norm): the scorer's static clause holds in all eight models. The median
+resting term is negative at all four layers (`gt.static[*].median_resting`), and the rank correlation with duty beats
+all 20 random directions at 4 of 4 layers in every model (`gt.verdict.static_layers_beating_random`), where the
+design asks for three of four. On Qwen chat the correlations are 0.960 at layer 6, 0.974
 at layer 11, 0.970 at layer 16 and 0.949 at layer 20, against a largest random-direction correlation of 0.098, 0.130,
 0.118 and 0.072 (`gt.static[*].rho_resting_duty`, `rho_random`). So the constant direction is the one each gate's
 threshold is set against, as Tuomi found.
@@ -113,8 +114,9 @@ Each row is `common_mode.A-tmpl|M` in that stage's [summary.json](instruct/summa
 
 A `rho` near 0 says the frame changes each position in its own way; a `rho` near 1 says it adds the same vector
 everywhere. The largest value anywhere is 0.164 (OLMo Instruct), under the 0.2 bar, and the design's smallest effect
-worth knowing is 0.1, so the differences between the small stages (0.067 to 0.085) are below it. The `kappa` column is
-the same ratio taken position by position: it is larger than `rho` at every row, which is what a shift that every
+worth knowing is 0.1, so the differences between the small stages (0.067 to 0.085) are below it. `kappa` is the same
+ratio taken position by position and averaged over positions: the share of the difference that is the same across
+passages, where `rho` is the share that is also the same across positions. It is larger than `rho` at every row, which is what a shift that every
 passage gets but that changes along the passage looks like (the design's `kappa` minus `rho`). On Qwen chat the gap is
 0.011 (0.117 against 0.106) and on OLMo Instruct 0.018 (0.182 against 0.164). Both gaps are small, so a shift that
 every passage gets but that varies along the passage accounts for little more than the fixed vector does; most of the
@@ -145,7 +147,8 @@ layer 0 is the exception, 0.270 against 0.323). Five of six is "three quarters o
 
 No. Arming is the mean paired change in a neuron's gate pre-activation between the two frames, in units of its
 standard deviation in the second frame, as a percentile among its layer's neurons (50 is typical). The catalogued sets
-are Part 92's classification of OLMo 2 1B Instruct neurons, 21 slot and 18 concept, as [Amendment 4](../../part206/AMENDMENT-4.md)
+are Part 92's classification of OLMo 2 1B Instruct neurons by one Haiku reader (`results/part92/step2/kinds.json`), 21
+slot and 18 concept, as [Amendment 4](../../part206/AMENDMENT-4.md)
 changed them (`arming.slot.median_percentile`, `arming.concept.median_percentile`).
 
 | stage | slot median | concept median | gap | shuffle 95th percentile |
@@ -163,10 +166,9 @@ percentile of 16.87, so 206.8 fails on all three clauses. The activity-matched v
 (`206.8_activity_matched`: slot 35.0, concept 37.5), so the verdict does not depend on the control. 206.M2 fails the
 same way.
 
-The largest gap of the six stages is at mid-training end, 25.69, not at Instruct; 206.12 asked for the largest *rise*
-to be from SFT to DPO and that rise is -0.043. Its interval (-6.12 to 15.09) contains 0, so the rise is not
-distinguishable from none. That is a descriptive reading of the table, not a claim: the registered row asks which
-adjacent rise is largest and the answer is mid-training 26B to mid-training end, +32.04.
+206.12's registered answer: the largest adjacent rise is mid-training 26B to mid-training end, +32.04, and SFT to DPO
+is -0.043 (interval -6.12 to 15.09, which contains 0). Descriptive, not a registered row: the mid-training-end gap
+itself (25.69) is the largest of the six stages, on a 39-neuron set whose concept half is weak (see Limits).
 
 On Qwen chat the 16 maker and company neurons' median arming percentile is 45.97 (`arming.identity.median_percentile`),
 inside the 35 to 65 band, so 206.9 and 206.M3 both held: an assistant turn alone does not arm them. The activity-matched
@@ -245,7 +247,7 @@ The design's Limits, in its words, plus what the results add.
 - The split describes positions holding frequent token types only, about half the read positions (coverage 0.537 on
   Qwen, 0.515 on OLMo). Rare tokens, which may be more or less token-determined, are not measured.
 - A shift whose size changes along the passage lowers `rho` and shows as `kappa` minus `rho`; `rho` alone does not
-  distinguish a weak shift from a strong one that varies with position. The `kappa` column above is that gap.
+  distinguish a weak shift from a strong one that varies with position. The `kappa` column above reads it.
 - A-tmpl differs from M in template tokens and the request as well as the role. Only R-tmpl, one token, isolates the
   role, and only for the template frames.
 - The split's shares carry sampling noise of their own; each share is reported with a passage-resampled interval, but
@@ -271,7 +273,7 @@ What the results add:
 - Qwen ran with eager attention (`attn_implementation` in [config206.json](../../part206/config206.json)), not the
   default SDPA kernel whose bf16 output on the A770 is the front page's known issue (Part 178's finding).
 - 206.8 and 206.12 rest on 39 neurons and one reader's kinds, not the 329 the design named, after Amendment 4. Only 8
-  of the 18 concept neurons kept their kind under a second reader (Part 92b), so the concept median is a weak
+  of the 18 concept neurons kept their kind under Part 92b's second (DeepSeek) reader, so the concept median is a weak
   quantity. The unscored reader-stable sets read slot 49.05 against concept 51.56 at Instruct
   (`arming.p92b_ds_slot.median_percentile`, `arming.p92b_ds_concept.median_percentile`), the same picture.
 - With 39 neurons the label-shuffle null is wider, and its 95th percentile (16.87 at Instruct) is the effective bar for
@@ -292,7 +294,14 @@ fourth was found after every stage had recorded: OLMo's catalogued neurons were 
 stages died in the analysis before writing a summary (Amendment 4), which replaced them with Part 92's 21 slot and 18
 concept OLMo neurons. The fifth is the scorer fix above (Amendment 5), made after the scores were seen.
 
-Cold check: pending
+Cold check: 2026-11-13, two fresh DeepSeek V4.1 Flash readers with only the files. The scorer check
+([cold/SCORER-CHECK.md](cold/SCORER-CHECK.md)) compared every row's code with the registered text; its four
+MISMATCH flags were refuted on reading (adjudication at its end), and the write-up worker then found its 206.5 win
+count wrong (5 of 6, not 6 of 6; held either way). The README check ([cold/README-COLD.md](cold/README-COLD.md))
+traced every number to its key and found none wrong; folded: panel A's title and bar label (206.6's 0.2 is scored on
+Qwen chat only), `kappa` defined as the design defines it, the static clause's registered three-of-four bar and which
+values were read, the mid-training-end gap labelled descriptive after 206.12's registered answer, and Part 92 and
+92b's readers named. Nothing left unfolded.
 
 ## Files
 

@@ -1,0 +1,20 @@
+{
+ "gates": {
+  "G0": {
+   "max_abs_logit_diff": 0.0,
+   "pass": true
+  },
+  "G0.5": {
+   "bound": 1e-06,
+   "every_hook_once": true,
+   "max_relative_error": 0.0,
+   "pass": true
+  },
+  "G1": {
+   "n_passages_different": 0,
+   "pass": true,
+   "passages_retokenized_differently": [],
+   "unequal_groups": []
+  }
+ }
+}

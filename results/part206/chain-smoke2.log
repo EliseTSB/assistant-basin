@@ -1,0 +1,16 @@
+Running as unit: part206-smoke2.scope; invocation ID: 9e81d368652c4369a29eb6eabce63da1
+14:47:54 part209-main finished; starting Part 206 Qwen smoke
+launching from /home/elisepc/green/worktrees/ab-part206
+14:47:55 attempt 1 free=10
+14:48:41 attempt 1 free=13.9
+14:48:41 running job.py processes=0 --ignore-busy
+STARTED: 14:48:42 step 1 start: -I -B part206/record206.py --stage qwen-chat --device xpu --model-path E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots
+14:50:25 step 1 rc=0
+14:50:46 attempt 1 free=7.8
+14:51:32 attempt 1 free=10.9
+14:52:18 attempt 1 free=12
+14:52:18 running job.py processes=0 --ignore-busy
+STARTED: 14:52:20 step 1 start: -I -B part206/record206.py --stage qwen-chat --device xpu --model-path E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots
+14:55:03 step 1 rc=0
+ALL-DONE
+ALL-DONE

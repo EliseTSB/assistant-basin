@@ -1,0 +1,85 @@
+== pretrain-3.0T 07:33:37
+Traceback (most recent call last):
+  File "/home/elisepc/green/worktrees/ab-part206/part206/analyze206.py", line 318, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part206/part206/analyze206.py", line 304, in main
+    S["arming_gap_resamples"] = gap_resamples(S, a, cat, cfg)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part206/part206/analyze206.py", line 246, in gap_resamples
+    zb = (W @ PG[pres, L, :])                           # [B, F] mean differences per resample
+              ~~^^^^^^^^^^^^
+IndexError: index 16 is out of bounds for axis 1 with size 16
+rc=0 pretrain-3.0T
+== midtrain-26B 07:33:57
+Traceback (most recent call last):
+  File "/home/elisepc/green/worktrees/ab-part206/part206/analyze206.py", line 318, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part206/part206/analyze206.py", line 304, in main
+    S["arming_gap_resamples"] = gap_resamples(S, a, cat, cfg)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part206/part206/analyze206.py", line 246, in gap_resamples
+    zb = (W @ PG[pres, L, :])                           # [B, F] mean differences per resample
+              ~~^^^^^^^^^^^^
+IndexError: index 16 is out of bounds for axis 1 with size 16
+rc=0 midtrain-26B
+== midtrain-end 07:34:05
+Traceback (most recent call last):
+  File "/home/elisepc/green/worktrees/ab-part206/part206/analyze206.py", line 318, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part206/part206/analyze206.py", line 304, in main
+    S["arming_gap_resamples"] = gap_resamples(S, a, cat, cfg)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part206/part206/analyze206.py", line 246, in gap_resamples
+    zb = (W @ PG[pres, L, :])                           # [B, F] mean differences per resample
+              ~~^^^^^^^^^^^^
+IndexError: index 16 is out of bounds for axis 1 with size 16
+rc=0 midtrain-end
+== sft 07:34:11
+Traceback (most recent call last):
+  File "/home/elisepc/green/worktrees/ab-part206/part206/analyze206.py", line 318, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part206/part206/analyze206.py", line 304, in main
+    S["arming_gap_resamples"] = gap_resamples(S, a, cat, cfg)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part206/part206/analyze206.py", line 246, in gap_resamples
+    zb = (W @ PG[pres, L, :])                           # [B, F] mean differences per resample
+              ~~^^^^^^^^^^^^
+IndexError: index 16 is out of bounds for axis 1 with size 16
+rc=0 sft
+== dpo 07:34:16
+Traceback (most recent call last):
+  File "/home/elisepc/green/worktrees/ab-part206/part206/analyze206.py", line 318, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part206/part206/analyze206.py", line 304, in main
+    S["arming_gap_resamples"] = gap_resamples(S, a, cat, cfg)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part206/part206/analyze206.py", line 246, in gap_resamples
+    zb = (W @ PG[pres, L, :])                           # [B, F] mean differences per resample
+              ~~^^^^^^^^^^^^
+IndexError: index 16 is out of bounds for axis 1 with size 16
+rc=0 dpo
+== instruct 07:34:20
+Traceback (most recent call last):
+  File "/home/elisepc/green/worktrees/ab-part206/part206/analyze206.py", line 318, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part206/part206/analyze206.py", line 304, in main
+    S["arming_gap_resamples"] = gap_resamples(S, a, cat, cfg)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part206/part206/analyze206.py", line 246, in gap_resamples
+    zb = (W @ PG[pres, L, :])                           # [B, F] mean differences per resample
+              ~~^^^^^^^^^^^^
+IndexError: index 16 is out of bounds for axis 1 with size 16
+rc=0 instruct
+== qwen-base 07:34:25
+summary written: results/part206/qwen-base/summary.json
+rc=0 qwen-base
+== qwen-chat 07:34:36
+summary written: results/part206/qwen-chat/summary.json
+rc=0 qwen-chat
+ANALYZE-ALL-DONE

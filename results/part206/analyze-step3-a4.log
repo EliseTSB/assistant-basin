@@ -1,0 +1,25 @@
+== pretrain-3.0T 08:01:40
+summary written: results/part206/pretrain-3.0T/summary.json
+rc=0 pretrain-3.0T
+== midtrain-26B 08:01:47
+summary written: results/part206/midtrain-26B/summary.json
+rc=0 midtrain-26B
+== midtrain-end 08:01:54
+summary written: results/part206/midtrain-end/summary.json
+rc=0 midtrain-end
+== sft 08:02:00
+summary written: results/part206/sft/summary.json
+rc=0 sft
+== dpo 08:02:07
+summary written: results/part206/dpo/summary.json
+rc=0 dpo
+== instruct 08:02:13
+summary written: results/part206/instruct/summary.json
+rc=0 instruct
+== qwen-base 08:02:19
+summary written: results/part206/qwen-base/summary.json
+rc=0 qwen-base
+== qwen-chat 08:02:31
+summary written: results/part206/qwen-chat/summary.json
+rc=0 qwen-chat
+ANALYZE-ALL-DONE

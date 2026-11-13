@@ -75,7 +75,7 @@ def main(argv=None):
         a.plot([x], [cm["rho_peak"]], "o", color=SLOT, markersize=8, markeredgecolor=SURFACE, markeredgewidth=2)
         a.text(x, hi + 0.006, f"{cm['rho_peak']:.3f}", ha="center", fontsize=8.5, color=INK)
     a.axhline(BAR_206_6, color=INK, linestyle=(0, (4, 3)), linewidth=1)
-    a.text(len(OLMO_ORDER) - 0.45, BAR_206_6 + 0.005, "206.6 bar, 0.2", fontsize=8.5, color=MUTED, ha="right")
+    a.text(len(OLMO_ORDER) - 0.45, BAR_206_6 + 0.005, "206.6 bar (scored on Qwen chat only), 0.2", fontsize=8.5, color=MUTED, ha="right")
     qx = len(OLMO_ORDER) + 0.6
     for dx, stage, label in ((0.0, "qwen-chat", "Qwen chat"), (0.55, "qwen-base", "Qwen base")):
         cm = R[stage]["common_mode"]["A-tmpl|M"]
@@ -90,7 +90,7 @@ def main(argv=None):
     a.set_xlim(-0.6, qx + 1.3)
     a.set_ylim(0, 0.22)
     a.set_ylabel("rho_peak(A-tmpl, M): share of the frame difference\nthat is one fixed vector (95% interval)", fontsize=9, color=MUTED)
-    a.set_title("A. Is the assistant frame a constant shift?\nNo stage reaches the 0.2 bar", fontsize=10.5, color=INK, loc="left")
+    a.set_title("A. How much of the assistant frame's difference is one fixed vector?\nAt most 0.164; Qwen chat 0.106, under 206.6's 0.2", fontsize=10.5, color=INK, loc="left")
 
     # ---- Panel B: slot vs concept median arming percentile per OLMo stage
     for x, stage in zip(xs, OLMO_ORDER):
@@ -131,8 +131,8 @@ def main(argv=None):
     c.set_xlim(-0.5, len(groups) - 0.15)
     c.set_ylim(-0.14, 0.14)
     c.set_ylabel("mean change in the maker token's log probability\n(positive = more likely)", fontsize=9, color=MUTED)
-    c.set_title(f"C. Does removing the shift change the maker token?\nQwen chat, {n_rows} phrasings: it raises it, "
-                "the (M2, M) null raises it more", fontsize=10.5, color=INK, loc="left")
+    c.set_title(f"C. Does removing the shift change the maker token?\nQwen chat, {n_rows} phrasings: it rises, the (M2, M) "
+                "null more", fontsize=10.5, color=INK, loc="left")
     c.legend(handles=[Line2D([], [], color=ARM, marker="o", linestyle="", markersize=8, label="assistant shift"),
                       Line2D([], [], color=CONTROL, marker="o", linestyle="", markersize=8, label="(M2, M) direction"),
                       Line2D([], [], color="#b9b8b2", marker="o", linestyle="", markersize=5,
@@ -140,7 +140,7 @@ def main(argv=None):
              frameon=False, fontsize=8.5, loc="lower left", labelcolor=INK)
 
     fig.tight_layout()
-    fig.savefig(args.out, dpi=150, facecolor=SURFACE)
+    fig.savefig(args.out, dpi=150, facecolor=SURFACE, bbox_inches="tight")
     print(args.out)
     return 0
 

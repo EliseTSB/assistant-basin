@@ -1,0 +1,14 @@
+Running as unit: part206-smoke.scope; invocation ID: 9d1991e6dd9d4a41a9f9a3d6c29a97dd
+14:38:53 part209-main finished; starting Part 206 Qwen smoke
+launching from /home/elisepc/green/worktrees/ab-part206
+14:38:54 attempt 1 free=10.9
+14:39:40 attempt 1 free=15.8
+14:39:40 running job.py processes=0 --ignore-busy
+STARTED: 14:39:41 step 1 start: -I -B part206/record206.py --stage qwen-chat --device xpu --model-path E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots
+14:40:22 step 1 rc=1
+14:40:43 attempt 2 free=17.2
+14:40:44 running job.py processes=0 --ignore-busy
+STARTED: 14:40:45 step 1 start: -I -B part206/record206.py --stage qwen-chat --device xpu --model-path E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots
+14:41:02 step 1 rc=1
+step failed after 2 attempts: -I -B part206/record206.py --stage qwen-chat --device xpu --model-path E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a --out results/part206/smoke --limit 20 --batch 2 --smoke
+ARC STEPS FAILED (batch 4 may simply not fit; read step logs)
