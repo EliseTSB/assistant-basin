@@ -384,3 +384,36 @@ recorded here so the readings are fixed before any data. 67 tests pass on the ho
 Engineering changes that do not change any reading: atomic writes with a recomputed check on a torn file, resume that
 re-runs only unfinished work, and replacement values placed on the input's device. The prompts are approved
 (`part205/prompts205.json`), and the pilot uses `part205/prompts205-pilot.json` (the same items cut to honesty).
+
+## Amendment 2 (2026-11-12 20:06 CT, after the pilot, before the six-value gap is measured)
+
+The pilot (PILOT.md, 3210e562) failed G2 and fired the Size section's precision rule: at Instruct, on honesty, the You
+frame and the named third person give nearly the same answers (gap 0.0068 over 8 pairs), so T's standard error was
+about 4.1. **It is not a ceiling.** P(consistent) in the pilot runs from 0.52 to 0.93 in both frames, and it moves with
+the paraphrase (items 6 and 8 high, 5 and 7 low) far more than with the persona line (honesty-6: You 0.842, Zara
+0.925, Milo 0.917). The rule's named remedy (more held-out paraphrases) narrows the gap's noise, not a mean near zero.
+The pilot covered one value; the main run pools six. So the main run gets one cheap step first, and a branch fixed now.
+
+1. **Step A0, the six-value gap screen** (OLMo 2 1B Instruct, CPU, float32, the registered frame and prompts): the plain
+   You run for each of the 24 held-out SAY questions and the plain third-person run for each of the 48 question-name
+   pairs, 72 forward passes, no hooks, no copy arm. Computed and printed: gap = mean(P_you - P_third) over the 48 pairs,
+   its standard error with the 24 questions as clusters, the gap per value, and every P. Nothing else is computed or
+   read before the branch is taken.
+2. **The branch.** With SD(d) = 0.079 from the pilot (the only measured value), T's projected standard error over 48
+   pairs is 0.079 / (sqrt(48) x gap); 0.25 is at least 3 of them when the gap is at least 0.137. **If the six-value gap
+   is at least 0.14 and G2 passes, the main run proceeds exactly as registered.** Otherwise:
+   - Every copy arm is dropped from the main run in both families (T, SAY copy, reverse, persona swap, random sets,
+     off-target, Sauers' wording). Predictions 205.4, 205.6 and 205.9 are recorded UNTESTABLE by design precision,
+     with A0's numbers; 205.7 is vacuous.
+   - The You and third-person baseline passes still run at every stage (72 per stage), so the gap is reported per
+     stage and **205.5 is read on the gap as registered** (a gap under 0.10 at 3.0T holds it; a gap of 0.10 or more
+     there makes it depend on T, so it is UNTESTABLE).
+   - O and its predictions (205.1, 205.2, 205.3, 205.8) and the withdrawal rule are unchanged.
+   SD(d) for the other five values is unmeasured; if the main run proceeds, its own SD(d) is reported beside the
+   projection, and no reading changes on it.
+3. **Not chosen, and why.** Screening items for a large gap and computing T on them would divide by a denominator
+   selected on its own noise, which inflates T (regression to the mean); fresh items for an honest screen are not
+   written. A negated persona line ("You do not care about ...") would manufacture a gap but changes what the copy
+   carries, so it is a different question, not a remedy.
+4. **Family Q** has no T prediction (205.8 is about O). Its copy arms run only if its own A0 (the same 72 passes, on
+   the A770, at Qwen3.5-4B) meets the same rule; otherwise they are dropped as above and its O is read as registered.
