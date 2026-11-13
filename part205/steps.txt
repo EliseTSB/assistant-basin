@@ -23,6 +23,13 @@ Launch each in the memory-capped CPU unit, in this order (the design's stage ord
   tools/launch_arc.py 205 --cpu "/home/elisepc/neuron-probe/.venv/bin/python -I -B part205/run205.py --stage dpo --out results/part205 --check-pool" --mem 8G --tag dpo
   tools/launch_arc.py 205 --cpu "/home/elisepc/neuron-probe/.venv/bin/python -I -B part205/run205.py --stage instruct --out results/part205 --check-pool" --mem 8G --tag instruct
 
+--- 1b. family O under Amendment 2's fallback (A0, 2026-11-13 07:34: gap 0.0191 < 0.194, G0 passed; BRANCH: FALLBACK)
+These replace step 1. Each stage runs 168 passes (48 ranking, 24 You, 48 third-person, 48 do-nothing on the DO and SAY
+union) with --arms controls, in the design's stage order:
+
+  tools/launch_arc.py 205 --cpu "/home/elisepc/neuron-probe/.venv/bin/python -I -B part205/run205.py --stage pretrain-3.0T --out results/part205 --check-pool --arms controls" --mem 8G --tag pretrain
+  (the same line with --stage midtrain-26B, midtrain-end, sft, dpo, instruct, and --tag accordingly)
+
 --- 2. the A770 G1 check, before family Q's main run (one question, 5 plain + 5 do-nothing runs)
 
   tools/launch_arc.py 205 --step "-I -B part205/g1check205.py --stage qwen-chat --out results/part205/g1" --copy part205/run205.py part205/common205.py part205/score205.py part205/config.json part205/prompts205.json part205/g1check205.py neuron_report.py
