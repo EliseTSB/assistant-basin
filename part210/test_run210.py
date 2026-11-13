@@ -433,7 +433,8 @@ def test_a_resume_decodes_only_what_is_missing_and_a_half_written_call_again(tmp
 
 def test_a_completed_run_resumed_writes_nothing(tmp_path, monkeypatch):
     """Break: in _existing_whole, drop the `expected[key] != set(ids)` test (a whole call would count as incomplete and
-    be decoded again), or in run(), drop the `if not pending: continue` guard."""
+    be decoded again), or in run(), drop the `if not missing: continue` guard (sabotaged 2026-11-13 with
+    scripts/sabotage-run.py in the Journal repo: this test went red on its own row)."""
     _install_fakes(monkeypatch, tmp_path=tmp_path)
     assert run210.run(_args(tmp_path)) == 0
     before = (tmp_path / "answers.jsonl").read_bytes()
