@@ -1,0 +1,21 @@
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:  33%|███▎      | 59/179 [00:00<00:00, 585.26it/s]Loading weights:  69%|██████▊   | 123/179 [00:00<00:00, 616.08it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 781.28it/s]
+[load] midtrain-end: allenai/OLMo-2-0425-1B@a1847dff float32 cpu eager
+[r1] 24/120 frames, 13.9s
+[r1] 48/120 frames, 28.5s
+[r1] 72/120 frames, 43.2s
+[r1] 96/120 frames, 57.7s
+[r1] 120/120 frames, 72.2s
+[r3] 120/360 reference sentences, 135.9s
+[r3] 240/360 reference sentences, 202.5s
+[r3] 360/360 reference sentences, 271.0s
+[summary] midtrain-end: mean P3 over 24 ROOM-W told frames = 0.795
+[summary] TOLD-SIT: told posture largest in 8/8; top tokens of #1: ' sitting' 0.714, ' standing' 0.044, ' lying' 0.030, ' in' 0.030, ' seated' 0.009
+[summary] TOLD-STAND: told posture largest in 8/8; top tokens of #1: ' standing' 0.454, ' sitting' 0.199, ' in' 0.040, ' lying' 0.038, ' ' 0.013
+[summary] TOLD-LIE: told posture largest in 8/8; top tokens of #1: ' lying' 0.657, ' sitting' 0.117, ' standing' 0.035, ' laying' 0.033, ' in' 0.025
+[summary] NOBODY-TOLD-SIT: told posture largest in 8/8; top tokens of #1: ' sitting' 0.749, ' standing' 0.039, ' lying' 0.029, ' in' 0.024, ' seated' 0.012
+[summary] NOBODY-TOLD-STAND: told posture largest in 8/8; top tokens of #1: ' standing' 0.446, ' sitting' 0.233, ' lying' 0.057, ' in' 0.032, ' not' 0.012
+[summary] R3 sit_stand: layer 8 held-out acc 0.942 (null mean 0.504, p95 0.567)
+[summary] R3 sit_lie: layer 9 held-out acc 0.992 (null mean 0.506, p95 0.575)
+[summary] R3 poles TOLD-SIT above TOLD-STAND in 8/8 paraphrases
+[summary] R3 poles NOBODY-TOLD-SIT above NOBODY-TOLD-STAND in 8/8 paraphrases
+rc=0 13:37:32

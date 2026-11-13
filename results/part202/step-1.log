@@ -1,0 +1,1 @@
+{"answers_written": 6516, "replicate_rows": 200, "gates_r1_r3": true, "why": "", "gate_r3": {"passed": true, "pushed_calls": 130, "no_push_calls": 16, "pushed_calls_not_in_chunks_of_8": 0, "bad_no_push_calls": 0, "pushed_chunks": 829, "companion_rows": 132, "largest_chunk_rows": 8}}

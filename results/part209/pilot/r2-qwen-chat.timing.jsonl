@@ -1,0 +1,5 @@
+{"batch_size": 16, "rows": 16, "seconds": 23.679, "max_new_tokens": 96, "new_tokens": 1532}
+{"batch_size": 16, "rows": 16, "seconds": 28.034, "max_new_tokens": 96, "new_tokens": 1467}
+{"batch_size": 16, "rows": 16, "seconds": 17.874, "max_new_tokens": 96, "new_tokens": 1536}
+{"batch_size": 16, "rows": 16, "seconds": 17.58, "max_new_tokens": 96, "new_tokens": 1495}
+{"batch_size": 16, "rows": 12, "seconds": 15.612, "max_new_tokens": 96, "new_tokens": 1152}

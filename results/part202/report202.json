@@ -1,0 +1,348 @@
+{
+  "source": "part202/report202.py",
+  "predictions": {
+    "202.1": {
+      "verdict": "held",
+      "R1": "True",
+      "R2": "True",
+      "R3_bad_pushed_calls": 0,
+      "R3_bad_no_push_calls": 0
+    },
+    "202.2": {
+      "verdict": "held"
+    },
+    "202.3": {
+      "verdict": "held",
+      "qwen_neuron": 0.05822193270646879,
+      "qwen_random": 0.06498883061383061,
+      "broken_neuron": 0.305625,
+      "broken_random": 0.111875
+    },
+    "202.4": {
+      "verdict": "held",
+      "neuron_at_cap": 1011,
+      "random_at_cap": 3175
+    },
+    "202.5": {
+      "verdict": "failed",
+      "differ": 103,
+      "of": 200
+    }
+  },
+  "part164_gates": {
+    "gate1_rows": {
+      "published": {
+        "passed": true,
+        "expected_rows": 6516,
+        "rows": 6516,
+        "unique_rows": 6516,
+        "nonempty_answers": 6516,
+        "duplicates": 0
+      },
+      "rerun": {
+        "passed": true,
+        "expected_rows": 6516,
+        "rows": 6516,
+        "unique_rows": 6516,
+        "nonempty_answers": 6516,
+        "duplicates": 0
+      }
+    },
+    "gate2_no_push": {
+      "published": {
+        "passed": true,
+        "qwen_named": 16,
+        "alibaba_or_tongyi_named": 16,
+        "total": 16,
+        "minimum_each": 12
+      },
+      "rerun": {
+        "passed": true,
+        "qwen_named": 16,
+        "alibaba_or_tongyi_named": 16,
+        "total": 16,
+        "minimum_each": 12
+      }
+    },
+    "gate3_recipe": {
+      "published": {
+        "passed": true,
+        "changed": 86,
+        "total": 100,
+        "changed_rate": 0.86,
+        "minimum_rate": 0.7
+      },
+      "rerun": {
+        "passed": true,
+        "changed": 71,
+        "total": 100,
+        "changed_rate": 0.71,
+        "minimum_rate": 0.7
+      }
+    },
+    "gate4_measure_room": {
+      "published": {
+        "passed": true,
+        "random_qwen_rate_0.8": 0.07944900932400932,
+        "minimum_rate": 0.04
+      },
+      "rerun": {
+        "passed": true,
+        "random_qwen_rate_0.8": 0.06498883061383061,
+        "minimum_rate": 0.04
+      }
+    }
+  },
+  "part164_verdicts": {
+    "164.1": {
+      "bar": "< 0.7",
+      "published": {
+        "verdict": "failed",
+        "estimate": 0.7886820388718295,
+        "interval_95": [
+          0.33316260784196317,
+          1.5689520987743126
+        ]
+      },
+      "rerun": {
+        "verdict": "failed",
+        "estimate": 0.8689997064396466,
+        "interval_95": [
+          0.3380512109467617,
+          1.8312484652610206
+        ]
+      }
+    },
+    "164.2": {
+      "bar": ">= 2",
+      "published": {
+        "verdict": "held",
+        "estimate": 3.4560000000000004,
+        "interval_95": [
+          2.4276632335794797,
+          5.072183741408934
+        ]
+      },
+      "rerun": {
+        "verdict": "held",
+        "estimate": 2.7318435754189943,
+        "interval_95": [
+          1.9807669082125605,
+          3.861121794871795
+        ]
+      }
+    },
+    "164.3": {
+      "bar": "0.8 < 1.0 < 1.2",
+      "published": {
+        "verdict": "held",
+        "estimate": null,
+        "interval_95": null,
+        "broken_rate_by_dose": {
+          "0.8": 0.078125,
+          "1.0": 0.196875,
+          "1.2": 0.364375
+        }
+      },
+      "rerun": {
+        "verdict": "held",
+        "estimate": null,
+        "interval_95": null,
+        "broken_rate_by_dose": {
+          "0.8": 0.111875,
+          "1.0": 0.285,
+          "1.2": 0.478125
+        }
+      }
+    },
+    "164.4": {
+      "bar": "0.7 to 1.3",
+      "published": {
+        "verdict": "failed",
+        "estimate": 5.528824117059411,
+        "interval_95": [
+          1.5099481823659366,
+          58.38254004060447
+        ],
+        "matched_random_dose": 1.0,
+        "neuron_broken_rate": 0.27,
+        "random_broken_rate": 0.196875
+      },
+      "rerun": {
+        "verdict": "failed",
+        "estimate": 7.441447963800905,
+        "interval_95": [
+          1.674310613495876,
+          105.12419871794873
+        ],
+        "matched_random_dose": 1.0,
+        "neuron_broken_rate": 0.305625,
+        "random_broken_rate": 0.285
+      }
+    },
+    "164.5": {
+      "bar": "< 0.5",
+      "published": {
+        "verdict": "held",
+        "estimate": 0.08570936085248311,
+        "interval_95": [
+          0.0,
+          0.2212487319084341
+        ]
+      },
+      "rerun": {
+        "verdict": "held",
+        "estimate": 0.11890155053241173,
+        "interval_95": [
+          0.0,
+          0.2980691461021628
+        ]
+      }
+    }
+  },
+  "rates": {
+    "qwen_rate": {
+      "neuron|0.8": {
+        "published": 0.06393878230612925,
+        "rerun": 0.05822193270646879
+      },
+      "random|0.8": {
+        "published": 0.07944900932400932,
+        "rerun": 0.06498883061383061
+      },
+      "random|1.0": {
+        "published": 0.011333333333333332,
+        "rerun": 0.007589285714285714
+      },
+      "random|1.2": {
+        "published": 0.00680952380952381,
+        "rerun": 0.007727272727272727
+      }
+    },
+    "broken_rate": {
+      "neuron|0.8": {
+        "published": 0.27,
+        "rerun": 0.305625
+      },
+      "random|0.8": {
+        "published": 0.078125,
+        "rerun": 0.111875
+      },
+      "random|1.0": {
+        "published": 0.196875,
+        "rerun": 0.285
+      },
+      "random|1.2": {
+        "published": 0.364375,
+        "rerun": 0.478125
+      }
+    }
+  },
+  "sizes": {
+    "published": {
+      "neuron": {
+        "rows": 1600,
+        "at_cap": 108,
+        "mean_tokens": 53.25875
+      },
+      "random": {
+        "rows": 4800,
+        "at_cap": 358,
+        "mean_tokens": 55.219375
+      }
+    },
+    "rerun": {
+      "neuron": {
+        "rows": 1600,
+        "at_cap": 1011,
+        "mean_tokens": 69.265625
+      },
+      "random": {
+        "rows": 4800,
+        "at_cap": 3175,
+        "mean_tokens": 71.26125
+      }
+    }
+  },
+  "replicate": {
+    "rows": 200,
+    "differ": 103,
+    "bar": [
+      40,
+      100
+    ],
+    "first_difference_battery_margin_steps": {
+      "0 (exact tie)": 45,
+      "over 0, up to 1": 49,
+      "over 1, up to 2": 5,
+      "over 2": 4,
+      "no recorded margin": 0
+    },
+    "first_difference_position_median": 18,
+    "label_changes": {
+      "broken": 17,
+      "excluded": 5,
+      "maker_gone": 1,
+      "qwen": 3
+    }
+  },
+  "stability": {
+    "164.1": {
+      "independent": 0.268,
+      "shared-change-0.5": 0.264,
+      "shared-change-1": 0.276,
+      "upper-marginal-independent": 0.632
+    },
+    "164.2": {
+      "independent": 0.738,
+      "shared-change-0.5": 0.726,
+      "shared-change-1": 0.719,
+      "upper-marginal-independent": 0.0
+    },
+    "164.3": {
+      "independent": 1.0,
+      "shared-change-0.5": 1.0,
+      "shared-change-1": 1.0,
+      "upper-marginal-independent": 1.0
+    },
+    "164.4": {
+      "independent": 1.0,
+      "shared-change-0.5": 1.0,
+      "shared-change-1": 1.0,
+      "upper-marginal-independent": 0.389
+    },
+    "164.5": {
+      "independent": 1.0,
+      "shared-change-0.5": 1.0,
+      "shared-change-1": 1.0,
+      "upper-marginal-independent": 0.102
+    }
+  },
+  "gate_stability": {
+    "gate1_rows": {
+      "independent": 1.0,
+      "shared-change-0.5": 1.0,
+      "shared-change-1": 1.0,
+      "upper-marginal-independent": 1.0
+    },
+    "gate2_no_push": {
+      "independent": 1.0,
+      "shared-change-0.5": 1.0,
+      "shared-change-1": 1.0,
+      "upper-marginal-independent": 1.0
+    },
+    "gate3_recipe": {
+      "independent": 1.0,
+      "shared-change-0.5": 1.0,
+      "shared-change-1": 1.0,
+      "upper-marginal-independent": 1.0
+    },
+    "gate4_measure_room": {
+      "independent": 1.0,
+      "shared-change-0.5": 1.0,
+      "shared-change-1": 1.0,
+      "upper-marginal-independent": 0.73
+    }
+  },
+  "withdrawn": false
+}

@@ -1,0 +1,26 @@
+{
+  "withdrawn": false,
+  "gates_r1_r3": {
+    "R1": true,
+    "R2": true,
+    "R3": true
+  },
+  "part164_gates": {
+    "gate1_rows": true,
+    "gate2_no_push": true,
+    "gate3_recipe": true,
+    "gate4_measure_room": true
+  },
+  "verdicts": {
+    "164.1": "failed",
+    "164.2": "held",
+    "164.3": "held",
+    "164.4": "failed",
+    "164.5": "held"
+  },
+  "p2021": true,
+  "p2022": true,
+  "p2023": true,
+  "p2024": true,
+  "p2025": false
+}

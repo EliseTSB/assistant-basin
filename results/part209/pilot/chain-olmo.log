@@ -1,0 +1,10 @@
+Running as unit: part209-olmo-pilot.scope; invocation ID: da6bde00a9aa4993a8e686a7a3479793
+12:50:47 batch 16 unit=part209-olmo-b16-125047
+12:57:27 batch 16 ended: success
+[r2] wrote 76 answers to results/part209/pilot/olmo-b16/r2-instruct.jsonl
+rc=0 12:57:09
+12:57:27 batch 32 unit=part209-olmo-b32-125727
+13:02:08 batch 32 ended: success
+[r2] wrote 76 answers to results/part209/pilot/olmo-b32/r2-instruct.jsonl
+rc=0 13:01:48
+ALL-DONE

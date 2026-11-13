@@ -1,0 +1,185 @@
+{
+  "gate1": {
+    "folds": {
+      "0": [
+        "1008",
+        "1010",
+        "1012",
+        "1014",
+        "1016",
+        "1025",
+        "1030",
+        "1034",
+        "1039",
+        "1050",
+        "1061",
+        "1062",
+        "1063",
+        "1070",
+        "1071",
+        "1072",
+        "1077",
+        "1085",
+        "1089"
+      ],
+      "1": [
+        "1006",
+        "1009",
+        "1011",
+        "1017",
+        "1022",
+        "1027",
+        "1033",
+        "1038",
+        "1042",
+        "1054",
+        "1060",
+        "1064",
+        "1069",
+        "1073",
+        "1078",
+        "1081",
+        "1083",
+        "1088"
+      ],
+      "2": [
+        "1002",
+        "1005",
+        "1019",
+        "1020",
+        "1024",
+        "1031",
+        "1037",
+        "1043",
+        "1047",
+        "1048",
+        "1049",
+        "1051",
+        "1052",
+        "1053",
+        "1058",
+        "1065",
+        "1080",
+        "1084"
+      ],
+      "3": [
+        "1007",
+        "1015",
+        "1029",
+        "1035",
+        "1036",
+        "1040",
+        "1041",
+        "1044",
+        "1046",
+        "1055",
+        "1056",
+        "1074",
+        "1075",
+        "1076",
+        "1082",
+        "1087",
+        "1090",
+        "1091"
+      ],
+      "4": [
+        "1001",
+        "1003",
+        "1004",
+        "1013",
+        "1018",
+        "1021",
+        "1023",
+        "1026",
+        "1028",
+        "1032",
+        "1045",
+        "1057",
+        "1059",
+        "1066",
+        "1067",
+        "1068",
+        "1079",
+        "1086"
+      ]
+    },
+    "planned": 2730,
+    "problems": {
+      "missing_or_failed": [
+        "1070_TSI_ANG_XX.wav",
+        "1073_IEO_NEU_XX.wav"
+      ],
+      "missing_or_failed_count": 2
+    },
+    "recorded_ok": 2728,
+    "verdict": "failed"
+  },
+  "gate2": {
+    "clips": [
+      {
+        "activation_fraction_within_tolerance": 1.0,
+        "activation_max_absolute_difference": 0.0,
+        "embedding_cosine": 1.0,
+        "filename": "1-100032-A-0.wav",
+        "passed": true
+      },
+      {
+        "activation_fraction_within_tolerance": 1.0,
+        "activation_max_absolute_difference": 0.0,
+        "embedding_cosine": 1.0,
+        "filename": "1-100038-A-14.wav",
+        "passed": true
+      },
+      {
+        "activation_fraction_within_tolerance": 1.0,
+        "activation_max_absolute_difference": 0.0,
+        "embedding_cosine": 1.0000000000000002,
+        "filename": "1-100210-A-36.wav",
+        "passed": true
+      },
+      {
+        "activation_fraction_within_tolerance": 1.0,
+        "activation_max_absolute_difference": 0.0,
+        "embedding_cosine": 1.0000000000000002,
+        "filename": "1-101296-A-19.wav",
+        "passed": true
+      },
+      {
+        "activation_fraction_within_tolerance": 1.0,
+        "activation_max_absolute_difference": 0.0,
+        "embedding_cosine": 1.0000000000000002,
+        "filename": "1-101336-A-30.wav",
+        "passed": true
+      },
+      {
+        "activation_fraction_within_tolerance": 1.0,
+        "activation_max_absolute_difference": 0.0,
+        "embedding_cosine": 1.0000000000000002,
+        "filename": "1-101404-A-34.wav",
+        "passed": true
+      },
+      {
+        "activation_fraction_within_tolerance": 1.0,
+        "activation_max_absolute_difference": 0.0,
+        "embedding_cosine": 1.0000000000000002,
+        "filename": "1-103298-A-9.wav",
+        "passed": true
+      },
+      {
+        "activation_fraction_within_tolerance": 1.0,
+        "activation_max_absolute_difference": 0.0,
+        "embedding_cosine": 1.0,
+        "filename": "1-104089-A-22.wav",
+        "passed": true
+      }
+    ],
+    "rules": {
+      "activation_abs_tolerance": 0.002,
+      "embedding_cosine_required": 0.9999,
+      "fraction_of_units_required": 0.999
+    },
+    "verdict": "passed"
+  },
+  "status": "gates_failed",
+  "study": "part203"
+}

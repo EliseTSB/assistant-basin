@@ -1,0 +1,7 @@
+Running as unit: part202-arc.scope; invocation ID: 7153a0725a684666a230868d5f9ed605
+launching from /home/elisepc/green/worktrees/ab-part202
+09:01:43 attempt 1 free=12.3
+09:01:43 running job.py processes=0 --ignore-busy
+STARTED: 09:01:46 step 1 start: -I -B part202/run202.py --device xpu --model E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf
+11:42:46 step 1 rc=0
+ALL-DONE

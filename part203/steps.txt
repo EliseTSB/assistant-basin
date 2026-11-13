@@ -18,7 +18,7 @@ Part 203 run steps
    source in this exact environment:
    PYTHONPATH=/home/elisepc/eg2-extra /home/elisepc/neuron-probe/.venv/bin/python -c 'import sentence_transformers, imageio_ffmpeg, soundfile'
    Then run the recorder without isolated mode so it sees those packages:
-   setsid nohup systemd-run --user --scope --collect --unit=part203-record --property=MemoryMax=6G env PYTHONPATH=/home/elisepc/eg2-extra OMP_NUM_THREADS=6 MKL_NUM_THREADS=6 OPENBLAS_NUM_THREADS=6 HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -B part203/record203.py --manifest part203/manifest203.csv --work-dir /mnt/e/neuron-probe/part203-work --threads 6 > results/part203-record.log 2>&1 < /dev/null &
+   setsid nohup systemd-run --user --scope --collect --unit=part203-record --property=MemoryMax=6G env PYTHONPATH=/home/elisepc/eg2-extra OMP_NUM_THREADS=6 MKL_NUM_THREADS=6 OPENBLAS_NUM_THREADS=6 HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -B part203/record203.py --manifest part203/manifest203.csv --work-dir /mnt/e/neuron-probe/part203-work --threads 6 --model-path /mnt/e/neuron-probe/hf/hub/models--google--embeddinggemma-2/snapshots/f9972ac22e696a105c482202646979e33e4b5a1e > results/part203-record.log 2>&1 < /dev/null &
    Gate 2 (Part 188's parity gate) runs first and stops before any CREMA-D clip is recorded if it fails. Each clip
    records V (Venn's vector), D (Part 196's final embedding), E's activations and H, in one atomically written row
    under <work-dir>/records/<clip id>.npz. Rows already written with status ok are skipped, so a stopped run resumes.
@@ -29,3 +29,6 @@ Part 203 run steps
 4. Analyze:
    /home/elisepc/neuron-probe/.venv/bin/python -I -B part203/analyze203.py --manifest part203/manifest203.csv --work-dir /mnt/e/neuron-probe/part203-work --out-dir results/part203
    Read results/part203/results.json only when both gates passed (`status` is "complete").
+
+Note 2026-11-11 06:49 CT: step 3 gained --model-path (the pinned snapshot on E:). Without it, HF_HUB_OFFLINE=1 finds no cached
+model (the cache is not under ~/.cache) and the recorder stops before Gate 2. The timing smoke ran with it.

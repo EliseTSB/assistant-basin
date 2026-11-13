@@ -430,6 +430,12 @@ def analyze(*, manifest_path: Path, work_dir: Path, out_dir: Path) -> dict[str, 
     records = read_records(rows, work_dir)
     status, v, d, e, h = (records["status"], records["v"], records["d"], records["e"], records["h"])
     g1 = gate1(rows, status, v, d, records["v_same_samples"])
+    # Amendment 1 (2026-11-12): a failed or missing record now carries its reason into Gate 1's report. The first
+    # analysis listed two clips as missing whose files load with status ok; the reason was caught and dropped.
+    failed_reasons = {rows[i]["file"]: str(records["errors"][i]) for i in range(len(rows))
+                      if status[i] != "ok" and str(records["errors"][i])}
+    if failed_reasons:
+        g1.setdefault("problems", {})["reasons"] = dict(list(failed_reasons.items())[:50])
     g2 = gate2(work_dir)
     if g1["verdict"] != "passed" or g2.get("verdict") != "passed":
         result = {"study": "part203", "status": "gates_failed", "gate1": g1, "gate2": g2}

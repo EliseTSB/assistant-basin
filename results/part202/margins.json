@@ -1,0 +1,211 @@
+{
+  "part": 202,
+  "source": "results/part164/score.json and answers.jsonl",
+  "expected_rows": 6516,
+  "plan_constants": {
+    "token_cap": 80,
+    "shape_replicate_rows": 200,
+    "pilot_batches": 3,
+    "cap_rate_prediction": 0.3,
+    "cap_rate_thresholds": {
+      "neuron": 480,
+      "random": 1440
+    }
+  },
+  "stage_counts": {
+    "no_push": 16,
+    "recipe": 100,
+    "battery": 6400
+  },
+  "gates": {
+    "gate1_rows": {
+      "passed": true,
+      "expected_rows": 6516,
+      "rows": 6516,
+      "unique_rows": 6516,
+      "nonempty_answers": 6516,
+      "duplicates": 0,
+      "units_per_arm": {
+        "neuron": 100,
+        "random": 100
+      }
+    },
+    "gate2_no_push": {
+      "passed": true,
+      "qwen_named": 16,
+      "alibaba_or_tongyi_named": 16,
+      "total": 16,
+      "minimum_each": 12
+    },
+    "gate3_recipe": {
+      "passed": true,
+      "changed": 86,
+      "total": 100,
+      "changed_rate": 0.86,
+      "minimum_rate": 0.7
+    },
+    "gate4_measure_room": {
+      "passed": true,
+      "random_qwen_rate_0.8": 0.07944900932400932,
+      "minimum_rate": 0.04
+    }
+  },
+  "predictions": {
+    "164.1": {
+      "prediction": "At +0.8, neuron Qwen rate is under 0.7 times random Qwen rate",
+      "verdict": "failed",
+      "estimate_ratio": 0.7886820388718295,
+      "ratio_interval_95": [
+        0.33316260784196317,
+        1.5689520987743126
+      ]
+    },
+    "164.2": {
+      "prediction": "At +0.8, neuron broken rate is at least twice random broken rate",
+      "verdict": "held",
+      "estimate_ratio": 3.4560000000000004,
+      "ratio_interval_95": [
+        2.4276632335794797,
+        5.072183741408934
+      ]
+    },
+    "164.3": {
+      "prediction": "Random broken rate rises strictly from +0.8 to +1.0 to +1.2",
+      "verdict": "held",
+      "broken_rate_by_dose": {
+        "0.8": 0.078125,
+        "1.0": 0.196875,
+        "1.2": 0.364375
+      }
+    },
+    "164.4": {
+      "prediction": "At nearest random broken-rate dose, neuron/random Qwen ratio is between 0.7 and 1.3",
+      "verdict": "failed",
+      "matched_random_dose": 1.0,
+      "neuron_broken_rate": 0.27,
+      "random_broken_rate": 0.196875,
+      "signed_broken_rate_offset_random_minus_neuron": -0.07312500000000002,
+      "absolute_broken_rate_offset": 0.07312500000000002,
+      "estimate_ratio": 5.528824117059411,
+      "ratio_interval_95": [
+        1.5099481823659366,
+        58.38254004060447
+      ]
+    },
+    "164.5": {
+      "prediction": "Random Qwen rate at +1.2 is under half its +0.8 rate",
+      "verdict": "held",
+      "estimate_ratio_1.2_over_0.8": 0.08570936085248311,
+      "ratio_interval_95": [
+        0.0,
+        0.2212487319084341
+      ]
+    }
+  },
+  "distances": [
+    {
+      "id": "Gate 1",
+      "estimate": "6516 complete rows",
+      "bar": "6516 complete rows",
+      "distance": 0,
+      "unit": "missing/extra rows to fail: 1"
+    },
+    {
+      "id": "Gate 2 Qwen",
+      "estimate": 16,
+      "bar": 12,
+      "distance": 4,
+      "unit": "row headroom; one more lost hit than headroom fails"
+    },
+    {
+      "id": "Gate 2 maker",
+      "estimate": 16,
+      "bar": 12,
+      "distance": 4,
+      "unit": "row headroom; one more lost hit than headroom fails"
+    },
+    {
+      "id": "Gate 3",
+      "estimate": "86/100 (0.860000)",
+      "bar": "0.70",
+      "distance": 16,
+      "unit": "row headroom; changed\u2192unchanged rows to fail: 17"
+    },
+    {
+      "id": "Gate 4",
+      "estimate": 0.07944900932400932,
+      "bar": 0.04,
+      "distance": 63.11841491841491,
+      "unit": "equivalent eligible-answer rows at 1,600 rows/arm"
+    },
+    {
+      "id": "164.1",
+      "estimate": 0.7886820388718295,
+      "bar": "< 0.7",
+      "distance": 13.319161246916366,
+      "unit": "equivalent Qwen-label rows above boundary; 1,600-row denominator"
+    },
+    {
+      "id": "164.2",
+      "estimate": 3.4560000000000004,
+      "bar": ">= 2",
+      "distance": 182.00000000000003,
+      "unit": "equivalent broken-answer rows above boundary; 1,600-row denominator"
+    },
+    {
+      "id": "164.3 first step",
+      "estimate": 0.11875,
+      "bar": "> 0",
+      "distance": 190.0,
+      "unit": "equivalent broken-answer rows to equality; 1,600 rows/dose"
+    },
+    {
+      "id": "164.3 second step",
+      "estimate": 0.1675,
+      "bar": "> 0",
+      "distance": 268.0,
+      "unit": "equivalent broken-answer rows to equality; 1,600 rows/dose"
+    },
+    {
+      "id": "164.4 upper boundary",
+      "estimate": 5.528824117059411,
+      "bar": "<= 1.3",
+      "distance": 78.72871835647346,
+      "unit": "equivalent Qwen-label rows to upper boundary; 1,600-row denominator"
+    },
+    {
+      "id": "164.5",
+      "estimate": 0.08570936085248311,
+      "bar": "< 0.5",
+      "distance": 52.663969363969365,
+      "unit": "equivalent Qwen-label rows below boundary; 1,600-row denominator"
+    },
+    {
+      "id": "Headline Qwen direction",
+      "estimate": -0.015510227017880074,
+      "bar": "< 0",
+      "distance": 24.816363228608118,
+      "unit": "equivalent Qwen-label rows to equality; 1,600 rows/arm"
+    },
+    {
+      "id": "Headline broken direction",
+      "estimate": 0.19187500000000002,
+      "bar": "> 0",
+      "distance": 307.0,
+      "unit": "equivalent broken-answer rows to equality; 1,600 rows/arm"
+    }
+  ],
+  "answer_lengths": {
+    "neuron": {
+      "answers": 1600,
+      "count_at_80": 108,
+      "mean_token_count": 53.25875
+    },
+    "random": {
+      "answers": 4800,
+      "count_at_80": 358,
+      "mean_token_count": 55.219375
+    }
+  },
+  "note": "Rate-derived row distances are equivalent counts from the per-unit mean-rate gap at a 1,600-row denominator; they are not a rerun of the scorer under edited labels."
+}

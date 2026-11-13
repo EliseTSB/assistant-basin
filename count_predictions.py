@@ -34,6 +34,9 @@ PATTERNS = [
     ('mixed', r'^(mixed|partly|partial)'),
     ('held', r'^(held|holds|confirmed|passed|pass\b|yes\b)'),
     ('failed', r'^(failed|fails|missed|refuted|no\b|did not)'),
+    # A verdict cell that opens with "untestable" (Part 198: "untestable (the gate failed)") is untestable; until
+    # 2026-11-12 every such row needed a hand override.
+    ('untestable', r'^(untestable|not testable)'),
 ]
 ROW_ID = re.compile(r'\d+[a-z]?(\.\d+[a-z]?)*|\d+[a-z]+\d*')
 

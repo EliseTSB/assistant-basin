@@ -1,0 +1,2169 @@
+{
+ "postures": [
+  "sitting",
+  "standing",
+  "lying"
+ ],
+ "sentences": [
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The man is sitting in the garden."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The man is standing in the garden."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The man is lying in the garden."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The man is sitting in the kitchen."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The man is standing in the kitchen."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The man is lying in the kitchen."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The man is sitting in the park."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The man is standing in the park."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The man is lying in the park."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The man is sitting in the library."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The man is standing in the library."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The man is lying in the library."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The man is sitting in the station."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The man is standing in the station."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The man is lying in the station."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The man is sitting in the office."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The man is standing in the office."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The man is lying in the office."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The man is sitting in the hallway."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The man is standing in the hallway."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The man is lying in the hallway."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The man is sitting in the church."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The man is standing in the church."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The man is lying in the church."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The man is sitting in the yard."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The man is standing in the yard."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The man is lying in the yard."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The man is sitting in the classroom."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The man is standing in the classroom."
+  },
+  {
+   "subject_index": 1,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The man is lying in the classroom."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The woman is sitting in the garden."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The woman is standing in the garden."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The woman is lying in the garden."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The woman is sitting in the kitchen."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The woman is standing in the kitchen."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The woman is lying in the kitchen."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The woman is sitting in the park."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The woman is standing in the park."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The woman is lying in the park."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The woman is sitting in the library."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The woman is standing in the library."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The woman is lying in the library."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The woman is sitting in the station."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The woman is standing in the station."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The woman is lying in the station."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The woman is sitting in the office."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The woman is standing in the office."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The woman is lying in the office."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The woman is sitting in the hallway."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The woman is standing in the hallway."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The woman is lying in the hallway."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The woman is sitting in the church."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The woman is standing in the church."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The woman is lying in the church."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The woman is sitting in the yard."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The woman is standing in the yard."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The woman is lying in the yard."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The woman is sitting in the classroom."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The woman is standing in the classroom."
+  },
+  {
+   "subject_index": 2,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The woman is lying in the classroom."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "My neighbour is sitting in the garden."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "standing",
+   "text": "My neighbour is standing in the garden."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "lying",
+   "text": "My neighbour is lying in the garden."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "My neighbour is sitting in the kitchen."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "standing",
+   "text": "My neighbour is standing in the kitchen."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "lying",
+   "text": "My neighbour is lying in the kitchen."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "My neighbour is sitting in the park."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "standing",
+   "text": "My neighbour is standing in the park."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "lying",
+   "text": "My neighbour is lying in the park."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "My neighbour is sitting in the library."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "standing",
+   "text": "My neighbour is standing in the library."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "lying",
+   "text": "My neighbour is lying in the library."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "My neighbour is sitting in the station."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "standing",
+   "text": "My neighbour is standing in the station."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "lying",
+   "text": "My neighbour is lying in the station."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "My neighbour is sitting in the office."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "standing",
+   "text": "My neighbour is standing in the office."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "lying",
+   "text": "My neighbour is lying in the office."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "My neighbour is sitting in the hallway."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "standing",
+   "text": "My neighbour is standing in the hallway."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "lying",
+   "text": "My neighbour is lying in the hallway."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "My neighbour is sitting in the church."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "standing",
+   "text": "My neighbour is standing in the church."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "lying",
+   "text": "My neighbour is lying in the church."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "My neighbour is sitting in the yard."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "standing",
+   "text": "My neighbour is standing in the yard."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "lying",
+   "text": "My neighbour is lying in the yard."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "My neighbour is sitting in the classroom."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "standing",
+   "text": "My neighbour is standing in the classroom."
+  },
+  {
+   "subject_index": 3,
+   "split": "fit",
+   "posture": "lying",
+   "text": "My neighbour is lying in the classroom."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The boy is sitting in the garden."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The boy is standing in the garden."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The boy is lying in the garden."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The boy is sitting in the kitchen."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The boy is standing in the kitchen."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The boy is lying in the kitchen."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The boy is sitting in the park."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The boy is standing in the park."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The boy is lying in the park."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The boy is sitting in the library."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The boy is standing in the library."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The boy is lying in the library."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The boy is sitting in the station."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The boy is standing in the station."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The boy is lying in the station."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The boy is sitting in the office."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The boy is standing in the office."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The boy is lying in the office."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The boy is sitting in the hallway."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The boy is standing in the hallway."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The boy is lying in the hallway."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The boy is sitting in the church."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The boy is standing in the church."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The boy is lying in the church."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The boy is sitting in the yard."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The boy is standing in the yard."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The boy is lying in the yard."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The boy is sitting in the classroom."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The boy is standing in the classroom."
+  },
+  {
+   "subject_index": 4,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The boy is lying in the classroom."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The girl is sitting in the garden."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The girl is standing in the garden."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The girl is lying in the garden."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The girl is sitting in the kitchen."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The girl is standing in the kitchen."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The girl is lying in the kitchen."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The girl is sitting in the park."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The girl is standing in the park."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The girl is lying in the park."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The girl is sitting in the library."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The girl is standing in the library."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The girl is lying in the library."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The girl is sitting in the station."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The girl is standing in the station."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The girl is lying in the station."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The girl is sitting in the office."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The girl is standing in the office."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The girl is lying in the office."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The girl is sitting in the hallway."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The girl is standing in the hallway."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The girl is lying in the hallway."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The girl is sitting in the church."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The girl is standing in the church."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The girl is lying in the church."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The girl is sitting in the yard."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The girl is standing in the yard."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The girl is lying in the yard."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "The girl is sitting in the classroom."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "standing",
+   "text": "The girl is standing in the classroom."
+  },
+  {
+   "subject_index": 5,
+   "split": "fit",
+   "posture": "lying",
+   "text": "The girl is lying in the classroom."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "Her father is sitting in the garden."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "standing",
+   "text": "Her father is standing in the garden."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "lying",
+   "text": "Her father is lying in the garden."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "Her father is sitting in the kitchen."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "standing",
+   "text": "Her father is standing in the kitchen."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "lying",
+   "text": "Her father is lying in the kitchen."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "Her father is sitting in the park."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "standing",
+   "text": "Her father is standing in the park."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "lying",
+   "text": "Her father is lying in the park."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "Her father is sitting in the library."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "standing",
+   "text": "Her father is standing in the library."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "lying",
+   "text": "Her father is lying in the library."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "Her father is sitting in the station."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "standing",
+   "text": "Her father is standing in the station."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "lying",
+   "text": "Her father is lying in the station."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "Her father is sitting in the office."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "standing",
+   "text": "Her father is standing in the office."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "lying",
+   "text": "Her father is lying in the office."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "Her father is sitting in the hallway."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "standing",
+   "text": "Her father is standing in the hallway."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "lying",
+   "text": "Her father is lying in the hallway."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "Her father is sitting in the church."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "standing",
+   "text": "Her father is standing in the church."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "lying",
+   "text": "Her father is lying in the church."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "Her father is sitting in the yard."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "standing",
+   "text": "Her father is standing in the yard."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "lying",
+   "text": "Her father is lying in the yard."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "sitting",
+   "text": "Her father is sitting in the classroom."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "standing",
+   "text": "Her father is standing in the classroom."
+  },
+  {
+   "subject_index": 6,
+   "split": "fit",
+   "posture": "lying",
+   "text": "Her father is lying in the classroom."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "sitting",
+   "text": "His sister is sitting in the garden."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "standing",
+   "text": "His sister is standing in the garden."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "lying",
+   "text": "His sister is lying in the garden."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "sitting",
+   "text": "His sister is sitting in the kitchen."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "standing",
+   "text": "His sister is standing in the kitchen."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "lying",
+   "text": "His sister is lying in the kitchen."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "sitting",
+   "text": "His sister is sitting in the park."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "standing",
+   "text": "His sister is standing in the park."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "lying",
+   "text": "His sister is lying in the park."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "sitting",
+   "text": "His sister is sitting in the library."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "standing",
+   "text": "His sister is standing in the library."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "lying",
+   "text": "His sister is lying in the library."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "sitting",
+   "text": "His sister is sitting in the station."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "standing",
+   "text": "His sister is standing in the station."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "lying",
+   "text": "His sister is lying in the station."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "sitting",
+   "text": "His sister is sitting in the office."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "standing",
+   "text": "His sister is standing in the office."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "lying",
+   "text": "His sister is lying in the office."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "sitting",
+   "text": "His sister is sitting in the hallway."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "standing",
+   "text": "His sister is standing in the hallway."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "lying",
+   "text": "His sister is lying in the hallway."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "sitting",
+   "text": "His sister is sitting in the church."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "standing",
+   "text": "His sister is standing in the church."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "lying",
+   "text": "His sister is lying in the church."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "sitting",
+   "text": "His sister is sitting in the yard."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "standing",
+   "text": "His sister is standing in the yard."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "lying",
+   "text": "His sister is lying in the yard."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "sitting",
+   "text": "His sister is sitting in the classroom."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "standing",
+   "text": "His sister is standing in the classroom."
+  },
+  {
+   "subject_index": 7,
+   "split": "test",
+   "posture": "lying",
+   "text": "His sister is lying in the classroom."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The old man is sitting in the garden."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "standing",
+   "text": "The old man is standing in the garden."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "lying",
+   "text": "The old man is lying in the garden."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The old man is sitting in the kitchen."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "standing",
+   "text": "The old man is standing in the kitchen."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "lying",
+   "text": "The old man is lying in the kitchen."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The old man is sitting in the park."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "standing",
+   "text": "The old man is standing in the park."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "lying",
+   "text": "The old man is lying in the park."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The old man is sitting in the library."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "standing",
+   "text": "The old man is standing in the library."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "lying",
+   "text": "The old man is lying in the library."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The old man is sitting in the station."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "standing",
+   "text": "The old man is standing in the station."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "lying",
+   "text": "The old man is lying in the station."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The old man is sitting in the office."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "standing",
+   "text": "The old man is standing in the office."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "lying",
+   "text": "The old man is lying in the office."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The old man is sitting in the hallway."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "standing",
+   "text": "The old man is standing in the hallway."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "lying",
+   "text": "The old man is lying in the hallway."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The old man is sitting in the church."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "standing",
+   "text": "The old man is standing in the church."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "lying",
+   "text": "The old man is lying in the church."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The old man is sitting in the yard."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "standing",
+   "text": "The old man is standing in the yard."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "lying",
+   "text": "The old man is lying in the yard."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The old man is sitting in the classroom."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "standing",
+   "text": "The old man is standing in the classroom."
+  },
+  {
+   "subject_index": 8,
+   "split": "test",
+   "posture": "lying",
+   "text": "The old man is lying in the classroom."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The student is sitting in the garden."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "standing",
+   "text": "The student is standing in the garden."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "lying",
+   "text": "The student is lying in the garden."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The student is sitting in the kitchen."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "standing",
+   "text": "The student is standing in the kitchen."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "lying",
+   "text": "The student is lying in the kitchen."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The student is sitting in the park."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "standing",
+   "text": "The student is standing in the park."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "lying",
+   "text": "The student is lying in the park."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The student is sitting in the library."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "standing",
+   "text": "The student is standing in the library."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "lying",
+   "text": "The student is lying in the library."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The student is sitting in the station."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "standing",
+   "text": "The student is standing in the station."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "lying",
+   "text": "The student is lying in the station."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The student is sitting in the office."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "standing",
+   "text": "The student is standing in the office."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "lying",
+   "text": "The student is lying in the office."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The student is sitting in the hallway."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "standing",
+   "text": "The student is standing in the hallway."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "lying",
+   "text": "The student is lying in the hallway."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The student is sitting in the church."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "standing",
+   "text": "The student is standing in the church."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "lying",
+   "text": "The student is lying in the church."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The student is sitting in the yard."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "standing",
+   "text": "The student is standing in the yard."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "lying",
+   "text": "The student is lying in the yard."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The student is sitting in the classroom."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "standing",
+   "text": "The student is standing in the classroom."
+  },
+  {
+   "subject_index": 9,
+   "split": "test",
+   "posture": "lying",
+   "text": "The student is lying in the classroom."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "sitting",
+   "text": "My friend is sitting in the garden."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "standing",
+   "text": "My friend is standing in the garden."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "lying",
+   "text": "My friend is lying in the garden."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "sitting",
+   "text": "My friend is sitting in the kitchen."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "standing",
+   "text": "My friend is standing in the kitchen."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "lying",
+   "text": "My friend is lying in the kitchen."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "sitting",
+   "text": "My friend is sitting in the park."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "standing",
+   "text": "My friend is standing in the park."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "lying",
+   "text": "My friend is lying in the park."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "sitting",
+   "text": "My friend is sitting in the library."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "standing",
+   "text": "My friend is standing in the library."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "lying",
+   "text": "My friend is lying in the library."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "sitting",
+   "text": "My friend is sitting in the station."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "standing",
+   "text": "My friend is standing in the station."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "lying",
+   "text": "My friend is lying in the station."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "sitting",
+   "text": "My friend is sitting in the office."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "standing",
+   "text": "My friend is standing in the office."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "lying",
+   "text": "My friend is lying in the office."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "sitting",
+   "text": "My friend is sitting in the hallway."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "standing",
+   "text": "My friend is standing in the hallway."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "lying",
+   "text": "My friend is lying in the hallway."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "sitting",
+   "text": "My friend is sitting in the church."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "standing",
+   "text": "My friend is standing in the church."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "lying",
+   "text": "My friend is lying in the church."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "sitting",
+   "text": "My friend is sitting in the yard."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "standing",
+   "text": "My friend is standing in the yard."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "lying",
+   "text": "My friend is lying in the yard."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "sitting",
+   "text": "My friend is sitting in the classroom."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "standing",
+   "text": "My friend is standing in the classroom."
+  },
+  {
+   "subject_index": 10,
+   "split": "test",
+   "posture": "lying",
+   "text": "My friend is lying in the classroom."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The teacher is sitting in the garden."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "standing",
+   "text": "The teacher is standing in the garden."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "lying",
+   "text": "The teacher is lying in the garden."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The teacher is sitting in the kitchen."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "standing",
+   "text": "The teacher is standing in the kitchen."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "lying",
+   "text": "The teacher is lying in the kitchen."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The teacher is sitting in the park."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "standing",
+   "text": "The teacher is standing in the park."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "lying",
+   "text": "The teacher is lying in the park."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The teacher is sitting in the library."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "standing",
+   "text": "The teacher is standing in the library."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "lying",
+   "text": "The teacher is lying in the library."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The teacher is sitting in the station."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "standing",
+   "text": "The teacher is standing in the station."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "lying",
+   "text": "The teacher is lying in the station."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The teacher is sitting in the office."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "standing",
+   "text": "The teacher is standing in the office."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "lying",
+   "text": "The teacher is lying in the office."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The teacher is sitting in the hallway."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "standing",
+   "text": "The teacher is standing in the hallway."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "lying",
+   "text": "The teacher is lying in the hallway."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The teacher is sitting in the church."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "standing",
+   "text": "The teacher is standing in the church."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "lying",
+   "text": "The teacher is lying in the church."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The teacher is sitting in the yard."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "standing",
+   "text": "The teacher is standing in the yard."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "lying",
+   "text": "The teacher is lying in the yard."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "sitting",
+   "text": "The teacher is sitting in the classroom."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "standing",
+   "text": "The teacher is standing in the classroom."
+  },
+  {
+   "subject_index": 11,
+   "split": "test",
+   "posture": "lying",
+   "text": "The teacher is lying in the classroom."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "sitting",
+   "text": "Their mother is sitting in the garden."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "standing",
+   "text": "Their mother is standing in the garden."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "lying",
+   "text": "Their mother is lying in the garden."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "sitting",
+   "text": "Their mother is sitting in the kitchen."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "standing",
+   "text": "Their mother is standing in the kitchen."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "lying",
+   "text": "Their mother is lying in the kitchen."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "sitting",
+   "text": "Their mother is sitting in the park."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "standing",
+   "text": "Their mother is standing in the park."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "lying",
+   "text": "Their mother is lying in the park."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "sitting",
+   "text": "Their mother is sitting in the library."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "standing",
+   "text": "Their mother is standing in the library."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "lying",
+   "text": "Their mother is lying in the library."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "sitting",
+   "text": "Their mother is sitting in the station."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "standing",
+   "text": "Their mother is standing in the station."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "lying",
+   "text": "Their mother is lying in the station."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "sitting",
+   "text": "Their mother is sitting in the office."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "standing",
+   "text": "Their mother is standing in the office."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "lying",
+   "text": "Their mother is lying in the office."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "sitting",
+   "text": "Their mother is sitting in the hallway."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "standing",
+   "text": "Their mother is standing in the hallway."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "lying",
+   "text": "Their mother is lying in the hallway."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "sitting",
+   "text": "Their mother is sitting in the church."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "standing",
+   "text": "Their mother is standing in the church."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "lying",
+   "text": "Their mother is lying in the church."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "sitting",
+   "text": "Their mother is sitting in the yard."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "standing",
+   "text": "Their mother is standing in the yard."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "lying",
+   "text": "Their mother is lying in the yard."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "sitting",
+   "text": "Their mother is sitting in the classroom."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "standing",
+   "text": "Their mother is standing in the classroom."
+  },
+  {
+   "subject_index": 12,
+   "split": "test",
+   "posture": "lying",
+   "text": "Their mother is lying in the classroom."
+  }
+ ]
+}

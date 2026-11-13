@@ -1,0 +1,16 @@
+{
+ "part": 209,
+ "stages": {
+  "instruct": {
+   "model_id": "allenai/OLMo-2-0425-1B-Instruct",
+   "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+   "family": "O",
+   "dtype": "float32",
+   "device": "cpu",
+   "attn_implementation": "eager",
+   "torch": "2.14.1+cpu",
+   "transformers": "5.20.0",
+   "recorded": "2026-11-12T11:10:23"
+  }
+ }
+}

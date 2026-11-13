@@ -1,0 +1,35 @@
+....................F........                                            [100%]
+=================================== FAILURES ===================================
+___________________________ test_scorer_known_truth ____________________________
+
+cfg = {'part': 209, 'note': 'Every revision, seed and setting the design names, fixed before any run. Model ids and revision...O'}, {'stage': 'sft', 'family': 'O'}, {'stage': 'dpo', 'family': 'O'}, {'stage': 'instruct', 'family': 'O'}, ...], ...}
+tmp_path = PosixPath('/tmp/pytest-of-elisepc/pytest-40/test_scorer_known_truth0')
+
+    def test_scorer_known_truth(cfg, tmp_path):
+        _write_fixture(tmp_path / "raw")
+        res = S.score(tmp_path / "raw", cfg, resamples=500, log=lambda m: None)
+        got = {k: v["verdict"] for k, v in res["predictions"].items()}
+        assert got == EXPECTED
+        q = res["r2"]["qwen-chat"]["arms"]
+        assert abs(q["ROOM-W"]["sitting_share"] - 10 / 12) < 1e-9
+        assert abs(q["NOBODY"]["none_frac"] - 0.75) < 1e-9
+        assert res["predictions"]["209.5"]["denominator"] == 96
+        assert abs(res["predictions"]["209.4"]["mean_warmup_effect"] - (1 / 12 + 0 + 2 / 12) / 3) < 1e-9
+        assert abs(res["predictions"]["209.11"]["nobody_i_minus_none0"] - (6 / 8 - 4 / 12)) < 1e-9
+        for key in ("209.2", "209.4", "209.11"):
+            assert {"ci95_paired", "ci95_unpaired"} <= set(res["predictions"][key])
+        c = res["r3"]["qwen-chat"]["c"]
+        assert abs(c["NOBODY"] - (0.6 - 0.1) / 0.8) < 1e-9        # NOBODY's own poles
+        assert abs(c["ROOM-W"] - 0.8) < 1e-9                      # ROOM-W's poles
+        assert res["r3"]["qwen-chat"]["pole_gap_read"] == {"ROOM-W": True, "NOBODY": True}
+        assert res["gates"]["G2"]["kappa_posture"] == 1.0 and res["headline"]["withdrawn"] is False
+>       assert res["r1"]["qwen-chat"]["ROOM-W"]["range"] == [0.9, 0.9]
+E       assert [0.9000000000...0000000000001] == [0.9, 0.9]
+E         
+E         At index 0 diff: 0.9000000000000001 != 0.9
+E         Use -v to get more diff
+
+part209/test_part209.py:421: AssertionError
+=========================== short test summary info ============================
+FAILED part209/test_part209.py::test_scorer_known_truth - assert [0.900000000...
+1 failed, 28 passed in 20.11s
