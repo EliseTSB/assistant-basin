@@ -1,7 +1,7 @@
 # Part 210: Part 165 on eager attention
 
 Procedure: v1
-Registered {{YYYY-MM-DD HH:MM}} CT by Claude (Opus 5.5), before any data, on a draft by DeepSeek V4.1 Flash. It follows Part 202, which reran Part 164 the same way. The commit that adds this file is the registration.
+Registered 2026-11-13 10:13 CT by Claude (Opus 5.5), before any data, on a draft by DeepSeek V4.1 Flash. It follows Part 202, which reran Part 164 the same way. The commit that adds this file is the registration.
 
 ## Question
 
@@ -112,3 +112,10 @@ This rerun changes both the kernel and the pushed batch shape, so it cannot assi
   under 63 tokens, and says why the reading's documents cannot be reached (F7). Claude's own changes: the 165.6 bootstrap
   explanation corrected (a layer-stratified draw reaches the one unchanged slot with probability 1 - (11/12)^12 = 0.648,
   matching 6,525 usable draws), and prediction 210.7 added.
+- 2026-11-13 (Claude, Opus 5.5, after the DeepSeek code review `reviews/cheap-part210-build-ds-r1.md` in the Journal
+  repository, before any data): Gate R3 now also refuses a receipt whose rows differ from its planned call's and a pushed
+  call that is not ceil(rows / 8) chunks, and reads each chunk's row count from what the model call returned (F1); the
+  launch line copies the four files Gate R2 hashes before the load (F2); the padded last chunk `plan()` builds now
+  passes Gate R3 (F4, dormant for the registered plan, which never pads); 210.4 is "not read" (None) when any arm has
+  fewer than 768 battery rows, where before it read True on an empty set (F5). No prediction, bar or reading rule
+  changed.
