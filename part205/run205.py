@@ -449,6 +449,24 @@ def _run_stage_locked(args, out, model, tok, units, env, prompts, cfg):
         q0, ids = C.question_start(tok, text, persona)
         return text, ids, q0
 
+    # ---- 0. Amendment 2, step A0: the six-value gap screen. Only the plain You run per held-out SAY question and the
+    # plain third-person run per question-name pair (24 + 48 = 72), forward only, nothing captured or hooked: no
+    # ranking, no sets, no effect. Run it with its own --out, so its records never meet the main run's resume.
+    if args.stage_only == "screen":
+        held = heldout_say(prompts)
+        names = [n for n in prompts["personas"] if n != "You"]
+        for h in held:
+            for name in ["You"] + names:
+                arm = "you" if name == "You" else "baseline"
+                if not missing(arm, h["id"], name, h["value"], name):
+                    continue
+                text, ids_tok, _ = frame(name, h["value"], h["question"])
+                ids, read, _acts, _grads = run(text, need_grad=False, capture=False, consistent=h["consistent"])
+                assert ids == ids_tok, "runner and offset tokenisation disagree"
+                emit({"arm": arm, "stage": stage, "value": h["value"], "item": h["item"], "id": h["id"],
+                      "name": name, "persona": name, "consistent": h["consistent"], "n_tokens": len(ids), **read})
+        return _finish(out, meta, n_pass)
+
     # ---- 1. ranking: 48 forward+backward passes in the You frame (skipped when ranking.npz and its records exist)
     sel = selection_prompts(prompts)
     random.Random(cfg["seeds"]["prompt_order"]).shuffle(sel)  # prompt order seeded (Design, Controls, Seeds)
@@ -795,8 +813,9 @@ def main(argv=None):
     ap.add_argument("--config", default=str(HERE / "config.json"))
     ap.add_argument("--prompts", default=str(HERE / "prompts205.json"))
     ap.add_argument("--device", default=None, help="override the family's device (cpu / xpu)")
-    ap.add_argument("--stage-only", choices=["ranking", "baseline", "pairs"], default=None,
-                    help="stop after the ranking, the baselines, or the You/third-person pairs (timing, G0/G2, SD(d))")
+    ap.add_argument("--stage-only", choices=["ranking", "baseline", "pairs", "screen"], default=None,
+                    help="stop after the ranking, the baselines, or the You/third-person pairs (timing, G0/G2, SD(d)); "
+                         "'screen' is Amendment 2's step A0: only the 72 plain You and third-person passes")
     ap.add_argument("--check-pool", action="store_true",
                     help="refuse unless the unit pool matches config.json (off for tiny test models)")
     ap.add_argument("--models-json", default=str(HERE / "models.json"),

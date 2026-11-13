@@ -1348,3 +1348,83 @@ def test_score_family_matches_on_the_do_selection_score():
     import run205
     scores = {"say": np.array([9.0, 1.0]), "do": np.array([1.0, 9.0]), "pooled": np.array([5.0, 5.0])}
     assert list(run205.matching_score(scores)) == [1.0, 9.0]
+
+
+# ---- Amendment 2, step A0 (2026-11-12): the screen mode and the branch it feeds -----------------------------------
+
+def test_screen_mode_runs_only_the_72_plain_passes(tmp_path, cfg, prompts, olmo_tok):
+    """`--stage-only screen` writes the 24 You and 48 third-person rows and nothing else: no ranking, no sets, no
+    effect, no copy arm (Amendment 2 item 1: nothing else is computed before the branch)."""
+    out = tmp_path / "a0"
+    res = R.run_stage(stage_args(out, stage_only="screen"), model=tiny_olmo(), tok=olmo_tok,
+                      env={"family": "O", "stage": "tiny"}, prompts=prompts, cfg=tiny_cfg(cfg))
+    rows = records(out / "tiny")
+    from collections import Counter
+    assert Counter(r["arm"] for r in rows) == {"you": 24, "baseline": 48}
+    for f in ("ranking.npz", "sets.json", "effect.npz", "copy_acts.npz"):
+        assert not (out / "tiny" / f).exists(), f
+    assert json.loads((out / "tiny" / "meta.json").read_text())["passes_this_run"] == 72
+    # a second run resumes, runs nothing and adds nothing
+    R.run_stage(stage_args(out, stage_only="screen"), model=tiny_olmo(), tok=olmo_tok,
+                env={"family": "O", "stage": "tiny"}, prompts=prompts, cfg=tiny_cfg(cfg))
+    assert len(records(out / "tiny")) == 72
+    assert json.loads((out / "tiny" / "meta.json").read_text())["passes_this_run"] == 0
+    del res
+
+
+def _screen_rows(prompts, gap, mass=0.8, top_letter=True, drop=0):
+    """Synthetic A0 rows: every You P(consistent) 0.7, every third-person 0.7 - gap."""
+    held = R.heldout_say(prompts)
+    names = [n for n in prompts["personas"] if n != "You"]
+    rows = []
+    for h in held:
+        pa = 0.7 if h["consistent"] == "A" else 0.3
+        rows.append({"arm": "you", "id": h["id"], "name": "You", "value": h["value"], "consistent": h["consistent"],
+                     "p_a": pa, "p_b": 1 - pa, "option_mass": mass, "top_is_letter": top_letter})
+        for n in names:
+            pc = 0.7 - gap
+            pa = pc if h["consistent"] == "A" else 1 - pc
+            rows.append({"arm": "baseline", "id": h["id"], "name": n, "value": h["value"],
+                         "consistent": h["consistent"], "p_a": pa, "p_b": 1 - pa, "option_mass": mass,
+                         "top_is_letter": top_letter})
+    return rows[: len(rows) - drop]
+
+
+def _write_rows(d, rows):
+    d.mkdir(parents=True, exist_ok=True)
+    (d / "records.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    return d
+
+
+@pytest.mark.parametrize("gap,branch", [(0.25, "PROCEED"), (0.194, "PROCEED"), (0.1935, "FALLBACK"),
+                                        (0.0068, "FALLBACK"), (-0.05, "FALLBACK")])
+def test_screen_branch_threshold(tmp_path, prompts, gap, branch):
+    import screen205 as SC
+    out = SC.screen(_write_rows(tmp_path / "s", _screen_rows(prompts, gap)))
+    assert out["branch"] == branch, (gap, out["gap"])
+    assert abs(out["gap"] - gap) < 1e-9
+    assert out["n_clusters"] == 24 and len(out["gap_per_value"]) == 6
+
+
+def test_screen_g0_failure_forces_fallback_even_at_a_large_gap(tmp_path, prompts):
+    import screen205 as SC
+    out = SC.screen(_write_rows(tmp_path / "s", _screen_rows(prompts, 0.4, mass=0.3, top_letter=False)))
+    assert out["G0"]["pass"] is False and out["branch"] == "FALLBACK"
+
+
+def test_screen_reads_g0_on_the_you_rows_only(tmp_path, prompts):
+    """r2 M1: a degenerate third-person frame must not move G0 (only the 24 You rows enter it)."""
+    import screen205 as SC
+    rows = _screen_rows(prompts, 0.3)
+    for r in rows:
+        if r["arm"] == "baseline":
+            r["option_mass"], r["top_is_letter"] = 0.05, False
+    out = SC.screen(_write_rows(tmp_path / "s", rows))
+    assert out["G0"]["pass"] is True and out["G0"]["n"] == 24 and out["branch"] == "PROCEED"
+
+
+def test_screen_incomplete_is_hold(tmp_path, prompts):
+    import screen205 as SC
+    out = SC.screen(_write_rows(tmp_path / "s", _screen_rows(prompts, 0.3, drop=1)))
+    assert out["branch"] == "HOLD"
+    assert SC.main([str(tmp_path / "s")]) == 3
