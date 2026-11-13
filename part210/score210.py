@@ -463,7 +463,9 @@ def score(rows, load=None, norms=None, replicate=None, published=None, published
     at_cap = {arm: sum(r.get("arm") == arm and int(r.get("token_count", 0)) == CAP for r in battery_rows(rows))
               for arm in ARMS}
     per_arm = {arm: sum(r.get("arm") == arm for r in battery_rows(rows)) for arm in ARMS}
-    p2104 = all(at_cap[arm] >= PREDICTION_2104 for arm in ARMS if per_arm[arm] >= 768)
+    # Not read unless every arm has its 768 battery rows (DS r1 F5: the old `if per_arm >= 768` filter left an empty
+    # generator on a short file, and all() of nothing printed True).
+    p2104 = None if any(per_arm[arm] < 768 for arm in ARMS) else all(at_cap[arm] >= PREDICTION_2104 for arm in ARMS)
     out("210.4 at least 300 of 768 at the cap in each arm", p2104, file_rows, f"battery/* token_count=={CAP}")
     for arm in ARMS:
         out(f"210.4 {arm} at cap", f"{at_cap[arm]} of {per_arm[arm]}", file_rows, f"battery/{arm} token_count=={CAP}")

@@ -255,6 +255,46 @@ def test_gate_r3_accepts_the_planned_shapes_and_refuses_a_short_chunk():
     assert run210.call_shapes(plain_two)["passed"] is False
 
 
+@pytest.mark.parametrize("scored", [1, 2, 3, 4, 5, 6, 7])
+def test_gate_r3_accepts_the_padded_last_chunk_plan_builds_and_refuses_a_false_companion(scored):
+    """DS r1 F4: plan() pads a short chunk by repeating its own rows from the start; Gate R3 must accept that shape for
+    every short length. Break: in bad_chunk, treat a row's FIRST occurrence as its companion (the pre-fix loop; 3 to 7
+    scored rows go red), or drop the `if skipped` test (a companion that repeats nothing would pass)."""
+    ids = [f"r{i}" for i in range(scored)]
+    model_rows = [ids[i % scored] for i in range(run210.CHUNK)]
+    call = {"pushed": True, "row_ids": ids, "row_count": scored,
+            "chunks": [{"row_ids": model_rows, "companions": model_rows[scored:], "rows": run210.CHUNK}]}
+    assert run210.call_shapes([call])["passed"] is True
+    # A companion listed that the chunk does not contain: every real repeat is still consumed, so only the `if skipped`
+    # test sees it (a first version of this test swapped a real companion out, which the order test also catches).
+    ghost = json.loads(json.dumps(call))
+    ghost["chunks"][0]["companions"] = ghost["chunks"][0]["companions"] + ["not-a-row"]
+    assert run210.call_shapes([ghost])["passed"] is False
+
+
+def test_gate_r3_refuses_an_extra_chunk_made_only_of_companions():
+    """DS r1 F1, the case only the chunk count sees: a 64-row call with a ninth chunk whose 8 rows all repeat scored rows
+    and are listed as companions keeps the scored order intact. Break: drop the `len(chunks) != ceil(rows / 8)` test."""
+    planned = run210.registered_plan()
+    c = next(c for c in planned["calls"] if c["stage"] != "no_push" and len(c["row_ids"]) == 64)
+    call = {"pushed": True, "row_ids": c["row_ids"], "row_count": 64,
+            "chunks": [{"row_ids": ch["row_ids"], "companions": ch["companions"], "rows": len(ch["row_ids"])}
+                       for ch in c["chunks"]]}
+    assert run210.call_shapes([call])["passed"] is True
+    extra = json.loads(json.dumps(call))
+    extra["chunks"].append({"row_ids": c["row_ids"][:8], "companions": c["row_ids"][:8], "rows": 8})
+    assert run210.call_shapes([extra])["passed"] is False
+
+
+def test_the_launch_line_copies_every_file_gate_r2_hashes():
+    """DS r1 F2: run() checks Gate R2's SHA-256 values before the model load, so a job folder built from steps.txt's
+    --copy list must hold every hashed file. Break: drop any of them from the --copy list."""
+    steps = (Path(__file__).resolve().parent / "steps.txt").read_text(encoding="utf-8")
+    launch = next(line for line in steps.splitlines() if line.startswith("python3 tools/launch_arc.py 210 --step"))
+    copied = set(launch.split(" --copy ", 1)[1].split())
+    assert set(run210.EXPECTED_SHA256) <= copied, sorted(set(run210.EXPECTED_SHA256) - copied)
+
+
 @pytest.mark.parametrize("kernel,config_kernel", [("sdpa", "sdpa"), ("eager", "sdpa"), ("sdpa", "eager")])
 def test_the_loader_refuses_a_non_eager_load_before_any_generation(monkeypatch, tmp_path, kernel, config_kernel):
     """Break: in EagerLoader.__call__, drop either half of the `kernel != "eager" or config_kernel != "eager"` test (the
@@ -320,7 +360,7 @@ def test_the_run_writes_every_planned_row_once_in_chunks_of_8_through_the_real_h
     expected = run210.plan({0: 32}, layers=(0,))["rows"]
     assert expected == 8 + 8 * 12 * len(run165.ARMS)
     assert len(rows) == expected
-    # The tiny model has one layer, so its rows repeat run165.row_key; the plan's own row_ids are what tell them apart.
+    # Distinct rows by the plan's own row_ids (the tiny plan's run165.row_key values are distinct too: 872 of 872).
     assert len({r["row_id"] for r in rows}) == expected
     # Every row carries Part 165's fields and Part 201's margin fields.
     for row in rows[:50]:
@@ -355,6 +395,22 @@ def test_the_run_writes_every_planned_row_once_in_chunks_of_8_through_the_real_h
     short = json.loads(json.dumps(rec))
     short["loads"][-1]["calls"] = [c for c in short["loads"][-1]["calls"] if c["call"] != 6]
     assert run210.record_gates(short, run210.plan({0: 32}, layers=(0,)))[0] is False
+    # DS r1 F1: a pushed receipt that kept one chunk of 8. With its row_ids cut to match, call_shapes alone is satisfied
+    # (the receipt agrees with itself) and the plan comparison must refuse it; with its row_ids left whole, the chunk
+    # count refuses it.
+    tiny_plan = run210.plan({0: 32}, layers=(0,))
+    pushed_at = next(i for i, c in enumerate(rec["loads"][-1]["calls"]) if c["pushed"])
+    cut = json.loads(json.dumps(rec))
+    receipt = cut["loads"][-1]["calls"][pushed_at]
+    receipt["chunks"] = receipt["chunks"][:1]
+    receipt["row_ids"], receipt["row_count"] = receipt["chunks"][0]["row_ids"], run210.CHUNK
+    assert run210.call_shapes(cut["loads"][-1]["calls"])["passed"] is True
+    ok, why, shapes = run210.record_gates(cut, tiny_plan)
+    assert ok is False and shapes["receipts_off_plan"] == 1 and "planned call's rows" in why
+    whole = json.loads(json.dumps(rec))
+    whole["loads"][-1]["calls"][pushed_at]["chunks"] = whole["loads"][-1]["calls"][pushed_at]["chunks"][:1]
+    assert run210.call_shapes(whole["loads"][-1]["calls"])["passed"] is False
+    assert run210.record_gates(whole, tiny_plan)[0] is False
     # Gate R1 wants one device: a second launch on another device fails the record.
     two = json.loads(json.dumps(rec))
     two["loads"].append(dict(two["loads"][-1], load=dict(two["loads"][-1]["load"], device="xpu:0")))
@@ -399,13 +455,11 @@ def test_a_resume_decodes_only_what_is_missing_and_a_half_written_call_again(tmp
     # Every row is on disk once: the redrawn call's rows were appended once, not once per chunk (the half-written
     # call's 8 rows are in rows.removed.jsonl, not in answers.jsonl).
     assert len(rows) == len({r["row_id"] for r in rows}) == expected
-    # The on-disk filter in run() is the second guard: a call that is partly on disk (a kill between two flushes, or a
-    # launch that did not move it aside) is decoded whole, and the rows already written are not appended again. Here
-    # the LAST battery call's first chunk is put back on disk as the only rows of that call, with a receipt for every
-    # battery call: _existing_whole keeps the call (it is whole against the plan) and the loop decodes it, so the
-    # filter is the only thing that stops the chunk being appended twice. The last call of the LAST question: a call
-    # from an earlier question would be followed by calls whose rows are already on disk, and the tiny fixture's
-    # one-layer plan repeats run165.row_key across questions, so the loop's `missing` test would skip them first.
+    # A second kill, later: the LAST battery call's first chunk is put back on disk as the only rows of that call, with
+    # a receipt for every battery call. _existing_whole compares the call's rows on disk with its PLANNED rows, finds 8
+    # of 44, and moves them aside, so the call is decoded once and its rows land once. (Until DS r1 F3, 2026-11-13, this
+    # comment said _existing_whole kept the call and the on-disk filter did the work; the review measured that the
+    # filter never fires here. The filter has its own test below.)
     last_battery = max(c["call"] for c in planned["calls"] if c["stage"] == "battery")
     assert planned["calls"][last_battery]["question_index"] == max(c["question_index"] for c in planned["calls"]
                                                                   if c["stage"] == "battery")
@@ -429,6 +483,31 @@ def test_a_resume_decodes_only_what_is_missing_and_a_half_written_call_again(tmp
     assert len(after) == len({r["row_id"] for r in after}) == expected
     assert sum(1 for n in seen if n == 1) == run210.REPLICATE_ROWS
     assert len(_rows(tmp_path / "replicate.jsonl")) == run210.REPLICATE_ROWS
+
+
+def test_the_on_disk_filter_stops_a_partly_written_call_appending_twice(tmp_path, monkeypatch):
+    """The on-disk filter on its own (DS r1 F3): if _existing_whole ever kept a call that is only partly on disk, the loop
+    decodes the whole call and appends only the rows not yet written. Break: delete the two `on_disk` lines in run() (the
+    partial call's 8 written rows would land twice)."""
+    _install_fakes(monkeypatch, tmp_path=tmp_path)
+    assert run210.run(_args(tmp_path)) == 0
+    path = tmp_path / "answers.jsonl"
+    planned = run210.plan({0: 32}, layers=(0,))
+    first = next(c for c in planned["calls"] if c["stage"] == "battery")
+    lines = path.read_text(encoding="utf-8").splitlines(keepends=True)
+    def in_first(line):
+        row = json.loads(line)
+        return row["stage"] == "battery" and row["call"] == first["call"]
+    partial = [line for line in lines if in_first(line)][:run210.CHUNK]
+    path.write_text("".join([line for line in lines if not in_first(line)] + partial), encoding="utf-8")
+    monkeypatch.setattr(run210, "_existing_whole", lambda folder, plan: _rows(path))   # keeps the partial call
+    seen = []
+    real = run210._decode_chunk
+    monkeypatch.setattr(run210, "_decode_chunk", lambda *a: (seen.append(len(a[3])), real(*a))[1])
+    assert run210.run(_args(tmp_path)) == 0
+    assert sum(1 for n in seen if n == run210.CHUNK) == len(first["chunks"])     # the whole call was decoded again
+    rows = _rows(path)
+    assert len(rows) == len({r["row_id"] for r in rows}) == planned["rows"]
 
 
 def test_a_completed_run_resumed_writes_nothing(tmp_path, monkeypatch):
@@ -566,8 +645,8 @@ def test_the_replicate_rows_are_written_one_row_per_call_and_resume_by_their_own
     assert seen == [1], (len(seen), lines[-1][:60])
     after = _rows(path)
     assert len(after) == run210.REPLICATE_ROWS and dropped["row_id"] in {r["row_id"] for r in after}
-    # The tiny model's one layer gives many rows the same run165.row_key, so this file's rows are told apart by row_id;
-    # the same resume on a run whose keys are distinct decodes only the dropped row (the test below).
+    # This file's rows are told apart by row_id; the same resume on a run whose keys are distinct decodes only the
+    # dropped row (the test below).
 
 
 def test_a_replicate_resume_decodes_only_the_row_missing_from_the_file(tmp_path, monkeypatch):

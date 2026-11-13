@@ -530,9 +530,10 @@ def run(args, loader=None, directions_fn=None):
                     # A call is decoded whole or not at all (design, Method): every one of its scored rows missing from
                     # disk means the whole call is decoded; any of them present means the call is already on disk
                     # (`_existing_whole` moved a half-written call aside, so a partly present call cannot reach here).
-                    # Keying on "any row missing" rather than "any row present" is what stops a resumed launch from
-                    # decoding a call whose rows are already written: the tiny fixture's one-layer plan repeats
-                    # run165.row_key across calls, so a present row's key is no proof that a later call is undone.
+                    # Keying on "any row missing" rather than "any row present" stops a resumed launch decoding a call
+                    # whose rows are all written (sabotage of the `continue` reds test_a_completed_run_resumed_writes_
+                    # nothing). The keys are distinct in the registered plan and in the tiny test plan (872 of 872,
+                    # measured 2026-11-13; an earlier comment here said the tiny plan repeated them, which was false).
                     missing = [r for ch in call["chunks"] for r in ch["rows"] if "companion_of" not in r
                                and run165.row_key(r) not in done]
                     if not missing:
@@ -550,13 +551,18 @@ def run(args, loader=None, directions_fn=None):
                                "hook_firings": decodes[0]["decode"]["hook_firings"],
                                "forward_passes": sum(p["decode"]["forward_passes"] for p in decodes),
                                "attempts": 1,
+                               # "rows" is what the model call RETURNED, not the planned chunk's length, so Gate R3
+                               # reads the shapes that reached the model (design, Controls; DS r1 F1).
                                "chunks": [{"row_ids": p["chunk"]["row_ids"], "companions": p["chunk"]["companions"],
-                                           "rows": len(p["chunk"]["rows"]), "seconds": p["decode"]["seconds"],
+                                           "rows": len(p["decode"]["rows"]), "seconds": p["decode"]["seconds"],
                                            "generation_steps": p["decode"]["generation_steps"],
                                            "hook_firings": p["decode"]["hook_firings"],
                                            "forward_passes": p["decode"]["forward_passes"]} for p in decodes]}
                     calls_log.append(receipt)
                     flush()
+                    # Second guard, unreachable while _existing_whole moves every partial call aside: a call partly on
+                    # disk is decoded whole and only its unwritten rows are appended (DS r1 F3; tested directly by
+                    # test_the_on_disk_filter_stops_a_partly_written_call_appending_twice).
                     on_disk = {run165.row_key(r) for r in read_jsonl(answers_file)}
                     output = [r for r in output if run165.row_key(r) not in on_disk]
                     run201._append(answers_file, output)
@@ -655,7 +661,16 @@ def record_gates(rec, planned=None):
     if planned is not None:
         receipted = {(c.get("pass"), c.get("call")) for c in calls}
         missing = [(c["stage"], c["call"]) for c in planned["calls"] if (c["stage"], c["call"]) not in receipted]
-        shapes = dict(shapes, planned_calls=len(planned["calls"]), planned_calls_without_receipt=len(missing))
+        # A receipt must carry its planned call's rows, in order (DS r1 F1: the receipt's own row_ids were the only
+        # thing call_shapes compared with, so a receipt that dropped rows from both passed).
+        plan_ids = {(c["stage"], c["call"]): list(c["row_ids"]) for c in planned["calls"]}
+        off_plan = [(c.get("pass"), c.get("call")) for c in calls
+                    if list(c.get("row_ids") or []) != plan_ids.get((c.get("pass"), c.get("call")))]
+        shapes = dict(shapes, planned_calls=len(planned["calls"]), planned_calls_without_receipt=len(missing),
+                      receipts_off_plan=len(off_plan))
+        if off_plan:
+            shapes["passed"] = False
+            why_shape = f"Gate R3: {len(off_plan)} receipts do not carry their planned call's rows (first: {off_plan[:3]})"
         if missing:
             shapes["passed"] = False
             why_shape = f"Gate R3: {len(missing)} of {len(planned['calls'])} planned calls have no receipt " \
@@ -672,22 +687,33 @@ def call_shapes(calls):
 
     def bad_chunk(call):
         chunks = call.get("chunks") or []
-        if any(int(ch.get("rows", 0)) != CHUNK for ch in chunks):
+        row_ids = list(call.get("row_ids") or [])
+        # A pushed call is ceil(rows / 8) chunks (design, Controls, Gate R3: a 64-row block is 8 chunks of exactly 8).
+        # Before DS r1 F1 a call receipted as ONE chunk of 8 passed, because nothing compared the chunk count with the
+        # call's rows.
+        if not row_ids or len(chunks) != -(-len(row_ids) // CHUNK):
+            return True
+        if int(call.get("row_count", len(row_ids))) != len(row_ids):
+            return True
+        if any(int(ch.get("rows", 0)) != CHUNK or len(ch.get("row_ids") or []) != CHUNK for ch in chunks):
             return True
         if any(ch.get("companions") for ch in chunks[:-1]):
             return True
-        scored = []
+        # The FIRST occurrence of a row id is the scored row; a later repeat listed as a companion is its padding
+        # duplicate (plan() pads a short last chunk by repeating the chunk's own rows from its start). Before DS r1 F4
+        # the loop consumed the companions on the first occurrence, so the padded shape plan() builds failed R3.
+        scored, seen = [], set()
         for ch in chunks:
             skipped = list(ch.get("companions") or [])
             for rid in ch["row_ids"]:
-                if rid in skipped:
-                    skipped.remove(rid)       # the first occurrence is the scored row, a repeat is its companion
+                if rid in seen and rid in skipped:
+                    skipped.remove(rid)
                 else:
                     scored.append(rid)
-        companions = [rid for ch in chunks for rid in (ch.get("companions") or [])]
-        if any(rid not in set(call.get("row_ids") or []) for rid in companions):
-            return True
-        return scored != list(call.get("row_ids") or [])
+                    seen.add(rid)
+            if skipped:
+                return True       # a declared companion that does not repeat a scored row of the call
+        return scored != row_ids
 
     def is_bad_plain(call):
         chunks = call.get("chunks") or []

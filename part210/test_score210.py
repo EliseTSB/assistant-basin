@@ -265,6 +265,16 @@ def test_165_6_is_reported_with_its_usable_draw_count_and_a_collapsed_interval_i
 
 # --------------------------------------------------------------------------------------------- Part 165's four gates
 
+def test_210_4_is_not_read_on_a_file_short_of_768_rows_in_an_arm():
+    """DS r1 F5. Break: restore the `if per_arm[arm] >= 768` filter (an arm short of rows would leave all() of nothing,
+    which printed True)."""
+    rows = _synthetic()
+    short = [r for r in rows if not (r.get("stage") == "battery" and r.get("arm") == "full")][:-1] + \
+        [r for r in rows if r.get("stage") == "battery" and r.get("arm") == "full"][:10]
+    _text, summary = _summary(short, norms=_norms())
+    assert summary["p2104"] is None, summary.get("p2104")
+
+
 def test_gate_1_refuses_a_missing_row_a_duplicate_and_an_empty_answer():
     """Break: in score165.score_rows' gate1, drop the `len(rows) == EXPECTED_ROWS` test (a missing row would pass)."""
     rows = _synthetic()
