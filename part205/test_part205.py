@@ -1255,8 +1255,9 @@ def test_h_f9_models_json_records_revisions(tmp_path):
 def test_h_f9_every_launch_line_checks_the_pool():
     lines = [x for x in (HERE / "steps.txt").read_text().splitlines()
              if "launch_arc" in x and ("part205/run205.py --stage" in x)]
-    assert len(lines) == 9
+    assert len(lines) == 10                       # 9 registered + the fallback's (Amendment 2 item 2, A0 2026-11-13)
     assert all("--check-pool" in x for x in lines)
+    assert sum("--arms controls" in x for x in lines) == 1
 
 
 def test_h_f9_g1check_runs_and_compares_full_logits(tmp_path, prompts, cfg, qwen_tok):
