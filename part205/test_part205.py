@@ -1255,8 +1255,9 @@ def test_h_f9_models_json_records_revisions(tmp_path):
 def test_h_f9_every_launch_line_checks_the_pool():
     lines = [x for x in (HERE / "steps.txt").read_text().splitlines()
              if "launch_arc" in x and ("part205/run205.py --stage" in x)]
-    assert len(lines) == 9
+    assert len(lines) == 10                       # 9 registered + the fallback's (Amendment 2 item 2, A0 2026-11-13)
     assert all("--check-pool" in x for x in lines)
+    assert sum("--arms controls" in x for x in lines) == 1
 
 
 def test_h_f9_g1check_runs_and_compares_full_logits(tmp_path, prompts, cfg, qwen_tok):
@@ -1503,3 +1504,89 @@ def test_screen_resume_under_other_prompts_is_refused(tmp_path, cfg, prompts, ol
     with pytest.raises(SystemExit):
         R.run_stage(stage_args(out, stage_only="screen"), model=tiny_olmo(), tok=olmo_tok,
                     env={"family": "O", "stage": "tiny"}, prompts=prompts, cfg=tiny_cfg(cfg))
+
+
+# ---- Amendment 2 item 2, the fallback: `--arms controls` (2026-11-13) ---------------------------------------------
+
+def _controls_args(out, stage_only=None):
+    a = stage_args(out, stage_only=stage_only)
+    a.arms = "controls"
+    return a
+
+
+def test_controls_mode_runs_exactly_168_passes_and_hooks_the_do_say_union(tmp_path, cfg, prompts, olmo_tok):
+    """Amendment 2 item 2: per stage 48 ranking, 24 You, 48 third-person, 48 do-nothing (168); the do-nothing arm hooks
+    the union of the DO and SAY sets at the copied positions; no effect, no random sets, no copy, off-target or
+    secondary arm. Red if any copy arm runs, the effect is computed, or do-nothing hooks another set."""
+    out = tmp_path / "fb"
+    c = tiny_cfg(cfg, top_k=16)
+    R.run_stage(_controls_args(out), model=wide_olmo(), tok=olmo_tok, env={"family": "O", "stage": "tiny"},
+                prompts=prompts, cfg=c)
+    d = out / "tiny"
+    rows = records(d)
+    from collections import Counter
+    assert Counter(r["arm"] for r in rows) == {"ranking": 48, "you": 24, "baseline": 48, "do_nothing": 48}
+    assert json.loads((d / "meta.json").read_text())["passes_this_run"] == 168
+    assert not (d / "effect.npz").exists()
+    sets = json.loads((d / "sets.json").read_text())
+    assert sets["arms"] == "controls" and sets["random"]["families"] == {}
+    union = set(sets["do"]) | set(sets["say"])
+    assert all(r["n_parts"] == len(union) for r in rows if r["arm"] == "do_nothing")
+    assert len(union) > max(len(sets["do"]), len(sets["say"]))       # the fixture tells the union from either set
+    # a resume runs nothing and adds nothing
+    R.run_stage(_controls_args(out), model=wide_olmo(), tok=olmo_tok, env={"family": "O", "stage": "tiny"},
+                prompts=prompts, cfg=c)
+    assert len(records(d)) == 168
+    assert json.loads((d / "meta.json").read_text())["passes_this_run"] == 0
+
+
+def test_controls_and_full_runs_refuse_each_others_stage_folder(tmp_path, cfg, prompts, olmo_tok):
+    """A full run resuming a controls folder (or the reverse) would mix arms under one sets.json: refused."""
+    out = tmp_path / "fb"
+    c = tiny_cfg(cfg, top_k=4)
+    R.run_stage(_controls_args(out), model=wide_olmo(), tok=olmo_tok, env={"family": "O", "stage": "tiny"},
+                prompts=prompts, cfg=c)
+    with pytest.raises(SystemExit, match="controls"):
+        R.run_stage(stage_args(out), model=wide_olmo(), tok=olmo_tok, env={"family": "O", "stage": "tiny"},
+                    prompts=prompts, cfg=c)
+
+
+def test_a_controls_stage_scores_O_and_leaves_every_copy_reading_unread(tmp_path, cfg, prompts, olmo_tok):
+    """Amendment 2 item 2: at a fallback stage the scorer reads O on G0, G1 and G4 and reads no copy arm; 205.4, 205.6
+    and 205.9 are "not read" with the fallback named as the reason. Red if a controls stage crashes the scorer, if T
+    or a copy arm is read, or if the reason is missing."""
+    out = tmp_path / "fb"
+    c = tiny_cfg(cfg, top_k=16)
+    R.run_stage(_controls_args(out), model=wide_olmo(), tok=olmo_tok, env={"family": "O", "stage": "tiny"},
+                prompts=prompts, cfg=c)
+    sd = S.load_stage_dir(out / "tiny")
+    res = S.score_stage("instruct", sd, c, 1)
+    assert res["read"]["T"] is False and res["read"]["copy_arms"] is False
+    assert res["T"] is None and res["T_SAY"] is None and res["T_swap"] is None
+    assert res["read"]["O"] == (res["gates"]["G0"]["pass"] and res["gates"]["G1"]["pass"] and res["gates"]["G4"]["pass"])
+    assert res["gates"]["G1"]["per_arm"]["do_nothing"]["n"] == 48                # G1 rests on the 48 do-nothing rows
+    assert res["arms_mode"] == "controls"
+    c2 = dict(c, stages=[{"stage": "instruct", "family": "O"}])
+    p = S.predictions([res], c2)
+    for k in ("205.4", "205.6", "205.9"):
+        assert p[k]["verdict"] == "not read" and "fallback" in p[k].get("reason", ""), (k, p[k])
+    # review r1 F0: even with T marked read, the three stay "not read" at a controls stage (no "failed" on None inputs)
+    forced = dict(res, read={"O": True, "T": True, "copy_arms": True, "random_set_rule": False})
+    p2 = S.predictions([forced], c2)
+    for k in ("205.4", "205.6", "205.9"):
+        assert p2[k]["verdict"] == "not read" and "fallback" in p2[k].get("reason", ""), (k, p2[k])
+
+
+def test_a_controls_relaunch_on_a_full_folder_without_sets_is_refused(tmp_path, cfg, prompts, olmo_tok):
+    """Review r1 F2: a full run stopped before sets.json (here --stage-only pairs) leaves records and no sets.json;
+    a controls relaunch on that folder must be refused before it runs anything."""
+    out = tmp_path / "fb"
+    c = tiny_cfg(cfg, top_k=16)
+    R.run_stage(stage_args(out, stage_only="pairs"), model=wide_olmo(), tok=olmo_tok,
+                env={"family": "O", "stage": "tiny"}, prompts=prompts, cfg=c)
+    assert not (out / "tiny" / "sets.json").exists()
+    n_before = len(records(out / "tiny"))
+    with pytest.raises(SystemExit, match="use a fresh --out"):
+        R.run_stage(_controls_args(out), model=wide_olmo(), tok=olmo_tok, env={"family": "O", "stage": "tiny"},
+                    prompts=prompts, cfg=c)
+    assert len(records(out / "tiny")) == n_before
