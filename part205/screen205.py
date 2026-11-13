@@ -20,22 +20,64 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import score205 as S  # noqa: E402
-from common205 import read_jsonl  # noqa: E402
+import run205 as R  # noqa: E402  (stdlib-only at import; heldout_say and _sha are the main run's own)
+import common205 as C  # noqa: E402
 
-THRESHOLD = 0.194          # Amendment 2 item 2
+THRESHOLD = 0.194          # Amendment 2 item 2, compared exactly (no tolerance: DS review F4)
+REGISTERED_STAGE = "instruct"
+DEFAULT_PROMPTS = HERE / "prompts205.json"
 N_YOU, N_PAIRS = 24, 48
 SD_D_PILOT, R_PILOT = 0.079, 0.71   # pilot (honesty), for the sensitivity rows only
 
 
-def screen(stage_dir):
-    rows = read_jsonl(Path(stage_dir) / "records.jsonl", repair=False)
+def validate(stage_dir, rows, prompts_path, stage):
+    """Every reason this is not the registered A0, as a list (empty = valid). DS code review F1-F3 (2026-11-12): the
+    first version counted rows, so a duplicated pair plus a missing one passed and could flip the branch; an orphan
+    third-person row crashed; and nothing checked which stage or prompt set produced the rows."""
+    problems = []
+    prompts = C.load_prompts(prompts_path)
+    held = R.heldout_say(prompts)
+    names = [n for n in prompts["personas"] if n != "You"]
+    want_you = {h["id"] for h in held}
+    want_pairs = {(h["id"], n) for h in held for n in names}
+    if len(want_you) != N_YOU or len(want_pairs) != N_PAIRS:
+        problems.append(f"the prompt file gives {len(want_you)} questions and {len(want_pairs)} pairs, not 24 and 48")
+    meta_path = Path(stage_dir) / "meta.json"
+    try:
+        meta = json.loads(meta_path.read_text())
+    except (OSError, ValueError) as e:
+        meta = None
+        problems.append(f"no readable meta.json ({e})")
+    if meta is not None:
+        if (meta.get("env") or {}).get("stage") != stage:
+            problems.append(f"meta.json stage {(meta.get('env') or {}).get('stage')!r}, not {stage!r}")
+        if meta.get("prompts_sha") != R._sha(prompts_path):
+            problems.append("meta.json prompts_sha does not match the registered prompt file")
+    other = sorted({r.get("arm") for r in rows} - {"you", "baseline"}, key=str)
+    if other:
+        problems.append(f"rows from arms other than the screen's: {other}")
+    if any(r.get("stage") != stage for r in rows):
+        problems.append(f"rows whose stage is not {stage!r}")
+    you_ids = [r.get("id") for r in rows if r.get("arm") == "you"]
+    pair_keys = [(r.get("id"), r.get("name")) for r in rows if r.get("arm") == "baseline"]
+    if len(you_ids) != len(set(you_ids)) or set(you_ids) != want_you:
+        problems.append(f"You rows are not the 24 held-out questions once each ({len(you_ids)} rows, "
+                        f"{len(set(you_ids) & want_you)} of 24 matched)")
+    if len(pair_keys) != len(set(pair_keys)) or set(pair_keys) != want_pairs:
+        problems.append(f"third-person rows are not the 48 registered pairs once each ({len(pair_keys)} rows, "
+                        f"{len(set(pair_keys) & want_pairs)} of 48 matched)")
+    return problems
+
+
+def screen(stage_dir, prompts_path=DEFAULT_PROMPTS, stage=REGISTERED_STAGE):
+    rows = C.read_jsonl(Path(stage_dir) / "records.jsonl", repair=False)
     you = [r for r in rows if r.get("arm") == "you"]
     third = [r for r in rows if r.get("arm") == "baseline"]
     ids = sorted({r["id"] for r in you})
     out = {"n_you": len(you), "n_third": len(third), "threshold": THRESHOLD}
-    if len(you) != N_YOU or len(third) != N_PAIRS or len(ids) != N_YOU:
-        out.update({"branch": "HOLD", "reason": f"incomplete screen: {len(you)} You rows (want {N_YOU}), "
-                                                  f"{len(third)} third-person rows (want {N_PAIRS})"})
+    problems = validate(stage_dir, rows, prompts_path, stage)
+    if problems:
+        out.update({"branch": "HOLD", "reason": "; ".join(problems)})
         return out
     p_you = {r["id"]: S.p_consistent(r) for r in you}
     value = {r["id"]: r["value"] for r in you}
@@ -54,9 +96,7 @@ def screen(stage_dir):
     for qid, _, g in pairs:
         per_value.setdefault(value[qid], []).append(g)
     g0 = S.gate_g0({"you": you}, set(ids))
-    # 1e-12: a gap that equals 0.194 in decimal can come out as 0.19399999999999995 after subtracting probabilities;
-    # "at least 0.194" must not turn on float rounding (found by the boundary test). It moves nothing a real gap can hit.
-    branch = "PROCEED" if (g0["pass"] and gap >= THRESHOLD - 1e-12) else "FALLBACK"
+    branch = "PROCEED" if (g0["pass"] and gap >= THRESHOLD) else "FALLBACK"
     sens = []
     for sd in (0.08, 0.12, 0.16):
         for n in (24, 48):
@@ -81,9 +121,11 @@ def screen(stage_dir):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("stage_dir")
+    ap.add_argument("--prompts", default=str(DEFAULT_PROMPTS))
+    ap.add_argument("--stage", default=REGISTERED_STAGE)
     ap.add_argument("--json", default=None)
     a = ap.parse_args(argv)
-    out = screen(a.stage_dir)
+    out = screen(a.stage_dir, a.prompts, a.stage)
     if a.json:
         Path(a.json).write_text(json.dumps(out, indent=2, sort_keys=True))
     if out["branch"] == "HOLD":

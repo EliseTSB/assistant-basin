@@ -408,6 +408,15 @@ def _run_stage_locked(args, out, model, tok, units, env, prompts, cfg):
     pool = C.check_pool(units, expected)
     letter_ids = {"A": C.option_token_ids(tok, "A"), "B": C.option_token_ids(tok, "B")}
     runner = Runner(model, tok, units, letter_ids)
+    # ⛔ A screen resumed under other prompts or config would mix frames under one gap (DS code review F6): refuse.
+    if args.stage_only == "screen" and (out / "meta.json").exists():
+        try:
+            old = json.loads((out / "meta.json").read_text())
+        except ValueError:
+            old = {}
+        for k, path in (("prompts_sha", args.prompts), ("config_sha", args.config)):
+            if old.get(k) and old[k] != _sha(path):
+                raise SystemExit(f"{out}: an earlier screen ran under a different {k}; use a fresh --out")
     meta = {"env": env, "pool": pool, "letter_ids": letter_ids, "units": [u.key for u in units],
             "unit_meta": [u.as_dict() for u in units], "prompts_sha": _sha(args.prompts), "config_sha": _sha(args.config),
             "started": time.strftime("%Y-%m-%dT%H:%M:%S")}

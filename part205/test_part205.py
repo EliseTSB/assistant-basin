@@ -1380,24 +1380,26 @@ def _screen_rows(prompts, gap, mass=0.8, top_letter=True, drop=0):
     for h in held:
         pa = 0.7 if h["consistent"] == "A" else 0.3
         rows.append({"arm": "you", "id": h["id"], "name": "You", "value": h["value"], "consistent": h["consistent"],
-                     "p_a": pa, "p_b": 1 - pa, "option_mass": mass, "top_is_letter": top_letter})
+                     "p_a": pa, "p_b": 1 - pa, "option_mass": mass, "top_is_letter": top_letter, "stage": "instruct"})
         for n in names:
             pc = 0.7 - gap
             pa = pc if h["consistent"] == "A" else 1 - pc
             rows.append({"arm": "baseline", "id": h["id"], "name": n, "value": h["value"],
                          "consistent": h["consistent"], "p_a": pa, "p_b": 1 - pa, "option_mass": mass,
-                         "top_is_letter": top_letter})
+                         "top_is_letter": top_letter, "stage": "instruct"})
     return rows[: len(rows) - drop]
 
 
-def _write_rows(d, rows):
+def _write_rows(d, rows, stage="instruct", prompts_sha=None):
     d.mkdir(parents=True, exist_ok=True)
     (d / "records.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    sha = prompts_sha or R._sha(HERE / "prompts205.json")
+    (d / "meta.json").write_text(json.dumps({"env": {"stage": stage, "family": "O"}, "prompts_sha": sha}))
     return d
 
 
-@pytest.mark.parametrize("gap,branch", [(0.25, "PROCEED"), (0.194, "PROCEED"), (0.1935, "FALLBACK"),
-                                        (0.0068, "FALLBACK"), (-0.05, "FALLBACK")])
+@pytest.mark.parametrize("gap,branch", [(0.25, "PROCEED"), (0.1941, "PROCEED"), (0.1939, "FALLBACK"),
+                                        (0.1935, "FALLBACK"), (0.0068, "FALLBACK"), (-0.05, "FALLBACK")])
 def test_screen_branch_threshold(tmp_path, prompts, gap, branch):
     import screen205 as SC
     out = SC.screen(_write_rows(tmp_path / "s", _screen_rows(prompts, gap)))
@@ -1428,3 +1430,76 @@ def test_screen_incomplete_is_hold(tmp_path, prompts):
     out = SC.screen(_write_rows(tmp_path / "s", _screen_rows(prompts, 0.3, drop=1)))
     assert out["branch"] == "HOLD"
     assert SC.main([str(tmp_path / "s")]) == 3
+
+
+# DS code review of 48562d81 (2026-11-12): the screen must be exactly the registered 72 rows, from the registered
+# stage and prompt file; otherwise HOLD, never a branch and never a crash.
+
+def test_screen_duplicate_plus_missing_pair_is_hold(tmp_path, prompts):
+    import screen205 as SC
+    rows = _screen_rows(prompts, 0.19)
+    third = [i for i, r in enumerate(rows) if r["arm"] == "baseline"]
+    rows[third[5]] = dict(rows[third[0]])          # 48 rows still, one pair twice and one missing (review F1)
+    out = SC.screen(_write_rows(tmp_path / "s", rows))
+    assert out["branch"] == "HOLD" and "48 registered pairs" in out["reason"]
+
+
+def test_screen_orphan_third_person_row_is_hold_not_a_crash(tmp_path, prompts):
+    import screen205 as SC
+    rows = _screen_rows(prompts, 0.3)
+    orphan = dict(next(r for r in rows if r["arm"] == "baseline"))
+    orphan["id"] = "say-honesty-99"
+    d = _write_rows(tmp_path / "s", rows[:-1] + [orphan])
+    assert SC.screen(d)["branch"] == "HOLD"
+    assert SC.main([str(d)]) == 3
+
+
+@pytest.mark.parametrize("kind", ["stage", "sha", "ids", "row_stage"])
+def test_screen_from_the_wrong_stage_or_prompts_is_hold(tmp_path, prompts, kind):
+    import screen205 as SC
+    rows = _screen_rows(prompts, 0.3)
+    stage, sha = "instruct", None
+    if kind == "stage":
+        stage = "dpo"
+    if kind == "sha":
+        sha = "0" * 64
+    if kind == "ids":
+        for r in rows:
+            r["id"] = "invented-" + r["id"]
+    if kind == "row_stage":
+        rows[3]["stage"] = "dpo"
+    out = SC.screen(_write_rows(tmp_path / "s", rows, stage=stage, prompts_sha=sha))
+    assert out["branch"] == "HOLD", out.get("reason")
+
+
+def test_screen_rows_equal_the_main_runs_rows(tmp_path, cfg, prompts, olmo_tok):
+    """Review F5: the screen's You and third-person rows must be the main run's own, field for field (a swapped persona
+    line would leave the counts right and make A0 measure zero)."""
+    a = tmp_path / "a0"
+    b = tmp_path / "main"
+    R.run_stage(stage_args(a, stage_only="screen"), model=tiny_olmo(), tok=olmo_tok,
+                env={"family": "O", "stage": "tiny"}, prompts=prompts, cfg=tiny_cfg(cfg))
+    R.run_stage(stage_args(b, stage_only="pairs"), model=tiny_olmo(), tok=olmo_tok,
+                env={"family": "O", "stage": "tiny"}, prompts=prompts, cfg=tiny_cfg(cfg))
+    fields = ("p_a", "p_b", "mass_a", "mass_b", "option_mass", "top_token", "top_prob", "top_is_letter", "n_tokens",
+              "id", "name", "persona", "consistent", "value")
+    key = lambda r: (r["arm"], r["id"], r["name"])  # noqa: E731
+    sa = {key(r): r for r in records(a / "tiny") if r["arm"] in ("you", "baseline")}
+    sb = {key(r): r for r in records(b / "tiny") if r["arm"] in ("you", "baseline")}
+    assert set(sa) == set(sb) and len(sa) == 72
+    diffs = [(k, f) for k in sa for f in fields if sa[k].get(f) != sb[k].get(f)]
+    assert diffs == []
+    third = [r for r in sa.values() if r["arm"] == "baseline"]
+    assert any(abs(r["p_a"] - sa[("you", r["id"], "You")]["p_a"]) > 0 for r in third), "frames must differ"
+
+
+def test_screen_resume_under_other_prompts_is_refused(tmp_path, cfg, prompts, olmo_tok):
+    out = tmp_path / "a0"
+    R.run_stage(stage_args(out, stage_only="screen"), model=tiny_olmo(), tok=olmo_tok,
+                env={"family": "O", "stage": "tiny"}, prompts=prompts, cfg=tiny_cfg(cfg))
+    m = json.loads((out / "tiny" / "meta.json").read_text())
+    m["prompts_sha"] = "0" * 64
+    (out / "tiny" / "meta.json").write_text(json.dumps(m))
+    with pytest.raises(SystemExit):
+        R.run_stage(stage_args(out, stage_only="screen"), model=tiny_olmo(), tok=olmo_tok,
+                    env={"family": "O", "stage": "tiny"}, prompts=prompts, cfg=tiny_cfg(cfg))
