@@ -1570,3 +1570,23 @@ def test_a_controls_stage_scores_O_and_leaves_every_copy_reading_unread(tmp_path
     p = S.predictions([res], c2)
     for k in ("205.4", "205.6", "205.9"):
         assert p[k]["verdict"] == "not read" and "fallback" in p[k].get("reason", ""), (k, p[k])
+    # review r1 F0: even with T marked read, the three stay "not read" at a controls stage (no "failed" on None inputs)
+    forced = dict(res, read={"O": True, "T": True, "copy_arms": True, "random_set_rule": False})
+    p2 = S.predictions([forced], c2)
+    for k in ("205.4", "205.6", "205.9"):
+        assert p2[k]["verdict"] == "not read" and "fallback" in p2[k].get("reason", ""), (k, p2[k])
+
+
+def test_a_controls_relaunch_on_a_full_folder_without_sets_is_refused(tmp_path, cfg, prompts, olmo_tok):
+    """Review r1 F2: a full run stopped before sets.json (here --stage-only pairs) leaves records and no sets.json;
+    a controls relaunch on that folder must be refused before it runs anything."""
+    out = tmp_path / "fb"
+    c = tiny_cfg(cfg, top_k=16)
+    R.run_stage(stage_args(out, stage_only="pairs"), model=wide_olmo(), tok=olmo_tok,
+                env={"family": "O", "stage": "tiny"}, prompts=prompts, cfg=c)
+    assert not (out / "tiny" / "sets.json").exists()
+    n_before = len(records(out / "tiny"))
+    with pytest.raises(SystemExit, match="use a fresh --out"):
+        R.run_stage(_controls_args(out), model=wide_olmo(), tok=olmo_tok, env={"family": "O", "stage": "tiny"},
+                    prompts=prompts, cfg=c)
+    assert len(records(out / "tiny")) == n_before

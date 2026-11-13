@@ -417,9 +417,24 @@ def _run_stage_locked(args, out, model, tok, units, env, prompts, cfg):
         for k, path in (("prompts_sha", args.prompts), ("config_sha", args.config)):
             if old.get(k) and old[k] != _sha(path):
                 raise SystemExit(f"{out}: an earlier screen ran under a different {k}; use a fresh --out")
+    # ⛔ A stage folder holds one mode (review r1 F2, 2026-11-13): the mode is recorded in meta.json before any pass,
+    # and a relaunch in the other mode is refused here, before it runs anything. A folder whose meta.json names no
+    # mode but already holds records is refused too (a full run killed before sets.json carries no other marker).
+    mode = getattr(args, "arms", "all")
+    if args.stage_only != "screen" and (out / "meta.json").exists():
+        try:
+            old_meta = json.loads((out / "meta.json").read_text())
+        except ValueError:
+            old_meta = {}
+        has_records = any(True for _ in C.read_jsonl(out / "records.jsonl", repair=False)) \
+            if (out / "records.jsonl").exists() else False
+        old_mode = old_meta.get("arms")
+        if (old_mode is None and has_records) or (old_mode is not None and old_mode != mode):
+            raise SystemExit(f"{out}: an earlier run here was {old_mode or 'unmarked'}; this run is {mode}: "
+                             f"use a fresh --out")
     meta = {"env": env, "pool": pool, "letter_ids": letter_ids, "units": [u.key for u in units],
             "unit_meta": [u.as_dict() for u in units], "prompts_sha": _sha(args.prompts), "config_sha": _sha(args.config),
-            "started": time.strftime("%Y-%m-%dT%H:%M:%S")}
+            "started": time.strftime("%Y-%m-%dT%H:%M:%S"), "arms": mode}
     _write(out / "meta.json", meta)
     rec_path = out / "records.jsonl"
     done = {_rec_key(r) for r in C.read_jsonl(rec_path, repair=True)}

@@ -702,11 +702,13 @@ def predictions(stages, cfg):
                         "T": st[n]["T"], "T_swap": st[n]["T_swap"]}
     # Amendment 2 item 2: at a fallback stage the copy arms never ran, so 205.4, 205.6 and 205.9 (Instruct only) are
     # "not read" with the fallback as the reason; the results write UNTESTABLE beside this, with A0's numbers.
+    # Unconditional (review r1 F0): a controls stage never ran the copy arms, so whatever the read flags say, these
+    # three are not read there; they are set, not relabelled, so a "failed" on absent inputs cannot reach the results.
     if n in st and st[n].get("arms_mode") == "controls":
         for k in ("205.4", "205.6", "205.9"):
-            if out[k]["verdict"] == "not read":
-                out[k]["reason"] = ("fallback (Amendment 2 item 2): the copy arms were not run at this stage; "
-                                    "UNTESTABLE, by A0's gap")
+            out[k] = {"verdict": "not read",
+                      "reason": "fallback (Amendment 2 item 2): the copy arms were not run at this stage; "
+                                "UNTESTABLE, by A0's gap"}
     return out
 
 
