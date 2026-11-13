@@ -417,9 +417,24 @@ def _run_stage_locked(args, out, model, tok, units, env, prompts, cfg):
         for k, path in (("prompts_sha", args.prompts), ("config_sha", args.config)):
             if old.get(k) and old[k] != _sha(path):
                 raise SystemExit(f"{out}: an earlier screen ran under a different {k}; use a fresh --out")
+    # ⛔ A stage folder holds one mode (review r1 F2, 2026-11-13): the mode is recorded in meta.json before any pass,
+    # and a relaunch in the other mode is refused here, before it runs anything. A folder whose meta.json names no
+    # mode but already holds records is refused too (a full run killed before sets.json carries no other marker).
+    mode = getattr(args, "arms", "all")
+    if args.stage_only != "screen" and (out / "meta.json").exists():
+        try:
+            old_meta = json.loads((out / "meta.json").read_text())
+        except ValueError:
+            old_meta = {}
+        has_records = any(True for _ in C.read_jsonl(out / "records.jsonl", repair=False)) \
+            if (out / "records.jsonl").exists() else False
+        old_mode = old_meta.get("arms")
+        if (old_mode is None and has_records) or (old_mode is not None and old_mode != mode):
+            raise SystemExit(f"{out}: an earlier run here was {old_mode or 'unmarked'}; this run is {mode}: "
+                             f"use a fresh --out")
     meta = {"env": env, "pool": pool, "letter_ids": letter_ids, "units": [u.key for u in units],
             "unit_meta": [u.as_dict() for u in units], "prompts_sha": _sha(args.prompts), "config_sha": _sha(args.config),
-            "started": time.strftime("%Y-%m-%dT%H:%M:%S")}
+            "started": time.strftime("%Y-%m-%dT%H:%M:%S"), "arms": mode}
     _write(out / "meta.json", meta)
     rec_path = out / "records.jsonl"
     done = {_rec_key(r) for r in C.read_jsonl(rec_path, repair=True)}
@@ -512,12 +527,19 @@ def _run_stage_locked(args, out, model, tok, units, env, prompts, cfg):
     held = heldout_say(prompts)
     names = [n for n in prompts["personas"] if n != "You"]
     partner = {n: [m for m in names if m != n][0] for n in names}
-    need_effect = sets is None and args.stage_only != "ranking"
+    need_effect = sets is None and args.stage_only != "ranking" and getattr(args, "arms", "all") != "controls"
     random_arms = []
     if sets is not None:
         random_arms = [f"random:{fn}:{i}" for fn, f in sets["random"]["families"].items()
                        for i in range(len(f["sets"]))]
-    pair_arms = ["do_nothing", "do_copy", "say_copy", "swap", "reverse"] + random_arms
+    # Amendment 2 item 2, the fallback (`--arms controls`): ranking, You, third-person and the main do-nothing arm only,
+    # the do-nothing arm hooking the union of the DO and SAY sets; no effect, no random sets, no copy arm, no off-target,
+    # no secondary arm. A sets.json from the other mode is refused, so the two never mix in one stage folder.
+    controls = getattr(args, "arms", "all") == "controls"
+    if sets is not None and (sets.get("arms") == "controls") != controls:
+        raise SystemExit(f"{out / 'sets.json'} was written by a {'controls' if sets.get('arms') == 'controls' else 'full'}"
+                         f" run; this run is {'controls' if controls else 'full'}: use a fresh --out")
+    pair_arms = ["do_nothing"] if controls else ["do_nothing", "do_copy", "say_copy", "swap", "reverse"] + random_arms
     stop_after_pairs = args.stage_only in ("baseline", "pairs")
 
     def need_pair(qid, name):
@@ -571,6 +593,10 @@ def _run_stage_locked(args, out, model, tok, units, env, prompts, cfg):
         return _finish(out, meta, n_pass)
 
     # ---- 5. the sets: drawn once, after the baseline passes, before any replacement run
+    if sets is None and controls:
+        sets = {"say": say_set, "do": do_set, "random": {"families": {}}, "arms": "controls", "n_sets": 0,
+                "note": "Amendment 2 item 2 (fallback): no random sets are drawn"}
+        _write(out / "sets.json", sets)
     if sets is None:
         rngs = {k: random.Random(cfg["seeds"][f"random_family_{k}"]) for k in ("layer", "score", "effect")}
         n_sets = cfg["random_family"]["sets_per_stage_olmo"] if env["family"] == "O" \
@@ -606,7 +632,10 @@ def _run_stage_locked(args, out, model, tok, units, env, prompts, cfg):
                 ids, read, _, _ = replace_and_read(b["text"], copy_parts, dst_pos, vals, h["consistent"])
                 emit_arm("do_nothing", h, name, copy_parts, dst_pos, read, ids,
                          {"max_abs_logit_diff": C.max_abs_logit_diff(runner.last_logits, b["logits"]),
-                          "parts": "union of the copy arms' parts"})
+                          "parts": "union of the DO and SAY sets' parts (Amendment 2, fallback)" if controls
+                          else "union of the copy arms' parts"})
+            if controls:
+                continue
             arms = [("do_copy", do_set), ("say_copy", say_set)] + [(a, random_sets[a]) for a in random_arms]
             vals = None
             for arm, part_keys in arms:
@@ -628,6 +657,9 @@ def _run_stage_locked(args, out, model, tok, units, env, prompts, cfg):
                 ids, read, _, _ = replace_and_read(y["text"], do_set, r_dst, C.values_at(b["acts"], r_src),
                                                    h["consistent"])
                 emit_arm("reverse", h, name, do_set, r_dst, read, ids, {"source": name, "receiver": "You"})
+
+    if controls:
+        return _finish(out, meta, n_pass)
 
     # ---- 7. off-target: value-free self-reports under value-free persona lines (review r1 H-F3)
     off_personas = prompts["off_target_personas"]
@@ -822,6 +854,8 @@ def main(argv=None):
     ap.add_argument("--config", default=str(HERE / "config.json"))
     ap.add_argument("--prompts", default=str(HERE / "prompts205.json"))
     ap.add_argument("--device", default=None, help="override the family's device (cpu / xpu)")
+    ap.add_argument("--arms", choices=["all", "controls"], default="all",
+                    help="controls: Amendment 2's fallback (ranking, You, third-person, do-nothing on DO and SAY's union)")
     ap.add_argument("--stage-only", choices=["ranking", "baseline", "pairs", "screen"], default=None,
                     help="stop after the ranking, the baselines, or the You/third-person pairs (timing, G0/G2, SD(d)); "
                          "'screen' is Amendment 2's step A0: only the 72 plain You and third-person passes")
