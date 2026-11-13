@@ -929,3 +929,22 @@ For the steering-word part that follows:
   and 198 found gradient edits invisible to base-free weight statistics and named only when their write points at a
   word; an edit that leaves every write untouched and changes 89 rows of gate and up is a natural next case for that
   detector. Not run.
+
+## 2026-11-13, Sauers' body map across bodies (from the daily X watch; posts read through x-thread.mjs, the figure read whole; the 2121035773160132626 video, code and data not read)
+
+- **@Sauers_, a body map shared between bodies** (X, 2026-11-13, status 2121133135765381619, one figure; a reply says
+  Qwen is doing in-context learning of body-part steering). Qwen3-32B, with the same quiet sunny room prompt Part 209
+  used, plus touch sentences ("A feather brushes slowly across your left heel", 54 human places; a two-wheeled robot
+  version with 6 robot parts). Left panel: each robot part's internal state is closest to the human part with the same
+  job (wheels to heels, camera and antenna to ears, chassis to chest, gripper to palm), every one above the median of
+  shuffled pairings. Right panel: a limb direction carries the limb's role and the body names it in its own words.
+  Asked "Where in your body do you feel something right now?", Qwen talking as a dog and steered with human hands says
+  paw in 12 of 24 and with human feet in 19 of 24; talking as a person and steered with dog front paws says hand in 24
+  of 24, dog hind paws foot in 20 of 24; no steering 0 of 24 for each. Talking as a robot, a human-hand direction gives
+  gripper in 46% (random direction 6%) and a human-foot direction wheel in 98% (random 22%). A second post says "the
+  body map is a causally impactful part of the AI's cognition" (video, not read), and a reply says Qwen is trained to
+  control the body there. **Bears on our parts:** Part 209 measured the posture this prompt defaults to (sitting) and
+  found the lean already in pretraining and as strong for a described man; Sauers' map gives a reading that could be
+  followed across stages in the same way (where along OLMo's checkpoints robot parts start landing on the human part
+  with the same job). The random-direction control at 22% for wheel is high, so a stage comparison would need it at
+  every stage. Not designed.
