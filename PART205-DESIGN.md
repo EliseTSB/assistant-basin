@@ -385,35 +385,55 @@ Engineering changes that do not change any reading: atomic writes with a recompu
 re-runs only unfinished work, and replacement values placed on the input's device. The prompts are approved
 (`part205/prompts205.json`), and the pilot uses `part205/prompts205-pilot.json` (the same items cut to honesty).
 
-## Amendment 2 (2026-11-12 20:06 CT, after the pilot, before the six-value gap is measured)
+## Amendment 2 (2026-11-12 20:06 CT, revised 20:22 CT after a cold review, before the six-value gap is measured)
 
 The pilot (PILOT.md, 3210e562) failed G2 and fired the Size section's precision rule: at Instruct, on honesty, the You
 frame and the named third person give nearly the same answers (gap 0.0068 over 8 pairs), so T's standard error was
-about 4.1. **It is not a ceiling.** P(consistent) in the pilot runs from 0.52 to 0.93 in both frames, and it moves with
-the paraphrase (items 6 and 8 high, 5 and 7 low) far more than with the persona line (honesty-6: You 0.842, Zara
-0.925, Milo 0.917). The rule's named remedy (more held-out paraphrases) narrows the gap's noise, not a mean near zero.
-The pilot covered one value; the main run pools six. So the main run gets one cheap step first, and a branch fixed now.
+about 4.1. The near-zero gap is not saturation: P(consistent) runs from 0.52 to 0.93 in both frames and moves with the
+paraphrase (items 6 and 8 high, 5 and 7 low) far more than with the persona line (honesty-6: You 0.842, Zara 0.925,
+Milo 0.917). The pilot says nothing about the other five values. The rule's named remedy (more held-out paraphrases)
+narrows the gap's noise, not a mean near zero. The main run pools six values, so it gets one cheap step first, a cost
+gate that decides what is spent, and a read gate on T computed from the main run's own data. All of it is fixed here,
+before any number for the other five values exists.
 
-1. **Step A0, the six-value gap screen** (OLMo 2 1B Instruct, CPU, float32, the registered frame and prompts): the plain
-   You run for each of the 24 held-out SAY questions and the plain third-person run for each of the 48 question-name
-   pairs, 72 forward passes, no hooks, no copy arm. Computed and printed: gap = mean(P_you - P_third) over the 48 pairs,
-   its standard error with the 24 questions as clusters, the gap per value, and every P. Nothing else is computed or
-   read before the branch is taken.
-2. **The branch.** With SD(d) = 0.079 from the pilot (the only measured value), T's projected standard error over 48
-   pairs is 0.079 / (sqrt(48) x gap); 0.25 is at least 3 of them when the gap is at least 0.137. **If the six-value gap
-   is at least 0.14 and G2 passes, the main run proceeds exactly as registered.** Otherwise:
-   - Every copy arm is dropped from the main run in both families (T, SAY copy, reverse, persona swap, random sets,
-     off-target, Sauers' wording). Predictions 205.4, 205.6 and 205.9 are recorded UNTESTABLE by design precision,
-     with A0's numbers; 205.7 is vacuous.
-   - The You and third-person baseline passes still run at every stage (72 per stage), so the gap is reported per
-     stage and **205.5 is read on the gap as registered** (a gap under 0.10 at 3.0T holds it; a gap of 0.10 or more
-     there makes it depend on T, so it is UNTESTABLE).
-   - O and its predictions (205.1, 205.2, 205.3, 205.8) and the withdrawal rule are unchanged.
-   SD(d) for the other five values is unmeasured; if the main run proceeds, its own SD(d) is reported beside the
-   projection, and no reading changes on it.
-3. **Not chosen, and why.** Screening items for a large gap and computing T on them would divide by a denominator
-   selected on its own noise, which inflates T (regression to the mean); fresh items for an honest screen are not
-   written. A negated persona line ("You do not care about ...") would manufacture a gap but changes what the copy
-   carries, so it is a different question, not a remedy.
-4. **Family Q** has no T prediction (205.8 is about O). Its copy arms run only if its own A0 (the same 72 passes, on
-   the A770, at Qwen3.5-4B) meets the same rule; otherwise they are dropped as above and its O is read as registered.
+1. **Step A0, the six-value gap screen**, at OLMo 2 1B Instruct (CPU, float32, the registered frame and prompts): the
+   plain You run for each of the 24 held-out SAY questions and the plain third-person run for each of the 48
+   question-name pairs, 72 forward passes, no hooks. Computed and printed: the gap mean(P_you - P_third) over the 48
+   pairs, its standard error with the 24 questions as clusters, the gap per value, G0 on the same 72 rows (option mass
+   and letter share, as registered), and every P. Nothing else is computed or read before the branch. **A0 must be
+   complete (all 72 rows) before any branch is taken**; a failed or interrupted A0 is recorded, the main run is held,
+   and Amendment 1's resume rule is the only retry.
+2. **The cost gate, for family O.** The copy test's precision at the design's conservative end, the registered formula
+   with the 24 questions as the unit (the pairs share You runs): SE(T) = SD(d) / (sqrt(24) x gap). With SD(d) = 0.079,
+   the only measured value, 0.25 is at least 3 SE when the gap is at least 0.193. **If G0 passes at Instruct and the
+   six-value gap is at least 0.19, the main run proceeds as registered.** (A gap of 0.19 or more implies G2.) Honesty's
+   gap is 0.0068, so this needs the other five values to average at least 0.227. Otherwise, the fallback:
+   - The copy arms are dropped at every OLMo stage (T, SAY copy, reverse, persona swap, random sets, off-target,
+     Sauers' wording). **The do-nothing arm is kept**: it is a control, and G1 gates O (Reading rules: G1 failing means
+     nothing at that stage is read, and the scorer reads O on G0, G1 and G4). Per stage: 48 ranking passes, 24 You,
+     48 third-person, 48 do-nothing.
+   - Predictions 205.4, 205.6 and 205.9 are recorded UNTESTABLE by design precision, with A0's numbers; 205.7 is
+     vacuous. 205.5 is read on the gap as registered (a gap under 0.10 at 3.0T holds it; 0.10 or more makes it depend
+     on T, so it is UNTESTABLE; not read if G0 or G1 fails there). O and 205.1, 205.2, 205.3, 205.8 and the withdrawal
+     rule are unchanged.
+   A0 also prints the threshold under other assumptions, for the reader and no decision: SD(d) of 0.08, 0.12 and 0.16
+   at n = 24 and n = 48, and the full ratio delta method (which counts the gap's own variance and its covariance with
+   d) at T = 0.25.
+3. **The read gate on T (new G5), whichever branch runs.** At any stage where T is computed, it is read only if its
+   standard error from the main run's own data, by the delta method with the 24 questions as clusters, is at most
+   0.083 (so 0.25 is at least 3 SE); otherwise T and the predictions that rest on it are UNTESTABLE at that stage.
+   The cost gate rests on an 8-pair SD from one value (its 95% interval is 0.052 to 0.161); G5 is what makes a read T
+   meet the Size rule. The scorer gains G5, with tests, before any main-run T is scored, and only if the main run
+   proceeds.
+4. **Family Q.** No prediction reads Q's copy arms (205.8 is about O). Each Q model runs its own A0 (the same 72 plain
+   passes and G0, on the A770, at that model) as the first step of its main run. Its copy arms run only if **both**
+   family O's cost gate passed and that model's own gap is at least 0.19; otherwise they are dropped, and that model's
+   do-nothing and O are kept as for O. The threshold for Q is a cost gate only: its SD(d) (another model, device and
+   dtype) is unmeasured.
+5. **Not chosen, and why.** Screening items for a large gap would change the estimand from the registered pooled T to
+   T on a high-gap subset, shrink n, and leave nothing fresh to test on (no further items are written). A negated
+   persona line ("You do not care about ...") would manufacture a gap but changes what the copy carries, so it is a
+   different question, not a remedy.
+
+Cold review: DeepSeek V4.1 Flash, `reviews/cheap-p205-amendment2-ds-r1.md` in the Journal (SHIP-WITH-FIXES, nine
+findings, all folded here; it ran no model and computed no gap).
