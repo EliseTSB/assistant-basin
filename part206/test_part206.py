@@ -379,7 +379,7 @@ def summary(fam, n_layers, **kw):
                    "c": [{"token_share": 0.1} for L in range(n_layers)]},
          "reference": [{"write_share": {"mlp": 0.6, "mixer": 0.3, "embedding": 0.1}} for _ in range(n_layers)],
          "common_mode": {"A-tmpl|M": cm(kw.get("rho", 0.25)), "A-tmpl|R-tmpl": cm(kw.get("rho_r", 0.2)),
-                         "M2|M": {"layers": [{"rho": kw.get("rho_null", 0.05)} for _ in range(n_layers)]}},
+                         "M2|M": {"layers": [{"rho": kw.get("rho_null", 0.005)} for _ in range(n_layers)]}},
          "cos_delta_bM": [kw.get("cos_b", 0.6)] * n_layers,
          "cos_request_change": [kw.get("cos", 0.9)] * n_layers,
          "gt": {"verdict": {"pass": kw.get("gt", True)}}}
@@ -544,6 +544,7 @@ def test_muse_rows_hold_and_fail_on_their_bars(tmp_path):
     V2 = V_of(tmp_path / "m2", {"instruct": {"slot": 65.0, "concept": 50.0}})
     assert V2["206.M2"] == "held"
     for over, key in (({"qwen-chat": {"rho": 0.35}}, "206.M1"), ({"qwen-chat": {"rho_null": 0.1}}, "206.M1"),
+                      ({"qwen-chat": {"rho_null": 0.03}}, "206.M1"),  # registered range is 0.00-0.01 (#24); 0.03 passed the stale 0.02-0.08 check
                       ({"qwen-chat": {"ident": 60.0}}, "206.M3"), ({"qwen-chat": {"tf": 0.45}}, "206.M4"),
                       ({"qwen-chat": {"cos_b": 0.4}}, "206.M5")):
         assert V_of(tmp_path / key / str(len(str(over))), over)[key] == "failed", (key, over)
