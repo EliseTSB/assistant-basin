@@ -1,0 +1,42 @@
+# Part 210: Part 165 on the eager kernel (PART210-DESIGN.md). Same model, revision, prompts, directions, dose, row
+# order, scorer and 80 new tokens as Part 165; the wrapper changes only the kernel record, the push batch shape (every
+# pushed call is 8 chunks of exactly 8 rows in the block's order; a registered block is 64 rows, so no chunk is short
+# and no companion row is needed), the pilot rate floor (0.32 answers/s after the first three pushed calls), the
+# margin fields on every row, and the 200-row shape replicate decoded one row per call after the battery.
+# Before launch: close stale model runs and other GPU-heavy applications on the Windows host to release Arc memory
+# (design, Optimization: Windows memory during model load is the bound resource). A task killed at the runner's 6-hour
+# limit is relaunched with the SAME line: a call that is whole on disk is kept, a call that is not is decoded again
+# whole (its rows go to rows.removed.jsonl), and the shape replicate skips rows already written. A killed task leaves
+# results/part210/run210.lock (Part 199's folder lock under this part's name): check that no run210 process runs, then
+# remove it by hand. The pilot stop (below 0.32 answers/s) is a HOLD until its cause is reviewed; do not relaunch past it.
+# The run loads through neuron_report.load_model with its default attention kernel ("eager") and bf16, and refuses
+# (exit 3) before generating anything unless both the load record and the model's config say eager and the load is
+# bf16 (Gate R1). It checks Gate R2's 14 SHA-256 values before the load, and writes results/part210/load.json,
+# answers.jsonl, norms.json and replicate.jsonl into the --out folder.
+# The --copy list is Part 165's closure plus this part's runner and steps and the modules run210.py imports at top
+# level: part201/run201.py (Part 201's row fields, repair, append and hashes, reused), part199/run199.py (the folder
+# lock and record writer), tools/margin_recorder.py (the score recorder), part165/run165.py (Part 165's plan, pushes,
+# directions and key, imported not copied) and what run165.py imports at top level (part160/run160.py,
+# part164/run164.py, part155/run155.py, part153/battery153.py, part163/run163.py), part86/common86.py and
+# part86/triage86.py (the prompt builder and the triage rule), neuron_report.py (the loader and the kernel record) and
+# results/part112/medians.json (Part 165's per-layer medians, read when the directions are built). part164/units164.json,
+# part165/score165.py, results/part165/answers.jsonl and results/part165/norms.json are copied because Gate R2 hashes
+# them before the model load (DS r1 F2: without them a fresh job folder refused to start). part148/score148.py
+# is copied because part160/run160.py imports it at top level. part210, part165, part164, part163, part160, part155,
+# part153, part148 and part86 are namespace packages (no __init__.py), so no package file is copied. The scorer, the
+# shape floor and margins210.py run on the host, where the tokenizer and the repo are; they are not job steps.
+python3 tools/launch_arc.py 210 --step "-I -B part210/run210.py --device xpu --model E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a --out results/part210/answers.jsonl" --copy tools/launch_arc.py tools/margin_recorder.py part210/run210.py part210/steps.txt part201/__init__.py part201/run201.py part201/ROWS-SCHEMA.md part201/LOAD-SCHEMA.md part199/__init__.py part199/run199.py part165/run165.py part164/run164.py part163/run163.py part160/run160.py part155/run155.py part153/battery153.py part148/battery148.py part148/score148.py part86/common86.py part86/triage86.py neuron_report.py results/part112/medians.json part164/units164.json part165/score165.py results/part165/answers.jsonl results/part165/norms.json
+
+# Host, after the run, in this order:
+# Gates R1 and R3 over every recorded launch: every load eager, one model, revision and folder, every pushed call's
+# chunks of exactly 8 rows, every no-push call one row, and a receipt for every planned call.
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part210/run210.py --check-record results/part210/load.json
+# Score: Part 165's own scorer (imported) on the rerun's rows, every number printed with its file and key, beside the
+# published value and its distance from results/part210/margins.md; Gates R1 to R3 from the load record, the hashes
+# and the norms; 165.6 with its usable-draw count, a collapsed interval marked not informative; predictions 210.1 to
+# 210.7; the shape replicate and the shape floor of 165.1 to 165.5 and the gates. Exit 3 withdraws the headline reading.
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part210/score210.py --rows results/part210/answers.jsonl --load results/part210/load.json --norms results/part210/norms.json --replicate results/part210/replicate.jsonl --out results/part210
+
+# Host verification, from the repository root: this part's tests and the tools it imports (which it must not move).
+/home/elisepc/neuron-probe/.venv/bin/python -I -m pytest -q part210
+/home/elisepc/neuron-probe/.venv/bin/python -I -m pytest -q tools/test_margin_recorder.py tools/test_shape_floor.py part165/test_part165.py
