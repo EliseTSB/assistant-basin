@@ -29,6 +29,30 @@ ROOT = HERE.parent
 
 # ---------------------------------------------------------------- io
 
+AMENDMENT4_CATALOGUE = HERE / "catalogue-amendment4.json"
+
+
+def check_catalogue(cat, n_layers, width, fam):
+    """Refuse a catalogue with any (layer, neuron) outside the model: the registered OLMo sets were another model's."""
+    bad = [(name, int(L), int(n)) for name, lst in cat.items() for L, n in lst
+           if not (0 <= int(L) < n_layers and 0 <= int(n) < width)]
+    if bad:
+        raise ValueError(f"{len(bad)} catalogued {fam} neurons lie outside the model's {n_layers} layers x {width} "
+                         f"neurons (first: {bad[:3]})")
+    return cat
+
+
+def catalogue(prompts, fam, n_layers, width, path=None):
+    """The catalogued neuron sets Part 206 scores. Amendment 4: prompts206.json's OLMo sets are Part 112's Qwen3.5-4B
+    coordinates, so OLMo's come from catalogue-amendment4.json (Part 92's OLMo kinds); Qwen's stay as registered.
+    Every coordinate is checked against the shape the caller passes: the recorded data's or the loaded model's."""
+    if fam == "O":
+        cat = json.loads(Path(path or AMENDMENT4_CATALOGUE).read_text())["O"]
+    else:
+        cat = prompts["catalogued"][fam]
+    return check_catalogue(cat, int(n_layers), int(width), fam)
+
+
 def load_config(path=None):
     return json.loads(Path(path or HERE / "config206.json").read_text(encoding="utf-8"))
 
@@ -303,10 +327,33 @@ def activity_matched_percentile(z_layer, rate_layer, idx, k):
 
 # ---------------------------------------------------------------- GT (Tuomi)
 
+def _average_ranks(x):
+    """Ranks 1..n with ties given their mean rank (scipy.stats.rankdata's 'average' method)."""
+    x = np.asarray(x, float)
+    sorter = np.argsort(x, kind="mergesort")
+    inv = np.empty(len(x), dtype=np.intp)
+    inv[sorter] = np.arange(len(x))
+    xs = x[sorter]
+    obs = np.r_[True, xs[1:] != xs[:-1]]
+    dense = obs.cumsum()[inv]
+    count = np.r_[np.nonzero(obs)[0], len(obs)]
+    return 0.5 * (count[dense] + count[dense - 1] + 1)
+
+
 def spearman(a, b):
-    from scipy.stats import spearmanr
-    r = spearmanr(a, b).correlation
-    return None if r is None or np.isnan(r) else float(r)
+    """Spearman's rho as Pearson's r on average ranks; None where scipy.stats.spearmanr gives nan (a NaN in either
+    input, fewer than two values, or a constant input). Plain numpy since Amendment 3: the Windows GPU venv has no
+    scipy, and step 2 died on the import (2026-11-12 15:21)."""
+    a = np.asarray(a, float).ravel()
+    b = np.asarray(b, float).ravel()
+    if a.shape != b.shape or len(a) < 2 or np.isnan(a).any() or np.isnan(b).any():
+        return None
+    ra = _average_ranks(a) - (len(a) + 1) / 2
+    rb = _average_ranks(b) - (len(b) + 1) / 2
+    den = float(np.sqrt((ra * ra).sum() * (rb * rb).sum()))
+    if den == 0.0:
+        return None
+    return float((ra * rb).sum() / den)
 
 
 def gt_static(W_gate, b_L, duty, random_dirs):
