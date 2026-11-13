@@ -906,3 +906,14 @@ For the steering-word part that follows:
   Part 209 replicates the default on Qwen3.5-4B (80.6% of posture-naming answers) and decomposes it: a field instead of
   a room takes it to 9.4%, the warm-up changes it by +0.3 points, told no body it names none in 94 of 96, and in OLMo 2
   1B the forced lean is 0.731 at pretraining and 0.721 for a described man.
+
+## 2026-11-13, for Part 206 (the paper read in full by Claude on 2026-11-12, v1)
+
+- **Tuomi 2026, arXiv 2609.31956, "Transformer MLP Gate Thresholds Are Couplings to a Carried Reference Direction."**
+  A gate's resting pre-activation is carried by its coupling to `b_L`, the corpus mean of the normalized MLP input, and
+  removing the stream's projection on that direction moves gate duty far more than a norm-matched control (+0.302
+  against +0.0001 in Qwen2.5-1.5B). **Bears on our parts:** Part 206 replicates his static test in all eight models it
+  reads (Qwen3.5-4B base and chat, OLMo 2 1B at six training stages), the rank correlation of resting term with duty
+  beating all 20 random directions at 4 of 4 layers in each. His causal test does not replicate at the registered bar:
+  the duty change is 3.3 to 10.0 times the largest of 20 random controls, against the 20 times asked for (his smallest
+  reported ratio, 23 on Phi-2, is against one control).
