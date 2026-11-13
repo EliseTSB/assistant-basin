@@ -1,0 +1,327 @@
+{
+  "part": 210,
+  "source": "results/part165/score.json and results/part165/answers.jsonl",
+  "answers_per_arm": 768,
+  "token_cap": 80,
+  "full_k": 9216,
+  "bars": {
+    "165.1": "n+ breaks at least twice as often as full",
+    "165.2": "Broken rate falls with k: Spearman at or below -0.8 across n\u00b1, k4, k16, k64, k256, k1024, full",
+    "165.3": "k16's broken rate is nearer full's than n\u00b1's",
+    "165.4": "The n+ over n\u00b1 broken ratio is between 0.67 and 1.5",
+    "165.5": "iso's broken rate is under 0.8 times full's",
+    "165.6": "Changed rate falls with k: Spearman at or below -0.6 across the same seven arms",
+    "165.7": "n+'s mean relative last-layer change is at least 1.5 times full's"
+  },
+  "distances": [
+    {
+      "id": "Gate 1 rows",
+      "estimate": "6920 rows, 6920 unique, 6920 nonempty",
+      "bar": "6920 unique nonempty rows",
+      "distance": 0,
+      "unit": "rows of headroom; one missing, extra or empty row fails",
+      "reading": "count",
+      "verdict": "passed"
+    },
+    {
+      "id": "Gate 2 no push",
+      "estimate": "8 no-push answers, 0 broken",
+      "bar": "8 no-push answers, none primary-broken",
+      "distance": 8,
+      "unit": "answers of headroom; one broken no-push answer fails",
+      "reading": "count",
+      "verdict": "passed"
+    },
+    {
+      "id": "Gate 3 size",
+      "estimate": "864 directions, max write error 3.95e-07, max iso residual 3.96e-06",
+      "bar": "864 unique directions, every write within 1%, iso residual under 1%",
+      "distance": 0,
+      "unit": "directions of headroom (a count); the write and iso margins are in Method",
+      "reading": "count",
+      "verdict": "passed"
+    },
+    {
+      "id": "Gate 4 measure room",
+      "estimate": 0.2565104166666667,
+      "bar": ">= 0.03",
+      "distance": 0.2265104166666667,
+      "unit": "n+ broken-rate points above the bar (768 answers per arm; 1 point = 7.68 answers)",
+      "reading": "point estimate",
+      "verdict": "passed"
+    },
+    {
+      "id": "165.1 n+ over full",
+      "estimate": 2.6986301369863015,
+      "bar": ">= 2",
+      "distance": 0.6986301369863015,
+      "unit": "ratio units above the bar; in broken-rate points it is n+ rate minus 2 x full rate = 0.0664 (51.0 n+ answers of headroom)",
+      "reading": "point estimate (score165.ratio_* reads estimate_ratio; the 95% paired slot interval [1.8888888888888888, 3.859649122807017] is printed and decides nothing)",
+      "verdict": "pass"
+    },
+    {
+      "id": "165.2 Spearman",
+      "estimate": -0.8571428571428571,
+      "bar": "<= -0.8",
+      "distance": 0.05714285714285705,
+      "unit": "Spearman units above the bar (positive = on the passing side)",
+      "reading": "point estimate (score165.spearman_at_most reads the estimate; the 95% interval [-0.9642857142857143, -0.6306562238868912] is printed and decides nothing)",
+      "verdict": "pass"
+    },
+    {
+      "id": "165.6 Spearman",
+      "estimate": 0.20412414523193148,
+      "bar": "<= -0.6",
+      "distance": -0.8041241452319314,
+      "unit": "Spearman units above the bar (positive = on the passing side)",
+      "reading": "point estimate (score165.spearman_at_most reads the estimate; the 95% interval [0.20412414523193148, 0.20412414523193148] is printed and decides nothing)",
+      "verdict": "fail"
+    },
+    {
+      "id": "165.3 k16 nearer full",
+      "estimate": "to full 0.0534, to n\u00b1 0.1055",
+      "bar": "distance to full < distance to n\u00b1",
+      "distance": 0.05208333333333333,
+      "unit": "broken-rate points of margin; 1 point = 7.68 answers; a negative margin fails",
+      "reading": "point estimate (two distances; no interval is defined for a comparison of distances)",
+      "verdict": "pass"
+    },
+    {
+      "id": "165.4 n+ over n\u00b1",
+      "estimate": 1.0102564102564102,
+      "bar": "between 0.67 and 1.5",
+      "distance": 0.3402564102564102,
+      "unit": "ratio units to the nearer boundary (positive = inside)",
+      "reading": "point estimate (score165.ratio_* reads estimate_ratio; the 95% paired slot interval [0.7811001779545692, 1.2994020433708853] is printed and decides nothing)",
+      "verdict": "pass"
+    },
+    {
+      "id": "165.5 iso over full",
+      "estimate": 0.8356164383561644,
+      "bar": "< 0.8",
+      "distance": -0.03561643835616435,
+      "unit": "ratio units below the bar (positive = on the passing side)",
+      "reading": "point estimate (score165.ratio_* reads estimate_ratio; the 95% paired slot interval [0.5466666666666666, 1.2712249614791982] is printed and decides nothing)",
+      "verdict": "fail"
+    }
+  ],
+  "arm_rates": {
+    "broken": {
+      "n+": 0.2565104166666667,
+      "n\u00b1": 0.25390625,
+      "k4": 0.2708333333333333,
+      "k16": 0.1484375,
+      "k64": 0.10026041666666667,
+      "k256": 0.09244791666666667,
+      "k1024": 0.0859375,
+      "full": 0.09505208333333333,
+      "iso": 0.07942708333333333
+    },
+    "loop_only": {
+      "n+": 0.08072916666666667,
+      "n\u00b1": 0.10546875,
+      "k4": 0.13020833333333334,
+      "k16": 0.09635416666666667,
+      "k64": 0.07552083333333333,
+      "k256": 0.0703125,
+      "k1024": 0.07421875,
+      "full": 0.07552083333333333,
+      "iso": 0.06380208333333333
+    },
+    "changed": {
+      "n+": 1.0,
+      "n\u00b1": 1.0,
+      "k4": 1.0,
+      "k16": 0.9986979166666666,
+      "k64": 1.0,
+      "k256": 1.0,
+      "k1024": 1.0,
+      "full": 1.0,
+      "iso": 1.0
+    }
+  },
+  "spearman": {
+    "recomputed": {
+      "broken": -0.8571428571428571,
+      "changed": 0.20412414523193148
+    },
+    "published": {
+      "broken": -0.8571428571428571,
+      "changed": 0.20412414523193148
+    },
+    "agrees": true
+  },
+  "answer_lengths": {
+    "n+": {
+      "answers": 768,
+      "count_at_cap": 67,
+      "mean_token_count": 56.766927083333336,
+      "primary_broken": 197,
+      "loop_only_broken": 62,
+      "any_trigram_loop": 188
+    },
+    "n\u00b1": {
+      "answers": 768,
+      "count_at_cap": 67,
+      "mean_token_count": 57.1171875,
+      "primary_broken": 195,
+      "loop_only_broken": 81,
+      "any_trigram_loop": 186
+    },
+    "k4": {
+      "answers": 768,
+      "count_at_cap": 57,
+      "mean_token_count": 57.713541666666664,
+      "primary_broken": 208,
+      "loop_only_broken": 100,
+      "any_trigram_loop": 208
+    },
+    "k16": {
+      "answers": 768,
+      "count_at_cap": 50,
+      "mean_token_count": 57.734375,
+      "primary_broken": 114,
+      "loop_only_broken": 74,
+      "any_trigram_loop": 113
+    },
+    "k64": {
+      "answers": 768,
+      "count_at_cap": 59,
+      "mean_token_count": 58.942708333333336,
+      "primary_broken": 77,
+      "loop_only_broken": 58,
+      "any_trigram_loop": 76
+    },
+    "k256": {
+      "answers": 768,
+      "count_at_cap": 78,
+      "mean_token_count": 60.708333333333336,
+      "primary_broken": 71,
+      "loop_only_broken": 54,
+      "any_trigram_loop": 71
+    },
+    "k1024": {
+      "answers": 768,
+      "count_at_cap": 79,
+      "mean_token_count": 61.087239583333336,
+      "primary_broken": 66,
+      "loop_only_broken": 57,
+      "any_trigram_loop": 66
+    },
+    "full": {
+      "answers": 768,
+      "count_at_cap": 84,
+      "mean_token_count": 60.68359375,
+      "primary_broken": 73,
+      "loop_only_broken": 58,
+      "any_trigram_loop": 73
+    },
+    "iso": {
+      "answers": 768,
+      "count_at_cap": 63,
+      "mean_token_count": 58.256510416666664,
+      "primary_broken": 61,
+      "loop_only_broken": 49,
+      "any_trigram_loop": 61
+    }
+  },
+  "no_push": {
+    "answers": 8,
+    "count_at_cap": 0,
+    "mean_token_count": 58.0,
+    "primary_broken": 0
+  },
+  "cap_and_loops": [
+    {
+      "arm": "n+",
+      "answers": 768,
+      "at_cap": 67,
+      "at_cap_primary_broken": 26,
+      "at_cap_loop_only": 7,
+      "at_cap_whitespace_loop": 23,
+      "whitespace_loop": 176,
+      "primary_broken": 197
+    },
+    {
+      "arm": "n\u00b1",
+      "answers": 768,
+      "at_cap": 67,
+      "at_cap_primary_broken": 26,
+      "at_cap_loop_only": 11,
+      "at_cap_whitespace_loop": 24,
+      "whitespace_loop": 176,
+      "primary_broken": 195
+    },
+    {
+      "arm": "k4",
+      "answers": 768,
+      "at_cap": 57,
+      "at_cap_primary_broken": 21,
+      "at_cap_loop_only": 2,
+      "at_cap_whitespace_loop": 16,
+      "whitespace_loop": 186,
+      "primary_broken": 208
+    },
+    {
+      "arm": "k16",
+      "answers": 768,
+      "at_cap": 50,
+      "at_cap_primary_broken": 7,
+      "at_cap_loop_only": 7,
+      "at_cap_whitespace_loop": 5,
+      "whitespace_loop": 84,
+      "primary_broken": 114
+    },
+    {
+      "arm": "k64",
+      "answers": 768,
+      "at_cap": 59,
+      "at_cap_primary_broken": 9,
+      "at_cap_loop_only": 8,
+      "at_cap_whitespace_loop": 8,
+      "whitespace_loop": 56,
+      "primary_broken": 77
+    },
+    {
+      "arm": "k256",
+      "answers": 768,
+      "at_cap": 78,
+      "at_cap_primary_broken": 17,
+      "at_cap_loop_only": 15,
+      "at_cap_whitespace_loop": 11,
+      "whitespace_loop": 54,
+      "primary_broken": 71
+    },
+    {
+      "arm": "k1024",
+      "answers": 768,
+      "at_cap": 79,
+      "at_cap_primary_broken": 12,
+      "at_cap_loop_only": 12,
+      "at_cap_whitespace_loop": 7,
+      "whitespace_loop": 45,
+      "primary_broken": 66
+    },
+    {
+      "arm": "full",
+      "answers": 768,
+      "at_cap": 84,
+      "at_cap_primary_broken": 14,
+      "at_cap_loop_only": 11,
+      "at_cap_whitespace_loop": 12,
+      "whitespace_loop": 55,
+      "primary_broken": 73
+    },
+    {
+      "arm": "iso",
+      "answers": 768,
+      "at_cap": 63,
+      "at_cap_primary_broken": 7,
+      "at_cap_loop_only": 6,
+      "at_cap_whitespace_loop": 6,
+      "whitespace_loop": 45,
+      "primary_broken": 61
+    }
+  ],
+  "note": "Rate-derived distances are computed from the published point estimates; they are not a rerun of the scorer under edited answers and do not predict independent row flips."
+}
