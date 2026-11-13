@@ -29,6 +29,32 @@ ROOT = HERE.parent
 
 # ---------------------------------------------------------------- io
 
+AMENDMENT4_CATALOGUE = HERE / "catalogue-amendment4.json"
+FAMILY_SHAPES = {"O": {"layers": 16, "ffn": 8192}, "Q": {"layers": 32, "ffn": 9216}}
+
+
+def check_catalogue(cat, n_layers, width, fam):
+    """Refuse a catalogue with any (layer, neuron) outside the model: the registered OLMo sets were another model's."""
+    bad = [(name, int(L), int(n)) for name, lst in cat.items() for L, n in lst
+           if not (0 <= int(L) < n_layers and 0 <= int(n) < width)]
+    if bad:
+        raise ValueError(f"{len(bad)} catalogued {fam} neurons lie outside the model's {n_layers} layers x {width} "
+                         f"neurons (first: {bad[:3]})")
+    return cat
+
+
+def catalogue(prompts, fam, n_layers=None, width=None, path=None):
+    """The catalogued neuron sets Part 206 scores. Amendment 4: prompts206.json's OLMo sets are Part 112's Qwen3.5-4B
+    coordinates, so OLMo's come from catalogue-amendment4.json (Part 92's OLMo kinds); Qwen's stay as registered.
+    Every coordinate is checked against the model's shape (the data's, when the caller passes it)."""
+    if fam == "O":
+        cat = json.loads(Path(path or AMENDMENT4_CATALOGUE).read_text())["O"]
+    else:
+        cat = prompts["catalogued"][fam]
+    shp = FAMILY_SHAPES[fam]
+    return check_catalogue(cat, int(n_layers or shp["layers"]), int(width or shp["ffn"]), fam)
+
+
 def load_config(path=None):
     return json.loads(Path(path or HERE / "config206.json").read_text(encoding="utf-8"))
 
