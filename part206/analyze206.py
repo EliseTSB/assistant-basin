@@ -210,8 +210,6 @@ def neuron_table(S, cat, cfg):
     for name, lst in cat.items():
         rows = []
         for L, n in lst:
-            if L >= zz.shape[0]:
-                continue
             rows.append({"layer": L, "neuron": n, "z": float(zz[L, n]),
                          "percentile": C.percentile_in(zz[L], zz[L, n]),
                          "percentile_activity_matched": C.activity_matched_percentile(zz[L], rate[L], n,
@@ -297,7 +295,7 @@ def main(argv=None):
     cfg = C.load_config()
     prompts = json.loads(Path(a_.prompts).read_text())
     S, a, meta = analyze(cfg, a_.stage, a_.out)
-    cat = prompts["catalogued"][S["family"]]
+    cat = C.catalogue(prompts, S["family"], *S["_arming_arrays"]["A-tmpl|M"]["z"].shape)   # Amendment 4
     S["arming"] = neuron_table(S, cat, cfg)
     if S["family"] == "O":
         S["arming_label_shuffle"] = label_shuffle(S["arming"], cfg)

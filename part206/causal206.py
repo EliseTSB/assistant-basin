@@ -179,7 +179,7 @@ def main(argv=None):
     pre = F["frames"]["A-tmpl"]
     hstart = generation_header_start(tok, fam, cfg["request"])
     test = [p for p in prompts["passages"] if p["half"] == "test"][:a_.limit or None]
-    cat = prompts["catalogued"][fam]
+    cat = C.catalogue(prompts, fam, len(layers), layers[0].mlp.gate_proj.out_features)   # Amendment 4
     want = {}
     for name, lst in cat.items():
         for L, n in lst:
