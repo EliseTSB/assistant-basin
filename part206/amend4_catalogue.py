@@ -28,6 +28,11 @@ def build():
     slot = sorted(where[i] for i, k in kinds.items() if k == "slot")
     concept = sorted(where[i] for i, k in kinds.items() if k == "concept")
     reg = json.loads((HERE / "prompts206.json").read_text())["catalogued"]["O"]
+    part92 = set(where.values())
+    for k in ("p92b_ds_slot", "p92b_ds_concept"):
+        stray = [x for x in reg[k] if tuple(x) not in part92]
+        if stray:
+            raise SystemExit(f"{k} in prompts206.json holds units that are not Part 92 neurons: {stray[:3]}")
     return {"source": "Part 206 Amendment 4: slot and concept from results/part92/step2/kinds.json (Part 92, OLMo 2 1B "
                       "Instruct, one Haiku reader); p92b_ds_slot and p92b_ds_concept copied from prompts206.json",
             "O": {"slot": [list(x) for x in slot], "concept": [list(x) for x in concept],

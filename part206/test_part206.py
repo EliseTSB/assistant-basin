@@ -619,6 +619,12 @@ def test_amended_olmo_catalogue_is_part92s_kinds_and_fits_olmo():
     assert sum(k == "slot" for k in kinds.values()) == 21 and sum(k == "concept" for k in kinds.values()) == 18
 
 
+def test_catalogue_requires_the_callers_shape():
+    # red if catalogue() falls back to constants when no shape is passed (review L1)
+    with pytest.raises(TypeError):
+        C.catalogue(_prompts(), "O")
+
+
 def test_qwen_catalogue_is_unchanged_and_fits_qwen():
     # red if Amendment 4 touched Qwen's registered identity neurons
     p = _prompts()
@@ -636,5 +642,6 @@ def test_analysis_and_causal_steps_read_the_catalogue_only_through_catalogue():
     for name in ("analyze206.py", "causal206.py"):
         src = (HERE / name).read_text()
         assert 'prompts["catalogued"]' not in src, name
-        assert "C.catalogue(" in src, name
+        assert "AMENDMENT4_CATALOGUE" not in src and "catalogue-amendment4" not in src, name   # no bypass of the check
+        assert src.count("C.catalogue(") == 1 and "cat = C.catalogue(" in src, name
     assert "if L >= zz.shape[0]" not in (HERE / "analyze206.py").read_text()
