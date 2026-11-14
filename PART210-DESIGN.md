@@ -119,3 +119,24 @@ This rerun changes both the kernel and the pushed batch shape, so it cannot assi
   passes Gate R3 (F4, dormant for the registered plan, which never pads); 210.4 is "not read" (None) when any arm has
   fewer than 768 battery rows, where before it read True on an empty set (F5). No prediction, bar or reading rule
   changed.
+
+## Amendment 1 (2026-11-14 05:07 CT, after the run, before any answer or prediction is read)
+
+Gate R3's host check (`run210.py --check-record`, steps.txt's first host step) failed: "112 receipts do not carry
+their planned call's rows". The cause was the check, not the run. `check_record` built the plan it compares against
+with `layers=tuple(widths)`, and `registered_widths()` is a dict filled in the order layers first appear in
+`results/part165/answers.jsonl` (21, 19, 26, 22, 25, 20, 23, 24), not Part 165's run order (`run165.LAYERS`, 19 to
+26). The run itself built its plan with `run165.LAYERS`, the order `test_the_rebuilt_plan_equals_all_6920_published_rows_key_for_key_in_order`
+proves equal to Part 165's published rows. Every off-plan receipt had the same arms, slots and k as its planned call
+and different layers: the same shuffle applied to a list whose layers came in a different order. The tests passed
+because every `check_record` fixture uses one layer, or a widths dict already in sorted order.
+
+The one change: `check_record` passes `layers=None`, so `plan()` uses `run165.LAYERS` and the check compares against
+`registered_plan()`, the plan the run built. With it, the record passes: 1 recorded load, all eager, 112 pushed calls
+in 864 chunks of exactly 8 rows, 120 planned calls each with a receipt, 0 off plan. A new test,
+`test_check_record_compares_against_the_registered_plan_in_part_165s_layer_order`, fails on the old line.
+
+What had been seen before this fix: the chain log's step exit codes, the gate's message, the two layer orders, and the
+first off-plan receipt's row ids against its planned call's (row keys only). No answer, margin, label, count, score or
+prediction had been read, and `score210.py` had not been run. No prediction, gate threshold, row or reading rule
+changes.
