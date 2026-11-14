@@ -821,14 +821,17 @@ def _effect_per_part(units, held, names, you, base, span):
 
 
 def _save_acts(path, acts, grads):
+    # Amendment 5 (2026-11-14): numpy has no bfloat16, so a Qwen stage on the A770 (bf16 sites) died here with
+    # "Got unsupported ScalarType BFloat16"; family O ran float32 on the CPU and never reached this. Widening bf16 to
+    # float32 is exact, and no scorer reads this file.
     import numpy as np
     arrays = {}
     for qid, d in acts.items():
         for site, x in d.items():
-            arrays[f"act|{qid}|{site}"] = x.numpy()
+            arrays[f"act|{qid}|{site}"] = x.float().numpy()
     for qid, d in grads.items():
         for site, x in d.items():
-            arrays[f"grad|{qid}|{site}"] = x.numpy()
+            arrays[f"grad|{qid}|{site}"] = x.float().numpy()
     C.atomic_savez(path, **arrays)
 
 
