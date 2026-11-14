@@ -1,0 +1,31 @@
+# Part 211: the host launch lines, pilot first. Python: /home/elisepc/neuron-probe/.venv/bin/python -I -B
+# Nothing here runs on the A770: float32, CPU, eager attention (design: Optimization).
+# Run from the worktree root /home/elisepc/green/worktrees/ab-part180b.
+
+# 0. Pin every revision (network; writes part211/checkpoints.json). Do not run before the design is registered.
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part211/checkpoints211.py pin
+
+# 1. Draw the two text sets, once per family's tokenizer (network; needs `datasets` and the tokenizers). The row list
+#    is written once, so both families draw from the same rows in the same order (the second call reads --rows).
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part211/text211.py --tokenizer EleutherAI/pythia-160m \
+    --rows-out results/part211/rows.json --out results/part211/texts_pythia.json
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part211/text211.py --tokenizer allenai/OLMo-2-0425-1B \
+    --rows results/part211/rows.json --out results/part211/texts_olmo.json
+
+# 2. The pilot (design: Size): R0 at steps 0 and 143000 and W1 at step 143000, set A; stop rules; a stop is a HOLD.
+#    Downloads: 3 Pythia checkpoints (~1.1 GB). Watch the relay: ss -tnp | grep :993 before, during and after.
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part211/run211.py --stage pilot \
+    --texts results/part211/texts_pythia.json --out results/part211
+
+# 3. The main run, resumable (reference checkpoints first, both sets, then the rest; complete records are skipped).
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part211/run211.py --stage main \
+    --texts results/part211/texts_pythia.json --out results/part211
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part211/run211.py --stage main \
+    --texts results/part211/texts_olmo.json --out results/part211
+
+# 4. Score: reads only the distance files.
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part211/score211.py --out results/part211 \
+    --json results/part211/score.json
+
+# 5. The tests (no network, no downloads; tiny models from config).
+/home/elisepc/neuron-probe/.venv/bin/python -I -B -m pytest -q part211/

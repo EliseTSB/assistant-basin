@@ -1,0 +1,80 @@
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:   1%|          | 1/179 [00:10<32:19, 10.90s/it]Loading weights:  34%|███▎      | 60/179 [00:11<00:16,  7.40it/s]Loading weights:  41%|████▏     | 74/179 [00:11<00:11,  8.89it/s]Loading weights:  45%|████▌     | 81/179 [00:12<00:11,  8.64it/s]Loading weights:  48%|████▊     | 86/179 [00:13<00:09,  9.64it/s]Loading weights:  50%|█████     | 90/179 [00:13<00:08, 10.68it/s]Loading weights:  53%|█████▎    | 94/179 [00:13<00:09,  8.98it/s]Loading weights:  57%|█████▋    | 102/179 [00:14<00:08,  9.58it/s]Loading weights:  59%|█████▊    | 105/179 [00:14<00:07, 10.50it/s]Loading weights:  63%|██████▎   | 113/179 [00:15<00:06, 10.49it/s]Loading weights:  69%|██████▊   | 123/179 [00:15<00:03, 14.96it/s]Loading weights:  70%|███████   | 126/179 [00:16<00:04, 11.49it/s]Loading weights:  75%|███████▍  | 134/179 [00:16<00:02, 15.60it/s]Loading weights:  77%|███████▋  | 137/179 [00:17<00:03, 10.89it/s]Loading weights:  81%|████████  | 145/179 [00:17<00:02, 15.95it/s]Loading weights:  83%|████████▎ | 149/179 [00:18<00:02, 11.96it/s]Loading weights:  87%|████████▋ | 156/179 [00:18<00:01, 16.62it/s]Loading weights:  89%|████████▉ | 160/179 [00:18<00:01, 11.80it/s]Loading weights:  93%|█████████▎| 167/179 [00:18<00:00, 16.43it/s]Loading weights:  96%|█████████▌| 171/179 [00:19<00:00, 12.00it/s]Loading weights: 100%|██████████| 179/179 [00:19<00:00,  9.11it/s]
+passages 8/600 tokens=10368 elapsed_s=120.5 tok_per_s=86.0
+passages 16/600 tokens=20736 elapsed_s=221.3 tok_per_s=93.7
+passages 24/600 tokens=31104 elapsed_s=317.8 tok_per_s=97.9
+passages 32/600 tokens=41472 elapsed_s=403.2 tok_per_s=102.9
+passages 40/600 tokens=51840 elapsed_s=490.4 tok_per_s=105.7
+passages 48/600 tokens=62208 elapsed_s=602.2 tok_per_s=103.3
+passages 56/600 tokens=72576 elapsed_s=710.0 tok_per_s=102.2
+passages 64/600 tokens=82944 elapsed_s=810.5 tok_per_s=102.3
+passages 72/600 tokens=93312 elapsed_s=915.4 tok_per_s=101.9
+passages 80/600 tokens=103680 elapsed_s=1024.2 tok_per_s=101.2
+passages 88/600 tokens=114048 elapsed_s=1129.0 tok_per_s=101.0
+passages 96/600 tokens=124416 elapsed_s=1230.1 tok_per_s=101.1
+passages 104/600 tokens=134784 elapsed_s=1337.6 tok_per_s=100.8
+passages 112/600 tokens=145152 elapsed_s=1438.7 tok_per_s=100.9
+passages 120/600 tokens=155520 elapsed_s=1520.8 tok_per_s=102.3
+passages 128/600 tokens=165888 elapsed_s=1609.1 tok_per_s=103.1
+passages 136/600 tokens=176256 elapsed_s=1685.5 tok_per_s=104.6
+passages 144/600 tokens=186624 elapsed_s=1766.8 tok_per_s=105.6
+passages 152/600 tokens=196992 elapsed_s=1838.5 tok_per_s=107.1
+passages 160/600 tokens=207360 elapsed_s=1907.0 tok_per_s=108.7
+passages 168/600 tokens=217728 elapsed_s=1978.9 tok_per_s=110.0
+passages 176/600 tokens=228096 elapsed_s=2049.5 tok_per_s=111.3
+passages 184/600 tokens=238464 elapsed_s=2123.5 tok_per_s=112.3
+passages 192/600 tokens=248832 elapsed_s=2196.4 tok_per_s=113.3
+passages 200/600 tokens=259200 elapsed_s=2273.7 tok_per_s=114.0
+passages 208/600 tokens=269568 elapsed_s=2349.2 tok_per_s=114.7
+passages 216/600 tokens=279936 elapsed_s=2421.8 tok_per_s=115.6
+passages 224/600 tokens=290304 elapsed_s=2495.7 tok_per_s=116.3
+passages 232/600 tokens=300672 elapsed_s=2569.8 tok_per_s=117.0
+passages 240/600 tokens=311040 elapsed_s=2647.4 tok_per_s=117.5
+passages 248/600 tokens=321408 elapsed_s=2723.0 tok_per_s=118.0
+passages 256/600 tokens=331776 elapsed_s=2795.9 tok_per_s=118.7
+passages 264/600 tokens=342144 elapsed_s=2872.0 tok_per_s=119.1
+passages 272/600 tokens=352512 elapsed_s=2944.5 tok_per_s=119.7
+passages 280/600 tokens=362880 elapsed_s=3020.5 tok_per_s=120.1
+passages 288/600 tokens=373248 elapsed_s=3096.5 tok_per_s=120.5
+passages 296/600 tokens=383616 elapsed_s=3171.9 tok_per_s=120.9
+passages 304/600 tokens=393984 elapsed_s=3241.4 tok_per_s=121.5
+passages 312/600 tokens=404352 elapsed_s=3309.1 tok_per_s=122.2
+passages 320/600 tokens=414720 elapsed_s=3382.5 tok_per_s=122.6
+passages 328/600 tokens=425088 elapsed_s=3456.6 tok_per_s=123.0
+passages 336/600 tokens=435456 elapsed_s=3527.0 tok_per_s=123.5
+passages 344/600 tokens=445824 elapsed_s=3597.0 tok_per_s=123.9
+passages 352/600 tokens=456192 elapsed_s=3665.5 tok_per_s=124.5
+passages 360/600 tokens=466560 elapsed_s=3736.0 tok_per_s=124.9
+passages 368/600 tokens=476928 elapsed_s=3804.2 tok_per_s=125.4
+passages 376/600 tokens=487296 elapsed_s=3872.7 tok_per_s=125.8
+passages 384/600 tokens=497664 elapsed_s=3943.0 tok_per_s=126.2
+passages 392/600 tokens=508032 elapsed_s=4011.5 tok_per_s=126.6
+passages 400/600 tokens=518400 elapsed_s=4083.8 tok_per_s=126.9
+passages 408/600 tokens=528768 elapsed_s=4147.9 tok_per_s=127.5
+passages 416/600 tokens=539136 elapsed_s=4205.6 tok_per_s=128.2
+passages 424/600 tokens=549504 elapsed_s=4268.0 tok_per_s=128.7
+passages 432/600 tokens=559872 elapsed_s=4327.3 tok_per_s=129.4
+passages 440/600 tokens=570240 elapsed_s=4382.9 tok_per_s=130.1
+passages 448/600 tokens=580608 elapsed_s=4443.3 tok_per_s=130.7
+passages 456/600 tokens=590976 elapsed_s=4500.1 tok_per_s=131.3
+passages 464/600 tokens=601344 elapsed_s=4559.8 tok_per_s=131.9
+passages 472/600 tokens=611712 elapsed_s=4624.8 tok_per_s=132.3
+passages 480/600 tokens=622080 elapsed_s=4698.7 tok_per_s=132.4
+passages 488/600 tokens=632448 elapsed_s=4754.7 tok_per_s=133.0
+passages 496/600 tokens=642816 elapsed_s=4823.1 tok_per_s=133.3
+passages 504/600 tokens=653184 elapsed_s=4877.7 tok_per_s=133.9
+passages 512/600 tokens=663552 elapsed_s=4947.6 tok_per_s=134.1
+passages 520/600 tokens=673920 elapsed_s=5019.9 tok_per_s=134.2
+passages 528/600 tokens=684288 elapsed_s=5091.0 tok_per_s=134.4
+passages 536/600 tokens=694656 elapsed_s=5171.3 tok_per_s=134.3
+passages 544/600 tokens=705024 elapsed_s=5234.3 tok_per_s=134.7
+passages 552/600 tokens=715392 elapsed_s=5290.8 tok_per_s=135.2
+passages 560/600 tokens=725760 elapsed_s=5354.2 tok_per_s=135.6
+passages 568/600 tokens=736128 elapsed_s=5410.0 tok_per_s=136.1
+passages 576/600 tokens=746496 elapsed_s=5465.9 tok_per_s=136.6
+passages 584/600 tokens=756864 elapsed_s=5523.2 tok_per_s=137.0
+passages 592/600 tokens=767232 elapsed_s=5579.0 tok_per_s=137.5
+passages 600/600 tokens=777600 elapsed_s=5634.1 tok_per_s=138.0
+clips_done stage=sft passages=600 G2=True
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:   1%|          | 1/179 [00:08<24:59,  8.43s/it]Loading weights:  34%|███▎      | 60/179 [00:08<00:12,  9.58it/s]Loading weights:  40%|███▉      | 71/179 [00:09<00:09, 10.80it/s]Loading weights:  45%|████▍     | 80/179 [00:09<00:08, 11.23it/s]Loading weights:  50%|█████     | 90/179 [00:10<00:06, 13.86it/s]Loading weights:  53%|█████▎    | 95/179 [00:10<00:06, 12.53it/s]Loading weights:  57%|█████▋    | 102/179 [00:11<00:06, 11.95it/s]Loading weights:  63%|██████▎   | 112/179 [00:11<00:04, 15.87it/s]Loading weights:  65%|██████▍   | 116/179 [00:12<00:04, 13.64it/s]Loading weights:  69%|██████▊   | 123/179 [00:12<00:03, 16.76it/s]Loading weights:  71%|███████   | 127/179 [00:12<00:03, 13.58it/s]Loading weights:  75%|███████▍  | 134/179 [00:12<00:02, 17.78it/s]Loading weights:  77%|███████▋  | 138/179 [00:13<00:03, 13.29it/s]Loading weights:  81%|████████  | 145/179 [00:13<00:01, 18.01it/s]Loading weights:  83%|████████▎ | 149/179 [00:14<00:02, 13.24it/s]Loading weights:  87%|████████▋ | 156/179 [00:14<00:01, 17.94it/s]Loading weights:  89%|████████▉ | 160/179 [00:14<00:01, 13.70it/s]Loading weights:  93%|█████████▎| 167/179 [00:15<00:00, 17.90it/s]Loading weights:  96%|█████████▌| 171/179 [00:15<00:00, 13.10it/s]Loading weights: 100%|██████████| 179/179 [00:15<00:00, 11.36it/s]
+gt_done stage=sft layer=5 passages=150
+rc=0 02:52:09

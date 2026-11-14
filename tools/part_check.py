@@ -254,14 +254,17 @@ def prelaunch(repo, pid, fetch=True, legacy_ok=False, min_margin=DEFAULT_MIN_MAR
             "Controls: no random or matched control and no 'Not used:' line")
     r.check(re.search(r"gate|positive control", controls, re.I) is not None,
             "Controls name a gate or positive control", "Controls: no 'Gate:' line (or 'No gate: <reason>')")
-    count, unit, minutes = parse_size(sec.get("Size", ""))
+    # Markdown emphasis is stripped before the Size checks: a design that bolds its labels ("- **Total:** ...") is
+    # the same line to a reader (papercut 2026-11-12 0003, a design worker's bolded Total and Pilot read as missing).
+    size_text = re.sub(r"\*\*|__", "", sec.get("Size", ""))
+    count, unit, minutes = parse_size(size_text)
     size_ok = r.check(count is not None and minutes is not None and count > 0 and minutes > 0,
                       f"Size: Total {count:,} {unit.strip()}, about {minutes:g} minutes" if count is not None
                       and minutes is not None else "",
                       "Size: no 'Total: N <unit>, about M minutes' line with N and M above zero")
-    r.check(re.search(r"smallest effect", sec.get("Size", ""), re.I) is not None,
+    r.check(re.search(r"smallest effect", size_text, re.I) is not None,
             "Size names the smallest effect worth knowing", "Size: no 'Smallest effect worth knowing' line")
-    pilot = re.search(r"^\s*-?\s*Pilot:\s*(.*)$", sec.get("Size", ""), re.M | re.I)
+    pilot = re.search(r"^\s*-?\s*Pilot:\s*(.*)$", size_text, re.M | re.I)
     big = size_ok and (minutes > 60 or (count > 1000 and GENERATION_UNITS.search(unit) is not None))
     if not pilot:
         r.fail("Size: no 'Pilot:' line")
@@ -298,7 +301,10 @@ def prelaunch(repo, pid, fetch=True, legacy_ok=False, min_margin=DEFAULT_MIN_MAR
     if fetch:
         f = git(repo, "fetch", "-q", "origin", "main", check=False)
         if f.returncode:
-            r.fail("git fetch origin main failed: " + f.stderr.strip()[:120])
+            hint = (" (a read-only git dir, e.g. a worker sandbox: run with --no-fetch there; the registration checks"
+                    " below can only pass on the host after tools/register_public.py)"
+                    if "Read-only file system" in f.stderr else "")
+            r.fail("git fetch origin main failed: " + f.stderr.strip()[:120] + hint)
     rel = design.relative_to(repo).as_posix()
     reg = git(repo, "show", f"origin/main:{rel}", check=False)
     if r.check(reg.returncode == 0, f"registered: {rel} is on origin/main",

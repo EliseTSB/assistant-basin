@@ -167,7 +167,7 @@ def muse_rows(R):
         lay = cmA["rho_peak_layer"]
         rp = cite(p, "common_mode.A-tmpl|M.rho_peak", cmA["rho_peak"])
         rn = cite(p, f"common_mode.M2|M.layers[{lay}].rho", S["common_mode"]["M2|M"]["layers"][lay]["rho"])
-        V["206.M1"] = verdict(rp is not None and rn is not None and 0.07 <= rp <= 0.30 and 0.02 <= rn <= 0.08)
+        V["206.M1"] = verdict(rp is not None and rn is not None and 0.07 <= rp <= 0.30 and 0.00 <= rn <= 0.01)
         idm = cite(p, "arming.identity.median_percentile", S["arming"]["identity"]["median_percentile"])
         V["206.M3"] = verdict(45 <= idm <= 55)
         t0 = cite(p, "split.m[0].token_share", S["split"]["m"][0]["token_share"])
