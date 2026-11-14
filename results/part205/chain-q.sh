@@ -11,6 +11,8 @@
 #   4. qwen-base, controls.
 # The design predates the launcher's Registered/Total/Pilot/Kernel-check line formats and is public, so each launch
 # carries an --override (ARC_OVERRIDE) naming the check that was done instead.
+# One brace group ending in exit: bash reads the whole script before running it (detached-script-guard.mjs).
+{
 set -u
 cd /home/elisepc/green/worktrees/ab-part201 || exit 1
 export ARC_TREE=/home/elisepc/green/worktrees/ab-part201 LAUNCH_ARC_CONFIG=/home/elisepc/green/worktrees/ab-part67/tools/local.json
@@ -77,3 +79,5 @@ ARC_OVERRIDE="$BASE Family Q, qwen-base, --arms controls (Amendment 2 item 4: O'
 rm -rf results/part205/qwen-base && cp -r "$J/results/part205/qwen-base" results/part205/ || { echo "COPY FAILED: qwen-base"; exit 5; }
 merge_models qwen-base || { echo "MODELS.JSON MERGE FAILED: qwen-base"; exit 5; }
 echo "$(date +%H:%M:%S) PART205-Q-ALL-DONE"
+exit 0
+}

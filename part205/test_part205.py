@@ -1611,3 +1611,34 @@ def test_family_q_loader_finds_neuron_report_under_python_isolated_mode(tmp_path
                        cwd=str(tmp_path / "part205"), capture_output=True, text=True, timeout=120)
     assert r.returncode == 0, r.stderr[-600:]
     assert "stub at the job-folder root" in r.stdout
+
+
+@pytest.mark.parametrize("family", ["O", "Q"])
+def test_frozen_runner_gives_identical_site_gradients_and_builds_no_weight_gradient(family, olmo_tok, qwen_tok):
+    """Amendment 4 (2026-11-14): Runner freezes the weights and marks the embedding output as requiring grad, so a
+    ranking pass builds gradients at the sites only (18.3 GB -> 8.7 GB peak on the A770 for Qwen3.5-4B). The site
+    activations, gradients and estimates must equal the unfrozen runner's exactly, and no weight may hold a gradient.
+    Break: drop the embedding hook (register_hook on a site input then fails: nothing requires grad), or freeze=False
+    by default (the weight-gradient assert goes red)."""
+    tok = olmo_tok if family == "O" else qwen_tok
+    make = tiny_olmo if family == "O" else tiny_qwen
+    prompts = C.load_prompts()
+    text, it = text_for(prompts, "You", "kindness", 1)
+    ids = {"A": C.option_token_ids(tok, "A"), "B": C.option_token_ids(tok, "B")}
+    m_ref = make()
+    units = C.units_for(m_ref)
+    with torch.enable_grad():
+        _, read_ref, acts_ref, grads_ref = R.Runner(m_ref, tok, units, ids, freeze=False).run(
+            text, need_grad=True, consistent=it["consistent"])
+    m = make()
+    runner = R.Runner(m, tok, C.units_for(m), ids)
+    with torch.enable_grad():
+        _, read, acts, grads = runner.run(text, need_grad=True, consistent=it["consistent"])
+    assert read == read_ref
+    assert set(grads) == set(grads_ref) and grads
+    for k in grads_ref:
+        assert torch.equal(acts[k], acts_ref[k]), k
+        assert torch.equal(grads[k], grads_ref[k]), k
+    assert torch.equal(C.estimates_for_prompt(acts, grads, units), C.estimates_for_prompt(acts_ref, grads_ref, units))
+    assert all(p.grad is None for p in m.parameters())
+    assert any(p.grad is not None for p in m_ref.parameters())

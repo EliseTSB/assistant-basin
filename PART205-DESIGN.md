@@ -480,3 +480,24 @@ the same choice as `part209/run209.py`. A Windows smoke run with the A770 job's 
 job folder, imports `neuron_report` from `run205`, refuses a second process's stage lock, frees it on release, and
 keeps two stages in `models.json` (`results/part205/smoke_windows205.py`, output `windows-smoke.txt`). No pass ran
 at either stage launch, so nothing was measured. No prediction, gate, threshold, arm, seed or reading rule changes.
+
+## Amendment 4 (2026-11-14 07:47 CT, after two family Q launch failures, before any Qwen value is read)
+
+The qwen-chat stage died twice with `RuntimeError: level_zero backend failed with error: 2147483646
+(UR_RESULT_ERROR_UNKNOWN)`, at 06:29 (in a backward pass, 18 ranking records written) and 06:44 (in a forward pass of
+the resumed ranking block), each 15 to 18 minutes in. The cause measured: `Runner.run`'s backward pass, which the
+method needs only at the sites, also built a gradient for every weight, because `from_pretrained` leaves the weights
+requiring grad and `neuron_report.load_model` only turns autograd off globally. A probe on the A770
+(`results/part205/probe_freeze205.py`, output `probe_freeze205.json`: one ranking prompt, prompt 0 of the seeded
+order) measured 18.28 GB peak device memory on the 16 GB card with 426 weight gradients, and 8.68 GB with the weights
+frozen; the site estimates were bit-identical between the two (and between two runs of the current code), and the probe
+printed no estimate values. A pass took 61 s and 56 s, so the speed is not the memory.
+
+The one change: `Runner` freezes the weights and marks the embedding output as requiring grad while grad is enabled,
+so every site input downstream still carries a graph and the backward pass computes only activation gradients. A new
+test, `test_frozen_runner_gives_identical_site_gradients_and_builds_no_weight_gradient`, compares activations,
+gradients and estimates with an unfrozen runner on both tiny models (O and Q) exactly, and checks no weight holds a
+gradient; dropping the hook or the freeze turns it red. Family O's six stages ran with the old code on the CPU; the
+gradients they used are the same quantities, so nothing there is rerun. The 18 qwen-chat ranking records from the
+failed attempts are kept: the resume rule reruns the ranking block whole, and the probe shows the estimates unchanged.
+No prediction, gate, threshold, arm, seed or reading rule changes.

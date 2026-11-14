@@ -1,0 +1,12 @@
+Running as unit: probe205-064640.scope; invocation ID: 143f42f99ea54453bcb70d934ff8cd5e
+07:40:41 score210 ended; probing
+launching from /home/elisepc/green/worktrees/ab-part201
+07:40:42 attempt 1 free=10.7
+07:41:28 attempt 1 free=14.1
+07:41:28 running job.py processes=0 --ignore-busy
+STARTED: 07:41:30 step 1 start: -I -B results/part205/probe_freeze205.py (ram_avail 14.1G)
+07:44:53 step 1 rc=0
+ALL-DONE
+07:45:33 probe step ended rc=0
+copied probe_freeze205.json
+PROBE-FREEZE-DONE
