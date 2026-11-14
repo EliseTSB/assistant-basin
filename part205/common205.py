@@ -386,16 +386,43 @@ def read_jsonl(path, repair=False):
     return out
 
 
+def lock_file(f, blocking=True):
+    """An exclusive lock on an open file: fcntl.flock on Linux, msvcrt.locking on byte 0 on Windows, where the A770
+    job runs. Amendment 3 (2026-11-14): an unconditional `import fcntl` died at family Q's first stage launch, as it
+    had for Part 209 (part209/run209.py). Raises BlockingIOError when `blocking` is False and the lock is held."""
+    try:
+        import fcntl
+    except ImportError:
+        import msvcrt
+        f.seek(0)
+        try:
+            msvcrt.locking(f.fileno(), msvcrt.LK_LOCK if blocking else msvcrt.LK_NBLCK, 1)
+        except OSError as exc:
+            raise BlockingIOError(str(exc)) from exc
+        return
+    fcntl.flock(f.fileno(), fcntl.LOCK_EX if blocking else fcntl.LOCK_EX | fcntl.LOCK_NB)
+
+
+def unlock_file(f):
+    try:
+        import fcntl
+    except ImportError:
+        import msvcrt
+        f.seek(0)
+        msvcrt.locking(f.fileno(), msvcrt.LK_UNLCK, 1)
+        return
+    fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+
+
 class StageLock:
-    """An exclusive, non-blocking flock on <stage dir>/.lock held for the whole run (review r1 D-F16). The kernel
-    drops it when the process ends, so a killed run leaves no stale lock."""
+    """An exclusive, non-blocking lock on <stage dir>/.lock held for the whole run (review r1 D-F16). The OS drops it
+    when the process ends, so a killed run leaves no stale lock."""
 
     def __init__(self, path):
-        import fcntl
         self.path = Path(path)
         self.f = self.path.open("a+")
         try:
-            fcntl.flock(self.f.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+            lock_file(self.f, blocking=False)
         except BlockingIOError:
             self.f.close()
             raise SystemExit(f"{self.path} is held by another run of this stage; refusing to start a second")
@@ -406,9 +433,8 @@ class StageLock:
         self.f.flush()
 
     def release(self):
-        import fcntl
         if self.f and not self.f.closed:
-            fcntl.flock(self.f.fileno(), fcntl.LOCK_UN)
+            unlock_file(self.f)
             self.f.close()
 
 

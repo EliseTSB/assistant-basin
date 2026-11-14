@@ -470,3 +470,13 @@ which omit the flag, are not used as written. Before the Base model's stage, its
 float32-upcast reference, then the card candidate, then `tools/part_check.py kernel`), because no check existed for
 Qwen3.5-4B-Base; the chat model's is `results/part183/kernel-check.json`, rechecked as passing (21 of 21) before this
 launch. The design predates the launcher's Kernel-check line, so each launch records the check in its override.
+
+**Addition to Amendment 3 (2026-11-14 06:09 CT, before any Qwen pass).** With the import fixed, the G1 check ran and
+passed at 05:12 (`results/part205/g1/g1.json`). The qwen-chat stage then died 1 second after its start, twice, with
+`ModuleNotFoundError: No module named 'fcntl'`: `common205.StageLock` and `run205.write_models_json` locked with
+`fcntl`, which does not exist on Windows, where the A770 job runs (Part 209 hit the same on 2026-11-12). Both now go
+through `common205.lock_file` and `unlock_file`: `fcntl.flock` on Linux, `msvcrt.locking` on byte 0 on Windows,
+the same choice as `part209/run209.py`. A Windows smoke run with the A770 job's own Python, in a copy laid out like the
+job folder, imports `neuron_report` from `run205`, refuses a second process's stage lock, frees it on release, and
+keeps two stages in `models.json` (`results/part205/smoke_windows205.py`, output `windows-smoke.txt`). No pass ran
+at either stage launch, so nothing was measured. No prediction, gate, threshold, arm, seed or reading rule changes.
