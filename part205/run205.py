@@ -53,6 +53,10 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
+# Amendment 3 (2026-11-14): family Q's loader imports neuron_report from the repository (or job-folder) root, which
+# `python -I` leaves off sys.path; the first A770 launch died on it. Appended, so this folder's modules still win.
+if str(HERE.parent) not in sys.path:
+    sys.path.append(str(HERE.parent))
 
 import common205 as C  # noqa: E402
 

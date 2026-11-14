@@ -1,0 +1,8 @@
+Running as unit: chain-205q-050133.scope; invocation ID: 240463c3fb9d4358a720f0620d2938a7
+launching from /home/elisepc/green/worktrees/ab-part201
+05:01:34 attempt 1 free=11
+05:01:35 running job.py processes=0 --ignore-busy
+STARTED: 05:01:35 step 1 start: -I -B part205/g1check205.py --stage qwen-chat --out results/part205/g1 (ram_avail 11.1G)
+05:01:39 step 1 rc=1
+step failed after 1 attempts: -I -B part205/g1check205.py --stage qwen-chat --out results/part205/g1
+PART205 G1 FAILED OR DID NOT RUN
