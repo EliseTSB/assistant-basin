@@ -737,7 +737,9 @@ def check_record(path, widths=None, layers=None):
     own, so the check asks for the receipts that run could have written and no others."""
     rec = json.loads(Path(path).read_text(encoding="utf-8"))
     widths = widths or registered_widths()
-    ok, why, shapes = record_gates(rec, plan(widths, layers=tuple(widths) if layers is None else layers))
+    # Amendment 1 (2026-11-14): `layers=None` is Part 165's run order (run165.LAYERS), the plan the run built
+    # (registered_plan()). The old `tuple(widths)` took the order layers first appear in Part 165's answers file.
+    ok, why, shapes = record_gates(rec, plan(widths, layers=layers))
     if ok:
         print(f"PART210 record ok: {len(rec.get('loads', []))} recorded load(s), all eager, one model/revision/folder; "
               f"{shapes['pushed_calls']} pushed calls in {shapes['pushed_chunks']} chunks of exactly 8 rows, "
