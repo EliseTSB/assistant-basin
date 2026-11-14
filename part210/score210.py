@@ -45,6 +45,8 @@ LADDER = score165.LADDER
 PREDICTION_2102 = {"165.1": "pass", "165.2": "pass", "165.3": "pass", "165.4": "pass",
                    "165.5": "fail", "165.6": "fail"}
 PREDICTION_2103 = 1.5                 # the n+ over full broken ratio is above 1.5, the same side of 1 as published
+PREDICTION_2105 = 2.69863             # the n+ over full broken ratio is lower than the published 2.69863
+                                      # (Amendment 2: this rule had no code until 2026-11-14)
 PREDICTION_2104 = 300                 # at least 300 of 768 battery answers reach the cap in each arm
 PREDICTION_2106 = (40, 110)           # between 40 and 110 of the 200 replicate texts differ
 PREDICTION_2107 = 8                   # the primary-broken rate is higher in at least 8 of the 9 arms
@@ -460,6 +462,9 @@ def score(rows, load=None, norms=None, replicate=None, published=None, published
     ratio_nf = (score_now["predictions"]["165.1"] or {}).get("estimate_ratio")
     p2103 = isinstance(ratio_nf, (int, float)) and ratio_nf > PREDICTION_2103
     out("210.3 n+ over full broken ratio above 1.5", p2103, file_rows, "predictions.165.1.estimate_ratio")
+    p2105 = isinstance(ratio_nf, (int, float)) and ratio_nf < PREDICTION_2105
+    out("210.5 n+ over full broken ratio lower than the published 2.69863", p2105, file_rows,
+        "predictions.165.1.estimate_ratio")
     at_cap = {arm: sum(r.get("arm") == arm and int(r.get("token_count", 0)) == CAP for r in battery_rows(rows))
               for arm in ARMS}
     per_arm = {arm: sum(r.get("arm") == arm for r in battery_rows(rows)) for arm in ARMS}
@@ -525,7 +530,7 @@ def score(rows, load=None, norms=None, replicate=None, published=None, published
     out("headline reading withdrawn", withdrawn, "gates above", "R1,R2,R3,Part165 gates")
     return out.text(), {"withdrawn": withdrawn, "gates_r1_r3": {"R1": r1, "R2": r2, "R3": r3},
                         "part165_gates": gates165, "verdicts": verdicts, "p2101": p2101, "p2102": p2102,
-                        "p2103": p2103, "p2104": p2104, "p2106": p2106, "p2107": p2107}
+                        "p2103": p2103, "p2104": p2104, "p2105": p2105, "p2106": p2106, "p2107": p2107}
 
 
 def main(argv=None):
