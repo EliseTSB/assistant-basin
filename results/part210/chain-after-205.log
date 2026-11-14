@@ -1,0 +1,61 @@
+Running as unit: chain-210-after-205.scope; invocation ID: d2b9b421f9b54a3d8c92ad60886aa15c
+00:54:35 chain-205-after-206 ended: PART205-FALLBACK-ALL-DONE
+launching from /home/elisepc/green/worktrees/ab-part210
+00:54:38 attempt 1 free=4
+00:55:24 attempt 1 free=8.2
+00:56:10 attempt 1 free=8.4
+00:56:56 attempt 1 free=9
+00:57:42 attempt 1 free=9
+00:58:27 attempt 1 free=8.8
+00:59:13 attempt 1 free=9
+00:59:58 attempt 1 free=9.2
+01:00:44 attempt 1 free=9.2
+01:01:30 attempt 1 free=9.2
+01:02:15 attempt 1 free=9.2
+01:03:01 attempt 1 free=9.3
+01:03:47 attempt 1 free=9.3
+01:04:32 attempt 1 free=9.8
+01:05:18 attempt 1 free=9.9
+01:06:03 attempt 1 free=10
+01:06:49 attempt 1 free=9.9
+01:07:35 attempt 1 free=10.2
+01:08:21 attempt 1 free=10.1
+01:09:06 attempt 1 free=10
+01:09:52 attempt 1 free=10.3
+01:10:38 attempt 1 free=8.8
+01:11:23 attempt 1 free=8.7
+01:12:09 attempt 1 free=8.3
+01:12:54 attempt 1 free=7
+01:13:40 attempt 1 free=8.6
+01:14:26 attempt 1 free=8.5
+01:15:11 attempt 1 free=8.7
+01:15:57 attempt 1 free=8.6
+01:16:43 attempt 1 free=8.5
+01:17:28 attempt 1 free=8.5
+01:18:14 attempt 1 free=8.4
+01:18:59 attempt 1 free=8.4
+01:19:45 attempt 1 free=8.4
+01:20:31 attempt 1 free=8.4
+01:21:16 attempt 1 free=8.6
+01:22:02 attempt 1 free=8.6
+01:22:48 attempt 1 free=8.7
+01:23:33 attempt 1 free=8.6
+01:24:19 attempt 1 free=8.7
+01:25:05 attempt 1 free=8.9
+01:25:50 attempt 1 free=8.2
+01:26:36 attempt 1 free=9
+01:27:22 attempt 1 free=9
+01:28:07 attempt 1 free=9
+01:28:53 attempt 1 free=8.5
+01:29:39 attempt 1 free=10
+01:30:24 attempt 1 free=9.9
+01:31:10 attempt 1 free=9.9
+01:31:56 attempt 1 free=9.4
+01:32:41 attempt 1 free=10
+01:33:27 attempt 1 free=13.8
+01:33:27 running job.py processes=0 --ignore-busy
+STARTED: 01:33:30 step 1 start: -I -B part210/run210.py --device xpu --model E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf
+04:06:45 step 1 rc=0
+ALL-DONE
+04:07:01 part210 results copied back
+PART210-RUN-DONE

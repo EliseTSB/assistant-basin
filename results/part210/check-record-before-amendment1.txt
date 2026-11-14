@@ -1,0 +1,1 @@
+PART210 RECORD FAILED: Gate R3: 112 receipts do not carry their planned call's rows (first: [('battery', 8), ('battery', 9), ('battery', 10)])

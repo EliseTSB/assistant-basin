@@ -1,0 +1,6 @@
+Running as unit: score210-waiter-061037.scope; invocation ID: cc447430e1144a8b8835eb1189b7744c
+06:45:38 chain-205q ended; scoring
+07:40:14 score210 rc=0
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 54:35.80
+	Maximum resident set size (kbytes): 6287148
+PART210-SCORE-DONE

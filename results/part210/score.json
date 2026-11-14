@@ -1,0 +1,28 @@
+{
+  "withdrawn": false,
+  "gates_r1_r3": {
+    "R1": true,
+    "R2": true,
+    "R3": true
+  },
+  "part165_gates": {
+    "gate1_rows": true,
+    "gate2_no_push": true,
+    "gate3_size": true,
+    "gate4_measure_room": true
+  },
+  "verdicts": {
+    "165.1": "fail",
+    "165.2": "pass",
+    "165.3": "pass",
+    "165.4": "pass",
+    "165.5": "not read",
+    "165.6": "fail"
+  },
+  "p2101": true,
+  "p2102": false,
+  "p2103": true,
+  "p2104": true,
+  "p2106": false,
+  "p2107": true
+}

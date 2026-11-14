@@ -1,0 +1,248 @@
+
+## Rows
+rows: 6920  <- rows:len
+unique (stage, arm, slot, layer, question_index): 6920  <- rows:unique run165.row_key
+battery rows: 6912  <- rows:stage=='battery'
+no-push rows: 8  <- rows:stage=='no_push'
+nonfinite rows: 0  <- rows:nonfinite
+rows with margin fields: 6920  <- rows:margin/top1/top2/emitted_logit/finish
+answers at the 80-token cap, n+: 375  <- rows:battery/n+ token_count==80
+mean token_count, n+: 67.457  <- rows:battery/n+ token_count mean
+answers at the 80-token cap, n±: 405  <- rows:battery/n± token_count==80
+mean token_count, n±: 68.543  <- rows:battery/n± token_count mean
+answers at the 80-token cap, k4: 436  <- rows:battery/k4 token_count==80
+mean token_count, k4: 70.2318  <- rows:battery/k4 token_count mean
+answers at the 80-token cap, k16: 383  <- rows:battery/k16 token_count==80
+mean token_count, k16: 68.7526  <- rows:battery/k16 token_count mean
+answers at the 80-token cap, k64: 359  <- rows:battery/k64 token_count==80
+mean token_count, k64: 68.5065  <- rows:battery/k64 token_count mean
+answers at the 80-token cap, k256: 372  <- rows:battery/k256 token_count==80
+mean token_count, k256: 69.6966  <- rows:battery/k256 token_count mean
+answers at the 80-token cap, k1024: 350  <- rows:battery/k1024 token_count==80
+mean token_count, k1024: 69.3633  <- rows:battery/k1024 token_count mean
+answers at the 80-token cap, full: 379  <- rows:battery/full token_count==80
+mean token_count, full: 70.2956  <- rows:battery/full token_count mean
+answers at the 80-token cap, iso: 349  <- rows:battery/iso token_count==80
+mean token_count, iso: 68.0078  <- rows:battery/iso token_count mean
+
+## Gates R1 to R3
+R1 every launch eager: True  <- load:loads[*].load.attn_implementation
+R1 last launch status: done  <- load:loads[-1].status
+R1/R3 record gates: True  <- load:record_gates
+R1/R3 reason: none  <- load:record_gates
+R1 device: xpu  <- load:loads[*].load.device
+R1 launches: 1  <- load:loads
+R1 distinct (model, revision, out_dir): 1  <- load:loads[*]
+R3 planned calls without a receipt: 0  <- load:calls[*] vs plan
+R3 pushed calls not in chunks of 8: 0  <- load:calls[*].chunks
+R3 no-push calls not one row: 0  <- load:calls[*].chunks
+R3 companion rows (discarded): 0  <- load:calls[*].chunks[*].companions
+R3 largest chunk rows: 8  <- load:calls[*].chunks[*].rows
+R2 input hashes: True  <- the design's 14 files:sha256
+R2 sha256 part164/units164.json: 4f146140e4dbc6d28b95ed937e6ccf72b9e712a641c721235628b5ec01627921  <- part164/units164.json:sha256
+R2 sha256 results/part112/medians.json: 65562b342818b46189a98ae18852e6a972d1b41a594f7ce1c442016aecd0f715  <- results/part112/medians.json:sha256
+R2 sha256 part153/battery153.py: e2032288651d65cafa2e60634f512470ec346f5ad093e8be7d6510df089d96a7  <- part153/battery153.py:sha256
+R2 sha256 part155/run155.py: 07b15c41a731e07fffe2b0a26d09a95b2c808a71a1020180096cfa41baac0fa5  <- part155/run155.py:sha256
+R2 sha256 part164/run164.py: 19d36e18a25f730dd37b1df46c06404a154f5b1e338a53c9cf04e70b909e7277  <- part164/run164.py:sha256
+R2 sha256 part165/run165.py: a967a8f21f1ff8a898ea28c4b874ef28060893fd709e391a610e0046bf061d48  <- part165/run165.py:sha256
+R2 sha256 part165/score165.py: 8c93f5921e9cdb69bc032f31ded81c77710c03bcdeec489fd29a1d9ee2fbe132  <- part165/score165.py:sha256
+R2 sha256 part86/triage86.py: 5e43bc9ff52148435f2ab733f8332653cef3b3826d788c061be50049743cc3ee  <- part86/triage86.py:sha256
+R2 sha256 part86/common86.py: 434879455a54f411de022f40006562d36d8f87244bee86fddf00dc8bc80bed16  <- part86/common86.py:sha256
+R2 sha256 part160/run160.py: ba5cb92bc110f9106daa5c56cc1df75a4ca2b93ade714a6d8536f7cb289066d5  <- part160/run160.py:sha256
+R2 sha256 part148/battery148.py: 52edb691a716a84ee88967404eb4901d655e125b02b4841b0e1f0af85ddc4434  <- part148/battery148.py:sha256
+R2 sha256 neuron_report.py: b56bfb07e17db090b48d00ce9d2876edbb3d57e709ac0a37e9d44fff080f2322  <- neuron_report.py:sha256
+R2 sha256 results/part165/norms.json: 746f8762030fef78dc3582eb8fee4ac1a3331dad7f24597ed489c7dee1067858  <- results/part165/norms.json:sha256
+R2 sha256 results/part165/answers.jsonl: 07d9585ccb153c510d01d423b2140a795de9b5c5f53e6afc638a2cdbaba06762  <- results/part165/answers.jsonl:sha256
+R2 ordered 8 prompts match the regenerated selection: True  <- rows:battery question_index 0..7
+R2 rerun questions: 8  <- rows:battery question_index
+R2 first differing question: null  <- rows:battery question_index
+R2 write norms equal the published norms (1e-6 relative): True  <- norms:directions[*].write_norm
+R2 directions outside 1e-6 relative: 0  <- norms:directions[*].write_norm
+R2 directions missing or extra: 0  <- norms:directions
+
+## Part 165 gates and verdicts (part165/score165.py)
+gate1_rows passed: True  <- rows:gates.gate1_rows.passed
+gate1_rows expected_rows: 6920  <- rows:gates.gate1_rows.expected_rows
+gate1_rows rows: 6920  <- rows:gates.gate1_rows.rows
+gate1_rows unique_rows: 6920  <- rows:gates.gate1_rows.unique_rows
+gate1_rows duplicates: 0  <- rows:gates.gate1_rows.duplicates
+gate1_rows nonempty_answers: 6920  <- rows:gates.gate1_rows.nonempty_answers
+gate2_no_push passed: True  <- rows:gates.gate2_no_push.passed
+gate2_no_push baseline_answers: 8  <- rows:gates.gate2_no_push.baseline_answers
+gate2_no_push broken_question_indices: []  <- rows:gates.gate2_no_push.broken_question_indices
+gate3_size passed: True  <- rows:gates.gate3_size.passed
+gate3_size expected_directions: 864  <- rows:gates.gate3_size.expected_directions
+gate3_size directions: 864  <- rows:gates.gate3_size.directions
+gate3_size unique_expected_directions: True  <- rows:gates.gate3_size.unique_expected_directions
+gate3_size duplicate_directions: 0  <- rows:gates.gate3_size.duplicate_directions
+gate3_size write_norm_failures: 0  <- rows:gates.gate3_size.write_norm_failures
+gate3_size iso_residual_failures: 0  <- rows:gates.gate3_size.iso_residual_failures
+gate3_size max_relative_write_error: 3.94895e-07  <- rows:gates.gate3_size.max_relative_write_error
+gate3_size max_iso_residual_fraction: 3.95998e-06  <- rows:gates.gate3_size.max_iso_residual_fraction
+gate4_measure_room passed: True  <- rows:gates.gate4_measure_room.passed
+gate4_measure_room n_plus_broken_rate: 0.282552  <- rows:gates.gate4_measure_room.n_plus_broken_rate
+gate4_measure_room minimum: 0.03  <- rows:gates.gate4_measure_room.minimum
+165.1 verdict: fail  <- rows:predictions.165.1.verdict
+165.1 estimate: 1.83898  <- rows:predictions.<key>.estimate_ratio
+165.1 published verdict: pass  <- results/part165/score.json:predictions.165.1.verdict
+165.1 published estimate: 2.69863  <- results/part165/score.json:predictions.<key>.estimate_ratio
+165.1 published distance from the bar: 0.69863  <- results/part210/margins.md:distances.165.1 n+ over full.distance
+165.1 rerun distance from the published value: -0.859647  <- rows:predictions.165.1 minus results/part210/margins.md:distances.165.1 n+ over full.estimate
+165.2 verdict: pass  <- rows:predictions.165.2.verdict
+165.2 estimate: -0.857143  <- rows:predictions.<key>.spearman.estimate
+165.2 published verdict: pass  <- results/part165/score.json:predictions.165.2.verdict
+165.2 published estimate: -0.857143  <- results/part165/score.json:predictions.<key>.spearman.estimate
+165.2 published distance from the bar: 0.0571429  <- results/part210/margins.md:distances.165.2 Spearman.distance
+165.2 rerun distance from the published value: 0  <- rows:predictions.165.2 minus results/part210/margins.md:distances.165.2 Spearman.estimate
+165.3 verdict: pass  <- rows:predictions.165.3.verdict
+165.3 estimate: 0.03125  <- rows:predictions.<key>.distances.to_n_pm - distances.to_full
+165.3 published verdict: pass  <- results/part165/score.json:predictions.165.3.verdict
+165.3 published estimate: 0.0520833  <- results/part165/score.json:predictions.<key>.distances.to_n_pm - distances.to_full
+165.3 published distance from the bar: 0.0520833  <- results/part210/margins.md:distances.165.3 k16 nearer full.distance
+165.3 rerun distance from the published value: null  <- rows:predictions.165.3 minus results/part210/margins.md:distances.165.3 k16 nearer full.estimate
+165.4 verdict: pass  <- rows:predictions.165.4.verdict
+165.4 estimate: 0.92735  <- rows:predictions.<key>.estimate_ratio
+165.4 published verdict: pass  <- results/part165/score.json:predictions.165.4.verdict
+165.4 published estimate: 1.01026  <- results/part165/score.json:predictions.<key>.estimate_ratio
+165.4 published distance from the bar: 0.340256  <- results/part210/margins.md:distances.165.4 n+ over n±.distance
+165.4 rerun distance from the published value: -0.082906  <- rows:predictions.165.4 minus results/part210/margins.md:distances.165.4 n+ over n±.estimate
+165.5 verdict: not read  <- rows:predictions.165.5.verdict
+165.5 estimate: 0.855932  <- rows:predictions.<key>.estimate_ratio
+165.5 published verdict: fail  <- results/part165/score.json:predictions.165.5.verdict
+165.5 published estimate: 0.835616  <- results/part165/score.json:predictions.<key>.estimate_ratio
+165.5 published distance from the bar: -0.0356164  <- results/part210/margins.md:distances.165.5 iso over full.distance
+165.5 rerun distance from the published value: 0.0203158  <- rows:predictions.165.5 minus results/part210/margins.md:distances.165.5 iso over full.estimate
+165.6 verdict: fail  <- rows:predictions.165.6.verdict
+165.6 estimate: 0.204124  <- rows:predictions.<key>.spearman.estimate
+165.6 published verdict: fail  <- results/part165/score.json:predictions.165.6.verdict
+165.6 published estimate: 0.204124  <- results/part165/score.json:predictions.<key>.spearman.estimate
+165.6 published distance from the bar: -0.804124  <- results/part210/margins.md:distances.165.6 Spearman.distance
+165.6 rerun distance from the published value: 0  <- rows:predictions.165.6 minus results/part210/margins.md:distances.165.6 Spearman.estimate
+165.6 usable draws: 6525  <- rows:predictions.165.6.spearman.usable_draws
+165.6 bootstrap replicates: 10000  <- rows:predictions.165.6.spearman.bootstrap_replicates
+165.6 interval: 0.20412414523193148 to 0.20412414523193148  <- rows:predictions.165.6.spearman.interval_95
+165.6 interval collapsed (not informative): True  <- rows:predictions.165.6.spearman.interval_95
+broken rate n+: 0.282552  <- rows:rates.broken.n+
+changed rate n+: 1  <- rows:rates.changed.n+
+broken rate n±: 0.304688  <- rows:rates.broken.n±
+changed rate n±: 1  <- rows:rates.changed.n±
+broken rate k4: 0.317708  <- rows:rates.broken.k4
+changed rate k4: 1  <- rows:rates.changed.k4
+broken rate k16: 0.213542  <- rows:rates.broken.k16
+changed rate k16: 0.998698  <- rows:rates.changed.k16
+broken rate k64: 0.177083  <- rows:rates.broken.k64
+changed rate k64: 1  <- rows:rates.changed.k64
+broken rate k256: 0.144531  <- rows:rates.broken.k256
+changed rate k256: 1  <- rows:rates.changed.k256
+broken rate k1024: 0.106771  <- rows:rates.broken.k1024
+changed rate k1024: 1  <- rows:rates.changed.k1024
+broken rate full: 0.153646  <- rows:rates.broken.full
+changed rate full: 1  <- rows:rates.changed.full
+broken rate iso: 0.13151  <- rows:rates.broken.iso
+changed rate iso: 1  <- rows:rates.changed.iso
+
+## Predictions
+210.1 gates R1-R3 and Part 165's four gates pass: True  <- all gates above:all
+210.2 165.1-165.4 hold and 165.5-165.6 fail, as published, gates passed: False  <- rows:predictions.*.verdict
+210.3 n+ over full broken ratio above 1.5: True  <- rows:predictions.165.1.estimate_ratio
+210.4 at least 300 of 768 at the cap in each arm: True  <- rows:battery/* token_count==80
+210.4 n+ at cap: 375 of 768  <- rows:battery/n+ token_count==80
+210.4 n± at cap: 405 of 768  <- rows:battery/n± token_count==80
+210.4 k4 at cap: 436 of 768  <- rows:battery/k4 token_count==80
+210.4 k16 at cap: 383 of 768  <- rows:battery/k16 token_count==80
+210.4 k64 at cap: 359 of 768  <- rows:battery/k64 token_count==80
+210.4 k256 at cap: 372 of 768  <- rows:battery/k256 token_count==80
+210.4 k1024 at cap: 350 of 768  <- rows:battery/k1024 token_count==80
+210.4 full at cap: 379 of 768  <- rows:battery/full token_count==80
+210.4 iso at cap: 349 of 768  <- rows:battery/iso token_count==80
+210.7 primary-broken rate higher in at least 8 of 9 arms: True  <- rows:rates.broken vs published
+210.7 arms higher: n+, n±, k4, k16, k64, k256, k1024, full, iso  <- rows:rates.broken vs published
+
+## Shape replicate
+replicate rows: 200  <- replicate:len
+replicate rows matched to a battery row: 162  <- replicate:run165.row_key
+replicate texts that differ from the chunk-of-8 text: 154  <- replicate:answer vs rows answer
+210.6 between 40 and 110 of the 200 differ: False  <- replicate:answer vs rows answer
+replicate pairs starting broken true / false: 65 / 97  <- replicate:floor_labels(broken)
+replicate pairs starting triage true / false: 21 / 141  <- replicate:floor_labels(triage)
+replicate pairs starting loop true / false: 65 / 97  <- replicate:floor_labels(loop)
+replicate pairs starting short true / false: 1 / 161  <- replicate:floor_labels(short)
+stability independent 165.1: 1  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.1.sensitivity
+inside shape floor (<0.95) independent 165.1: False  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.1.sensitivity
+stability independent 165.2: 0.232  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.2.sensitivity
+inside shape floor (<0.95) independent 165.2: True  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.2.sensitivity
+stability independent 165.3: 0.512  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.3.sensitivity
+inside shape floor (<0.95) independent 165.3: True  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.3.sensitivity
+stability independent 165.4: 1  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.4.sensitivity
+inside shape floor (<0.95) independent 165.4: False  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.4.sensitivity
+stability independent 165.5: 1  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.5.sensitivity
+inside shape floor (<0.95) independent 165.5: False  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.5.sensitivity
+stability independent gate:gate1_rows: 1  <- rows+replicate:shape_floor.scenarios.independent.verdicts.gate:gate1_rows.sensitivity
+inside shape floor (<0.95) independent gate:gate1_rows: False  <- rows+replicate:shape_floor.scenarios.independent.verdicts.gate:gate1_rows.sensitivity
+stability independent gate:gate2_no_push: 1  <- rows+replicate:shape_floor.scenarios.independent.verdicts.gate:gate2_no_push.sensitivity
+inside shape floor (<0.95) independent gate:gate2_no_push: False  <- rows+replicate:shape_floor.scenarios.independent.verdicts.gate:gate2_no_push.sensitivity
+stability independent gate:gate3_size: 1  <- rows+replicate:shape_floor.scenarios.independent.verdicts.gate:gate3_size.sensitivity
+inside shape floor (<0.95) independent gate:gate3_size: False  <- rows+replicate:shape_floor.scenarios.independent.verdicts.gate:gate3_size.sensitivity
+stability independent gate:gate4_measure_room: 1  <- rows+replicate:shape_floor.scenarios.independent.verdicts.gate:gate4_measure_room.sensitivity
+inside shape floor (<0.95) independent gate:gate4_measure_room: False  <- rows+replicate:shape_floor.scenarios.independent.verdicts.gate:gate4_measure_room.sensitivity
+stability shared-change-0.5 165.1: 1  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.1.sensitivity
+inside shape floor (<0.95) shared-change-0.5 165.1: False  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.1.sensitivity
+stability shared-change-0.5 165.2: 0.212  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.2.sensitivity
+inside shape floor (<0.95) shared-change-0.5 165.2: True  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.2.sensitivity
+stability shared-change-0.5 165.3: 0.521  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.3.sensitivity
+inside shape floor (<0.95) shared-change-0.5 165.3: True  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.3.sensitivity
+stability shared-change-0.5 165.4: 1  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.4.sensitivity
+inside shape floor (<0.95) shared-change-0.5 165.4: False  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.4.sensitivity
+stability shared-change-0.5 165.5: 1  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.5.sensitivity
+inside shape floor (<0.95) shared-change-0.5 165.5: False  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.5.sensitivity
+stability shared-change-0.5 gate:gate1_rows: 1  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.gate:gate1_rows.sensitivity
+inside shape floor (<0.95) shared-change-0.5 gate:gate1_rows: False  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.gate:gate1_rows.sensitivity
+stability shared-change-0.5 gate:gate2_no_push: 1  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.gate:gate2_no_push.sensitivity
+inside shape floor (<0.95) shared-change-0.5 gate:gate2_no_push: False  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.gate:gate2_no_push.sensitivity
+stability shared-change-0.5 gate:gate3_size: 1  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.gate:gate3_size.sensitivity
+inside shape floor (<0.95) shared-change-0.5 gate:gate3_size: False  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.gate:gate3_size.sensitivity
+stability shared-change-0.5 gate:gate4_measure_room: 1  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.gate:gate4_measure_room.sensitivity
+inside shape floor (<0.95) shared-change-0.5 gate:gate4_measure_room: False  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.gate:gate4_measure_room.sensitivity
+stability shared-change-1 165.1: 1  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.1.sensitivity
+inside shape floor (<0.95) shared-change-1 165.1: False  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.1.sensitivity
+stability shared-change-1 165.2: 0.209  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.2.sensitivity
+inside shape floor (<0.95) shared-change-1 165.2: True  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.2.sensitivity
+stability shared-change-1 165.3: 0.492  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.3.sensitivity
+inside shape floor (<0.95) shared-change-1 165.3: True  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.3.sensitivity
+stability shared-change-1 165.4: 1  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.4.sensitivity
+inside shape floor (<0.95) shared-change-1 165.4: False  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.4.sensitivity
+stability shared-change-1 165.5: 1  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.5.sensitivity
+inside shape floor (<0.95) shared-change-1 165.5: False  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.5.sensitivity
+stability shared-change-1 gate:gate1_rows: 1  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.gate:gate1_rows.sensitivity
+inside shape floor (<0.95) shared-change-1 gate:gate1_rows: False  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.gate:gate1_rows.sensitivity
+stability shared-change-1 gate:gate2_no_push: 1  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.gate:gate2_no_push.sensitivity
+inside shape floor (<0.95) shared-change-1 gate:gate2_no_push: False  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.gate:gate2_no_push.sensitivity
+stability shared-change-1 gate:gate3_size: 1  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.gate:gate3_size.sensitivity
+inside shape floor (<0.95) shared-change-1 gate:gate3_size: False  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.gate:gate3_size.sensitivity
+stability shared-change-1 gate:gate4_measure_room: 1  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.gate:gate4_measure_room.sensitivity
+inside shape floor (<0.95) shared-change-1 gate:gate4_measure_room: False  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.gate:gate4_measure_room.sensitivity
+stability upper-marginal-independent 165.1: 1  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.165.1.sensitivity
+inside shape floor (<0.95) upper-marginal-independent 165.1: False  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.165.1.sensitivity
+stability upper-marginal-independent 165.2: 0.195  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.165.2.sensitivity
+inside shape floor (<0.95) upper-marginal-independent 165.2: True  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.165.2.sensitivity
+stability upper-marginal-independent 165.3: 0.481  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.165.3.sensitivity
+inside shape floor (<0.95) upper-marginal-independent 165.3: True  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.165.3.sensitivity
+stability upper-marginal-independent 165.4: 1  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.165.4.sensitivity
+inside shape floor (<0.95) upper-marginal-independent 165.4: False  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.165.4.sensitivity
+stability upper-marginal-independent 165.5: 1  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.165.5.sensitivity
+inside shape floor (<0.95) upper-marginal-independent 165.5: False  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.165.5.sensitivity
+stability upper-marginal-independent gate:gate1_rows: 1  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.gate:gate1_rows.sensitivity
+inside shape floor (<0.95) upper-marginal-independent gate:gate1_rows: False  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.gate:gate1_rows.sensitivity
+stability upper-marginal-independent gate:gate2_no_push: 1  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.gate:gate2_no_push.sensitivity
+inside shape floor (<0.95) upper-marginal-independent gate:gate2_no_push: False  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.gate:gate2_no_push.sensitivity
+stability upper-marginal-independent gate:gate3_size: 1  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.gate:gate3_size.sensitivity
+inside shape floor (<0.95) upper-marginal-independent gate:gate3_size: False  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.gate:gate3_size.sensitivity
+stability upper-marginal-independent gate:gate4_measure_room: 1  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.gate:gate4_measure_room.sensitivity
+inside shape floor (<0.95) upper-marginal-independent gate:gate4_measure_room: False  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.gate:gate4_measure_room.sensitivity
+165.6 stability: floor not informative: changed is constant  <- rows+replicate:changed left out
+shape floor redraws with no donor text: 1718050  <- rows+replicate:shape_floor.no_donor_substitutions
+shape floor draws projected onto a possible label set: 2163960  <- rows+replicate:shape_floor.projected_label_draws
+
+## Headline
+headline reading withdrawn: False  <- gates above:R1,R2,R3,Part165 gates
+

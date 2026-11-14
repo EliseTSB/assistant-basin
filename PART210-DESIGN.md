@@ -140,3 +140,21 @@ What had been seen before this fix: the chain log's step exit codes, the gate's 
 first off-plan receipt's row ids against its planned call's (row keys only). No answer, margin, label, count, score or
 prediction had been read, and `score210.py` had not been run. No prediction, gate threshold, row or reading rule
 changes.
+
+## Amendment 2 (2026-11-14 07:42 CT, after the scores were seen)
+
+`score210.py` had no code for prediction 210.5 ("The n+ over full broken ratio is lower on the rerun than the published
+2.69863"). It printed 210.1 to 210.4, 210.6 and 210.7 and silently left 210.5 out, which was found only on reading the
+first scored output (`results/part210/score.md`, written 07:40). **The rule was added after every other number in that
+output had been seen**, and is the registered text unchanged: `p2105 = ratio < 2.69863` on the same
+`predictions.165.1.estimate_ratio` that 210.3 reads. Its test (`test_210_5_reads_the_ratio_against_the_published_2_69863`)
+passes a 1.5 ratio and refuses a 3.0, and goes red when the comparison is reversed.
+
+The scored output on disk was computed before this change, so 210.5 is read by hand from its own line,
+`165.1 estimate: 1.83898  <- rows:predictions.<key>.estimate_ratio`: 1.83898 is lower than 2.69863, so **210.5 holds**.
+A rerun of the scorer prints the same reading from the code. No other prediction, gate, threshold or reading rule
+changes.
+
+Also recorded: the scorer's peak resident memory was 6,287,148 kB (`/usr/bin/time -v`), against the 6 GiB cap it ran
+under (6,291,456 kB), after a first run at a 1.5 GB cap was killed by the OOM killer at 53 CPU minutes. A rerun needs a
+larger cap. Wall time 54 min 36 s, almost all of it the shape floor's 1,000 redraws.
