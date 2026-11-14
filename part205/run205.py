@@ -128,9 +128,21 @@ def write_models_json(path, env):
 class Runner:
     """Runs one prompt through the model, with optional hooks, and returns the readout and site tensors."""
 
-    def __init__(self, model, tok, units, letter_ids):
+    def __init__(self, model, tok, units, letter_ids, freeze=True):
         import torch
         self.model = model
+        # Amendment 4 (2026-11-14): the backward pass needs gradients at the sites only. With the weights left
+        # requiring grad (from_pretrained's default; neuron_report.load_model only turns autograd off globally), every
+        # ranking pass also built a gradient for all 4B weights: 18.3 GB peak on the 16 GB A770, and both qwen-chat
+        # attempts died with Level Zero UR_RESULT_ERROR_UNKNOWN. Frozen weights plus an embedding output that requires
+        # grad (so every site input downstream carries a graph) gave bit-identical estimates at 8.7 GB peak
+        # (results/part205/probe_freeze205.json). The hook acts only while grad is enabled.
+        self._freeze_hook = None
+        if freeze:
+            model.requires_grad_(False)
+            self._freeze_hook = model.get_input_embeddings().register_forward_hook(
+                lambda _m, _a, out: out.requires_grad_(True)
+                if torch.is_grad_enabled() and not out.requires_grad else out)
         self.tok = tok
         self.units = units
         self.layers = C.text_layers(model)
@@ -809,14 +821,17 @@ def _effect_per_part(units, held, names, you, base, span):
 
 
 def _save_acts(path, acts, grads):
+    # Amendment 5 (2026-11-14): numpy has no bfloat16, so a Qwen stage on the A770 (bf16 sites) died here with
+    # "Got unsupported ScalarType BFloat16"; family O ran float32 on the CPU and never reached this. Widening bf16 to
+    # float32 is exact, and no scorer reads this file.
     import numpy as np
     arrays = {}
     for qid, d in acts.items():
         for site, x in d.items():
-            arrays[f"act|{qid}|{site}"] = x.numpy()
+            arrays[f"act|{qid}|{site}"] = x.float().numpy()
     for qid, d in grads.items():
         for site, x in d.items():
-            arrays[f"grad|{qid}|{site}"] = x.numpy()
+            arrays[f"grad|{qid}|{site}"] = x.float().numpy()
     C.atomic_savez(path, **arrays)
 
 

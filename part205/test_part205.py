@@ -1611,3 +1611,68 @@ def test_family_q_loader_finds_neuron_report_under_python_isolated_mode(tmp_path
                        cwd=str(tmp_path / "part205"), capture_output=True, text=True, timeout=120)
     assert r.returncode == 0, r.stderr[-600:]
     assert "stub at the job-folder root" in r.stdout
+
+
+@pytest.mark.parametrize("family", ["O", "Q"])
+def test_frozen_runner_gives_identical_site_gradients_and_builds_no_weight_gradient(family, olmo_tok, qwen_tok):
+    """Amendment 4 (2026-11-14): Runner freezes the weights and marks the embedding output as requiring grad, so a
+    ranking pass builds gradients at the sites only (18.3 GB -> 8.7 GB peak on the A770 for Qwen3.5-4B). The site
+    activations, gradients and estimates must equal the unfrozen runner's exactly, and no weight may hold a gradient.
+    Break: drop the embedding hook (register_hook on a site input then fails: nothing requires grad), or freeze=False
+    by default (the weight-gradient assert goes red)."""
+    tok = olmo_tok if family == "O" else qwen_tok
+    make = tiny_olmo if family == "O" else tiny_qwen
+    prompts = C.load_prompts()
+    text, it = text_for(prompts, "You", "kindness", 1)
+    ids = {"A": C.option_token_ids(tok, "A"), "B": C.option_token_ids(tok, "B")}
+    m_ref = make()
+    units = C.units_for(m_ref)
+    with torch.enable_grad():
+        _, read_ref, acts_ref, grads_ref = R.Runner(m_ref, tok, units, ids, freeze=False).run(
+            text, need_grad=True, consistent=it["consistent"])
+    m = make()
+    runner = R.Runner(m, tok, C.units_for(m), ids)
+    with torch.enable_grad():
+        _, read, acts, grads = runner.run(text, need_grad=True, consistent=it["consistent"])
+    assert read == read_ref
+    assert set(grads) == set(grads_ref) and grads
+    for k in grads_ref:
+        assert torch.equal(acts[k], acts_ref[k]), k
+        assert torch.equal(grads[k], grads_ref[k]), k
+    assert torch.equal(C.estimates_for_prompt(acts, grads, units), C.estimates_for_prompt(acts_ref, grads_ref, units))
+    assert all(p.grad is None for p in m.parameters())
+    assert any(p.grad is not None for p in m_ref.parameters())
+
+
+def test_save_acts_takes_bf16_sites_and_keeps_their_values_exactly(tmp_path):
+    """Amendment 5 (2026-11-14): qwen-chat on the A770 died in _save_acts with "Got unsupported ScalarType BFloat16"
+    (numpy has no bf16). The saved arrays are float32 and equal the bf16 values exactly; float32 inputs are unchanged."""
+    import numpy as np
+    g = torch.Generator().manual_seed(205)
+    a16 = torch.randn(1, 5, 8, generator=g).to(torch.bfloat16)
+    g16 = torch.randn(1, 5, 8, generator=g).to(torch.bfloat16)
+    a32 = torch.randn(1, 5, 8, generator=g)
+    p = tmp_path / "copy_acts.npz"
+    R._save_acts(p, {"q1": {"mlp:3": a16}, "q2": {"mlp:3": a32}}, {"q1": {"mlp:3": g16}})
+    with np.load(p) as z:
+        assert z["act|q1|mlp:3"].dtype == np.float32
+        assert np.array_equal(z["act|q1|mlp:3"], a16.float().numpy())
+        assert np.array_equal(z["grad|q1|mlp:3"], g16.float().numpy())
+        assert np.array_equal(z["act|q2|mlp:3"], a32.numpy())
+
+
+def test_controls_stage_runs_end_to_end_on_a_bf16_qwen(tmp_path, cfg, prompts, qwen_tok):
+    """Amendment 5 (2026-11-14): family O ran float32 on the CPU, so no test had run a stage in bf16; qwen-chat died
+    after its ranking block in _save_acts. The REAL run_stage, controls mode, on a tiny Qwen3.5 cast to bf16, must
+    finish and write the controls arms."""
+    c = tiny_cfg(cfg, family="Q", top_k=4)
+    args = stage_args(tmp_path)
+    args.arms = "controls"
+    R.run_stage(args, model=tiny_qwen().to(torch.bfloat16), tok=qwen_tok, env={"family": "Q", "stage": "tiny"},
+                prompts=prompts, cfg=c)
+    d = tmp_path / "tiny"
+    for f in ("ranking.npz", "copy_acts.npz", "sets.json", "records.jsonl", "meta.json"):
+        assert (d / f).exists(), f
+    arms = {r["arm"] for r in records(d)}
+    assert {"ranking", "you", "baseline", "do_nothing"} <= arms
+    assert not arms & {"do_copy", "say_copy", "swap", "reverse"}
