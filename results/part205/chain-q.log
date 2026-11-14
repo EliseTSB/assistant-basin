@@ -1,14 +1,13 @@
-Running as unit: chain-205q-060957.scope; invocation ID: e6116e42c38241f389c5d97f3ee8641e
-06:09:57 G1 already passed (results/part205/g1/g1.json); skipped
+Running as unit: chain-205q-074822.scope; invocation ID: 003a9d36828f4f28a4cac3bb189254cf
+07:48:22 G1 already passed (results/part205/g1/g1.json); skipped
 launching from /home/elisepc/green/worktrees/ab-part201
-06:09:58 attempt 1 free=10.6
-06:10:43 attempt 1 free=13.7
-06:10:44 running job.py processes=0 --ignore-busy
-STARTED: 06:10:45 step 1 start: -I -B part205/run205.py --stage qwen-chat --out results/part205 --device xpu --check-pool --arms controls (ram_avail 13.7G)
-06:29:12 step 1 rc=1
-06:29:53 attempt 2 free=14.2
-06:29:53 running job.py processes=0 --ignore-busy
-STARTED: 06:29:54 step 1 start: -I -B part205/run205.py --stage qwen-chat --out results/part205 --device xpu --check-pool --arms controls (ram_avail 14.2G)
-06:44:43 step 1 rc=1
+07:48:23 attempt 1 free=13.3
+07:48:23 running job.py processes=0 --ignore-busy
+STARTED: 07:48:25 step 1 start: -I -B part205/run205.py --stage qwen-chat --out results/part205 --device xpu --check-pool --arms controls (ram_avail 13.3G)
+09:24:12 step 1 rc=1
+09:24:51 attempt 2 free=14.3
+09:24:51 running job.py processes=0 --ignore-busy
+STARTED: 09:24:52 step 1 start: -I -B part205/run205.py --stage qwen-chat --out results/part205 --device xpu --check-pool --arms controls (ram_avail 14.3G)
+09:25:29 step 1 rc=1
 step failed after 2 attempts: -I -B part205/run205.py --stage qwen-chat --out results/part205 --device xpu --check-pool --arms controls
 PART205 QWEN-CHAT FAILED

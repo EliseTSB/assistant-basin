@@ -501,3 +501,16 @@ gradient; dropping the hook or the freeze turns it red. Family O's six stages ra
 gradients they used are the same quantities, so nothing there is rerun. The 18 qwen-chat ranking records from the
 failed attempts are kept: the resume rule reruns the ranking block whole, and the probe shows the estimates unchanged.
 No prediction, gate, threshold, arm, seed or reading rule changes.
+
+## Amendment 5 (2026-11-14 09:35 CT, after a family Q launch failure, before any Qwen value is read)
+
+The qwen-chat stage ran its ranking block to the end on the frozen runner (Amendment 4; `ranking.npz` written 09:23)
+and then died twice in `_save_acts` with `TypeError: Got unsupported ScalarType BFloat16`: numpy has no bfloat16,
+and family Q's sites are bf16 on the A770. Family O ran float32 on the CPU, so no stage and no test had ever saved
+bf16 sites. `_save_acts` now widens each tensor to float32 before `.numpy()`. The widening is exact, float32
+inputs are unchanged, and `score205.py` reads neither `copy_acts.npz` nor `effect.npz`, so no scored value can
+move. A sweep of every `.numpy()` in `part205/` found no other call without a float conversion. Two tests: the
+saved values equal the bf16 values exactly, and the REAL `run_stage` in controls mode finishes on a tiny Qwen3.5
+cast to bf16 (no test had run a stage in bf16 before). Both are red with the old line. The stage resumes from its
+records and `ranking.npz`; `records.jsonl` holds 48 ranking and 24 You records with no duplicate keys.
+No prediction, gate, threshold, arm, seed or reading rule changes.
