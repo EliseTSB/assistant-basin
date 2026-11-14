@@ -145,6 +145,7 @@ changed rate iso: 1  <- rows:rates.changed.iso
 210.1 gates R1-R3 and Part 165's four gates pass: True  <- all gates above:all
 210.2 165.1-165.4 hold and 165.5-165.6 fail, as published, gates passed: False  <- rows:predictions.*.verdict
 210.3 n+ over full broken ratio above 1.5: True  <- rows:predictions.165.1.estimate_ratio
+210.5 n+ over full broken ratio lower than the published 2.69863: True  <- rows:predictions.165.1.estimate_ratio
 210.4 at least 300 of 768 at the cap in each arm: True  <- rows:battery/* token_count==80
 210.4 n+ at cap: 375 of 768  <- rows:battery/n+ token_count==80
 210.4 n± at cap: 405 of 768  <- rows:battery/n± token_count==80
@@ -160,23 +161,24 @@ changed rate iso: 1  <- rows:rates.changed.iso
 
 ## Shape replicate
 replicate rows: 200  <- replicate:len
-replicate rows matched to a battery row: 162  <- replicate:run165.row_key
-replicate texts that differ from the chunk-of-8 text: 154  <- replicate:answer vs rows answer
-210.6 between 40 and 110 of the 200 differ: False  <- replicate:answer vs rows answer
-replicate pairs starting broken true / false: 65 / 97  <- replicate:floor_labels(broken)
-replicate pairs starting triage true / false: 21 / 141  <- replicate:floor_labels(triage)
-replicate pairs starting loop true / false: 65 / 97  <- replicate:floor_labels(loop)
-replicate pairs starting short true / false: 1 / 161  <- replicate:floor_labels(short)
-stability independent 165.1: 1  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.1.sensitivity
-inside shape floor (<0.95) independent 165.1: False  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.1.sensitivity
-stability independent 165.2: 0.232  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.2.sensitivity
-inside shape floor (<0.95) independent 165.2: True  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.2.sensitivity
-stability independent 165.3: 0.512  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.3.sensitivity
-inside shape floor (<0.95) independent 165.3: True  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.3.sensitivity
+replicate rows matched to a battery row: 200  <- replicate:row_id rep|<battery row_id>
+replicate texts that differ from the chunk-of-8 text: 84  <- replicate:answer vs rows answer
+210.6 between 40 and 110 of the 200 differ: True  <- replicate:answer vs rows answer
+replicate pairs starting broken true / false: 101 / 99  <- replicate:floor_labels(broken)
+replicate pairs starting triage true / false: 32 / 168  <- replicate:floor_labels(triage)
+replicate pairs starting loop true / false: 101 / 99  <- replicate:floor_labels(loop)
+replicate pairs starting short true / false: 1 / 199  <- replicate:floor_labels(short)
+shape floor replicate pairs: 200  <- rows+replicate:shape_floor.replicate_pairs
+stability independent 165.1: 0.89  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.1.sensitivity
+inside shape floor (<0.95) independent 165.1: True  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.1.sensitivity
+stability independent 165.2: 0.986  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.2.sensitivity
+inside shape floor (<0.95) independent 165.2: False  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.2.sensitivity
+stability independent 165.3: 0.958  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.3.sensitivity
+inside shape floor (<0.95) independent 165.3: False  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.3.sensitivity
 stability independent 165.4: 1  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.4.sensitivity
 inside shape floor (<0.95) independent 165.4: False  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.4.sensitivity
-stability independent 165.5: 1  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.5.sensitivity
-inside shape floor (<0.95) independent 165.5: False  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.5.sensitivity
+stability independent 165.5: 0.89  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.5.sensitivity
+inside shape floor (<0.95) independent 165.5: True  <- rows+replicate:shape_floor.scenarios.independent.verdicts.165.5.sensitivity
 stability independent gate:gate1_rows: 1  <- rows+replicate:shape_floor.scenarios.independent.verdicts.gate:gate1_rows.sensitivity
 inside shape floor (<0.95) independent gate:gate1_rows: False  <- rows+replicate:shape_floor.scenarios.independent.verdicts.gate:gate1_rows.sensitivity
 stability independent gate:gate2_no_push: 1  <- rows+replicate:shape_floor.scenarios.independent.verdicts.gate:gate2_no_push.sensitivity
@@ -185,16 +187,16 @@ stability independent gate:gate3_size: 1  <- rows+replicate:shape_floor.scenario
 inside shape floor (<0.95) independent gate:gate3_size: False  <- rows+replicate:shape_floor.scenarios.independent.verdicts.gate:gate3_size.sensitivity
 stability independent gate:gate4_measure_room: 1  <- rows+replicate:shape_floor.scenarios.independent.verdicts.gate:gate4_measure_room.sensitivity
 inside shape floor (<0.95) independent gate:gate4_measure_room: False  <- rows+replicate:shape_floor.scenarios.independent.verdicts.gate:gate4_measure_room.sensitivity
-stability shared-change-0.5 165.1: 1  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.1.sensitivity
-inside shape floor (<0.95) shared-change-0.5 165.1: False  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.1.sensitivity
-stability shared-change-0.5 165.2: 0.212  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.2.sensitivity
-inside shape floor (<0.95) shared-change-0.5 165.2: True  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.2.sensitivity
-stability shared-change-0.5 165.3: 0.521  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.3.sensitivity
-inside shape floor (<0.95) shared-change-0.5 165.3: True  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.3.sensitivity
+stability shared-change-0.5 165.1: 0.891  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.1.sensitivity
+inside shape floor (<0.95) shared-change-0.5 165.1: True  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.1.sensitivity
+stability shared-change-0.5 165.2: 0.984  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.2.sensitivity
+inside shape floor (<0.95) shared-change-0.5 165.2: False  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.2.sensitivity
+stability shared-change-0.5 165.3: 0.959  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.3.sensitivity
+inside shape floor (<0.95) shared-change-0.5 165.3: False  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.3.sensitivity
 stability shared-change-0.5 165.4: 1  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.4.sensitivity
 inside shape floor (<0.95) shared-change-0.5 165.4: False  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.4.sensitivity
-stability shared-change-0.5 165.5: 1  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.5.sensitivity
-inside shape floor (<0.95) shared-change-0.5 165.5: False  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.5.sensitivity
+stability shared-change-0.5 165.5: 0.891  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.5.sensitivity
+inside shape floor (<0.95) shared-change-0.5 165.5: True  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.165.5.sensitivity
 stability shared-change-0.5 gate:gate1_rows: 1  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.gate:gate1_rows.sensitivity
 inside shape floor (<0.95) shared-change-0.5 gate:gate1_rows: False  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.gate:gate1_rows.sensitivity
 stability shared-change-0.5 gate:gate2_no_push: 1  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.gate:gate2_no_push.sensitivity
@@ -203,16 +205,16 @@ stability shared-change-0.5 gate:gate3_size: 1  <- rows+replicate:shape_floor.sc
 inside shape floor (<0.95) shared-change-0.5 gate:gate3_size: False  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.gate:gate3_size.sensitivity
 stability shared-change-0.5 gate:gate4_measure_room: 1  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.gate:gate4_measure_room.sensitivity
 inside shape floor (<0.95) shared-change-0.5 gate:gate4_measure_room: False  <- rows+replicate:shape_floor.scenarios.shared-change-0.5.verdicts.gate:gate4_measure_room.sensitivity
-stability shared-change-1 165.1: 1  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.1.sensitivity
-inside shape floor (<0.95) shared-change-1 165.1: False  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.1.sensitivity
-stability shared-change-1 165.2: 0.209  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.2.sensitivity
-inside shape floor (<0.95) shared-change-1 165.2: True  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.2.sensitivity
-stability shared-change-1 165.3: 0.492  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.3.sensitivity
-inside shape floor (<0.95) shared-change-1 165.3: True  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.3.sensitivity
+stability shared-change-1 165.1: 0.882  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.1.sensitivity
+inside shape floor (<0.95) shared-change-1 165.1: True  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.1.sensitivity
+stability shared-change-1 165.2: 0.989  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.2.sensitivity
+inside shape floor (<0.95) shared-change-1 165.2: False  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.2.sensitivity
+stability shared-change-1 165.3: 0.962  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.3.sensitivity
+inside shape floor (<0.95) shared-change-1 165.3: False  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.3.sensitivity
 stability shared-change-1 165.4: 1  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.4.sensitivity
 inside shape floor (<0.95) shared-change-1 165.4: False  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.4.sensitivity
-stability shared-change-1 165.5: 1  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.5.sensitivity
-inside shape floor (<0.95) shared-change-1 165.5: False  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.5.sensitivity
+stability shared-change-1 165.5: 0.882  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.5.sensitivity
+inside shape floor (<0.95) shared-change-1 165.5: True  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.165.5.sensitivity
 stability shared-change-1 gate:gate1_rows: 1  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.gate:gate1_rows.sensitivity
 inside shape floor (<0.95) shared-change-1 gate:gate1_rows: False  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.gate:gate1_rows.sensitivity
 stability shared-change-1 gate:gate2_no_push: 1  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.gate:gate2_no_push.sensitivity
@@ -223,9 +225,9 @@ stability shared-change-1 gate:gate4_measure_room: 1  <- rows+replicate:shape_fl
 inside shape floor (<0.95) shared-change-1 gate:gate4_measure_room: False  <- rows+replicate:shape_floor.scenarios.shared-change-1.verdicts.gate:gate4_measure_room.sensitivity
 stability upper-marginal-independent 165.1: 1  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.165.1.sensitivity
 inside shape floor (<0.95) upper-marginal-independent 165.1: False  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.165.1.sensitivity
-stability upper-marginal-independent 165.2: 0.195  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.165.2.sensitivity
+stability upper-marginal-independent 165.2: 0.933  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.165.2.sensitivity
 inside shape floor (<0.95) upper-marginal-independent 165.2: True  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.165.2.sensitivity
-stability upper-marginal-independent 165.3: 0.481  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.165.3.sensitivity
+stability upper-marginal-independent 165.3: 0.902  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.165.3.sensitivity
 inside shape floor (<0.95) upper-marginal-independent 165.3: True  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.165.3.sensitivity
 stability upper-marginal-independent 165.4: 1  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.165.4.sensitivity
 inside shape floor (<0.95) upper-marginal-independent 165.4: False  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.165.4.sensitivity
@@ -240,8 +242,8 @@ inside shape floor (<0.95) upper-marginal-independent gate:gate3_size: False  <-
 stability upper-marginal-independent gate:gate4_measure_room: 1  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.gate:gate4_measure_room.sensitivity
 inside shape floor (<0.95) upper-marginal-independent gate:gate4_measure_room: False  <- rows+replicate:shape_floor.scenarios.upper-marginal-independent.verdicts.gate:gate4_measure_room.sensitivity
 165.6 stability: floor not informative: changed is constant  <- rows+replicate:changed left out
-shape floor redraws with no donor text: 1718050  <- rows+replicate:shape_floor.no_donor_substitutions
-shape floor draws projected onto a possible label set: 2163960  <- rows+replicate:shape_floor.projected_label_draws
+shape floor redraws with no donor text: 632873  <- rows+replicate:shape_floor.no_donor_substitutions
+shape floor draws projected onto a possible label set: 828255  <- rows+replicate:shape_floor.projected_label_draws
 
 ## Headline
 headline reading withdrawn: False  <- gates above:R1,R2,R3,Part165 gates

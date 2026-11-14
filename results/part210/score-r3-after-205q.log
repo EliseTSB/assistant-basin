@@ -1,0 +1,6 @@
+Running as unit: score210-wait-095405.scope; invocation ID: f46f2e13f6fb4009a72cac993b417095
+09:54:05 chain-205q ended; scoring
+10:41:33 score210 rc=0
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 47:27.69
+	Maximum resident set size (kbytes): 1573308
+PART210-SCORE-R3-DONE
