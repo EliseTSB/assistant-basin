@@ -1,0 +1,36 @@
+{
+ "env": {
+  "model_id": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "dtype": "torch.bfloat16",
+  "device": "xpu",
+  "attn_implementation": "eager"
+ },
+ "A1": {
+  "label": "A1 current code (weights require grad)",
+  "seconds": 60.99,
+  "peak_alloc_gb": 18.28,
+  "params_with_grad": 426
+ },
+ "A2": {
+  "label": "A2 current code again (run-to-run)",
+  "seconds": 61.28,
+  "peak_alloc_gb": 18.29,
+  "params_with_grad": 426
+ },
+ "B1": {
+  "label": "B1 weights frozen, embedding output requires grad",
+  "seconds": 55.88,
+  "peak_alloc_gb": 8.68,
+  "params_with_grad": 0
+ },
+ "A1_vs_A2": {
+  "max_abs": 0.0,
+  "equal": true
+ },
+ "A1_vs_B1": {
+  "max_abs": 0.0,
+  "equal": true,
+  "max_abs_est": 3.57177734375
+ }
+}
