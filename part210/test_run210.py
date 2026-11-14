@@ -681,3 +681,22 @@ def test_the_replicate_rows_carry_the_margin_fields_and_part_165s_fields(tmp_pat
 
 if __name__ == "__main__":
     raise SystemExit(pytest.main([__file__, "-q"]))
+
+
+def test_check_record_compares_against_the_registered_plan_in_part_165s_layer_order(tmp_path, monkeypatch):
+    """Amendment 1 (2026-11-14): check_record built its plan with layers=tuple(widths), and registered_widths() is a
+    dict filled in the order layers first appear in results/part165/answers.jsonl (21, 19, 26, ...), not Part 165's run
+    order (run165.LAYERS). The real run's 120 receipts then read as 112 off-plan. The host check must compare against
+    registered_plan(), the plan the run built. Break: restore `layers=tuple(widths) if layers is None else layers`."""
+    assert tuple(run210.registered_widths()) != tuple(run165.LAYERS), "precondition: the dict order must differ"
+    seen = {}
+
+    def capture(rec, planned=None):
+        seen["planned"] = planned
+        return True, "", {"pushed_calls": 0, "pushed_chunks": 0, "companion_rows": 0}
+
+    monkeypatch.setattr(run210, "record_gates", capture)
+    (tmp_path / "load.json").write_text(json.dumps({"loads": []}), encoding="utf-8")
+    assert run210.check_record(tmp_path / "load.json") == 0
+    expected = run210.registered_plan()
+    assert [c["row_ids"] for c in seen["planned"]["calls"]] == [c["row_ids"] for c in expected["calls"]]
