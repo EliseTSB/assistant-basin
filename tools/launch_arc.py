@@ -123,6 +123,56 @@ def cpu_script(command):
             f"{command}\nrc=$?\necho \"rc=$rc $(date +%H:%M:%S)\"\nexit $rc\n")
 
 
+POSIX_ONLY = {"fcntl", "termios", "tty", "pty", "pwd", "grp", "resource", "posix", "crypt", "syslog", "spwd"}
+
+
+def posix_only_imports(paths):
+    """(path, line, module) for each import of a POSIX-only module not inside a try with an ImportError handler.
+
+    Why (2026-11-14): the A770 job runs the copied files on Windows, and both Part 209 (2026-11-12) and Part 205
+    (2026-11-14) died at launch on an unguarded `import fcntl` that every Linux test had passed. A guarded import
+    (`try: import fcntl` / `except ImportError: import msvcrt`) is fine. Files that are not Python, or do not parse, are
+    left to the run itself."""
+    import ast
+
+    def guarded(node, parents):
+        for p in parents:
+            if isinstance(p, ast.Try) and node in [n for b in p.body for n in ast.walk(b)]:
+                for h in p.handlers:
+                    names = []
+                    if h.type is None:
+                        return True
+                    for t in (h.type.elts if isinstance(h.type, ast.Tuple) else [h.type]):
+                        names.append(getattr(t, "id", getattr(t, "attr", "")))
+                    if {"ImportError", "ModuleNotFoundError", "Exception", "BaseException"} & set(names):
+                        return True
+        return False
+
+    out = []
+    for path in paths:
+        path = Path(path)
+        if path.suffix != ".py" or not path.is_file():
+            continue
+        try:
+            tree = ast.parse(path.read_text(encoding="utf-8", errors="replace"))
+        except SyntaxError:
+            continue
+        stack = [(tree, [])]
+        while stack:
+            node, parents = stack.pop()
+            mods = []
+            if isinstance(node, ast.Import):
+                mods = [a.name.split(".")[0] for a in node.names]
+            elif isinstance(node, ast.ImportFrom) and node.module and not node.level:
+                mods = [node.module.split(".")[0]]
+            for m in mods:
+                if m in POSIX_ONLY and not guarded(node, parents):
+                    out.append((str(path), node.lineno, m))
+            for child in ast.iter_child_nodes(node):
+                stack.append((child, parents + [node]))
+    return sorted(out)
+
+
 def main(argv=None, env=None):
     import os
     env = dict(os.environ) if env is None else env
@@ -205,6 +255,12 @@ def main(argv=None, env=None):
     if missing or outside:
         print("NOT LAUNCHED: --copy needs files inside the repo, given as relative paths without '..': " +
               ", ".join(missing + outside))
+        return 2
+    posix = posix_only_imports([repo / c for c in a.copy])
+    if posix:
+        print("NOT LAUNCHED: the A770 job runs on Windows, and these copied files import a POSIX-only module outside a "
+              "try/except ImportError (Part 209 on 2026-11-12 and Part 205 on 2026-11-14 died on `import fcntl`): " +
+              "; ".join(f"{p}:{line} {mod}" for p, line, mod in posix))
         return 2
     baseline = len(text.splitlines())
     offset = prog.stat().st_size if prog.exists() else 0
