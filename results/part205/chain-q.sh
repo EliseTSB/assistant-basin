@@ -24,14 +24,18 @@ merge_models() {  # copy the job folder's models.json back only if it holds ever
 import json, sys, os
 win, wt, stage = sys.argv[1], sys.argv[2], sys.argv[3]
 w, t = json.load(open(win)), json.load(open(wt))
-key = lambda d: {json.dumps(r, sort_keys=True) for r in d["stages"]}
-assert key(t) <= key(w), "job folder models.json lost a worktree row"
-assert any(r.get("stage") == stage for r in w["stages"]), f"no {stage} row"
+# "stages" is a dict keyed by stage name (run205.write_models_json); every worktree stage must be unchanged
+assert all(w["stages"].get(k) == v for k, v in t["stages"].items()), "job folder models.json lost or changed a worktree row"
+assert stage in w["stages"], f"no {stage} row"
 tmp = wt + ".tmp"; json.dump(w, open(tmp, "w"), indent=1); os.replace(tmp, wt); print("models.json merged:", stage)
 PY
 }
 
-# 1. G1
+# 1. G1 (skipped when a passing g1.json from this card is already here: it passed at 05:12 on 11-14, and the
+#    lock fix does not touch g1check205.py's path)
+if python3 -I -c "import json,sys; sys.exit(0 if json.load(open('results/part205/g1/g1.json'))['verdict']['pass'] else 1)" 2>/dev/null; then
+  echo "$(date +%H:%M:%S) G1 already passed (results/part205/g1/g1.json); skipped"
+else
 ARC_OVERRIDE="$BASE Step 2 (the A770 G1 check). Kernel check: results/part183/kernel-check.json passes against the Qwen3.5-4B CPU float32 reference (same revision, xpu, bf16, eager)." \
   $ARC 205 11 1 "-I -B part205/g1check205.py --stage qwen-chat --out results/part205/g1" \
   -- part205/run205.py part205/common205.py part205/score205.py part205/config.json part205/prompts205.json part205/g1check205.py neuron_report.py \
@@ -39,6 +43,7 @@ ARC_OVERRIDE="$BASE Step 2 (the A770 G1 check). Kernel check: results/part183/ke
 mkdir -p results/part205/g1 && cp "$J/results/part205/g1/g1.json" results/part205/g1/ || { echo "COPY FAILED: g1.json"; exit 5; }
 python3 -I -c "import json,sys; v=json.load(open('results/part205/g1/g1.json'))['verdict']; print('G1', v); sys.exit(0 if v['pass'] else 1)" \
   || { echo "PART205 G1 VERDICT FAIL: family Q held"; exit 4; }
+fi
 
 # 2. qwen-chat, controls
 ARC_OVERRIDE="$BASE Family Q, qwen-chat, --arms controls (Amendment 2 item 4: O's cost gate failed). Kernel check: results/part183/kernel-check.json passes against the Qwen3.5-4B CPU float32 reference (same revision, xpu, bf16, eager)." \

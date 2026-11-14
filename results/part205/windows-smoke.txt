@@ -1,0 +1,5 @@
+imports ok: neuron_report.py
+second refused: f this stage; refusing to start a second
+lock free after release: ok
+write_models_json: both stages kept
+WINDOWS SMOKE OK

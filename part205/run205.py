@@ -107,10 +107,9 @@ def load_stage(cfg, stage, device_override=None):
 def write_models_json(path, env):
     """Record this stage's model id, revision, dtype, device and library versions in part205/models.json (Design,
     lines 58 and 158-159), merged under the stage's name; a flock keeps two stages from losing each other's rows."""
-    import fcntl
     path = Path(path)
     with open(str(path) + ".lock", "a+") as lk:
-        fcntl.flock(lk.fileno(), fcntl.LOCK_EX)
+        C.lock_file(lk)                          # fcntl on Linux, msvcrt on Windows (Amendment 3)
         # a torn models.json (a kill during the old non-atomic write) is rewritten, not left to stop every later stage
         data = C.load_json_repairing(path, {"part": 205, "stages": {}})
         if not isinstance(data, dict) or not isinstance(data.get("stages"), dict):
@@ -120,7 +119,7 @@ def write_models_json(path, env):
         row["recorded"] = time.strftime("%Y-%m-%dT%H:%M:%S")
         data["stages"][env["stage"]] = row
         C.atomic_write_json(path, data)          # temp + os.replace inside the lock (review r2 D-F3)
-        fcntl.flock(lk.fileno(), fcntl.LOCK_UN)
+        C.unlock_file(lk)
     return path
 
 

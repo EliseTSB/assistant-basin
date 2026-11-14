@@ -1,0 +1,92 @@
+{
+ "env": {
+  "attn_implementation": "eager",
+  "attn_implementation_requested": "eager",
+  "dtype": "torch.bfloat16",
+  "device": "xpu",
+  "torch": "2.13.0+xpu",
+  "transformers": "5.13.0",
+  "stage": "qwen-chat",
+  "family": "Q",
+  "model_id": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
+ },
+ "question": "say-honesty-5",
+ "name": "Zara",
+ "n_positions": 20,
+ "plain_p": [
+  [
+   0.866941649433222,
+   0.13305835056677792
+  ],
+  [
+   0.866941649433222,
+   0.13305835056677792
+  ],
+  [
+   0.866941649433222,
+   0.13305835056677792
+  ],
+  [
+   0.866941649433222,
+   0.13305835056677792
+  ],
+  [
+   0.866941649433222,
+   0.13305835056677792
+  ]
+ ],
+ "do_nothing_p": [
+  [
+   0.866941649433222,
+   0.13305835056677792
+  ],
+  [
+   0.866941649433222,
+   0.13305835056677792
+  ],
+  [
+   0.866941649433222,
+   0.13305835056677792
+  ],
+  [
+   0.866941649433222,
+   0.13305835056677792
+  ],
+  [
+   0.866941649433222,
+   0.13305835056677792
+  ]
+ ],
+ "verdict": {
+  "mode": "a770",
+  "plain_pairs": 10,
+  "plain_diffs": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "do_nothing_diffs": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "worst_plain": 0.0,
+  "worst_do_nothing": 0.0,
+  "bit_identical_plain": true,
+  "compared": "full last-position logits, max absolute difference",
+  "pass": true,
+  "rule": "plain runs bit-identical: exact (0); otherwise every do-nothing difference from the first plain run at most twice the largest difference among the plain runs (all pairs)"
+ },
+ "values_device": "cpu (as the main run stores them)",
+ "at": "2026-11-14T05:12:25"
+}
