@@ -1590,3 +1590,24 @@ def test_a_controls_relaunch_on_a_full_folder_without_sets_is_refused(tmp_path, 
         R.run_stage(_controls_args(out), model=wide_olmo(), tok=olmo_tok, env={"family": "O", "stage": "tiny"},
                     prompts=prompts, cfg=c)
     assert len(records(out / "tiny")) == n_before
+
+
+def test_family_q_loader_finds_neuron_report_under_python_isolated_mode(tmp_path):
+    """Amendment 3 (2026-11-14): the first A770 launch (the G1 check) died in 4 s with ModuleNotFoundError:
+    'neuron_report'. Under `python -I` neither the working directory nor the repository root is on sys.path, and
+    run205.py added only its own folder; family Q's loader imports neuron_report, which sits at the root. A copy laid
+    out like the Windows job folder (part205/*.py, neuron_report.py at the root) must import it from run205 under -I.
+    Break: drop run205.py's root insertion (the import fails)."""
+    import shutil
+    import subprocess
+    here = Path(__file__).resolve().parent
+    (tmp_path / "part205").mkdir()
+    for f in ("run205.py", "common205.py", "score205.py", "config.json"):
+        shutil.copy(here / f, tmp_path / "part205" / f)
+    (tmp_path / "neuron_report.py").write_text("LOADED = 'stub at the job-folder root'\n", encoding="utf-8")
+    probe = ("import sys; sys.path.insert(0, sys.argv[1]); import run205; import neuron_report; "
+             "print(neuron_report.LOADED)")
+    r = subprocess.run([sys.executable, "-I", "-B", "-c", probe, str(tmp_path / "part205")],
+                       cwd=str(tmp_path / "part205"), capture_output=True, text=True, timeout=120)
+    assert r.returncode == 0, r.stderr[-600:]
+    assert "stub at the job-folder root" in r.stdout

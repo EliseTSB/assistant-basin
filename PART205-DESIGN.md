@@ -449,3 +449,24 @@ before any number for the other five values exists.
 Cold reviews: DeepSeek V4.1 Flash, Journal `reviews/cheap-p205-amendment2-ds-r1.md` (SHIP-WITH-FIXES, nine findings)
 and `reviews/cheap-p205-amendment2-ds-r2.md` (SHIP-WITH-FIXES, four medium and seven low, no high), all folded here.
 Neither reviewer ran a model or computed a gap.
+
+## Amendment 3 (2026-11-14 05:07 CT, at family Q's first launch, before any Qwen data)
+
+The first A770 launch, the G1 check (steps.txt step 2), died 4 seconds after it started with
+`ModuleNotFoundError: No module named 'neuron_report'`, raised in `run205.load_stage` before any model was loaded.
+Under `python -I` neither the working directory nor the repository root is on `sys.path`, and `run205.py` put only its
+own folder there; family Q's loader (the design's `neuron_report.load_model`) imports a module that sits at the root.
+Family O's six stages never reached that import, so the defect was invisible until now. Nothing was loaded or
+measured: no G1 number, no Qwen pass, no record.
+
+The one change: `run205.py` appends its parent folder (the repository root, or the job folder's root on Windows) to
+`sys.path` after its own folder. A new test, `test_family_q_loader_finds_neuron_report_under_python_isolated_mode`,
+builds a copy laid out like the Windows job folder and imports `neuron_report` from `run205` under `python -I`; it
+fails on the old code with the same error. No prediction, gate, threshold, arm, seed or reading rule changes.
+
+Also recorded here, because it changes how family Q is launched, not what it reads: under Amendment 2 item 4, O's
+cost gate failed (A0, gap 0.0191 < 0.194), so both Qwen models run `--arms controls`, and steps.txt's step 3 lines,
+which omit the flag, are not used as written. Before the Base model's stage, its kernel check is run (the CPU
+float32-upcast reference, then the card candidate, then `tools/part_check.py kernel`), because no check existed for
+Qwen3.5-4B-Base; the chat model's is `results/part183/kernel-check.json`, rechecked as passing (21 of 21) before this
+launch. The design predates the launcher's Kernel-check line, so each launch records the check in its override.
