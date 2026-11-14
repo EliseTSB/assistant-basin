@@ -158,3 +158,34 @@ changes.
 Also recorded: the scorer's peak resident memory was 6,287,148 kB (`/usr/bin/time -v`), against the 6 GiB cap it ran
 under (6,291,456 kB), after a first run at a 1.5 GB cap was killed by the OOM killer at 53 CPU minutes. A rerun needs a
 larger cap. Wall time 54 min 36 s, almost all of it the shape floor's 1,000 redraws.
+
+## Amendment 3 (2026-11-14 09:50 CT, after the scores were seen; found by a cold check)
+
+A cold check (DeepSeek V4.1 Flash, `notes/reports/part210-score-check-2026-11-14/CHECK.md` in the Journal) found that
+`score210.py` paired each replicate row with its battery row by `run165.row_key`, which includes `slot`, and that
+every replicate row was written with `slot: 0`. The runner's battery path overwrites `slot` with Part 165's direction
+slot (`run210.py:419`); its replicate path does not, so `slot` stays the row's index in its one-row call. 178 of the
+200 replicate rows carry a slot that differs from their battery row's. The row_key pairing therefore collapsed rows onto
+slot 0, matched 162 of 200 and compared some texts across different directions, and printed 154 differing.
+
+Each replicate row's `row_id` is `rep|<battery row_id>` (`run210._replicate_spec`). Paired that way all 200 rows
+match on arm, layer, question_index and k, and every pair has the same `push_sha256` as its battery row, so each
+replicate decode used the right push and only the written `slot` field is wrong. **84 of 200 texts differ, so 210.6
+(between 40 and 110) holds, where the scorer printed False.** This moves a verdict toward the prediction, after the
+scores were seen; the pairing is the registered comparison ("the 200 shape-replicate texts" against "their chunk-of-8
+texts"), and the change is to which battery row each replicate row is compared with, nothing else.
+
+The fix: `score210.replicate_pairs` pairs by `row_id` and refuses a replicate row with no battery row or a pair whose
+arm, layer, question_index, k or push_sha256 disagree. It is used for the 210.6 count and for the shape floor, which had
+the same pairing and so drew from 162 mis-paired pairs; the stabilities printed in `score.md` are superseded until the
+scorer is rerun. The printed "replicate pairs starting <label>" counts now take the battery row's labels, the side
+`tools/shape_floor.py` treats as the start (`labels_a`); the old print took the replicate row's (a printed count only,
+no verdict reads it). The floor's pair count is now printed. The test fixture had kept each battery row's slot on its
+replicate rows, which is why the tests passed; it now writes `slot: 0` as the runner does and gives the published rows
+the runner's `row_id`. The runner is left as it ran.
+
+The cold check also noted that Part 165's own reading rule leaves 165.5 "not read" when 165.1 fails, so 210.2's "165.5
+fails" is compared with a verdict the scorer never issues. 210.2 is false either way, because 165.1 fails; no change.
+
+The scorer is rerun (MemoryMax at least 8G, the last run peaked at 6.0 GiB) after Part 205's A770 chain finishes, so it
+does not share Windows memory with it. No prediction, gate, threshold or reading rule changes.

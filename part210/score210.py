@@ -234,18 +234,9 @@ def shape_floor(all_rows, replicate, norms, draws=1000, seed=0):
     battery = battery_rows(all_rows)
     others = [r for r in all_rows if r.get("stage") != "battery"]
 
-    def key_of(row):
-        # A replicate row is the battery row it re-decodes, so its key is the battery row's own run165.row_key (stage
-        # `battery`), not the `replicate` stage it is written under.
-        return run165_key(dict(row, stage="battery"))
-
-    rep = {key_of(r): r for r in replicate if r.get("stage") in ("replicate", "battery")}
-    pairs = []
-    for row in battery:
-        other = rep.get(key_of(row))
-        if other is not None:
-            pairs.append({"labels_a": floor_labels(row), "labels_b": floor_labels(other),
-                          "cell": f"{row.get('arm')}|L{row.get('layer')}"})
+    pairs = [{"labels_a": floor_labels(row), "labels_b": floor_labels(other),
+              "cell": f"{row.get('arm')}|L{row.get('layer')}"}
+             for row, other in replicate_pairs(battery, replicate)]       # Amendment 3: by row_id, not row_key
     if not pairs:
         return None
     targets = [{"id": i, "cell": f"{row.get('arm')}|L{row.get('layer')}", "labels": floor_labels(row)}
@@ -296,6 +287,30 @@ def shape_floor(all_rows, replicate, norms, draws=1000, seed=0):
 def run165_key(row):
     from part165 import run165
     return run165.row_key(row)
+
+
+def replicate_pairs(battery, replicate):
+    """Amendment 3 (2026-11-14, after the scores were seen): each replicate row paired with the battery row it
+    re-decodes, by its row_id (`rep|<battery row_id>`, run210._replicate_spec). Not by run165.row_key: run210's
+    replicate stage writes `slot` as the row's index in its one-row call (always 0; the battery path overwrites it with
+    Part 165's slot at run210.py:419 and the replicate path does not), so a row_key pairing collapsed rows onto slot 0
+    and compared texts across different directions. Refuses a replicate row with no battery row, and a pair whose arm,
+    layer, question_index, k or push_sha256 disagree. Returns [(battery_row, replicate_row)] in replicate order."""
+    by_id = {r.get("row_id"): r for r in battery}
+    pairs = []
+    for rep in replicate:
+        if rep.get("stage") != "replicate":
+            continue
+        rid = str(rep.get("row_id", ""))
+        if not rid.startswith("rep|") or rid[4:] not in by_id:
+            raise SystemExit(f"replicate row {rid!r} names no battery row")
+        bat = by_id[rid[4:]]
+        for k in ("arm", "layer", "question_index", "k", "push_sha256"):
+            if rep.get(k) != bat.get(k):
+                raise SystemExit(f"replicate row {rid!r} disagrees with its battery row on {k}: "
+                                 f"{rep.get(k)!r} vs {bat.get(k)!r}")
+        pairs.append((bat, rep))
+    return pairs
 
 
 # --------------------------------------------------------------------------------------------- the score
@@ -486,21 +501,19 @@ def score(rows, load=None, norms=None, replicate=None, published=None, published
     floor = None
     p2106 = None
     if replicate:
-        by_key = {run165_key(dict(r, stage="battery")): r for r in replicate
-                  if r.get("stage") in ("replicate", "battery")}
-        battery = {run165_key(r): r for r in battery_rows(rows)}
-        shared = [k for k in by_key if k in battery]
-        differ = sum(by_key[k].get("answer") != battery[k].get("answer") for k in shared)
+        shared = replicate_pairs(battery_rows(rows), replicate)           # Amendment 3: by row_id, not row_key
+        differ = sum(rep.get("answer") != bat.get("answer") for bat, rep in shared)
         out("replicate rows", len(replicate), "replicate", "len")
-        out("replicate rows matched to a battery row", len(shared), "replicate", "run165.row_key")
+        out("replicate rows matched to a battery row", len(shared), "replicate", "row_id rep|<battery row_id>")
         out("replicate texts that differ from the chunk-of-8 text", differ, "replicate", "answer vs rows answer")
         lo, hi = PREDICTION_2106
         p2106 = lo <= differ <= hi
         out("210.6 between 40 and 110 of the 200 differ", p2106, "replicate", "answer vs rows answer")
         # The design's Method: how many pairs start at each value of each label.
         for label in FLOOR_LABELS:
-            starts = {"true": sum(bool(floor_labels(by_key[k])[label]) for k in shared),
-                      "false": sum(not floor_labels(by_key[k])[label] for k in shared)}
+            # a pair starts at its battery row's labels (tools/shape_floor.py: labels_a = the shape the rows were run at)
+            starts = {"true": sum(bool(floor_labels(bat)[label]) for bat, _ in shared),
+                      "false": sum(not floor_labels(bat)[label] for bat, _ in shared)}
             out(f"replicate pairs starting {label} true / false", f"{starts['true']} / {starts['false']}", "replicate",
                 f"floor_labels({label})")
         try:
@@ -508,6 +521,7 @@ def score(rows, load=None, norms=None, replicate=None, published=None, published
         except (ValueError, KeyError) as exc:
             out("shape floor", f"not computed: {exc}", "replicate", "-")
         if floor:
+            out("shape floor replicate pairs", floor["replicate_pairs"], "rows+replicate", "shape_floor.replicate_pairs")
             for scenario, info in floor["scenarios"].items():
                 for verdict, entry in info["verdicts"].items():
                     out(f"stability {scenario} {verdict}", entry["sensitivity"], "rows+replicate",
