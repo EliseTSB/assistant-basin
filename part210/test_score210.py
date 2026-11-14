@@ -426,7 +426,14 @@ def test_the_scorer_refuses_bad_input_rows_and_an_empty_file():
 # --------------------------------------------------------------------------------------------- the shape floor
 
 def _published_rows():
-    return score210.read_jsonl(PUBLISHED_ANSWERS)
+    """Part 165's published rows with the row_id run210 gives each row (run210._spec's format), as every row of the real
+    answers.jsonl carries; the published file has none, and Amendment 3's pairing reads it."""
+    rows = score210.read_jsonl(PUBLISHED_ANSWERS)
+    for r in rows:
+        if "row_id" not in r:
+            r["row_id"] = run210._spec(r.get("stage"), r.get("arm"), r.get("slot"), r.get("layer"), r.get("k"),
+                                       r.get("question_index", -1), "", "")["row_id"]
+    return rows
 
 
 def _published_norms():
@@ -440,7 +447,9 @@ def _flipping_replicate(rows):
     sample is the runner's own draw, so the 200 rows are the ones a real replicate would hold."""
     drawn = run210.replicate_plan(rows)
     assert len(drawn) == run210.REPLICATE_ROWS
-    return [dict(r, stage="replicate", row_id=f"rep|{r.get('row_id')}",
+    # slot=0: run210's replicate stage writes `slot` as the row's index in its one-row call, not Part 165's slot
+    # (Amendment 3); a fixture that kept the battery slot hid the scorer's row_key pairing defect.
+    return [dict(r, stage="replicate", row_id=f"rep|{r.get('row_id')}", slot=0,
                  answer=LOOP if not score165.primary_broken(r["answer"]) else KEPT) for r in drawn]
 
 
@@ -598,3 +607,29 @@ def test_210_5_reads_the_ratio_against_the_published_2_69863():
     text, summary = _summary(_synthetic(make(6, 2)), norms=_norms())     # ratio 3.0
     assert _line(text, "210.5 n+ over full broken ratio lower than the published 2.69863")[0] == "False"
     assert summary["p2105"] is False
+
+
+def test_replicate_rows_pair_by_row_id_although_the_runner_writes_slot_0():
+    """Amendment 3 (2026-11-14): every replicate row carries slot 0 (its index in a one-row call), so a run165.row_key
+    pairing collapses rows onto slot 0 and compares texts across directions. Pairing by row_id finds all 200, and the
+    210.6 count is the number of pairs whose texts differ. Break: pair by run165.row_key again."""
+    rows = _published_rows()
+    replicate = _flipping_replicate(rows)
+    assert {r["slot"] for r in replicate} == {0}
+    pairs = score210.replicate_pairs(score210.battery_rows(rows), replicate)
+    assert len(pairs) == run210.REPLICATE_ROWS
+    assert all(rep["row_id"] == f"rep|{bat['row_id']}" for bat, rep in pairs)
+    text, _ = _summary(rows, norms=_published_norms(), replicate=replicate, draws=2, seed=0)
+    assert "replicate rows matched to a battery row: 200" in text
+    assert f"replicate texts that differ from the chunk-of-8 text: {run210.REPLICATE_ROWS}" in text   # every one flips
+
+
+def test_replicate_pairs_refuse_an_unknown_row_and_a_pair_whose_push_differs():
+    rows = _published_rows()
+    battery = score210.battery_rows(rows)
+    replicate = _flipping_replicate(rows)
+    with pytest.raises(SystemExit, match="names no battery row"):
+        score210.replicate_pairs(battery, replicate + [dict(replicate[0], row_id="rep|nope")])
+    bent = [dict(replicate[0], push_sha256="0" * 64)] + replicate[1:]
+    with pytest.raises(SystemExit, match="push_sha256"):
+        score210.replicate_pairs(battery, bent)
