@@ -583,3 +583,18 @@ def test_the_floor_goes_red_when_the_donor_key_drops_question_index():
 
 if __name__ == "__main__":
     raise SystemExit(pytest.main([__file__, "-q"]))
+
+
+def test_210_5_reads_the_ratio_against_the_published_2_69863():
+    """210.5 (Amendment 2: registered, but score210 had no code for it until 2026-11-14): the n+ over full broken ratio
+    is lower on the rerun than the published 2.69863. Break: compare with `>` instead of `<` (the 1.5 fixture fails and
+    the 3.0 fixture passes)."""
+    def make(n_plus, full):
+        return lambda arm, l, s, qi: BROKEN[qi % len(BROKEN)] if (arm == "n+" and qi < n_plus) or \
+            (arm == "full" and qi < full) else KEPT
+    text, summary = _summary(_synthetic(make(6, 4)), norms=_norms())     # ratio 1.5
+    assert _line(text, "210.5 n+ over full broken ratio lower than the published 2.69863")[0] == "True"
+    assert summary["p2105"] is True
+    text, summary = _summary(_synthetic(make(6, 2)), norms=_norms())     # ratio 3.0
+    assert _line(text, "210.5 n+ over full broken ratio lower than the published 2.69863")[0] == "False"
+    assert summary["p2105"] is False
