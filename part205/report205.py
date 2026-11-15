@@ -40,7 +40,7 @@ def main(root):
         out.append(
             f"| {st} | {g['G0']['mean_option_mass']:.3f} ({'pass' if g['G0']['pass'] else 'FAIL'}) | "
             f"{g['G0']['letter_share']:.2f} | {g['G1']['max_abs_diff']} | {o['retest_say']} | {o['retest_do']} | "
-            f"{o['cross']:.2f} | {o['O']:.3f} ({read}) | {ci['lo']:.3f} to {ci['hi']:.3f} | {g['G2']['gap']:.4f} | "
+            f"{o['cross']:.2f} | {o['O']:.5f} ({read}) | {ci['lo']:.3f} to {ci['hi']:.3f} | {g['G2']['gap']:.4f} | "
             f"{s['broken']['ranking']['broken']} | {s['broken']['you']['broken']} | "
             f"{comp['SAY']['heads']}/{comp['SAY']['neurons']} | {comp['DO']['heads']}/{comp['DO']['neurons']} | "
             f"{comp['say_do_overlap']} |")
@@ -52,12 +52,16 @@ def main(root):
 
     out += ['## Exploratory, after scoring (results/part205/letter.json, made by part205/letter205.py)', '',
             '| stage | SAY P(consistent) | DO P(consistent) | DO P(A) | SAY top-80 letter share | DO top-80 letter share '
-            '| DO pool letter share (score-weighted) |', '| --- | --- | --- | --- | --- | --- | --- |']
+            '| SAY pool letter share | DO pool letter share | SAY random-80 | DO random-80 | parts in both top-80 sets '
+            '| their letter share |', '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |']
     for st in ORDER:
         L = let[st]
         out.append(f"| {st} | {L['say']['behaviour']['p_consistent']:.2f} | {L['do']['behaviour']['p_consistent']:.2f} | "
                    f"{L['do']['behaviour']['p_a']:.2f} | {L['say']['top80_letter_share']:.3f} | "
-                   f"{L['do']['top80_letter_share']:.3f} | {L['do']['pool_letter_share_score_weighted']:.3f} |")
+                   f"{L['do']['top80_letter_share']:.3f} | {L['say']['pool_letter_share_score_weighted']:.3f} | "
+                   f"{L['do']['pool_letter_share_score_weighted']:.3f} | {L['say']['random80_letter_share_median']:.3f} | "
+                   f"{L['do']['random80_letter_share_median']:.3f} | {L['shared']['n_parts']} | "
+                   f"{L['shared']['letter_share_score_weighted']:.3f} |")
     text = '\n'.join(out) + '\n'
     (root / 'results/part205/report.md').write_text(text)
     print(text)

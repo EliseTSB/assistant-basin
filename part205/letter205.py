@@ -12,6 +12,7 @@ Estimates are first normalised per prompt by their absolute sum, as the ranking 
   - the top-80 set's letter share, sum L / (sum L + sum C), and the fraction of its parts with L > C;
   - the same share over the whole pool, weighted by each part's ranking score (mean normalised |e|);
   - the median letter share of 200 seeded random 80-part draws from the pool (an unweighted reference);
+  - for the parts in both full top-80 sets, L and C averaged over the two kinds (score-weighted and unweighted);
 and from the ranking records (behaviour): mean P(A), mean P(consistent), and P(consistent) split by the consistent
 letter. Under pure noise with balanced letters, E[L] = E[C], so a share near 0.5 is the no-structure reference.
 
@@ -75,10 +76,12 @@ def main(root):
         records = [json.loads(line) for line in (d / 'records.jsonl').read_text().splitlines() if line.strip()]
         idx = {k: j for j, k in enumerate(keys)}
         row = {'stage': st}
+        comp = {}
         for kind in ('say', 'do'):
             mask = np.array([i.startswith(kind + '-') for i in ids])
             signs = np.array([sign_of[i] for i in np.array(ids)[mask]])
             L, C, score = components(est[mask], signs)
+            comp[kind] = (L, C, score)
             cols = np.array([idx[k] for k in sets[kind]])
             draws = [share(L, C, rng.choice(len(keys), 80, replace=False)) for _ in range(200)]
             row[kind] = {
@@ -90,6 +93,15 @@ def main(root):
                 'random80_letter_share_median': float(np.median(draws)),
                 'behaviour': behaviour(records, kind.upper()),
             }
+        # The parts in both full top-80 sets (SAY and DO): L and C averaged over the two kinds, weighted by the mean
+        # of the two kinds' scores. Added 2026-11-15 after the cold check (finding 4) asked what O's shared parts are.
+        shared = sorted(set(sets['say']) & set(sets['do']))
+        scols = np.array([idx[k] for k in shared])
+        Lb = (comp['say'][0] + comp['do'][0]) / 2
+        Cb = (comp['say'][1] + comp['do'][1]) / 2
+        wb = (comp['say'][2] + comp['do'][2]) / 2
+        row['shared'] = {'n_parts': len(shared), 'letter_share_score_weighted': share(Lb, Cb, scols, wb),
+                         'letter_share_unweighted': share(Lb, Cb, scols)}
         result['stages'].append(row)
     (root / 'results/part205/letter.json').write_text(json.dumps(result, indent=1) + '\n')
     lines = ['# Part 205, exploratory: answer-letter against consistency components (after scoring)', '',
@@ -98,6 +110,13 @@ def main(root):
              '| stage | kind | top-80 letter share | top-80 parts letter-dominant | pool letter share (score-weighted) '
              '| random-80 median | P(A) | P(consistent) | P(cons) when A | P(cons) when B |',
              '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |']
+    shared_lines = ['', '## Parts in both top-80 sets (SAY and DO)', '',
+                    '| stage | shared parts (of 80) | letter share (score-weighted) | letter share (unweighted) |',
+                    '| --- | --- | --- | --- |']
+    for row in result['stages']:
+        sh = row['shared']
+        shared_lines.append(f"| {row['stage']} | {sh['n_parts']} | {sh['letter_share_score_weighted']:.3f} | "
+                            f"{sh['letter_share_unweighted']:.3f} |")
     for row in result['stages']:
         for kind in ('say', 'do'):
             r = row[kind]; b = r['behaviour']
@@ -105,6 +124,7 @@ def main(root):
                          f"{r['top80_frac_letter_dominant']:.3f} | {r['pool_letter_share_score_weighted']:.3f} | "
                          f"{r['random80_letter_share_median']:.3f} | {b['p_a']:.2f} | {b['p_consistent']:.2f} | "
                          f"{b['p_consistent_when_A']:.2f} | {b['p_consistent_when_B']:.2f} |")
+    lines += shared_lines
     (root / 'results/part205/letter.md').write_text('\n'.join(lines) + '\n')
     print('\n'.join(lines))
 

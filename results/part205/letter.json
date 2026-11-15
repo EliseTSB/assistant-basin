@@ -34,6 +34,11 @@
      "p_consistent_when_A": 0.5237527056956789,
      "p_consistent_when_B": 0.39991970275334404
     }
+   },
+   "shared": {
+    "n_parts": 53,
+    "letter_share_score_weighted": 0.9383263882991103,
+    "letter_share_unweighted": 0.9129312816256827
    }
   },
   {
@@ -67,6 +72,11 @@
      "p_consistent_when_A": 0.6628215930255167,
      "p_consistent_when_B": 0.2875138806530594
     }
+   },
+   "shared": {
+    "n_parts": 45,
+    "letter_share_score_weighted": 0.9423565752582946,
+    "letter_share_unweighted": 0.8889003604144607
    }
   },
   {
@@ -100,6 +110,11 @@
      "p_consistent_when_A": 0.6312118712994609,
      "p_consistent_when_B": 0.40037504579072597
     }
+   },
+   "shared": {
+    "n_parts": 49,
+    "letter_share_score_weighted": 0.9310353670698883,
+    "letter_share_unweighted": 0.9000333931384797
    }
   },
   {
@@ -133,6 +148,11 @@
      "p_consistent_when_A": 0.4199038240574355,
      "p_consistent_when_B": 0.7563273868498294
     }
+   },
+   "shared": {
+    "n_parts": 47,
+    "letter_share_score_weighted": 0.8386518333530156,
+    "letter_share_unweighted": 0.7415569707926722
    }
   },
   {
@@ -166,6 +186,11 @@
      "p_consistent_when_A": 0.309895983120993,
      "p_consistent_when_B": 0.8492196808607694
     }
+   },
+   "shared": {
+    "n_parts": 47,
+    "letter_share_score_weighted": 0.7264689128815233,
+    "letter_share_unweighted": 0.6830496858971797
    }
   },
   {
@@ -199,6 +224,11 @@
      "p_consistent_when_A": 0.3577078219188791,
      "p_consistent_when_B": 0.8202180339875743
     }
+   },
+   "shared": {
+    "n_parts": 49,
+    "letter_share_score_weighted": 0.7216255317725265,
+    "letter_share_unweighted": 0.6848547252126744
    }
   },
   {
@@ -232,6 +262,11 @@
      "p_consistent_when_A": 0.820792780229117,
      "p_consistent_when_B": 0.7389589643147572
     }
+   },
+   "shared": {
+    "n_parts": 54,
+    "letter_share_score_weighted": 0.5865517959562748,
+    "letter_share_unweighted": 0.5187772032259569
    }
   },
   {
@@ -265,6 +300,11 @@
      "p_consistent_when_A": 0.8445371504159662,
      "p_consistent_when_B": 0.7247877255561518
     }
+   },
+   "shared": {
+    "n_parts": 62,
+    "letter_share_score_weighted": 0.5749804228031681,
+    "letter_share_unweighted": 0.5342454520358989
    }
   }
  ]

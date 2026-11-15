@@ -41,13 +41,13 @@ def main(root):
         read = s['read']['O']
         a.errorbar([x], [o], yerr=[[o - ci['lo']], [ci['hi'] - o]], fmt='o', color=c, ecolor=c, elinewidth=2,
                    capsize=0, markersize=9, markerfacecolor=c if read else SURF, markeredgewidth=2)
-        a.annotate(f"{o:.2f}", (x, ci['hi']), xytext=(0, 5), textcoords='offset points', ha='center', fontsize=8.5,
+        a.annotate(f"{o:.2f}" + ('' if read else '\nnot read'), (x, ci['hi']), xytext=(0, 5), textcoords='offset points', ha='center', fontsize=8.5,
                    color=INK)
     a.axhline(0.5, color=MUTED, linewidth=1, linestyle=(0, (4, 3)))
     a.text(xs[0] - 0.3, 0.52, "205.2's bar (O at least 0.5 at Instruct)", fontsize=8, color=MUTED, va='bottom', ha='left')
     a.text(xs[0] - 0.3, 0.42, 'open marker: not read (G0 failed at pretrain 3.0T)', fontsize=8, color=MUTED, ha='left')
     a.set_ylabel('overlap index O  (Cross / Retest, 95% CI)', color=INK, fontsize=9.5)
-    a.set_title('SAY and DO rankings overlap at every stage', loc='left', fontsize=11.5, color=INK, pad=10)
+    a.set_title('SAY and DO rankings overlap at every stage that passed G0', loc='left', fontsize=11.5, color=INK, pad=10)
 
     for kind, marker, ls, dx in (('say', 'o', '-', -0.12), ('do', 's', (0, (3, 2)), 0.12)):
         for seg in (range(0, 6), range(6, 8)):
@@ -65,7 +65,7 @@ def main(root):
     b.plot([], [], color=MUTED, marker='s', linestyle=(0, (3, 2)), label='DO scenarios')
     b.legend(loc='lower right', frameon=False, fontsize=8.5, labelcolor=INK)
     b.set_ylabel('P(value-consistent option), You frame', color=INK, fontsize=9.5)
-    b.set_title("while OLMo's DO answers stay near chance (Qwen's do not)", loc='left', fontsize=11.5, color=INK, pad=10)
+    b.set_title("while OLMo's DO P(value-consistent) stays near chance", loc='left', fontsize=11.5, color=INK, pad=10)
 
     fig.text(0.01, 0.005, 'OLMo 2 1B stages (blue), Qwen3.5-4B Base and chat (orange). Selection prompts, 24 per kind. '
              'Sources: results/part205/results.json, letter.json; drawn by part205/fig205.py.', fontsize=7.5, color=MUTED)

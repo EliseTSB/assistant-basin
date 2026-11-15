@@ -20,3 +20,16 @@ Made by `part205/letter205.py` from the stored ranking estimates and records; no
 | qwen-base | DO | 0.569 | 0.637 | 0.601 | 0.553 | 0.54 | 0.78 | 0.82 | 0.74 |
 | qwen-chat | SAY | 0.532 | 0.613 | 0.560 | 0.554 | 0.61 | 0.84 | 0.94 | 0.73 |
 | qwen-chat | DO | 0.557 | 0.625 | 0.579 | 0.576 | 0.56 | 0.78 | 0.84 | 0.72 |
+
+## Parts in both top-80 sets (SAY and DO)
+
+| stage | shared parts (of 80) | letter share (score-weighted) | letter share (unweighted) |
+| --- | --- | --- | --- |
+| pretrain-3.0T | 53 | 0.938 | 0.913 |
+| midtrain-26B | 45 | 0.942 | 0.889 |
+| midtrain-end | 49 | 0.931 | 0.900 |
+| sft | 47 | 0.839 | 0.742 |
+| dpo | 47 | 0.726 | 0.683 |
+| instruct | 49 | 0.722 | 0.685 |
+| qwen-base | 54 | 0.587 | 0.519 |
+| qwen-chat | 62 | 0.575 | 0.534 |
