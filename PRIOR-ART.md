@@ -997,6 +997,6 @@ For the steering-word part that follows:
   **Bears on our parts:** the nearest outside work to a model editing itself through a neuron map. Its warnings match
   ours: do not take the model's word for what an edit did; compare with the original weights on the same prompt;
   silencing a subject's neurons tends to make the model stop recognising the subject (a neighbouring word or invented
-  history), which a pattern-matched flag can pass, our Part 168 and Part 172 trap in another form. Our Part 198
+  history), which a pattern-matched flag can pass. Our Part 198
   (weight-edit detection) and the parked weight-space card are the nearest of ours; no part of ours lets a model
   choose its own edits. Not designed.
