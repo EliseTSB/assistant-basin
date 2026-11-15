@@ -180,13 +180,13 @@ You, 48 third-person, 48 do-nothing); no copy, random-set, persona-swap, reverse
 - `results/part205/a0/screen.json`: step A0, the six-value gap screen.
 - `results/part205/<stage>/records.jsonl`: every pass's letter probabilities and option mass; `sets.json`: the top-80
   sets and halves. The per-prompt estimates (`ranking.npz`, 24 MB per OLMo stage and 43 MB per Qwen model) and the
-  copy-activation caches (0.8 to 1.1 GB per stage) are kept locally, not published; `letter205.py` needs `ranking.npz`.
+  copy-activation caches (0.8 to 1.1 GB per stage) are kept locally, not published; `part205/letter205.py` needs `ranking.npz`.
 - `results/part205/g1/g1.json`: the A770 do-nothing check; `pilot/`: the honesty pilot (PILOT.md).
 
 Cold check: two DeepSeek V4.1 Flash readers, 2026-11-15 (dark-factory runs part205-readme-cold-2026-11-15 and
-part205-readme-cold-r2-2026-11-15; reports in the Journal repo at `notes/reports/part205-readme-cold-2026-11-15/`).
+part205-readme-cold-r2-2026-11-15; reports kept in the Journal repo).
 Round 1 recomputed every O, Retest, Cross, gate and letter-table value from the stored files, all matching, and found 16
 issues (none changing a verdict: wording stronger than the tables, mixed ranges, undefined terms, exploratory labels
 missing where the letter result was restated); all folded, and the shared-parts measure it asked for was added to
-`letter205.py`. Round 2 confirmed the folds and found 5 issues in the new text (a comparison across two weightings, the
+`part205/letter205.py`. Round 2 confirmed the folds and found 5 issues in the new text (a comparison across two weightings, the
 prompt scope of the gate numbers, a random-80 comparison that holds only before SFT, two range labels); all folded.
