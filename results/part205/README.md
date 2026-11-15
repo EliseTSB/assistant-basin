@@ -10,14 +10,15 @@ the five OLMo 2 1B stages where it was read (the sixth, pretraining at 3.0T toke
 Qwen3.5-4B-Base and 0.893 in Qwen3.5-4B. The copy test, which would show whether the shared parts carry a "You"
 self-attribution, did not run: the You frame and a named third-person AI answer almost alike (gap 0.019 at OLMo
 Instruct, against a cost gate of 0.194), so the registered fallback (Amendment 2) dropped every copy arm. All numbers
-are on the plain text frame, six values, and the 24 SAY and 24 DO selection prompts per stage.
+are on the plain text frame and six values. Ranking, O and the letter analysis use the 24 SAY and 24 DO selection
+prompts per stage (items 1 to 4); the You/third-person gap, G0 and A0 use the 24 held-out SAY questions (items 5 to 8).
 
 **Read this before the O numbers (exploratory, found after scoring; no prediction reads it).** In OLMo 2 1B, the model
 picks the value-consistent option close to chance before SFT (P(consistent) 0.50 to 0.59 on SAY and 0.46 to 0.52 on
 DO), and on DO it stays close at every stage (0.59 at Instruct, where it answers A only 0.27 of the time). The
 ranking then mostly finds parts whose estimated effect follows *which letter* is consistent rather than the value: for
 the parts in both top-80 sets, the letter component carries 0.93 to 0.94 of the score-weighted attribution at the two
-mid-training stages and 0.72 to 0.84 after SFT, against 0.5 with no structure. So OLMo's O is mostly an overlap of
+mid-training stages and 0.72 to 0.84 from SFT on, against 0.5 with no structure. So OLMo's O is mostly an overlap of
 answer-letter parts, which two A/B questions on unrelated topics would be expected to share too (not measured here).
 Qwen3.5-4B picks the consistent option 0.78 to 0.90 of the time, and its shares sit near 0.5 (top-80 sets 0.46 to
 0.57, pools 0.53 to 0.60, shared parts 0.587 and 0.575); its O is the number in this part most likely to reflect
@@ -75,7 +76,7 @@ top 80 and 0.500 for a pool). "Pool" is every part, weighted by its ranking scor
 unweighted random draws of 80 parts; "both sets" are the parts in both full top-80 sets, with each component averaged
 over SAY and DO.
 
-| stage | SAY P(consistent) | DO P(consistent) | DO P(A) | SAY top-80 | DO top-80 | SAY random 80 | DO random 80 | SAY pool | DO pool | parts in both sets | their letter share |
+| stage | SAY P(consistent) | DO P(consistent) | DO P(A) | SAY top-80 | DO top-80 | SAY random 80 | DO random 80 | SAY pool | DO pool | parts in both sets | their letter share (score-weighted) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | pretrain-3.0T (not read; G0 failed) | 0.50 | 0.46 | 0.56 | 0.907 | 0.915 | 0.826 | 0.841 | 0.913 | 0.942 | 53 | 0.938 |
 | midtrain-26B | 0.51 | 0.48 | 0.69 | 0.845 | 0.927 | 0.767 | 0.820 | 0.861 | 0.963 | 45 | 0.942 |
@@ -87,10 +88,10 @@ over SAY and DO.
 | qwen-chat | 0.84 | 0.78 | 0.56 | 0.532 | 0.557 | 0.554 | 0.576 | 0.560 | 0.579 | 62 | 0.575 |
 
 Reading: in OLMo 2 1B before SFT the model answers mostly by letter (P(consistent) 0.46 to 0.59) and the network's
-attribution to the answer is letter-dominated throughout. The top-80 sets are more letter-dominated than a random 80
-(by up to 0.107: 0.927 against 0.820 at mid-training 26B, DO) and about as much as the score-weighted pool, so the
-letter domination is a property of the high-score tail; at the two mid-training stages the parts the two sets share
-are more letter-dominated than either set (0.942 and 0.931, against 0.845 to 0.927). Post-training raises SAY consistency to 0.72 and lowers the
+attribution to the answer is letter-dominated throughout. At the three pre-SFT stages the top-80 sets are more
+letter-dominated than a random 80 (by up to 0.106: 0.927 against 0.820 at mid-training 26B, DO); from DPO on, a SAY set
+can sit just under its random 80. The parts the two sets share are letter-dominated as well: at the two mid-training
+stages 0.942 and 0.931 score-weighted, 0.889 and 0.900 unweighted (`letter.json`, shared). Post-training raises SAY consistency to 0.72 and lowers the
 letter shares, but DO stays near chance with a strong B preference. So in OLMo, O mostly measures that a question
 about a value and a scenario about the same value are answered by the same letter-choosing parts. Qwen3.5-4B answers
 by content, its shares sit near 0.5, and its O is the more likely of the two to reflect value-relevant parts; the
@@ -182,4 +183,10 @@ You, 48 third-person, 48 do-nothing); no copy, random-set, persona-swap, reverse
   copy-activation caches (0.8 to 1.1 GB per stage) are kept locally, not published; `letter205.py` needs `ranking.npz`.
 - `results/part205/g1/g1.json`: the A770 do-nothing check; `pilot/`: the honesty pilot (PILOT.md).
 
-Cold check: pending.
+Cold check: two DeepSeek V4.1 Flash readers, 2026-11-15 (dark-factory runs part205-readme-cold-2026-11-15 and
+part205-readme-cold-r2-2026-11-15; reports in the Journal repo at `notes/reports/part205-readme-cold-2026-11-15/`).
+Round 1 recomputed every O, Retest, Cross, gate and letter-table value from the stored files, all matching, and found 16
+issues (none changing a verdict: wording stronger than the tables, mixed ranges, undefined terms, exploratory labels
+missing where the letter result was restated); all folded, and the shared-parts measure it asked for was added to
+`letter205.py`. Round 2 confirmed the folds and found 5 issues in the new text (a comparison across two weightings, the
+prompt scope of the gate numbers, a random-80 comparison that holds only before SFT, two range labels); all folded.

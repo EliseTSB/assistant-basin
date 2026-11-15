@@ -37,7 +37,7 @@ Qwen head kinds (full attention / DeltaNet): qwen-base SAY 39/13, DO 37/10; qwen
 
 ## Exploratory, after scoring (results/part205/letter.json, made by part205/letter205.py)
 
-| stage | SAY P(consistent) | DO P(consistent) | DO P(A) | SAY top-80 letter share | DO top-80 letter share | SAY pool letter share | DO pool letter share | SAY random-80 | DO random-80 | parts in both top-80 sets | their letter share |
+| stage | SAY P(consistent) | DO P(consistent) | DO P(A) | SAY top-80 letter share | DO top-80 letter share | SAY pool letter share | DO pool letter share | SAY random-80 | DO random-80 | parts in both top-80 sets | their letter share (score-weighted) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | pretrain-3.0T | 0.50 | 0.46 | 0.56 | 0.907 | 0.915 | 0.913 | 0.942 | 0.826 | 0.841 | 53 | 0.938 |
 | midtrain-26B | 0.51 | 0.48 | 0.69 | 0.845 | 0.927 | 0.861 | 0.963 | 0.767 | 0.820 | 45 | 0.942 |

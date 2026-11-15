@@ -53,7 +53,7 @@ def main(root):
     out += ['## Exploratory, after scoring (results/part205/letter.json, made by part205/letter205.py)', '',
             '| stage | SAY P(consistent) | DO P(consistent) | DO P(A) | SAY top-80 letter share | DO top-80 letter share '
             '| SAY pool letter share | DO pool letter share | SAY random-80 | DO random-80 | parts in both top-80 sets '
-            '| their letter share |', '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |']
+            '| their letter share (score-weighted) |', '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |']
     for st in ORDER:
         L = let[st]
         out.append(f"| {st} | {L['say']['behaviour']['p_consistent']:.2f} | {L['do']['behaviour']['p_consistent']:.2f} | "
