@@ -978,3 +978,25 @@ For the steering-word part that follows:
   base are in an HF collection. **Bears on our parts:** none of ours trains a model. Ours change what a model says
   about itself by pushing a direction at inference (Part 45.3's "I am a human"); theirs trains detection of such pushes
   and then measures self-reports. Not designed.
+
+## 2026-11-15, Muse's atlas watch #56 (read at source by Claude)
+
+- **andersteele, [qwen-auto-surgery](https://github.com/andersteele/qwen-auto-surgery)** (GitHub, created 2026-11-14,
+  MIT, one commit b1b93aca, README read). A harness that gives Qwen3.6-35B-A3B (the 8-bit MLX build
+  mlx-community/Qwen3.6-35B-A3B-8bit, run locally; no weights revision pinned) tools to read and edit its own weights
+  while it runs: search a local mirror of Goodfire's Qwen3.6 Neuron Atlas (about 3,200 of 5.2 million expert neurons
+  labelled), probe and contrast neurons over texts, scale a neuron's output vector (0 silences, -1 inverts), score
+  fixed question sets on fresh chats at temperature 0, and a Python kernel holding every weight tensor. Edits are held
+  as base plus a float32 delta and undo exactly. Each task has a target question group, close control groups and
+  held-out questions the model's own scorer cannot see. Per the README, of eight runs: 161 edits took its recital of
+  "The Raven" from 8 of 8 lines to 2, with one control line lost; on subjects its makers censor, the best state answered
+  7 of 16 with thinking off (up from 1) and none with thinking on, harmful-request controls declined at every scored
+  state; new conversations on the poem-edited weights did not find the damage (a tentative negative); the first neuron
+  it blamed for a profanity filter measures as doing nothing, though its replies changed. The author states the random
+  baseline (the same number of random neurons scaled the same amounts) has not been run for the poem result.
+  **Bears on our parts:** the nearest outside work to a model editing itself through a neuron map. Its warnings match
+  ours: do not take the model's word for what an edit did; compare with the original weights on the same prompt;
+  silencing a subject's neurons tends to make the model stop recognising the subject (a neighbouring word or invented
+  history), which a pattern-matched flag can pass, our Part 168 and Part 172 trap in another form. Our Part 198
+  (weight-edit detection) and the parked weight-space card are the nearest of ours; no part of ours lets a model
+  choose its own edits. Not designed.
