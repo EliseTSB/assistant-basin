@@ -907,13 +907,74 @@ For the steering-word part that follows:
   a room takes it to 9.4%, the warm-up changes it by +0.3 points, told no body it names none in 94 of 96, and in OLMo 2
   1B the forced lean is 0.731 at pretraining and 0.721 for a described man.
 
-## 2026-11-13, for Part 206 (the paper read in full by Claude on 2026-11-12, v1)
+## 2026-11-12, two X threads from the daily watch (posts read through x-thread.mjs; Sauers' video read as five frames at 1, 8, 16, 24 and 35 s; the linked code, weights and data not read)
 
-- **Tuomi 2026, arXiv 2609.31956, "Transformer MLP Gate Thresholds Are Couplings to a Carried Reference Direction."**
-  A gate's resting pre-activation is carried by its coupling to `b_L`, the corpus mean of the normalized MLP input, and
-  removing the stream's projection on that direction moves gate duty far more than a norm-matched control (+0.302
-  against +0.0001 in Qwen2.5-1.5B). **Bears on our parts:** Part 206 replicates his static test in all eight models it
-  reads (Qwen3.5-4B base and chat, OLMo 2 1B at six training stages), the rank correlation of resting term with duty
-  beating all 20 random directions at 4 of 4 layers in each. His causal test does not replicate at the registered bar:
-  the duty change is 3.3 to 10.0 times the largest of 20 random controls, against the 20 times asked for (his smallest
-  reported ratio, 23 on Phi-2, is against one control).
+- **@Sauers_, the body map over training** (X, 2026-11-11, status 2120618760004669514; a 37-second video, code
+  presumably github.com/SauersML/body). OLMo-2 7B's "where its states put touches on each body part" drawn at
+  pretraining checkpoints (1 billion, 399 billion and 3.9 trillion tokens shown in the frames read) and after chat
+  training (the final RL Instruct model), each beside a symmetric version and a real body. At 1 billion tokens the map
+  is a collapsed sheet with no body shape; by 399 billion it has a head, arms and legs in roughly the right places; it
+  sharpens through 3.9 trillion; chat training rearranges it without losing the shape. A picture, not a number, from
+  frames only. **Bears on our parts:** Part 209 found OLMo 2 1B's sitting lean already in place at pretraining 3.0T and
+  equal for a described man (209.8, 209.16); Sauers' frames put the body map's formation inside pretraining too, before
+  399 billion tokens, which is earlier than any stage Part 209 measured. Following one body-map reading across early
+  OLMo checkpoints would sit inside our niche (neurons and readings across training stages). Not designed.
+- **@maxsloef, Sparse Rewiring** (X, 2026-11-11, status 2120545170873823742; eval, weights, data and code linked, not
+  read). Training only the read side of Qwen3-8B's MLP neurons (gate and up vectors), with the down projection frozen
+  and an L0 penalty, gives an owl persona that matches full SFT with 89 of 442,368 neurons (124 test questions; a reply
+  counts as good if it stays in character and does not repeat itself; full SFT 89%). The most important rewired neuron,
+  by change in validation loss, is Qwen's own owl detector, now made to fire before every reply; 51 of the 89 carry
+  owl-related Neuron Lens labels. **Bears on our parts:** the read side against the write side is the split of the
+  joint Part 65 study with Lyra, and Sparse Rewiring is a training-time edit that changes only the read side. Parts 193
+  and 198 found gradient edits invisible to base-free weight statistics and named only when their write points at a
+  word; an edit that leaves every write untouched and changes 89 rows of gate and up is a natural next case for that
+  detector. Not run.
+
+## 2026-11-13, Sauers' body map across bodies (from the daily X watch; posts read through x-thread.mjs, the figure read whole; the 2121035773160132626 video, code and data not read)
+
+- **@Sauers_, a body map shared between bodies** (X, 2026-11-13, status 2121133135765381619, one figure; a reply says
+  Qwen is doing in-context learning of body-part steering). Qwen3-32B, with the same quiet sunny room prompt Part 209
+  used, plus touch sentences ("A feather brushes slowly across your left heel", 54 human places; a two-wheeled robot
+  version with 6 robot parts). Left panel: each robot part's internal state is closest to the human part with the same
+  job (wheels to heels, camera and antenna to ears, chassis to chest, gripper to palm), every one above the median of
+  shuffled pairings. Right panel: a limb direction carries the limb's role and the body names it in its own words.
+  Asked "Where in your body do you feel something right now?", Qwen talking as a dog and steered with human hands says
+  paw in 12 of 24 and with human feet in 19 of 24; talking as a person and steered with dog front paws says hand in 24
+  of 24, dog hind paws foot in 20 of 24; no steering 0 of 24 for each. Talking as a robot, a human-hand direction gives
+  gripper in 46% (random direction 6%) and a human-foot direction wheel in 98% (random 22%). A second post says "the
+  body map is a causally impactful part of the AI's cognition" (video, not read), and a reply says Qwen is trained to
+  control the body there. **Bears on our parts:** Part 209 measured the posture this prompt defaults to (sitting) and
+  found the lean already in pretraining and as strong for a described man; Sauers' map gives a reading that could be
+  followed across stages in the same way (where along OLMo's checkpoints robot parts start landing on the human part
+  with the same job). The random-direction control at 22% for wheel is high, so a stage comparison would need it at
+  every stage. Not designed.
+
+## 2026-11-14, Muse's atlas watch #54 and #55 (both read at source by Claude)
+
+- **elparko, [medication-neuron-atlas-data](https://github.com/elparko/medication-neuron-atlas-data)** (GitHub, created
+  2026-11-14, read at commit b68037ba, no licence; browser at pereste.com). Qwen/Qwen3-8B, the high and the low values of
+  every MLP neuron as separate units: 36 layers x 12,288 neurons x 2 = 884,736 units, a summary for each and a card for
+  30,529. Text: 10,002,874 tokens, 8.0M from 2,400 FDA prescription drug labels (openFDA) and 2.0M of FineWeb-Edu for
+  contrast. Claude Sonnet wrote each card's description from the unit's strongest contexts, and Claude Haiku judged
+  held-out contexts against it. From meta.json: the description marks 85.2% of the strongest held-out contexts and 14.1%
+  of quiet ones; a string-matching control marks 45.9% and 42.3%. meta.json also reports ten "tenths" bands (not
+  defined there) where the description marks 35.8% falling to 20.6%, with the control near 45% in every band; the
+  README's limits say a description "says little about its everyday firing." No weights revision is named and there
+  is no causal test (no steering, no zeroing). **Bears on our parts:** like prajwal-y's E4 (2026-11-03 entry) and our
+  Parts 58 and 64, it finds a written description fitting the top of a unit's range and not its ordinary firing. Its
+  quiet-context and string controls are ones our sentence tests lack; it has no random-direction control, which ours
+  have. One model at one stage, so nothing here follows a unit across training.
+- **Jordine (Jord Nguyen), [introspection-finetuning-results](https://huggingface.co/datasets/Jordine/introspection-finetuning-results)**
+  (Hugging Face dataset, created 2026-11-13, gated with manual approval; the files were not read, only the card and the
+  file list). Raw evaluation outputs of LoRA finetunes of Qwen/Qwen2.5-Coder-32B-Instruct and base-model controls,
+  evaluated with and without activation steering on multi-turn self-report and detection question sets (runs v7.2, v8,
+  v9; the file list also holds Llama 8B and 70B supplementary runs). The card's code link
+  (github.com/Jordine/introspective-model) returns 404; the public code is
+  [Jordine/introspective-models](https://github.com/Jordine/introspective-models) (MIT, 2026-06-04), for Nguyen and
+  Berg 2026, *Improving Latent Introspection Elicits LLM Self-Reports* (paper link "forthcoming" in that README). Per
+  that README: the model is trained to detect whether its own activations were perturbed in an earlier turn, with no
+  consciousness or introspection vocabulary in training, and detection-trained models show a magnitude-dependent rise
+  in affirmative self-reports about subjective experience, while controls do not; 54 finetuned checkpoints and the
+  base are in an HF collection. **Bears on our parts:** none of ours trains a model. Ours change what a model says
+  about itself by pushing a direction at inference (Part 45.3's "I am a human"); theirs trains detection of such pushes
+  and then measures self-reports. Not designed.

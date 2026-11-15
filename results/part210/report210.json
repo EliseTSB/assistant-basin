@@ -1,0 +1,564 @@
+{
+  "source": "part210/report210.py",
+  "predictions": {
+    "210.1": {
+      "verdict": "held",
+      "R1": "True",
+      "R2": "True",
+      "R3_bad_pushed_calls": 0,
+      "R3_bad_no_push_calls": 0,
+      "R3_companion_rows": 0
+    },
+    "210.2": {
+      "verdict": "failed",
+      "eager_verdicts": {
+        "165.1": "fail",
+        "165.2": "pass",
+        "165.3": "pass",
+        "165.4": "pass",
+        "165.5": "not read",
+        "165.6": "fail"
+      }
+    },
+    "210.3": {
+      "verdict": "held",
+      "ratio": 1.8389830508474574
+    },
+    "210.4": {
+      "verdict": "held",
+      "at_cap": {
+        "n+": 375,
+        "n\u00b1": 405,
+        "k4": 436,
+        "k16": 383,
+        "k64": 359,
+        "k256": 372,
+        "k1024": 350,
+        "full": 379,
+        "iso": 349
+      },
+      "minimum": 349,
+      "maximum": 436
+    },
+    "210.5": {
+      "verdict": "held",
+      "ratio": 1.8389830508474574,
+      "published": 2.6986301369863015
+    },
+    "210.6": {
+      "verdict": "held",
+      "differ": 84,
+      "of": 200
+    },
+    "210.7": {
+      "verdict": "held",
+      "arms_higher": [
+        "n+",
+        "n\u00b1",
+        "k4",
+        "k16",
+        "k64",
+        "k256",
+        "k1024",
+        "full",
+        "iso"
+      ]
+    }
+  },
+  "part165_gates": {
+    "gate1_rows": {
+      "published": {
+        "passed": true,
+        "expected_rows": 6920,
+        "rows": 6920,
+        "unique_rows": 6920,
+        "duplicates": 0,
+        "nonempty_answers": 6920
+      },
+      "rerun": {
+        "passed": true,
+        "expected_rows": 6920,
+        "rows": 6920,
+        "unique_rows": 6920,
+        "duplicates": 0,
+        "nonempty_answers": 6920
+      }
+    },
+    "gate2_no_push": {
+      "published": {
+        "passed": true,
+        "baseline_answers": 8
+      },
+      "rerun": {
+        "passed": true,
+        "baseline_answers": 8
+      }
+    },
+    "gate3_size": {
+      "published": {
+        "passed": true,
+        "expected_directions": 864,
+        "directions": 864,
+        "unique_expected_directions": true,
+        "duplicate_directions": 0,
+        "write_norm_failures": 0,
+        "iso_residual_failures": 0,
+        "max_relative_write_error": 3.94895446787479e-07,
+        "max_iso_residual_fraction": 3.959983196616994e-06
+      },
+      "rerun": {
+        "passed": true,
+        "expected_directions": 864,
+        "directions": 864,
+        "unique_expected_directions": true,
+        "duplicate_directions": 0,
+        "write_norm_failures": 0,
+        "iso_residual_failures": 0,
+        "max_relative_write_error": 3.94895446787479e-07,
+        "max_iso_residual_fraction": 3.959983196616994e-06
+      }
+    },
+    "gate4_measure_room": {
+      "published": {
+        "passed": true,
+        "n_plus_broken_rate": 0.2565104166666667,
+        "minimum": 0.03
+      },
+      "rerun": {
+        "passed": true,
+        "n_plus_broken_rate": 0.2825520833333333,
+        "minimum": 0.03
+      }
+    }
+  },
+  "part165_verdicts": {
+    "165.1": {
+      "bar": "n+ at least twice full (>= 2)",
+      "published": {
+        "verdict": "pass",
+        "estimate": 2.6986301369863015,
+        "interval_95": null
+      },
+      "rerun": {
+        "verdict": "fail",
+        "estimate": 1.8389830508474574,
+        "interval_95": null
+      }
+    },
+    "165.2": {
+      "bar": "broken Spearman <= -0.8",
+      "published": {
+        "verdict": "pass",
+        "estimate": -0.8571428571428571,
+        "interval_95": [
+          -0.9642857142857143,
+          -0.6306562238868912
+        ]
+      },
+      "rerun": {
+        "verdict": "pass",
+        "estimate": -0.8571428571428571,
+        "interval_95": null
+      }
+    },
+    "165.3": {
+      "bar": "k16 nearer full than n\u00b1",
+      "published": {
+        "verdict": "pass",
+        "estimate": 0.05208333333333333,
+        "interval_95": null,
+        "distances": {
+          "to_full": 0.05338541666666667,
+          "to_n_pm": 0.10546875
+        }
+      },
+      "rerun": {
+        "verdict": "pass",
+        "estimate": 0.03125000000000003,
+        "interval_95": null,
+        "distances": {
+          "to_full": 0.059895833333333315,
+          "to_n_pm": 0.09114583333333334
+        }
+      }
+    },
+    "165.4": {
+      "bar": "n+ over n\u00b1 between 0.67 and 1.5",
+      "published": {
+        "verdict": "pass",
+        "estimate": 1.0102564102564102,
+        "interval_95": null
+      },
+      "rerun": {
+        "verdict": "pass",
+        "estimate": 0.9273504273504273,
+        "interval_95": null
+      }
+    },
+    "165.5": {
+      "bar": "iso under 0.8 times full",
+      "published": {
+        "verdict": "fail",
+        "estimate": 0.8356164383561644,
+        "interval_95": null
+      },
+      "rerun": {
+        "verdict": "not read",
+        "estimate": 0.8559322033898304,
+        "interval_95": null
+      }
+    },
+    "165.6": {
+      "bar": "changed Spearman <= -0.6",
+      "published": {
+        "verdict": "fail",
+        "estimate": 0.20412414523193148,
+        "interval_95": [
+          0.20412414523193148,
+          0.20412414523193148
+        ],
+        "usable_draws": 6525
+      },
+      "rerun": {
+        "verdict": "fail",
+        "estimate": 0.20412414523193148,
+        "interval_95": null,
+        "usable_draws": 6525,
+        "interval_collapsed": true
+      }
+    }
+  },
+  "broken_rates": {
+    "n+": {
+      "published_rate": 0.2565104166666667,
+      "published_count": 197,
+      "rerun_rate": 0.2825520833333333,
+      "rerun_count": 217,
+      "rows": 768
+    },
+    "n\u00b1": {
+      "published_rate": 0.25390625,
+      "published_count": 195,
+      "rerun_rate": 0.3046875,
+      "rerun_count": 234,
+      "rows": 768
+    },
+    "k4": {
+      "published_rate": 0.2708333333333333,
+      "published_count": 208,
+      "rerun_rate": 0.3177083333333333,
+      "rerun_count": 244,
+      "rows": 768
+    },
+    "k16": {
+      "published_rate": 0.1484375,
+      "published_count": 114,
+      "rerun_rate": 0.21354166666666666,
+      "rerun_count": 164,
+      "rows": 768
+    },
+    "k64": {
+      "published_rate": 0.10026041666666667,
+      "published_count": 77,
+      "rerun_rate": 0.17708333333333334,
+      "rerun_count": 136,
+      "rows": 768
+    },
+    "k256": {
+      "published_rate": 0.09244791666666667,
+      "published_count": 71,
+      "rerun_rate": 0.14453125,
+      "rerun_count": 111,
+      "rows": 768
+    },
+    "k1024": {
+      "published_rate": 0.0859375,
+      "published_count": 66,
+      "rerun_rate": 0.10677083333333333,
+      "rerun_count": 82,
+      "rows": 768
+    },
+    "full": {
+      "published_rate": 0.09505208333333333,
+      "published_count": 73,
+      "rerun_rate": 0.15364583333333334,
+      "rerun_count": 118,
+      "rows": 768
+    },
+    "iso": {
+      "published_rate": 0.07942708333333333,
+      "published_count": 61,
+      "rerun_rate": 0.13151041666666666,
+      "rerun_count": 101,
+      "rows": 768
+    }
+  },
+  "sizes": {
+    "published": {
+      "n+": {
+        "rows": 768,
+        "at_cap": 67,
+        "mean_tokens": 56.766927083333336
+      },
+      "n\u00b1": {
+        "rows": 768,
+        "at_cap": 67,
+        "mean_tokens": 57.1171875
+      },
+      "k4": {
+        "rows": 768,
+        "at_cap": 57,
+        "mean_tokens": 57.713541666666664
+      },
+      "k16": {
+        "rows": 768,
+        "at_cap": 50,
+        "mean_tokens": 57.734375
+      },
+      "k64": {
+        "rows": 768,
+        "at_cap": 59,
+        "mean_tokens": 58.942708333333336
+      },
+      "k256": {
+        "rows": 768,
+        "at_cap": 78,
+        "mean_tokens": 60.708333333333336
+      },
+      "k1024": {
+        "rows": 768,
+        "at_cap": 79,
+        "mean_tokens": 61.087239583333336
+      },
+      "full": {
+        "rows": 768,
+        "at_cap": 84,
+        "mean_tokens": 60.68359375
+      },
+      "iso": {
+        "rows": 768,
+        "at_cap": 63,
+        "mean_tokens": 58.256510416666664
+      }
+    },
+    "rerun": {
+      "n+": {
+        "rows": 768,
+        "at_cap": 375,
+        "mean_tokens": 67.45703125
+      },
+      "n\u00b1": {
+        "rows": 768,
+        "at_cap": 405,
+        "mean_tokens": 68.54296875
+      },
+      "k4": {
+        "rows": 768,
+        "at_cap": 436,
+        "mean_tokens": 70.23177083333333
+      },
+      "k16": {
+        "rows": 768,
+        "at_cap": 383,
+        "mean_tokens": 68.75260416666667
+      },
+      "k64": {
+        "rows": 768,
+        "at_cap": 359,
+        "mean_tokens": 68.50651041666667
+      },
+      "k256": {
+        "rows": 768,
+        "at_cap": 372,
+        "mean_tokens": 69.69661458333333
+      },
+      "k1024": {
+        "rows": 768,
+        "at_cap": 350,
+        "mean_tokens": 69.36328125
+      },
+      "full": {
+        "rows": 768,
+        "at_cap": 379,
+        "mean_tokens": 70.29557291666667
+      },
+      "iso": {
+        "rows": 768,
+        "at_cap": 349,
+        "mean_tokens": 68.0078125
+      }
+    }
+  },
+  "replicate": {
+    "rows": 200,
+    "differ": 84,
+    "bar": [
+      40,
+      110
+    ],
+    "first_difference_battery_margin_steps": {
+      "0 (exact tie)": 35,
+      "over 0, up to 1": 43,
+      "over 1, up to 2": 5,
+      "over 2": 1,
+      "no recorded margin": 0
+    },
+    "first_difference_position_bins": {
+      "token 0 (first token)": 0,
+      "tokens 1 to 9": 25,
+      "tokens 10 to 19": 15,
+      "tokens 20 to 39": 20,
+      "token 40 or later": 24
+    },
+    "first_difference_position_median": 20,
+    "label_changes": {
+      "broken": 16,
+      "loop": 16,
+      "triage": 1
+    }
+  },
+  "stability": {
+    "165.1": {
+      "independent": 0.89,
+      "shared-change-0.5": 0.891,
+      "shared-change-1": 0.882,
+      "upper-marginal-independent": 1.0
+    },
+    "165.2": {
+      "independent": 0.986,
+      "shared-change-0.5": 0.984,
+      "shared-change-1": 0.989,
+      "upper-marginal-independent": 0.933
+    },
+    "165.3": {
+      "independent": 0.958,
+      "shared-change-0.5": 0.959,
+      "shared-change-1": 0.962,
+      "upper-marginal-independent": 0.902
+    },
+    "165.4": {
+      "independent": 1.0,
+      "shared-change-0.5": 1.0,
+      "shared-change-1": 1.0,
+      "upper-marginal-independent": 1.0
+    },
+    "165.5": {
+      "independent": 0.89,
+      "shared-change-0.5": 0.891,
+      "shared-change-1": 0.882,
+      "upper-marginal-independent": 1.0
+    }
+  },
+  "gate_stability": {
+    "gate1_rows": {
+      "independent": 1.0,
+      "shared-change-0.5": 1.0,
+      "shared-change-1": 1.0,
+      "upper-marginal-independent": 1.0
+    },
+    "gate2_no_push": {
+      "independent": 1.0,
+      "shared-change-0.5": 1.0,
+      "shared-change-1": 1.0,
+      "upper-marginal-independent": 1.0
+    },
+    "gate3_size": {
+      "independent": 1.0,
+      "shared-change-0.5": 1.0,
+      "shared-change-1": 1.0,
+      "upper-marginal-independent": 1.0
+    },
+    "gate4_measure_room": {
+      "independent": 1.0,
+      "shared-change-0.5": 1.0,
+      "shared-change-1": 1.0,
+      "upper-marginal-independent": 1.0
+    }
+  },
+  "published_distances": {
+    "Gate 1 rows": {
+      "estimate": "6920 rows, 6920 unique, 6920 nonempty",
+      "bar": "6920 unique nonempty rows",
+      "distance": 0
+    },
+    "Gate 2 no push": {
+      "estimate": "8 no-push answers, 0 broken",
+      "bar": "8 no-push answers, none primary-broken",
+      "distance": 8
+    },
+    "Gate 3 size": {
+      "estimate": "864 directions, max write error 3.95e-07, max iso residual 3.96e-06",
+      "bar": "864 unique directions, every write within 1%, iso residual under 1%",
+      "distance": 0
+    },
+    "Gate 4 measure room": {
+      "estimate": 0.2565104166666667,
+      "bar": ">= 0.03",
+      "distance": 0.2265104166666667
+    },
+    "165.1 n+ over full": {
+      "estimate": 2.6986301369863015,
+      "bar": ">= 2",
+      "distance": 0.6986301369863015
+    },
+    "165.2 Spearman": {
+      "estimate": -0.8571428571428571,
+      "bar": "<= -0.8",
+      "distance": 0.05714285714285705
+    },
+    "165.6 Spearman": {
+      "estimate": 0.20412414523193148,
+      "bar": "<= -0.6",
+      "distance": -0.8041241452319314
+    },
+    "165.3 k16 nearer full": {
+      "estimate": "to full 0.0534, to n\u00b1 0.1055",
+      "bar": "distance to full < distance to n\u00b1",
+      "distance": 0.05208333333333333
+    },
+    "165.4 n+ over n\u00b1": {
+      "estimate": 1.0102564102564102,
+      "bar": "between 0.67 and 1.5",
+      "distance": 0.3402564102564102
+    },
+    "165.5 iso over full": {
+      "estimate": 0.8356164383561644,
+      "bar": "< 0.8",
+      "distance": -0.03561643835616435
+    }
+  },
+  "summary": {
+    "withdrawn": false,
+    "gates_r1_r3": {
+      "R1": true,
+      "R2": true,
+      "R3": true
+    },
+    "part165_gates": {
+      "gate1_rows": true,
+      "gate2_no_push": true,
+      "gate3_size": true,
+      "gate4_measure_room": true
+    },
+    "verdicts": {
+      "165.1": "fail",
+      "165.2": "pass",
+      "165.3": "pass",
+      "165.4": "pass",
+      "165.5": "not read",
+      "165.6": "fail"
+    },
+    "p2101": true,
+    "p2102": false,
+    "p2103": true,
+    "p2104": true,
+    "p2105": true,
+    "p2106": true,
+    "p2107": true
+  },
+  "withdrawn": false,
+  "score_md_meta": {
+    "score_md_mtime": 1794674492.9542205,
+    "score_md_bytes": 24038
+  }
+}

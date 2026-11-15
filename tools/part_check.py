@@ -413,7 +413,9 @@ def publish(repo, pid, legacy_ok=False):
             ", ".join(sorted(set(local))[:8]))
     r.check(not missing, "every cited path exists", "cited but missing: " + ", ".join(missing[:8]))
     r.check(not uncommitted, "every cited path is committed (or gitignored and local by design)",
-            "cited but not committed: " + ", ".join(uncommitted[:8]))
+            "cited but not committed: " + ", ".join(uncommitted[:8]) +
+            " (on disk but not in git: commit them before publishing; a worker briefed not to commit reports this"
+            " line as expected and leaves the commit to its parent)")
     return r
 
 
