@@ -317,3 +317,9 @@ beyond one part.
   that produced its input.
 - 2026-11-09 (Part 199). Compare answer lengths before comparing loop or repetition rates across kernels: on SDPA, 358 to
   383 of 384 dose-1 answers per cell ended before the cap, and a shorter answer has less room to loop.
+- 2026-11-15 (Part 205). A ranking on a forced choice needs a gate that the model picks by content. G0 checked that the
+  two letters carry the mass, not which letter wins; OLMo 2 1B answered DO near chance at every stage (P(consistent)
+  0.48 to 0.59, mostly a B preference), so activation x gradient of "consistent minus other" ranked letter-choosing
+  parts and the overlap index measured those. With the consistent letter balanced across prompts, split each part's
+  estimate into a letter component |mean(e x s)| and a consistency component |mean(e)| before reading an overlap
+  (`part205/letter205.py`), and gate a stage on P(consistent) above chance.
