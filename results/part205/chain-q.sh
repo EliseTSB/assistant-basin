@@ -47,13 +47,18 @@ python3 -I -c "import json,sys; v=json.load(open('results/part205/g1/g1.json'))[
   || { echo "PART205 G1 VERDICT FAIL: family Q held"; exit 4; }
 fi
 
-# 2. qwen-chat, controls
+# 2. qwen-chat, controls (skipped when its finished stage folder and models.json row are already here: it finished
+#    09:43 on 11-14 and was copied back; the base kernel reference then died at the RAM guard during Elise's game)
+if python3 -I -c "import json,sys; m=json.load(open('results/part205/qwen-chat/meta.json')); w=json.load(open('part205/models.json')); sys.exit(0 if m.get('finished') and 'qwen-chat' in w['stages'] else 1)" 2>/dev/null; then
+  echo "$(date +%H:%M:%S) qwen-chat already finished ($(python3 -I -c "import json; print(json.load(open('results/part205/qwen-chat/meta.json'))['finished'])")); skipped"
+else
 ARC_OVERRIDE="$BASE Family Q, qwen-chat, --arms controls (Amendment 2 item 4: O's cost gate failed). Kernel check: results/part183/kernel-check.json passes against the Qwen3.5-4B CPU float32 reference (same revision, xpu, bf16, eager)." \
   $ARC 205 11 2 "-I -B part205/run205.py --stage qwen-chat --out results/part205 --device xpu --check-pool --arms controls" \
   -- "${COPY_Q[@]}" || { echo "PART205 QWEN-CHAT FAILED"; exit 6; }
 rm -rf results/part205/qwen-chat && cp -r "$J/results/part205/qwen-chat" results/part205/ || { echo "COPY FAILED: qwen-chat"; exit 5; }
 merge_models qwen-chat || { echo "MODELS.JSON MERGE FAILED: qwen-chat"; exit 5; }
 echo "$(date +%H:%M:%S) PART205-QWEN-CHAT-DONE"
+fi
 
 # 3. Qwen3.5-4B-Base kernel check
 REV=1001bb4d826a52d1f399e183466143f4da7b741b
@@ -61,7 +66,7 @@ REF=results/kernel-reference/qwen-qwen3.5-4b-base-cpu-float32.json
 CAND=results/part205/kernel-check-base.json
 KCOPY=(tools/kernel_reference.py tools/part_check.py neuron_report.py)
 ARC_OVERRIDE="$BASE Kernel check for Qwen3.5-4B-Base before family Q's base stage (PROCEDURE.md section 6): the CPU float32-upcast reference." \
-  $ARC 205 12 1 "-I -B tools/kernel_reference.py --model Qwen/Qwen3.5-4B-Base --revision $REV --device cpu --dtype float32-upcast --attn-implementation eager --out $REF" \
+  $ARC 205 14 2 "-I -B tools/kernel_reference.py --model Qwen/Qwen3.5-4B-Base --revision $REV --device cpu --dtype float32-upcast --attn-implementation eager --out $REF" \
   -- "${KCOPY[@]}" || { echo "BASE KERNEL REFERENCE FAILED"; exit 7; }
 mkdir -p results/kernel-reference && cp "$J/$REF" "$REF" || { echo "COPY FAILED: base reference"; exit 5; }
 ARC_OVERRIDE="$BASE Kernel check for Qwen3.5-4B-Base: the card candidate (xpu, bf16, eager)." \

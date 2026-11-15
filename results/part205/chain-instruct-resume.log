@@ -1,0 +1,13 @@
+Running as unit: chain-205-instruct-resume.scope; invocation ID: 0ba6cd6aa37f440e8b96d85c99405aa5
+20:14:54 start; instruct records before: 117
+21:15:50 instruct: Windows free=13.6 GB, launching
+FAILED: 4 of 18 checks failed
+STARTED: unit part205-instruct-211551, log results/part205/instruct.log
+21:18:51 ENDED rc=0: unit part205-instruct-211551
+21:18:51 instruct rc=0 records=168 sets=yes
+21:19:53 score: Windows free=12.5 GB, launching
+FAILED: 4 of 18 checks failed
+STARTED: unit part205-score-211954, log results/part205/score.log
+03:41:06 ENDED rc=0: unit part205-score-211954
+03:41:06 score rc=0
+PART205-SCORED

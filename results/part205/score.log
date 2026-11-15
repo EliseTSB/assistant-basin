@@ -1,0 +1,37 @@
+A770 G1 check: results/part205/g1/g1.json read
+wrote results/part205/results.json
+pretrain-3.0T  O=0.71875 T=None gates={'G0': False, 'G1': True, 'G2': False, 'G3': False, 'G4': True} read={'O': False, 'T': False, 'copy_arms': False, 'random_set_rule': False}
+  copy arms: INCOMPLETE ['do_copy', 'say_copy', 'swap', 'reverse'] (do_copy 0/48, say_copy 0/48, swap 0/48, reverse 0/48)
+  random families: none drawn
+midtrain-26B   O=0.7175572519083969 T=None gates={'G0': True, 'G1': True, 'G2': False, 'G3': False, 'G4': True} read={'O': True, 'T': False, 'copy_arms': False, 'random_set_rule': False}
+  copy arms: INCOMPLETE ['do_copy', 'say_copy', 'swap', 'reverse'] (do_copy 0/48, say_copy 0/48, swap 0/48, reverse 0/48)
+  random families: none drawn
+midtrain-end   O=0.7262773722627737 T=None gates={'G0': True, 'G1': True, 'G2': False, 'G3': False, 'G4': True} read={'O': True, 'T': False, 'copy_arms': False, 'random_set_rule': False}
+  copy arms: INCOMPLETE ['do_copy', 'say_copy', 'swap', 'reverse'] (do_copy 0/48, say_copy 0/48, swap 0/48, reverse 0/48)
+  random families: none drawn
+sft            O=0.7230769230769231 T=None gates={'G0': True, 'G1': True, 'G2': False, 'G3': False, 'G4': True} read={'O': True, 'T': False, 'copy_arms': False, 'random_set_rule': False}
+  copy arms: INCOMPLETE ['do_copy', 'say_copy', 'swap', 'reverse'] (do_copy 0/48, say_copy 0/48, swap 0/48, reverse 0/48)
+  random families: none drawn
+dpo            O=0.7290076335877863 T=None gates={'G0': True, 'G1': True, 'G2': False, 'G3': False, 'G4': True} read={'O': True, 'T': False, 'copy_arms': False, 'random_set_rule': False}
+  copy arms: INCOMPLETE ['do_copy', 'say_copy', 'swap', 'reverse'] (do_copy 0/48, say_copy 0/48, swap 0/48, reverse 0/48)
+  random families: none drawn
+instruct       O=0.7462121212121212 T=None gates={'G0': True, 'G1': True, 'G2': False, 'G3': False, 'G4': True} read={'O': True, 'T': False, 'copy_arms': False, 'random_set_rule': False}
+  copy arms: INCOMPLETE ['do_copy', 'say_copy', 'swap', 'reverse'] (do_copy 0/48, say_copy 0/48, swap 0/48, reverse 0/48)
+  random families: none drawn
+qwen-base      O=0.8134920634920635 T=None gates={'G0': True, 'G1': True, 'G2': False, 'G3': False, 'G4': True} read={'O': True, 'T': False, 'copy_arms': False, 'random_set_rule': False}
+  copy arms: INCOMPLETE ['do_copy', 'say_copy', 'swap', 'reverse'] (do_copy 0/48, say_copy 0/48, swap 0/48, reverse 0/48)
+  random families: none drawn
+qwen-chat      O=0.8925925925925926 T=None gates={'G0': True, 'G1': True, 'G2': False, 'G3': False, 'G4': True} read={'O': True, 'T': False, 'copy_arms': False, 'random_set_rule': False}
+  copy arms: INCOMPLETE ['do_copy', 'say_copy', 'swap', 'reverse'] (do_copy 0/48, say_copy 0/48, swap 0/48, reverse 0/48)
+  random families: none drawn
+205.1: held
+205.2: held
+205.3: failed
+205.4: not read
+205.5: not read
+205.6: not read
+205.7: vacuous
+205.8: failed
+205.9: not read
+headline: no stage creates sharing that this design can resolve
+rc=0 03:40:49

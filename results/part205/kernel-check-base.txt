@@ -1,0 +1,24 @@
+part_check kernel results/part205/kernel-check-base.json against results/kernel-reference/qwen-qwen3.5-4b-base-cpu-float32.json
+  ok    model matches (Qwen/Qwen3.5-4B-Base)
+  ok    revision matches (1001bb4d826a52d1f399e183466143f4da7b741b)
+  ok    prompt_sha256 matches (bda9209c060d9487c8730a818cc8c02b210f2b804755d0b11f8228604867f3cb)
+  ok    new_tokens matches (96)
+  ok    batch sizes compared: 1, 2
+  ok    batch 1 prompt 0: agrees with the reference on all 91 positions
+  ok    batch 1 prompt 1: near-tie divergence at position 68 (reference margin 0.053, under 0.5); later positions not compared
+  ok    batch 1 prompt 2: agrees with the reference on all 8 positions
+  ok    batch 1 prompt 3: near-tie divergence at position 42 (reference margin 0.002, under 0.5); later positions not compared
+  ok    batch 1 prompt 4: agrees with the reference on all 96 positions
+  ok    batch 1 prompt 5: agrees with the reference on all 96 positions
+  ok    batch 1 prompt 6: agrees with the reference on all 96 positions
+  ok    batch 1 prompt 7: agrees with the reference on all 96 positions
+  ok    batch 2 prompt 0: agrees with the reference on all 91 positions
+  ok    batch 2 prompt 1: near-tie divergence at position 68 (reference margin 0.053, under 0.5); later positions not compared
+  ok    batch 2 prompt 2: agrees with the reference on all 8 positions
+  ok    batch 2 prompt 3: near-tie divergence at position 17 (reference margin 0.010, under 0.5); later positions not compared
+  ok    batch 2 prompt 4: near-tie divergence at position 12 (reference margin 0.093, under 0.5); later positions not compared
+  ok    batch 2 prompt 5: agrees with the reference on all 96 positions
+  ok    batch 2 prompt 6: agrees with the reference on all 96 positions
+  ok    batch 2 prompt 7: agrees with the reference on all 96 positions
+PASSED: all 21 checks
+KERNEL CHECK: PASS

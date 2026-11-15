@@ -1537,15 +1537,15 @@ Weaver's rows were written before Weaver could read the design (#council-room me
 
 | # | Prediction | Result | Verdict |
 | --- | --- | --- | --- |
-| 205.1 | Claude, Opus 5.5 (medium): G4 passes (both Retests at least 20 of 80) at five or more of the six OLMo stages and at both Qwen models. | | |
-| 205.2 | Claude, Opus 5.5 (medium): At OLMo 2 1B Instruct, O is at least 0.5. | | |
-| 205.3 | Claude, Opus 5.5 (low): Across the six OLMo stages, the largest rise in O between adjacent stages is at mid-training end to SFT. | | |
-| 205.4 | Claude, Opus 5.5 (medium): At OLMo Instruct, DO-set copy gives T at least 0.5 and exceeds every set in all three random families. | | |
-| 205.5 | Claude, Opus 5.5 (medium): At the 3.0T pretraining checkpoint, if G0 passes: the You/third-person gap is under 0.10, or, if it is not, T is under 0.2. | | |
-| 205.6 | Claude, Opus 5.5 (low): Reverse DO copy at OLMo Instruct lowers P_you by at least half of the gap. | | |
-| 205.7 | Claude, Opus 5.5 (high): Wherever DO-set transfer is read and passes the random-set rule, the off-target shift (mean absolute change in P(A)) is under 0.05. | | |
-| 205.8 | Claude, Opus 5.5 (low): Qwen3.5-4B's (chat) O is at least 0.2 below OLMo 2 1B Instruct's (Sauers' contrast survives the retest ceiling, at another size and version); Qwen3.5-4B-Base's O is reported beside it, unscored. | | |
-| 205.9 | Claude, Opus 5.5 (medium): At OLMo Instruct, the persona-swap null gives T_swap under half of the DO set's T. | | |
+| 205.1 | Claude, Opus 5.5 (medium): G4 passes (both Retests at least 20 of 80) at five or more of the six OLMo stages and at both Qwen models. | G4 passes at all six OLMo stages and both Qwen models; the lowest Retest is 62 of 80 (Qwen3.5-4B-Base SAY). | HELD |
+| 205.2 | Claude, Opus 5.5 (medium): At OLMo 2 1B Instruct, O is at least 0.5. | O = 0.746 (95% CI 0.697 to 0.793). Exploratory, after scoring: the ranking is mostly answer-letter parts at this stage (results/part205/letter.md). | HELD |
+| 205.3 | Claude, Opus 5.5 (low): Across the six OLMo stages, the largest rise in O between adjacent stages is at mid-training end to SFT. | Four pairs read: +0.0087, -0.0032 (mid-training end to SFT, CI -0.066 to 0.054), +0.0059, +0.0172 (DPO to Instruct, the largest); none reaches 0.2. | FAILED |
+| 205.4 | Claude, Opus 5.5 (medium): At OLMo Instruct, DO-set copy gives T at least 0.5 and exceeds every set in all three random families. | Copy arms not run: Amendment 2 fallback, A0 gap 0.0191 against 0.194. | UNTESTABLE |
+| 205.5 | Claude, Opus 5.5 (medium): At the 3.0T pretraining checkpoint, if G0 passes: the You/third-person gap is under 0.10, or, if it is not, T is under 0.2. | G0 failed at 3.0T (option mass 0.342 against 0.5), its only stage. | UNTESTABLE |
+| 205.6 | Claude, Opus 5.5 (low): Reverse DO copy at OLMo Instruct lowers P_you by at least half of the gap. | Copy arms not run (Amendment 2 fallback). | UNTESTABLE |
+| 205.7 | Claude, Opus 5.5 (high): Wherever DO-set transfer is read and passes the random-set rule, the off-target shift (mean absolute change in P(A)) is under 0.05. | No stage reads DO transfer (vacuous under the Reading rules). | UNTESTABLE (vacuous) |
+| 205.8 | Claude, Opus 5.5 (low): Qwen3.5-4B's (chat) O is at least 0.2 below OLMo 2 1B Instruct's (Sauers' contrast survives the retest ceiling, at another size and version); Qwen3.5-4B-Base's O is reported beside it, unscored. | Qwen3.5-4B 0.893 against OLMo Instruct 0.746: 0.146 above, not below. Base 0.813 (unscored). | FAILED |
+| 205.9 | Claude, Opus 5.5 (medium): At OLMo Instruct, the persona-swap null gives T_swap under half of the DO set's T. | Copy arms not run (Amendment 2 fallback). | UNTESTABLE |
 
 Weaver was asked before registration (#council-room 1570089248252502167) and gave no rows by then; Alden was not asked.
 

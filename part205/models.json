@@ -1,14 +1,91 @@
 {
  "part": 205,
  "stages": {
+  "dpo": {
+   "attn_implementation": "eager",
+   "device": "cpu",
+   "dtype": "float32",
+   "family": "O",
+   "model_id": "allenai/OLMo-2-0425-1B-DPO",
+   "recorded": "2026-11-13T23:22:00",
+   "revision": "c4b0485961ab24c2433b090f3b922f0913a9290f",
+   "torch": "2.14.1+cpu",
+   "transformers": "5.20.0"
+  },
   "instruct": {
    "attn_implementation": "eager",
    "device": "cpu",
    "dtype": "float32",
    "family": "O",
    "model_id": "allenai/OLMo-2-0425-1B-Instruct",
-   "recorded": "2026-11-13T07:33:08",
+   "recorded": "2026-11-14T21:16:14",
    "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+   "torch": "2.14.1+cpu",
+   "transformers": "5.20.0"
+  },
+  "midtrain-26B": {
+   "attn_implementation": "eager",
+   "device": "cpu",
+   "dtype": "float32",
+   "family": "O",
+   "model_id": "allenai/OLMo-2-0425-1B",
+   "recorded": "2026-11-13T15:24:27",
+   "revision": "1c3599f7b4042ce2a39c5777ff4047f2a84f871e",
+   "torch": "2.14.1+cpu",
+   "transformers": "5.20.0"
+  },
+  "midtrain-end": {
+   "attn_implementation": "eager",
+   "device": "cpu",
+   "dtype": "float32",
+   "family": "O",
+   "model_id": "allenai/OLMo-2-0425-1B",
+   "recorded": "2026-11-13T18:31:07",
+   "revision": "a1847dff35000b4271fa70afc5db10fd29fedbdf",
+   "torch": "2.14.1+cpu",
+   "transformers": "5.20.0"
+  },
+  "pretrain-3.0T": {
+   "attn_implementation": "eager",
+   "device": "cpu",
+   "dtype": "float32",
+   "family": "O",
+   "model_id": "allenai/OLMo-2-0425-1B",
+   "recorded": "2026-11-13T11:23:53",
+   "revision": "22738a97eabcd7523be1a56eaa1745bc60e9781c",
+   "torch": "2.14.1+cpu",
+   "transformers": "5.20.0"
+  },
+  "qwen-base": {
+   "attn_implementation": "eager",
+   "device": "xpu",
+   "dtype": "torch.bfloat16",
+   "family": "Q",
+   "model_id": "Qwen/Qwen3.5-4B-Base",
+   "recorded": "2026-11-14T18:32:19",
+   "revision": "1001bb4d826a52d1f399e183466143f4da7b741b",
+   "torch": "2.13.0+xpu",
+   "transformers": "5.13.0"
+  },
+  "qwen-chat": {
+   "attn_implementation": "eager",
+   "device": "xpu",
+   "dtype": "torch.bfloat16",
+   "family": "Q",
+   "model_id": "Qwen/Qwen3.5-4B",
+   "recorded": "2026-11-14T09:37:18",
+   "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+   "torch": "2.13.0+xpu",
+   "transformers": "5.13.0"
+  },
+  "sft": {
+   "attn_implementation": "eager",
+   "device": "cpu",
+   "dtype": "float32",
+   "family": "O",
+   "model_id": "allenai/OLMo-2-0425-1B-SFT",
+   "recorded": "2026-11-13T22:37:56",
+   "revision": "0d85a3d037876ce6ac7d4311d994400fc66ac27f",
    "torch": "2.14.1+cpu",
    "transformers": "5.20.0"
   }
