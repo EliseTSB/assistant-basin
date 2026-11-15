@@ -13,6 +13,11 @@ must match only new lines.
 
 CPU mode writes the command to results/partNN/run-<tag>.sh (systemd-run expands $ in an inline command; a script file
 is not expanded) and starts it as a systemd user unit with a memory cap, output appended to results/partNN/<tag>.log.
+--block (CPU mode) waits for the unit to end and exits with the run's own rc, read from the wrapper's last
+`rc=N` line in the log written after this launch. A unit with no such line was killed (out of memory, stopped) and
+--block exits 1. Never judge a CPU run by `systemctl show -p Result`: the unit is started with --collect, so once it
+has ended it is unloaded and `show` prints the DEFAULT value, "success" (Part 205's Instruct stage, OOM-killed at
+00:54 on 2026-11-14 with 117 of 168 records, was logged "ended: success" that way and went unnoticed for 19 hours).
 A systemd user unit gets the user manager's environment, not this shell's: give interpreters by full path.
 API keys are missing there too (OPENCODE_GO_API_KEY, 2026-10-29: 90 calibration calls all failed): read a key
 from its env file inside the command at run time, never pass its value on the command line.
@@ -123,6 +128,37 @@ def cpu_script(command):
             f"{command}\nrc=$?\necho \"rc=$rc $(date +%H:%M:%S)\"\nexit $rc\n")
 
 
+RC_LINE = re.compile(r"^rc=(-?\d+) \d\d:\d\d:\d\d$")
+
+
+def cpu_outcome(new_log_text):
+    """The run's rc from the wrapper's `rc=N HH:MM:SS` line in the log text written after this launch, or None when
+    there is no such line (the unit was killed before the wrapper's last line: out of memory, stopped). The LAST
+    matching line wins, and only a whole line counts, so a program printing 'rc=0' mid-line cannot pass for it."""
+    rc = None
+    for line in new_log_text.splitlines():
+        m = RC_LINE.match(line.strip())
+        if m:
+            rc = int(m.group(1))
+    return rc
+
+
+def wait_cpu(unit, log, offset, poll=30, is_active=None, sleep=time.sleep):
+    """Block until `unit` is no longer active, then judge it by cpu_outcome on the log after `offset`. Returns
+    (rc_or_None, message). is_active and sleep are injectable for tests."""
+    if is_active is None:
+        def is_active(u):
+            return subprocess.run(["systemctl", "--user", "is-active", "--quiet", u]).returncode == 0
+    while is_active(unit):
+        sleep(poll)
+    data = log.read_bytes()[offset:].decode("utf-8", errors="replace") if log.exists() else ""
+    rc = cpu_outcome(data)
+    if rc is None:
+        return None, (f"ENDED WITHOUT AN rc= LINE: unit {unit} was killed before the wrapper's last line "
+                      f"(out of memory, stopped, or the wrapper died); see journalctl --user -u {unit}")
+    return rc, f"ENDED rc={rc}: unit {unit}"
+
+
 POSIX_ONLY = {"fcntl", "termios", "tty", "pty", "pwd", "grp", "resource", "posix", "crypt", "syslog", "spwd"}
 
 
@@ -188,6 +224,9 @@ def main(argv=None, env=None):
     ap.add_argument("--override", help="launch even though the check failed; the reason is recorded")
     ap.add_argument("--ignore-busy", action="store_true")
     ap.add_argument("--wait", type=int, default=60, help="seconds to wait for the start line; 0 does not wait")
+    ap.add_argument("--block", action="store_true",
+                    help="CPU mode: wait for the unit to end and exit with the run's own rc (1 if killed)")
+    ap.add_argument("--poll", type=int, default=30, help="seconds between --block checks")
     ap.add_argument("--repo", default=str(TOOLS.parent))
     ap.add_argument("--no-fetch", action="store_true")
     ap.add_argument("--legacy-ok", action="store_true")
@@ -199,6 +238,9 @@ def main(argv=None, env=None):
         return 2
     if a.cpu and a.copy:
         print("--copy is for A770 mode only (a CPU run reads the repo directly)", file=sys.stderr)
+        return 2
+    if a.block and not a.cpu:
+        print("--block is for CPU mode only (an A770 run is judged by its progress.log rc= line)", file=sys.stderr)
         return 2
     rep = part_check.prelaunch(repo, pid, fetch=not a.no_fetch, legacy_ok=a.legacy_ok)
     rep.print()
@@ -232,12 +274,20 @@ def main(argv=None, env=None):
         rdir.mkdir(parents=True, exist_ok=True)
         script.write_text(cpu_script(a.cpu), encoding="utf-8")
         script.chmod(0o755)
+        offset = log.stat().st_size if log.exists() else 0  # the log appends across runs: judge only what follows
         p = subprocess.run(cmd, capture_output=True, text=True)
         rec["systemd_run_rc"] = p.returncode
         record(repo, pid, rec)
         print((p.stdout + p.stderr).strip())
         print(f"{'STARTED' if p.returncode == 0 else 'FAILED TO START'}: unit {unit}, log {log.relative_to(repo)}")
-        return 0 if p.returncode == 0 else 1
+        if p.returncode != 0:
+            return 1
+        if a.block:
+            sys.stdout.flush()
+            rc, msg = wait_cpu(unit, log, offset, poll=a.poll)
+            print(f"{time.strftime('%H:%M:%S')} {msg}")
+            return 1 if rc is None else (rc if 0 <= rc < 256 else 1)
+        return 0
     cfg = load_config(env)
     job_dir = Path(cfg.get("arc_job_dir", ""))
     if not cfg.get("arc_job_dir") or not job_dir.is_dir():
