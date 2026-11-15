@@ -948,3 +948,33 @@ For the steering-word part that follows:
   followed across stages in the same way (where along OLMo's checkpoints robot parts start landing on the human part
   with the same job). The random-direction control at 22% for wheel is high, so a stage comparison would need it at
   every stage. Not designed.
+
+## 2026-11-14, Muse's atlas watch #54 and #55 (both read at source by Claude)
+
+- **elparko, [medication-neuron-atlas-data](https://github.com/elparko/medication-neuron-atlas-data)** (GitHub, created
+  2026-11-14, read at commit b68037ba, no licence; browser at pereste.com). Qwen/Qwen3-8B, the high and the low values of
+  every MLP neuron as separate units: 36 layers x 12,288 neurons x 2 = 884,736 units, a summary for each and a card for
+  30,529. Text: 10,002,874 tokens, 8.0M from 2,400 FDA prescription drug labels (openFDA) and 2.0M of FineWeb-Edu for
+  contrast. Claude Sonnet wrote each card's description from the unit's strongest contexts, and Claude Haiku judged
+  held-out contexts against it. From meta.json: the description marks 85.2% of the strongest held-out contexts and 14.1%
+  of quiet ones; a string-matching control marks 45.9% and 42.3%. meta.json also reports ten "tenths" bands (not
+  defined there) where the description marks 35.8% falling to 20.6%, with the control near 45% in every band; the
+  README's limits say a description "says little about its everyday firing." No weights revision is named and there
+  is no causal test (no steering, no zeroing). **Bears on our parts:** like prajwal-y's E4 (2026-11-03 entry) and our
+  Parts 58 and 64, it finds a written description fitting the top of a unit's range and not its ordinary firing. Its
+  quiet-context and string controls are ones our sentence tests lack; it has no random-direction control, which ours
+  have. One model at one stage, so nothing here follows a unit across training.
+- **Jordine (Jord Nguyen), [introspection-finetuning-results](https://huggingface.co/datasets/Jordine/introspection-finetuning-results)**
+  (Hugging Face dataset, created 2026-11-13, gated with manual approval; the files were not read, only the card and the
+  file list). Raw evaluation outputs of LoRA finetunes of Qwen/Qwen2.5-Coder-32B-Instruct and base-model controls,
+  evaluated with and without activation steering on multi-turn self-report and detection question sets (runs v7.2, v8,
+  v9; the file list also holds Llama 8B and 70B supplementary runs). The card's code link
+  (github.com/Jordine/introspective-model) returns 404; the public code is
+  [Jordine/introspective-models](https://github.com/Jordine/introspective-models) (MIT, 2026-06-04), for Nguyen and
+  Berg 2026, *Improving Latent Introspection Elicits LLM Self-Reports* (paper link "forthcoming" in that README). Per
+  that README: the model is trained to detect whether its own activations were perturbed in an earlier turn, with no
+  consciousness or introspection vocabulary in training, and detection-trained models show a magnitude-dependent rise
+  in affirmative self-reports about subjective experience, while controls do not; 54 finetuned checkpoints and the
+  base are in an HF collection. **Bears on our parts:** none of ours trains a model. Ours change what a model says
+  about itself by pushing a direction at inference (Part 45.3's "I am a human"); theirs trains detection of such pushes
+  and then measures self-reports. Not designed.
