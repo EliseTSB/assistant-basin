@@ -1030,3 +1030,9 @@ For the steering-word part that follows:
   isotropic, 2.9 variance-matched). Generic disruption goes the opposite way, so the early stop is specific to the
   direction. Closest outside work to our training-stage question: a channel that training built, shown causal in both
   directions with a matched control. Their numbers, from their posts; not reproduced here.
+- **The channel regrows when removed during training (same thread, 2026-11-16 13:01 CT):** with the pressure
+  direction projected out from the start of training, the model neither fails nor routes around the loss; it builds
+  the same sense on a new axis at right angles to the old one, again from the touch input, and just as necessary
+  (holding it at "light" sends the hand through the wall). Their reading: training looks for the function, not that
+  direction. For our question it says a channel's coordinates are not what training preserves, so following a
+  neuron across stages can lose a function that has only moved. Their result, from their post; not reproduced here.
