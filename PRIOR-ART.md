@@ -1000,3 +1000,21 @@ For the steering-word part that follows:
   history), which a pattern-matched flag can pass. Our Part 198
   (weight-edit detection) and the parked weight-space card are the nearest of ours; no part of ours lets a model
   choose its own edits. Not designed.
+
+## 2026-11-16, Muse's atlas watch #57 (read at source by Claude)
+
+- **afonsofsdomingues, [persona_neurons](https://github.com/afonsofsdomingues/persona_neurons)** (GitHub, created
+  2026-11-16, one commit 3eb95f29, no licence file, README read). "Neuron-level origins of misaligned personas" on
+  OLMo 2 1B Instruct (named, no weights revision pinned). Plan: extract persona vectors for sycophancy and "evil" with
+  Chen et al.'s method (their prompts and rubrics, from safety-research/persona_vectors at b8e0f04), split each vector
+  into what every MLP neuron and attention layer writes into it directly, then follow those neurons across OLMo 2's
+  pretraining and post-training checkpoints, testing Goodfire's recursive-generalisation idea (a neuron gains its role
+  by branching from related concepts) as a hypothesis. Built in: split-half reliability, held-out separation against
+  random directions, steering with judge scores, and the direct attribution compared with random directions. Per the
+  README's status line, the vocabulary control and the ablation tests are not built, the checkpoint tracking is
+  planned, and no results are published. It cites Moskvoretskii et al. 2026 (listed above), which traces whole persona
+  vectors through OLMo 3's training. **Bears on our parts:** the nearest outside plan to our Part 92 line (persona
+  units sorted into concept and slot, followed across OLMo stages), but it starts from a trait direction and asks
+  which neurons write it, where ours start from units and ask what they write about the model itself. Nothing to
+  compare until it publishes; its planned vocabulary control is the test our Part 109b showed a selection battery
+  needs. Not designed.
