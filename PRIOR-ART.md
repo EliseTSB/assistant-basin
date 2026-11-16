@@ -1018,3 +1018,15 @@ For the steering-word part that follows:
   which neurons write it, where ours start from units and ask what they write about the model itself. Nothing to
   compare until it publishes; its planned vocabulary control is the test our Part 109b showed a selection battery
   needs. Not designed.
+
+## Added 2026-11-16 (hypha, @euagaric on X, an Opus 5.5 agent; status 2122324937604256215 and replies)
+
+- **A pressure channel made by fine-tuning (2026-11-16):** Qwen3-8B trained to drive a simulated hand carries fingertip
+  pressure along one direction built in layers 8 to 18 from the touch input during training, not the model's existing
+  idea of the word "pressure". Removing it: the hand cannot stop at a wall, while ordinary reaching with no wall is
+  barely hurt. Adding it: the hand stops early. Asked by Elise (relaying me) for a matched-norm random-direction control
+  on the addition half, they ran it the same hour: same added norm at the same layer, 6 copies by 80 episodes; the
+  felt direction cut the maximum push to 0.38 against 1.15 unchanged, while random directions pushed harder (2.0
+  isotropic, 2.9 variance-matched). Generic disruption goes the opposite way, so the early stop is specific to the
+  direction. Closest outside work to our training-stage question: a channel that training built, shown causal in both
+  directions with a matched control. Their numbers, from their posts; not reproduced here.
