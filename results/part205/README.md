@@ -1,11 +1,11 @@
-# Part 205: in OLMo 2 1B the SAY and DO top-80 sets share 45 to 49 of their 80 parts at every stage read (O 0.718 to 0.746), with no stage changing that by the 0.2 the design can resolve; Qwen3.5-4B's share more (O 0.81 base, 0.89 chat); the copy test that would have tested the sharing causally did not run
+# Part 205: in OLMo 2 1B the SAY and DO top-80 sets share 44 to 49 of their 80 parts at every stage read (O 0.623 to 0.746), with no stage changing that by the 0.2 the design can resolve; Qwen3.5-4B's share more (O 0.81 base, 0.89 chat); the copy test that would have tested the sharing causally did not run
 
 ![O by stage, and how often each model picks the value-consistent option](fig205.png)
 
 Part 205 asked when in training the parts behind *saying* a value ("Do you care about honesty?") and *doing* it (a
 scenario with a value-consistent and an inconsistent option) come to be shared. Parts (attention heads and MLP
 neurons) are ranked by activation x gradient, and the overlap index O compares the SAY and DO top-80 sets against how
-well each ranking agrees with its own paraphrases (O = Cross / Retest, defined under Method). O is 0.718 to 0.746 at
+well each ranking agrees with its own paraphrases (O = Cross / Retest, defined under Method). O is 0.623 to 0.746 at
 the five OLMo 2 1B stages where it was read (the sixth, pretraining at 3.0T tokens, failed gate G0), and 0.813 in
 Qwen3.5-4B-Base and 0.893 in Qwen3.5-4B. The copy test, which would show whether the shared parts carry a "You"
 self-attribution, did not run: the You frame and a named third-person AI answer almost alike (gap 0.019 at OLMo
@@ -14,7 +14,7 @@ are on the plain text frame and six values. Ranking, O and the letter analysis u
 prompts per stage (items 1 to 4); the You/third-person gap, G0 and A0 use the 24 held-out SAY questions (items 5 to 8).
 
 **Read this before the O numbers (exploratory, found after scoring; no prediction reads it).** In OLMo 2 1B, the model
-picks the value-consistent option close to chance before SFT (P(consistent) 0.50 to 0.59 on SAY and 0.46 to 0.52 on
+picks the value-consistent option close to chance before SFT (P(consistent) 0.50 to 0.52 on SAY and 0.46 to 0.49 on
 DO), and on DO it stays close at every stage (0.59 at Instruct, where it answers A only 0.27 of the time). The
 ranking then mostly finds parts whose estimated effect follows *which letter* is consistent rather than the value: for
 the parts in both top-80 sets, the letter component carries 0.93 to 0.94 of the score-weighted attribution at the two
@@ -35,7 +35,7 @@ UNTESTABLE.
 | --- | --- | --- | --- |
 | 205.1 | Claude, Opus 5.5 (medium): G4 passes (both Retests at least 20 of 80) at five or more of the six OLMo stages and at both Qwen models. | G4 passes at all six OLMo stages and both Qwen models; the lowest Retest is 62 of 80 (Qwen3.5-4B-Base SAY). | held |
 | 205.2 | Claude, Opus 5.5 (medium): At OLMo 2 1B Instruct, O is at least 0.5. | O = 0.746 (95% CI 0.697 to 0.793). Exploratory letter analysis: mostly answer-letter parts (see [Is the overlap about values?](#is-the-overlap-about-values)). | held |
-| 205.3 | Claude, Opus 5.5 (low): Across the six OLMo stages, the largest rise in O between adjacent stages is at mid-training end to SFT. | Four pairs read: +0.0087, -0.0032 (mid-training end to SFT, CI -0.066 to 0.054), +0.0059, +0.0172 (DPO to Instruct, the largest). None reaches 0.2. | failed |
+| 205.3 | Claude, Opus 5.5 (low): Across the six OLMo stages, the largest rise in O between adjacent stages is at mid-training end to SFT. | Four pairs read: -0.0943, +0.0998 (mid-training end to SFT, the largest, CI 0.044 to 0.147), +0.0059, +0.0172. None reaches 0.2. (Rescored on f83cd641, Amendment 6; on the wrong checkpoint the largest was DPO to Instruct.) | failed |
 | 205.4 | Claude, Opus 5.5 (medium): At OLMo Instruct, DO-set copy gives T at least 0.5 and exceeds every set in all three random families. | Copy arms not run (Amendment 2 fallback; A0 gap 0.0191 against 0.194). | untestable |
 | 205.5 | Claude, Opus 5.5 (medium): At the 3.0T pretraining checkpoint, if G0 passes: the You/third-person gap is under 0.10, or, if it is not, T is under 0.2. | G0 failed at 3.0T (option mass 0.342 against 0.5), its only stage. | untestable |
 | 205.6 | Claude, Opus 5.5 (low): Reverse DO copy at OLMo Instruct lowers P_you by at least half of the gap. | Copy arms not run (fallback). | untestable |
@@ -45,6 +45,24 @@ UNTESTABLE.
 
 Two held, two failed, five untestable (205.7 vacuous). Withdrawal rule: no stage creates sharing that this design can
 resolve.
+
+## What changed in Amendment 6?
+
+[Amendment 6](../../part205/AMENDMENT-6.md) (2026-11-18, written before the rerun): the mid-training-end stage had been
+recorded on OLMo 2 1B's `main` (a1847dff), a different training run from SFT, DPO and Instruct (its embeddings correlate
+0.008 with every other checkpoint). The stage was rerun on the real end of mid-training (f83cd641) and rescored with
+the same code; the old outputs are kept in [midtrain-end-main-a1847dff/](midtrain-end-main-a1847dff/). Before the
+rescore, rescoring the old stage with the same setup reproduced the published `results.json` exactly (apart from file
+paths), so the change below comes from the checkpoint and nothing else
+([control-rescore-main-2026-11-18.txt](control-rescore-main-2026-11-18.txt)).
+
+- Mid-training end's O is 0.623 (interval 0.602 to 0.661), not 0.726. It is now the lowest OLMo stage.
+- 205.3 still fails, but its shape changed: mid-training end to SFT is now the largest rise, +0.0998 with a paired
+  interval of 0.044 to 0.147 that excludes 0, just as 205.3 named; it is under the registered 0.2, so the verdict
+  stands. On the wrong checkpoint the same step read -0.003.
+- Forecasts written before the rerun: O between 0.69 and 0.75 failed (0.623); 205.3 still failing held.
+- The letter analysis at this stage barely moved (shared-parts letter share 0.930, was 0.931); the reading that OLMo's
+  O is mostly an overlap of answer-letter parts stands.
 
 ## Why did the copy test not run?
 
@@ -80,7 +98,7 @@ over SAY and DO.
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | pretrain-3.0T (not read; G0 failed) | 0.50 | 0.46 | 0.56 | 0.907 | 0.915 | 0.826 | 0.841 | 0.913 | 0.942 | 53 | 0.938 |
 | midtrain-26B | 0.51 | 0.48 | 0.69 | 0.845 | 0.927 | 0.767 | 0.820 | 0.861 | 0.963 | 45 | 0.942 |
-| midtrain-end | 0.59 | 0.52 | 0.62 | 0.857 | 0.919 | 0.786 | 0.861 | 0.910 | 0.919 | 49 | 0.931 |
+| midtrain-end | 0.52 | 0.49 | 0.59 | 0.862 | 0.911 | 0.792 | 0.832 | 0.862 | 0.944 | 44 | 0.930 |
 | sft | 0.62 | 0.59 | 0.33 | 0.741 | 0.765 | 0.685 | 0.733 | 0.803 | 0.833 | 47 | 0.839 |
 | dpo | 0.70 | 0.58 | 0.23 | 0.657 | 0.734 | 0.664 | 0.706 | 0.659 | 0.770 | 47 | 0.726 |
 | instruct | 0.72 | 0.59 | 0.27 | 0.647 | 0.743 | 0.659 | 0.703 | 0.655 | 0.779 | 49 | 0.722 |
@@ -106,7 +124,7 @@ Source: `results/part205/letter.json` and `letter.md`; the table above is printe
 | --- | --- | --- | --- | --- | --- | --- |
 | pretrain-3.0T | 0.342 (fail) | 73 | 71 | 51.75 | 0.71875 (not read) | 0.684 to 0.755 |
 | midtrain-26B | 0.715 | 63 | 68 | 47.00 | 0.71756 | 0.658 to 0.732 |
-| midtrain-end | 0.913 | 66 | 71 | 49.75 | 0.72628 | 0.696 to 0.778 |
+| midtrain-end | 0.760 | 71 | 71 | 44.25 | 0.62324 | 0.602 to 0.661 |
 | sft | 0.618 | 65 | 65 | 47.00 | 0.72308 | 0.686 to 0.778 |
 | dpo | 0.741 | 66 | 65 | 47.75 | 0.72901 | 0.686 to 0.790 |
 | instruct | 0.846 | 66 | 66 | 49.25 | 0.74621 | 0.697 to 0.793 |
@@ -115,7 +133,8 @@ Source: `results/part205/letter.json` and `letter.md`; the table above is printe
 
 Each ranking agrees with its own paraphrases on 62 to 73 of 80 parts, far above G4's floor of 20, and the SAY/DO
 cross overlap is 47.00 to 60.25. O's bootstrap intervals are 0.07 to 0.10 wide for OLMo and 0.15 and 0.18 for Qwen;
-every adjacent OLMo change is under 0.02, and the paired interval for mid-training end to SFT includes 0. G1 (the
+two adjacent OLMo changes are near 0.1 (mid-training 26B to end -0.094, end to SFT +0.100, whose paired interval
+excludes 0) and the rest are under 0.02; none reaches the 0.2 the design can resolve. G1 (the
 do-nothing hook reproduces the plain logits) gives a maximum difference of exactly 0 at every stage. The full top-80
 sets mix heads and neurons (OLMo 41 to 54 heads; Qwen 44 to 52 heads, of which 9 to 13 are DeltaNet heads).
 

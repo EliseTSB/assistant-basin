@@ -48,7 +48,9 @@ Predictions and amendments are recorded in [`PREDICTIONS.md`](PREDICTIONS.md). I
 > 206.2 count stages and come out the same whatever that stage shows. Numbers that do not involve that stage are
 > unaffected. Each part will get a dated amendment when it is rerun. Rerun so far: Part 209 (2026-11-18, Amendment 2,
 > forecasts written first): 209.8 still holds and 209.15 flips from failed to held. Part 206 (2026-11-18, Amendment 6,
-> forecasts written first): 206.7 still holds and 206.12 still fails. 205.3 remains unresolved.
+> forecasts written first): 206.7 still holds and 206.12 still fails. Part 205 (2026-11-18, Amendment 6): 205.3 still
+> fails, though mid-training end to SFT is now its largest rise (+0.100, under the 0.2 bar). All five verdicts are
+> now rescored on f83cd641.
 
 ## The short version
 

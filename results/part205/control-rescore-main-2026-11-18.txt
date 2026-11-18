@@ -1,0 +1,1 @@
+Part 205 control, 2026-11-18: rescoring the old main midtrain-end stage together with the seven stages' files (copied from worktree ab-part201) reproduced HEAD's results.json exactly except 24 file-path strings (scratch prefix vs results/part205/). Run 04:07 to about 07:15, one core.

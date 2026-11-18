@@ -40,8 +40,8 @@
    "dtype": "float32",
    "family": "O",
    "model_id": "allenai/OLMo-2-0425-1B",
-   "recorded": "2026-11-13T18:31:07",
-   "revision": "a1847dff35000b4271fa70afc5db10fd29fedbdf",
+   "recorded": "2026-11-18T03:05:22",
+   "revision": "f83cd641d4f00954eb25c781e0ac360debb3239e",
    "torch": "2.14.1+cpu",
    "transformers": "5.20.0"
   },

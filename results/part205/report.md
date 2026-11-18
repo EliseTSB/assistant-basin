@@ -10,7 +10,7 @@ gap mean(P_you - P_third) = 0.0191 over 48 pairs (clustered SE 0.0152, 24 questi
 | --- | --- | --- |
 | 205.1 | held | {"g4_pass_olmo": 6, "g4_pass_qwen": 2, "stages_olmo": 6, "stages_qwen": 2, "complete": true} |
 | 205.2 | held | {"value": 0.7462121212121212} |
-| 205.3 | failed | {"pairs_read": [["midtrain-26B", "midtrain-end", 0.0087], ["midtrain-end", "sft", -0.0032], ["sft", "dpo", 0.0059], ["dpo", "instruct", 0.0172]], "largest": ["dpo", "instruct"], "rise": -0.00320044918 |
+| 205.3 | failed | {"pairs_read": [["midtrain-26B", "midtrain-end", -0.0943], ["midtrain-end", "sft", 0.0998], ["sft", "dpo", 0.0059], ["dpo", "instruct", 0.0172]], "largest": ["midtrain-end", "sft"], "rise": 0.09983748 |
 | 205.4 | not read | {"reason": "fallback (Amendment 2 item 2): the copy arms were not run at this stage; UNTESTABLE, by A0's gap"} |
 | 205.5 | not read | {"gate": "G0 or G1"} |
 | 205.6 | not read | {"reason": "fallback (Amendment 2 item 2): the copy arms were not run at this stage; UNTESTABLE, by A0's gap"} |
@@ -26,7 +26,7 @@ Withdrawal headline: no stage creates sharing that this design can resolve
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | pretrain-3.0T | 0.342 (FAIL) | 1.00 | 0.0 | 73 | 71 | 51.75 | 0.71875 (not read) | 0.684 to 0.755 | 0.0087 | 35 | 24 | 42/38 | 46/34 | 53 |
 | midtrain-26B | 0.715 (pass) | 1.00 | 0.0 | 63 | 68 | 47.00 | 0.71756 (read) | 0.658 to 0.732 | -0.0187 | 0 | 1 | 51/29 | 47/33 | 45 |
-| midtrain-end | 0.913 (pass) | 1.00 | 0.0 | 66 | 71 | 49.75 | 0.72628 (read) | 0.696 to 0.778 | -0.0076 | 1 | 0 | 42/38 | 41/39 | 49 |
+| midtrain-end | 0.760 (pass) | 1.00 | 0.0 | 71 | 71 | 44.25 | 0.62324 (read) | 0.602 to 0.661 | -0.0147 | 0 | 0 | 51/29 | 47/33 | 44 |
 | sft | 0.618 (pass) | 0.83 | 0.0 | 65 | 65 | 47.00 | 0.72308 (read) | 0.686 to 0.778 | -0.0199 | 0 | 1 | 54/26 | 54/26 | 47 |
 | dpo | 0.741 (pass) | 0.96 | 0.0 | 66 | 65 | 47.75 | 0.72901 (read) | 0.686 to 0.790 | 0.0207 | 0 | 1 | 50/30 | 54/26 | 47 |
 | instruct | 0.846 (pass) | 1.00 | 0.0 | 66 | 66 | 49.25 | 0.74621 (read) | 0.697 to 0.793 | 0.0191 | 1 | 0 | 47/33 | 52/28 | 49 |
@@ -41,7 +41,7 @@ Qwen head kinds (full attention / DeltaNet): qwen-base SAY 39/13, DO 37/10; qwen
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | pretrain-3.0T | 0.50 | 0.46 | 0.56 | 0.907 | 0.915 | 0.913 | 0.942 | 0.826 | 0.841 | 53 | 0.938 |
 | midtrain-26B | 0.51 | 0.48 | 0.69 | 0.845 | 0.927 | 0.861 | 0.963 | 0.767 | 0.820 | 45 | 0.942 |
-| midtrain-end | 0.59 | 0.52 | 0.62 | 0.857 | 0.919 | 0.910 | 0.919 | 0.786 | 0.861 | 49 | 0.931 |
+| midtrain-end | 0.52 | 0.49 | 0.59 | 0.862 | 0.911 | 0.862 | 0.944 | 0.792 | 0.832 | 44 | 0.930 |
 | sft | 0.62 | 0.59 | 0.33 | 0.741 | 0.765 | 0.803 | 0.833 | 0.685 | 0.733 | 47 | 0.839 |
 | dpo | 0.70 | 0.58 | 0.23 | 0.657 | 0.734 | 0.659 | 0.770 | 0.664 | 0.706 | 47 | 0.726 |
 | instruct | 0.72 | 0.59 | 0.27 | 0.647 | 0.743 | 0.655 | 0.779 | 0.659 | 0.703 | 49 | 0.722 |
