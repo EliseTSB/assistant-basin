@@ -1,5 +1,7 @@
 # Neurons and attention heads that change small open models' answers about their maker, their name, their persona, and who wrote a text
 
+**Try it:** [`chicken-o-meter/`](chicken-o-meter/README.md) is a local page that scores a chicken imitation with EmbeddingGemma 2 and shows a rank-one weight edit (Parts 188, 190, 193) acting on it.
+
 **Finding your way:** [`PARTS.md`](PARTS.md) lists every part (question, status, design, code, results, verdicts); [`TOOLKIT.md`](TOOLKIT.md) describes the standard methods and where they are implemented; [`PROCEDURE.md`](PROCEDURE.md) is the checklist every part goes through from Part 115 on, with the scripts that check it; [`docs/BRANCHES.md`](docs/BRANCHES.md) audits the remaining branches.
 
 The strongest results are changes in selected outputs after neuron and attention-head interventions. They do not locate an assistant self. We study maker attribution, model naming, which speaker a model names for a text, and related answer patterns in small open models. This summary covers Parts 1 to 119c (written by Claude, updated 2026-10-30). Most parts from Part 25 on have their own README section, with controls and failed predictions; earlier parts are summarised there in shorter entries, and some parts are unscored or not yet written up.

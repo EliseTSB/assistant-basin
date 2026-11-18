@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chicken-o-Meter</title>
+<style>
+:root {
+  --bg: #fbf7ef; --panel: #ffffff; --ink: #2b2620; --muted: #7a6f62; --line: #e6dccb;
+  --accent: #c8501e; --accent-soft: #f6dccd; --good: #3f7d3a; --bar: #e0a33a; --bar-peak: #c8501e;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1d1a16; --panel: #27231e; --ink: #f1e9dc; --muted: #ab9f8f; --line: #3b352d;
+    --accent: #f08a4b; --accent-soft: #4a3020; --good: #8cc47f; --bar: #d29a3c; --bar-peak: #f08a4b;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 640px; margin: 0 auto; padding: 24px 16px 48px; }
+h1 { margin: 0; font-size: 2rem; letter-spacing: 0.01em; }
+.sub { margin: 2px 0 20px; color: var(--muted); }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+svg.gauge { width: 100%; height: auto; display: block; }
+.pct { text-align: center; font-size: 2.6rem; font-weight: 700; margin-top: -8px; font-variant-numeric: tabular-nums; }
+.verdict { text-align: center; font-size: 1.15rem; margin: 2px 0 0; }
+.controls { display: flex; gap: 12px; align-items: center; justify-content: center; flex-wrap: wrap; }
+button.rec { font: inherit; font-size: 1.1rem; font-weight: 600; border: 0; border-radius: 999px; padding: 14px 28px;
+  background: var(--accent); color: #fff; cursor: pointer; min-width: 200px; }
+button.rec.on { animation: pulse 1s infinite; }
+@keyframes pulse { 50% { opacity: 0.75; } }
+button.rec:disabled { opacity: 0.5; cursor: wait; }
+label.up { color: var(--muted); cursor: pointer; text-decoration: underline; }
+label.up input { display: none; }
+.status { text-align: center; color: var(--muted); min-height: 1.5em; margin-top: 10px; font-variant-numeric: tabular-nums; }
+.facts { display: grid; gap: 8px; }
+.facts div { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px dashed var(--line); padding-bottom: 6px; }
+.facts span:first-child { color: var(--muted); }
+.facts span:last-child { text-align: right; }
+.timeline { display: flex; align-items: flex-end; gap: 3px; height: 90px; margin-top: 8px; }
+.timeline div { flex: 1; background: var(--bar); border-radius: 3px 3px 0 0; min-height: 3px; }
+.timeline div.peak { background: var(--bar-peak); }
+.axis { display: flex; justify-content: space-between; color: var(--muted); font-size: 0.85rem; }
+h2 { font-size: 1rem; margin: 0 0 8px; }
+audio { width: 100%; margin-top: 12px; }
+.hidden { display: none; }
+.neuron { margin: 10px 0 16px; }
+.neuron .head { display: flex; justify-content: space-between; gap: 8px; }
+.neuron .why { color: var(--muted); font-size: 0.85rem; }
+.track { position: relative; height: 14px; background: var(--line); border-radius: 7px; margin-top: 6px; }
+.fill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent); border-radius: 7px; }
+.hen { position: absolute; top: -4px; bottom: -4px; width: 3px; background: var(--good); border-radius: 2px; }
+.legend { display: flex; justify-content: space-between; color: var(--muted); font-size: 0.8rem; margin-top: 4px; }
+.note { color: var(--muted); font-size: 0.85rem; }
+.labels { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 14px; }
+.labels label { border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+.labels input { margin-right: 6px; }
+.labels label:has(input:checked) { background: var(--accent-soft); border-color: var(--accent); }
+.gatehead { font-size: 1.3rem; font-weight: 700; margin: 4px 0 10px; }
+.gatehead.open { color: var(--accent); }
+.gatehead.closed { color: var(--good); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Chicken-o-Meter 🐔</h1>
+  <p class="sub">AI-assisted voice training.</p>
+
+  <section class="panel">
+    <svg class="gauge" viewBox="0 0 300 170" role="img" aria-label="Chicken gauge">
+      <path d="M30 150 A120 120 0 0 1 270 150" fill="none" stroke="var(--line)" stroke-width="22" stroke-linecap="round"/>
+      <path id="arc" d="M30 150 A120 120 0 0 1 270 150" fill="none" stroke="var(--accent)" stroke-width="22"
+            stroke-linecap="round" stroke-dasharray="0 400"/>
+      <g id="needle2" transform="rotate(-90 150 150)" class="hidden">
+        <line x1="150" y1="150" x2="150" y2="58" stroke="var(--good)" stroke-width="4" stroke-linecap="round"
+              stroke-dasharray="7 5"/>
+      </g>
+      <g id="needle" transform="rotate(-90 150 150)">
+        <line x1="150" y1="150" x2="150" y2="48" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/>
+      </g>
+      <circle cx="150" cy="150" r="9" fill="var(--ink)"/>
+      <text x="22" y="168" font-size="12" fill="var(--muted)">person</text>
+      <text x="262" y="168" font-size="14">🐔</text>
+    </svg>
+    <div class="pct" id="pct">–</div>
+    <p class="verdict" id="verdict">Press record and give it your best hen.</p>
+    <p class="verdict" id="both"></p>
+  </section>
+
+  <section class="panel">
+    <div class="labels" id="labels">
+      <label><input type="radio" name="lab" value="real">a real hen</label>
+      <label><input type="radio" name="lab" value="imitation">my imitation</label>
+      <label><input type="radio" name="lab" value="other">something else</label>
+      <label><input type="radio" name="lab" value="" checked>just playing (not saved)</label>
+    </div>
+    <div class="controls">
+      <button class="rec" id="rec">● Record</button>
+      <label class="up">or upload a file<input type="file" id="file" accept="audio/*"></label>
+      <label class="up">or record on this phone<input type="file" id="phonerec" accept="audio/*" capture></label>
+    </div>
+    <div class="status" id="status">Up to 30 seconds. An egg song works best.</div>
+    <audio id="play" controls class="hidden"></audio>
+  </section>
+
+  <section class="panel hidden" id="gate">
+    <h2>The gate</h2>
+    <div class="gatehead" id="gatehead"></div>
+    <div class="facts" id="gatefacts"></div>
+    <p class="note">The gate opens only when the sound is chicken-like (layer 19) and the real-chicken neuron (layer 17)
+    stays quiet: the signature of a person imitating a hen. When it opens it pushes the answer away from "hen" and
+    "rooster". When it is closed the answer is exactly the model's own. Its three numbers are frozen.</p>
+  </section>
+
+  <section class="panel hidden" id="neurons">
+    <h2>Inside the model: the chicken neurons</h2>
+    <div id="nlist"></div>
+    <p class="note">Each bar is how much louder this neuron fired than ordinary non-chicken sounds (480 ESC-50 clips of
+    48 kinds). The green tick is where a typical recorded hen lands.</p>
+  </section>
+
+  <section class="panel hidden" id="result">
+    <h2>How it heard you</h2>
+    <div class="facts" id="facts"></div>
+    <div id="tlwrap" class="hidden">
+      <h2 style="margin-top:16px">Which part carries it</h2>
+      <div class="timeline" id="timeline"></div>
+      <div class="axis"><span>start</span><span id="tlend"></span></div>
+      <p class="note">Each bar scores two seconds of your take. The darkest bar is the most chicken moment.</p>
+    </div>
+  </section>
+
+  <p class="note">Scored by Google's EmbeddingGemma 2 against 31 reference sounds: real hens, public-domain chickens,
+  Elise's imitations, Claude's synthetic purrs and a few controls. It knows clucking, cackling and egg songs well and
+  purrs not at all. Runs on this PC. Only takes you label are saved, for the gate test. The score is sensitive: re-encoding the same recording can move
+  it by twenty points, so compare takes recorded the same way.</p>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+let rec = null, chunks = [], timer = null, t0 = 0;
+
+function setGauge(pct) {
+  const p = Math.max(0, Math.min(100, pct));
+  $('needle').setAttribute('transform', `rotate(${-90 + 1.8 * p} 150 150)`);
+  const len = Math.PI * 120;
+  $('arc').setAttribute('stroke-dasharray', `${len * p / 100} 400`);
+  $('pct').textContent = Math.round(p) + '%';
+}
+
+function verdict(r) {
+  const p = r.percentile, chickenTop = /hen|chicken|rooster/.test(r.top[0].prompt);
+  if (p >= 95 && chickenTop) return 'Certified hen. The flock would let you in.';
+  if (p >= 80) return 'Convincing chicken.';
+  if (p >= 60) return 'Recognisably poultry. Keep going.';
+  if (p >= 40) return 'Some bird in there.';
+  if (p >= 20) return 'Mostly human. More cluck.';
+  return 'No chicken detected.';
+}
+
+function show(r) {
+  setGauge(r.percentile);
+  $('verdict').textContent = verdict(r);
+  const rows = [
+    ['More chicken than', `${Math.round(r.percentile * r.n_reference / 100)} of ${r.n_reference} reference sounds`],
+    ['Heard it as', r.top.map((t) => t.prompt).join(', ')],
+    ['Closest reference', r.nearest.label],
+  ];
+  if (r.just_beat) rows.push(['You just beat', r.just_beat]);
+  if (r.next_up) rows.push(['Next to beat', r.next_up]);
+  rows.push(['Length', r.seconds + ' s']);
+  $('facts').innerHTML = '';
+  for (const [k, v] of rows) {
+    const d = document.createElement('div');
+    const a = document.createElement('span'); a.textContent = k;
+    const b = document.createElement('span'); b.textContent = v;
+    d.append(a, b); $('facts').append(d);
+  }
+  const tl = r.timeline || [];
+  $('tlwrap').classList.toggle('hidden', tl.length < 2);
+  if (tl.length >= 2) {
+    const zs = tl.map((w) => w.chicken_z), lo = Math.min(...zs), hi = Math.max(...zs), span = (hi - lo) || 1;
+    const peak = zs.indexOf(hi);
+    $('timeline').innerHTML = '';
+    tl.forEach((w, i) => {
+      const bar = document.createElement('div');
+      bar.style.height = (10 + 90 * (w.chicken_z - lo) / span) + '%';
+      bar.title = `${w.t.toFixed(1)} s: ${w.chicken_z.toFixed(2)}`;
+      if (i === peak) bar.className = 'peak';
+      $('timeline').append(bar);
+    });
+    $('tlend').textContent = r.seconds + ' s';
+  }
+  $('result').classList.remove('hidden');
+  const g = r.gate;
+  if (g) {
+    const pa = Math.max(0, Math.min(100, g.percentile_after));
+    $('needle2').setAttribute('transform', `rotate(${-90 + 1.8 * pa} 150 150)`);
+    $('needle2').classList.toggle('hidden', !g.open);
+    $('both').textContent = g.open
+      ? `Model alone ${Math.round(r.percentile)}% · with the gate ${Math.round(pa)}% (green dashed needle)`
+      : `Model alone ${Math.round(r.percentile)}% · with the gate the same: it stayed closed`;
+    $('gate').classList.remove('hidden');
+    $('gatehead').textContent = g.open ? 'Open: the gate thinks a person made this' : 'Closed: the answer is the model\'s own';
+    $('gatehead').className = 'gatehead ' + (g.open ? 'open' : 'closed');
+    const grows = [
+      ['Model alone heard', `${g.top_before} (chicken score ${g.score_before.toFixed(3)})`],
+      ['With the gate', `${g.top_after} (chicken score ${g.score_after.toFixed(3)})`],
+      ['Sounds-like-chicken neuron', `${g.s19.toFixed(4)} (gate needs over ${g.t19.toFixed(4)})`],
+      ['Real-chicken neuron', `${g.s17.toFixed(4)} (gate needs under ${g.t17.toFixed(4)})`],
+    ];
+    if (r.saved_as) grows.push(['Saved for the test', r.saved_as]);
+    $('gatefacts').innerHTML = '';
+    for (const [k, v] of grows) {
+      const d = document.createElement('div');
+      const a = document.createElement('span'); a.textContent = k;
+      const b = document.createElement('span'); b.textContent = v;
+      d.append(a, b); $('gatefacts').append(d);
+    }
+  }
+  const ns = r.neurons || [];
+  $('neurons').classList.toggle('hidden', ns.length === 0);
+  $('nlist').innerHTML = '';
+  for (const n of ns) {
+    const box = document.createElement('div'); box.className = 'neuron';
+    const head = document.createElement('div'); head.className = 'head';
+    const a = document.createElement('strong'); a.textContent = n.name;
+    const b = document.createElement('span'); b.textContent = `above ${Math.round(n.pct_above_other)}% of other sounds`;
+    head.append(a, b);
+    const why = document.createElement('div'); why.className = 'why'; why.textContent = n.why;
+    const tr = document.createElement('div'); tr.className = 'track';
+    const fill = document.createElement('div'); fill.className = 'fill'; fill.style.width = n.pct_above_other + '%';
+    const hen = document.createElement('div'); hen.className = 'hen'; hen.style.left = `calc(${n.hen_median_pct_above_other}% - 1px)`;
+    hen.title = 'a typical hen';
+    tr.append(fill, hen);
+    const lg = document.createElement('div'); lg.className = 'legend';
+    const l1 = document.createElement('span'); l1.textContent = 'quiet';
+    const l2 = document.createElement('span'); l2.textContent = `${Math.round(n.pct_above_chicken)}% of real chickens fire less`;
+    lg.append(l1, l2);
+    box.append(head, why, tr, lg);
+    $('nlist').append(box);
+  }
+}
+
+async function send(blob, route) {
+  const lab = (document.querySelector('input[name=lab]:checked') || {}).value || '';
+  $('rec').disabled = true;
+  $('status').textContent = 'Listening closely…';
+  $('play').src = URL.createObjectURL(blob);
+  $('play').classList.remove('hidden');
+  try {
+    const res = await fetch('/score?label=' + encodeURIComponent(lab) + '&route=' + route, { method: 'POST', body: blob });
+    const r = await res.json();
+    if (!res.ok) throw new Error(r.error || res.statusText);
+    show(r);
+    $('status').textContent = 'Try again to beat it.';
+  } catch (e) {
+    $('status').textContent = 'Could not score that: ' + e.message;
+  } finally {
+    $('rec').disabled = false;
+  }
+}
+
+function stop() {
+  if (rec && rec.state === 'recording') rec.stop();
+  clearInterval(timer);
+  $('rec').classList.remove('on');
+  $('rec').textContent = '● Record';
+}
+
+$('rec').addEventListener('click', async () => {
+  if (rec && rec.state === 'recording') return stop();
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+    chunks = [];
+    rec = new MediaRecorder(stream);
+    rec.ondataavailable = (e) => e.data.size && chunks.push(e.data);
+    rec.onstop = () => { stream.getTracks().forEach((t) => t.stop()); send(new Blob(chunks, { type: rec.mimeType }), 'mic'); };
+    rec.start();
+    t0 = Date.now();
+    $('rec').classList.add('on');
+    $('rec').textContent = '■ Stop';
+    timer = setInterval(() => {
+      const s = (Date.now() - t0) / 1000;
+      $('status').textContent = `Recording ${s.toFixed(1)} s`;
+      if (s >= 30) stop();
+    }, 100);
+  } catch (e) {
+    $('status').textContent = 'No microphone: ' + e.message;
+  }
+});
+
+$('file').addEventListener('change', (e) => { const f = e.target.files[0]; if (f) send(f, 'upload'); e.target.value = ''; });
+$('phonerec').addEventListener('change', (e) => { const f = e.target.files[0]; if (f) send(f, 'phone'); e.target.value = ''; });
+</script>
+</body>
+</html>
