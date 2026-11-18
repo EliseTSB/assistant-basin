@@ -1,0 +1,159 @@
+{
+ "n_neurons": 49152,
+ "width": 2048,
+ "n_layers": 24,
+ "share_two_sided_at_least": {
+  "0.75": 0.4031575520833333,
+  "0.9": 0.10921223958333333,
+  "0.95": 0.047159830729166664,
+  "0.99": 0.0106201171875,
+  "1.0": 0.0026041666666666665
+ },
+ "count_two_sided_at_least": {
+  "0.75": 19816,
+  "0.9": 5368,
+  "0.95": 2318,
+  "0.99": 522,
+  "1.0": 128
+ },
+ "by_layer_share_ge_0.99": [
+  0.00439453125,
+  0.0078125,
+  0.005859375,
+  0.0068359375,
+  0.005859375,
+  0.01171875,
+  0.01220703125,
+  0.00830078125,
+  0.00341796875,
+  0.0087890625,
+  0.0009765625,
+  0.0029296875,
+  0.00390625,
+  0.00439453125,
+  0.00341796875,
+  0.0029296875,
+  0.00439453125,
+  0.0078125,
+  0.01904296875,
+  0.021484375,
+  0.03271484375,
+  0.03369140625,
+  0.02587890625,
+  0.01611328125
+ ],
+ "selected": [
+  {
+   "layer": 17,
+   "index": 1574,
+   "image_auc_same_sign": 1.0,
+   "two_sided": 1.0,
+   "share_of_all_at_or_above": 0.0026041666666666665
+  },
+  {
+   "layer": 19,
+   "index": 1129,
+   "image_auc_same_sign": 1.0,
+   "two_sided": 1.0,
+   "share_of_all_at_or_above": 0.0026041666666666665
+  },
+  {
+   "layer": 15,
+   "index": 1281,
+   "image_auc_same_sign": 0.9989888776541962,
+   "two_sided": 0.9989888776541962,
+   "share_of_all_at_or_above": 0.00360107421875
+  },
+  {
+   "layer": 20,
+   "index": 1260,
+   "image_auc_same_sign": 0.9908998988877654,
+   "two_sided": 0.9908998988877654,
+   "share_of_all_at_or_above": 0.0106201171875
+  },
+  {
+   "layer": 23,
+   "index": 1262,
+   "image_auc_same_sign": 0.9888776541961577,
+   "two_sided": 0.9888776541961577,
+   "share_of_all_at_or_above": 0.012125651041666666
+  },
+  {
+   "layer": 16,
+   "index": 349,
+   "image_auc_same_sign": 0.974721941354904,
+   "two_sided": 0.974721941354904,
+   "share_of_all_at_or_above": 0.023905436197916668
+  },
+  {
+   "layer": 16,
+   "index": 134,
+   "image_auc_same_sign": 0.9464105156723963,
+   "two_sided": 0.9464105156723963,
+   "share_of_all_at_or_above": 0.051554361979166664
+  },
+  {
+   "layer": 21,
+   "index": 1999,
+   "image_auc_same_sign": 0.8776541961577351,
+   "two_sided": 0.8776541961577351,
+   "share_of_all_at_or_above": 0.14646402994791666
+  },
+  {
+   "layer": 17,
+   "index": 1297,
+   "image_auc_same_sign": 0.8452982810920121,
+   "two_sided": 0.8452982810920121,
+   "share_of_all_at_or_above": 0.20328776041666666
+  },
+  {
+   "layer": 15,
+   "index": 960,
+   "image_auc_same_sign": 0.7765419615773509,
+   "two_sided": 0.7765419615773509,
+   "share_of_all_at_or_above": 0.343505859375
+  },
+  {
+   "layer": 15,
+   "index": 436,
+   "image_auc_same_sign": 0.750252780586451,
+   "two_sided": 0.750252780586451,
+   "share_of_all_at_or_above": 0.4031575520833333
+  },
+  {
+   "layer": 19,
+   "index": 2021,
+   "image_auc_same_sign": 0.7340748230535895,
+   "two_sided": 0.7340748230535895,
+   "share_of_all_at_or_above": 0.4408772786458333
+  },
+  {
+   "layer": 15,
+   "index": 109,
+   "image_auc_same_sign": 0.5490394337714863,
+   "two_sided": 0.5490394337714863,
+   "share_of_all_at_or_above": 0.8835652669270834
+  },
+  {
+   "layer": 15,
+   "index": 1126,
+   "image_auc_same_sign": 0.5490394337714863,
+   "two_sided": 0.5490394337714863,
+   "share_of_all_at_or_above": 0.8835652669270834
+  },
+  {
+   "layer": 17,
+   "index": 1068,
+   "image_auc_same_sign": 0.31749241658240646,
+   "two_sided": 0.6825075834175935,
+   "share_of_all_at_or_above": 0.56634521484375
+  },
+  {
+   "layer": 2,
+   "index": 1214,
+   "image_auc_same_sign": 0.29625884732052576,
+   "two_sided": 0.7037411526794742,
+   "share_of_all_at_or_above": 0.51312255859375
+  }
+ ]
+}

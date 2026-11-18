@@ -1,0 +1,28 @@
+path	label	route	note
+/home/elisepc/green/Journal/DropZone/chicken_sounds.m4a	real	discord-upload	Elise 15:56 CT: "mostly brahma mama, with a bit of another hen, maybe jewel"
+/home/elisepc/green/Journal/DropZone/noisy_minimal_peeps.m4a	real	discord-upload	Elise 16:14 CT confirmed: "noisy is mostly background noises, with a few peeps from my hens"
+/home/elisepc/green/Journal/DropZone/background_only.m4a	other	discord-upload	no chicken (C7)
+/home/elisepc/green/Journal/DropZone/fake_egg.m4a	imitation	discord-upload	Elise 15:57 CT: "a different take i made right before fake egg song" (recorded 11-03, never read)
+/home/elisepc/green/Journal/DropZone/real_quite.m4a	real	discord-upload	Elise 16:07 CT batch; "real_quite" (quiet real hens)
+/home/elisepc/green/Journal/DropZone/fake_egg_song_1.m4a	imitation	discord-upload	Elise 16:07 CT batch
+/home/elisepc/green/Journal/DropZone/fake_bawks.m4a	imitation	discord-upload	Elise 16:07 CT batch
+/home/elisepc/green/Journal/DropZone/fake_egg_2.m4a	imitation	discord-upload	Elise 16:07 CT batch
+/home/elisepc/green/Journal/DropZone/fake_egg_3.m4a	imitation	discord-upload	Elise 16:07 CT batch
+/home/elisepc/green/Journal/DropZone/obvious_fake.m4a	imitation-obvious	discord-upload	Elise 16:07 CT: "fake and real has a mix, obvious fake is me not trying to sound very chicken like"; rule set before scoring: reported separately, NOT in the C1/C5/C6 AUCs (the test is convincing imitations)
+/home/elisepc/green/Journal/DropZone/fake_and_real.m4a	mixed	discord-upload	Elise 16:07 CT: "fake and real has a mix, obvious fake is me not trying to sound very chicken like"; descriptive only
+/home/elisepc/green/Journal/DropZone/fake_egg_4.m4a	imitation	discord-upload	Elise 16:09 CT
+/home/elisepc/green/Journal/DropZone/Gandalf.m4a	real	discord-upload	Elise 16:13 CT: "Three more chicken sounds" (Gandalf)
+/home/elisepc/green/Journal/DropZone/multihen.m4a	real	discord-upload	Elise 16:13 CT: "Three more chicken sounds"
+/home/elisepc/green/Journal/DropZone/multihen2.m4a	real	discord-upload	Elise 16:13 CT: "Three more chicken sounds"
+# excluded: DropZone/brahma_chatty(1).m4a (byte-identical to 11-03 brahma_chatty.m4a, already read)
+# labels written 2026-11-04 15:57 CT, before any take is scored
+# excluded: DropZone/fake_egg(1).m4a (byte-identical to fake_egg.m4a)
+# 16:07 batch labelled 16:08 CT, before any take is scored
+# fake_egg_4 labelled 16:09 CT, before any take is scored
+# 16:13 batch labelled 16:13 CT, before any take is scored
+# set OPEN on Elise's word (16:15 CT): waiting for real egg-song takes (Amendment 6a)
+/home/elisepc/green/Journal/sources/audio-perception/hen-purr-2026-09-06/real-egg-song-brahma-mama-2026-11-05a.m4a	real	discord-upload	Elise 13:59 CT: brahma mama egg song, faint and far, hen stopped to greet her. 2 syllables at 4.2 s and 7.7 s. Raw peak -31.1 dBFS, 4.1 dB over its own background; meter raw 64.5 pct; cleaned (-clean file, high-pass 250 Hz + normalise) 87.1 pct, top prompt 'a hen cackling'
+/home/elisepc/green/Journal/sources/audio-perception/hen-purr-2026-09-06/real-egg-song-jewel-2026-11-06a-trimmed.m4a	real	discord-upload	Elise 12:35 CT: "I captured an egg song, jewel I think, the trimmed version is pretty clean". 13.6 s; buk runs at about 0.2 s spacing near 900-1000 Hz with three loud broadband calls at 0.68, 7.83 and 12.56 s; peak about 50 dB over its own floor. Hen identity tentative (her "I think").
+/home/elisepc/green/Journal/sources/audio-perception/hen-purr-2026-09-06/real-egg-song-jewel-2026-11-06a-full.m4a	real-same-recording	discord-upload	Elise 12:35 CT: the full version of the same take, "starts far away and has multiple chickens and me walking closer". 58.9 s; not the clean one.
+# 11-06 takes labelled 12:37 CT from Elise's message, before any take is scored; set still OPEN
+# 13:05 CT, before scoring: Elise closed the set (13:04 CT, "We can close it."). The full Jewel take is the same recording as the trimmed one, so it is relabelled real-same-recording and is descriptive only; the trimmed take (the one she called clean) is the one that counts. Call types for Amendment 6a are in takes_calltypes.tsv, assigned from her descriptions before scoring.

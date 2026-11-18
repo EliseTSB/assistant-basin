@@ -1,0 +1,1937 @@
+{
+  "items": [
+    {
+      "id": "vis:v0000",
+      "animal": "Animal_Domestic animals_ pets_Cat_Growling",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "laughing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.02371799945831299,
+          "chicken_prompt_score_after": 0.02371799945831299,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0001",
+      "animal": "Animal_Domestic animals_ pets_Cat_Growling",
+      "unedited_top_class": "snoring",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "breathing",
+          "changed": true,
+          "chicken_prompt_score_before": 0.012745261192321777,
+          "chicken_prompt_score_after": -0.018596172332763672,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0002",
+      "animal": "Animal_Domestic animals_ pets_Cat_Growling",
+      "unedited_top_class": "snoring",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "snoring",
+          "changed": false,
+          "chicken_prompt_score_before": 0.005711257457733154,
+          "chicken_prompt_score_after": 0.005711257457733154,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0003",
+      "animal": "Animal_Domestic animals_ pets_Cat_Growling",
+      "unedited_top_class": "snoring",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "snoring",
+          "changed": false,
+          "chicken_prompt_score_before": 0.0046149492263793945,
+          "chicken_prompt_score_after": 0.0046149492263793945,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0004",
+      "animal": "Animal_Domestic animals_ pets_Cat_Hiss",
+      "unedited_top_class": "hen",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "hen",
+          "changed": false,
+          "chicken_prompt_score_before": 0.03257936239242554,
+          "chicken_prompt_score_after": 0.03257936239242554,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0005",
+      "animal": "Animal_Domestic animals_ pets_Cat_Hiss",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "sneezing",
+          "changed": false,
+          "chicken_prompt_score_before": -0.006958663463592529,
+          "chicken_prompt_score_after": -0.006958663463592529,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0006",
+      "animal": "Animal_Domestic animals_ pets_Cat_Hiss",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "sneezing",
+          "changed": false,
+          "chicken_prompt_score_before": -0.01013094186782837,
+          "chicken_prompt_score_after": -0.01013094186782837,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0007",
+      "animal": "Animal_Domestic animals_ pets_Cat_Hiss",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "sneezing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.0070160627365112305,
+          "chicken_prompt_score_after": -0.024830937385559082,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0008",
+      "animal": "Animal_Domestic animals_ pets_Cat_Meow",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "chainsaw",
+          "changed": true,
+          "chicken_prompt_score_before": 0.010780155658721924,
+          "chicken_prompt_score_after": -0.014173805713653564,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0009",
+      "animal": "Animal_Domestic animals_ pets_Cat_Meow",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "laughing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.010545015335083008,
+          "chicken_prompt_score_after": 0.010545015335083008,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0010",
+      "animal": "Animal_Domestic animals_ pets_Cat_Meow",
+      "unedited_top_class": "frog",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "frog",
+          "changed": false,
+          "chicken_prompt_score_before": 0.011853396892547607,
+          "chicken_prompt_score_after": 0.011853396892547607,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0011",
+      "animal": "Animal_Domestic animals_ pets_Cat_Meow",
+      "unedited_top_class": "crow",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "crow",
+          "changed": false,
+          "chicken_prompt_score_before": 0.004159808158874512,
+          "chicken_prompt_score_after": 0.004159808158874512,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0012",
+      "animal": "Animal_Domestic animals_ pets_Cat_Purr",
+      "unedited_top_class": "snoring",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "snoring",
+          "changed": false,
+          "chicken_prompt_score_before": -0.006291747093200684,
+          "chicken_prompt_score_after": -0.006291747093200684,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0013",
+      "animal": "Animal_Domestic animals_ pets_Cat_Purr",
+      "unedited_top_class": "snoring",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "snoring",
+          "changed": false,
+          "chicken_prompt_score_before": -0.0009405016899108887,
+          "chicken_prompt_score_after": -0.0009405016899108887,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0014",
+      "animal": "Animal_Domestic animals_ pets_Cat_Purr",
+      "unedited_top_class": "snoring",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "snoring",
+          "changed": false,
+          "chicken_prompt_score_before": 0.021183788776397705,
+          "chicken_prompt_score_after": 0.021183788776397705,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0015",
+      "animal": "Animal_Domestic animals_ pets_Cat_Purr",
+      "unedited_top_class": "snoring",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "snoring",
+          "changed": false,
+          "chicken_prompt_score_before": 0.006810426712036133,
+          "chicken_prompt_score_after": 0.006810426712036133,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0016",
+      "animal": "Animal_Domestic animals_ pets_Dog_Bark",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "laughing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.010150134563446045,
+          "chicken_prompt_score_after": 0.010150134563446045,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0017",
+      "animal": "Animal_Domestic animals_ pets_Dog_Bark",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "breathing",
+          "changed": true,
+          "chicken_prompt_score_before": 0.023498237133026123,
+          "chicken_prompt_score_after": -0.012300729751586914,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0018",
+      "animal": "Animal_Domestic animals_ pets_Dog_Bark",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "breathing",
+          "changed": true,
+          "chicken_prompt_score_before": 0.02581620216369629,
+          "chicken_prompt_score_after": -0.01847141981124878,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0019",
+      "animal": "Animal_Domestic animals_ pets_Dog_Bark",
+      "unedited_top_class": "crying_baby",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "crying_baby",
+          "changed": false,
+          "chicken_prompt_score_before": 0.019083917140960693,
+          "chicken_prompt_score_after": 0.019083917140960693,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0020",
+      "animal": "Animal_Domestic animals_ pets_Dog_Growling",
+      "unedited_top_class": "snoring",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "snoring",
+          "changed": false,
+          "chicken_prompt_score_before": 0.005970358848571777,
+          "chicken_prompt_score_after": 0.005970358848571777,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0021",
+      "animal": "Animal_Domestic animals_ pets_Dog_Growling",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "sneezing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.008848726749420166,
+          "chicken_prompt_score_after": 0.008848726749420166,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0022",
+      "animal": "Animal_Domestic animals_ pets_Dog_Growling",
+      "unedited_top_class": "snoring",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "snoring",
+          "changed": false,
+          "chicken_prompt_score_before": 0.028711259365081787,
+          "chicken_prompt_score_after": 0.028711259365081787,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0023",
+      "animal": "Animal_Domestic animals_ pets_Dog_Growling",
+      "unedited_top_class": "snoring",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "breathing",
+          "changed": true,
+          "chicken_prompt_score_before": 0.0030102133750915527,
+          "chicken_prompt_score_after": -0.023422420024871826,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0024",
+      "animal": "Animal_Domestic animals_ pets_Dog_Howl",
+      "unedited_top_class": "crying_baby",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "crying_baby",
+          "changed": false,
+          "chicken_prompt_score_before": 0.0036973953247070312,
+          "chicken_prompt_score_after": 0.0036973953247070312,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0025",
+      "animal": "Animal_Domestic animals_ pets_Dog_Howl",
+      "unedited_top_class": "crying_baby",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "crying_baby",
+          "changed": false,
+          "chicken_prompt_score_before": 0.0182722806930542,
+          "chicken_prompt_score_after": 0.0182722806930542,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0026",
+      "animal": "Animal_Domestic animals_ pets_Dog_Howl",
+      "unedited_top_class": "crying_baby",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "crying_baby",
+          "changed": false,
+          "chicken_prompt_score_before": 0.011185228824615479,
+          "chicken_prompt_score_after": 0.011185228824615479,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0027",
+      "animal": "Animal_Domestic animals_ pets_Dog_Howl",
+      "unedited_top_class": "crying_baby",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "crying_baby",
+          "changed": false,
+          "chicken_prompt_score_before": 0.023245394229888916,
+          "chicken_prompt_score_after": 0.023245394229888916,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0028",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Cattle_ bovinae_Cowbell",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "sneezing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.0022192001342773438,
+          "chicken_prompt_score_after": 0.0022192001342773438,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0029",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Cattle_ bovinae_Cowbell",
+      "unedited_top_class": "clapping",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "clapping",
+          "changed": false,
+          "chicken_prompt_score_before": 0.026344358921051025,
+          "chicken_prompt_score_after": -0.011532068252563477,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0030",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Cattle_ bovinae_Cowbell",
+      "unedited_top_class": "drinking_sipping",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "drinking_sipping",
+          "changed": false,
+          "chicken_prompt_score_before": 0.009810447692871094,
+          "chicken_prompt_score_after": 0.009810447692871094,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0031",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Cattle_ bovinae_Cowbell",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "keyboard_typing",
+          "changed": true,
+          "chicken_prompt_score_before": 0.0331844687461853,
+          "chicken_prompt_score_after": -0.007942676544189453,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0032",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Cattle_ bovinae_Moo",
+      "unedited_top_class": "rooster",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "rooster",
+          "changed": false,
+          "chicken_prompt_score_before": 0.03865683078765869,
+          "chicken_prompt_score_after": 0.03865683078765869,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0033",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Cattle_ bovinae_Moo",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "can_opening",
+          "changed": true,
+          "chicken_prompt_score_before": 0.009060263633728027,
+          "chicken_prompt_score_after": -0.02637934684753418,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0034",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Cattle_ bovinae_Moo",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "sneezing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.028128623962402344,
+          "chicken_prompt_score_after": 0.028128623962402344,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0035",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Cattle_ bovinae_Moo",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "laughing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.020706236362457275,
+          "chicken_prompt_score_after": 0.020706236362457275,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0074",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Fowl_Duck_Quack",
+      "unedited_top_class": "crying_baby",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "coughing",
+          "changed": true,
+          "chicken_prompt_score_before": 0.020249545574188232,
+          "chicken_prompt_score_after": -0.010484099388122559,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0075",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Fowl_Duck_Quack",
+      "unedited_top_class": "clapping",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "clapping",
+          "changed": false,
+          "chicken_prompt_score_before": 0.010817408561706543,
+          "chicken_prompt_score_after": 0.010817408561706543,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0076",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Fowl_Duck_Quack",
+      "unedited_top_class": "dog",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "sea_waves",
+          "changed": true,
+          "chicken_prompt_score_before": 0.016397058963775635,
+          "chicken_prompt_score_after": -0.00671464204788208,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0077",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Fowl_Duck_Quack",
+      "unedited_top_class": "clapping",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "keyboard_typing",
+          "changed": true,
+          "chicken_prompt_score_before": 0.01611793041229248,
+          "chicken_prompt_score_after": -0.008721649646759033,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0078",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Fowl_Goose_Honk",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "laughing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.04231053590774536,
+          "chicken_prompt_score_after": -0.006918549537658691,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0079",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Fowl_Goose_Honk",
+      "unedited_top_class": "clapping",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "clapping",
+          "changed": false,
+          "chicken_prompt_score_before": 0.013328731060028076,
+          "chicken_prompt_score_after": 0.013328731060028076,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0080",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Fowl_Goose_Honk",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "sneezing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.014854192733764648,
+          "chicken_prompt_score_after": 0.014854192733764648,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0081",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Fowl_Goose_Honk",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "laughing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.029343485832214355,
+          "chicken_prompt_score_after": 0.029343485832214355,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0082",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Fowl_Turkey_Gobble",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "laughing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.00948023796081543,
+          "chicken_prompt_score_after": -0.01557832956314087,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0083",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Fowl_Turkey_Gobble",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "laughing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.023445308208465576,
+          "chicken_prompt_score_after": 0.023445308208465576,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0084",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Fowl_Turkey_Gobble",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "laughing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.001552581787109375,
+          "chicken_prompt_score_after": 0.001552581787109375,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0085",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Fowl_Turkey_Gobble",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "can_opening",
+          "changed": true,
+          "chicken_prompt_score_before": -0.00015932321548461914,
+          "chicken_prompt_score_after": -0.01986616849899292,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0086",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Goat_Bleat",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "sneezing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.0019648075103759766,
+          "chicken_prompt_score_after": 0.0019648075103759766,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0087",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Goat_Bleat",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "laughing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.014348328113555908,
+          "chicken_prompt_score_after": 0.014348328113555908,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0088",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Goat_Bleat",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "breathing",
+          "changed": true,
+          "chicken_prompt_score_before": 0.01384437084197998,
+          "chicken_prompt_score_after": -0.024126529693603516,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0089",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Goat_Bleat",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "laughing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.004505574703216553,
+          "chicken_prompt_score_after": 0.004505574703216553,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0090",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Horse_Clip-clop",
+      "unedited_top_class": "clock_tick",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "clock_tick",
+          "changed": false,
+          "chicken_prompt_score_before": 0.03222304582595825,
+          "chicken_prompt_score_after": 0.03222304582595825,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0091",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Horse_Clip-clop",
+      "unedited_top_class": "clock_tick",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "clock_tick",
+          "changed": false,
+          "chicken_prompt_score_before": 0.01720559597015381,
+          "chicken_prompt_score_after": 0.01720559597015381,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0092",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Horse_Clip-clop",
+      "unedited_top_class": "clapping",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "clapping",
+          "changed": false,
+          "chicken_prompt_score_before": -0.00013971328735351562,
+          "chicken_prompt_score_after": -0.00013971328735351562,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0093",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Horse_Clip-clop",
+      "unedited_top_class": "clapping",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "clapping",
+          "changed": false,
+          "chicken_prompt_score_before": 0.037165820598602295,
+          "chicken_prompt_score_after": 0.037165820598602295,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0094",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Horse_Neigh_ whinny",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "laughing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.029297947883605957,
+          "chicken_prompt_score_after": 0.029297947883605957,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0095",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Horse_Neigh_ whinny",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "laughing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.017422020435333252,
+          "chicken_prompt_score_after": 0.017422020435333252,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0096",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Horse_Neigh_ whinny",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "sneezing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.03115946054458618,
+          "chicken_prompt_score_after": 0.03115946054458618,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0097",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Horse_Neigh_ whinny",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "laughing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.02428734302520752,
+          "chicken_prompt_score_after": 0.02428734302520752,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0098",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Horse_Snort (horse)",
+      "unedited_top_class": "snoring",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "snoring",
+          "changed": false,
+          "chicken_prompt_score_before": 0.025356650352478027,
+          "chicken_prompt_score_after": 0.025356650352478027,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0099",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Horse_Snort (horse)",
+      "unedited_top_class": "snoring",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "chainsaw",
+          "changed": true,
+          "chicken_prompt_score_before": -0.010133504867553711,
+          "chicken_prompt_score_after": -0.031089723110198975,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0100",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Horse_Snort (horse)",
+      "unedited_top_class": "coughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "coughing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.02166980504989624,
+          "chicken_prompt_score_after": -0.006426572799682617,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0101",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Horse_Snort (horse)",
+      "unedited_top_class": "snoring",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "snoring",
+          "changed": false,
+          "chicken_prompt_score_before": -0.0001863241195678711,
+          "chicken_prompt_score_after": -0.0001863241195678711,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0102",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Pig_Oink",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "sneezing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.0004883408546447754,
+          "chicken_prompt_score_after": 0.0004883408546447754,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0103",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Pig_Oink",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "keyboard_typing",
+          "changed": true,
+          "chicken_prompt_score_before": 0.021565914154052734,
+          "chicken_prompt_score_after": -0.010219156742095947,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0104",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Pig_Oink",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "sneezing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.009668052196502686,
+          "chicken_prompt_score_after": 0.009668052196502686,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0105",
+      "animal": "Animal_Livestock_ farm animals_ working animals_Pig_Oink",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "sneezing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.018414676189422607,
+          "chicken_prompt_score_after": 0.018414676189422607,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0106",
+      "animal": "Animal_Wild animals_Bird_Bird flight_ flapping wings",
+      "unedited_top_class": "wind",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "wind",
+          "changed": false,
+          "chicken_prompt_score_before": 0.012205958366394043,
+          "chicken_prompt_score_after": 0.012205958366394043,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0107",
+      "animal": "Animal_Wild animals_Bird_Bird flight_ flapping wings",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "keyboard_typing",
+          "changed": true,
+          "chicken_prompt_score_before": 0.004396498203277588,
+          "chicken_prompt_score_after": -0.01841127872467041,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0108",
+      "animal": "Animal_Wild animals_Bird_Bird flight_ flapping wings",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "laughing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.012372910976409912,
+          "chicken_prompt_score_after": 0.012372910976409912,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0109",
+      "animal": "Animal_Wild animals_Bird_Bird flight_ flapping wings",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "breathing",
+          "changed": true,
+          "chicken_prompt_score_before": 0.006387174129486084,
+          "chicken_prompt_score_after": -0.022398173809051514,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0110",
+      "animal": "Animal_Wild animals_Bird_Bird vocalization_ bird call_ bird song_Chirp_ tweet",
+      "unedited_top_class": "crying_baby",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "crying_baby",
+          "changed": false,
+          "chicken_prompt_score_before": 0.008626937866210938,
+          "chicken_prompt_score_after": 0.008626937866210938,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0111",
+      "animal": "Animal_Wild animals_Bird_Bird vocalization_ bird call_ bird song_Chirp_ tweet",
+      "unedited_top_class": "chirping_birds",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "chirping_birds",
+          "changed": false,
+          "chicken_prompt_score_before": 0.026221156120300293,
+          "chicken_prompt_score_after": 0.026221156120300293,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0112",
+      "animal": "Animal_Wild animals_Bird_Bird vocalization_ bird call_ bird song_Chirp_ tweet",
+      "unedited_top_class": "crying_baby",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "drinking_sipping",
+          "changed": true,
+          "chicken_prompt_score_before": 0.014896214008331299,
+          "chicken_prompt_score_after": -0.016576945781707764,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0113",
+      "animal": "Animal_Wild animals_Bird_Bird vocalization_ bird call_ bird song_Chirp_ tweet",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "sneezing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.00558924674987793,
+          "chicken_prompt_score_after": 0.00558924674987793,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0114",
+      "animal": "Animal_Wild animals_Bird_Crow_Caw",
+      "unedited_top_class": "crying_baby",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "crying_baby",
+          "changed": false,
+          "chicken_prompt_score_before": 0.010005950927734375,
+          "chicken_prompt_score_after": 0.010005950927734375,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0115",
+      "animal": "Animal_Wild animals_Bird_Crow_Caw",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "laughing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.005076348781585693,
+          "chicken_prompt_score_after": 0.005076348781585693,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0116",
+      "animal": "Animal_Wild animals_Bird_Crow_Caw",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "coughing",
+          "changed": true,
+          "chicken_prompt_score_before": 0.03547775745391846,
+          "chicken_prompt_score_after": 0.008463025093078613,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0117",
+      "animal": "Animal_Wild animals_Bird_Crow_Caw",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "keyboard_typing",
+          "changed": true,
+          "chicken_prompt_score_before": 0.02170807123184204,
+          "chicken_prompt_score_after": -0.007963001728057861,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0118",
+      "animal": "Animal_Wild animals_Bird_Owl_Hoot",
+      "unedited_top_class": "coughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "coughing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.018298208713531494,
+          "chicken_prompt_score_after": -0.016107499599456787,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0119",
+      "animal": "Animal_Wild animals_Bird_Owl_Hoot",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "breathing",
+          "changed": true,
+          "chicken_prompt_score_before": 0.011805951595306396,
+          "chicken_prompt_score_after": -0.012779831886291504,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0120",
+      "animal": "Animal_Wild animals_Bird_Owl_Hoot",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "breathing",
+          "changed": true,
+          "chicken_prompt_score_before": 0.012359857559204102,
+          "chicken_prompt_score_after": -0.015014886856079102,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0121",
+      "animal": "Animal_Wild animals_Bird_Owl_Hoot",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "breathing",
+          "changed": true,
+          "chicken_prompt_score_before": 0.023761272430419922,
+          "chicken_prompt_score_after": -0.022856175899505615,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0122",
+      "animal": "Animal_Wild animals_Bird_Pigeon_ dove_Coo",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "breathing",
+          "changed": true,
+          "chicken_prompt_score_before": 0.02415364980697632,
+          "chicken_prompt_score_after": -0.01304018497467041,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0123",
+      "animal": "Animal_Wild animals_Bird_Pigeon_ dove_Coo",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "breathing",
+          "changed": true,
+          "chicken_prompt_score_before": 0.020319879055023193,
+          "chicken_prompt_score_after": -0.012824177742004395,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0124",
+      "animal": "Animal_Wild animals_Bird_Pigeon_ dove_Coo",
+      "unedited_top_class": "crying_baby",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "breathing",
+          "changed": true,
+          "chicken_prompt_score_before": 0.010071039199829102,
+          "chicken_prompt_score_after": -0.016237080097198486,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0125",
+      "animal": "Animal_Wild animals_Bird_Pigeon_ dove_Coo",
+      "unedited_top_class": "coughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "keyboard_typing",
+          "changed": true,
+          "chicken_prompt_score_before": 0.03262507915496826,
+          "chicken_prompt_score_after": -0.013049840927124023,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0126",
+      "animal": "Animal_Wild animals_Frog_Croak",
+      "unedited_top_class": "coughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "coughing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.0414891242980957,
+          "chicken_prompt_score_after": 0.01622682809829712,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0127",
+      "animal": "Animal_Wild animals_Frog_Croak",
+      "unedited_top_class": "crying_baby",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "coughing",
+          "changed": true,
+          "chicken_prompt_score_before": 0.013207495212554932,
+          "chicken_prompt_score_after": -0.018589556217193604,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0128",
+      "animal": "Animal_Wild animals_Frog_Croak",
+      "unedited_top_class": "crickets",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "coughing",
+          "changed": true,
+          "chicken_prompt_score_before": 0.018268108367919922,
+          "chicken_prompt_score_after": -0.004896044731140137,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0129",
+      "animal": "Animal_Wild animals_Frog_Croak",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "laughing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.02816307544708252,
+          "chicken_prompt_score_after": 0.02816307544708252,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0130",
+      "animal": "Animal_Wild animals_Insect_Bee_ wasp_ etc_Buzz",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "sneezing",
+          "changed": false,
+          "chicken_prompt_score_before": -0.0015824437141418457,
+          "chicken_prompt_score_after": -0.0015824437141418457,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0131",
+      "animal": "Animal_Wild animals_Insect_Bee_ wasp_ etc_Buzz",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "sneezing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.014593124389648438,
+          "chicken_prompt_score_after": 0.014593124389648438,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0132",
+      "animal": "Animal_Wild animals_Insect_Bee_ wasp_ etc_Buzz",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "drinking_sipping",
+          "changed": true,
+          "chicken_prompt_score_before": 0.011731743812561035,
+          "chicken_prompt_score_after": -0.01680082082748413,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0133",
+      "animal": "Animal_Wild animals_Insect_Bee_ wasp_ etc_Buzz",
+      "unedited_top_class": "breathing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "breathing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.011258542537689209,
+          "chicken_prompt_score_after": -0.024980127811431885,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0134",
+      "animal": "Animal_Wild animals_Insect_Cricket",
+      "unedited_top_class": "clock_tick",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "clock_tick",
+          "changed": false,
+          "chicken_prompt_score_before": 0.015251338481903076,
+          "chicken_prompt_score_after": 0.015251338481903076,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0135",
+      "animal": "Animal_Wild animals_Insect_Cricket",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "sneezing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.014434099197387695,
+          "chicken_prompt_score_after": 0.014434099197387695,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0136",
+      "animal": "Animal_Wild animals_Insect_Cricket",
+      "unedited_top_class": "chirping_birds",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "keyboard_typing",
+          "changed": true,
+          "chicken_prompt_score_before": 0.020258188247680664,
+          "chicken_prompt_score_after": -0.00010699033737182617,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0137",
+      "animal": "Animal_Wild animals_Insect_Cricket",
+      "unedited_top_class": "chirping_birds",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "chirping_birds",
+          "changed": false,
+          "chicken_prompt_score_before": 0.04253256320953369,
+          "chicken_prompt_score_after": 0.04253256320953369,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0138",
+      "animal": "Animal_Wild animals_Insect_Mosquito",
+      "unedited_top_class": "crying_baby",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "crying_baby",
+          "changed": false,
+          "chicken_prompt_score_before": 0.018849670886993408,
+          "chicken_prompt_score_after": 0.018849670886993408,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0139",
+      "animal": "Animal_Wild animals_Insect_Mosquito",
+      "unedited_top_class": "snoring",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "snoring",
+          "changed": false,
+          "chicken_prompt_score_before": 0.012554287910461426,
+          "chicken_prompt_score_after": 0.012554287910461426,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0140",
+      "animal": "Animal_Wild animals_Insect_Mosquito",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "laughing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.019278347492218018,
+          "chicken_prompt_score_after": 0.019278347492218018,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0141",
+      "animal": "Animal_Wild animals_Insect_Mosquito",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "breathing",
+          "changed": true,
+          "chicken_prompt_score_before": 0.04849529266357422,
+          "chicken_prompt_score_after": -4.273653030395508e-05,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0142",
+      "animal": "Animal_Wild animals_Roaring cats (lions_ tigers)_Roar",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "sneezing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.012711644172668457,
+          "chicken_prompt_score_after": 0.012711644172668457,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0143",
+      "animal": "Animal_Wild animals_Roaring cats (lions_ tigers)_Roar",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "sneezing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.00883859395980835,
+          "chicken_prompt_score_after": 0.00883859395980835,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0144",
+      "animal": "Animal_Wild animals_Roaring cats (lions_ tigers)_Roar",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "sneezing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.014223754405975342,
+          "chicken_prompt_score_after": 0.014223754405975342,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0145",
+      "animal": "Animal_Wild animals_Roaring cats (lions_ tigers)_Roar",
+      "unedited_top_class": "sneezing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "sneezing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.0012299418449401855,
+          "chicken_prompt_score_after": 0.0012299418449401855,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0146",
+      "animal": "Animal_Wild animals_Rodents_ rats_ mice_Mouse___3Samples",
+      "unedited_top_class": "clock_tick",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "clock_tick",
+          "changed": false,
+          "chicken_prompt_score_before": -0.000691533088684082,
+          "chicken_prompt_score_after": -0.020835399627685547,
+          "gate_open": true
+        }
+      }
+    },
+    {
+      "id": "vis:v0147",
+      "animal": "Animal_Wild animals_Rodents_ rats_ mice_Mouse___3Samples",
+      "unedited_top_class": "laughing",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "laughing",
+          "changed": false,
+          "chicken_prompt_score_before": 0.006924331188201904,
+          "chicken_prompt_score_after": 0.006924331188201904,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0148",
+      "animal": "Animal_Wild animals_Rodents_ rats_ mice_Mouse___3Samples",
+      "unedited_top_class": "chirping_birds",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "chirping_birds",
+          "changed": false,
+          "chicken_prompt_score_before": 0.02501124143600464,
+          "chicken_prompt_score_after": 0.02501124143600464,
+          "gate_open": false
+        }
+      }
+    },
+    {
+      "id": "vis:v0149",
+      "animal": "Animal_Wild animals_Rodents_ rats_ mice_Mouse___3Samples",
+      "unedited_top_class": "clapping",
+      "arms": {
+        "gentle_hook": {
+          "top_class": "clapping",
+          "changed": false,
+          "chicken_prompt_score_before": 0.0014219284057617188,
+          "chicken_prompt_score_after": 0.0014219284057617188,
+          "gate_open": false
+        }
+      }
+    }
+  ],
+  "changed_count_by_arm": {
+    "gentle_hook": 31
+  },
+  "summary_by_animal": {
+    "Animal_Domestic animals_ pets_Cat_Growling": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 1,
+          "after_labels": {
+            "breathing": 1,
+            "laughing": 1,
+            "snoring": 2
+          }
+        }
+      }
+    },
+    "Animal_Domestic animals_ pets_Cat_Hiss": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 0,
+          "after_labels": {
+            "hen": 1,
+            "sneezing": 3
+          }
+        }
+      }
+    },
+    "Animal_Domestic animals_ pets_Cat_Meow": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 1,
+          "after_labels": {
+            "chainsaw": 1,
+            "crow": 1,
+            "frog": 1,
+            "laughing": 1
+          }
+        }
+      }
+    },
+    "Animal_Domestic animals_ pets_Cat_Purr": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 0,
+          "after_labels": {
+            "snoring": 4
+          }
+        }
+      }
+    },
+    "Animal_Domestic animals_ pets_Dog_Bark": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 2,
+          "after_labels": {
+            "breathing": 2,
+            "crying_baby": 1,
+            "laughing": 1
+          }
+        }
+      }
+    },
+    "Animal_Domestic animals_ pets_Dog_Growling": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 1,
+          "after_labels": {
+            "breathing": 1,
+            "sneezing": 1,
+            "snoring": 2
+          }
+        }
+      }
+    },
+    "Animal_Domestic animals_ pets_Dog_Howl": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 0,
+          "after_labels": {
+            "crying_baby": 4
+          }
+        }
+      }
+    },
+    "Animal_Livestock_ farm animals_ working animals_Cattle_ bovinae_Cowbell": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 1,
+          "after_labels": {
+            "clapping": 1,
+            "drinking_sipping": 1,
+            "keyboard_typing": 1,
+            "sneezing": 1
+          }
+        }
+      }
+    },
+    "Animal_Livestock_ farm animals_ working animals_Cattle_ bovinae_Moo": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 1,
+          "after_labels": {
+            "can_opening": 1,
+            "laughing": 1,
+            "rooster": 1,
+            "sneezing": 1
+          }
+        }
+      }
+    },
+    "Animal_Livestock_ farm animals_ working animals_Fowl_Duck_Quack": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 3,
+          "after_labels": {
+            "clapping": 1,
+            "coughing": 1,
+            "keyboard_typing": 1,
+            "sea_waves": 1
+          }
+        }
+      }
+    },
+    "Animal_Livestock_ farm animals_ working animals_Fowl_Goose_Honk": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 0,
+          "after_labels": {
+            "clapping": 1,
+            "laughing": 2,
+            "sneezing": 1
+          }
+        }
+      }
+    },
+    "Animal_Livestock_ farm animals_ working animals_Fowl_Turkey_Gobble": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 1,
+          "after_labels": {
+            "can_opening": 1,
+            "laughing": 3
+          }
+        }
+      }
+    },
+    "Animal_Livestock_ farm animals_ working animals_Goat_Bleat": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 1,
+          "after_labels": {
+            "breathing": 1,
+            "laughing": 2,
+            "sneezing": 1
+          }
+        }
+      }
+    },
+    "Animal_Livestock_ farm animals_ working animals_Horse_Clip-clop": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 0,
+          "after_labels": {
+            "clapping": 2,
+            "clock_tick": 2
+          }
+        }
+      }
+    },
+    "Animal_Livestock_ farm animals_ working animals_Horse_Neigh_ whinny": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 0,
+          "after_labels": {
+            "laughing": 3,
+            "sneezing": 1
+          }
+        }
+      }
+    },
+    "Animal_Livestock_ farm animals_ working animals_Horse_Snort (horse)": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 1,
+          "after_labels": {
+            "chainsaw": 1,
+            "coughing": 1,
+            "snoring": 2
+          }
+        }
+      }
+    },
+    "Animal_Livestock_ farm animals_ working animals_Pig_Oink": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 1,
+          "after_labels": {
+            "keyboard_typing": 1,
+            "sneezing": 3
+          }
+        }
+      }
+    },
+    "Animal_Wild animals_Bird_Bird flight_ flapping wings": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 2,
+          "after_labels": {
+            "breathing": 1,
+            "keyboard_typing": 1,
+            "laughing": 1,
+            "wind": 1
+          }
+        }
+      }
+    },
+    "Animal_Wild animals_Bird_Bird vocalization_ bird call_ bird song_Chirp_ tweet": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 1,
+          "after_labels": {
+            "chirping_birds": 1,
+            "crying_baby": 1,
+            "drinking_sipping": 1,
+            "sneezing": 1
+          }
+        }
+      }
+    },
+    "Animal_Wild animals_Bird_Crow_Caw": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 2,
+          "after_labels": {
+            "coughing": 1,
+            "crying_baby": 1,
+            "keyboard_typing": 1,
+            "laughing": 1
+          }
+        }
+      }
+    },
+    "Animal_Wild animals_Bird_Owl_Hoot": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 3,
+          "after_labels": {
+            "breathing": 3,
+            "coughing": 1
+          }
+        }
+      }
+    },
+    "Animal_Wild animals_Bird_Pigeon_ dove_Coo": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 4,
+          "after_labels": {
+            "breathing": 3,
+            "keyboard_typing": 1
+          }
+        }
+      }
+    },
+    "Animal_Wild animals_Frog_Croak": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 2,
+          "after_labels": {
+            "coughing": 3,
+            "laughing": 1
+          }
+        }
+      }
+    },
+    "Animal_Wild animals_Insect_Bee_ wasp_ etc_Buzz": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 1,
+          "after_labels": {
+            "breathing": 1,
+            "drinking_sipping": 1,
+            "sneezing": 2
+          }
+        }
+      }
+    },
+    "Animal_Wild animals_Insect_Cricket": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 1,
+          "after_labels": {
+            "chirping_birds": 1,
+            "clock_tick": 1,
+            "keyboard_typing": 1,
+            "sneezing": 1
+          }
+        }
+      }
+    },
+    "Animal_Wild animals_Insect_Mosquito": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 1,
+          "after_labels": {
+            "breathing": 1,
+            "crying_baby": 1,
+            "laughing": 1,
+            "snoring": 1
+          }
+        }
+      }
+    },
+    "Animal_Wild animals_Roaring cats (lions_ tigers)_Roar": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 0,
+          "after_labels": {
+            "sneezing": 4
+          }
+        }
+      }
+    },
+    "Animal_Wild animals_Rodents_ rats_ mice_Mouse___3Samples": {
+      "clips": 4,
+      "arms": {
+        "gentle_hook": {
+          "changed_count": 0,
+          "after_labels": {
+            "chirping_birds": 1,
+            "clapping": 1,
+            "clock_tick": 1,
+            "laughing": 1
+          }
+        }
+      }
+    }
+  }
+}

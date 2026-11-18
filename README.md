@@ -1,5 +1,7 @@
 # Neurons and attention heads that change small open models' answers about their maker, their name, their persona, and who wrote a text
 
+**Journal citations:** a design or brief that cites a Journal path `P` (for example Journal `reviews/x.md`) points to [`evidence/journal/P`](evidence/journal/README.md); that page also lists the few cited files that are not public and why. Scripts carry paths from our machines (`/home/elisepc/...`, `/mnt/e/...`, `C:\Users\...`); set them with each script's flags or environment.
+
 **Try it:** [`chicken-o-meter/`](chicken-o-meter/README.md) is a local page that scores a chicken imitation with EmbeddingGemma 2 and shows a rank-one weight edit (Parts 188, 190, 193) acting on it.
 
 **Finding your way:** [`PARTS.md`](PARTS.md) lists every part (question, status, design, code, results, verdicts); [`TOOLKIT.md`](TOOLKIT.md) describes the standard methods and where they are implemented; [`PROCEDURE.md`](PROCEDURE.md) is the checklist every part goes through from Part 115 on, with the scripts that check it; [`docs/BRANCHES.md`](docs/BRANCHES.md) audits the remaining branches.

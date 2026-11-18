@@ -1,0 +1,6 @@
+Running as unit: timecut-after-arc-2026-11-04.scope; invocation ID: 19a867916955454183fa35862d874f04
+12:58:28 re-armed after the inside run (the meter and the inside fit are done; one model job in WSL at a time)
+Running as unit: timecut-after-arc-2026-11-04b.scope; invocation ID: 811113382d3241058f4e63e6de655cff
+12:58:28 arc: 12:23:12 step 1 rc=0
+12:59:29 gate ok=2 free=10.8 game=0
+13:35:01 timecut.py ended (pid 3200840); its outer waiter had been stopped at 13:0x, so its rc line is not in timecut_after_arc.log

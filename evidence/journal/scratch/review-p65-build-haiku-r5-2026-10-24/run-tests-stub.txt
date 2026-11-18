@@ -1,0 +1,141 @@
+..........E..EE...E.....E.........E.E.EE...........
+======================================================================
+ERROR: test_control_direction_is_normalized_w_down_times_hand_set_r (test_part65.Part65Tests.test_control_direction_is_normalized_w_down_times_hand_set_r)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 314, in test_control_direction_is_normalized_w_down_times_hand_set_r
+    model = TinyCausalModel(hidden=4, intermediate=4, layers=2)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 57, in __init__
+    self.model = TinyBackbone(hidden, intermediate, layers)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 50, in __init__
+    self.layers = nn.ModuleList([TinyBlock(hidden, intermediate) for _ in range(layers)])
+                  ^^^^^^^^^^^^^
+AttributeError: module 'torch.nn' has no attribute 'ModuleList'
+
+======================================================================
+ERROR: test_dose_zero_check_compares_with_a_separate_unsteered_generation (test_part65.Part65Tests.test_dose_zero_check_compares_with_a_separate_unsteered_generation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 386, in test_dose_zero_check_compares_with_a_separate_unsteered_generation
+    model = TinyCausalModel()
+            ^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 57, in __init__
+    self.model = TinyBackbone(hidden, intermediate, layers)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 50, in __init__
+    self.layers = nn.ModuleList([TinyBlock(hidden, intermediate) for _ in range(layers)])
+                  ^^^^^^^^^^^^^
+AttributeError: module 'torch.nn' has no attribute 'ModuleList'
+
+======================================================================
+ERROR: test_dose_zero_reproduces_baseline_tokens (test_part65.Part65Tests.test_dose_zero_reproduces_baseline_tokens)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 372, in test_dose_zero_reproduces_baseline_tokens
+    model = TinyCausalModel()
+            ^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 57, in __init__
+    self.model = TinyBackbone(hidden, intermediate, layers)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 50, in __init__
+    self.layers = nn.ModuleList([TinyBlock(hidden, intermediate) for _ in range(layers)])
+                  ^^^^^^^^^^^^^
+AttributeError: module 'torch.nn' has no attribute 'ModuleList'
+
+======================================================================
+ERROR: test_generate_batch_requires_explicit_hook_layer_for_pushes (test_part65.Part65Tests.test_generate_batch_requires_explicit_hook_layer_for_pushes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 353, in test_generate_batch_requires_explicit_hook_layer_for_pushes
+    model = TinyCausalModel(layers=2)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 57, in __init__
+    self.model = TinyBackbone(hidden, intermediate, layers)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 50, in __init__
+    self.layers = nn.ModuleList([TinyBlock(hidden, intermediate) for _ in range(layers)])
+                  ^^^^^^^^^^^^^
+AttributeError: module 'torch.nn' has no attribute 'ModuleList'
+
+======================================================================
+ERROR: test_layer1_push_fires_on_layer1_and_changes_output (test_part65.Part65Tests.test_layer1_push_fires_on_layer1_and_changes_output)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 333, in test_layer1_push_fires_on_layer1_and_changes_output
+    model = TinyCausalModel(vocab=19, hidden=4, intermediate=4, layers=2)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 57, in __init__
+    self.model = TinyBackbone(hidden, intermediate, layers)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 50, in __init__
+    self.layers = nn.ModuleList([TinyBlock(hidden, intermediate) for _ in range(layers)])
+                  ^^^^^^^^^^^^^
+AttributeError: module 'torch.nn' has no attribute 'ModuleList'
+
+======================================================================
+ERROR: test_pilot_check_uses_recorded_run_wide_gates (test_part65.Part65Tests.test_pilot_check_uses_recorded_run_wide_gates)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 412, in test_pilot_check_uses_recorded_run_wide_gates
+    model = TinyCausalModel(vocab=19, hidden=4, intermediate=4, layers=2)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 57, in __init__
+    self.model = TinyBackbone(hidden, intermediate, layers)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 50, in __init__
+    self.layers = nn.ModuleList([TinyBlock(hidden, intermediate) for _ in range(layers)])
+                  ^^^^^^^^^^^^^
+AttributeError: module 'torch.nn' has no attribute 'ModuleList'
+
+======================================================================
+ERROR: test_pushed_generation_rejects_a_hook_that_never_fires (test_part65.Part65Tests.test_pushed_generation_rejects_a_hook_that_never_fires)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 359, in test_pushed_generation_rejects_a_hook_that_never_fires
+    model = TinyCausalModel()
+            ^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 57, in __init__
+    self.model = TinyBackbone(hidden, intermediate, layers)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 50, in __init__
+    self.layers = nn.ModuleList([TinyBlock(hidden, intermediate) for _ in range(layers)])
+                  ^^^^^^^^^^^^^
+AttributeError: module 'torch.nn' has no attribute 'ModuleList'
+
+======================================================================
+ERROR: test_real_and_control_write_vector_norms_match (test_part65.Part65Tests.test_real_and_control_write_vector_norms_match)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 292, in test_real_and_control_write_vector_norms_match
+    model = TinyCausalModel(hidden=8, intermediate=12, layers=3)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 57, in __init__
+    self.model = TinyBackbone(hidden, intermediate, layers)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 50, in __init__
+    self.layers = nn.ModuleList([TinyBlock(hidden, intermediate) for _ in range(layers)])
+                  ^^^^^^^^^^^^^
+AttributeError: module 'torch.nn' has no attribute 'ModuleList'
+
+======================================================================
+ERROR: test_real_ledger_subcap_refuses_before_post_and_main_exits_2 (test_part65.Part65Tests.test_real_ledger_subcap_refuses_before_post_and_main_exits_2)
+Catches mutants that ignore the real sub-cap, POST the refused chunk, or leak its error.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/elisepc/green/worktrees/ab-part65/part65/test_part65.py", line 892, in test_real_ledger_subcap_refuses_before_post_and_main_exits_2
+    with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent) as directory:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/tempfile.py", line 1021, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/tempfile.py", line 523, in mkdtemp
+    _os.mkdir(file, 0o700)
+OSError: [Errno 30] Read-only file system: '/home/elisepc/green/worktrees/ab-part65/part65/tmps1pbws2i'
+
+----------------------------------------------------------------------
+Ran 51 tests in 2.081s
+
+FAILED (errors=9)
+{"ambiguous": 0, "pending": 0, "released": 1, "settled": 0}

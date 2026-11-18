@@ -1,0 +1,9 @@
+batch 332: 124.1s (elapsed 125s)
+mode hooks: 50 batches, median 0.053s, slow 1, elapsed 128s
+mode hooks: 100 batches, median 0.055s, slow 1, elapsed 130s
+mode hooks: 150 batches, median 0.055s, slow 1, elapsed 133s
+mode hooks: 200 batches, median 0.057s, slow 1, elapsed 136s
+mode hooks: 250 batches, median 0.058s, slow 1, elapsed 140s
+batch 593: 164.3s (elapsed 305s)
+mode hooks: 300 batches, median 0.059s, slow 2, elapsed 307s
+done mode hooks: 300 batches, slow(>5s) [(332, 124.1), (593, 164.3)], total 307s

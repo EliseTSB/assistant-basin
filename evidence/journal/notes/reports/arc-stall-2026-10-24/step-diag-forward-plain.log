@@ -1,0 +1,7 @@
+mode plain: 50 batches, median 0.047s, slow 0, elapsed 3s
+mode plain: 100 batches, median 0.048s, slow 0, elapsed 6s
+mode plain: 150 batches, median 0.049s, slow 0, elapsed 8s
+mode plain: 200 batches, median 0.050s, slow 0, elapsed 11s
+mode plain: 250 batches, median 0.051s, slow 0, elapsed 14s
+mode plain: 300 batches, median 0.051s, slow 0, elapsed 17s
+done mode plain: 300 batches, slow(>5s) [], total 17s

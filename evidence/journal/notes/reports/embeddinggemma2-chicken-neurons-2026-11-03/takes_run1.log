@@ -1,0 +1,17 @@
+Loading weights:   0%|          | 0/1165 [00:00<?, ?it/s]Loading weights:   6%|▌         | 65/1165 [00:00<00:01, 622.79it/s]Loading weights:  14%|█▎        | 158/1165 [00:00<00:01, 772.95it/s]Loading weights:  22%|██▏       | 251/1165 [00:00<00:01, 729.14it/s]Loading weights:  30%|██▉       | 344/1165 [00:00<00:01, 783.48it/s]Loading weights:  38%|███▊      | 437/1165 [00:00<00:00, 743.84it/s]Loading weights:  45%|████▌     | 530/1165 [00:00<00:00, 785.77it/s]Loading weights:  53%|█████▎    | 623/1165 [00:00<00:00, 754.05it/s]Loading weights:  61%|██████▏   | 716/1165 [00:00<00:00, 793.21it/s]Loading weights:  68%|██████▊   | 797/1165 [00:01<00:01, 247.99it/s]Loading weights: 100%|██████████| 1165/1165 [00:01<00:00, 637.79it/s]
+scored take 1/15 across 7 versions
+scored take 2/15 across 7 versions
+scored take 3/15 across 7 versions
+scored take 4/15 across 7 versions
+scored take 5/15 across 7 versions
+scored take 6/15 across 7 versions
+scored take 7/15 across 7 versions
+scored take 8/15 across 7 versions
+scored take 9/15 across 7 versions
+scored take 10/15 across 7 versions
+scored take 11/15 across 7 versions
+scored take 12/15 across 7 versions
+scored take 13/15 across 7 versions
+scored take 14/15 across 7 versions
+scored take 15/15 across 7 versions
+wrote takes_scored_run1.json (15 takes; versions: unedited, output_gate, inside_full, gentle, W1, W2, W2_control)

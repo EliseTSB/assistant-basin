@@ -1,0 +1,13 @@
+5000 iters, 10000 syncs: median 0.66ms, p99.9 1.0ms, slow 0, elapsed 3s
+10000 iters, 20000 syncs: median 0.65ms, p99.9 1.0ms, slow 0, elapsed 7s
+15000 iters, 30000 syncs: median 0.65ms, p99.9 1.0ms, slow 0, elapsed 10s
+20000 iters, 40000 syncs: median 0.65ms, p99.9 1.0ms, slow 0, elapsed 13s
+25000 iters, 50000 syncs: median 0.65ms, p99.9 1.0ms, slow 0, elapsed 17s
+30000 iters, 60000 syncs: median 0.65ms, p99.9 1.0ms, slow 0, elapsed 20s
+35000 iters, 70000 syncs: median 0.64ms, p99.9 1.0ms, slow 0, elapsed 23s
+40000 iters, 80000 syncs: median 0.64ms, p99.9 1.0ms, slow 0, elapsed 27s
+45000 iters, 90000 syncs: median 0.64ms, p99.9 1.0ms, slow 0, elapsed 30s
+50000 iters, 100000 syncs: median 0.64ms, p99.9 1.0ms, slow 0, elapsed 33s
+55000 iters, 110000 syncs: median 0.64ms, p99.9 1.0ms, slow 0, elapsed 36s
+60000 iters, 120000 syncs: median 0.63ms, p99.9 1.0ms, slow 0, elapsed 39s
+done: 60000 iters, 120000 syncs, slow(>5s) [], total 39s, vals per iter 168141

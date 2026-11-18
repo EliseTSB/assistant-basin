@@ -1,0 +1,3548 @@
+{
+ "specification": "EDIT-DESIGN.md and PREDICTIONS.md E1-E6; Amendment 1 applied",
+ "method": {
+  "score": "cosine to hen/rooster prompt maximum minus mean cosine to the other 48 ESC-50 prompts",
+  "auc_bootstrap_draws": 4000,
+  "auc_bootstrap_interval": "percentile 95% interval, 2.5th and 97.5th percentiles; paired resample indices shared across arms",
+  "bootstrap_seed": 20261104,
+  "threshold_quantiles": [
+   0.1,
+   0.2,
+   0.30000000000000004,
+   0.4,
+   0.5,
+   0.6,
+   0.7000000000000001,
+   0.8,
+   0.9
+  ],
+  "k_grid": [
+   0.01,
+   0.01778279410038923,
+   0.03162277660168379,
+   0.056234132519034905,
+   0.1,
+   0.1778279410038923,
+   0.31622776601683794,
+   0.5623413251903491,
+   1.0,
+   1.7782794100389228,
+   3.1622776601683795,
+   5.62341325190349,
+   10.0,
+   17.78279410038923,
+   31.622776601683793,
+   56.23413251903491,
+   100.0,
+   177.82794100389228,
+   316.2277660168379,
+   562.341325190349,
+   1000.0,
+   1778.2794100389228,
+   3162.2776601683795,
+   5623.413251903491,
+   10000.0,
+   17782.794100389227,
+   31622.776601683792,
+   56234.13251903491,
+   100000.0
+  ],
+  "mlp": {
+   "hidden_units": 64,
+   "epochs": 500,
+   "optimizer": "Adam",
+   "learning_rate": 0.001,
+   "cpu": true,
+   "seed": 0,
+   "keep_penalty_weight": 10.0
+  }
+ },
+ "signs": {
+  "L17_N1574": 1,
+  "L19_N1129": -1
+ },
+ "split": {
+  "seed": 20261104,
+  "fit_rule": "first half of the shuffled sorted chicken-imitation participant ids, matching edit_pilot_gate.py",
+  "fit_imitator_count": 16,
+  "fit_imitation_count": 18,
+  "test_imitation_count": 20,
+  "test_real_chicken_count": 20,
+  "fit_real_positive_count": 228,
+  "fit_keep_nonchicken_count": 288,
+  "fit_people": [
+   "4515180000000000.0",
+   "4725840000000000.0",
+   "4747750000000000.0",
+   "5105800000000000.0",
+   "5168400000000000.0",
+   "5178080000000000.0",
+   "5417520000000000.0",
+   "5466390000000000.0",
+   "5526170000000000.0",
+   "5648090000000000.0",
+   "5657380000000000.0",
+   "5692770000000000.0",
+   "5713740000000000.0",
+   "6285330000000000.0",
+   "6288440000000000.0",
+   "6521070000000000.0"
+  ],
+  "esc_test_fold_4_5_count": 224,
+  "esc_test_nonchicken_count": 192,
+  "pixabay_real_count": 180,
+  "pixabay_imitation_count": 8
+ },
+ "baseline_test_auc": 0.5875,
+ "baseline_test_auc_bootstrap_95": [
+  0.4,
+  0.76
+ ],
+ "arms": {
+  "written_gated_block": {
+   "parameters": {
+    "t19": 0.007097244262695313,
+    "t17": 0.021478271484375002,
+    "k": 10000.0,
+    "t19_quantile": 0.1,
+    "t17_quantile": 0.7000000000000001,
+    "fit_auc": 0.8669590643274854,
+    "direction": "normalized mean of hen and rooster prompt embeddings",
+    "gate_units": {
+     "L17_N1574_sign": 1,
+     "L19_N1129_sign": -1
+    },
+    "quantile_levels": [
+     0.1,
+     0.2,
+     0.30000000000000004,
+     0.4,
+     0.5,
+     0.6,
+     0.7000000000000001,
+     0.8,
+     0.9
+    ],
+    "k_grid": [
+     0.01,
+     0.01778279410038923,
+     0.03162277660168379,
+     0.056234132519034905,
+     0.1,
+     0.1778279410038923,
+     0.31622776601683794,
+     0.5623413251903491,
+     1.0,
+     1.7782794100389228,
+     3.1622776601683795,
+     5.62341325190349,
+     10.0,
+     17.78279410038923,
+     31.622776601683793,
+     56.23413251903491,
+     100.0,
+     177.82794100389228,
+     316.2277660168379,
+     562.341325190349,
+     1000.0,
+     1778.2794100389228,
+     3162.2776601683795,
+     5623.413251903491,
+     10000.0,
+     17782.794100389227,
+     31622.776601683792,
+     56234.13251903491,
+     100000.0
+    ],
+    "tie_break": "smallest k; first t19/t17 quantile pair in ascending grid order"
+   },
+   "fit_auc": 0.8669590643274854,
+   "test_auc": 0.8525,
+   "test_auc_bootstrap_95": [
+    0.72,
+    0.9525
+   ],
+   "baseline_test_auc": 0.5875,
+   "damage_esc50_folds_4_5": {
+    "per_class": {
+     "dog": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "rooster": {
+      "n": 16,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "pig": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "cow": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "frog": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "cat": {
+      "n": 4,
+      "correct_before": 1,
+      "correct_after": 1,
+      "accuracy_before": 0.25,
+      "accuracy_after": 0.25,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "hen": {
+      "n": 16,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "insects": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "sheep": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "crow": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "rain": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "sea_waves": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "crackling_fire": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "crickets": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "chirping_birds": {
+      "n": 4,
+      "correct_before": 4,
+      "correct_after": 4,
+      "accuracy_before": 1.0,
+      "accuracy_after": 1.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "water_drops": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "wind": {
+      "n": 4,
+      "correct_before": 2,
+      "correct_after": 2,
+      "accuracy_before": 0.5,
+      "accuracy_after": 0.5,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "pouring_water": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "toilet_flush": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "thunderstorm": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "crying_baby": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "sneezing": {
+      "n": 4,
+      "correct_before": 2,
+      "correct_after": 2,
+      "accuracy_before": 0.5,
+      "accuracy_after": 0.5,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "clapping": {
+      "n": 4,
+      "correct_before": 4,
+      "correct_after": 4,
+      "accuracy_before": 1.0,
+      "accuracy_after": 1.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "breathing": {
+      "n": 4,
+      "correct_before": 1,
+      "correct_after": 1,
+      "accuracy_before": 0.25,
+      "accuracy_after": 0.25,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "coughing": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "footsteps": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "laughing": {
+      "n": 4,
+      "correct_before": 4,
+      "correct_after": 4,
+      "accuracy_before": 1.0,
+      "accuracy_after": 1.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "brushing_teeth": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "snoring": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "drinking_sipping": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "door_wood_knock": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "mouse_click": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "keyboard_typing": {
+      "n": 4,
+      "correct_before": 2,
+      "correct_after": 2,
+      "accuracy_before": 0.5,
+      "accuracy_after": 0.5,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "door_wood_creaks": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "can_opening": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "washing_machine": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "vacuum_cleaner": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "clock_alarm": {
+      "n": 4,
+      "correct_before": 2,
+      "correct_after": 2,
+      "accuracy_before": 0.5,
+      "accuracy_after": 0.5,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "clock_tick": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "glass_breaking": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "helicopter": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "chainsaw": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "siren": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "car_horn": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "engine": {
+      "n": 4,
+      "correct_before": 4,
+      "correct_after": 4,
+      "accuracy_before": 1.0,
+      "accuracy_after": 1.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "train": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "church_bells": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 2,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.5,
+      "delta_accuracy": -0.25,
+      "delta_correct_clips": -1
+     },
+     "airplane": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "fireworks": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "hand_saw": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     }
+    },
+    "classes_changed_any_accuracy": [
+     "church_bells"
+    ],
+    "classes_changed_any_count": 1,
+    "classes_changed_more_than_1_clip": [],
+    "classes_changed_more_than_1_clip_count": 0,
+    "all_classes_within_1_clip": true
+   },
+   "nonchicken_bit_identical": {
+    "identical_clips": 176,
+    "total_clips": 192,
+    "share": 0.9166666666666666
+   },
+   "pixabay_imitation_descriptive": [
+    {
+     "id": "69152",
+     "score_before": 0.016109943389892578,
+     "score_after": -0.2027001976966858
+    },
+    {
+     "id": "79678",
+     "score_before": 0.03592574596405029,
+     "score_after": -0.1739596277475357
+    },
+    {
+     "id": "86687",
+     "score_before": 0.012110650539398193,
+     "score_after": 0.012110650539398193
+    },
+    {
+     "id": "88731",
+     "score_before": 0.0041634440422058105,
+     "score_after": -0.1826554536819458
+    },
+    {
+     "id": "89241",
+     "score_before": 0.026191890239715576,
+     "score_after": -0.18272191286087036
+    },
+    {
+     "id": "101726",
+     "score_before": 0.014241397380828857,
+     "score_after": -0.1796773076057434
+    },
+    {
+     "id": "487671",
+     "score_before": 0.04024285078048706,
+     "score_after": -0.18189042806625366
+    },
+    {
+     "id": "487676",
+     "score_before": 0.03735703229904175,
+     "score_after": -0.13609693944454193
+    }
+   ]
+  },
+  "steering": {
+   "parameters": {
+    "k": 0.01,
+    "fit_auc": 0.6569200779727096,
+    "target_written_fit_auc": 0.8669590643274854,
+    "selection": "highest fit AUC on the fixed log grid because no k reached the written block fit AUC",
+    "reached_target": false,
+    "grid": [
+     0.01,
+     0.01778279410038923,
+     0.03162277660168379,
+     0.056234132519034905,
+     0.1,
+     0.1778279410038923,
+     0.31622776601683794,
+     0.5623413251903491,
+     1.0,
+     1.7782794100389228,
+     3.1622776601683795,
+     5.62341325190349,
+     10.0,
+     17.78279410038923,
+     31.622776601683793,
+     56.23413251903491,
+     100.0,
+     177.82794100389228,
+     316.2277660168379,
+     562.341325190349,
+     1000.0,
+     1778.2794100389228,
+     3162.2776601683795,
+     5623.413251903491,
+     10000.0,
+     17782.794100389227,
+     31622.776601683792,
+     56234.13251903491,
+     100000.0
+    ],
+    "direction": "normalized mean of hen and rooster prompt embeddings"
+   },
+   "fit_auc": 0.6569200779727096,
+   "test_auc": 0.5875,
+   "test_auc_bootstrap_95": [
+    0.4,
+    0.76
+   ],
+   "baseline_test_auc": 0.5875,
+   "damage_esc50_folds_4_5": {
+    "per_class": {
+     "dog": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "rooster": {
+      "n": 16,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "pig": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "cow": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "frog": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "cat": {
+      "n": 4,
+      "correct_before": 1,
+      "correct_after": 1,
+      "accuracy_before": 0.25,
+      "accuracy_after": 0.25,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "hen": {
+      "n": 16,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "insects": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "sheep": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "crow": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "rain": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "sea_waves": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "crackling_fire": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "crickets": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "chirping_birds": {
+      "n": 4,
+      "correct_before": 4,
+      "correct_after": 4,
+      "accuracy_before": 1.0,
+      "accuracy_after": 1.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "water_drops": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "wind": {
+      "n": 4,
+      "correct_before": 2,
+      "correct_after": 2,
+      "accuracy_before": 0.5,
+      "accuracy_after": 0.5,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "pouring_water": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "toilet_flush": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "thunderstorm": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "crying_baby": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "sneezing": {
+      "n": 4,
+      "correct_before": 2,
+      "correct_after": 2,
+      "accuracy_before": 0.5,
+      "accuracy_after": 0.5,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "clapping": {
+      "n": 4,
+      "correct_before": 4,
+      "correct_after": 4,
+      "accuracy_before": 1.0,
+      "accuracy_after": 1.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "breathing": {
+      "n": 4,
+      "correct_before": 1,
+      "correct_after": 1,
+      "accuracy_before": 0.25,
+      "accuracy_after": 0.25,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "coughing": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "footsteps": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "laughing": {
+      "n": 4,
+      "correct_before": 4,
+      "correct_after": 4,
+      "accuracy_before": 1.0,
+      "accuracy_after": 1.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "brushing_teeth": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "snoring": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "drinking_sipping": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "door_wood_knock": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "mouse_click": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "keyboard_typing": {
+      "n": 4,
+      "correct_before": 2,
+      "correct_after": 2,
+      "accuracy_before": 0.5,
+      "accuracy_after": 0.5,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "door_wood_creaks": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "can_opening": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "washing_machine": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "vacuum_cleaner": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "clock_alarm": {
+      "n": 4,
+      "correct_before": 2,
+      "correct_after": 2,
+      "accuracy_before": 0.5,
+      "accuracy_after": 0.5,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "clock_tick": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "glass_breaking": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "helicopter": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "chainsaw": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "siren": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "car_horn": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "engine": {
+      "n": 4,
+      "correct_before": 4,
+      "correct_after": 4,
+      "accuracy_before": 1.0,
+      "accuracy_after": 1.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "train": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "church_bells": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "airplane": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "fireworks": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "hand_saw": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     }
+    },
+    "classes_changed_any_accuracy": [],
+    "classes_changed_any_count": 0,
+    "classes_changed_more_than_1_clip": [],
+    "classes_changed_more_than_1_clip_count": 0,
+    "all_classes_within_1_clip": true
+   },
+   "nonchicken_bit_identical": {
+    "identical_clips": 0,
+    "total_clips": 192,
+    "share": 0.0
+   },
+   "pixabay_imitation_descriptive": [
+    {
+     "id": "69152",
+     "score_before": 0.016109943389892578,
+     "score_after": 0.014562010765075684
+    },
+    {
+     "id": "79678",
+     "score_before": 0.03592574596405029,
+     "score_after": 0.03452986478805542
+    },
+    {
+     "id": "86687",
+     "score_before": 0.012110650539398193,
+     "score_after": 0.010534703731536865
+    },
+    {
+     "id": "88731",
+     "score_before": 0.0041634440422058105,
+     "score_after": 0.0025371909141540527
+    },
+    {
+     "id": "89241",
+     "score_before": 0.026191890239715576,
+     "score_after": 0.02472102642059326
+    },
+    {
+     "id": "101726",
+     "score_before": 0.014241397380828857,
+     "score_after": 0.012684106826782227
+    },
+    {
+     "id": "487671",
+     "score_before": 0.04024285078048706,
+     "score_after": 0.038867175579071045
+    },
+    {
+     "id": "487676",
+     "score_before": 0.03735703229904175,
+     "score_after": 0.03595888614654541
+    }
+   ]
+  },
+  "trained_layer": {
+   "parameters": {
+    "architecture": "residual MLP: Linear(768,64), ReLU, Linear(64,768), normalize(e + MLP(e))",
+    "seed": 0,
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "epochs": 500,
+    "full_batch": true,
+    "keep_penalty_weight": 10.0,
+    "labels_shuffled": false,
+    "final_training_loss": 1.0211122035980225
+   },
+   "fit_auc": 1.0,
+   "test_auc": 0.9925,
+   "test_auc_bootstrap_95": [
+    0.97,
+    1.0
+   ],
+   "baseline_test_auc": 0.5875,
+   "damage_esc50_folds_4_5": {
+    "per_class": {
+     "dog": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 0,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.0,
+      "delta_accuracy": -0.75,
+      "delta_correct_clips": -3
+     },
+     "rooster": {
+      "n": 16,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "pig": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "cow": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "frog": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "cat": {
+      "n": 4,
+      "correct_before": 1,
+      "correct_after": 0,
+      "accuracy_before": 0.25,
+      "accuracy_after": 0.0,
+      "delta_accuracy": -0.25,
+      "delta_correct_clips": -1
+     },
+     "hen": {
+      "n": 16,
+      "correct_before": 0,
+      "correct_after": 16,
+      "accuracy_before": 0.0,
+      "accuracy_after": 1.0,
+      "delta_accuracy": 1.0,
+      "delta_correct_clips": 16
+     },
+     "insects": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "sheep": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "crow": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "rain": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "sea_waves": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "crackling_fire": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "crickets": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "chirping_birds": {
+      "n": 4,
+      "correct_before": 4,
+      "correct_after": 0,
+      "accuracy_before": 1.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": -1.0,
+      "delta_correct_clips": -4
+     },
+     "water_drops": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "wind": {
+      "n": 4,
+      "correct_before": 2,
+      "correct_after": 1,
+      "accuracy_before": 0.5,
+      "accuracy_after": 0.25,
+      "delta_accuracy": -0.25,
+      "delta_correct_clips": -1
+     },
+     "pouring_water": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "toilet_flush": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "thunderstorm": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "crying_baby": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 0,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.0,
+      "delta_accuracy": -0.75,
+      "delta_correct_clips": -3
+     },
+     "sneezing": {
+      "n": 4,
+      "correct_before": 2,
+      "correct_after": 3,
+      "accuracy_before": 0.5,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.25,
+      "delta_correct_clips": 1
+     },
+     "clapping": {
+      "n": 4,
+      "correct_before": 4,
+      "correct_after": 4,
+      "accuracy_before": 1.0,
+      "accuracy_after": 1.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "breathing": {
+      "n": 4,
+      "correct_before": 1,
+      "correct_after": 1,
+      "accuracy_before": 0.25,
+      "accuracy_after": 0.25,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "coughing": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "footsteps": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "laughing": {
+      "n": 4,
+      "correct_before": 4,
+      "correct_after": 1,
+      "accuracy_before": 1.0,
+      "accuracy_after": 0.25,
+      "delta_accuracy": -0.75,
+      "delta_correct_clips": -3
+     },
+     "brushing_teeth": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "snoring": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 2,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.5,
+      "delta_accuracy": -0.25,
+      "delta_correct_clips": -1
+     },
+     "drinking_sipping": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "door_wood_knock": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "mouse_click": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "keyboard_typing": {
+      "n": 4,
+      "correct_before": 2,
+      "correct_after": 1,
+      "accuracy_before": 0.5,
+      "accuracy_after": 0.25,
+      "delta_accuracy": -0.25,
+      "delta_correct_clips": -1
+     },
+     "door_wood_creaks": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "can_opening": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "washing_machine": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "vacuum_cleaner": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "clock_alarm": {
+      "n": 4,
+      "correct_before": 2,
+      "correct_after": 2,
+      "accuracy_before": 0.5,
+      "accuracy_after": 0.5,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "clock_tick": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "glass_breaking": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "helicopter": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "chainsaw": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "siren": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 0,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.0,
+      "delta_accuracy": -0.75,
+      "delta_correct_clips": -3
+     },
+     "car_horn": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 1,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.25,
+      "delta_accuracy": -0.5,
+      "delta_correct_clips": -2
+     },
+     "engine": {
+      "n": 4,
+      "correct_before": 4,
+      "correct_after": 4,
+      "accuracy_before": 1.0,
+      "accuracy_after": 1.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "train": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "church_bells": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 1,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.25,
+      "delta_accuracy": -0.5,
+      "delta_correct_clips": -2
+     },
+     "airplane": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "fireworks": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "hand_saw": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     }
+    },
+    "classes_changed_any_accuracy": [
+     "car_horn",
+     "cat",
+     "chirping_birds",
+     "church_bells",
+     "crying_baby",
+     "dog",
+     "hen",
+     "keyboard_typing",
+     "laughing",
+     "siren",
+     "sneezing",
+     "snoring",
+     "wind"
+    ],
+    "classes_changed_any_count": 13,
+    "classes_changed_more_than_1_clip": [
+     "car_horn",
+     "chirping_birds",
+     "church_bells",
+     "crying_baby",
+     "dog",
+     "hen",
+     "laughing",
+     "siren"
+    ],
+    "classes_changed_more_than_1_clip_count": 8,
+    "all_classes_within_1_clip": false
+   },
+   "nonchicken_bit_identical": {
+    "identical_clips": 0,
+    "total_clips": 192,
+    "share": 0.0
+   },
+   "pixabay_imitation_descriptive": [
+    {
+     "id": "69152",
+     "score_before": 0.016109943389892578,
+     "score_after": 0.3610111176967621
+    },
+    {
+     "id": "79678",
+     "score_before": 0.03592574596405029,
+     "score_after": -0.12312132120132446
+    },
+    {
+     "id": "86687",
+     "score_before": 0.012110650539398193,
+     "score_after": -0.35637974739074707
+    },
+    {
+     "id": "88731",
+     "score_before": 0.0041634440422058105,
+     "score_after": -0.2825685441493988
+    },
+    {
+     "id": "89241",
+     "score_before": 0.026191890239715576,
+     "score_after": -0.38741201162338257
+    },
+    {
+     "id": "101726",
+     "score_before": 0.014241397380828857,
+     "score_after": -0.3845018148422241
+    },
+    {
+     "id": "487671",
+     "score_before": 0.04024285078048706,
+     "score_after": -0.3897620141506195
+    },
+    {
+     "id": "487676",
+     "score_before": 0.03735703229904175,
+     "score_after": -0.38568374514579773
+    }
+   ]
+  },
+  "random_direction_control": {
+   "parameters": {
+    "t19": 0.00954437255859375,
+    "t17": 0.05936279296875,
+    "k": 56234.13251903491,
+    "t19_quantile": 0.2,
+    "t17_quantile": 0.9,
+    "fit_auc": 0.719541910331384,
+    "direction": "seed-0 random unit vector",
+    "direction_seed": 0,
+    "gate_units": {
+     "L17_N1574_sign": 1,
+     "L19_N1129_sign": -1
+    },
+    "quantile_levels": [
+     0.1,
+     0.2,
+     0.30000000000000004,
+     0.4,
+     0.5,
+     0.6,
+     0.7000000000000001,
+     0.8,
+     0.9
+    ],
+    "k_grid": [
+     0.01,
+     0.01778279410038923,
+     0.03162277660168379,
+     0.056234132519034905,
+     0.1,
+     0.1778279410038923,
+     0.31622776601683794,
+     0.5623413251903491,
+     1.0,
+     1.7782794100389228,
+     3.1622776601683795,
+     5.62341325190349,
+     10.0,
+     17.78279410038923,
+     31.622776601683793,
+     56.23413251903491,
+     100.0,
+     177.82794100389228,
+     316.2277660168379,
+     562.341325190349,
+     1000.0,
+     1778.2794100389228,
+     3162.2776601683795,
+     5623.413251903491,
+     10000.0,
+     17782.794100389227,
+     31622.776601683792,
+     56234.13251903491,
+     100000.0
+    ],
+    "tie_break": "smallest k; first t19/t17 quantile pair in ascending grid order"
+   },
+   "fit_auc": 0.719541910331384,
+   "test_auc": 0.595,
+   "test_auc_bootstrap_95": [
+    0.3925,
+    0.78
+   ],
+   "baseline_test_auc": 0.5875,
+   "damage_esc50_folds_4_5": {
+    "per_class": {
+     "dog": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 2,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.5,
+      "delta_accuracy": -0.25,
+      "delta_correct_clips": -1
+     },
+     "rooster": {
+      "n": 16,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "pig": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "cow": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "frog": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "cat": {
+      "n": 4,
+      "correct_before": 1,
+      "correct_after": 1,
+      "accuracy_before": 0.25,
+      "accuracy_after": 0.25,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "hen": {
+      "n": 16,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "insects": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "sheep": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "crow": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "rain": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "sea_waves": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "crackling_fire": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "crickets": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "chirping_birds": {
+      "n": 4,
+      "correct_before": 4,
+      "correct_after": 4,
+      "accuracy_before": 1.0,
+      "accuracy_after": 1.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "water_drops": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "wind": {
+      "n": 4,
+      "correct_before": 2,
+      "correct_after": 2,
+      "accuracy_before": 0.5,
+      "accuracy_after": 0.5,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "pouring_water": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "toilet_flush": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "thunderstorm": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "crying_baby": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 2,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.5,
+      "delta_accuracy": -0.25,
+      "delta_correct_clips": -1
+     },
+     "sneezing": {
+      "n": 4,
+      "correct_before": 2,
+      "correct_after": 2,
+      "accuracy_before": 0.5,
+      "accuracy_after": 0.5,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "clapping": {
+      "n": 4,
+      "correct_before": 4,
+      "correct_after": 4,
+      "accuracy_before": 1.0,
+      "accuracy_after": 1.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "breathing": {
+      "n": 4,
+      "correct_before": 1,
+      "correct_after": 1,
+      "accuracy_before": 0.25,
+      "accuracy_after": 0.25,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "coughing": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "footsteps": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "laughing": {
+      "n": 4,
+      "correct_before": 4,
+      "correct_after": 4,
+      "accuracy_before": 1.0,
+      "accuracy_after": 1.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "brushing_teeth": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "snoring": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "drinking_sipping": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "door_wood_knock": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "mouse_click": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "keyboard_typing": {
+      "n": 4,
+      "correct_before": 2,
+      "correct_after": 2,
+      "accuracy_before": 0.5,
+      "accuracy_after": 0.5,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "door_wood_creaks": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "can_opening": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "washing_machine": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "vacuum_cleaner": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "clock_alarm": {
+      "n": 4,
+      "correct_before": 2,
+      "correct_after": 2,
+      "accuracy_before": 0.5,
+      "accuracy_after": 0.5,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "clock_tick": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "glass_breaking": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "helicopter": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "chainsaw": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "siren": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 2,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.5,
+      "delta_accuracy": -0.25,
+      "delta_correct_clips": -1
+     },
+     "car_horn": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "engine": {
+      "n": 4,
+      "correct_before": 4,
+      "correct_after": 4,
+      "accuracy_before": 1.0,
+      "accuracy_after": 1.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "train": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "church_bells": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 2,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.5,
+      "delta_accuracy": -0.25,
+      "delta_correct_clips": -1
+     },
+     "airplane": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "fireworks": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "hand_saw": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     }
+    },
+    "classes_changed_any_accuracy": [
+     "church_bells",
+     "crying_baby",
+     "dog",
+     "siren"
+    ],
+    "classes_changed_any_count": 4,
+    "classes_changed_more_than_1_clip": [],
+    "classes_changed_more_than_1_clip_count": 0,
+    "all_classes_within_1_clip": true
+   },
+   "nonchicken_bit_identical": {
+    "identical_clips": 160,
+    "total_clips": 192,
+    "share": 0.8333333333333334
+   },
+   "pixabay_imitation_descriptive": [
+    {
+     "id": "69152",
+     "score_before": 0.016109943389892578,
+     "score_after": 0.019787084311246872
+    },
+    {
+     "id": "79678",
+     "score_before": 0.03592574596405029,
+     "score_after": 0.02373574674129486
+    },
+    {
+     "id": "86687",
+     "score_before": 0.012110650539398193,
+     "score_after": 0.012110650539398193
+    },
+    {
+     "id": "88731",
+     "score_before": 0.0041634440422058105,
+     "score_after": 0.01925690472126007
+    },
+    {
+     "id": "89241",
+     "score_before": 0.026191890239715576,
+     "score_after": 0.019599568098783493
+    },
+    {
+     "id": "101726",
+     "score_before": 0.014241397380828857,
+     "score_after": 0.019335299730300903
+    },
+    {
+     "id": "487671",
+     "score_before": 0.04024285078048706,
+     "score_after": 0.020449643954634666
+    },
+    {
+     "id": "487676",
+     "score_before": 0.03735703229904175,
+     "score_after": 0.03735703229904175
+    }
+   ]
+  },
+  "random_gate_control": {
+   "parameters": {
+    "t19": 4.410743713378906e-06,
+    "t17": 0.009503173828125001,
+    "k": 100.0,
+    "t19_quantile": 0.5,
+    "t17_quantile": 0.9,
+    "fit_auc": 0.6583820662768031,
+    "direction": "normalized mean of hen and rooster prompt embeddings",
+    "gate_units": {
+     "L17_N": 1742,
+     "L17_sign": 1,
+     "L19_N": 1304,
+     "L19_sign": 1,
+     "selection_seed": 0
+    },
+    "quantile_levels": [
+     0.1,
+     0.2,
+     0.30000000000000004,
+     0.4,
+     0.5,
+     0.6,
+     0.7000000000000001,
+     0.8,
+     0.9
+    ],
+    "k_grid": [
+     0.01,
+     0.01778279410038923,
+     0.03162277660168379,
+     0.056234132519034905,
+     0.1,
+     0.1778279410038923,
+     0.31622776601683794,
+     0.5623413251903491,
+     1.0,
+     1.7782794100389228,
+     3.1622776601683795,
+     5.62341325190349,
+     10.0,
+     17.78279410038923,
+     31.622776601683793,
+     56.23413251903491,
+     100.0,
+     177.82794100389228,
+     316.2277660168379,
+     562.341325190349,
+     1000.0,
+     1778.2794100389228,
+     3162.2776601683795,
+     5623.413251903491,
+     10000.0,
+     17782.794100389227,
+     31622.776601683792,
+     56234.13251903491,
+     100000.0
+    ],
+    "tie_break": "smallest k; first t19/t17 quantile pair in ascending grid order"
+   },
+   "fit_auc": 0.6583820662768031,
+   "test_auc": 0.5975,
+   "test_auc_bootstrap_95": [
+    0.41,
+    0.7675625000000001
+   ],
+   "baseline_test_auc": 0.5875,
+   "damage_esc50_folds_4_5": {
+    "per_class": {
+     "dog": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "rooster": {
+      "n": 16,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "pig": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "cow": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "frog": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "cat": {
+      "n": 4,
+      "correct_before": 1,
+      "correct_after": 1,
+      "accuracy_before": 0.25,
+      "accuracy_after": 0.25,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "hen": {
+      "n": 16,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "insects": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "sheep": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "crow": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "rain": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "sea_waves": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "crackling_fire": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "crickets": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "chirping_birds": {
+      "n": 4,
+      "correct_before": 4,
+      "correct_after": 4,
+      "accuracy_before": 1.0,
+      "accuracy_after": 1.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "water_drops": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "wind": {
+      "n": 4,
+      "correct_before": 2,
+      "correct_after": 2,
+      "accuracy_before": 0.5,
+      "accuracy_after": 0.5,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "pouring_water": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "toilet_flush": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "thunderstorm": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "crying_baby": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "sneezing": {
+      "n": 4,
+      "correct_before": 2,
+      "correct_after": 2,
+      "accuracy_before": 0.5,
+      "accuracy_after": 0.5,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "clapping": {
+      "n": 4,
+      "correct_before": 4,
+      "correct_after": 4,
+      "accuracy_before": 1.0,
+      "accuracy_after": 1.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "breathing": {
+      "n": 4,
+      "correct_before": 1,
+      "correct_after": 1,
+      "accuracy_before": 0.25,
+      "accuracy_after": 0.25,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "coughing": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "footsteps": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "laughing": {
+      "n": 4,
+      "correct_before": 4,
+      "correct_after": 4,
+      "accuracy_before": 1.0,
+      "accuracy_after": 1.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "brushing_teeth": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "snoring": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "drinking_sipping": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "door_wood_knock": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "mouse_click": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "keyboard_typing": {
+      "n": 4,
+      "correct_before": 2,
+      "correct_after": 2,
+      "accuracy_before": 0.5,
+      "accuracy_after": 0.5,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "door_wood_creaks": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "can_opening": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "washing_machine": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "vacuum_cleaner": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "clock_alarm": {
+      "n": 4,
+      "correct_before": 2,
+      "correct_after": 2,
+      "accuracy_before": 0.5,
+      "accuracy_after": 0.5,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "clock_tick": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "glass_breaking": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "helicopter": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "chainsaw": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "siren": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "car_horn": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "engine": {
+      "n": 4,
+      "correct_before": 4,
+      "correct_after": 4,
+      "accuracy_before": 1.0,
+      "accuracy_after": 1.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "train": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "church_bells": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 3,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.75,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "airplane": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "fireworks": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "hand_saw": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     }
+    },
+    "classes_changed_any_accuracy": [],
+    "classes_changed_any_count": 0,
+    "classes_changed_more_than_1_clip": [],
+    "classes_changed_more_than_1_clip_count": 0,
+    "all_classes_within_1_clip": true
+   },
+   "nonchicken_bit_identical": {
+    "identical_clips": 111,
+    "total_clips": 192,
+    "share": 0.578125
+   },
+   "pixabay_imitation_descriptive": [
+    {
+     "id": "69152",
+     "score_before": 0.016109943389892578,
+     "score_after": 0.014288663864135742
+    },
+    {
+     "id": "79678",
+     "score_before": 0.03592574596405029,
+     "score_after": 0.03557795286178589
+    },
+    {
+     "id": "86687",
+     "score_before": 0.012110650539398193,
+     "score_after": 0.011958062648773193
+    },
+    {
+     "id": "88731",
+     "score_before": 0.0041634440422058105,
+     "score_after": 0.0041634440422058105
+    },
+    {
+     "id": "89241",
+     "score_before": 0.026191890239715576,
+     "score_after": 0.026191890239715576
+    },
+    {
+     "id": "101726",
+     "score_before": 0.014241397380828857,
+     "score_after": 0.014241397380828857
+    },
+    {
+     "id": "487671",
+     "score_before": 0.04024285078048706,
+     "score_after": 0.04024285078048706
+    },
+    {
+     "id": "487676",
+     "score_before": 0.03735703229904175,
+     "score_after": 0.03735703229904175
+    }
+   ]
+  },
+  "shuffled_label_trained_layer": {
+   "parameters": {
+    "architecture": "residual MLP: Linear(768,64), ReLU, Linear(64,768), normalize(e + MLP(e))",
+    "seed": 0,
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "epochs": 500,
+    "full_batch": true,
+    "keep_penalty_weight": 10.0,
+    "labels_shuffled": true,
+    "final_training_loss": 1.0242037773132324
+   },
+   "fit_auc": 0.651803118908382,
+   "test_auc": 0.5575,
+   "test_auc_bootstrap_95": [
+    0.36,
+    0.7500625000000002
+   ],
+   "baseline_test_auc": 0.5875,
+   "damage_esc50_folds_4_5": {
+    "per_class": {
+     "dog": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 0,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.0,
+      "delta_accuracy": -0.75,
+      "delta_correct_clips": -3
+     },
+     "rooster": {
+      "n": 16,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "pig": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "cow": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "frog": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "cat": {
+      "n": 4,
+      "correct_before": 1,
+      "correct_after": 0,
+      "accuracy_before": 0.25,
+      "accuracy_after": 0.0,
+      "delta_accuracy": -0.25,
+      "delta_correct_clips": -1
+     },
+     "hen": {
+      "n": 16,
+      "correct_before": 0,
+      "correct_after": 14,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.875,
+      "delta_accuracy": 0.875,
+      "delta_correct_clips": 14
+     },
+     "insects": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "sheep": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "crow": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "rain": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "sea_waves": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "crackling_fire": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "crickets": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "chirping_birds": {
+      "n": 4,
+      "correct_before": 4,
+      "correct_after": 1,
+      "accuracy_before": 1.0,
+      "accuracy_after": 0.25,
+      "delta_accuracy": -0.75,
+      "delta_correct_clips": -3
+     },
+     "water_drops": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "wind": {
+      "n": 4,
+      "correct_before": 2,
+      "correct_after": 2,
+      "accuracy_before": 0.5,
+      "accuracy_after": 0.5,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "pouring_water": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 4,
+      "accuracy_before": 0.75,
+      "accuracy_after": 1.0,
+      "delta_accuracy": 0.25,
+      "delta_correct_clips": 1
+     },
+     "toilet_flush": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "thunderstorm": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "crying_baby": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 0,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.0,
+      "delta_accuracy": -0.75,
+      "delta_correct_clips": -3
+     },
+     "sneezing": {
+      "n": 4,
+      "correct_before": 2,
+      "correct_after": 2,
+      "accuracy_before": 0.5,
+      "accuracy_after": 0.5,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "clapping": {
+      "n": 4,
+      "correct_before": 4,
+      "correct_after": 1,
+      "accuracy_before": 1.0,
+      "accuracy_after": 0.25,
+      "delta_accuracy": -0.75,
+      "delta_correct_clips": -3
+     },
+     "breathing": {
+      "n": 4,
+      "correct_before": 1,
+      "correct_after": 1,
+      "accuracy_before": 0.25,
+      "accuracy_after": 0.25,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "coughing": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "footsteps": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "laughing": {
+      "n": 4,
+      "correct_before": 4,
+      "correct_after": 1,
+      "accuracy_before": 1.0,
+      "accuracy_after": 0.25,
+      "delta_accuracy": -0.75,
+      "delta_correct_clips": -3
+     },
+     "brushing_teeth": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "snoring": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 4,
+      "accuracy_before": 0.75,
+      "accuracy_after": 1.0,
+      "delta_accuracy": 0.25,
+      "delta_correct_clips": 1
+     },
+     "drinking_sipping": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "door_wood_knock": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "mouse_click": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 1,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.25,
+      "delta_accuracy": -0.5,
+      "delta_correct_clips": -2
+     },
+     "keyboard_typing": {
+      "n": 4,
+      "correct_before": 2,
+      "correct_after": 1,
+      "accuracy_before": 0.5,
+      "accuracy_after": 0.25,
+      "delta_accuracy": -0.25,
+      "delta_correct_clips": -1
+     },
+     "door_wood_creaks": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "can_opening": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "washing_machine": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "vacuum_cleaner": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "clock_alarm": {
+      "n": 4,
+      "correct_before": 2,
+      "correct_after": 2,
+      "accuracy_before": 0.5,
+      "accuracy_after": 0.5,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "clock_tick": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "glass_breaking": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "helicopter": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "chainsaw": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "siren": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 0,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.0,
+      "delta_accuracy": -0.75,
+      "delta_correct_clips": -3
+     },
+     "car_horn": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 1,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.25,
+      "delta_accuracy": -0.5,
+      "delta_correct_clips": -2
+     },
+     "engine": {
+      "n": 4,
+      "correct_before": 4,
+      "correct_after": 3,
+      "accuracy_before": 1.0,
+      "accuracy_after": 0.75,
+      "delta_accuracy": -0.25,
+      "delta_correct_clips": -1
+     },
+     "train": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "church_bells": {
+      "n": 4,
+      "correct_before": 3,
+      "correct_after": 1,
+      "accuracy_before": 0.75,
+      "accuracy_after": 0.25,
+      "delta_accuracy": -0.5,
+      "delta_correct_clips": -2
+     },
+     "airplane": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 1,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.25,
+      "delta_accuracy": 0.25,
+      "delta_correct_clips": 1
+     },
+     "fireworks": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     },
+     "hand_saw": {
+      "n": 4,
+      "correct_before": 0,
+      "correct_after": 0,
+      "accuracy_before": 0.0,
+      "accuracy_after": 0.0,
+      "delta_accuracy": 0.0,
+      "delta_correct_clips": 0
+     }
+    },
+    "classes_changed_any_accuracy": [
+     "airplane",
+     "car_horn",
+     "cat",
+     "chirping_birds",
+     "church_bells",
+     "clapping",
+     "crying_baby",
+     "dog",
+     "engine",
+     "hen",
+     "keyboard_typing",
+     "laughing",
+     "mouse_click",
+     "pouring_water",
+     "siren",
+     "snoring"
+    ],
+    "classes_changed_any_count": 16,
+    "classes_changed_more_than_1_clip": [
+     "car_horn",
+     "chirping_birds",
+     "church_bells",
+     "clapping",
+     "crying_baby",
+     "dog",
+     "hen",
+     "laughing",
+     "mouse_click",
+     "siren"
+    ],
+    "classes_changed_more_than_1_clip_count": 10,
+    "all_classes_within_1_clip": false
+   },
+   "nonchicken_bit_identical": {
+    "identical_clips": 0,
+    "total_clips": 192,
+    "share": 0.0
+   },
+   "pixabay_imitation_descriptive": [
+    {
+     "id": "69152",
+     "score_before": 0.016109943389892578,
+     "score_after": 0.3802332580089569
+    },
+    {
+     "id": "79678",
+     "score_before": 0.03592574596405029,
+     "score_after": 0.4130913019180298
+    },
+    {
+     "id": "86687",
+     "score_before": 0.012110650539398193,
+     "score_after": 0.4289384186267853
+    },
+    {
+     "id": "88731",
+     "score_before": 0.0041634440422058105,
+     "score_after": 0.4341232180595398
+    },
+    {
+     "id": "89241",
+     "score_before": 0.026191890239715576,
+     "score_after": 0.4357890784740448
+    },
+    {
+     "id": "101726",
+     "score_before": 0.014241397380828857,
+     "score_after": 0.4374377429485321
+    },
+    {
+     "id": "487671",
+     "score_before": 0.04024285078048706,
+     "score_after": 0.43302565813064575
+    },
+    {
+     "id": "487676",
+     "score_before": 0.03735703229904175,
+     "score_after": 0.431626558303833
+    }
+   ]
+  }
+ },
+ "verdicts": {
+  "E1": {
+   "prediction": "The written gated block raises the held-out AUC to at least 0.75. Medium (its gate opened on 56% of fit imitations, which caps the gain).",
+   "verdict": "held",
+   "written_test_auc": 0.8525,
+   "threshold": 0.75
+  },
+  "E2": {
+   "prediction": "The written block leaves at least 95% of ESC-50 fold 4 and 5 non-chicken clips bit-identical, and changes per-class accuracy on folds 4 and 5 by at most 1 clip in every class. Medium.",
+   "verdict": "not held",
+   "nonchicken_bit_identical_share": 0.9166666666666666,
+   "required_share": 0.95,
+   "all_classes_within_1_clip": true,
+   "classes_changed_more_than_1_clip": [],
+   "classes_changed_more_than_1_clip_count": 0
+  },
+  "E3": {
+   "prediction": "The trained layer reaches a held-out AUC of at least 0.85. Medium.",
+   "verdict": "held",
+   "trained_layer_test_auc": 0.9925,
+   "threshold": 0.85
+  },
+  "E4": {
+   "prediction": "The trained layer changes per-class accuracy on folds 4 and 5 by more than 1 clip in at least one class. Low-medium.",
+   "verdict": "held",
+   "classes_changed_more_than_1_clip": [
+    "car_horn",
+    "chirping_birds",
+    "church_bells",
+    "crying_baby",
+    "dog",
+    "hen",
+    "laughing",
+    "siren"
+   ],
+   "classes_changed_more_than_1_clip_count": 8,
+   "required_count": "at least 1"
+  },
+  "E5": {
+   "prediction": "The steering arm, scaled on the fit split to the written block's fit AUC, changes more fold 4 and 5 classes' accuracy than the written block does. Medium.",
+   "verdict": "not held",
+   "steering_classes_changed_any_count": 0,
+   "written_classes_changed_any_count": 1,
+   "steering_classes_changed_any": [],
+   "written_classes_changed_any": [
+    "church_bells"
+   ]
+  },
+  "E6": {
+   "prediction": "Controls gain less than 0.05 held-out AUC each: the written block with a random direction, the written block gated by two random same-layer neurons, and the trained layer fitted on shuffled real/imitation labels. High.",
+   "verdict": "held",
+   "gain_threshold": 0.05,
+   "control_gains": {
+    "random_direction_control": 0.007499999999999951,
+    "random_gate_control": 0.010000000000000009,
+    "shuffled_label_trained_layer": -0.030000000000000027
+   },
+   "each_control_below_threshold": {
+    "random_direction_control": true,
+    "random_gate_control": true,
+    "shuffled_label_trained_layer": true
+   }
+  }
+ }
+}

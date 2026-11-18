@@ -1,0 +1,53 @@
+Loading weights:   0%|          | 0/1376 [00:00<?, ?it/s]Loading weights:   5%|▍         | 65/1376 [00:00<00:02, 593.75it/s]Loading weights:  11%|█▏        | 158/1376 [00:00<00:01, 738.60it/s]Loading weights:  18%|█▊        | 251/1376 [00:00<00:01, 719.64it/s]Loading weights:  26%|██▌       | 359/1376 [00:00<00:01, 833.21it/s]Loading weights:  32%|███▏      | 444/1376 [00:00<00:01, 725.32it/s]Loading weights:  39%|███▊      | 530/1376 [00:00<00:01, 730.32it/s]Loading weights:  45%|████▌     | 623/1376 [00:00<00:01, 705.28it/s]Loading weights:  52%|█████▏    | 716/1376 [00:00<00:00, 745.11it/s]Loading weights:  58%|█████▊    | 792/1376 [00:01<00:02, 221.21it/s]Loading weights:  85%|████████▍ | 1169/1376 [00:02<00:00, 578.89it/s]Loading weights:  95%|█████████▌| 1313/1376 [00:03<00:00, 287.21it/s]Loading weights: 100%|██████████| 1376/1376 [00:03<00:00, 356.17it/s]
+[transformers] Image decoding with `torchvision` is deprecated and will be removed in future versions .Please install `torchcodec>=0.16.0` instead. 
+done 2026-03-19-all-five-coop
+done 2026-04-30-four-hens-fresh-grass
+done 2026-08-04-side-stairs-flock-clearest
+done 2026-08-04-side-stairs-flock-elise
+done 2026-08-29-flock-roost-all-five
+done 2026-08-29-flock-roost-wide
+done 2026-08-29-flock-roost-perch-pair
+done 2026-08-04-brahma-mama-low-angle
+done 2026-07-03-brahma-mama-supervises-the-ops-board
+done 2026-07-25-three-hen-lap-cohort-mix
+done 2026-04-20-gandalf-lap
+{
+ "usable": [
+  "2026-03-19-all-five-coop",
+  "2026-04-30-four-hens-fresh-grass",
+  "2026-08-04-side-stairs-flock-clearest",
+  "2026-08-04-side-stairs-flock-elise",
+  "2026-08-29-flock-roost-all-five",
+  "2026-08-29-flock-roost-wide",
+  "2026-08-29-flock-roost-perch-pair",
+  "2026-08-04-brahma-mama-low-angle",
+  "2026-07-03-brahma-mama-supervises-the-ops-board",
+  "2026-07-25-three-hen-lap-cohort-mix",
+  "2026-04-20-gandalf-lap"
+ ],
+ "dropped": [
+  "2026-07-25-gandalf-followed-inside-desk"
+ ],
+ "n_usable": 11,
+ "predictions": {
+  "I4": {
+   "value": "11 of 11",
+   "held": true
+  },
+  "I5": {
+   "value": "7 of 11",
+   "held": false
+  },
+  "I6": {
+   "value": 0.00457763671875,
+   "held": true
+  },
+  "I7": {
+   "kept_vs_original": 0.006409406661987305,
+   "removed_vs_original": 0.1444917181506753,
+   "held": true
+  }
+ }
+}
+L17 N1574 {'sign': 1, 'kept_above_removed': 11, 'median_kept_minus_removed': 0.15008761081844568, 'rank_of_median_among_all': 225, 'top_share': 0.00457763671875, 'rank_of_standardized_median': 602, 'median_abs_kept_minus_original': 0.006409406661987305, 'median_abs_removed_minus_original': 0.1444917181506753}
+L15 N1126 {'sign': 1, 'kept_above_removed': 7, 'median_kept_minus_removed': 0.0036849286407232285, 'rank_of_median_among_all': 19650, 'top_share': 0.3997802734375, 'rank_of_standardized_median': 22493, 'median_abs_kept_minus_original': 0.007928727194666862, 'median_abs_removed_minus_original': 0.00863303616642952}

@@ -1,0 +1,82 @@
+{
+ "parity": {
+  "max_neuron_abs_diff": 0.0,
+  "min_cos_to_stored_emb": 0.9999997615814209,
+  "clips": 336
+ },
+ "R": 52.50996487481253,
+ "fits": {
+  "inside": {
+   "k": 17782.794100389227,
+   "fit_auc": 0.8691520467836257
+  },
+  "random_inside": {
+   "k": 100000.0,
+   "fit_auc": 0.8082358674463938
+  }
+ },
+ "arms": {
+  "inside": {
+   "k": 17782.794100389227,
+   "test_auc": 0.8525,
+   "test_auc_bootstrap_95": [
+    0.72,
+    0.9525
+   ],
+   "gated_test_imitations": 12,
+   "gated_top_classes": {
+    "engine": 10,
+    "keyboard_typing": 2
+   },
+   "gated_human_share": 0.0,
+   "gated_median_cos_to_original": -0.05605466663837433,
+   "nonchicken_bit_identical": 176,
+   "nonchicken_total": 192,
+   "classes_changed_more_than_1_clip": []
+  },
+  "random_inside": {
+   "k": 100000.0,
+   "test_auc": 0.7625,
+   "test_auc_bootstrap_95": [
+    0.5925,
+    0.91
+   ],
+   "gated_test_imitations": 12,
+   "gated_top_classes": {
+    "engine": 12
+   },
+   "gated_human_share": 0.0,
+   "gated_median_cos_to_original": -0.056870341300964355,
+   "nonchicken_bit_identical": 176,
+   "nonchicken_total": 192,
+   "classes_changed_more_than_1_clip": []
+  },
+  "output": {
+   "k": 10000.0,
+   "test_auc": 0.8525,
+   "test_auc_bootstrap_95": [
+    0.72,
+    0.9525
+   ],
+   "gated_test_imitations": 12,
+   "gated_top_classes": {
+    "crying_baby": 1,
+    "door_wood_creaks": 11
+   },
+   "gated_human_share": 0.08333333333333333,
+   "gated_median_cos_to_original": -0.4781949520111084,
+   "nonchicken_bit_identical": 176,
+   "nonchicken_total": 192,
+   "classes_changed_more_than_1_clip": []
+  }
+ },
+ "baseline_test_auc": 0.5875,
+ "verdicts": {
+  "I1": true,
+  "I2": true,
+  "I3": false,
+  "I4": true,
+  "I5": true
+ },
+ "seconds": 1508.2
+}

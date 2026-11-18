@@ -1,0 +1,86 @@
+{
+ "usable": [
+  "2026-03-19-all-five-coop",
+  "2026-04-30-four-hens-fresh-grass",
+  "2026-08-04-side-stairs-flock-clearest",
+  "2026-08-04-side-stairs-flock-elise",
+  "2026-08-29-flock-roost-all-five",
+  "2026-08-29-flock-roost-wide",
+  "2026-08-29-flock-roost-perch-pair",
+  "2026-08-04-brahma-mama-low-angle",
+  "2026-07-03-brahma-mama-supervises-the-ops-board",
+  "2026-07-25-three-hen-lap-cohort-mix",
+  "2026-04-20-gandalf-lap"
+ ],
+ "dropped": [
+  "2026-07-25-gandalf-followed-inside-desk"
+ ],
+ "n_usable": 11,
+ "units": {
+  "L17 N1574": {
+   "sign": 1,
+   "kept_minus_removed": [
+    0.1359806377440691,
+    0.13349052518606186,
+    0.12269601109437644,
+    0.12853438779711723,
+    0.1965973973274231,
+    0.21228411560878158,
+    0.2092302441596985,
+    0.19683953328058124,
+    0.15008761081844568,
+    0.10309556545689702,
+    0.1901377011090517
+   ],
+   "kept_above_removed": 11,
+   "median_kept_minus_removed": 0.15008761081844568,
+   "rank_of_median_among_all": 225,
+   "top_share": 0.00457763671875,
+   "rank_of_standardized_median": 602,
+   "median_abs_kept_minus_original": 0.006409406661987305,
+   "median_abs_removed_minus_original": 0.1444917181506753
+  },
+  "L15 N1126": {
+   "sign": 1,
+   "kept_minus_removed": [
+    0.02435536589473486,
+    0.030365199316293,
+    -0.0007043089717626572,
+    -0.013192296028137207,
+    0.0036849286407232285,
+    0.02317757625132799,
+    0.0024507977068424225,
+    -0.01703611947596073,
+    0.01645997166633606,
+    -0.006595971062779427,
+    0.025338061153888702
+   ],
+   "kept_above_removed": 7,
+   "median_kept_minus_removed": 0.0036849286407232285,
+   "rank_of_median_among_all": 19650,
+   "top_share": 0.3997802734375,
+   "rank_of_standardized_median": 22493,
+   "median_abs_kept_minus_original": 0.007928727194666862,
+   "median_abs_removed_minus_original": 0.00863303616642952
+  }
+ },
+ "predictions": {
+  "I4": {
+   "value": "11 of 11",
+   "held": true
+  },
+  "I5": {
+   "value": "7 of 11",
+   "held": false
+  },
+  "I6": {
+   "value": 0.00457763671875,
+   "held": true
+  },
+  "I7": {
+   "kept_vs_original": 0.006409406661987305,
+   "removed_vs_original": 0.1444917181506753,
+   "held": true
+  }
+ }
+}

@@ -1,0 +1,40 @@
+/home/elisepc/neuron-probe/.venv/lib/python3.12/site-packages/transformers/audio_utils.py:829: UserWarning: At least one mel filter has all zero values. The value for `num_mel_filters` (128) may be set too high. Or, the value for `num_frequency_bins` (257) may be set too low.
+  warnings.warn(
+Loading weights:   0%|          | 0/203 [00:00<?, ?it/s]Loading weights:  42%|████▏     | 86/203 [00:00<00:00, 850.08it/s]Loading weights: 100%|██████████| 203/203 [00:00<00:00, 1169.38it/s]
+Loading weights:   0%|          | 0/1165 [00:00<?, ?it/s]Loading weights:   6%|▌         | 65/1165 [00:00<00:01, 589.85it/s]Loading weights:  14%|█▎        | 158/1165 [00:00<00:01, 718.08it/s]Loading weights:  21%|██▏       | 250/1165 [00:00<00:01, 803.91it/s]Loading weights:  28%|██▊       | 331/1165 [00:00<00:01, 660.13it/s]Loading weights:  34%|███▍      | 401/1165 [00:00<00:01, 649.72it/s]Loading weights:  40%|████      | 468/1165 [00:00<00:01, 637.03it/s]Loading weights:  48%|████▊     | 556/1165 [00:00<00:00, 706.06it/s]Loading weights:  54%|█████▍    | 629/1165 [00:00<00:00, 632.26it/s]Loading weights:  60%|█████▉    | 695/1165 [00:01<00:00, 636.98it/s]Loading weights:  65%|██████▌   | 761/1165 [00:02<00:03, 117.76it/s]Loading weights: 100%|██████████| 1165/1165 [00:02<00:00, 421.80it/s]
+0 vis:v0168 windows=15 16s
+10 vis:v0178 windows=8 112s
+30 pixabay:22892 windows=29 314s
+40 pixabay:32468 windows=29 558s
+60 pixabay:50952 windows=29 746s
+70 pixabay:63323 windows=29 982s
+80 pixabay:69769 windows=29 1174s
+100 pixabay:87917 windows=8 1389s
+120 pixabay:118440 windows=25 1432s
+160 pixabay:331471 windows=27 1712s
+190 pixabay:497325 windows=14 2050s
+{
+ "n_recordings": 115,
+ "n_windows": 2392,
+ "T1": {
+  "value": 0.7391304347826086,
+  "held": false
+ },
+ "T2": {
+  "value": 0.6782608695652174,
+  "held": false
+ },
+ "T3": {
+  "rank": 4466,
+  "top_share": 0.09086100260416667,
+  "held": false
+ },
+ "T4": {
+  "value": 0.782608695652174,
+  "held": true
+ },
+ "descriptive": {
+  "L15_rms_matched_share": 0.7652173913043478,
+  "ast_auc_check_on_vs_off": 0.8701600763700323
+ }
+}

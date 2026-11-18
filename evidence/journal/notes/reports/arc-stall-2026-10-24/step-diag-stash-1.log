@@ -1,0 +1,3 @@
+inline: 20 batches in 158.1s
+stash: 20 batches in 529.4s
+CHECK IDENTICAL: compared 161 arrays; diffs []

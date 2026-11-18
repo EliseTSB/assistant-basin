@@ -1,0 +1,264 @@
+{
+ "R": 52.50996398925781,
+ "clips": [
+  "v0036",
+  "v0039",
+  "v0041",
+  "v0044",
+  "v0047",
+  "v0049",
+  "v0050",
+  "v0051",
+  "v0053",
+  "v0064",
+  "v0072",
+  "v0073"
+ ],
+ "ladder": [
+  {
+   "push_over_R": 0.05,
+   "direction": "chicken",
+   "top": {
+    "clapping": 4,
+    "laughing": 2,
+    "rooster": 1,
+    "breathing": 1,
+    "coughing": 1,
+    "insects": 1,
+    "clock_tick": 1,
+    "sneezing": 1
+   },
+   "median_chicken_score": 0.009810477495193481,
+   "median_cos_to_original": 0.9886988401412964
+  },
+  {
+   "push_over_R": 0.05,
+   "direction": "random",
+   "top": {
+    "laughing": 5,
+    "dog": 2,
+    "crying_baby": 2,
+    "rooster": 1,
+    "crickets": 1,
+    "clapping": 1
+   },
+   "median_chicken_score": 0.018647879362106323,
+   "median_cos_to_original": 0.9834416508674622
+  },
+  {
+   "push_over_R": 0.1,
+   "direction": "chicken",
+   "top": {
+    "clapping": 4,
+    "coughing": 2,
+    "laughing": 2,
+    "breathing": 1,
+    "insects": 1,
+    "clock_tick": 1,
+    "sneezing": 1
+   },
+   "median_chicken_score": 0.001872628927230835,
+   "median_cos_to_original": 0.9537965059280396
+  },
+  {
+   "push_over_R": 0.1,
+   "direction": "random",
+   "top": {
+    "laughing": 4,
+    "dog": 3,
+    "crying_baby": 2,
+    "insects": 1,
+    "crickets": 1,
+    "clapping": 1
+   },
+   "median_chicken_score": 0.018570929765701294,
+   "median_cos_to_original": 0.9412598013877869
+  },
+  {
+   "push_over_R": 0.2,
+   "direction": "chicken",
+   "top": {
+    "clapping": 6,
+    "coughing": 2,
+    "breathing": 2,
+    "clock_tick": 1,
+    "chainsaw": 1
+   },
+   "median_chicken_score": -0.008471578359603882,
+   "median_cos_to_original": 0.8340775966644287
+  },
+  {
+   "push_over_R": 0.2,
+   "direction": "random",
+   "top": {
+    "dog": 9,
+    "crickets": 1,
+    "crying_baby": 1,
+    "clapping": 1
+   },
+   "median_chicken_score": 0.020100504159927368,
+   "median_cos_to_original": 0.8247088193893433
+  },
+  {
+   "push_over_R": 0.35,
+   "direction": "chicken",
+   "top": {
+    "keyboard_typing": 10,
+    "clock_tick": 1,
+    "clapping": 1
+   },
+   "median_chicken_score": -0.018233835697174072,
+   "median_cos_to_original": 0.6613771915435791
+  },
+  {
+   "push_over_R": 0.35,
+   "direction": "random",
+   "top": {
+    "dog": 8,
+    "engine": 3,
+    "helicopter": 1
+   },
+   "median_chicken_score": 0.02241683006286621,
+   "median_cos_to_original": 0.639681339263916
+  },
+  {
+   "push_over_R": 0.5,
+   "direction": "chicken",
+   "top": {
+    "keyboard_typing": 12
+   },
+   "median_chicken_score": -0.022399142384529114,
+   "median_cos_to_original": 0.5428289175033569
+  },
+  {
+   "push_over_R": 0.5,
+   "direction": "random",
+   "top": {
+    "engine": 11,
+    "dog": 1
+   },
+   "median_chicken_score": 0.020190194249153137,
+   "median_cos_to_original": 0.46021729707717896
+  },
+  {
+   "push_over_R": 0.75,
+   "direction": "chicken",
+   "top": {
+    "keyboard_typing": 12
+   },
+   "median_chicken_score": -0.025982677936553955,
+   "median_cos_to_original": 0.4097912609577179
+  },
+  {
+   "push_over_R": 0.75,
+   "direction": "random",
+   "top": {
+    "engine": 12
+   },
+   "median_chicken_score": 0.015850991010665894,
+   "median_cos_to_original": 0.22683370113372803
+  },
+  {
+   "push_over_R": 1.0,
+   "direction": "chicken",
+   "top": {
+    "keyboard_typing": 12
+   },
+   "median_chicken_score": -0.0288144052028656,
+   "median_cos_to_original": 0.3099774420261383
+  },
+  {
+   "push_over_R": 1.0,
+   "direction": "random",
+   "top": {
+    "engine": 12
+   },
+   "median_chicken_score": 0.014999009668827057,
+   "median_cos_to_original": 0.11208789050579071
+  },
+  {
+   "push_over_R": 1.5,
+   "direction": "chicken",
+   "top": {
+    "keyboard_typing": 10,
+    "engine": 2
+   },
+   "median_chicken_score": -0.03352363407611847,
+   "median_cos_to_original": 0.17301532626152039
+  },
+  {
+   "push_over_R": 1.5,
+   "direction": "random",
+   "top": {
+    "engine": 12
+   },
+   "median_chicken_score": 0.01357562281191349,
+   "median_cos_to_original": 0.0426144003868103
+  },
+  {
+   "push_over_R": 2.0,
+   "direction": "chicken",
+   "top": {
+    "keyboard_typing": 6,
+    "engine": 6
+   },
+   "median_chicken_score": -0.036556974053382874,
+   "median_cos_to_original": 0.09104405343532562
+  },
+  {
+   "push_over_R": 2.0,
+   "direction": "random",
+   "top": {
+    "engine": 12
+   },
+   "median_chicken_score": 0.01282497774809599,
+   "median_cos_to_original": 0.012915318831801414
+  },
+  {
+   "push_over_R": 3.0,
+   "direction": "chicken",
+   "top": {
+    "engine": 12
+   },
+   "median_chicken_score": -0.03957483544945717,
+   "median_cos_to_original": 0.007268128450959921
+  },
+  {
+   "push_over_R": 3.0,
+   "direction": "random",
+   "top": {
+    "engine": 12
+   },
+   "median_chicken_score": 0.012074869126081467,
+   "median_cos_to_original": -0.014158292673528194
+  },
+  {
+   "push_over_R": 6.0,
+   "direction": "chicken",
+   "top": {
+    "engine": 12
+   },
+   "median_chicken_score": -0.042446285486221313,
+   "median_cos_to_original": -0.07541501522064209
+  },
+  {
+   "push_over_R": 6.0,
+   "direction": "random",
+   "top": {
+    "engine": 12
+   },
+   "median_chicken_score": 0.011212022975087166,
+   "median_cos_to_original": -0.03800132870674133
+  }
+ ],
+ "unedited": {
+  "top": {
+   "laughing": 7,
+   "clapping": 2,
+   "rooster": 1,
+   "crickets": 1,
+   "crying_baby": 1
+  },
+  "median_chicken_score": 0.017144471406936646
+ }
+}

@@ -1,0 +1,7 @@
+model + docs loaded in 20s; 2500 batches
+A layer  3: 12 batches, median 0.10s, max 1.49s, first 1.49s; sparse pairs/batch {width: n} = {6144: 39324, 1000: 185883}; sparse calls {6144: 24, 1000: 24}; dense calls {6144: 89, 1000: 6}
+B layer  3 neuron : values (544, 6144) build 0.2ms; compare 0.4ms; nonzero 0.9ms -> 21636 pairs (0.6%); index_select+cpu 0.4ms; bulk cpu 3.2ms; bulk cpu + numpy select 2.9ms
+B layer  3 control: values (544, 1000) build 1.4ms; compare 0.1ms; nonzero 0.5ms -> 98690 pairs (18.1%); index_select+cpu 0.3ms; bulk cpu 0.4ms; bulk cpu + numpy select 0.8ms
+A layer 10: 12 batches, median 0.16s, max 0.20s, first 0.20s; sparse pairs/batch {width: n} = {6144: 92522, 1000: 248207}; sparse calls {6144: 24, 1000: 24}; dense calls {6144: 58, 1000: 79}
+B layer 10 neuron : values (544, 6144) build 0.2ms; compare 0.2ms; nonzero 0.8ms -> 48881 pairs (1.5%); index_select+cpu 0.3ms; bulk cpu 1.8ms; bulk cpu + numpy select 3.4ms
+B layer 10 control: values (544, 1000) build 0.8ms; compare 0.2ms; nonzero 0.5ms -> 130650 pairs (24.0%); index_select+cpu 0.4ms; bulk cpu 0.4ms; bulk cpu + numpy select 0.9ms

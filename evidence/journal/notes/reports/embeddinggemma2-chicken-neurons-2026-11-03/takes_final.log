@@ -1,0 +1,20 @@
+Loading weights:   0%|          | 0/1165 [00:00<?, ?it/s]Loading weights:   1%|          | 8/1165 [00:00<00:24, 46.95it/s]Loading weights:   5%|▌         | 60/1165 [00:00<00:04, 251.01it/s]Loading weights:   8%|▊         | 90/1165 [00:00<00:06, 165.11it/s]Loading weights:  11%|█         | 127/1165 [00:00<00:06, 168.92it/s]Loading weights:  16%|█▌        | 181/1165 [00:00<00:04, 227.86it/s]Loading weights:  18%|█▊        | 208/1165 [00:01<00:04, 195.89it/s]Loading weights:  21%|██        | 246/1165 [00:01<00:04, 212.43it/s]Loading weights:  23%|██▎       | 270/1165 [00:01<00:04, 181.68it/s]Loading weights:  25%|██▍       | 290/1165 [00:01<00:05, 171.37it/s]Loading weights:  27%|██▋       | 318/1165 [00:01<00:04, 177.81it/s]Loading weights:  32%|███▏      | 367/1165 [00:01<00:03, 243.03it/s]Loading weights:  34%|███▍      | 395/1165 [00:02<00:04, 169.08it/s]Loading weights:  38%|███▊      | 437/1165 [00:02<00:04, 180.22it/s]Loading weights:  42%|████▏     | 491/1165 [00:02<00:02, 229.19it/s]Loading weights:  44%|████▍     | 518/1165 [00:02<00:03, 192.59it/s]Loading weights:  47%|████▋     | 550/1165 [00:02<00:03, 196.88it/s]Loading weights:  49%|████▉     | 572/1165 [00:02<00:03, 190.49it/s]Loading weights:  53%|█████▎    | 612/1165 [00:03<00:02, 233.09it/s]Loading weights:  55%|█████▍    | 639/1165 [00:03<00:02, 180.16it/s]Loading weights:  58%|█████▊    | 677/1165 [00:03<00:02, 218.09it/s]Loading weights:  60%|██████    | 704/1165 [00:03<00:02, 188.12it/s]Loading weights:  63%|██████▎   | 739/1165 [00:03<00:01, 218.61it/s]Loading weights:  66%|██████▌   | 765/1165 [00:07<00:14, 27.53it/s] Loading weights: 100%|██████████| 1165/1165 [00:07<00:00, 163.72it/s]
+scored take 1/18 across 7 versions
+scored take 2/18 across 7 versions
+scored take 3/18 across 7 versions
+scored take 4/18 across 7 versions
+scored take 5/18 across 7 versions
+scored take 6/18 across 7 versions
+scored take 7/18 across 7 versions
+scored take 8/18 across 7 versions
+scored take 9/18 across 7 versions
+scored take 10/18 across 7 versions
+scored take 11/18 across 7 versions
+scored take 12/18 across 7 versions
+scored take 13/18 across 7 versions
+scored take 14/18 across 7 versions
+scored take 15/18 across 7 versions
+scored take 16/18 across 7 versions
+scored take 17/18 across 7 versions
+scored take 18/18 across 7 versions
+wrote takes_scored_final.json (18 takes; versions: unedited, output_gate, inside_full, gentle, W1, W2, W2_control)

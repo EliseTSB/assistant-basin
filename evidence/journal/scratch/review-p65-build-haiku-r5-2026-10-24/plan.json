@@ -1,0 +1,29 @@
+{
+  "runId": "cheap-review-p65-build-haiku-r5-2026-10-24",
+  "note": "first-round cold review of p65-build (1 commits, 3629a47..ac95b47) on haiku",
+  "timeoutMs": 2700000,
+  "workers": [
+    {
+      "id": "worker-01",
+      "role": "builder",
+      "model": "claude-haiku-5-5",
+      "maxTurns": 130,
+      "tools": [
+        "Read",
+        "Write",
+        "Edit",
+        "Bash",
+        "Grep",
+        "Glob"
+      ],
+      "domain": "/home/elisepc/green/Journal/scratch/review-p65-build-haiku-r5-2026-10-24",
+      "verify": {
+        "files": [
+          "REVIEW.md"
+        ],
+        "minBytes": 1200
+      },
+      "brief": "# Cold adversarial review: p65-build\n\nYou are an independent cold reviewer. You did not write this code; distrust the author's framing, comments, commit\nmessage and tests. Write only in your domain /home/elisepc/green/Journal/scratch/review-p65-build-haiku-r5-2026-10-24. Read the change with `git -C /home/elisepc/green/worktrees/ab-part65 diff 3629a47..ac95b47` (and\n`git -C /home/elisepc/green/worktrees/ab-part65 log --oneline 3629a47..ac95b47`). Do not read whole large files: Grep and ranged Read. Write a skeleton\n/home/elisepc/green/Journal/scratch/review-p65-build-haiku-r5-2026-10-24/REVIEW.md (that exact path) within your first five turns and fill it; never end on a summary with nothing written.\nMeasure, do not speculate: for each suspected defect write a small script in your domain that imports or drives the\nREAL code from /home/elisepc/green/worktrees/ab-part65 and shows the behaviour, and paste its output. If code needs packages or spawns channel-server,\nrun with NODE_PATH=/home/elisepc/green/DiscordBot/node_modules and\nNODE_OPTIONS=--import=/home/elisepc/green/Journal/scripts/lib/worktree-live-modules/register.mjs. Never write to\n/home/elisepc/green/DiscordBot or /home/elisepc/green/Journal outside your domain, and never touch live state files. Never call a live service (the\npapercuts server on :3935, Terra, the rack broker, the gateway, the council relay) and never read credential files\n(~/fleet/*.env, .env files, token files): a live call files real reports and wakes real people (on 2026-10-15 a\nreview filed a live papercut ALARM with a token it had read). To test a delivery path, start your own copy of the\nserver on a free port with a temporary store.\n\n## What changed\nPart 65's judge after Amendment 4 (part65/ on branch part65-design, worktree /home/elisepc/green/worktrees/ab-part65):\njudge65.py (one-shot Haiku 5.5 Message Batches judge, 1,000 trials in 10 chunks, through the shared paid-action ledger\npaidaction/paid_ledger.py), analyze65.py, RUNBOOK-65.md, test_part65.py. The contract is Amendment 4 at the end of\nPART65-DESIGN.md, built from Chorus Task's review at /home/elisepc/green/Journal/reviews/chorus-p65-judge-2026-10-24.md:\na released chunk ends the judge; one run identity fenced at every send under a ledger-path lock; a durable pre-send\nrecord; mixed runs refused; --reserve-total before the probe. Earlier rounds: reviews/cheap-p65-build-haiku-r4.md (this fold answers it), reviews/cheap-p65-build-ds-r1.md,\ncheap-p65-build-ds-r2.md, cheap-p65-build-haiku-r3.md.\n\n## Hunt for\n- Anything the change claims (in comments, the commit message or a design doc) that the code does not do.\n- Failure paths: what happens when a write, a read, a network call or a child process fails, times out or is interrupted.\n- Tests that pass for the wrong reason: an assertion changed to fit, a row that supplies the value the fix expects, a sabotage that would stay green, a suite that exits 0 having run nothing.\n- With any feature flag OFF: is every path refused?\n- Concurrency and restarts: two requests at once, a restart between two steps, a retry after a partial success.\n- Any path that sends a chunk to the provider twice, under any interleaving, crash point or second output directory; any\n- path that sends a chunk after another chunk was released or became ambiguous; any way answers from two runs or plans\n- reach the analysis; any way the pre-send record is not durable before the send; any lock that does not cover the lookup\n- through the send; anything in --reserve-total that sends a request; and any test that passes without exercising the\n- property it names.\n\n## Output: REVIEW.md\nVerdict first (SHIP / SHIP-WITH-FIXES / DO-NOT-SHIP). Findings by severity, each with file:line, the MEASURED trigger\n(script + output), why it matters, the smallest fix. Label each finding INTRODUCED (this change adds it or makes it\nreachable) or PRE-EXISTING (it was there before and this change does not reach it); a PRE-EXISTING finding is a\nfollow-up, not a reason to hold this change. Style, wording and cleanup alone are not findings: leave them out.\nThen \"what I checked and found sound\", briefly.\n"
+    }
+  ]
+}

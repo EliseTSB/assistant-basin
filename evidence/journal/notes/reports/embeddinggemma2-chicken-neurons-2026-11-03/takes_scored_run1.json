@@ -1,0 +1,1476 @@
+{
+  "schema_version": 1,
+  "model": {
+    "snapshot": "/mnt/e/neuron-probe/hf/hub/models--google--embeddinggemma-2/snapshots/f9972ac22e696a105c482202646979e33e4b5a1e",
+    "device": "cpu",
+    "dtype": "float32",
+    "torch_threads": 6,
+    "audio": "record.decode; mono 16000 Hz f32le; first 300 seconds"
+  },
+  "frozen_sha256_prefixes": {
+    "edit_arms.py": "b98535b337b70034",
+    "edit_verdicts.json": "057b5bfcbc0458d2",
+    "inside_gate.py": "2c431db8ef136b2b",
+    "inside_params.npz": "c0c2a552476faf9a",
+    "gentle_gate.py": "159762d56d82f3cc",
+    "gentle_results.json": "3a5ac04aa4474f79",
+    "weight_edit.py": "bb6b1347b0234906",
+    "weight_edit_results.json": "c4551530d2f4fa14",
+    "record.py": "29a8bd48f5595f83",
+    "chicken-o-meter/server.py": "d10ddc53f28a1fd7"
+  },
+  "weight_rebuild_validation": {
+    "mean_fit_x_dot_m": {
+      "reconstructed": 2.1082383729320635,
+      "committed": 2.1082383729320635
+    },
+    "covariance_mean_diagonal": {
+      "reconstructed": 0.0023766920918954102,
+      "committed": 0.0023766920918954102
+    },
+    "actual_denominator": {
+      "reconstructed": 14.921580132707255,
+      "committed": 14.921580132707255
+    },
+    "control_denominator": {
+      "reconstructed": 2.8104468841295556,
+      "committed": 2.8104468841295556
+    }
+  },
+  "versions": [
+    "unedited",
+    "output_gate",
+    "inside_full",
+    "gentle",
+    "W1",
+    "W2",
+    "W2_control"
+  ],
+  "takes": [
+    {
+      "path": "/home/elisepc/green/Journal/DropZone/chicken_sounds.m4a",
+      "label": "real",
+      "route": "discord-upload",
+      "note": "[real] Elise 15:56 CT: \"mostly brahma mama, with a bit of another hen, maybe jewel\"",
+      "versions": {
+        "unedited": {
+          "score_before": 0.022198200225830078,
+          "score_after": 0.022198200225830078,
+          "top_class": "coughing",
+          "cosine_to_unedited": 1.0000001192092896
+        },
+        "output_gate": {
+          "score_before": 0.022198200225830078,
+          "score_after": 0.013611555099487305,
+          "top_class": "coughing",
+          "cosine_to_unedited": 0.9991564750671387,
+          "gate": {
+            "open": true,
+            "g": 5.541562859434611e-06,
+            "s17": -0.005176544189453125,
+            "s19": 0.007305145263671875,
+            "neuron_values": {
+              "L17_N1574": -0.005176544189453125,
+              "L19_N1129": 0.007305145263671875
+            }
+          }
+        },
+        "inside_full": {
+          "score_before": 0.022198200225830078,
+          "score_after": 0.0034523606300354004,
+          "top_class": "coughing",
+          "cosine_to_unedited": 0.9339063167572021,
+          "gate": {
+            "open": true,
+            "g": 5.541562859434611e-06,
+            "s17": -0.005176544189453125,
+            "s19": 0.007305145263671875,
+            "neuron_values": {
+              "L17_N1574": -0.005176544189453125,
+              "L19_N1129": 0.007305145263671875
+            }
+          }
+        },
+        "gentle": {
+          "score_before": 0.022198200225830078,
+          "score_after": -0.009168803691864014,
+          "top_class": "keyboard_typing",
+          "cosine_to_unedited": 0.7982498407363892,
+          "gate": {
+            "open": true,
+            "g": 5.541562859434611e-06,
+            "s17": -0.005176544189453125,
+            "s19": 0.007305145263671875,
+            "neuron_values": {
+              "L17_N1574": -0.005176544189453125,
+              "L19_N1129": 0.007305145263671875
+            }
+          }
+        },
+        "W1": {
+          "score_before": 0.022198200225830078,
+          "score_after": 0.015696465969085693,
+          "top_class": "coughing",
+          "cosine_to_unedited": 0.9937556385993958,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2": {
+          "score_before": 0.022198200225830078,
+          "score_after": 0.011700809001922607,
+          "top_class": "coughing",
+          "cosine_to_unedited": 0.9837298393249512,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2_control": {
+          "score_before": 0.022198200225830078,
+          "score_after": 0.008726894855499268,
+          "top_class": "coughing",
+          "cosine_to_unedited": 0.9723580479621887,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        }
+      }
+    },
+    {
+      "path": "/home/elisepc/green/Journal/DropZone/noisy_minimal_peeps.m4a",
+      "label": "real",
+      "route": "discord-upload",
+      "note": "[real] Elise 16:14 CT confirmed: \"noisy is mostly background noises, with a few peeps from my hens\"",
+      "versions": {
+        "unedited": {
+          "score_before": 0.0240439772605896,
+          "score_after": 0.0240439772605896,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 1.0
+        },
+        "output_gate": {
+          "score_before": 0.0240439772605896,
+          "score_after": 0.00026726722717285156,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 0.9935105443000793,
+          "gate": {
+            "open": true,
+            "g": 1.4487636508420129e-05,
+            "s17": 0.0198822021484375,
+            "s19": 0.01617431640625,
+            "neuron_values": {
+              "L17_N1574": 0.0198822021484375,
+              "L19_N1129": 0.01617431640625
+            }
+          }
+        },
+        "inside_full": {
+          "score_before": 0.0240439772605896,
+          "score_after": -0.013723492622375488,
+          "top_class": "keyboard_typing",
+          "cosine_to_unedited": 0.7570993900299072,
+          "gate": {
+            "open": true,
+            "g": 1.4487636508420129e-05,
+            "s17": 0.0198822021484375,
+            "s19": 0.01617431640625,
+            "neuron_values": {
+              "L17_N1574": 0.0198822021484375,
+              "L19_N1129": 0.01617431640625
+            }
+          }
+        },
+        "gentle": {
+          "score_before": 0.0240439772605896,
+          "score_after": -0.008283674716949463,
+          "top_class": "keyboard_typing",
+          "cosine_to_unedited": 0.824933648109436,
+          "gate": {
+            "open": true,
+            "g": 1.4487636508420129e-05,
+            "s17": 0.0198822021484375,
+            "s19": 0.01617431640625,
+            "neuron_values": {
+              "L17_N1574": 0.0198822021484375,
+              "L19_N1129": 0.01617431640625
+            }
+          }
+        },
+        "W1": {
+          "score_before": 0.0240439772605896,
+          "score_after": 0.023725807666778564,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 0.9982839822769165,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2": {
+          "score_before": 0.0240439772605896,
+          "score_after": 0.013744056224822998,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 0.9813722372055054,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2_control": {
+          "score_before": 0.0240439772605896,
+          "score_after": 0.013766705989837646,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 0.9808670282363892,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        }
+      }
+    },
+    {
+      "path": "/home/elisepc/green/Journal/DropZone/background_only.m4a",
+      "label": "other",
+      "route": "discord-upload",
+      "note": "[other] no chicken (C7)",
+      "versions": {
+        "unedited": {
+          "score_before": 0.00580143928527832,
+          "score_after": 0.00580143928527832,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 1.0
+        },
+        "output_gate": {
+          "score_before": 0.00580143928527832,
+          "score_after": 0.00580143928527832,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 1.0,
+          "gate": {
+            "open": false,
+            "g": 0.0,
+            "s17": 0.0080108642578125,
+            "s19": -0.004100799560546875,
+            "neuron_values": {
+              "L17_N1574": 0.0080108642578125,
+              "L19_N1129": -0.004100799560546875
+            }
+          }
+        },
+        "inside_full": {
+          "score_before": 0.00580143928527832,
+          "score_after": 0.00580143928527832,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 1.0,
+          "gate": {
+            "open": false,
+            "g": 0.0,
+            "s17": 0.0080108642578125,
+            "s19": -0.004100799560546875,
+            "neuron_values": {
+              "L17_N1574": 0.0080108642578125,
+              "L19_N1129": -0.004100799560546875
+            }
+          }
+        },
+        "gentle": {
+          "score_before": 0.00580143928527832,
+          "score_after": 0.00580143928527832,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 1.0,
+          "gate": {
+            "open": false,
+            "g": 0.0,
+            "s17": 0.0080108642578125,
+            "s19": -0.004100799560546875,
+            "neuron_values": {
+              "L17_N1574": 0.0080108642578125,
+              "L19_N1129": -0.004100799560546875
+            }
+          }
+        },
+        "W1": {
+          "score_before": 0.00580143928527832,
+          "score_after": 0.0026435256004333496,
+          "top_class": "breathing",
+          "cosine_to_unedited": 0.9957297444343567,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2": {
+          "score_before": 0.00580143928527832,
+          "score_after": 0.003172159194946289,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 0.9971776008605957,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2_control": {
+          "score_before": 0.00580143928527832,
+          "score_after": -0.0029145479202270508,
+          "top_class": "breathing",
+          "cosine_to_unedited": 0.9873735308647156,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        }
+      }
+    },
+    {
+      "path": "/home/elisepc/green/Journal/DropZone/fake_egg.m4a",
+      "label": "imitation",
+      "route": "discord-upload",
+      "note": "[imitation] Elise 15:57 CT: \"a different take i made right before fake egg song\" (recorded 11-03, never read)",
+      "versions": {
+        "unedited": {
+          "score_before": 0.011188149452209473,
+          "score_after": 0.011188149452209473,
+          "top_class": "snoring",
+          "cosine_to_unedited": 1.0
+        },
+        "output_gate": {
+          "score_before": 0.011188149452209473,
+          "score_after": -0.2156507968902588,
+          "top_class": "door_wood_creaks",
+          "cosine_to_unedited": 0.12375816702842712,
+          "gate": {
+            "open": true,
+            "g": 0.0001269182605028618,
+            "s17": 0.0019702911376953125,
+            "s19": 0.01360321044921875,
+            "neuron_values": {
+              "L17_N1574": 0.0019702911376953125,
+              "L19_N1129": 0.01360321044921875
+            }
+          }
+        },
+        "inside_full": {
+          "score_before": 0.011188149452209473,
+          "score_after": -0.0375763475894928,
+          "top_class": "engine",
+          "cosine_to_unedited": 0.10025615990161896,
+          "gate": {
+            "open": true,
+            "g": 0.0001269182605028618,
+            "s17": 0.0019702911376953125,
+            "s19": 0.01360321044921875,
+            "neuron_values": {
+              "L17_N1574": 0.0019702911376953125,
+              "L19_N1129": 0.01360321044921875
+            }
+          }
+        },
+        "gentle": {
+          "score_before": 0.011188149452209473,
+          "score_after": -0.01463460922241211,
+          "top_class": "keyboard_typing",
+          "cosine_to_unedited": 0.7985641956329346,
+          "gate": {
+            "open": true,
+            "g": 0.0001269182605028618,
+            "s17": 0.0019702911376953125,
+            "s19": 0.01360321044921875,
+            "neuron_values": {
+              "L17_N1574": 0.0019702911376953125,
+              "L19_N1129": 0.01360321044921875
+            }
+          }
+        },
+        "W1": {
+          "score_before": 0.011188149452209473,
+          "score_after": -0.0046866536140441895,
+          "top_class": "clapping",
+          "cosine_to_unedited": 0.9500687718391418,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2": {
+          "score_before": 0.011188149452209473,
+          "score_after": -0.012788355350494385,
+          "top_class": "clapping",
+          "cosine_to_unedited": 0.872703492641449,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2_control": {
+          "score_before": 0.011188149452209473,
+          "score_after": 0.0005672574043273926,
+          "top_class": "clapping",
+          "cosine_to_unedited": 0.9734389185905457,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        }
+      }
+    },
+    {
+      "path": "/home/elisepc/green/Journal/DropZone/real_quite.m4a",
+      "label": "real",
+      "route": "discord-upload",
+      "note": "[real] Elise 16:07 CT batch; \"real_quite\" (quiet real hens)",
+      "versions": {
+        "unedited": {
+          "score_before": 0.035068511962890625,
+          "score_after": 0.035068511962890625,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 1.0
+        },
+        "output_gate": {
+          "score_before": 0.035068511962890625,
+          "score_after": 0.035068511962890625,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 1.0,
+          "gate": {
+            "open": false,
+            "g": 0.0,
+            "s17": 0.03656005859375,
+            "s19": 0.01227569580078125,
+            "neuron_values": {
+              "L17_N1574": 0.03656005859375,
+              "L19_N1129": 0.01227569580078125
+            }
+          }
+        },
+        "inside_full": {
+          "score_before": 0.035068511962890625,
+          "score_after": 0.035068511962890625,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 1.0,
+          "gate": {
+            "open": false,
+            "g": 0.0,
+            "s17": 0.03656005859375,
+            "s19": 0.01227569580078125,
+            "neuron_values": {
+              "L17_N1574": 0.03656005859375,
+              "L19_N1129": 0.01227569580078125
+            }
+          }
+        },
+        "gentle": {
+          "score_before": 0.035068511962890625,
+          "score_after": 0.035068511962890625,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 1.0,
+          "gate": {
+            "open": false,
+            "g": 0.0,
+            "s17": 0.03656005859375,
+            "s19": 0.01227569580078125,
+            "neuron_values": {
+              "L17_N1574": 0.03656005859375,
+              "L19_N1129": 0.01227569580078125
+            }
+          }
+        },
+        "W1": {
+          "score_before": 0.035068511962890625,
+          "score_after": 0.029405713081359863,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 0.9940569996833801,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2": {
+          "score_before": 0.035068511962890625,
+          "score_after": 0.025652408599853516,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 0.9866149425506592,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2_control": {
+          "score_before": 0.035068511962890625,
+          "score_after": 0.02133643627166748,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 0.975240170955658,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        }
+      }
+    },
+    {
+      "path": "/home/elisepc/green/Journal/DropZone/fake_egg_song_1.m4a",
+      "label": "imitation",
+      "route": "discord-upload",
+      "note": "[imitation] Elise 16:07 CT batch",
+      "versions": {
+        "unedited": {
+          "score_before": 0.03304016590118408,
+          "score_after": 0.03304016590118408,
+          "top_class": "dog",
+          "cosine_to_unedited": 1.0000001192092896
+        },
+        "output_gate": {
+          "score_before": 0.03304016590118408,
+          "score_after": -0.18863773345947266,
+          "top_class": "door_wood_creaks",
+          "cosine_to_unedited": -0.46085411310195923,
+          "gate": {
+            "open": true,
+            "g": 0.0003189820672560018,
+            "s17": -0.0013217926025390625,
+            "s19": 0.021087646484375,
+            "neuron_values": {
+              "L17_N1574": -0.0013217926025390625,
+              "L19_N1129": 0.021087646484375
+            }
+          }
+        },
+        "inside_full": {
+          "score_before": 0.03304016590118408,
+          "score_after": -0.04160720109939575,
+          "top_class": "engine",
+          "cosine_to_unedited": -0.07703004777431488,
+          "gate": {
+            "open": true,
+            "g": 0.0003189820672560018,
+            "s17": -0.0013217926025390625,
+            "s19": 0.021087646484375,
+            "neuron_values": {
+              "L17_N1574": -0.0013217926025390625,
+              "L19_N1129": 0.021087646484375
+            }
+          }
+        },
+        "gentle": {
+          "score_before": 0.03304016590118408,
+          "score_after": -0.002140223979949951,
+          "top_class": "clock_tick",
+          "cosine_to_unedited": 0.7910854816436768,
+          "gate": {
+            "open": true,
+            "g": 0.0003189820672560018,
+            "s17": -0.0013217926025390625,
+            "s19": 0.021087646484375,
+            "neuron_values": {
+              "L17_N1574": -0.0013217926025390625,
+              "L19_N1129": 0.021087646484375
+            }
+          }
+        },
+        "W1": {
+          "score_before": 0.03304016590118408,
+          "score_after": 0.021264851093292236,
+          "top_class": "clock_tick",
+          "cosine_to_unedited": 0.9647770524024963,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2": {
+          "score_before": 0.03304016590118408,
+          "score_after": 0.006135761737823486,
+          "top_class": "clapping",
+          "cosine_to_unedited": 0.8749922513961792,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2_control": {
+          "score_before": 0.03304016590118408,
+          "score_after": 0.01889115571975708,
+          "top_class": "clock_tick",
+          "cosine_to_unedited": 0.9659815430641174,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        }
+      }
+    },
+    {
+      "path": "/home/elisepc/green/Journal/DropZone/fake_bawks.m4a",
+      "label": "imitation",
+      "route": "discord-upload",
+      "note": "[imitation] Elise 16:07 CT batch",
+      "versions": {
+        "unedited": {
+          "score_before": 0.021076202392578125,
+          "score_after": 0.021076202392578125,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 0.9999999403953552
+        },
+        "output_gate": {
+          "score_before": 0.021076202392578125,
+          "score_after": -0.1579539030790329,
+          "top_class": "drinking_sipping",
+          "cosine_to_unedited": 0.566188633441925,
+          "gate": {
+            "open": true,
+            "g": 8.43141751829535e-05,
+            "s17": 0.0155487060546875,
+            "s19": 0.0213165283203125,
+            "neuron_values": {
+              "L17_N1574": 0.0155487060546875,
+              "L19_N1129": 0.0213165283203125
+            }
+          }
+        },
+        "inside_full": {
+          "score_before": 0.021076202392578125,
+          "score_after": -0.03292624652385712,
+          "top_class": "keyboard_typing",
+          "cosine_to_unedited": 0.18590489029884338,
+          "gate": {
+            "open": true,
+            "g": 8.43141751829535e-05,
+            "s17": 0.0155487060546875,
+            "s19": 0.0213165283203125,
+            "neuron_values": {
+              "L17_N1574": 0.0155487060546875,
+              "L19_N1129": 0.0213165283203125
+            }
+          }
+        },
+        "gentle": {
+          "score_before": 0.021076202392578125,
+          "score_after": -0.009785592555999756,
+          "top_class": "keyboard_typing",
+          "cosine_to_unedited": 0.7840268611907959,
+          "gate": {
+            "open": true,
+            "g": 8.43141751829535e-05,
+            "s17": 0.0155487060546875,
+            "s19": 0.0213165283203125,
+            "neuron_values": {
+              "L17_N1574": 0.0155487060546875,
+              "L19_N1129": 0.0213165283203125
+            }
+          }
+        },
+        "W1": {
+          "score_before": 0.021076202392578125,
+          "score_after": 0.012159287929534912,
+          "top_class": "clapping",
+          "cosine_to_unedited": 0.9689323902130127,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2": {
+          "score_before": 0.021076202392578125,
+          "score_after": 0.0007109642028808594,
+          "top_class": "clapping",
+          "cosine_to_unedited": 0.8956140279769897,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2_control": {
+          "score_before": 0.021076202392578125,
+          "score_after": 0.012090802192687988,
+          "top_class": "clapping",
+          "cosine_to_unedited": 0.9753459692001343,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        }
+      }
+    },
+    {
+      "path": "/home/elisepc/green/Journal/DropZone/fake_egg_2.m4a",
+      "label": "imitation",
+      "route": "discord-upload",
+      "note": "[imitation] Elise 16:07 CT batch",
+      "versions": {
+        "unedited": {
+          "score_before": 0.015979886054992676,
+          "score_after": 0.015979886054992676,
+          "top_class": "dog",
+          "cosine_to_unedited": 1.0000001192092896
+        },
+        "output_gate": {
+          "score_before": 0.015979886054992676,
+          "score_after": -0.20064401626586914,
+          "top_class": "door_wood_creaks",
+          "cosine_to_unedited": -0.377619206905365,
+          "gate": {
+            "open": true,
+            "g": 0.0002589733609056566,
+            "s17": -0.0026683807373046875,
+            "s19": 0.017822265625,
+            "neuron_values": {
+              "L17_N1574": -0.0026683807373046875,
+              "L19_N1129": 0.017822265625
+            }
+          }
+        },
+        "inside_full": {
+          "score_before": 0.015979886054992676,
+          "score_after": -0.04129873588681221,
+          "top_class": "engine",
+          "cosine_to_unedited": -0.040967874228954315,
+          "gate": {
+            "open": true,
+            "g": 0.0002589733609056566,
+            "s17": -0.0026683807373046875,
+            "s19": 0.017822265625,
+            "neuron_values": {
+              "L17_N1574": -0.0026683807373046875,
+              "L19_N1129": 0.017822265625
+            }
+          }
+        },
+        "gentle": {
+          "score_before": 0.015979886054992676,
+          "score_after": -0.01225501298904419,
+          "top_class": "clock_tick",
+          "cosine_to_unedited": 0.7970781326293945,
+          "gate": {
+            "open": true,
+            "g": 0.0002589733609056566,
+            "s17": -0.0026683807373046875,
+            "s19": 0.017822265625,
+            "neuron_values": {
+              "L17_N1574": -0.0026683807373046875,
+              "L19_N1129": 0.017822265625
+            }
+          }
+        },
+        "W1": {
+          "score_before": 0.015979886054992676,
+          "score_after": 0.0058386921882629395,
+          "top_class": "clapping",
+          "cosine_to_unedited": 0.9652232527732849,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2": {
+          "score_before": 0.015979886054992676,
+          "score_after": -0.0037322640419006348,
+          "top_class": "clapping",
+          "cosine_to_unedited": 0.8947052955627441,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2_control": {
+          "score_before": 0.015979886054992676,
+          "score_after": 0.007836997509002686,
+          "top_class": "clapping",
+          "cosine_to_unedited": 0.9807151556015015,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        }
+      }
+    },
+    {
+      "path": "/home/elisepc/green/Journal/DropZone/fake_egg_3.m4a",
+      "label": "imitation",
+      "route": "discord-upload",
+      "note": "[imitation] Elise 16:07 CT batch",
+      "versions": {
+        "unedited": {
+          "score_before": 0.0286179780960083,
+          "score_after": 0.0286179780960083,
+          "top_class": "dog",
+          "cosine_to_unedited": 1.0
+        },
+        "output_gate": {
+          "score_before": 0.0286179780960083,
+          "score_after": -0.19527924060821533,
+          "top_class": "door_wood_creaks",
+          "cosine_to_unedited": -0.4403929114341736,
+          "gate": {
+            "open": true,
+            "g": 0.000278791475284379,
+            "s17": 0.003475189208984375,
+            "s19": 0.0225830078125,
+            "neuron_values": {
+              "L17_N1574": 0.003475189208984375,
+              "L19_N1129": 0.0225830078125
+            }
+          }
+        },
+        "inside_full": {
+          "score_before": 0.0286179780960083,
+          "score_after": -0.04111867770552635,
+          "top_class": "engine",
+          "cosine_to_unedited": -0.04564957320690155,
+          "gate": {
+            "open": true,
+            "g": 0.000278791475284379,
+            "s17": 0.003475189208984375,
+            "s19": 0.0225830078125,
+            "neuron_values": {
+              "L17_N1574": 0.003475189208984375,
+              "L19_N1129": 0.0225830078125
+            }
+          }
+        },
+        "gentle": {
+          "score_before": 0.0286179780960083,
+          "score_after": -0.0029660463333129883,
+          "top_class": "keyboard_typing",
+          "cosine_to_unedited": 0.7862982153892517,
+          "gate": {
+            "open": true,
+            "g": 0.000278791475284379,
+            "s17": 0.003475189208984375,
+            "s19": 0.0225830078125,
+            "neuron_values": {
+              "L17_N1574": 0.003475189208984375,
+              "L19_N1129": 0.0225830078125
+            }
+          }
+        },
+        "W1": {
+          "score_before": 0.0286179780960083,
+          "score_after": 0.015194237232208252,
+          "top_class": "clapping",
+          "cosine_to_unedited": 0.959736704826355,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2": {
+          "score_before": 0.0286179780960083,
+          "score_after": 0.0037581920623779297,
+          "top_class": "clapping",
+          "cosine_to_unedited": 0.882000744342804,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2_control": {
+          "score_before": 0.0286179780960083,
+          "score_after": 0.01610952615737915,
+          "top_class": "clapping",
+          "cosine_to_unedited": 0.9674813747406006,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        }
+      }
+    },
+    {
+      "path": "/home/elisepc/green/Journal/DropZone/obvious_fake.m4a",
+      "label": "other",
+      "route": "discord-upload",
+      "note": "[imitation-obvious] Elise 16:07 CT: \"fake and real has a mix, obvious fake is me not trying to sound very chicken like\"; rule set before scoring: reported separately, NOT in the C1/C5/C6 AUCs (the test is convincing imitations)",
+      "versions": {
+        "unedited": {
+          "score_before": 0.009881794452667236,
+          "score_after": 0.009881794452667236,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 1.0
+        },
+        "output_gate": {
+          "score_before": 0.009881794452667236,
+          "score_after": -0.2010631561279297,
+          "top_class": "door_wood_creaks",
+          "cosine_to_unedited": -0.393214613199234,
+          "gate": {
+            "open": true,
+            "g": 0.00027476398972794416,
+            "s17": 0.00238037109375,
+            "s19": 0.021484375,
+            "neuron_values": {
+              "L17_N1574": 0.00238037109375,
+              "L19_N1129": 0.021484375
+            }
+          }
+        },
+        "inside_full": {
+          "score_before": 0.009881794452667236,
+          "score_after": -0.0415441133081913,
+          "top_class": "engine",
+          "cosine_to_unedited": -0.0035066306591033936,
+          "gate": {
+            "open": true,
+            "g": 0.00027476398972794416,
+            "s17": 0.00238037109375,
+            "s19": 0.021484375,
+            "neuron_values": {
+              "L17_N1574": 0.00238037109375,
+              "L19_N1129": 0.021484375
+            }
+          }
+        },
+        "gentle": {
+          "score_before": 0.009881794452667236,
+          "score_after": -0.01224905252456665,
+          "top_class": "clapping",
+          "cosine_to_unedited": 0.8460298776626587,
+          "gate": {
+            "open": true,
+            "g": 0.00027476398972794416,
+            "s17": 0.00238037109375,
+            "s19": 0.021484375,
+            "neuron_values": {
+              "L17_N1574": 0.00238037109375,
+              "L19_N1129": 0.021484375
+            }
+          }
+        },
+        "W1": {
+          "score_before": 0.009881794452667236,
+          "score_after": 0.0004884600639343262,
+          "top_class": "clapping",
+          "cosine_to_unedited": 0.9522731900215149,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2": {
+          "score_before": 0.009881794452667236,
+          "score_after": -0.005559206008911133,
+          "top_class": "clapping",
+          "cosine_to_unedited": 0.9026631116867065,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2_control": {
+          "score_before": 0.009881794452667236,
+          "score_after": 0.0025478601455688477,
+          "top_class": "clapping",
+          "cosine_to_unedited": 0.9779336452484131,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        }
+      }
+    },
+    {
+      "path": "/home/elisepc/green/Journal/DropZone/fake_and_real.m4a",
+      "label": "other",
+      "route": "discord-upload",
+      "note": "[mixed] Elise 16:07 CT: \"fake and real has a mix, obvious fake is me not trying to sound very chicken like\"; descriptive only",
+      "versions": {
+        "unedited": {
+          "score_before": 0.03603243827819824,
+          "score_after": 0.03603243827819824,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 1.0
+        },
+        "output_gate": {
+          "score_before": 0.03603243827819824,
+          "score_after": 0.03603243827819824,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 1.0,
+          "gate": {
+            "open": false,
+            "g": 0.0,
+            "s17": 0.0445556640625,
+            "s19": 0.02001953125,
+            "neuron_values": {
+              "L17_N1574": 0.0445556640625,
+              "L19_N1129": 0.02001953125
+            }
+          }
+        },
+        "inside_full": {
+          "score_before": 0.03603243827819824,
+          "score_after": 0.03603243827819824,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 1.0,
+          "gate": {
+            "open": false,
+            "g": 0.0,
+            "s17": 0.0445556640625,
+            "s19": 0.02001953125,
+            "neuron_values": {
+              "L17_N1574": 0.0445556640625,
+              "L19_N1129": 0.02001953125
+            }
+          }
+        },
+        "gentle": {
+          "score_before": 0.03603243827819824,
+          "score_after": 0.03603243827819824,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 1.0,
+          "gate": {
+            "open": false,
+            "g": 0.0,
+            "s17": 0.0445556640625,
+            "s19": 0.02001953125,
+            "neuron_values": {
+              "L17_N1574": 0.0445556640625,
+              "L19_N1129": 0.02001953125
+            }
+          }
+        },
+        "W1": {
+          "score_before": 0.03603243827819824,
+          "score_after": 0.02925848960876465,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 0.9809010028839111,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2": {
+          "score_before": 0.03603243827819824,
+          "score_after": 0.020350277423858643,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 0.9504780769348145,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2_control": {
+          "score_before": 0.03603243827819824,
+          "score_after": 0.023716628551483154,
+          "top_class": "chirping_birds",
+          "cosine_to_unedited": 0.9741557836532593,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        }
+      }
+    },
+    {
+      "path": "/home/elisepc/green/Journal/DropZone/fake_egg_4.m4a",
+      "label": "imitation",
+      "route": "discord-upload",
+      "note": "[imitation] Elise 16:09 CT",
+      "versions": {
+        "unedited": {
+          "score_before": 0.026824533939361572,
+          "score_after": 0.026824533939361572,
+          "top_class": "laughing",
+          "cosine_to_unedited": 1.0000001192092896
+        },
+        "output_gate": {
+          "score_before": 0.026824533939361572,
+          "score_after": -0.18624770641326904,
+          "top_class": "door_wood_creaks",
+          "cosine_to_unedited": -0.5171764492988586,
+          "gate": {
+            "open": true,
+            "g": 0.00039597763970959936,
+            "s17": -0.00804901123046875,
+            "s19": 0.0205078125,
+            "neuron_values": {
+              "L17_N1574": -0.00804901123046875,
+              "L19_N1129": 0.0205078125
+            }
+          }
+        },
+        "inside_full": {
+          "score_before": 0.026824533939361572,
+          "score_after": -0.04256172478199005,
+          "top_class": "engine",
+          "cosine_to_unedited": -0.07470241189002991,
+          "gate": {
+            "open": true,
+            "g": 0.00039597763970959936,
+            "s17": -0.00804901123046875,
+            "s19": 0.0205078125,
+            "neuron_values": {
+              "L17_N1574": -0.00804901123046875,
+              "L19_N1129": 0.0205078125
+            }
+          }
+        },
+        "gentle": {
+          "score_before": 0.026824533939361572,
+          "score_after": -0.006728410720825195,
+          "top_class": "clock_tick",
+          "cosine_to_unedited": 0.7993826270103455,
+          "gate": {
+            "open": true,
+            "g": 0.00039597763970959936,
+            "s17": -0.00804901123046875,
+            "s19": 0.0205078125,
+            "neuron_values": {
+              "L17_N1574": -0.00804901123046875,
+              "L19_N1129": 0.0205078125
+            }
+          }
+        },
+        "W1": {
+          "score_before": 0.026824533939361572,
+          "score_after": 0.011930882930755615,
+          "top_class": "clapping",
+          "cosine_to_unedited": 0.9471455812454224,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2": {
+          "score_before": 0.026824533939361572,
+          "score_after": 0.0011546611785888672,
+          "top_class": "clapping",
+          "cosine_to_unedited": 0.8778657913208008,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2_control": {
+          "score_before": 0.026824533939361572,
+          "score_after": 0.015252411365509033,
+          "top_class": "clapping",
+          "cosine_to_unedited": 0.9694631099700928,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        }
+      }
+    },
+    {
+      "path": "/home/elisepc/green/Journal/DropZone/Gandalf.m4a",
+      "label": "real",
+      "route": "discord-upload",
+      "note": "[real] Elise 16:13 CT: \"Three more chicken sounds\" (Gandalf)",
+      "versions": {
+        "unedited": {
+          "score_before": 0.028753995895385742,
+          "score_after": 0.028753995895385742,
+          "top_class": "sneezing",
+          "cosine_to_unedited": 1.0000001192092896
+        },
+        "output_gate": {
+          "score_before": 0.028753995895385742,
+          "score_after": 0.028753995895385742,
+          "top_class": "sneezing",
+          "cosine_to_unedited": 1.0000001192092896,
+          "gate": {
+            "open": false,
+            "g": 0.0,
+            "s17": 0.0389404296875,
+            "s19": 0.0070648193359375,
+            "neuron_values": {
+              "L17_N1574": 0.0389404296875,
+              "L19_N1129": 0.0070648193359375
+            }
+          }
+        },
+        "inside_full": {
+          "score_before": 0.028753995895385742,
+          "score_after": 0.028753995895385742,
+          "top_class": "sneezing",
+          "cosine_to_unedited": 1.0000001192092896,
+          "gate": {
+            "open": false,
+            "g": 0.0,
+            "s17": 0.0389404296875,
+            "s19": 0.0070648193359375,
+            "neuron_values": {
+              "L17_N1574": 0.0389404296875,
+              "L19_N1129": 0.0070648193359375
+            }
+          }
+        },
+        "gentle": {
+          "score_before": 0.028753995895385742,
+          "score_after": 0.028753995895385742,
+          "top_class": "sneezing",
+          "cosine_to_unedited": 1.0000001192092896,
+          "gate": {
+            "open": false,
+            "g": 0.0,
+            "s17": 0.0389404296875,
+            "s19": 0.0070648193359375,
+            "neuron_values": {
+              "L17_N1574": 0.0389404296875,
+              "L19_N1129": 0.0070648193359375
+            }
+          }
+        },
+        "W1": {
+          "score_before": 0.028753995895385742,
+          "score_after": 0.024574637413024902,
+          "top_class": "sneezing",
+          "cosine_to_unedited": 0.9968501925468445,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2": {
+          "score_before": 0.028753995895385742,
+          "score_after": 0.025521278381347656,
+          "top_class": "sneezing",
+          "cosine_to_unedited": 0.9968286752700806,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2_control": {
+          "score_before": 0.028753995895385742,
+          "score_after": 0.021575987339019775,
+          "top_class": "sneezing",
+          "cosine_to_unedited": 0.9915361404418945,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        }
+      }
+    },
+    {
+      "path": "/home/elisepc/green/Journal/DropZone/multihen.m4a",
+      "label": "real",
+      "route": "discord-upload",
+      "note": "[real] Elise 16:13 CT: \"Three more chicken sounds\"",
+      "versions": {
+        "unedited": {
+          "score_before": 0.025190353393554688,
+          "score_after": 0.025190353393554688,
+          "top_class": "sneezing",
+          "cosine_to_unedited": 1.0
+        },
+        "output_gate": {
+          "score_before": 0.025190353393554688,
+          "score_after": 0.025190353393554688,
+          "top_class": "sneezing",
+          "cosine_to_unedited": 1.0,
+          "gate": {
+            "open": false,
+            "g": 0.0,
+            "s17": 0.028717041015625,
+            "s19": 0.006374359130859375,
+            "neuron_values": {
+              "L17_N1574": 0.028717041015625,
+              "L19_N1129": 0.006374359130859375
+            }
+          }
+        },
+        "inside_full": {
+          "score_before": 0.025190353393554688,
+          "score_after": 0.025190353393554688,
+          "top_class": "sneezing",
+          "cosine_to_unedited": 1.0,
+          "gate": {
+            "open": false,
+            "g": 0.0,
+            "s17": 0.028717041015625,
+            "s19": 0.006374359130859375,
+            "neuron_values": {
+              "L17_N1574": 0.028717041015625,
+              "L19_N1129": 0.006374359130859375
+            }
+          }
+        },
+        "gentle": {
+          "score_before": 0.025190353393554688,
+          "score_after": 0.025190353393554688,
+          "top_class": "sneezing",
+          "cosine_to_unedited": 1.0,
+          "gate": {
+            "open": false,
+            "g": 0.0,
+            "s17": 0.028717041015625,
+            "s19": 0.006374359130859375,
+            "neuron_values": {
+              "L17_N1574": 0.028717041015625,
+              "L19_N1129": 0.006374359130859375
+            }
+          }
+        },
+        "W1": {
+          "score_before": 0.025190353393554688,
+          "score_after": 0.021994173526763916,
+          "top_class": "sneezing",
+          "cosine_to_unedited": 0.9959690570831299,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2": {
+          "score_before": 0.025190353393554688,
+          "score_after": 0.021518468856811523,
+          "top_class": "sneezing",
+          "cosine_to_unedited": 0.9948038458824158,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2_control": {
+          "score_before": 0.025190353393554688,
+          "score_after": 0.01758497953414917,
+          "top_class": "coughing",
+          "cosine_to_unedited": 0.9865840077400208,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        }
+      }
+    },
+    {
+      "path": "/home/elisepc/green/Journal/DropZone/multihen2.m4a",
+      "label": "real",
+      "route": "discord-upload",
+      "note": "[real] Elise 16:13 CT: \"Three more chicken sounds\"",
+      "versions": {
+        "unedited": {
+          "score_before": 0.03118652105331421,
+          "score_after": 0.03118652105331421,
+          "top_class": "dog",
+          "cosine_to_unedited": 1.000000238418579
+        },
+        "output_gate": {
+          "score_before": 0.03118652105331421,
+          "score_after": 0.03118652105331421,
+          "top_class": "dog",
+          "cosine_to_unedited": 1.000000238418579,
+          "gate": {
+            "open": false,
+            "g": 0.0,
+            "s17": 0.023193359375,
+            "s19": 0.0166778564453125,
+            "neuron_values": {
+              "L17_N1574": 0.023193359375,
+              "L19_N1129": 0.0166778564453125
+            }
+          }
+        },
+        "inside_full": {
+          "score_before": 0.03118652105331421,
+          "score_after": 0.03118652105331421,
+          "top_class": "dog",
+          "cosine_to_unedited": 1.000000238418579,
+          "gate": {
+            "open": false,
+            "g": 0.0,
+            "s17": 0.023193359375,
+            "s19": 0.0166778564453125,
+            "neuron_values": {
+              "L17_N1574": 0.023193359375,
+              "L19_N1129": 0.0166778564453125
+            }
+          }
+        },
+        "gentle": {
+          "score_before": 0.03118652105331421,
+          "score_after": 0.03118652105331421,
+          "top_class": "dog",
+          "cosine_to_unedited": 1.000000238418579,
+          "gate": {
+            "open": false,
+            "g": 0.0,
+            "s17": 0.023193359375,
+            "s19": 0.0166778564453125,
+            "neuron_values": {
+              "L17_N1574": 0.023193359375,
+              "L19_N1129": 0.0166778564453125
+            }
+          }
+        },
+        "W1": {
+          "score_before": 0.03118652105331421,
+          "score_after": 0.02040719985961914,
+          "top_class": "clapping",
+          "cosine_to_unedited": 0.9826878905296326,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2": {
+          "score_before": 0.03118652105331421,
+          "score_after": 0.016933858394622803,
+          "top_class": "clapping",
+          "cosine_to_unedited": 0.9672756195068359,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        },
+        "W2_control": {
+          "score_before": 0.03118652105331421,
+          "score_after": 0.01968473196029663,
+          "top_class": "clapping",
+          "cosine_to_unedited": 0.977914571762085,
+          "weight_restore": {
+            "before_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "after_sha256": "bb07e0056020db71ad04104bb31b66ee081123bf954256f9a84597c1f3566ef2",
+            "bitwise_restored": true
+          }
+        }
+      }
+    }
+  ]
+}

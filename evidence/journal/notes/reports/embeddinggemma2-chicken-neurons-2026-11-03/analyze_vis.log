@@ -1,0 +1,13 @@
+{"chicken_imitation": 38, "other_imitation": 112, "chicken_real": 20, "other_real": 56}
+L17 N1574: chicken_imit>other_imit 0.587  other_real>other_imit 0.617  chicken_real>other_real 0.764  chicken_real>chicken_imit 0.893
+L15 N1126: chicken_imit>other_imit 0.655  other_real>other_imit 0.521  chicken_real>other_real 0.854  chicken_real>chicken_imit 0.679
+L15 N436: chicken_imit>other_imit 0.668  other_real>other_imit 0.557  chicken_real>other_real 0.788  chicken_real>chicken_imit 0.721
+L15 N1281: chicken_imit>other_imit 0.658  other_real>other_imit 0.539  chicken_real>other_real 0.809  chicken_real>chicken_imit 0.841
+L16 N134: chicken_imit>other_imit 0.713  other_real>other_imit 0.564  chicken_real>other_real 0.864  chicken_real>chicken_imit 0.816
+L16 N349: chicken_imit>other_imit 0.552  other_real>other_imit 0.424  chicken_real>other_real 0.826  chicken_real>chicken_imit 0.789
+L17 N1297: chicken_imit>other_imit 0.588  other_real>other_imit 0.601  chicken_real>other_real 0.842  chicken_real>chicken_imit 0.876
+L19 N1129: chicken_imit>other_imit 0.775  other_real>other_imit 0.466  chicken_real>other_real 0.790  chicken_real>chicken_imit 0.499
+L20 N1260: chicken_imit>other_imit 0.698  other_real>other_imit 0.629  chicken_real>other_real 0.800  chicken_real>chicken_imit 0.768
+L23 N1262: chicken_imit>other_imit 0.709  other_real>other_imit 0.439  chicken_real>other_real 0.846  chicken_real>chicken_imit 0.597
+classifier: chicken_imit_vs_other_imit 0.621 [0.521, 0.715]  other_real_vs_other_imit 0.419 [0.323, 0.516]  chicken_real_vs_other_real 0.721 [0.588, 0.838]  chicken_real_vs_chicken_imit 0.576 [0.41, 0.741]
+PREDICTIONS {"V1": {"value": 0.5869360902255639, "held": false}, "V2": {"value": 0.6167889030612245, "held": true}, "V3": {"value": 0.7642857142857142, "held": false}, "V4": {"value": 0.8934210526315789, "held": true}, "V5": {"value": 0.6210056390977443, "held": false}, "V6": {"classifier": 0.5763157894736842, "neuron": 0.8934210526315789, "held": true}}

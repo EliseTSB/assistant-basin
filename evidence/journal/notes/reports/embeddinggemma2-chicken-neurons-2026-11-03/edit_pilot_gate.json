@@ -1,0 +1,68 @@
+{
+ "signs": {
+  "L17 N1574": 1.0,
+  "L19 N1129": -1.0
+ },
+ "fit_imitators": 16,
+ "groups": {
+  "esc_chicken_fit": {
+   "n": 48,
+   "s17_quantiles": [
+    0.0438,
+    0.0779,
+    0.1229
+   ],
+   "s19_quantiles": [
+    0.0117,
+    0.0207,
+    0.0324
+   ]
+  },
+  "esc_other_fit": {
+   "n": 288,
+   "s17_quantiles": [
+    -0.0162,
+    0.003,
+    0.0471
+   ],
+   "s19_quantiles": [
+    -0.0099,
+    -0.0009,
+    0.0144
+   ]
+  },
+  "vis_chicken_imitation_fit": {
+   "n": 18,
+   "s17_quantiles": [
+    -0.0016,
+    0.013,
+    0.0594
+   ],
+   "s19_quantiles": [
+    0.0071,
+    0.0204,
+    0.0329
+   ]
+  }
+ },
+ "gate": {
+  "t19": 0.011327743530273438,
+  "t17": 0.023956298828125,
+  "open_share": {
+   "esc_chicken_fit": 0.0,
+   "esc_other_fit": 0.04513888888888889,
+   "vis_chicken_imitation_fit": 0.5555555555555556
+  },
+  "esc_other_open_labels": [
+   "breathing",
+   "brushing_teeth",
+   "church_bells",
+   "clock_alarm",
+   "cow",
+   "hand_saw",
+   "pig",
+   "sheep",
+   "snoring"
+  ]
+ }
+}

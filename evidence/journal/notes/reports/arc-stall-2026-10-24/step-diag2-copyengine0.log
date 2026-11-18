@@ -1,0 +1,10 @@
+env: SYCL_PI_LEVEL_ZERO_USE_COPY_ENGINE=0 UR_L0_USE_COPY_ENGINE=0 SYCL_PI_LEVEL_ZERO_USE_IMMEDIATE_COMMANDLISTS=None UR_L0_USE_IMMEDIATE_COMMANDLISTS=None
+loaded; private 0.00GB ws 0.00GB faults 0
+batches 330-339: median 0.87s max 1.83s; elapsed 10s; private 0.00GB ws 0.00GB faults 0
+batches 340-349: median 0.89s max 1.02s; elapsed 19s; private 0.00GB ws 0.00GB faults 0
+batches 350-359: median 0.90s max 0.94s; elapsed 28s; private 0.00GB ws 0.00GB faults 0
+batches 360-369: median 0.89s max 0.93s; elapsed 37s; private 0.00GB ws 0.00GB faults 0
+batches 370-379: median 0.88s max 0.94s; elapsed 46s; private 0.00GB ws 0.00GB faults 0
+batches 380-389: median 0.90s max 0.94s; elapsed 55s; private 0.00GB ws 0.00GB faults 0
+batches 390-399: median 0.91s max 0.95s; elapsed 64s; private 0.00GB ws 0.00GB faults 0
+batches 400-409: median 0.91s max 0.93s; elapsed 73s; private 0.00GB ws 0.00GB faults 0

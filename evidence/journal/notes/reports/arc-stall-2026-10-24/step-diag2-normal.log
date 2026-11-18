@@ -1,0 +1,9 @@
+loaded; private 0.00GB ws 0.00GB faults 0
+batches 330-339: median 0.91s max 2.41s; elapsed 11s; private 0.00GB ws 0.00GB faults 0
+batches 340-349: median 0.92s max 0.97s; elapsed 20s; private 0.00GB ws 0.00GB faults 0
+batches 350-359: median 0.92s max 142.36s; elapsed 171s; private 0.00GB ws 0.00GB faults 0
+batches 360-369: median 0.87s max 0.91s; elapsed 179s; private 0.00GB ws 0.00GB faults 0
+batches 370-379: median 0.90s max 0.97s; elapsed 188s; private 0.00GB ws 0.00GB faults 0
+batches 380-389: median 0.89s max 160.42s; elapsed 357s; private 0.00GB ws 0.00GB faults 0
+batches 390-399: median 0.89s max 172.64s; elapsed 537s; private 0.00GB ws 0.00GB faults 0
+batches 400-409: median 0.90s max 172.22s; elapsed 718s; private 0.00GB ws 0.00GB faults 0

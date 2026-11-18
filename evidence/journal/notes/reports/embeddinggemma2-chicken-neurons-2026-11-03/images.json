@@ -1,0 +1,173 @@
+{
+ "n_hens": 43,
+ "n_others": 23,
+ "others": [
+  "2026-10-05-breakfast-sandwich-gandalf-egg-open.jpg",
+  "2026-10-05-breakfast-sandwich-gandalf-egg.jpg",
+  "2026-10-05-trixie-belly-rubs.jpg",
+  "2026-10-13-barred-owl-on-wire.jpg",
+  "creek/2026-09-09-creek-walk-124422.jpg",
+  "dog-reference-corpus/IMG_1124.jpg",
+  "dog-reference-corpus/IMG_1125.jpg",
+  "dog-reference-corpus/IMG_1148.jpg",
+  "dog-reference-corpus/IMG_1149.jpg",
+  "dog-reference-corpus/IMG_1165.jpg",
+  "dog-reference-corpus/IMG_1166.jpg",
+  "dog-reference-corpus/IMG_1167.jpg",
+  "dog-reference-corpus/IMG_1209.jpg",
+  "dog-reference-corpus/IMG_1210.jpg",
+  "dog-reference-corpus/IMG_1218.jpg",
+  "dog-reference-corpus/IMG_1299.jpg",
+  "dog-reference-corpus/IMG_1701.jpg",
+  "dog-reference-corpus/IMG_1702.jpg",
+  "dog-reference-corpus/IMG_1703.jpg",
+  "dog-reference-corpus/IMG_1704.jpg",
+  "pond/2026-06-01-small-toad-on-rim.jpg",
+  "pond/2026-07-02-tadpole-back-legs.jpg",
+  "pond/2026-09-17-large-toad-on-stick.jpg"
+ ],
+ "rows": [
+  {
+   "layer": 17,
+   "index": 1574,
+   "audio_sign": 1,
+   "image_auc_same_sign": 1.0,
+   "in_top10": true,
+   "in_both9": true
+  },
+  {
+   "layer": 19,
+   "index": 1129,
+   "audio_sign": -1,
+   "image_auc_same_sign": 1.0,
+   "in_top10": false,
+   "in_both9": true
+  },
+  {
+   "layer": 15,
+   "index": 1281,
+   "audio_sign": -1,
+   "image_auc_same_sign": 0.9989888776541962,
+   "in_top10": false,
+   "in_both9": true
+  },
+  {
+   "layer": 20,
+   "index": 1260,
+   "audio_sign": -1,
+   "image_auc_same_sign": 0.9908998988877654,
+   "in_top10": true,
+   "in_both9": true
+  },
+  {
+   "layer": 23,
+   "index": 1262,
+   "audio_sign": -1,
+   "image_auc_same_sign": 0.9888776541961577,
+   "in_top10": false,
+   "in_both9": true
+  },
+  {
+   "layer": 16,
+   "index": 349,
+   "audio_sign": 1,
+   "image_auc_same_sign": 0.974721941354904,
+   "in_top10": false,
+   "in_both9": true
+  },
+  {
+   "layer": 16,
+   "index": 134,
+   "audio_sign": 1,
+   "image_auc_same_sign": 0.9464105156723963,
+   "in_top10": false,
+   "in_both9": true
+  },
+  {
+   "layer": 21,
+   "index": 1999,
+   "audio_sign": 1,
+   "image_auc_same_sign": 0.8776541961577351,
+   "in_top10": true,
+   "in_both9": false
+  },
+  {
+   "layer": 17,
+   "index": 1297,
+   "audio_sign": -1,
+   "image_auc_same_sign": 0.8452982810920121,
+   "in_top10": false,
+   "in_both9": true
+  },
+  {
+   "layer": 15,
+   "index": 960,
+   "audio_sign": 1,
+   "image_auc_same_sign": 0.7765419615773509,
+   "in_top10": true,
+   "in_both9": false
+  },
+  {
+   "layer": 15,
+   "index": 436,
+   "audio_sign": 1,
+   "image_auc_same_sign": 0.750252780586451,
+   "in_top10": true,
+   "in_both9": true
+  },
+  {
+   "layer": 19,
+   "index": 2021,
+   "audio_sign": 1,
+   "image_auc_same_sign": 0.7340748230535895,
+   "in_top10": true,
+   "in_both9": false
+  },
+  {
+   "layer": 15,
+   "index": 109,
+   "audio_sign": -1,
+   "image_auc_same_sign": 0.5490394337714863,
+   "in_top10": true,
+   "in_both9": false
+  },
+  {
+   "layer": 15,
+   "index": 1126,
+   "audio_sign": 1,
+   "image_auc_same_sign": 0.5490394337714863,
+   "in_top10": true,
+   "in_both9": false
+  },
+  {
+   "layer": 17,
+   "index": 1068,
+   "audio_sign": -1,
+   "image_auc_same_sign": 0.31749241658240646,
+   "in_top10": true,
+   "in_both9": false
+  },
+  {
+   "layer": 2,
+   "index": 1214,
+   "audio_sign": -1,
+   "image_auc_same_sign": 0.29625884732052576,
+   "in_top10": true,
+   "in_both9": false
+  }
+ ],
+ "predictions": {
+  "I1": [
+   "held",
+   1.0
+  ],
+  "I2": [
+   "held",
+   9
+  ],
+  "I3": [
+   "failed",
+   0.5490394337714863
+  ]
+ }
+}

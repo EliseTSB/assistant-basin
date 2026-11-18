@@ -1,0 +1,17 @@
+Loading weights:   0%|          | 0/1165 [00:00<?, ?it/s]Loading weights:   1%|          | 8/1165 [00:00<00:26, 43.34it/s]Loading weights:   5%|▌         | 60/1165 [00:00<00:04, 235.67it/s]Loading weights:   8%|▊         | 89/1165 [00:00<00:05, 201.46it/s]Loading weights:  10%|█         | 122/1165 [00:00<00:04, 234.87it/s]Loading weights:  13%|█▎        | 149/1165 [00:00<00:05, 186.66it/s]Loading weights:  16%|█▌        | 189/1165 [00:01<00:05, 168.05it/s]Loading weights:  19%|█▉        | 220/1165 [00:01<00:04, 190.47it/s]Loading weights:  22%|██▏       | 251/1165 [00:01<00:05, 181.21it/s]Loading weights:  26%|██▌       | 299/1165 [00:01<00:03, 242.09it/s]Loading weights:  28%|██▊       | 328/1165 [00:01<00:04, 209.11it/s]Loading weights:  32%|███▏      | 370/1165 [00:01<00:03, 223.29it/s]Loading weights:  34%|███▍      | 395/1165 [00:02<00:03, 195.35it/s]Loading weights:  38%|███▊      | 437/1165 [00:02<00:04, 174.91it/s]Loading weights:  40%|████      | 468/1165 [00:02<00:03, 181.58it/s]Loading weights:  42%|████▏     | 494/1165 [00:02<00:03, 194.68it/s]Loading weights:  44%|████▍     | 516/1165 [00:02<00:04, 159.43it/s]Loading weights:  48%|████▊     | 556/1165 [00:02<00:02, 204.43it/s]Loading weights:  50%|████▉     | 581/1165 [00:03<00:03, 186.12it/s]Loading weights:  53%|█████▎    | 623/1165 [00:03<00:02, 183.40it/s]Loading weights:  59%|█████▉    | 685/1165 [00:03<00:02, 237.03it/s]Loading weights:  63%|██████▎   | 731/1165 [00:03<00:01, 279.56it/s]Loading weights:  65%|██████▌   | 763/1165 [00:06<00:09, 42.28it/s] Loading weights: 100%|██████████| 1165/1165 [00:06<00:00, 183.97it/s]
+model loaded 9s
+discovery 0/336 10s
+discovery 50/336 42s
+discovery 100/336 74s
+discovery 150/336 106s
+discovery 200/336 138s
+discovery 250/336 171s
+discovery 300/336 203s
+parity {'max_neuron_abs_diff': 0.0, 'min_cos_to_stored_emb': 0.9999997615814209, 'clips': 336} R 52.51
+open: {'fit_real': 11, 'fit_imit': 12, 'test_imit': 12, 'test_real': 1, 'esc_test': 17}
+inside {'k': 17782.794100389227, 'fit_auc': 0.8691520467836257} 852s
+random_inside {'k': 100000.0, 'fit_auc': 0.8082358674463938} 1481s
+inside {"k": 17782.794100389227, "test_auc": 0.8525, "test_auc_bootstrap_95": [0.72, 0.9525], "gated_test_imitations": 12, "gated_top_classes": {"engine": 10, "keyboard_typing": 2}, "gated_human_share": 0.0, "gated_median_cos_to_original": -0.05605466663837433, "nonchicken_bit_identical": 176, "nonchicken_total": 192, "classes_changed_more_than_1_clip": []}
+random_inside {"k": 100000.0, "test_auc": 0.7625, "test_auc_bootstrap_95": [0.5925, 0.91], "gated_test_imitations": 12, "gated_top_classes": {"engine": 12}, "gated_human_share": 0.0, "gated_median_cos_to_original": -0.056870341300964355, "nonchicken_bit_identical": 176, "nonchicken_total": 192, "classes_changed_more_than_1_clip": []}
+output {"k": 10000.0, "test_auc": 0.8525, "test_auc_bootstrap_95": [0.72, 0.9525], "gated_test_imitations": 12, "gated_top_classes": {"crying_baby": 1, "door_wood_creaks": 11}, "gated_human_share": 0.08333333333333333, "gated_median_cos_to_original": -0.4781949520111084, "nonchicken_bit_identical": 176, "nonchicken_total": 192, "classes_changed_more_than_1_clip": []}
+VERDICTS {'I1': True, 'I2': True, 'I3': False, 'I4': True, 'I5': True} seconds 1508.2

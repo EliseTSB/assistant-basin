@@ -3,7 +3,7 @@
 Question (registered in `PART193-DESIGN.md`, public main c85d553, 2026-11-08 05:04 CT; Amendments 1 and 2 at 71143e8 and
 134930b, after the run and before the edit data behind 193.2 and 193.3 was opened): without the original weights, can simple
 statistics of the weight matrices find which matrix of EmbeddingGemma 2 was edited by our published chicken imitation
-edits (Journal `notes/reports/embeddinggemma2-chicken-neurons-2026-11-03/EDIT-DESIGN.md`, Amendment 5)? The edits are W1,
+edits ([`EDIT-DESIGN.md`](../../evidence/journal/notes/reports/embeddinggemma2-chicken-neurons-2026-11-03/EDIT-DESIGN.md), Amendment 5)? The edits are W1,
 which rewrites neuron 1083 of layer 20's MLP (its gate row, up row and down column); W2, a rank-one closed-form
 (ROME-style) update of layer 20's `down_proj`; and W2c, the same W2 fit on shuffled labels. The statistics are F1 (log of a matrix's top singular value) and
 F2 (the share of its squared spectrum in the top singular value), each ranked against the same matrix role in the other 23

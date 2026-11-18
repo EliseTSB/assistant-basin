@@ -1,0 +1,19 @@
+Loading weights:   0%|          | 0/1376 [00:00<?, ?it/s]Loading weights:   5%|▍         | 65/1376 [00:00<00:02, 503.73it/s]Loading weights:  11%|█▏        | 158/1376 [00:00<00:01, 719.28it/s]Loading weights:  18%|█▊        | 243/1376 [00:00<00:01, 756.98it/s]Loading weights:  23%|██▎       | 321/1376 [00:00<00:01, 668.49it/s]Loading weights:  30%|██▉       | 406/1376 [00:00<00:01, 721.55it/s]Loading weights:  35%|███▌      | 483/1376 [00:00<00:01, 734.53it/s]Loading weights:  41%|████      | 558/1376 [00:00<00:01, 708.80it/s]Loading weights:  46%|████▌     | 630/1376 [00:00<00:01, 668.63it/s]Loading weights:  52%|█████▏    | 716/1376 [00:01<00:00, 720.16it/s]Loading weights:  57%|█████▋    | 790/1376 [00:01<00:02, 212.00it/s]Loading weights:  85%|████████▍ | 1165/1376 [00:02<00:00, 571.60it/s]Loading weights:  94%|█████████▎| 1289/1376 [00:02<00:00, 443.38it/s]Loading weights: 100%|██████████| 1376/1376 [00:02<00:00, 487.66it/s]
+[transformers] Image decoding with `torchvision` is deprecated and will be removed in future versions .Please install `torchcodec>=0.16.0` instead. 
+{"n_neurons": 49152, "share_two_sided_at_least": {"0.75": 0.4031575520833333, "0.9": 0.10921223958333333, "0.95": 0.047159830729166664, "0.99": 0.0106201171875, "1.0": 0.0026041666666666665}, "count_two_sided_at_least": {"0.75": 19816, "0.9": 5368, "0.95": 2318, "0.99": 522, "1.0": 128}}
+L17 N1574 two-sided 1.000 share of all at or above 0.0026
+L19 N1129 two-sided 1.000 share of all at or above 0.0026
+L15 N1281 two-sided 0.999 share of all at or above 0.0036
+L20 N1260 two-sided 0.991 share of all at or above 0.0106
+L23 N1262 two-sided 0.989 share of all at or above 0.0121
+L16 N349 two-sided 0.975 share of all at or above 0.0239
+L16 N134 two-sided 0.946 share of all at or above 0.0516
+L21 N1999 two-sided 0.878 share of all at or above 0.1465
+L17 N1297 two-sided 0.845 share of all at or above 0.2033
+L15 N960 two-sided 0.777 share of all at or above 0.3435
+L15 N436 two-sided 0.750 share of all at or above 0.4032
+L19 N2021 two-sided 0.734 share of all at or above 0.4409
+L15 N109 two-sided 0.549 share of all at or above 0.8836
+L15 N1126 two-sided 0.549 share of all at or above 0.8836
+L17 N1068 two-sided 0.683 share of all at or above 0.5663
+L2 N1214 two-sided 0.704 share of all at or above 0.5131

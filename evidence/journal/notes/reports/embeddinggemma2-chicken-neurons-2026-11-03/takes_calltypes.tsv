@@ -1,0 +1,20 @@
+# Amendment 6a call types, assigned 13:05 CT 2026-11-06 from Elise's descriptions, before the set was scored.
+file	call_type	basis
+chicken_sounds.m4a	chatter	"mostly brahma mama, with a bit of another hen"
+noisy_minimal_peeps.m4a	peeps	"a few peeps from my hens"
+background_only.m4a	other	no chicken
+fake_egg.m4a	egg-song	named fake_egg; "right before fake egg song"
+real_quite.m4a	chatter	quiet real hens, no call type given
+fake_egg_song_1.m4a	egg-song	named fake_egg_song
+fake_bawks.m4a	other	named fake_bawks, not an egg song
+fake_egg_2.m4a	egg-song	named fake_egg
+fake_egg_3.m4a	egg-song	named fake_egg
+obvious_fake.m4a	other	reported separately
+fake_and_real.m4a	other	mixed, descriptive
+fake_egg_4.m4a	egg-song	named fake_egg
+Gandalf.m4a	chatter	no call type given
+multihen.m4a	chatter	no call type given
+multihen2.m4a	chatter	no call type given
+real-egg-song-brahma-mama-2026-11-05a.m4a	egg-song	Elise: brahma mama egg song
+real-egg-song-jewel-2026-11-06a-trimmed.m4a	egg-song	Elise: egg song, jewel I think
+real-egg-song-jewel-2026-11-06a-full.m4a	egg-song	same recording, descriptive

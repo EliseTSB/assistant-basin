@@ -1,0 +1,1 @@
+{"record_type": "case", "run_mode": "registered", "case_id": 1, "took": false, "already_satisfied": true, "name_eligible": true, "localization": {"f1": {"localized": false}, "pcs": {"localized": false}}, "aimed_positive_control": {"oracle_named_strict": true}}
