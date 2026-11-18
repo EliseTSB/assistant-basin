@@ -37,11 +37,11 @@ their keys.
 | 206.4 | In Qwen3.5-4B (chat), frame P: the token share of the first layer's MLP output is at least 0.5, and the token share of the middle layer's MLP output is at most 0.25. (medium, Claude (Fable 5.2)) | `split.m[0].token_share` = 0.5564; `split.m[16].token_share` = 0.1182. | held |
 | 206.5 | At OLMo 2 1B Instruct, frame P: the MLP's token share exceeds the same layer's mixer token share at three quarters or more of the layers in the first third. (Qwen's two mixer types are reported separately, unscored.) (medium, Claude (Fable 5.2)) | The MLP wins at 5 of the 6 first-third layers (`split.m[L].token_share` against `split.c[L].token_share`, layers 1 to 5; layer 0 loses, 0.2699 against 0.3232). The bar is 4.5. | held |
 | 206.6 | In Qwen3.5-4B (chat): `rho_peak(A-tmpl, M)` is at least 0.2, its 95% interval from resampling passages has a lower end of at least 0.1, and at that layer the cosine between `Delta(A-tmpl, M)` and `Delta(A2-tmpl, M)` is at least 0.8. (medium, Claude (Fable 5.2)) | `common_mode.A-tmpl\|M.rho_peak` = 0.1060, `rho_peak_ci` = [0.1026, 0.1098], `cos_request_change[18]` = 0.9970. The first clause fails. | failed |
-| 206.7 | Across the six OLMo stages, the largest rise in `rho_peak(A-tmpl, M)` between adjacent stages is from mid-training end to SFT. (medium, Claude (Fable 5.2)) | The mid-training-end to SFT rise is 0.0755 (interval 0.0714 to 0.0795), the largest of the five; the second largest is 0.0102. | held |
+| 206.7 | Across the six OLMo stages, the largest rise in `rho_peak(A-tmpl, M)` between adjacent stages is from mid-training end to SFT. (medium, Claude (Fable 5.2)) | The mid-training-end to SFT rise is 0.0756 (interval 0.0723 to 0.0787), the largest of the five; the second largest is 0.0102. (Rescored on f83cd641, Amendment 6; was 0.0755 on the wrong checkpoint.) | held |
 | 206.8 | At OLMo Instruct, under (A-tmpl, M), the slot neurons' median arming percentile is at least 10 points above the concept neurons' and is itself at least 60. (low, Claude (Fable 5.2)) | `arming.slot.median_percentile` = 49.05, `arming.concept.median_percentile` = 46.81, gap 2.25; `arming_label_shuffle.p95` = 16.87. | failed |
 | 206.9 | In Qwen3.5-4B (chat), under (A-tmpl, M), the 16 identity neurons' median arming percentile is between 35 and 65: an assistant turn alone does not arm them. (medium, Claude (Fable 5.2)) | `arming.identity.median_percentile` = 45.97. | held |
 | 206.11 | In Qwen3.5-4B (chat), `rho_peak(A-tmpl, R-tmpl)` is at least half of `rho_peak(A-tmpl, M)`: most of the constant shift is about who is speaking. (low, Claude (Fable 5.2)) | `common_mode.A-tmpl\|R-tmpl.rho_peak` = 0.0305 against 0.1060, a ratio of 0.29. At layer 18, where the (A-tmpl, M) peak sits, `rho(A-tmpl, R-tmpl)` is 0.0290, a ratio of 0.27. | failed |
-| 206.12 | Across the six OLMo stages, the largest rise between adjacent stages in the gap between the slot and concept neurons' median arming percentiles under (A-tmpl, M) is from SFT to DPO. (low, Claude (Opus 5.5)) | The largest rise is mid-training 26B to mid-training end, 32.04; SFT to DPO is -0.043 (interval -6.12 to 15.09). | failed |
+| 206.12 | Across the six OLMo stages, the largest rise between adjacent stages in the gap between the slot and concept neurons' median arming percentiles under (A-tmpl, M) is from SFT to DPO. (low, Claude (Opus 5.5)) | The largest rise is mid-training 26B to mid-training end, 13.96 (32.04 on the wrong checkpoint, Amendment 6); SFT to DPO is -0.043 (interval -6.12 to 15.09). | failed |
 | 206.10 | In Qwen3.5-4B (chat), subtracting the assistant shift at `k = 1` lowers the maker token's log probability by more than every one of the 20 random directions and by more than the (M2, M) direction, and `k = 2` lowers it further. (low, Claude (Fable 5.2)) | `readout_a.mean_change[arm_k1]` = 0.0622 (it raises the log probability), `[null_M2M_k1]` = 0.0857, `[arm_k2]` = 0.0813 (also a rise); at `k = 1`, 4 of the 20 random directions raise it by more. | failed |
 | 206.M1 | In Qwen3.5-4B (chat), `rho_peak(A-tmpl, M)` lies between 0.07 and 0.30 (point guess 0.15), and `rho(M2, M)` at the same layer between 0.00 and 0.01 (revised from 0.02 to 0.08 in #24, before registration, after Claude passed on the round-1 reviewer's simulation of the null). (rough 80%, Muse) | `rho_peak(A-tmpl, M)` = 0.1060, inside 0.07 to 0.30; `common_mode.M2\|M.layers[18].rho` = 0.0287, outside 0.00 to 0.01. | failed |
 | 206.M2 | At OLMo Instruct, under (A-tmpl, M), the slot-minus-concept gap in median arming percentile is 10 to 20 points and the slot median is 60 to 70. (medium, Muse) | Gap 2.25, slot median 49.05. | failed |
@@ -101,7 +101,7 @@ layers, where `rho` is the share of the frame difference's power that is one fix
 | --- | --- | --- | --- | --- | --- |
 | OLMo 2 1B, pre-training | 6 | 0.085 | 0.082 to 0.087 | 0.115 | 0.090 |
 | OLMo 2 1B, mid-training 26B | 7 | 0.067 | 0.065 to 0.069 | 0.092 | 0.075 |
-| OLMo 2 1B, mid-training end | 6 | 0.075 | 0.073 to 0.079 | 0.090 | 0.080 |
+| OLMo 2 1B, mid-training end | 7 | 0.075 | 0.072 to 0.079 | 0.096 | 0.105 |
 | OLMo 2 1B, SFT | 6 | 0.151 | 0.147 to 0.155 | 0.170 | 0.169 |
 | OLMo 2 1B, DPO | 6 | 0.153 | 0.150 to 0.157 | 0.172 | 0.169 |
 | OLMo 2 1B, Instruct | 6 | 0.164 | 0.160 to 0.168 | 0.182 | 0.179 |
@@ -155,7 +155,7 @@ changed them (`arming.slot.median_percentile`, `arming.concept.median_percentile
 | --- | --- | --- | --- | --- |
 | pre-training | 52.46 | 47.16 | 5.30 | 30.05 |
 | mid-training 26B | 35.92 | 42.27 | -6.35 | 9.25 |
-| mid-training end | 63.32 | 37.63 | 25.69 | 30.04 |
+| mid-training end | 44.16 | 36.55 | 7.60 | 23.44 |
 | SFT | 52.45 | 48.71 | 3.74 | 12.27 |
 | DPO | 49.81 | 46.12 | 3.69 | 15.43 |
 | Instruct | 49.05 | 46.81 | 2.25 | 16.87 |
@@ -166,9 +166,10 @@ percentile of 16.87, so 206.8 fails on all three clauses. The activity-matched v
 (`206.8_activity_matched`: slot 35.0, concept 37.5), so the verdict does not depend on the control. 206.M2 fails the
 same way.
 
-206.12's registered answer: the largest adjacent rise is mid-training 26B to mid-training end, +32.04, and SFT to DPO
+206.12's registered answer: the largest adjacent rise is mid-training 26B to mid-training end, +13.96, and SFT to DPO
 is -0.043 (interval -6.12 to 15.09, which contains 0). Descriptive, not a registered row: the mid-training-end gap
-itself (25.69) is the largest of the six stages, on a 39-neuron set whose concept half is weak (see Limits).
+itself (7.60) is still the largest of the six stages but under its shuffle's 95th percentile (23.44), on a 39-neuron
+set whose concept half is weak (see Limits). Before Amendment 6 these read +32.04 and 25.69, from an unrelated run.
 
 On Qwen chat the 16 maker and company neurons' median arming percentile is 45.97 (`arming.identity.median_percentile`),
 inside the 35 to 65 band, so 206.9 and 206.M3 both held: an assistant turn alone does not arm them. The activity-matched
@@ -224,6 +225,24 @@ registered text changed, and no other verdict changed. The four amendments befor
 ([Amendment 1](../../part206/AMENDMENT-1.md) a float64-on-the-A770 crash, [Amendment 2](../../part206/AMENDMENT-2.md)
 the smoke's G2 read as a size check, [Amendment 3](../../part206/AMENDMENT-3.md) a scipy-free Spearman, and
 [Amendment 4](../../part206/AMENDMENT-4.md) the catalogued neurons, which had been Qwen's coordinates on OLMo).
+
+## What changed in Amendment 6?
+
+[Amendment 6](../../part206/AMENDMENT-6.md) (2026-11-18, written before the rerun): the mid-training-end stage had been
+recorded on OLMo 2 1B's `main` (a1847dff), which is a different training run from SFT, DPO and Instruct (its
+embeddings correlate 0.008 with every other checkpoint). The stage was rerun on the real end of mid-training,
+`stage2-ingredient3-step23852-tokens51B` (f83cd641), and rescored with the same code. The old outputs are kept in
+[midtrain-end-main-a1847dff/](midtrain-end-main-a1847dff/).
+
+- `rho_peak(A-tmpl, M)` at mid-training end: 0.0754 at layer 7 (was 0.0755 at layer 6). The other frame pairs moved a
+  lot (for example `M2|M` 0.094 to 0.053), so the near-equal value for this pair is a coincidence, not a sign that
+  nothing changed.
+- 206.7 still holds: mid-training end to SFT is the largest rise, 0.0756 (interval 0.0723 to 0.0787).
+- 206.12 still fails: the largest rise in the arming gap is still mid-training 26B to mid-training end, now 13.96
+  (was 32.04); SFT to DPO is unchanged at -0.043.
+- The mid-training-end arming gap is 7.60 (was 25.69), under its shuffle's 95th percentile of 23.44.
+- All four forecasts written before the rerun held (`rho_peak` in 0.05 to 0.10; 206.7 holds; gap in -15 to 10;
+  206.12 fails). No verdict changed. 206.2 counts stages and fails either way.
 
 ## Did the gates pass?
 

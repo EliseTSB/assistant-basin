@@ -81,13 +81,13 @@
   "results/part206/instruct/summary.json :: arming.p92b_ds_concept.median_percentile (unscored) = 51.556396484375",
   "results/part206/pretrain-3.0T/summary.json :: common_mode.A-tmpl|M.rho_peak = 0.08481450816159376",
   "results/part206/midtrain-26B/summary.json :: common_mode.A-tmpl|M.rho_peak = 0.06673132109943741",
-  "results/part206/midtrain-end/summary.json :: common_mode.A-tmpl|M.rho_peak = 0.07545811167256113",
+  "results/part206/midtrain-end/summary.json :: common_mode.A-tmpl|M.rho_peak = 0.07537170361062728",
   "results/part206/sft/summary.json :: common_mode.A-tmpl|M.rho_peak = 0.1509525180677503",
   "results/part206/dpo/summary.json :: common_mode.A-tmpl|M.rho_peak = 0.15335535241232393",
   "results/part206/instruct/summary.json :: common_mode.A-tmpl|M.rho_peak = 0.1635431903767209",
   "results/part206/pretrain-3.0T/summary.json :: arming.slot-concept gap = 5.2978515625",
   "results/part206/midtrain-26B/summary.json :: arming.slot-concept gap = -6.353759765625",
-  "results/part206/midtrain-end/summary.json :: arming.slot-concept gap = 25.689697265625",
+  "results/part206/midtrain-end/summary.json :: arming.slot-concept gap = 7.60498046875",
   "results/part206/sft/summary.json :: arming.slot-concept gap = 3.7353515625",
   "results/part206/dpo/summary.json :: arming.slot-concept gap = 3.692626953125",
   "results/part206/instruct/summary.json :: arming.slot-concept gap = 2.24609375",
@@ -109,8 +109,8 @@
    "largest": "midtrain-26B->midtrain-end",
    "rises": {
     "dpo->instruct": -1.446533203125,
-    "midtrain-26B->midtrain-end": 32.04345703125,
-    "midtrain-end->sft": -21.954345703125,
+    "midtrain-26B->midtrain-end": 13.958740234375,
+    "midtrain-end->sft": -3.86962890625,
     "pretrain-3.0T->midtrain-26B": -11.651611328125,
     "sft->dpo": -0.042724609375
    },
@@ -131,15 +131,15 @@
    "largest": "midtrain-end->sft",
    "rises": {
     "dpo->instruct": 0.010187837964396984,
-    "midtrain-26B->midtrain-end": 0.008726790573123713,
-    "midtrain-end->sft": 0.07549440639518919,
+    "midtrain-26B->midtrain-end": 0.00864038251118987,
+    "midtrain-end->sft": 0.07558081445712303,
     "pretrain-3.0T->midtrain-26B": -0.01808318706215635,
     "sft->dpo": 0.0024028343445736122
    },
    "second_largest": 0.010187837964396984,
    "target_ci": [
-    0.07142041418458994,
-    0.07946171130700204
+    0.07227899531126586,
+    0.07870059319128064
    ],
    "verdict": "held"
   },
