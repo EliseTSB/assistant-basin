@@ -43,6 +43,17 @@ LOCAL_PATH = re.compile(r"(?<![\w/.])(?:/home/|/mnt/|/tmp/|/etc/|/opt/|/Users/|/
 RATE = re.compile(r"\d[\d.,]*\s*[A-Za-z ]{0,40}?(?:/\s?(?:s|sec|second|min|minute|h|hour)\b|per (?:second|minute|hour|s|min)\b)"
                   r"|\d[\d.,]*\s+\w+(?: \w+){0,3} in (?:about )?\d[\d.,]*\s*(?:s|sec|seconds|min|minutes|h|hours)\b", re.I)
 GENERATION_UNITS = re.compile(r"generation|answer|rollout|completion", re.I)
+# Checkpoints that are NOT the lineage their repo name suggests (2026-11-17). OLMo 2 1B's `main` (a1847dff) is from a
+# different training run: embedding rows correlate 0.008 with the 3.0T, 26B and Instruct checkpoints, while the real
+# mid-training end, SFT's parent, is stage2-ingredient3-step23852-tokens51B (f83cd641, 1.000 with Instruct). Part 15
+# found it; Parts 205, 206 and 209 then used `main` as their mid-training-end stage from the model card anyway. A design
+# line that names one of these fails prelaunch unless the same line says the checkpoint is unrelated.
+UNRELATED_CHECKPOINTS = [
+    (re.compile(r"a1847dff|OLMo[- ]2[- ](?:0425[- ])?1B\b(?![- ](?:Instruct|SFT|DPO|RLVR))[^\n]{0,80}(?:`main`|revision main|@main)", re.I),
+     "OLMo 2 1B `main` (a1847dff) is a different training run from SFT/DPO/Instruct; the mid-training end is "
+     "stage2-ingredient3-step23852-tokens51B (f83cd641)"),
+]
+UNRELATED_ACK = re.compile(r"unrelated|different (?:training )?run|not the Instruct line", re.I)
 
 
 class Report:
@@ -297,6 +308,10 @@ def prelaunch(repo, pid, fetch=True, legacy_ok=False, min_margin=DEFAULT_MIN_MAR
     stale = sorted(set(PLACEHOLDER_TIME.findall(text + "\n" + psec)))
     r.check(not stale, "no typed placeholder times", "placeholder times (use `date` or a message id): " +
             ", ".join(stale))
+    bad_ckpt = [(i + 1, why) for i, line in enumerate(text.splitlines()) for rx, why in UNRELATED_CHECKPOINTS
+                if rx.search(line) and not UNRELATED_ACK.search(line)]
+    r.check(not bad_ckpt, "no checkpoint from an unrelated run used as a lineage stage",
+            "; ".join(f"design line {n}: {why} (say 'unrelated' on that line if it is meant)" for n, why in bad_ckpt[:3]))
     design_kernel_check(repo, text, sec.get("Method", ""), legacy_ok, min_margin, r)
     if fetch:
         f = git(repo, "fetch", "-q", "origin", "main", check=False)

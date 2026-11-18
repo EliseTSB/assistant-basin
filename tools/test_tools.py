@@ -561,3 +561,24 @@ def test_register_merge_back_keeps_a_section_main_gained_after_the_branch(tmp_pa
     assert "## Part 9 (registered z)" in local and "| 9.1 | s | | |" in local
     assert "| 1.1 | p | 0.4 | held |" in local          # the local verdicts still survive
     assert local.index("## Part 2 (") < local.index("## Part 9 (")
+
+
+def test_prelaunch_olmo_main_as_a_stage_fails(repo):
+    # 2026-11-17: Parts 205, 206 and 209 used OLMo 2 1B `main` (a different run) as their mid-training-end stage.
+    edit(repo, "A fixture; nothing runs.", "OLMo 2 1B at mid-training end (`main`, a1847dff, the released base).")
+    assert any("different training run" in f for f in pc.prelaunch(repo, "900", fetch=False).failed)
+
+
+def test_prelaunch_olmo_main_without_hash_fails(repo):
+    edit(repo, "A fixture; nothing runs.", "allenai/OLMo-2-0425-1B at revision main as the base stage.")
+    assert any("different training run" in f for f in pc.prelaunch(repo, "900", fetch=False).failed)
+
+
+def test_prelaunch_olmo_main_acknowledged_passes_that_check(repo):
+    edit(repo, "A fixture; nothing runs.", "OLMo 2 1B `main` (a1847dff), an unrelated run, as an outside base.")
+    assert not any("different training run" in f for f in pc.prelaunch(repo, "900", fetch=False).failed)
+
+
+def test_prelaunch_olmo_instruct_main_is_not_flagged(repo):
+    edit(repo, "A fixture; nothing runs.", "OLMo 2 1B Instruct (48d788ec); SFT parent f83cd641; OLMo-2-0425-1B-Instruct at `main`.")
+    assert not any("different training run" in f for f in pc.prelaunch(repo, "900", fetch=False).failed)
