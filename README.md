@@ -46,7 +46,9 @@ Predictions and amendments are recorded in [`PREDICTIONS.md`](PREDICTIONS.md). I
 > mid-training-end stage is between two unrelated models, so five registered verdicts are unresolved until that stage
 > is rerun on f83cd641: 205.3 (failed), 206.7 (held), 206.12 (failed), 209.8 (held) and 209.15 (failed). 205.1 and
 > 206.2 count stages and come out the same whatever that stage shows. Numbers that do not involve that stage are
-> unaffected. Each part will get a dated amendment when it is rerun.
+> unaffected. Each part will get a dated amendment when it is rerun. Rerun so far: Part 209 (2026-11-18, Amendment 2,
+> forecasts written first): 209.8 still holds and 209.15 flips from failed to held. 205.3, 206.7 and 206.12 remain
+> unresolved.
 
 ## The short version
 

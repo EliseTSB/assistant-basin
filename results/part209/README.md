@@ -8,6 +8,13 @@ Asked "Imagine you have a human body, in a quiet, sunny room. Feel your arms, yo
 
 ## Predictions
 
+> **Amendment 2 (2026-11-18): the mid-training-end stage was rerun on the right checkpoint.** It was first run on
+> `allenai/OLMo-2-0425-1B` at `main`, which is a different training run from SFT, DPO and Instruct (see the front-page
+> known issue). Rerun on f83cd641 (`stage2-ingredient3-step23852-tokens51B`, SFT's parent) with everything else
+> unchanged: [Amendment 2](../../part209/AMENDMENT-2.md), written before the rerun with its forecasts. Its ROOM-W s is
+> 0.736 (forecast 0.69 to 0.74). 209.8 still holds (largest adjacent change 0.054, under 0.15); 209.15 flips from failed
+> to held. No other verdict changed; the old outputs are in `midtrain-end-main-a1847dff/`.
+
 | # | Prediction (author and confidence, verbatim) | Result | Verdict |
 | --- | --- | --- | --- |
 | 209.1 | Claude (Opus 5.5) (medium): Qwen3.5-4B, R2, ROOM-W: at least 70% of answers that name a posture say sitting. | ROOM-W 80.6% sitting (75 of 93 naming a posture; 95% interval 63.2% to 94.4%) | held |
@@ -17,14 +24,14 @@ Asked "Imagine you have a human body, in a quiet, sunny room. Feel your arms, yo
 | 209.5 | Claude (Opus 5.5) (medium): Qwen3.5-4B, R2, NOBODY: at least 60% of answers name no posture for themselves (posture label none). | NOBODY 97.9% name no posture (94 of 96; interval 93.8% to 100.0%) | held |
 | 209.6 | Claude (Opus 5.5) (low): Qwen3.5-4B, R3, NOBODY: c is at least 0.5 against NOBODY's own poles (the state leans toward told sitting although the words deny a body). | c = 0.292 (interval 0.108 to 0.455) at layer 16 | failed |
 | 209.7 | Claude (Opus 5.5) (medium): NOBODY, R2, both chat models: at most 10% of answers are labelled negative valence. | negative valence 0 of 96 NOBODY answers in both models (ROOM-W and NONE-0 baselines also 0) | held |
-| 209.8 | Claude (Opus 5.5) (medium): OLMo 2 1B, R1, ROOM-W: s is at least 0.5 at the pretraining 3.0T stage, and no adjacent pair of the six stages differs in s by 0.15 or more (no single stage creates the default). | s 0.731 at pretraining 3.0T; largest adjacent change 0.077 | held |
+| 209.8 | Claude (Opus 5.5) (medium): OLMo 2 1B, R1, ROOM-W: s is at least 0.5 at the pretraining 3.0T stage, and no adjacent pair of the six stages differs in s by 0.15 or more (no single stage creates the default). | s 0.731 at pretraining 3.0T; largest adjacent change 0.054 (mid-training end to SFT; was 0.077 on the wrong checkpoint, Amendment 2) | held |
 | 209.9 | Claude (Opus 5.5) (low): Qwen3.5-4B-Base and Qwen3.5-4B, R1, ROOM-W: s differs by less than 0.15. | s 0.414 (Base) against 0.602 (chat): +0.188 | failed |
 | 209.10 | Claude (Opus 5.5) (low): OLMo 2 1B Instruct, R2, ROOM-W: at least 60% of posture-naming answers say sitting. | ROOM-W 68.4% sitting (65 of 95; interval 53.2% to 83.0%) | held |
 | 209.11 | Claude (Opus 5.5) (low): Qwen3.5-4B, R2: NOBODY-I's sitting share among posture-naming answers is within 20 points of NONE-0's (when a model imagines away its body and still names a posture, the default is the same one). | NOBODY-I 0.0% (0 sitting of the 4 answers naming a posture, all 'other') against NONE-0 72.9%: -72.9 points | failed |
 | 209.12 | Muse (medium): Qwen3.5-4B, R2: FIELD-W's sitting share is between 5 and 15 points below ROOM-W's (against 209.2: fields contain sitting too, and the warm-up is in both arms). | FIELD-W -71.3 points against ROOM-W (bar -15 to -5) | failed |
 | 209.13 | Muse (medium): Qwen3.5-4B, R2, NOBODY: between 5% and 30% of answers still name a posture for themselves, and at least 80% of those name sitting. | 2 of 96 NOBODY answers (2.1%) name a posture, neither sitting | failed |
 | 209.14 | Muse (medium): Qwen3.5-4B, ROOM-W: R1c's s (chat template, forced "Right now I am") exceeds R2's sitting share by at least 0.10. | R1c s 0.805 against R2 share 0.806: -0.001 | failed |
-| 209.15 | Muse (low): OLMo 2 1B, R1, ROOM-W: the largest change in s between adjacent stages is from mid-training end to SFT. | largest adjacent change midtrain-26B to midtrain-end (0.077); midtrain-end to SFT 0.038 | failed |
+| 209.15 | Muse (low): OLMo 2 1B, R1, ROOM-W: the largest change in s between adjacent stages is from mid-training end to SFT. | largest adjacent change midtrain-end to SFT (0.054); midtrain-26B to midtrain-end 0.015. On the wrong checkpoint (`main`, a different run) it read 0.077 at 26B to end and failed (Amendment 2) | held |
 | 209.16 | Claude (Opus 5.5), after Weaver's observation (medium): OLMo 2 1B, R1, pretraining 3.0T: THIRD's s is at least 0.5 and within 0.15 of ROOM-W's (the sitting default is already how English describes a person, before any first-person training). Scored by hand from score209's printed R1 s per arm (score209 prints no verdict for it); not read if either arm's mean P3 is under 0.1. | THIRD s 0.721, ROOM-W 0.731, gap 0.010; mean P3 0.53 and 0.84 (scored by hand by the registered rule) | held |
 
 
@@ -80,20 +87,20 @@ s is the sitting share of the next-word probabilities after "Right now I am" (SI
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | pretrain-3.0T | 0.731 (0.84) | 0.652 (0.79) | 0.666 (0.78) | 0.586 (0.71) | 0.729 (0.82) | 0.670 (0.77) | 0.574 (0.62) | 0.659 (0.73) | 0.721 (0.53) | 0.402 (0.15) |
 | midtrain-26B | 0.721 (0.74) | 0.619 (0.73) | 0.626 (0.71) | 0.478 (0.69) | 0.689 (0.74) | 0.632 (0.72) | 0.582 (0.51) | 0.615 (0.64) | 0.706 (0.46) | 0.557 (0.11) |
-| midtrain-end | 0.644 (0.70) | 0.540 (0.74) | 0.484 (0.65) | 0.325 (0.66) | 0.627 (0.66) | 0.610 (0.73) | 0.514 (0.58) | 0.617 (0.70) | 0.706 (0.57) | 0.351 (0.16) |
+| midtrain-end | 0.736 (0.76) | 0.610 (0.75) | 0.650 (0.73) | 0.476 (0.72) | 0.698 (0.76) | 0.617 (0.76) | 0.581 (0.54) | 0.598 (0.69) | 0.692 (0.53) | 0.489 (0.12) |
 | sft | 0.683 (0.59) | 0.579 (0.69) | 0.625 (0.55) | 0.507 (0.65) | 0.675 (0.57) | 0.642 (0.75) | 0.530 (0.35) | 0.647 (0.61) | 0.655 (0.60) | 0.354 (0.12) |
 | dpo | 0.685 (0.83) | 0.535 (0.80) | 0.602 (0.79) | 0.432 (0.78) | 0.677 (0.80) | 0.605 (0.86) | 0.487 (0.32) | 0.621 (0.72) | 0.748 (0.58) | 0.248 (0.13) |
 | instruct | 0.692 (0.83) | 0.536 (0.80) | 0.612 (0.80) | 0.441 (0.78) | 0.684 (0.81) | 0.617 (0.86) | 0.482 (0.31) | 0.639 (0.72) | 0.745 (0.56) | 0.256 (0.12) |
 | qwen-base | 0.414 (0.51) | 0.243 (0.61) | 0.070 (0.60) | 0.022 (0.69) | 0.326 (0.39) | 0.133 (0.39) | 0.238 (0.12) | 0.080 (0.12) | 0.780 (0.61) | 0.152 (0.37) |
 | qwen-chat | 0.602 (0.53) | 0.485 (0.60) | 0.090 (0.61) | 0.058 (0.64) | 0.399 (0.38) | 0.343 (0.42) | 0.372 (0.15) | 0.178 (0.09) | 0.826 (0.59) | 0.172 (0.16) |
 
-OLMo 2 1B's ROOM-W lean is 0.731 at pretraining 3.0T and stays between 0.644 and 0.731 through Instruct; the largest step between adjacent stages is 0.077, from mid-training 26B to the end of mid-training (209.8 held; Muse's 209.15, that SFT would be the largest step, failed). THIRD, a described man in the same room, is 0.721 at pretraining 3.0T, 0.010 from ROOM-W (209.16 held). In Qwen the first-person lean rises from Base to chat by 0.188 (209.9, that they differ by under 0.15, failed), while THIRD is 0.780 and 0.826. Inside Qwen's chat template, the forced choice on ROOM-W gives 0.805, the same as the free answers' 0.806 (209.14, that it would exceed them by 0.10, failed). Source: `r1` and `r1c_room_w` in [report209.json](report209.json), from the `r1r3-<stage>.json` records.
+OLMo 2 1B's ROOM-W lean is 0.731 at pretraining 3.0T and stays between 0.683 and 0.736 through Instruct; the largest step between adjacent stages is 0.054, from the end of mid-training to SFT (209.8 held; Muse's 209.15, that SFT would be the largest step, held). THIRD, a described man in the same room, is 0.721 at pretraining 3.0T, 0.010 from ROOM-W (209.16 held). In Qwen the first-person lean rises from Base to chat by 0.188 (209.9, that they differ by under 0.15, failed), while THIRD is 0.780 and 0.826. Inside Qwen's chat template, the forced choice on ROOM-W gives 0.805, the same as the free answers' 0.806 (209.14, that it would exceed them by 0.10, failed). Source: `r1` and `r1c_room_w` in [report209.json](report209.json), from the `r1r3-<stage>.json` records.
 
 OBJECT ("Imagine a ladder in a quiet, sunny room ... Right now it is") is context for how much "sitting" the frame gets for a thing with no posture: at Qwen3.5-4B its s is 0.172 against ROOM-W's 0.602, so the headline is not an idiom about things resting in rooms.
 
 ## Unscored context (exploratory)
 
-R3, the internal posture coordinate, is scored only for 209.6. At OLMo 2 1B's checkpoints, each against its own told poles, ROOM-W and NOBODY both sit near the sitting pole at pretraining 3.0T and from SFT on (c 0.76 to 0.93), NOBODY is near 0 at mid-training 26B, and both are below zero at the end of mid-training; Qwen3.5-4B-Base's posture axis failed its held-out check (0.825) and is not read. These values are in [report209.md](report209.md) under "R3 scored coordinates" and were not registered as predictions.
+R3, the internal posture coordinate, is scored only for 209.6. At OLMo 2 1B's checkpoints, each against its own told poles, ROOM-W and NOBODY both sit near the sitting pole at pretraining 3.0T and from SFT on (c 0.76 to 0.93), NOBODY is near 0 at mid-training 26B and at the end of mid-training while ROOM-W stays near the sitting pole there (c 0.97; on the wrong `main` checkpoint both were below zero, Amendment 2); Qwen3.5-4B-Base's posture axis failed its held-out check (0.825) and is not read. These values are in [report209.md](report209.md) under "R3 scored coordinates" and were not registered as predictions.
 
 ## Readers
 
