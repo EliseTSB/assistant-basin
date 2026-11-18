@@ -32,6 +32,17 @@ Predictions and amendments are recorded in [`PREDICTIONS.md`](PREDICTIONS.md). I
 > backend, and only when a model is split across two A770s. Single-card runs were clean there, and the author did not
 > bisect. We run PyTorch on one card, and no part here has been rerun on another driver, so nothing we have published
 > separates the card from its driver.
+>
+> **Known issue, found 2026-11-17: OLMo 2 1B's `main` is not the Instruct line's base.** Parts 205, 206 and 209 used
+> `allenai/OLMo-2-0425-1B` at `main` (a1847dff) as the "mid-training end" stage, following the model card. `main` is
+> from a different training run: on embedding rows 1000 to 4999 it correlates 0.008 with the 3.0T pretraining
+> checkpoint, the 26B mid-training checkpoint and Instruct, while the 26B checkpoint and the real mid-training end
+> (`stage2-ingredient3-step23852-tokens51B`, f83cd641, SFT's parent) correlate 1.000 with Instruct. Part 15 had found
+> this, and Parts 85, 95, 99 and 133 used f83cd641; Parts 205, 206 and 209 did not. Every comparison through their
+> mid-training-end stage is between two unrelated models, so five registered verdicts are unresolved until that stage
+> is rerun on f83cd641: 205.3 (failed), 206.7 (held), 206.12 (failed), 209.8 (held) and 209.15 (failed). 205.1 and
+> 206.2 count stages and come out the same whatever that stage shows. Numbers that do not involve that stage are
+> unaffected. Each part will get a dated amendment when it is rerun.
 
 ## The short version
 
