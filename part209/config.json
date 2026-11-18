@@ -28,9 +28,9 @@
     {
      "stage": "midtrain-end",
      "model_id": "allenai/OLMo-2-0425-1B",
-     "revision": "a1847dff35000b4271fa70afc5db10fd29fedbdf",
+     "revision": "f83cd641d4f00954eb25c781e0ac360debb3239e",
      "chat": false,
-     "note": "main, the released base model; the 1B was not merged, so this is the end of the same run as 1c3599f7"
+     "note": "stage2-ingredient3-step23852-tokens51B, SFT's parent (Amendment 2, 2026-11-18). Was main (a1847dff), which is a different training run."
     },
     {
      "stage": "sft",
