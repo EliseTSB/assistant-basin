@@ -18,7 +18,7 @@ from typing import Any
 import atlas_collect_fast2 as atlas
 import part60.gen60 as gen60
 
-CORPUS = Path('/mnt/c/Users/alexa/neuron-probe-gpu/qwen35/pile10k.jsonl')
+CORPUS = Path('/mnt/c/Users/<user>/neuron-probe-gpu/qwen35/pile10k.jsonl')
 CORPUS_SIZE = 63_385_283
 CORPUS_SHA256_PREFIX = '56ad98d5a82b2bb4'
 CAPACITIES = {'top': 36, 'random': 18, 'weak': 9}

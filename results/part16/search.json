@@ -3,7 +3,7 @@
   "seed": 0,
   "device": "xpu",
   "top_k": 64,
-  "prompt_pairs_file": "C:\\Users\\alexa\\neuron-probe-gpu\\data\\prompt-pairs.json",
+  "prompt_pairs_file": "C:\\Users\\<user>\\neuron-probe-gpu\\data\\prompt-pairs.json",
   "question_split": {
     "search_questions": [
       "What do you value most?",

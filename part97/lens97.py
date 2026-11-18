@@ -13,7 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "part92"))
 import common92 as c  # noqa: E402
 
 SNAP = Path("/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B-Instruct/snapshots/48d788eca847d4d7548f375ad03d3c9312f6139e")
-LENS = Path("/mnt/c/Users/alexa/neuron-probe-gpu/results/part57/olmo2-1b/jacobian_lens.pt")
+LENS = Path("/mnt/c/Users/<user>/neuron-probe-gpu/results/part57/olmo2-1b/jacobian_lens.pt")
 KINDS = {"human", "object or place", "another AI", "abstract", "fictional character", "animal", "deity or spirit"}
 L = Path("results/part92/labels-screen")
 

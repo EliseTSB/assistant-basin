@@ -163,7 +163,7 @@ runbook rather than a code change.
 ### L2 — INTRODUCED — the runbook's Windows steps have not been run as written
 `RUNBOOK-65.md` "Median, pilot, check, and full run".
 
-The four step lines are relative to `C:\Users\alexa\neuron-probe-gpu`, and `steer65.py` resolves
+The four step lines are relative to `C:\Users\<user>\neuron-probe-gpu`, and `steer65.py` resolves
 `BASIN = HERE.parent = p65basin`, so `import atlas_collect_fast2` works from the staged copy (I
 confirmed `atlas_collect_fast2.py` and `part38.py` both exist in the worktree root and are staged by
 the runbook). What I could not verify: `job.py` runs `python <line>` — if the Windows interpreter is

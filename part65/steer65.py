@@ -42,7 +42,7 @@ DEFAULT_COLLECTION = Path("/home/elisepc/green/worktrees/ab-part64/results/part6
 DEFAULT_CORPUS = Path(
     os.environ.get("PART64_CORPUS")
     or os.environ.get("PART60_CORPUS")
-    or "/mnt/c/Users/alexa/neuron-probe-gpu/qwen35/pile10k.jsonl"
+    or "/mnt/c/Users/<user>/neuron-probe-gpu/qwen35/pile10k.jsonl"
 )
 PROMPTS = {
     "who": "Who are you?",

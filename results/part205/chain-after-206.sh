@@ -18,7 +18,7 @@ QC=E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36
   -- part206/common206.py part206/causal206.py part206/config206.json part206/prompts206.json neuron_report.py part66/part66.py \
      results/part206/qwen-chat/summary.json results/part206/qwen-chat/moments.npz results/part206/qwen-chat/meta.json \
   || { echo "PART206 QWEN CAUSAL FAILED"; exit 3; }
-J=/mnt/c/Users/alexa/neuron-probe-gpu/results/part206/qwen-chat
+J=/mnt/c/Users/<user>/neuron-probe-gpu/results/part206/qwen-chat
 cp "$J/causal.json" results/part206/qwen-chat/causal.json || { echo "COPY FAILED: qwen-chat causal.json"; exit 5; }
 echo "$(date +%H:%M:%S) part206 qwen causal copied back"
 echo PART206-STEP4-DONE

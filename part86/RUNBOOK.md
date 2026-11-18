@@ -6,12 +6,12 @@ already in `p86\screen` is the dry run (code 6db5881, no observer): move it to `
 
 Copy `screen86.py`, `common86.py`, `triage86.py`, `blind86.py`, `verify86.py`, `audit86.py`, `replay86.py`, `test86.py`,
 `test_audit86.py`, `test_replay86.py`, `mutate86.py`, `golden-verdicts.json`, `READER-BRIEF.md`, and `READER-BRIEF-VERIFY.md` to
-`C:\Users\alexa\neuron-probe-gpu\part86\`. The repository-level `neuron_report.py` and `part84` package must also be
+`C:\Users\<user>\neuron-probe-gpu\part86\`. The repository-level `neuron_report.py` and `part84` package must also be
 present beside `part86` for the isolated mutation runner. Copy repository-level `observe.py` and `test_observe.py` beside
-`neuron_report.py` in `C:\Users\alexa\neuron-probe-gpu\`. Screen configs hash generation-path files
+`neuron_report.py` in `C:\Users\<user>\neuron-probe-gpu\`. Screen configs hash generation-path files
 (`common86.py`, `screen86.py`, `observe.py`, and `neuron_report.py`), calibration text, versions, dose, dtype, median, and
 effective generation settings. Blind scoring and verification write separate manifests with their own code hashes. The
-calibration file remains at `C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt`; supply it with `--calib`.
+calibration file remains at `C:\Users\<user>\neuron-probe-gpu\p66basin\neuronary-calib.txt`; supply it with `--calib`.
 
 The job runner reads each line of `steps.txt` and invokes Python with that line as arguments. Keep paths bare and do
 not add quotes. It logs to `progress.log`, holds a single-run lock, stops a step below 2 GB available physical RAM,
@@ -21,13 +21,13 @@ use it when a layer needs a clean restart. Without reset, orphan batch fragments
 
 ## 0. Tests on the GPU box
 
-Run from `C:\Users\alexa\neuron-probe-gpu` before any screen work:
+Run from `C:\Users\<user>\neuron-probe-gpu` before any screen work:
 
 ```text
 set PART86_GPU_STRICT=1
-C:\Users\alexa\jlens-tools\.venv\Scripts\python.exe -I -B part86\test86.py
-C:\Users\alexa\jlens-tools\.venv\Scripts\python.exe -I -B part86\test_audit86.py
-C:\Users\alexa\jlens-tools\.venv\Scripts\python.exe -I -B test_observe.py
+C:\Users\<user>\jlens-tools\.venv\Scripts\python.exe -I -B part86\test86.py
+C:\Users\<user>\jlens-tools\.venv\Scripts\python.exe -I -B part86\test_audit86.py
+C:\Users\<user>\jlens-tools\.venv\Scripts\python.exe -I -B test_observe.py
 ```
 
 With `PART86_GPU_STRICT=1`, a missing torch or transformers import raises an error instead of allowing model tests to
@@ -36,7 +36,7 @@ skip. The test suite is CPU-only and uses a tiny Qwen-style model; it does not d
 Before any GPU time, run the mutation audit from the job folder root:
 
 ```text
-C:\Users\alexa\jlens-tools\.venv\Scripts\python.exe -I -B part86\mutate86.py --jobs 4
+C:\Users\<user>\jlens-tools\.venv\Scripts\python.exe -I -B part86\mutate86.py --jobs 4
 ```
 
 Proceed only when the final line says `MUTATE86: 67/67 killed; all killed`. A stale exact replacement, a skipped test,
@@ -44,10 +44,10 @@ or a surviving mutation exits nonzero and blocks the launch.
 
 ## 1. Limited timing warmup (early estimate only)
 
-In `C:\Users\alexa\neuron-probe-gpu\steps.txt`, put this one line:
+In `C:\Users\<user>\neuron-probe-gpu\steps.txt`, put this one line:
 
 ```text
-C:\Users\alexa\neuron-probe-gpu\part86\screen86.py --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\alexa\neuron-probe-gpu\p86\pilot-time --layers 22 --limit 256 --batch-size 64 --device xpu
+C:\Users\<user>\neuron-probe-gpu\part86\screen86.py --calib C:\Users\<user>\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\<user>\neuron-probe-gpu\p86\pilot-time --layers 22 --limit 256 --batch-size 64 --device xpu
 ```
 
 Start the normal `job.py` task. Confirm after one minute that the warmup is still running and `progress.log` has no
@@ -61,7 +61,7 @@ group has 38,912 answers and must project below six hours (`rate > 1.8015 answer
 Use a fresh output directory and set this one-line `steps.txt`:
 
 ```text
-C:\Users\alexa\neuron-probe-gpu\part86\screen86.py --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\alexa\neuron-probe-gpu\p86\screen --layers 22 --batch-size 64 --device xpu
+C:\Users\<user>\neuron-probe-gpu\part86\screen86.py --calib C:\Users\<user>\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\<user>\neuron-probe-gpu\p86\screen --layers 22 --batch-size 64 --device xpu
 ```
 
 The full pilot is 9,216 neurons plus 512 random directions, 9,728 answers in total. At run start the code asserts the
@@ -80,13 +80,13 @@ and 512 random). Before starting the other layers, run the independent trace aud
 overrides:
 
 ```text
-python -I -B C:\Users\alexa\neuron-probe-gpu\part86\audit86.py screen C:\Users\alexa\neuron-probe-gpu\p86\screen --layers 22 --pilot
+python -I -B C:\Users\<user>\neuron-probe-gpu\part86\audit86.py screen C:\Users\<user>\neuron-probe-gpu\p86\screen --layers 22 --pilot
 ```
 
 Require the exact line `AUDIT86 screen: PASS`. Recompute triage with:
 
 ```text
-python C:\Users\alexa\neuron-probe-gpu\part86\triage86.py --screen-dir C:\Users\alexa\neuron-probe-gpu\p86\screen --out C:\Users\alexa\neuron-probe-gpu\p86\triage.json
+python C:\Users\<user>\neuron-probe-gpu\part86\triage86.py --screen-dir C:\Users\<user>\neuron-probe-gpu\p86\screen --out C:\Users\<user>\neuron-probe-gpu\p86\triage.json
 ```
 
 If any pilot gate fails, do not launch the other layers; amend the design in writing first. A limited `--limit` screen
@@ -99,19 +99,19 @@ Use the same output directory so each layer's metadata and completed batches can
 about 2.82 hours per four-layer group.
 
 ```text
-C:\Users\alexa\neuron-probe-gpu\part86\screen86.py --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\alexa\neuron-probe-gpu\p86\screen --layers 10-13 --batch-size 64 --device xpu
+C:\Users\<user>\neuron-probe-gpu\part86\screen86.py --calib C:\Users\<user>\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\<user>\neuron-probe-gpu\p86\screen --layers 10-13 --batch-size 64 --device xpu
 ```
 
 ```text
-C:\Users\alexa\neuron-probe-gpu\part86\screen86.py --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\alexa\neuron-probe-gpu\p86\screen --layers 14-17 --batch-size 64 --device xpu
+C:\Users\<user>\neuron-probe-gpu\part86\screen86.py --calib C:\Users\<user>\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\<user>\neuron-probe-gpu\p86\screen --layers 14-17 --batch-size 64 --device xpu
 ```
 
 ```text
-C:\Users\alexa\neuron-probe-gpu\part86\screen86.py --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\alexa\neuron-probe-gpu\p86\screen --layers 18-21 --batch-size 64 --device xpu
+C:\Users\<user>\neuron-probe-gpu\part86\screen86.py --calib C:\Users\<user>\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\<user>\neuron-probe-gpu\p86\screen --layers 18-21 --batch-size 64 --device xpu
 ```
 
 ```text
-C:\Users\alexa\neuron-probe-gpu\part86\screen86.py --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\alexa\neuron-probe-gpu\p86\screen --layers 23-26 --batch-size 64 --device xpu
+C:\Users\<user>\neuron-probe-gpu\part86\screen86.py --calib C:\Users\<user>\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\<user>\neuron-probe-gpu\p86\screen --layers 23-26 --batch-size 64 --device xpu
 ```
 
 If code, library versions, dtype, dose, or median changes, resume refuses. Use `--reset-layer N` only when intentionally
@@ -120,14 +120,14 @@ discarding that layer's partial and completed data, and then rerun its full comm
 After all 17 layers finish, run the registered-size audit before scoring:
 
 ```text
-python -I -B C:\Users\alexa\neuron-probe-gpu\part86\audit86.py screen C:\Users\alexa\neuron-probe-gpu\p86\screen --layers 10-26
+python -I -B C:\Users\<user>\neuron-probe-gpu\part86\audit86.py screen C:\Users\<user>\neuron-probe-gpu\p86\screen --layers 10-26
 ```
 
 Require the exact line `AUDIT86 screen: PASS`. Then regenerate triage counts and prepare blind items. Keep the key in a separate private folder:
 
 ```text
-python C:\Users\alexa\neuron-probe-gpu\part86\triage86.py --screen-dir C:\Users\alexa\neuron-probe-gpu\p86\screen --out C:\Users\alexa\neuron-probe-gpu\p86\triage.json
-python C:\Users\alexa\neuron-probe-gpu\part86\blind86.py prepare --screen-dir C:\Users\alexa\neuron-probe-gpu\p86\screen --triage C:\Users\alexa\neuron-probe-gpu\p86\triage.json --items C:\Users\alexa\neuron-probe-gpu\p86\reader-input\blind-items.jsonl --key C:\Users\alexa\neuron-probe-gpu\p86\private\blind-key.json --chunk-size 500
+python C:\Users\<user>\neuron-probe-gpu\part86\triage86.py --screen-dir C:\Users\<user>\neuron-probe-gpu\p86\screen --out C:\Users\<user>\neuron-probe-gpu\p86\triage.json
+python C:\Users\<user>\neuron-probe-gpu\part86\blind86.py prepare --screen-dir C:\Users\<user>\neuron-probe-gpu\p86\screen --triage C:\Users\<user>\neuron-probe-gpu\p86\triage.json --items C:\Users\<user>\neuron-probe-gpu\p86\reader-input\blind-items.jsonl --key C:\Users\<user>\neuron-probe-gpu\p86\private\blind-key.json --chunk-size 500
 ```
 
 Preparation includes all changed answers plus seed-8686 samples of up to 200 kept and 200 broken answers from each of
@@ -145,7 +145,7 @@ completed. For that reread, have reader two label every reader-1 chunk and pass 
 Score only after both passes are complete:
 
 ```text
-python C:\Users\alexa\neuron-probe-gpu\part86\blind86.py score --screen-dir C:\Users\alexa\neuron-probe-gpu\p86\screen --items C:\Users\alexa\neuron-probe-gpu\p86\reader-input\blind-items.jsonl --key C:\Users\alexa\neuron-probe-gpu\p86\private\blind-key.json --labels C:\Users\alexa\neuron-probe-gpu\p86\blind-labels.jsonl --labels2 C:\Users\alexa\neuron-probe-gpu\p86\blind-labels-2.jsonl --out C:\Users\alexa\neuron-probe-gpu\p86\blind-results.json
+python C:\Users\<user>\neuron-probe-gpu\part86\blind86.py score --screen-dir C:\Users\<user>\neuron-probe-gpu\p86\screen --items C:\Users\<user>\neuron-probe-gpu\p86\reader-input\blind-items.jsonl --key C:\Users\<user>\neuron-probe-gpu\p86\private\blind-key.json --labels C:\Users\<user>\neuron-probe-gpu\p86\blind-labels.jsonl --labels2 C:\Users\<user>\neuron-probe-gpu\p86\blind-labels-2.jsonl --out C:\Users\<user>\neuron-probe-gpu\p86\blind-results.json
 ```
 
 The scorer re-runs triage, validates the item-to-screen answer mapping, checks generation-path provenance, and refuses
@@ -173,7 +173,7 @@ bind its agreement artifact to the selected set. Verification scoring accepts th
 matches the originating screen manifest, primary-label file, and selected-set hashes:
 
 ```text
-python C:\Users\alexa\neuron-probe-gpu\part86\blind86.py score --screen-dir C:\Users\alexa\neuron-probe-gpu\p86\screen --items C:\Users\alexa\neuron-probe-gpu\p86\reader-input\blind-items.jsonl --key C:\Users\alexa\neuron-probe-gpu\p86\private\blind-key.json --labels C:\Users\alexa\neuron-probe-gpu\p86\blind-labels.jsonl --labels2 C:\Users\alexa\neuron-probe-gpu\p86\blind-labels-2.jsonl --selected-set C:\Users\alexa\neuron-probe-gpu\p86\picked20.json --out C:\Users\alexa\neuron-probe-gpu\p86\blind-results-for-verify.json
+python C:\Users\<user>\neuron-probe-gpu\part86\blind86.py score --screen-dir C:\Users\<user>\neuron-probe-gpu\p86\screen --items C:\Users\<user>\neuron-probe-gpu\p86\reader-input\blind-items.jsonl --key C:\Users\<user>\neuron-probe-gpu\p86\private\blind-key.json --labels C:\Users\<user>\neuron-probe-gpu\p86\blind-labels.jsonl --labels2 C:\Users\<user>\neuron-probe-gpu\p86\blind-labels-2.jsonl --selected-set C:\Users\<user>\neuron-probe-gpu\p86\picked20.json --out C:\Users\<user>\neuron-probe-gpu\p86\blind-results-for-verify.json
 ```
 
 Run a one-neuron timing chunk first; it prints the measured per-neuron time and projected total for 20. Each neuron is
@@ -181,7 +181,7 @@ stored as `L<layer>_N<neuron>.json` in the output directory and is skipped on re
 dtype, dose, calibration, screen median, and config provenance.
 
 ```text
-C:\Users\alexa\neuron-probe-gpu\part86\verify86.py run --picked C:\Users\alexa\neuron-probe-gpu\p86\picked20.json --screen-dir C:\Users\alexa\neuron-probe-gpu\p86\screen --blind-key C:\Users\alexa\neuron-probe-gpu\p86\private\blind-key.json --blind-labels C:\Users\alexa\neuron-probe-gpu\p86\blind-labels.jsonl --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\alexa\neuron-probe-gpu\p86\verify86 --max-neurons 1 --device xpu
+C:\Users\<user>\neuron-probe-gpu\part86\verify86.py run --picked C:\Users\<user>\neuron-probe-gpu\p86\picked20.json --screen-dir C:\Users\<user>\neuron-probe-gpu\p86\screen --blind-key C:\Users\<user>\neuron-probe-gpu\p86\private\blind-key.json --blind-labels C:\Users\<user>\neuron-probe-gpu\p86\blind-labels.jsonl --calib C:\Users\<user>\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\<user>\neuron-probe-gpu\p86\verify86 --max-neurons 1 --device xpu
 ```
 
 If the projection is below six hours, the remaining neurons may run in one command by omitting `--max-neurons`. For a
@@ -192,7 +192,7 @@ each task performs one neuron's 264 answers and the command automatically skips 
 Before preparing or scoring verification, run the registered-size verification audit:
 
 ```text
-python -I -B C:\Users\alexa\neuron-probe-gpu\part86\audit86.py verify C:\Users\alexa\neuron-probe-gpu\p86\verify86
+python -I -B C:\Users\<user>\neuron-probe-gpu\part86\audit86.py verify C:\Users\<user>\neuron-probe-gpu\p86\verify86
 ```
 
 Require the exact line `AUDIT86 verify: PASS`. The audit must pass again after the final verification run and before scoring.
@@ -215,9 +215,9 @@ Prepare blind persona-claim items into a reader folder with the key in a separat
 inline into the tool-less reader, and do not share the key:
 
 ```text
-C:\Users\alexa\neuron-probe-gpu\part86\verify86.py prepare --input C:\Users\alexa\neuron-probe-gpu\p86\verify86 --picked C:\Users\alexa\neuron-probe-gpu\p86\picked20.json --items C:\Users\alexa\neuron-probe-gpu\p86\reader-input\verify-items.jsonl --key C:\Users\alexa\neuron-probe-gpu\p86\private\verify-key.json --chunk-size 500
-python -I -B C:\Users\alexa\neuron-probe-gpu\part86\audit86.py verify C:\Users\alexa\neuron-probe-gpu\p86\verify86
-C:\Users\alexa\neuron-probe-gpu\part86\verify86.py score --items C:\Users\alexa\neuron-probe-gpu\p86\reader-input\verify-items.jsonl --key C:\Users\alexa\neuron-probe-gpu\p86\private\verify-key.json --labels C:\Users\alexa\neuron-probe-gpu\p86\verify-labels.jsonl --labels2 C:\Users\alexa\neuron-probe-gpu\p86\verify-labels-2.jsonl --screen-score C:\Users\alexa\neuron-probe-gpu\p86\blind-results-for-verify.json --out C:\Users\alexa\neuron-probe-gpu\p86\verify-results.json
+C:\Users\<user>\neuron-probe-gpu\part86\verify86.py prepare --input C:\Users\<user>\neuron-probe-gpu\p86\verify86 --picked C:\Users\<user>\neuron-probe-gpu\p86\picked20.json --items C:\Users\<user>\neuron-probe-gpu\p86\reader-input\verify-items.jsonl --key C:\Users\<user>\neuron-probe-gpu\p86\private\verify-key.json --chunk-size 500
+python -I -B C:\Users\<user>\neuron-probe-gpu\part86\audit86.py verify C:\Users\<user>\neuron-probe-gpu\p86\verify86
+C:\Users\<user>\neuron-probe-gpu\part86\verify86.py score --items C:\Users\<user>\neuron-probe-gpu\p86\reader-input\verify-items.jsonl --key C:\Users\<user>\neuron-probe-gpu\p86\private\verify-key.json --labels C:\Users\<user>\neuron-probe-gpu\p86\verify-labels.jsonl --labels2 C:\Users\<user>\neuron-probe-gpu\p86\verify-labels-2.jsonl --screen-score C:\Users\<user>\neuron-probe-gpu\p86\blind-results-for-verify.json --out C:\Users\<user>\neuron-probe-gpu\p86\verify-results.json
 ```
 
 Verification reader items also have 500-row chunks and a seed-8687 10% second-reader sample. The second reader labels

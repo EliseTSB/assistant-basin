@@ -1,7 +1,7 @@
 loaded in 10s, xpu allocated 7.57 GB
-C:\Users\alexa\jlens-tools\.venv\Lib\site-packages\bitsandbytes\backends\triton\ops.py:28: FutureWarning: _check_is_size will be removed in a future PyTorch release along with guard_size_oblivious.     Use _check(i >= 0) instead.
+C:\Users\<user>\jlens-tools\.venv\Lib\site-packages\bitsandbytes\backends\triton\ops.py:28: FutureWarning: _check_is_size will be removed in a future PyTorch release along with guard_size_oblivious.     Use _check(i >= 0) instead.
   torch._check_is_size(blocksize)
-C:\Users\alexa\jlens-tools\.venv\Lib\site-packages\bitsandbytes\backends\triton\ops.py:108: FutureWarning: _check_is_size will be removed in a future PyTorch release along with guard_size_oblivious.     Use _check(i >= 0) instead.
+C:\Users\<user>\jlens-tools\.venv\Lib\site-packages\bitsandbytes\backends\triton\ops.py:108: FutureWarning: _check_is_size will be removed in a future PyTorch release along with guard_size_oblivious.     Use _check(i >= 0) instead.
   torch._check_is_size(blocksize)
 direction check: Paris 0.477, cat 0.041
 4441 requests to answer

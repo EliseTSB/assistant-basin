@@ -7,8 +7,8 @@
   "batch_size": 16,
   "pile_maximum_n2742": 19.125,
   "pile_maximum_records": {
-    "json": "C:\\Users\\alexa\\neuron-probe-gpu\\p66basin\\results\\part26\\source.json",
-    "npz": "C:\\Users\\alexa\\neuron-probe-gpu\\p66basin\\results\\part26\\source.npz"
+    "json": "C:\\Users\\<user>\\neuron-probe-gpu\\p66basin\\results\\part26\\source.json",
+    "npz": "C:\\Users\\<user>\\neuron-probe-gpu\\p66basin\\results\\part26\\source.npz"
   },
   "down_proj_column_norms": {
     "layer": 22,

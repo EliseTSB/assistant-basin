@@ -56,7 +56,7 @@ reason, and the pure-logic tests must run without torch).
    Report 37.5, 37.6, 37.10 as HELD and 37.7 as NOT RUN (base not cached), with the reason.
 4. `part37/test_part37.py`: logic tests (records, length matching, frames, screen, folds, scoring rules) that run
    without torch, plus tiny-model tests (skip with a reason when torch is absent).
-5. `part37/RUNBOOK.md`: staging into `C:\Users\alexa\neuron-probe-gpu\p37basin`, the `steps.txt` lines for the pilot
+5. `part37/RUNBOOK.md`: staging into `C:\Users\<user>\neuron-probe-gpu\p37basin`, the `steps.txt` lines for the pilot
    and then the full run, the copy back, and the host analysis command. One model in memory at a time; free it before
    loading the next.
 

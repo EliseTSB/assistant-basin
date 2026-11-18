@@ -1,6 +1,6 @@
 import json,sys,random
 import numpy as np
-G='/mnt/c/Users/alexa/neuron-probe-gpu/results/part136/pilot-effects-b16/effects.jsonl'
+G='/mnt/c/Users/<user>/neuron-probe-gpu/results/part136/pilot-effects-b16/effects.jsonl'
 rows=[json.loads(l) for l in open(G,encoding='utf-8')]
 print(len(rows),list(rows[0].keys()))
 by={}

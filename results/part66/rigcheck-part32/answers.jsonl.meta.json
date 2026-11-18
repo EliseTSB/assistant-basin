@@ -35,7 +35,7 @@
     "11:8868": 0.46480887276785715,
     "29:776": -4.100935436430431
   },
-  "steering_source": "C:\\Users\\alexa\\neuron-probe-gpu\\p66basin\\results\\part25\\search-google-removal.json",
+  "steering_source": "C:\\Users\\<user>\\neuron-probe-gpu\\p66basin\\results\\part25\\search-google-removal.json",
   "steering_source_sha256": "847d30f81231f07917adffbdc6d594999539bf72197702df251cc680752b3f09",
   "temperature": 0.7,
   "top_p": 0.95,
@@ -45,5 +45,5 @@
   "gen_batch": 4,
   "samples_requested": 24,
   "prompt_builder": "neuron_report.build_prompt(tok, question, False), Part 25 chat-template path",
-  "out_path": "C:\\Users\\alexa\\neuron-probe-gpu\\p66basin\\results\\part66\\rigcheck-part32\\answers.jsonl"
+  "out_path": "C:\\Users\\<user>\\neuron-probe-gpu\\p66basin\\results\\part66\\rigcheck-part32\\answers.jsonl"
 }

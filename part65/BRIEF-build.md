@@ -9,7 +9,7 @@ Read first: ../PART65-DESIGN.md (the registered design; it is the contract, chan
 and ../part64/collect64_model.py (how the 500 dev units and their control directions are defined: atlas seed 5601, pool
 100 per layer, `atlas_collect_fast2.generate_controls`), ../part60/gen60.py and ../part63/ (how a Haiku batch reader is
 built, thinking disabled, through the paid-action lifecycle in ../paidaction/), ../gpu_job_runner.py and
-/mnt/c/Users/alexa/neuron-probe-gpu/job.py (how a step runs on the A770 from Windows Python: steps.txt, progress.log,
+/mnt/c/Users/<user>/neuron-probe-gpu/job.py (how a step runs on the A770 from Windows Python: steps.txt, progress.log,
 the RAM guard, copy engine off), and ../part64/REPORT-build.md for the house testing style.
 
 Build these, each with a module docstring stating what it reads and writes:

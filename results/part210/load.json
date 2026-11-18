@@ -14,7 +14,7 @@
       },
       "model": "E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
       "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
-      "out_dir": "C:\\Users\\alexa\\neuron-probe-gpu\\results\\part210",
+      "out_dir": "C:\\Users\\<user>\\neuron-probe-gpu\\results\\part210",
       "argv": [
         "--device",
         "xpu",

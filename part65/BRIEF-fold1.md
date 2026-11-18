@@ -20,11 +20,11 @@ report and say which tests you could not run; Claude runs them on the host after
 - **H1, judge transport.** In `judge65.py`, build the SSL context the way `part63/reader63.py`'s `context()` does (the
   mitm CA bundle at `~/.mitmproxy/ca-bundle-combined.crt` when it exists, else the default) and pass `context=` to every
   `urlopen`. Read the key from `ANTHROPIC_CREDITS_KEY`, falling back to `ANTHROPIC_API_KEY`; the error names both.
-- **H2, paths.** `DEFAULT_CORPUS` becomes the canonical Part 60 corpus, `/mnt/c/Users/alexa/neuron-probe-gpu/qwen35/pile10k.jsonl`,
+- **H2, paths.** `DEFAULT_CORPUS` becomes the canonical Part 60 corpus, `/mnt/c/Users/<user>/neuron-probe-gpu/qwen35/pile10k.jsonl`,
   overridable by `PART64_CORPUS` (and keep `PART60_CORPUS` as a second override). Both `--collection` and `--corpus`
   stay arguments. Write `part65/RUNBOOK-65.md`: on the A770 the steps run under Windows Python from
-  `C:\Users\alexa\neuron-probe-gpu` via `job.py` (each line of `steps.txt` runs as `python <line>` in that folder).
-  Stage the worktree as `C:\Users\alexa\neuron-probe-gpu\p65basin` (copy `part60/`, `part64/`, `part65/`,
+  `C:\Users\<user>\neuron-probe-gpu` via `job.py` (each line of `steps.txt` runs as `python <line>` in that folder).
+  Stage the worktree as `C:\Users\<user>\neuron-probe-gpu\p65basin` (copy `part60/`, `part64/`, `part65/`,
   `atlas_collect_fast2.py` and anything else `steer65` imports, plus `results/part64/collection.jsonl` from the Part 64
   worktree), the way Part 64 scoring used `p64basin`. Give the exact pilot step line with relative Windows paths
   (`p65basin\part65\steer65.py --collection p65basin\results\part64\collection.jsonl --corpus qwen35\pile10k.jsonl ...`),

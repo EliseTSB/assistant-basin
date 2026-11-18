@@ -28,7 +28,7 @@ Exact test count: 12 tests ran, 12 passed. Each of B1–B6 was applied to a thro
 
 - The registered posting rule does not specify what to do if 87.3 holds but 87.5 fails. Keep that case with Elise for a decision; the build does not infer one.
 - No open question changes the registered arms, samples, doses, or thresholds.
-- The neuronary calibration text is external to this checkout. The runbook uses the existing Windows copy at C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt; its SHA-256 is recorded in doses.json when measure runs.
+- The neuronary calibration text is external to this checkout. The runbook uses the existing Windows copy at C:\Users\<user>\neuron-probe-gpu\p66basin\neuronary-calib.txt; its SHA-256 is recorded in doses.json when measure runs.
 - Per the brief, no Qwen3.5-4B load or A770 generation was run here. Windows job-runner execution, GPU timings, actual medians/doses, and the Haiku labels remain to be produced and checked on the host.
 - The 87B matching regex is deliberately the registered lexical rule. The hand-read file is a review aid; the scorer does not turn reader judgments into the Google rate.
 

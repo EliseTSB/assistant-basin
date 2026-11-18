@@ -549,7 +549,7 @@ def _run_loaded(args, out_dir, batch_root, calibration_text, calibration_hash, t
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--calib", required=True, help="calibration text path; on WSL use /mnt/c/Users/alexa/neuron-probe-gpu/p66basin/neuronary-calib.txt")
+    ap.add_argument("--calib", required=True, help="calibration text path; on WSL use /mnt/c/Users/<user>/neuron-probe-gpu/p66basin/neuronary-calib.txt")
     ap.add_argument("--out", required=True, help="screen output directory")
     ap.add_argument("--layers", type=parse_layers, default=parse_layers("10-26"))
     ap.add_argument("--batch-size", type=int, default=16)

@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parent
 CONCEPTS_PATH = ROOT / "data" / "part35-concepts.json"
 RESULTS_ROOT = ROOT / "results" / "part42"
 SCREEN_DEFAULT = Path(
-    "/mnt/c/Users/alexa/neuron-probe-gpu/results/part35/"
+    "/mnt/c/Users/<user>/neuron-probe-gpu/results/part35/"
     "qwen-qwen3-1-7b/screen-floor-median.jsonl"
 )
 PART39_UNITS_DEFAULT = Path(

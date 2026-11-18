@@ -27,7 +27,7 @@ Read-only source discovery and review commands:
 - Environment/cache inspection showed HF_HOME, HF_HUB_CACHE, and TRANSFORMERS_CACHE unset. The check of /root/.cache/huggingface/hub returned PermissionError; later inspection was restricted to the accessible /mnt/e/neuron-probe/hf/hub cache.
 - ls -l, readlink -f, head -c 256, and ls -lh on the cached Instruct snapshot confirmed commit 48d788... and a complete 2.8 GiB model.safetensors blob. The base, SFT, and DPO repos had no snapshots in that cache.
 - importlib.util.find_spec reported no torch and no transformers.
-- No command accessed or modified C:\Users\alexa\neuron-probe-gpu; no model or judge API was run.
+- No command accessed or modified C:\Users\<user>\neuron-probe-gpu; no model or judge API was run.
 
 Validation commands and results:
 

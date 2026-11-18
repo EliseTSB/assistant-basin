@@ -15,7 +15,7 @@ Implemented `textfit17b.py fit-text` to reuse the Part 17 capture and produce a 
 
 ### Windows commands
 
-Run these in PowerShell from `C:\Users\alexa\neuron-probe-gpu`.
+Run these in PowerShell from `C:\Users\<user>\neuron-probe-gpu`.
 
 Smoke the text predictor on at most ten passages from each capture split. This writes a subset fit in a separate directory; run the full fit before the reader sequence.
 

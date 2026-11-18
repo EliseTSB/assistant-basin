@@ -2,7 +2,7 @@
 # gpu-chain3.sh — collect the OLMo 3 7B ladder on the A770 as each download lands (Claude fork, 2026-10-16).
 # For each model: wait for dl3.log to say it downloaded, wait for the previous GPU job to finish, write steps.txt,
 # start the NeuronProbeGPU task, wait for job.exit, copy the npz into out/. Logs to gpu-chain3.log.
-G=/mnt/c/Users/alexa/neuron-probe-gpu; S=/mnt/c/Windows/System32/schtasks.exe; cd /home/elisepc/neuron-probe
+G=/mnt/c/Users/<user>/neuron-probe-gpu; S=/mnt/c/Windows/System32/schtasks.exe; cd /home/elisepc/neuron-probe
 log() { echo "$(date +%H:%M:%S) $*" >> gpu-chain3.log; }
 wait_job() { until [ -f $G/job.exit ]; do sleep 10; done; }
 run() {  # $1 = steps text

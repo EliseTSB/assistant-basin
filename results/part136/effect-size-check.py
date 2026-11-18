@@ -1,6 +1,6 @@
 import json,base64
 import numpy as np
-G='/mnt/c/Users/alexa/neuron-probe-gpu/results/part136/pilot-effects-b16/effects.jsonl'
+G='/mnt/c/Users/<user>/neuron-probe-gpu/results/part136/pilot-effects-b16/effects.jsonl'
 b={}
 def band(l): return 'L0-22' if l<=22 else ('L23-23' if l==23 else 'L24-31')
 for l in open(G,encoding='utf-8'):

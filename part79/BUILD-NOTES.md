@@ -21,7 +21,7 @@ The requested negative checks were run one mutation at a time, restored after ea
 
 ## GPU folder copy list
 
-Read-only inspection of `/mnt/c/Users/alexa/neuron-probe-gpu/p66basin/` found `part66/part66.py`, `part66/score66.py`, `part78/part78.py`, `part78b/part78b.py`, and root `neuron_report.py`. The `part78/score78.py` dependency used by this build is absent there and must be copied from this repo. Copy the six files under `part79/` (including `__init__.py`) and `part78/score78.py` into their matching paths under that folder. Existing Part 66, Part 78 runner, Part 78b runner, and `neuron_report.py` files are already present. No files were copied to the GPU folder in this build.
+Read-only inspection of `/mnt/c/Users/<user>/neuron-probe-gpu/p66basin/` found `part66/part66.py`, `part66/score66.py`, `part78/part78.py`, `part78b/part78b.py`, and root `neuron_report.py`. The `part78/score78.py` dependency used by this build is absent there and must be copied from this repo. Copy the six files under `part79/` (including `__init__.py`) and `part78/score78.py` into their matching paths under that folder. Existing Part 66, Part 78 runner, Part 78b runner, and `neuron_report.py` files are already present. No files were copied to the GPU folder in this build.
 
 ## Limits / self-assessment
 

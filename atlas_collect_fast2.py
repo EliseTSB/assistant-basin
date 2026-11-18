@@ -26,7 +26,7 @@ import part38
 
 
 ROOT = Path(__file__).resolve().parent
-DEFAULT_DATA = Path("/mnt/c/Users/alexa/neuron-probe-gpu/qwen35/pile10k.jsonl")
+DEFAULT_DATA = Path("/mnt/c/Users/<user>/neuron-probe-gpu/qwen35/pile10k.jsonl")
 DEFAULT_OUT = ROOT / "results" / "atlas-qwen3-1.7b"
 DEFAULT_RANDOM_OUT = ROOT / "results" / "atlas-qwen3-1.7b-random-init"
 MODEL_ID = part38.MODEL_ID

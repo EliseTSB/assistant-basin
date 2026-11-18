@@ -41,7 +41,7 @@ These commands use the WSL worktree and the run directory `/home/elisepc/neuron-
    $WslRoot = "\\wsl.localhost\$Distro"
    $Repo = "$WslRoot\home\elisepc\green\worktrees\part1f"
    $Run = "$WslRoot\home\elisepc\neuron-climb-1f"
-   $Python = 'C:\Users\alexa\jlens-tools\.venv\Scripts\python.exe'
+   $Python = 'C:\Users\<user>\jlens-tools\.venv\Scripts\python.exe'
    $env:HF_HOME = 'E:\hf-cache'
    & $Python "$Repo\clef_batch_gpu.py" --requests "$Run\requests.jsonl" --answers "$Run\answers.jsonl" --limit 32 --batch 8 *> "$Run\clef-smoke.log"
    & $Python "$Repo\clef_batch_gpu.py" --requests "$Run\requests.jsonl" --answers "$Run\answers.jsonl" --batch 8 *> "$Run\clef-full.log"

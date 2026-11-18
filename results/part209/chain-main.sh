@@ -10,7 +10,7 @@ COPY="part209/run209.py part209/config.json part209/prompts209.json part209/refe
   "-I -B part209/run209.py --stage qwen-chat --out results/part209 --device xpu" \
   "-I -B part209/run209.py --stage qwen-chat --out results/part209 --device xpu --r2 --batch 32 --max-new-tokens 96" \
   -- $COPY || { echo "ARC STEPS FAILED"; exit 3; }
-J=/mnt/c/Users/alexa/neuron-probe-gpu/results/part209
+J=/mnt/c/Users/<user>/neuron-probe-gpu/results/part209
 for f in "$J"/*; do b=$(basename "$f"); case "$b" in pilot|smoke|smoke-d2) continue;; esac; cp -r "$f" results/part209/; done
 echo "$(date +%H:%M:%S) qwen results copied back: $(ls results/part209 | tr '\n' ' ')"
 PY='env HF_HOME=/mnt/e/neuron-probe/hf HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -I -B part209/run209.py'

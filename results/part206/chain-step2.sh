@@ -15,7 +15,7 @@ R="-I -B part206/record206.py --device xpu --out results/part206 --batch 4"
   "$R --stage qwen-chat --model-path $QC --pass gt" \
   -- part206/common206.py part206/record206.py part206/config206.json part206/prompts206.json neuron_report.py \
   || { echo "ARC STEPS FAILED"; exit 3; }
-J=/mnt/c/Users/alexa/neuron-probe-gpu/results/part206
+J=/mnt/c/Users/<user>/neuron-probe-gpu/results/part206
 for d in qwen-base qwen-chat; do cp -r "$J/$d" results/part206/ || { echo "COPY FAILED: $d"; exit 5; }; done
 echo "$(date +%H:%M:%S) qwen results copied back: $(ls results/part206 | tr '\n' ' ')"
 PY='env HF_HOME=/mnt/e/neuron-probe/hf HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -I -B part206/record206.py'

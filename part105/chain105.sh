@@ -4,7 +4,7 @@
 # Usage: part105/chain105.sh <marker file touched just before the scheduled task was started> <scratch dir>
 set -euo pipefail
 export SSL_CERT_FILE=$HOME/.mitmproxy/ca-bundle-combined.crt   # the labeller's HTTPS goes through the mitm proxy
-G=/mnt/c/Users/alexa/neuron-probe-gpu
+G=/mnt/c/Users/<user>/neuron-probe-gpu
 cd "$(dirname "$0")/.."
 marker=$1 scratch=$2
 until [ -f "$G/job.exit" ] && [ "$G/job.exit" -nt "$marker" ]; do sleep 20; done

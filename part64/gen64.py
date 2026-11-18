@@ -41,7 +41,7 @@ DEFAULT_ROOT = BASIN / "results" / "part64" / "gen64"
 MACHINE_WRITER_STAGE_LEDGER_DIR = Path("/home/elisepc/assistant-basin/results/part64/writer-stage")
 WRITER_STAGE_LEDGER_DIR = Path(os.environ.get(
     "PART64_TEST_WRITER_STAGE_LEDGER_DIR", str(MACHINE_WRITER_STAGE_LEDGER_DIR))).resolve()
-REGISTERED_CORPUS = Path("/mnt/c/Users/alexa/neuron-probe-gpu/qwen35/pile10k.jsonl")
+REGISTERED_CORPUS = Path("/mnt/c/Users/<user>/neuron-probe-gpu/qwen35/pile10k.jsonl")
 REGISTERED_CORPUS_SIZE = 63_385_283
 REGISTERED_CORPUS_SHA256_PREFIX = "56ad98d5a82b2bb4"
 REGISTERED_MODEL_REVISION = "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e"

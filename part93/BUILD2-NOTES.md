@@ -9,7 +9,7 @@ Test: `/home/elisepc/neuron-probe/.venv/bin/python -I -B part93/test93b.py` — 
 Run from the checked-out project root in PowerShell. The helper resolves the cached `main` snapshot under the requested hub root.
 
 ```powershell
-$Python = 'C:\Users\alexa\jlens-tools\.venv\Scripts\python.exe'
+$Python = 'C:\Users\<user>\jlens-tools\.venv\Scripts\python.exe'
 $Hub = 'E:\neuron-probe\hf\hub'
 function Get-HfSnapshot([string]$Repo) {
   $Cache = Join-Path $Hub ('models--' + $Repo.Replace('/', '--'))

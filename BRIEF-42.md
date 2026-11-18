@@ -8,7 +8,7 @@ part42.py, subcommands `read` and `score`:
   /mnt/e/neuron-probe/hf/hub/models--Qwen--<name>/snapshots/<only dir>); --lens (default
   /home/elisepc/neuron-probe/jlens/<qwen3-1.7b|qwen3.5-4b>/jlens/Salesforce-wikitext/<Qwen3-1.7B|Qwen3.5-4B>_jacobian_lens.pt);
   --units: for 1.7B, the rank-1 unit per concept from --screen (default
-  /mnt/c/Users/alexa/neuron-probe-gpu/results/part35/qwen-qwen3-1-7b/screen-floor-median.jsonl; reuse part35/part40's
+  /mnt/c/Users/<user>/neuron-probe-gpu/results/part35/qwen-qwen3-1-7b/screen-floor-median.jsonl; reuse part35/part40's
   rank-1 picker logic: read part40.py in /home/elisepc/green/worktrees/ab-part40-41-build for how it picks) plus the
   wizard unit L19 N4826; for 4B, the fixed list (6,753) (7,1169) (11,8868) (29,776) (22,2742). Plus 20 seeded random
   units (seed 4201) drawn from the same set of layers as the targets.

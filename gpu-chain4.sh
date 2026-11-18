@@ -4,7 +4,7 @@
 # "<repo> complete" (retry pass); it is given up on after the retry pass's third FAILED. Instruct and the two agent
 # models also get sysgen8_gpu.py (48 answers per condition, plus raw_nosys). The base comes last (its main pass
 # failed on a DNS blip at 02:08 and only the retry pass, which starts after the main unit, completes it).
-G=/mnt/c/Users/alexa/neuron-probe-gpu; S=/mnt/c/Windows/System32/schtasks.exe; cd /home/elisepc/neuron-probe
+G=/mnt/c/Users/<user>/neuron-probe-gpu; S=/mnt/c/Windows/System32/schtasks.exe; cd /home/elisepc/neuron-probe
 log() { echo "$(date +%H:%M:%S) $*" >> gpu-chain4.log; }
 wait_job() { until [ -f $G/job.exit ]; do sleep 10; done; }
 run() {  # $1 = steps text (one or more lines)

@@ -3,7 +3,7 @@
 # 6 GB free. Started detached (survives a session boundary); log: timecut_after_arc.log.
 set -u
 R=/home/elisepc/green/Journal/notes/reports/embeddinggemma2-chicken-neurons-2026-11-03
-L=/mnt/c/Users/alexa/neuron-probe-gpu/progress.log
+L=/mnt/c/Users/<user>/neuron-probe-gpu/progress.log
 PS=/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe
 for i in $(seq 1 600); do tail -n +969 "$L" | grep -q "step 1 rc=" && break; sleep 30; done
 echo "$(date +%H:%M:%S) arc: $(tail -n +969 "$L" | grep "step 1 rc=" | tail -1)"

@@ -3,7 +3,7 @@
 
 Written by Claude (Opus 5.5), 2026-10-28, for decision part85-after-r4-2026-10-28 option 1 (d) and decision
 part85-checkpoint-download-2026-10-28 (Elise: "The download is fine"; overnight, 5 MB/s). Run it with the Windows venv
-(C:\\Users\\alexa\\jlens-tools\\.venv\\Scripts\\python.exe): two large downloads from WSL have coincided with the Gmail relay
+(C:\\Users\\<user>\\jlens-tools\\.venv\\Scripts\\python.exe): two large downloads from WSL have coincided with the Gmail relay
 losing the network, and Terra and JJ's channel share this line.
 
 For every registered checkpoint except Instruct (already cached), it resolves the pinned commit (part85/checkpoints.py,

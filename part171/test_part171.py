@@ -749,9 +749,9 @@ def test_steps_use_arc_paths_and_rotation_uses_float64_qr_memory_formula():
     steps = (ROOT / "part171" / "steps.txt").read_text(encoding="utf-8")
     lines = steps.splitlines()
     assert ('python3 tools/launch_arc.py 171 --cpu "/home/elisepc/neuron-probe/.venv/bin/python -I -B '
-            'part171/rotate171.py --out-dir /mnt/c/Users/alexa/neuron-probe-gpu/results/part171 '
+            'part171/rotate171.py --out-dir /mnt/c/Users/<user>/neuron-probe-gpu/results/part171 '
             '--max-memory-gb 6" --mem 6G --tag rotate') in steps
-    assert "tar -C /mnt/c/Users/alexa/neuron-probe-gpu/results/part171" in steps
+    assert "tar -C /mnt/c/Users/<user>/neuron-probe-gpu/results/part171" in steps
     arc_lines = [line for line in lines if "run171.py --stage" in line]
     assert len(arc_lines) == 2 and all("--out-dir results/part171 " in line for line in arc_lines)
     assert not any("/mnt/c" in line for line in arc_lines)

@@ -4,10 +4,10 @@
 
 The requested test command passed: **6 tests**.
 
-From `C:\Users\alexa\neuron-probe-gpu`, run the layer-10 Instruct pilot with:
+From `C:\Users\<user>\neuron-probe-gpu`, run the layer-10 Instruct pilot with:
 
 ```bat
-C:\Users\alexa\jlens-tools\.venv\Scripts\python.exe -I -B part92\screen92.py --model E:\neuron-probe\hf\hub\models--allenai--OLMo-2-0425-1B-Instruct\snapshots\48d788eca847d4d7548f375ad03d3c9312f6139e --layers 10 --alpha 0.8 --random 256 --max-new 40 --batch 48 --out results\part92\screen-instruct --device xpu
+C:\Users\<user>\jlens-tools\.venv\Scripts\python.exe -I -B part92\screen92.py --model E:\neuron-probe\hf\hub\models--allenai--OLMo-2-0425-1B-Instruct\snapshots\48d788eca847d4d7548f375ad03d3c9312f6139e --layers 10 --alpha 0.8 --random 256 --max-new 40 --batch 48 --out results\part92\screen-instruct --device xpu
 ```
 
 I could not measure the XPU runtime or validate the Intel backend here; only the specified CPU tests ran. The pilot throughput and device-specific bf16 behavior remain unverified.

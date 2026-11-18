@@ -2,16 +2,16 @@
 
 Written by Claude (Opus 5.5), 2026-10-28, for decision `part85-after-r4-2026-10-28` option 1. `CLOUD-RUN.md` stays as
 the record of the cloud path; nothing in it applies here. No branches, no pushes: results live on the GPU box under
-`C:\Users\alexa\neuron-probe-gpu\results\part85\` and are copied into the repository after scoring.
+`C:\Users\<user>\neuron-probe-gpu\results\part85\` and are copied into the repository after scoring.
 
 ## 0. Stage and gate
 
 Commit the Part 85 source and tests in the repository first. From that checkout, get the full commit with
 `git rev-parse HEAD` and write its 40-hex output, on one line, to the staged `part85\CODE_COMMIT`. The staged folder is
 not a git checkout; `handoff85.py` reads this file to stamp results with the code commit. Copy `part85\` (every `.py`,
-`passages.json`, `CODE_COMMIT`, and `references\` if present) to `C:\Users\alexa\neuron-probe-gpu\part85\`, and the
+`passages.json`, `CODE_COMMIT`, and `references\` if present) to `C:\Users\<user>\neuron-probe-gpu\part85\`, and the
 repository-level `observe.py`, `neuron_report.py`, and `PART85-DESIGN.md` beside it in
-`C:\Users\alexa\neuron-probe-gpu\`. Production and audit read the registered plain frame from that design file.
+`C:\Users\<user>\neuron-probe-gpu\`. Production and audit read the registered plain frame from that design file.
 `observe.py` must stay byte-identical to the one Part 86 staged (`sha256sum` both); `observe85.py` wraps it and adds
 raw token IDs and forward-pass records.
 
@@ -21,7 +21,7 @@ runner folder containing its `step-N.log` files. The `--commit` for provenance i
 currently registered design and `part85\references.json`; `CODE_COMMIT` remains the source-code commit stamped into
 production rows.
 
-From `C:\Users\alexa\neuron-probe-gpu`, with the Windows venv `C:\Users\alexa\jlens-tools\.venv\Scripts\python.exe`:
+From `C:\Users\<user>\neuron-probe-gpu`, with the Windows venv `C:\Users\<user>\jlens-tools\.venv\Scripts\python.exe`:
 
 ```text
 python -I -B part85\test_part85.py
@@ -68,7 +68,7 @@ answers and calibration for each checkpoint are both under `R\main\KEY\`.
 Install the missing WikiText dependency into the Windows venv before creating neutral sequences:
 
 ```text
-C:\Users\alexa\jlens-tools\.venv\Scripts\python.exe -m pip install datasets
+C:\Users\<user>\jlens-tools\.venv\Scripts\python.exe -m pip install datasets
 ```
 
 ### 2a. Steps 0 and 1 for all twelve checkpoints, Instruct first (round-4 #7: these run whatever the pilot decides)
@@ -123,9 +123,9 @@ Resolve the new commit's full id with `git -C G rev-parse HEAD`, set it as `REFE
 manifest and directory to the staged GPU folder before proceeding:
 
 ```text
-New-Item -ItemType Directory -Force C:\Users\alexa\neuron-probe-gpu\part85\references | Out-Null
-Copy-Item part85\references.json C:\Users\alexa\neuron-probe-gpu\part85\references.json
-Copy-Item part85\references\* C:\Users\alexa\neuron-probe-gpu\part85\references\ -Recurse -Force
+New-Item -ItemType Directory -Force C:\Users\<user>\neuron-probe-gpu\part85\references | Out-Null
+Copy-Item part85\references.json C:\Users\<user>\neuron-probe-gpu\part85\references.json
+Copy-Item part85\references\* C:\Users\<user>\neuron-probe-gpu\part85\references\ -Recurse -Force
 ```
 
 For each checkpoint, after its step-1 audit has printed PASS, run provenance once before that checkpoint's replay.
@@ -164,8 +164,8 @@ control succeeds, and `job.py` stops on any nonzero exit. Require its message to
 prints `NOTHING CHANGED`. The replay itself selects the registered clamped answers for this control.
 
 ```text
-C:\Users\alexa\jlens-tools\.venv\Scripts\python.exe -I -B part85\replay85.py --cp-dir R\pilot-a1\pretrain_4T --step1-dir R\main\pretrain_4T --checkpoint pretrain_4T --mode pilot --snapshot S_PRETRAIN_4T --perturb-value 1.01 --device xpu --references part85\references.json --provenance R\provenance\pretrain_4T.json --code-commit part85\CODE_COMMIT
-C:\Users\alexa\jlens-tools\.venv\Scripts\python.exe -I -B part85\replay85.py --cp-dir R\pilot-a1\instruct --step1-dir R\main\instruct --checkpoint instruct --mode pilot --snapshot S_INSTRUCT --perturb-value 1.01 --device xpu --references part85\references.json --provenance R\provenance\instruct.json --code-commit part85\CODE_COMMIT
+C:\Users\<user>\jlens-tools\.venv\Scripts\python.exe -I -B part85\replay85.py --cp-dir R\pilot-a1\pretrain_4T --step1-dir R\main\pretrain_4T --checkpoint pretrain_4T --mode pilot --snapshot S_PRETRAIN_4T --perturb-value 1.01 --device xpu --references part85\references.json --provenance R\provenance\pretrain_4T.json --code-commit part85\CODE_COMMIT
+C:\Users\<user>\jlens-tools\.venv\Scripts\python.exe -I -B part85\replay85.py --cp-dir R\pilot-a1\instruct --step1-dir R\main\instruct --checkpoint instruct --mode pilot --snapshot S_INSTRUCT --perturb-value 1.01 --device xpu --references part85\references.json --provenance R\provenance\instruct.json --code-commit part85\CODE_COMMIT
 ```
 
 If gate 1 fails, register the revised frame in `PART85-DESIGN.md` as the Amendment 3 line, with the SHA-256 of its
@@ -189,8 +189,8 @@ four commands pass. Replay reads the registered attempt and frame; there is no p
 ```text
 part85\replay85.py --cp-dir R\pilot-a2\pretrain_4T --step1-dir R\main\pretrain_4T --checkpoint pretrain_4T --mode pilot --attempt 2 --snapshot S_PRETRAIN_4T --device xpu --references part85\references.json --provenance R\provenance\pretrain_4T.json --code-commit part85\CODE_COMMIT
 part85\replay85.py --cp-dir R\pilot-a2\instruct --step1-dir R\main\instruct --checkpoint instruct --mode pilot --attempt 2 --snapshot S_INSTRUCT --device xpu --references part85\references.json --provenance R\provenance\instruct.json --code-commit part85\CODE_COMMIT
-C:\Users\alexa\jlens-tools\.venv\Scripts\python.exe -I -B part85\replay85.py --cp-dir R\pilot-a2\pretrain_4T --step1-dir R\main\pretrain_4T --checkpoint pretrain_4T --mode pilot --attempt 2 --snapshot S_PRETRAIN_4T --perturb-value 1.01 --device xpu --references part85\references.json --provenance R\provenance\pretrain_4T.json --code-commit part85\CODE_COMMIT
-C:\Users\alexa\jlens-tools\.venv\Scripts\python.exe -I -B part85\replay85.py --cp-dir R\pilot-a2\instruct --step1-dir R\main\instruct --checkpoint instruct --mode pilot --attempt 2 --snapshot S_INSTRUCT --perturb-value 1.01 --device xpu --references part85\references.json --provenance R\provenance\instruct.json --code-commit part85\CODE_COMMIT
+C:\Users\<user>\jlens-tools\.venv\Scripts\python.exe -I -B part85\replay85.py --cp-dir R\pilot-a2\pretrain_4T --step1-dir R\main\pretrain_4T --checkpoint pretrain_4T --mode pilot --attempt 2 --snapshot S_PRETRAIN_4T --perturb-value 1.01 --device xpu --references part85\references.json --provenance R\provenance\pretrain_4T.json --code-commit part85\CODE_COMMIT
+C:\Users\<user>\jlens-tools\.venv\Scripts\python.exe -I -B part85\replay85.py --cp-dir R\pilot-a2\instruct --step1-dir R\main\instruct --checkpoint instruct --mode pilot --attempt 2 --snapshot S_INSTRUCT --perturb-value 1.01 --device xpu --references part85\references.json --provenance R\provenance\instruct.json --code-commit part85\CODE_COMMIT
 ```
 
 ### 2c. Pin the references

@@ -1,6 +1,6 @@
 {
- "a": "/mnt/c/Users/alexa/neuron-probe-gpu/results/part18/base/reads.npz",
- "b": "/mnt/c/Users/alexa/neuron-probe-gpu/results/part18/chat/reads.npz",
+ "a": "/mnt/c/Users/<user>/neuron-probe-gpu/results/part18/base/reads.npz",
+ "b": "/mnt/c/Users/<user>/neuron-probe-gpu/results/part18/chat/reads.npz",
  "tokens": 669404,
  "pearson_r": {
   "2742": 0.9561517768635106,

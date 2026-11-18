@@ -3,7 +3,7 @@
   "model": "allenai/OLMo-2-0425-1B-Instruct",
   "model_slug": "olmo2-1b",
   "snapshot": "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B-Instruct/snapshots/48d788eca847d4d7548f375ad03d3c9312f6139e",
-  "lens": "/mnt/c/Users/alexa/neuron-probe-gpu/results/part57/olmo2-1b/jacobian_lens.pt",
+  "lens": "/mnt/c/Users/<user>/neuron-probe-gpu/results/part57/olmo2-1b/jacobian_lens.pt",
   "lens_metadata": {
     "n_prompts": 100,
     "source_layers": [

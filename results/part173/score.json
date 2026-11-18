@@ -1837,7 +1837,7 @@
           "sha256": "22750d97783778183be9abe890dc044914fdd3e8e7fc717c3b1137a43a2f99a4"
         },
         "hook_source": {
-          "source": "C:\\Users\\alexa\\neuron-probe-gpu\\part171\\run171.py",
+          "source": "C:\\Users\\<user>\\neuron-probe-gpu\\part171\\run171.py",
           "sha256": "cb209c3e5cadbc35c9741a0c0645467c71318828d80db14284796d7abb987ca8"
         },
         "tokenizer_config": {

@@ -15,7 +15,7 @@ Implemented `residual17.py` with capture, FIT-only ridge/labels/quantiles, OLMo 
 
 ### Windows smoke commands
 
-Run from `C:\Users\alexa\neuron-probe-gpu` with the small corpus file and both models already in the HF cache:
+Run from `C:\Users\<user>\neuron-probe-gpu` with the small corpus file and both models already in the HF cache:
 
 ```powershell
 python residual17.py capture --corpus data\wikitext103-train0.parquet --identity results\part2-olmo2-1b\identity-instruct-chat.json --out-dir results\part17-smoke --device cpu --smoke
@@ -29,7 +29,7 @@ python residual17.py transplant --group G1 --out-dir results\part17-smoke --devi
 
 ### Windows full commands
 
-Run from `C:\Users\alexa\neuron-probe-gpu` after copying the parquet to `data\wikitext103-train0.parquet` and caching both models:
+Run from `C:\Users\<user>\neuron-probe-gpu` after copying the parquet to `data\wikitext103-train0.parquet` and caching both models:
 
 ```powershell
 python residual17.py capture --corpus data\wikitext103-train0.parquet --identity results\part2-olmo2-1b\identity-instruct-chat.json --out-dir results\part17 --device xpu

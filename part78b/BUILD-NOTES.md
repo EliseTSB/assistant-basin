@@ -37,7 +37,7 @@ The random tiny model's 78b.1 failed, so its 78b.2–78b.4 verdicts were correct
 
 ## Copy to GPU workspace
 
-Copy these new files into `/mnt/c/Users/alexa/neuron-probe-gpu/p66basin/part78b/`:
+Copy these new files into `/mnt/c/Users/<user>/neuron-probe-gpu/p66basin/part78b/`:
 
 - `part78b.py`
 - `score78b.py`
@@ -45,4 +45,4 @@ Copy these new files into `/mnt/c/Users/alexa/neuron-probe-gpu/p66basin/part78b/
 - `smoke_run78b.py`
 - `BUILD-NOTES.md`
 
-Read-only listing confirmed `/mnt/c/Users/alexa/neuron-probe-gpu/p66basin/part78/part78.py`, `results/part26/source.json`, and `results/part26/source.npz` already exist there.
+Read-only listing confirmed `/mnt/c/Users/<user>/neuron-probe-gpu/p66basin/part78/part78.py`, `results/part26/source.json`, and `results/part26/source.npz` already exist there.

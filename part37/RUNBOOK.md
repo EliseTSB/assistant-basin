@@ -4,19 +4,19 @@ The worker builds the pipeline; the generation, capture, and stated readout run 
 
 ## Stage the basin
 
-From WSL, stage the Part 37 source under `C:\Users\alexa\neuron-probe-gpu\p37basin`. The corpus is expected at `C:\Users\alexa\neuron-probe-gpu\qwen35\pile10k.jsonl`; confirm it is present before starting.
+From WSL, stage the Part 37 source under `C:\Users\<user>\neuron-probe-gpu\p37basin`. The corpus is expected at `C:\Users\<user>\neuron-probe-gpu\qwen35\pile10k.jsonl`; confirm it is present before starting.
 
 ```bash
-GPU_ROOT=/mnt/c/Users/alexa/neuron-probe-gpu
+GPU_ROOT=/mnt/c/Users/<user>/neuron-probe-gpu
 mkdir -p "$GPU_ROOT/p37basin/part37/results/pilot" "$GPU_ROOT/p37basin/part37/results/full"
 cp -a /home/elisepc/green/worktrees/ab-part37/part37 "$GPU_ROOT/p37basin/"
 ```
 
-The Windows environment needs Python 3.11+, PyTorch with XPU support, Transformers, NumPy, and scikit-learn installed. The three exact pinned model snapshots must already be cached locally. The `job.py` runner executes each non-comment line in the root `steps.txt` as `python <line>`, from `C:\Users\alexa\neuron-probe-gpu`, stopping at the first nonzero exit code.
+The Windows environment needs Python 3.11+, PyTorch with XPU support, Transformers, NumPy, and scikit-learn installed. The three exact pinned model snapshots must already be cached locally. The `job.py` runner executes each non-comment line in the root `steps.txt` as `python <line>`, from `C:\Users\<user>\neuron-probe-gpu`, stopping at the first nonzero exit code.
 
 ## Pilot, then full run
 
-Put these lines in `C:\Users\alexa\neuron-probe-gpu\steps.txt` in this order. The first section collects the first 20 questions, screens them, builds both readers' records, captures Stage A, and checks the registered stop rule. Exit code 3 from the pilot check is an intentional stop: inspect `pilot-analysis-37.json` and do not run the full section. Exit code 0 means continue into the full section.
+Put these lines in `C:\Users\<user>\neuron-probe-gpu\steps.txt` in this order. The first section collects the first 20 questions, screens them, builds both readers' records, captures Stage A, and checks the registered stop rule. Exit code 3 from the pilot check is an intentional stop: inspect `pilot-analysis-37.json` and do not run the full section. Exit code 0 means continue into the full section.
 
 ```text
 p37basin\part37\collect37.py generate --model qwen --questions p37basin\part37\questions.json --out p37basin\part37\results\pilot\qwen-gens.jsonl --limit 20 --device xpu
@@ -50,7 +50,7 @@ Copy the full artifacts from Windows into `part37/results/full` in the worktree:
 
 ```bash
 mkdir -p /home/elisepc/green/worktrees/ab-part37/part37/results/full
-cp -a /mnt/c/Users/alexa/neuron-probe-gpu/p37basin/part37/results/full/. \
+cp -a /mnt/c/Users/<user>/neuron-probe-gpu/p37basin/part37/results/full/. \
   /home/elisepc/green/worktrees/ab-part37/part37/results/full/
 ```
 

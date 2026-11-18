@@ -61,13 +61,13 @@ Smallest fix: copy `part63`'s `context()` helper and pass `context=`; accept
 ```
 DEFAULT_CORPUS = E:\neuron-probe-gpu\qwen35\pile10k.jsonl
 exists: False
-canonical exists: True          # /mnt/c/Users/alexa/neuron-probe-gpu/qwen35/pile10k.jsonl (63 MB)
+canonical exists: True          # /mnt/c/Users/<user>/neuron-probe-gpu/qwen35/pile10k.jsonl (63 MB)
 corpus_token_ids(default) RAISED: FileNotFoundError [Errno 2] ... 'E:\\neuron-probe-gpu\\qwen35\\pile10k.jsonl'
 ```
 
 The registered Part 60 corpus is on **C:** — `part64/collect64.py:21`, `part64/gen64.py:44`,
 `atlas_collect_fast2.py:29` and `part64/run64.sh:9` all use
-`/mnt/c/Users/alexa/neuron-probe-gpu/qwen35/pile10k.jsonl` (and the env var there is `PART64_CORPUS`, not
+`/mnt/c/Users/<user>/neuron-probe-gpu/qwen35/pile10k.jsonl` (and the env var there is `PART64_CORPUS`, not
 `PART60_CORPUS`). `steer65`'s default is the only `E:\neuron-probe-gpu` reference in the repo (the only other
 `E:` path is the HF cache `E:\neuron-probe\hf`). In addition, `DEFAULT_COLLECTION` is a WSL path; on the A770 the
 step runs under Windows Python (`/mnt/c/.../job.py` uses `ctypes.windll`), where `/home/...` resolves to

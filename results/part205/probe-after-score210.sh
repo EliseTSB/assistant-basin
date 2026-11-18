@@ -11,7 +11,7 @@ export ARC_OVERRIDE="Diagnostic probe, not a registered stage: one Part 205 rank
 /home/elisepc/green/Journal/scripts/research/arc-steps-when-ram.sh 205 11 1 "-I -B results/part205/probe_freeze205.py" \
   -- results/part205/probe_freeze205.py part205/run205.py part205/common205.py part205/score205.py part205/config.json part205/prompts205.json neuron_report.py
 echo "$(date +%H:%M:%S) probe step ended rc=$?"
-cp /mnt/c/Users/alexa/neuron-probe-gpu/results/part205/probe_freeze205.json results/part205/ && echo "copied probe_freeze205.json"
+cp /mnt/c/Users/<user>/neuron-probe-gpu/results/part205/probe_freeze205.json results/part205/ && echo "copied probe_freeze205.json"
 echo PROBE-FREEZE-DONE
 exit 0
 }

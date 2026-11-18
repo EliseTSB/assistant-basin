@@ -10,7 +10,7 @@ The design's optional Haiku reading of 48 answers per condition is not automated
 
 Tests run on CPU with a small random Llama model and direct hook fixtures. The test command was `/home/elisepc/neuron-probe/.venv/bin/python -m pytest -q part78`; output: `9 passed in 3.66s`. I deliberately changed the push assignment to add `1.0`; `test_push_sets_every_position_and_preserves_other_units` failed, then I restored the implementation and reran the passing suite.
 
-The Windows folder `/mnt/c/Users/alexa/neuron-probe-gpu/p66basin/` already contains `part66/part66.py`, `part66/score66.py`, `part25.py`, `neuron_report.py`, and `circuit.py`. I verified those paths by listing them. It does not contain `part62/` or `results/part26/`. Copy these files for the run:
+The Windows folder `/mnt/c/Users/<user>/neuron-probe-gpu/p66basin/` already contains `part66/part66.py`, `part66/score66.py`, `part25.py`, `neuron_report.py`, and `circuit.py`. I verified those paths by listing them. It does not contain `part62/` or `results/part26/`. Copy these files for the run:
 
 - `part78/part78.py`
 - `part78/score78.py`

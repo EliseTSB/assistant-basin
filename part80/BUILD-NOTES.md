@@ -4,7 +4,7 @@ Built the role-swapping runner, hidden-state distance and mean-state archive, se
 
 ## Copy to the GPU folder
 
-Copy `part80/part80.py`, `part80/score80.py`, `part80/test_part80.py`, `part80/smoke_run80.py`, `part80/__init__.py`, and `part80/BUILD-NOTES.md` to `/mnt/c/Users/alexa/neuron-probe-gpu/p66basin/part80/`. The destination folder was listed read-only in the assignment, so no files were written there.
+Copy `part80/part80.py`, `part80/score80.py`, `part80/test_part80.py`, `part80/smoke_run80.py`, `part80/__init__.py`, and `part80/BUILD-NOTES.md` to `/mnt/c/Users/<user>/neuron-probe-gpu/p66basin/part80/`. The destination folder was listed read-only in the assignment, so no files were written there.
 
 ## Tokenizer renderings, offline
 

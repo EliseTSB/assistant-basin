@@ -1,6 +1,6 @@
 # Part 87 A770 runbook
 
-This runbook uses the Windows job runner in `C:\Users\alexa\neuron-probe-gpu`. The runner invokes each `steps.txt`
+This runbook uses the Windows job runner in `C:\Users\<user>\neuron-probe-gpu`. The runner invokes each `steps.txt`
 line as `[sys.executable] + shlex.split(line, posix=False)`, so each line must contain only the script and its
 arguments. Python flags such as `-I -B` may appear before the script; do not put the interpreter in a line.
 
@@ -8,10 +8,10 @@ arguments. Python flags such as `-I -B` may appear before the script; do not put
 log. If a job stops and you resume it, replace each finished command with `-c pass` rather than deleting the line, so
 the remaining commands retain their recorded line numbers. The runner stops at the first nonzero exit.
 
-From `C:\Users\alexa\neuron-probe-gpu`, launch the runner with:
+From `C:\Users\<user>\neuron-probe-gpu`, launch the runner with:
 
 ~~~text
-C:\Users\alexa\jlens-tools\.venv\Scripts\python.exe job.py
+C:\Users\<user>\jlens-tools\.venv\Scripts\python.exe job.py
 ~~~
 
 Run a GPU phase only when Windows shows at least 12 GB of available physical memory. On 2026-10-28, 10 GB proved too
@@ -19,7 +19,7 @@ low for a Qwen3.5-4B load. Complete Part 84b on the A770 before the full Part 87
 
 ## Copy the files
 
-Keep this repository layout under `C:\Users\alexa\neuron-probe-gpu`:
+Keep this repository layout under `C:\Users\<user>\neuron-probe-gpu`:
 
 - `part87\__init__.py`, `part87\part87.py`, `part87\score87.py`, `part87\replay87.py`, `part87\test_part87.py`, `part87\test_audit87.py`, `part87\audit87.py`, `part87\mutate87.py`, `part87\ORIGIN-RUBRIC.md`
 - `observe.py`, `test_observe.py` at the repository root
@@ -31,7 +31,7 @@ Keep this repository layout under `C:\Users\alexa\neuron-probe-gpu`:
 - `results\part84\main\run.json` (the calibration SHA-256 that `measure` checks)
 
 The scripts use the repository root as the parent of `part87`. The calibration text remains at
-`C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt`. Give the reader `part87\ORIGIN-RUBRIC.md`; do not
+`C:\Users\<user>\neuron-probe-gpu\p66basin\neuronary-calib.txt`. Give the reader `part87\ORIGIN-RUBRIC.md`; do not
 copy or run `blind_origin.py`.
 
 ## CPU-only preflight
@@ -39,10 +39,10 @@ copy or run `blind_origin.py`.
 From the repository root, run these directly in a shell; they are not `steps.txt` lines:
 
 ~~~text
-C:\Users\alexa\jlens-tools\.venv\Scripts\python.exe -I -B part87\test_part87.py
-C:\Users\alexa\jlens-tools\.venv\Scripts\python.exe -I -B part87\test_audit87.py
-C:\Users\alexa\jlens-tools\.venv\Scripts\python.exe -I -B test_observe.py
-C:\Users\alexa\jlens-tools\.venv\Scripts\python.exe -I -B part87\mutate87.py
+C:\Users\<user>\jlens-tools\.venv\Scripts\python.exe -I -B part87\test_part87.py
+C:\Users\<user>\jlens-tools\.venv\Scripts\python.exe -I -B part87\test_audit87.py
+C:\Users\<user>\jlens-tools\.venv\Scripts\python.exe -I -B test_observe.py
+C:\Users\<user>\jlens-tools\.venv\Scripts\python.exe -I -B part87\mutate87.py
 ~~~
 
 These use a tiny local Qwen-style model; they do not load or download Qwen3.5-4B.
@@ -52,7 +52,7 @@ These use a tiny local Qwen-style model; they do not load or download Qwen3.5-4B
 Set `steps.txt` to a single command line:
 
 ~~~text
-C:\Users\alexa\neuron-probe-gpu\part87\part87.py measure --out C:\Users\alexa\neuron-probe-gpu\p87 --answers C:\Users\alexa\neuron-probe-gpu\results\part66\full\answers.jsonl --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --device xpu
+C:\Users\<user>\neuron-probe-gpu\part87\part87.py measure --out C:\Users\<user>\neuron-probe-gpu\p87 --answers C:\Users\<user>\neuron-probe-gpu\results\part66\full\answers.jsonl --calib C:\Users\<user>\neuron-probe-gpu\p66basin\neuronary-calib.txt --device xpu
 ~~~
 
 This teacher-forces the unchanged held-out answers, measures residual medians and writes `p87\doses.json` plus its
@@ -65,11 +65,11 @@ The dose file records the resolved revision and imported-source hashes, includin
 Use these five commands together as the pilot job's `steps.txt`, in order:
 
 ~~~text
-C:\Users\alexa\neuron-probe-gpu\part87\part87.py pilot --out C:\Users\alexa\neuron-probe-gpu\p87 --device xpu --max-gpu-gb 14.5
-C:\Users\alexa\neuron-probe-gpu\part87\audit87.py C:\Users\alexa\neuron-probe-gpu\p87 --phase pilot
-C:\Users\alexa\neuron-probe-gpu\part87\score87.py score --a-answers-dir C:\Users\alexa\neuron-probe-gpu\p87\pilot --b-answers-dir C:\Users\alexa\neuron-probe-gpu\p87\pilot --phase pilot --out C:\Users\alexa\neuron-probe-gpu\p87\pilot\score87.json
-C:\Users\alexa\neuron-probe-gpu\part87\replay87.py --run-dir C:\Users\alexa\neuron-probe-gpu\p87 --phase pilot --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --p66-answers C:\Users\alexa\neuron-probe-gpu\results\part66\full\answers.jsonl --device xpu --out C:\Users\alexa\neuron-probe-gpu\p87\replay\pilot.json --all
-C:\Users\alexa\neuron-probe-gpu\part87\replay87.py --run-dir C:\Users\alexa\neuron-probe-gpu\p87 --phase pilot --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --p66-answers C:\Users\alexa\neuron-probe-gpu\results\part66\full\answers.jsonl --device xpu --out C:\Users\alexa\neuron-probe-gpu\p87\replay\pilot-neg.json --all --perturb-dose 1.01
+C:\Users\<user>\neuron-probe-gpu\part87\part87.py pilot --out C:\Users\<user>\neuron-probe-gpu\p87 --device xpu --max-gpu-gb 14.5
+C:\Users\<user>\neuron-probe-gpu\part87\audit87.py C:\Users\<user>\neuron-probe-gpu\p87 --phase pilot
+C:\Users\<user>\neuron-probe-gpu\part87\score87.py score --a-answers-dir C:\Users\<user>\neuron-probe-gpu\p87\pilot --b-answers-dir C:\Users\<user>\neuron-probe-gpu\p87\pilot --phase pilot --out C:\Users\<user>\neuron-probe-gpu\p87\pilot\score87.json
+C:\Users\<user>\neuron-probe-gpu\part87\replay87.py --run-dir C:\Users\<user>\neuron-probe-gpu\p87 --phase pilot --calib C:\Users\<user>\neuron-probe-gpu\p66basin\neuronary-calib.txt --p66-answers C:\Users\<user>\neuron-probe-gpu\results\part66\full\answers.jsonl --device xpu --out C:\Users\<user>\neuron-probe-gpu\p87\replay\pilot.json --all
+C:\Users\<user>\neuron-probe-gpu\part87\replay87.py --run-dir C:\Users\<user>\neuron-probe-gpu\p87 --phase pilot --calib C:\Users\<user>\neuron-probe-gpu\p66basin\neuronary-calib.txt --p66-answers C:\Users\<user>\neuron-probe-gpu\results\part66\full\answers.jsonl --device xpu --out C:\Users\<user>\neuron-probe-gpu\p87\replay\pilot-neg.json --all --perturb-dose 1.01
 ~~~
 
 The pilot writes five 87A arms with four answers each and U, Z, M, F with six answers each: 44 rows total. It writes
@@ -84,9 +84,9 @@ After the pilot audit and replay controls pass, Part 84b has finished, and the 1
 these three commands in order as the full-run job's `steps.txt`:
 
 ~~~text
-C:\Users\alexa\neuron-probe-gpu\part87\part87.py run --out C:\Users\alexa\neuron-probe-gpu\p87 --device xpu --max-gpu-gb 14.5
-C:\Users\alexa\neuron-probe-gpu\part87\audit87.py C:\Users\alexa\neuron-probe-gpu\p87 --phase run
-C:\Users\alexa\neuron-probe-gpu\part87\replay87.py --run-dir C:\Users\alexa\neuron-probe-gpu\p87 --phase run --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --p66-answers C:\Users\alexa\neuron-probe-gpu\results\part66\full\answers.jsonl --device xpu --out C:\Users\alexa\neuron-probe-gpu\p87\replay\run.json
+C:\Users\<user>\neuron-probe-gpu\part87\part87.py run --out C:\Users\<user>\neuron-probe-gpu\p87 --device xpu --max-gpu-gb 14.5
+C:\Users\<user>\neuron-probe-gpu\part87\audit87.py C:\Users\<user>\neuron-probe-gpu\p87 --phase run
+C:\Users\<user>\neuron-probe-gpu\part87\replay87.py --run-dir C:\Users\<user>\neuron-probe-gpu\p87 --phase run --calib C:\Users\<user>\neuron-probe-gpu\p66basin\neuronary-calib.txt --p66-answers C:\Users\<user>\neuron-probe-gpu\results\part66\full\answers.jsonl --device xpu --out C:\Users\<user>\neuron-probe-gpu\p87\replay\run.json
 ~~~
 
 The run resumes arm by arm only when the arm manifest's source hashes, resolved model revision, bf16 dtype, device and
@@ -102,7 +102,7 @@ run result. The run replay uses its default quarter sample.
 Keep the private key separate. Prepare one shuffled item set containing both 87A and 87B answers under random ids:
 
 ~~~text
-C:\Users\alexa\neuron-probe-gpu\part87\score87.py blind-prepare --a-answers-dir C:\Users\alexa\neuron-probe-gpu\p87\run --b-answers-dir C:\Users\alexa\neuron-probe-gpu\p87\run --items C:\Users\alexa\neuron-probe-gpu\p87\reader-input\blind-items.jsonl --key C:\Users\alexa\neuron-probe-gpu\p87\private\blind-key.json
+C:\Users\<user>\neuron-probe-gpu\part87\score87.py blind-prepare --a-answers-dir C:\Users\<user>\neuron-probe-gpu\p87\run --b-answers-dir C:\Users\<user>\neuron-probe-gpu\p87\run --items C:\Users\<user>\neuron-probe-gpu\p87\reader-input\blind-items.jsonl --key C:\Users\<user>\neuron-probe-gpu\p87\private\blind-key.json
 ~~~
 
 Give only `blind-items.jsonl` and `part87\ORIGIN-RUBRIC.md` to a tool-less Claude Haiku 5.5 reader. Do not provide the
@@ -110,13 +110,13 @@ key, arm names, answer files or run directory. Ask for one JSONL row per item wi
 the returned rows as `p87\blind-labels.jsonl`. Blind scoring checks both 87A and 87B answer digests against the key:
 
 ~~~text
-C:\Users\alexa\neuron-probe-gpu\part87\score87.py blind-score --labels C:\Users\alexa\neuron-probe-gpu\p87\blind-labels.jsonl --key C:\Users\alexa\neuron-probe-gpu\p87\private\blind-key.json --a-answers-dir C:\Users\alexa\neuron-probe-gpu\p87\run --b-answers-dir C:\Users\alexa\neuron-probe-gpu\p87\run --out C:\Users\alexa\neuron-probe-gpu\p87\blind-score.json
+C:\Users\<user>\neuron-probe-gpu\part87\score87.py blind-score --labels C:\Users\<user>\neuron-probe-gpu\p87\blind-labels.jsonl --key C:\Users\<user>\neuron-probe-gpu\p87\private\blind-key.json --a-answers-dir C:\Users\<user>\neuron-probe-gpu\p87\run --b-answers-dir C:\Users\<user>\neuron-probe-gpu\p87\run --out C:\Users\<user>\neuron-probe-gpu\p87\blind-score.json
 ~~~
 
 Score the run and create the Google-match hand-read list:
 
 ~~~text
-C:\Users\alexa\neuron-probe-gpu\part87\score87.py score --a-answers-dir C:\Users\alexa\neuron-probe-gpu\p87\run --b-answers-dir C:\Users\alexa\neuron-probe-gpu\p87\run --labels C:\Users\alexa\neuron-probe-gpu\p87\blind-labels.jsonl --key C:\Users\alexa\neuron-probe-gpu\p87\private\blind-key.json --phase run --out C:\Users\alexa\neuron-probe-gpu\p87\score87.json
+C:\Users\<user>\neuron-probe-gpu\part87\score87.py score --a-answers-dir C:\Users\<user>\neuron-probe-gpu\p87\run --b-answers-dir C:\Users\<user>\neuron-probe-gpu\p87\run --labels C:\Users\<user>\neuron-probe-gpu\p87\blind-labels.jsonl --key C:\Users\<user>\neuron-probe-gpu\p87\private\blind-key.json --phase run --out C:\Users\<user>\neuron-probe-gpu\p87\score87.json
 ~~~
 
 The scorer writes `score87.json`, `score87.md`, `87a-score.json`, `hand-read.md` and a machine-readable
@@ -128,7 +128,7 @@ For each of up to 30 listed Google matches per main arm U, Z, M and F, fill `pas
 true only if the answer attributes its making to Google, otherwise false. Re-score with the completed hand reads:
 
 ~~~text
-C:\Users\alexa\neuron-probe-gpu\part87\score87.py score --a-answers-dir C:\Users\alexa\neuron-probe-gpu\p87\run --b-answers-dir C:\Users\alexa\neuron-probe-gpu\p87\run --labels C:\Users\alexa\neuron-probe-gpu\p87\blind-labels.jsonl --key C:\Users\alexa\neuron-probe-gpu\p87\private\blind-key.json --phase run --hand-reads C:\Users\alexa\neuron-probe-gpu\p87\hand-read.jsonl --out C:\Users\alexa\neuron-probe-gpu\p87\score87.json
+C:\Users\<user>\neuron-probe-gpu\part87\score87.py score --a-answers-dir C:\Users\<user>\neuron-probe-gpu\p87\run --b-answers-dir C:\Users\<user>\neuron-probe-gpu\p87\run --labels C:\Users\<user>\neuron-probe-gpu\p87\blind-labels.jsonl --key C:\Users\<user>\neuron-probe-gpu\p87\private\blind-key.json --phase run --hand-reads C:\Users\<user>\neuron-probe-gpu\p87\hand-read.jsonl --out C:\Users\<user>\neuron-probe-gpu\p87\score87.json
 ~~~
 
 The final score records each arm's hand-read passing-mention count and rate beside its Google rate.

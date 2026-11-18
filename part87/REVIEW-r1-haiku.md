@@ -18,7 +18,7 @@ Unmodified suite (base copy, `/home/elisepc/neuron-probe/.venv/bin/python -I -B 
 
 5. **MEDIUM**: The GPU guard default is loose. `part87.py:711` defaults `--max-gpu-gb` to 20. Other runners in the repo default to 14.5 (`neuron_report.py:77`, `part25.py:814`). Above that limit `spill_guard` (`part87.py:682`) lets memory spill to shared system RAM instead of stopping, and the RUNBOOK never passes the flag. Set 14.5 and add the flag to the run command.
 
-6. **MEDIUM**: Scoring commands are not bound to the venv. RUNBOOK lines 62, 87, 93 and 99 run `score87.py` as a bare script. It imports torch through part87 and part66. With the system Python I got `ModuleNotFoundError: No module named 'torch'`. Prefix each with `C:\Users\alexa\jlens-tools\.venv\Scripts\python.exe`. Line 24's bare `python` follows Part 86's convention, so LOW.
+6. **MEDIUM**: Scoring commands are not bound to the venv. RUNBOOK lines 62, 87, 93 and 99 run `score87.py` as a bare script. It imports torch through part87 and part66. With the system Python I got `ModuleNotFoundError: No module named 'torch'`. Prefix each with `C:\Users\<user>\jlens-tools\.venv\Scripts\python.exe`. Line 24's bare `python` follows Part 86's convention, so LOW.
 
 7. **LOW**: RUNBOOK line 108 covers only 87.3 failing. Amendment 1 (design lines 88-93) says the 87.3-holds, 87.5-fails case goes "exactly as when 87.3 fails". Add that sentence.
 

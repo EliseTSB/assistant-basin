@@ -17,7 +17,7 @@ set -u
 cd /home/elisepc/green/worktrees/ab-part201 || exit 1
 export ARC_TREE=/home/elisepc/green/worktrees/ab-part201 LAUNCH_ARC_CONFIG=/home/elisepc/green/worktrees/ab-part67/tools/local.json
 ARC=/home/elisepc/green/Journal/scripts/research/arc-steps-when-ram.sh
-J=/mnt/c/Users/alexa/neuron-probe-gpu
+J=/mnt/c/Users/<user>/neuron-probe-gpu
 BASE="Registered design (a91f73bd; Amendments 1 and 2 public) predates the launcher's Registered/Total/Pilot/Kernel-check line formats."
 COPY_Q=(part205/run205.py part205/common205.py part205/config.json part205/prompts205.json part205/models.json neuron_report.py)
 

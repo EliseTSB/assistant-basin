@@ -6,7 +6,7 @@ source "$(dirname "$0")/run64_helpers.sh"
 
 RUN_ROOT="${PART64_ROOT:-/root/assistant-basin}"
 RETURN_DIR="${PART64_RETURN_DIR:-/root}"
-CORPUS="${PART64_CORPUS:-/mnt/c/Users/alexa/neuron-probe-gpu/qwen35/pile10k.jsonl}"
+CORPUS="${PART64_CORPUS:-/mnt/c/Users/<user>/neuron-probe-gpu/qwen35/pile10k.jsonl}"
 GENERATED="${PART64_GENERATED:-$RUN_ROOT/results/part64/generated.jsonl}"
 RESULTS="$RUN_ROOT/results/part64"
 LOGS="$RUN_ROOT/logs/part64"

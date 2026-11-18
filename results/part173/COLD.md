@@ -29,7 +29,7 @@ The README's numbers are, for the most part, faithful to its files. I recomputed
    Fix: point the cap and the 16-of-4,483 figure to readers.log and run173.py (line 70). Either add the cap and the retry rule to PART173-DESIGN.md with their date, or say they were added to the code after registration and when. Do not call them registered unless they are.
 
 6. **[medium] Gate 4 row: "Artifact hashes were recorded, not compared."**
-   What is wrong: score.json gates.gate4.artifacts.pushes has source "in-memory test fixture" with sha256 22750d97…; the hook source path is a Windows path (C:\Users\alexa\neuron-probe-gpu\part171\run171.py); the model snapshot id is an E:\ path. So the recorded push hash does not identify Part 171's saved push artifact. The 44 of 44 token match is the only evidence that the replayed pushes were Part 171's. The README does not say this, and it reads as if the hashes tie the replay to Part 171's files.
+   What is wrong: score.json gates.gate4.artifacts.pushes has source "in-memory test fixture" with sha256 22750d97…; the hook source path is a Windows path (C:\Users\<user>\neuron-probe-gpu\part171\run171.py); the model snapshot id is an E:\ path. So the recorded push hash does not identify Part 171's saved push artifact. The 44 of 44 token match is the only evidence that the replayed pushes were Part 171's. The README does not say this, and it reads as if the hashes tie the replay to Part 171's files.
    Fix: add: "The recorded push hash is from an in-memory test fixture, not a saved Part 171 file. The replay match, 44 of 44 for each set, is the only evidence that the pushes were Part 171's."
 
 7. **[medium] The chance simulations are not mentioned, and one of them is empty.**

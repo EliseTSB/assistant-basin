@@ -1,7 +1,7 @@
 #!/bin/bash
 # Chain after Part 112's Arc run (written by Claude, Opus 5.5, 2026-10-29): when the job logs its exit line, start
 # Part 114 on the Arc, then copy Part 112's answers into the repo, label them blind (two passes) and score them.
-G=/mnt/c/Users/alexa/neuron-probe-gpu
+G=/mnt/c/Users/<user>/neuron-probe-gpu
 R=/home/elisepc/green/worktrees/ab-part67
 N=$(cat $R/results/part112/chain-baseline.txt)
 until tail -n +$((N+1)) $G/progress.log | grep -q "rc="; do sleep 30; done

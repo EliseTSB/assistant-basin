@@ -1,13 +1,13 @@
 # Part 65 runbook
 
-This run uses the pinned local Qwen3-1.7B snapshot on the Intel Arc A770, then ranks and judges the returned write summaries on the host. `job.py` runs each non-comment line of the root `steps.txt` as `python <line>` with its working directory set to `C:\Users\alexa\neuron-probe-gpu`. It stops at the first nonzero result, and writes `step-N.log` plus `progress.log` there. Its RAM guard and copy-engine-off defaults remain active.
+This run uses the pinned local Qwen3-1.7B snapshot on the Intel Arc A770, then ranks and judges the returned write summaries on the host. `job.py` runs each non-comment line of the root `steps.txt` as `python <line>` with its working directory set to `C:\Users\<user>\neuron-probe-gpu`. It stops at the first nonzero result, and writes `step-N.log` plus `progress.log` there. Its RAM guard and copy-engine-off defaults remain active.
 
 ## Stage the Windows basin
 
-From WSL, copy the code from this checkout and the frozen Part 64 collection into `C:\Users\alexa\neuron-probe-gpu\p65basin`. `atlas_collect_fast2.py` imports `part38.py`; those are the only extra project modules used by steering to reproduce the canonical random controls. The Windows Python environment must already have the pinned model cached and the project dependencies installed. Do not use a command that downloads the model.
+From WSL, copy the code from this checkout and the frozen Part 64 collection into `C:\Users\<user>\neuron-probe-gpu\p65basin`. `atlas_collect_fast2.py` imports `part38.py`; those are the only extra project modules used by steering to reproduce the canonical random controls. The Windows Python environment must already have the pinned model cached and the project dependencies installed. Do not use a command that downloads the model.
 
 ```bash
-GPU_ROOT=/mnt/c/Users/alexa/neuron-probe-gpu
+GPU_ROOT=/mnt/c/Users/<user>/neuron-probe-gpu
 mkdir -p "$GPU_ROOT/p65basin/results/part64" "$GPU_ROOT/p65basin/results/part65"
 cp -a /home/elisepc/green/worktrees/ab-part65/part60 "$GPU_ROOT/p65basin/"
 cp -a /home/elisepc/green/worktrees/ab-part65/part64 "$GPU_ROOT/p65basin/"
@@ -20,7 +20,7 @@ cp /home/elisepc/green/worktrees/ab-part64/results/part64/collection.jsonl \
 
 ## Median, pilot, check, and full run
 
-Put these four lines, in this order, into `C:\Users\alexa\neuron-probe-gpu\steps.txt`. They use paths relative to the runner's working directory. The median step measures the registered 2,000 corpus-token residual norms and writes `layer-medians.json`. The pilot reuses those medians for a stratified 20-unit sample. The check gates the full run on observed +0.8 changes, the separately generated dose-zero comparison, hook activity/layer, and equal push norms. Its equal-norm gate re-reads the run-wide check recorded in the pilot rows; it does not recompute run-wide norms from the pilot sample. If it fails, `job.py` stops before the full run.
+Put these four lines, in this order, into `C:\Users\<user>\neuron-probe-gpu\steps.txt`. They use paths relative to the runner's working directory. The median step measures the registered 2,000 corpus-token residual norms and writes `layer-medians.json`. The pilot reuses those medians for a stratified 20-unit sample. The check gates the full run on observed +0.8 changes, the separately generated dose-zero comparison, hook activity/layer, and equal push norms. Its equal-norm gate re-reads the run-wide check recorded in the pilot rows; it does not recompute run-wide norms from the pilot sample. If it fails, `job.py` stops before the full run.
 
 ```text
 p65basin\part65\steer65.py --corpus qwen35\pile10k.jsonl --medians p65basin\results\part65\layer-medians.json --device xpu --measure-medians-only
@@ -37,7 +37,7 @@ From WSL, copy the whole Part 65 result directory back to this worktree. It cont
 
 ```bash
 mkdir -p /home/elisepc/green/worktrees/ab-part65/results/part65
-cp -a /mnt/c/Users/alexa/neuron-probe-gpu/p65basin/results/part65/. \
+cp -a /mnt/c/Users/<user>/neuron-probe-gpu/p65basin/results/part65/. \
   /home/elisepc/green/worktrees/ab-part65/results/part65/
 ```
 

@@ -11,15 +11,15 @@
         "sha256": "0eecdd93d440974e185926ba3cc60d75270a5019befa5df8df6a3f05bcd16c90"
       },
       "split.json": {
-        "path": "C:\\Users\\alexa\\neuron-probe-gpu\\results\\part30\\split.json",
+        "path": "C:\\Users\\<user>\\neuron-probe-gpu\\results\\part30\\split.json",
         "sha256": "71232e1e64821f2e9726bf753a85aea80c609f3f8fb55d9bc81b00734bf18689"
       },
       "part30.py": {
-        "path": "C:\\Users\\alexa\\neuron-probe-gpu\\part30.py",
+        "path": "C:\\Users\\<user>\\neuron-probe-gpu\\part30.py",
         "sha256": "d4938d3e97b9dd93b8782ed712e5ad9291355d09b7203b34fc1a194ac3a676ef"
       },
       "neuron_report.py": {
-        "path": "C:\\Users\\alexa\\neuron-probe-gpu\\neuron_report.py",
+        "path": "C:\\Users\\<user>\\neuron-probe-gpu\\neuron_report.py",
         "sha256": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
       }
     },
@@ -93,5 +93,5 @@
     0.9175897091627121,
     0.8540605902671814
   ],
-  "adapter": "C:\\Users\\alexa\\neuron-probe-gpu\\results\\part30\\adapter-r1.pt"
+  "adapter": "C:\\Users\\<user>\\neuron-probe-gpu\\results\\part30\\adapter-r1.pt"
 }

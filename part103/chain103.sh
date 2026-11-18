@@ -7,7 +7,7 @@ set -euo pipefail
 # The labeller's HTTPS goes through the mitm proxy, whose certificate is only in this bundle; without it every call
 # fails CERTIFICATE_VERIFY_FAILED (it did on the first run, 2026-10-29 08:07 to 08:40).
 export SSL_CERT_FILE=$HOME/.mitmproxy/ca-bundle-combined.crt
-G=/mnt/c/Users/alexa/neuron-probe-gpu
+G=/mnt/c/Users/<user>/neuron-probe-gpu
 cd "$(dirname "$0")/.."
 marker=$1 scratch=$2
 until [ -f "$G/job.exit" ] && [ "$G/job.exit" -nt "$marker" ]; do sleep 20; done
