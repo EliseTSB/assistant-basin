@@ -94,7 +94,7 @@
       "stage": "midtrain-end",
       "family": "O",
       "model_id": "allenai/OLMo-2-0425-1B",
-      "revision": "a1847dff35000b4271fa70afc5db10fd29fedbdf"
+      "revision": "f83cd641d4f00954eb25c781e0ac360debb3239e"
     },
     {
       "stage": "sft",
