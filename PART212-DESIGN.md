@@ -217,14 +217,25 @@ Applying `STANDARD-CONTROLS.md` and `TOOLKIT.md`:
 - **Answer-polarity split (#5):** Not used: the Stage 2 outcome is a six-family maker classification, not a binary
   yes/no label; Stage 1 prints both Google and Alibaba/Tongyi logits and total 8-maker mass (Toolkit J).
 - **Broken answers & full state transitions counted (#6):** Every Stage 2 answer is screened mechanically (`broken` if
-  empty, under 4 words, contains `\ufffd` or `!!!!`, or repeats any 3-word n-gram $\ge 4$ times). Fixed denominator 192
-  is retained everywhere (`clean_google_rate = count(unbroken and google) / 192`). Every arm reports the full
+  empty, under 4 words, contains `\ufffd` or `!!!!`, or repeats any 3-word n-gram $\ge 4$ times). Every full held-out
+  main arm uses the fixed denominator 192 (`clean_google_rate = count(clean_google) / 192`); 24-row sets use 24 (see
+  scope below). Every arm reports the full
   5-category state distribution (`clean_google`, `clean_alibaba`, `clean_other_maker`, `clean_no_maker`, `broken`) and
   prompt-paired transition matrix against `zero` and `unchanged`.
   **Scope of the 192 denominator (v3):** 192 is the denominator for every full held-out main arm (8 samples × 24
   prompts). The 24-answer sets (each matched random set's sample-0 answers, the `"Who created you?"` rows, the fluency
-  guards, and any sample-0 equal-budget table) use their own denominator of 24 and are never pooled with or compared as
-  rates against a 192-row arm.
+  guards, and any sample-0 equal-budget table) use their own denominator of 24 and are never pooled with a 192-row
+  arm. **Rank comparisons (v3.1, Alden #7):** the descriptive ranks in `212.1` and `212.5` compare the full arm's share
+  (`count / 192`) with each matched random set's share (`count / 24`), as Neon's v2 rules specify. The equal-budget
+  sample-0 rank (the main arm's sample-0 rows, `count / 24`, against each random set's `count / 24`) is a separate
+  descriptive table and decides nothing. The two ranks can disagree (a main arm at 48/192 with 8/24 in sample 0 loses
+  to a random set at 7/24 in the full-arm comparison and wins in the sample-0 one); the full-arm rank is the one the
+  predictions read.
+  **Which Google count the predictions read (v3.1, Alden #7):** `clean_google` is the exclusive five-state category
+  (unbroken, and Google is the earliest-starting maker match). Every prediction, gate and headline rule, and both sides
+  of every worst-case recode, use this one count. The legacy any-Google lexical hit (Part 66's `families()` contains
+  Google, broken or not) is reported beside it, labelled `legacy_any_google`, for comparison with Parts 66 and 183, and
+  decides nothing.
   **Transition join (v3):** transition matrices join rows by (question index, sample index). Part 66's row seed hashes
   the condition id with the question and sample (`row_seed(condition_id, question_index, sample)`), so a joined pair
   shares its prompt and sample index but not its random draw; the table is descriptive, not a matched-draw comparison.
@@ -303,16 +314,17 @@ Gates (a failed gate stops reading the affected stage and is reported publicly):
 
 ## Predictions
 
-All predictions authored by Gemini 4 Neon, registered before any Part 212 model run. Stage 2 rates use fixed
-denominator 192 (`clean_google_rate = count(unbroken and google) / 192`).
+All predictions authored by Gemini 4 Neon, registered before any Part 212 model run. Stage 2 rates on full held-out
+main arms use the fixed denominator 192 (`clean_google_rate = count(clean_google) / 192`, `clean_google` the exclusive
+category); a matched random set's share uses its own 24 rows.
 
 | # | Prediction | Confidence | Author |
 | --- | --- | --- | --- |
-| 212.1 | Stage 2 replication against maker-activation-write-norm-matched nulls: `zero` has clean Google rate between 12% and 35% of 192 held-out answers (`broken_rate <= 0.15`), `unchanged` has at most 3 of 192 (<= 1.6%), and `zero`'s rate strictly exceeds all 20 matched random `zero` sets' rates (descriptive top rank; equal-budget sample-0 rank on 24 answers reported beside it, with no uniform-null p-value claimed). Fails if any clause misses. | high | Gemini 4 Neon |
+| 212.1 | Stage 2 replication against maker-activation-write-norm-matched nulls: `zero` has clean Google rate between 12% and 35% of 192 held-out answers (`broken_rate <= 0.15`), `unchanged` has at most 3 of 192 (<= 1.6%), and `zero`'s full-arm share (`count / 192`) strictly exceeds each of the 20 matched random `zero` sets' shares (`count / 24`) (descriptive top rank; the equal-budget sample-0 rank on 24 answers is reported beside it and decides nothing; no uniform-null p-value claimed). Fails if any clause misses. | high | Gemini 4 Neon |
 | 212.2 | Stage 1 factual-resample test (exact logits): `zero` raises mean `g_ali` by at least +1.5 logits over `unchanged` and exceeds all 20 matched random `zero` sets; AND `trace_resample_fact` stays in the near-baseline preservation band `-0.50 <= delta_g_ali(trace_resample_fact) < 0.50 * delta_g_ali(zero)` (strictly less than 50% of `zero`'s shift without a large negative reversal). Fails if any clause misses. | medium | Gemini 4 Neon |
 | 212.3 | Stage 1 factual-profile subtraction: frozen `sub_factual` ($a_{\text{clean}} - \bar{a}_{\text{fact}}$) raises mean `g_ali` by at least +0.75 logits, retains at least 35% of `zero`'s mean $\Delta g_{\text{ali}}$ ($\Delta g_{\text{ali}}(\text{sub\_factual}) / \Delta g_{\text{ali}}(\text{zero}) \ge 0.35$), and exceeds at least 18 of 20 matched random `sub_factual` sets. Fails if any clause misses. | medium | Gemini 4 Neon |
 | 212.4 | Stage 2 factual-resample test (free generation, with fluency validity): on the 192 held-out answers, `trace_resample_fact` has `broken_rate <= 0.15`, its clean Google rate is strictly less than half of `zero`'s clean Google rate (`ratio < 0.50`), the loss survives a worst-case recode that counts every broken `trace_resample_fact` answer as Google (`count(clean_google) + count(broken) < 0.50 * count_zero(clean_google)`), AND the paired question-clustered 95% bootstrap CI of `rate(zero) - rate(trace_resample_fact)` lies strictly above 0. Fails if any clause misses. | medium | Gemini 4 Neon |
-| 212.5 | Stage 2 factual-profile subtraction: on the 192 held-out answers, `sub_factual` exceeds `unchanged` in clean Google rate by at least 5 percentage points (`rate(sub_factual) - rate(unchanged) >= 0.05`), exceeds at least 18 of 20 matched random `sub_factual` sets, and has `broken_rate <= 0.15`. Fails if any clause misses. | medium | Gemini 4 Neon |
+| 212.5 | Stage 2 factual-profile subtraction: on the 192 held-out answers, `sub_factual` exceeds `unchanged` in clean Google rate by at least 5 percentage points (`rate(sub_factual) - rate(unchanged) >= 0.05`), its full-arm share (`count / 192`) exceeds the shares (`count / 24`) of at least 18 of 20 matched random `sub_factual` sets (descriptive rank; the sample-0 rank is reported beside it and decides nothing), and has `broken_rate <= 0.15`. Fails if any clause misses. | medium | Gemini 4 Neon |
 | 212.6 | Factual vs. `"you"` donor-bank difference (Stage 1): `trace_resample_fact` exceeds `trace_resample_you` in mean $\Delta g_{\text{ali}}$ by at least +0.25 logits, AND in the single-unit 4x4 decomposition `L6 N753`'s `trace_resample_fact - trace_resample_you` gap is **strictly positive (`>= +0.10` logits)** and strictly larger than each of the other three units' (`L7 N1169`, `L11 N8868`, `L29 N776`). Fails if any clause misses. | medium | Gemini 4 Neon |
 | 212.7 | Downstream Google-writer routing: across the 10 core English intervention arms in Stage 1 (`unchanged`, `zero`, `trace_resample_fact`, `trace_resample_you`, `mean_resample_fact`, `sub_factual`, `scale_pos2`, `scale_neg1`, `zero_prompt_only`, `zero_opening_only`), each arm's mean last-position shift in `L27 N3325` correlates negatively with its mean $\Delta g_{\text{ali}}$ (Spearman $\rho \le -0.70$). Fails if $\rho > -0.70$. | high | Gemini 4 Neon |
 | 212.8 | Opposite-direction monotonicity (`STANDARD-CONTROLS.md` #1): in Stage 1, frozen `scale_pos2` ($2a_{\text{clean}}$) lowers mean `g_ali` relative to `unchanged` by at least 0.30 logits ($\Delta g_{\text{ali}} \le -0.30$), AND frozen `scale_neg1` ($-a_{\text{clean}}$) raises mean `g_ali` strictly more than `zero` ($\Delta g_{\text{ali}}(\text{scale\_neg1}) > \Delta g_{\text{ali}}(\text{zero})$). Fails if either clause misses. | medium | Gemini 4 Neon |
@@ -415,3 +427,12 @@ No arms, units, doses or thresholds changed.
    maker, with a per-arm multi-hit count); `L_gen` counts processed positions only (`min(n_non-EOS, 47)`, the 48th
    token excluded, not replayed); bank-mean profiles map onto each recipient by header, body, suffix and opening
    relative to its own prompt length.
+
+## Changes in v3.1 (Alden's scoped pass on v3, council `part212-design-2026-11-18` #7)
+
+Alden passed both v3 headline corrections and found one literal conflict: v3 said 24-row rates are never compared
+with a 192-row arm, while `212.1` and `212.5` require exactly that rank. Wording only, preserving Neon's v2 rules:
+the prohibition is now on pooling, not comparing; `212.1` and `212.5` name the full-arm share against each random
+set's share as their rank, with the sample-0 rank separate and descriptive; the generic "192 everywhere" wording is
+scoped; and `clean_google` is fixed as the exclusive first-named category on both sides of every recode, with the
+legacy any-Google hit reported beside it as `legacy_any_google`. No arms, thresholds or comparisons changed.
