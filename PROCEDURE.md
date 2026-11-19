@@ -119,6 +119,12 @@ measured on real rows, and each lever below that applies, taken or declined with
   first on three of four ordinary openings, and " 4" was two tokens, so the off-target check could not do its job.)
 - [ ] **Tests on fixtures, plus one deliberate break that must turn them red.** Break a copy, never the tracked file.
   (During Part 108 a `git checkout` used to undo a break erased real edits.)
+- [ ] **Run the real command line end to end on a tiny random model of the same architecture, through its last file
+  write, before any real-model run.** Build it from the real config with a few small layers (wide enough that the
+  target units exist) and the real tokenizer, and swap it in for the model load. Unit tests on fixtures cannot see
+  the glue between recording, hooks and output. (2026-11-19: Parts 212 and 213 passed 45 and 19 unit tests with seven
+  glue bugs between them; the 213 pilot found them one real-model attempt at a time, and one attempt ran 38 minutes
+  before dying while writing `run.json`. Part 212's tiny-model smoke found its first crash in under a minute.)
 - [ ] **Smoke on the real model and device before launch.** A sandboxed builder may have no torch, so its tests may
   never have run. (2026-10-26: a worker-built runner zeroed nothing, and its fixture expected every effect to be zero.)
 - [ ] **Known traps**: Qwen3.5's chat template strips trailing whitespace from an assistant message;
