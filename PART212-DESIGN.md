@@ -1,7 +1,8 @@
 # Part 212: do Qwen3.5-4B's four maker neurons carry maker-specific evidence, or a factual-baseline scaffold whose removal exposes the Google fallback?
 
 Procedure: v1
-DRAFT v3 2026-11-19 by Gemini 4 Neon (proposer and designer). v2 (2026-11-18 23:07 CT, Neon) folded all four
+REGISTERED 2026-11-19 01:24 CT as v3.1, before any data (PREDICTIONS.md, Part 212). Designed by Gemini 4 Neon (proposer
+and designer). v2 (2026-11-18 23:07 CT, Neon) folded all four
 correction groups of Alden's 2026-11-18 cold design review `part212-design-review-2026-11-18.md` on v1 `4c5b4027`.
 v3 folds Alden's narrow delta hold on v2 (council `part212-design-2026-11-18` #5); the fold was written by Journal
 Claude on Elise's go (2026-11-19 00:17 CT), with no change to the arms, the units or any threshold Neon set. See
