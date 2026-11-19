@@ -132,30 +132,32 @@ def output_directory_lock(outdir, stage: str):
     lock_path = directory / OUTPUT_LOCK_NAME
     pid = os.getpid()
     payload = f'{pid}\n{pid}-{time.time_ns()}\n'.encode('utf-8')
-    while True:
+    try:
+        fd = os.open(str(lock_path), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+    except FileExistsError:
         try:
-            fd = os.open(str(lock_path), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
-        except FileExistsError:
-            try:
-                first_line = lock_path.read_text(encoding='utf-8').splitlines()[0].strip()
-                owner = int(first_line.removeprefix('pid='))
-            except (OSError, IndexError, ValueError) as exc:
-                raise RuntimeError(f'{stage}: cannot read owner PID from output lock {lock_path}') from exc
-            if pid_is_alive(owner):
-                raise RuntimeError(f'{stage}: output directory {directory} is locked by live PID {owner}')
-            print(f'{stage}: taking over stale output lock {lock_path}; PID {owner} is not alive', flush=True)
+            first_line = lock_path.read_text(encoding='utf-8').splitlines()[0].strip()
+            owner = int(first_line.removeprefix('pid='))
+        except (OSError, IndexError, ValueError) as exc:
+            raise RuntimeError(f'{stage}: cannot read owner PID from output lock {lock_path}') from exc
+        alive = pid_is_alive(owner)
+        print(f'{stage}: output lock {lock_path} records PID {owner}; pid_is_alive={alive}. '
+              f'Operator should delete this file if the run is not live.', flush=True)
+        raise RuntimeError(f'{stage}: output directory {directory} is locked by PID {owner}')
+    try:
+        os.write(fd, payload)
+        os.fsync(fd)
+    except BaseException:
+        try:
+            os.close(fd)
+        finally:
             try:
                 lock_path.unlink()
             except FileNotFoundError:
                 pass
-            continue
-        else:
-            try:
-                os.write(fd, payload)
-                os.fsync(fd)
-            finally:
-                os.close(fd)
-            break
+        raise
+    else:
+        os.close(fd)
     try:
         yield
     finally:
@@ -167,7 +169,7 @@ def output_directory_lock(outdir, stage: str):
 
 
 def repair_partial_jsonl(path) -> int:
-    """Drop a non-newline-terminated JSONL tail before resume and report its exact byte count."""
+    """Keep a complete unterminated JSON value, or drop and report an invalid JSONL tail."""
     path = Path(path)
     if not path.exists():
         return 0
@@ -176,9 +178,19 @@ def repair_partial_jsonl(path) -> int:
         if not raw or raw.endswith(b'\n'):
             return 0
         keep = raw.rfind(b'\n') + 1
-        dropped = len(raw) - keep
-        f.seek(keep)
-        f.truncate()
+        tail = raw[keep:]
+        try:
+            json.loads(tail)
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            dropped = len(raw) - keep
+            f.seek(keep)
+            f.truncate()
+        else:
+            f.seek(0, os.SEEK_END)
+            f.write(b'\n')
+            f.flush()
+            os.fsync(f.fileno())
+            return 0
     if dropped:
         print(f'stage2: dropped {dropped} trailing bytes from incomplete JSONL line in {path}', flush=True)
     return dropped
@@ -237,8 +249,8 @@ def stage2_batch_histogram(rows: list[dict]) -> dict[str, int]:
 
 
 def stage2_validate_resume(planned: list[dict], done_rows: list[dict], requested_batch_size: int,
-                           pilot: bool) -> None:
-    """Reject changed requested shapes and any partially persisted generation batch for this pilot flag."""
+                           pilot: bool) -> list[dict]:
+    """Validate saved rows and identify partial calls that must be replayed whole."""
     requested = int(requested_batch_size)
     if requested < 1:
         raise ValueError(f'batch_size must be positive, got {requested}')
@@ -280,13 +292,48 @@ def stage2_validate_resume(planned: list[dict], done_rows: list[dict], requested
                              f'batch_size={requested} plans batch_size={expected}')
 
     saved_key_set = set(saved_keys)
+    partial_calls = []
     for keys in batch_keys:
         present = saved_key_set.intersection(keys)
         if present and len(present) != len(keys):
             first = planned_by_key[keys[0]]
-            raise ValueError(f'existing Stage 2 rows contain only {len(present)} of {len(keys)} rows from a '
-                             f'generation batch for arm={first["arm"]}, question={first["question_index"]}, '
-                             f'set={first.get("set")}; refusing to regroup a partial batch')
+            partial_calls.append({'keys': present, 'size': len(keys), 'first': first})
+    return partial_calls
+
+
+def stage2_drop_partial_calls(path, done_rows: list[dict], partial_calls: list[dict], pilot: bool) -> int:
+    """Atomically remove persisted rows from incomplete calls so resume can regenerate each call whole."""
+    path = Path(path)
+    partial_keys = set().union(*(call['keys'] for call in partial_calls))
+    keep_rows = []
+    dropped = 0
+    for row in done_rows:
+        key = stage2_resume_key(row['arm'], row['question_index'], row['sample'], row.get('set'), pilot)
+        if bool(row.get('pilot', False)) == bool(pilot) and key in partial_keys:
+            dropped += 1
+        else:
+            keep_rows.append(row)
+
+    temp_path = path.with_name(f'.{path.name}.{os.getpid()}-{time.time_ns()}.tmp')
+    try:
+        with temp_path.open('x', encoding='utf-8') as sink:
+            for row in keep_rows:
+                sink.write(json.dumps(row, ensure_ascii=False) + '\n')
+            sink.flush()
+            os.fsync(sink.fileno())
+        os.replace(temp_path, path)
+    finally:
+        try:
+            temp_path.unlink()
+        except FileNotFoundError:
+            pass
+
+    calls = ', '.join(
+        f'arm={call["first"]["arm"]}, question={call["first"]["question_index"]}, '
+        f'set={call["first"].get("set")} ({len(call["keys"])}/{call["size"]})'
+        for call in partial_calls)
+    print(f'stage2: dropped {dropped} rows from partial generation calls: {calls}', flush=True)
+    return dropped
 
 
 # ----------------------------------------------------------------------------------------------------------------
@@ -1516,7 +1563,11 @@ def _stage2_locked(args, pilot: bool = False) -> dict:
     try:
         batch_size = stage2_requested_batch_size(args, pilot)
         done_rows = load_stage2_jsonl(answer_path)
-        stage2_validate_resume(planned, done_rows, batch_size, pilot)
+        partial_calls = stage2_validate_resume(planned, done_rows, batch_size, pilot)
+        if partial_calls:
+            stage2_drop_partial_calls(answer_path, done_rows, partial_calls, pilot)
+            done_rows = load_stage2_jsonl(answer_path)
+            stage2_validate_resume(planned, done_rows, batch_size, pilot)
     except ValueError as exc:
         raise SystemExit(f'Stage 2 resume refused: {exc}') from exc
     todo = stage2_todo(planned, done_rows, pilot)
@@ -1583,6 +1634,7 @@ def _stage2_locked(args, pilot: bool = False) -> dict:
             finally:
                 for hd in handles:
                     hd.remove()
+            lines = []
             for i, row in enumerate(batch):
                 raw = [int(t) for t in result[i, T:].tolist()]
                 if tok.eos_token_id is not None and int(tok.eos_token_id) in raw:
@@ -1596,8 +1648,10 @@ def _stage2_locked(args, pilot: bool = False) -> dict:
                           'prompt_token_ids': ids, 'answer': text, 'token_ids': raw,
                           'stop_reason': p66._stop_reason(raw, tok), 'pilot': pilot,
                           **stage2_batch_fields(len(batch), batch_size)}
-                sink.write(json.dumps(record, ensure_ascii=False) + '\n')
+                lines.append(json.dumps(record, ensure_ascii=False) + '\n')
+            sink.write(''.join(lines))
             sink.flush()
+            os.fsync(sink.fileno())
             done += len(batch)
             print(f'stage2: {done}/{len(todo)} elapsed={time.time() - start:.1f}s', flush=True)
             nr.spill_guard(device, 20.0)

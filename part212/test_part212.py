@@ -1566,14 +1566,70 @@ def test_stage2_resume_refuses_a_different_requested_batch_size_before_loading_m
         run212.stage2(args, pilot=True)
 
 
-def test_stage2_resume_refuses_to_regroup_a_partially_written_batch(tmp_path, monkeypatch):
+def test_stage2_resume_drops_and_regenerates_a_partially_written_call(tmp_path, monkeypatch, capsys):
     out = tmp_path / 'partial-batch'
     out.mkdir()
-    _write_rows(out / 'stage2.jsonl', _pilot_positive_rows(3, actual_size=8, requested_size=8))
-    monkeypatch.setattr(run212.nr, 'load_model', lambda *a, **k: pytest.fail('resume validation ran after model load'))
-    args = types.SimpleNamespace(out=str(out), device='cpu', batch=8)
-    with pytest.raises(SystemExit, match='partial|incomplete|batch'):
-        run212.stage2(args, pilot=True)
+    planned = [dict(r) for r in _pilot_positive_rows(8)]
+    path = out / 'stage2.jsonl'
+    _write_rows(path, planned[:3])
+    generation_widths = []
+
+    class FakeTokenizer:
+        pad_token_id = 0
+        eos_token_id = None
+
+        def __call__(self, text, add_special_tokens=False):
+            return {'input_ids': [1, 2]}
+
+        def decode(self, raw, skip_special_tokens=True):
+            return 'synthetic answer'
+
+    class FakeModel:
+        def generate(self, input_ids, **kwargs):
+            generation_widths.append(int(input_ids.shape[0]))
+            extra = torch.ones((int(input_ids.shape[0]), 1), dtype=torch.long)
+            return torch.cat((input_ids, extra), dim=1)
+
+    tok, model = FakeTokenizer(), FakeModel()
+    layer = types.SimpleNamespace(mlp=types.SimpleNamespace(down_proj=types.SimpleNamespace(in_features=1)))
+    bank = {'items': [{'kind': 'positive'} for _ in range(25)], 'guards': [],
+            'template_prefix_tokens': H, 'template_suffix_tokens': S}
+    monkeypatch.setattr(run212, 'stage2_rows', lambda pilot: planned)
+    monkeypatch.setattr(run212, 'load_prompts', lambda: bank)
+    monkeypatch.setattr(run212.nr, 'load_model', lambda *a, **k: (tok, model))
+    monkeypatch.setattr(run212.nr, 'LAST_LOAD', {})
+    monkeypatch.setattr(run212.nr, 'find_text_layers', lambda *a: (None, [layer], None))
+    monkeypatch.setattr(run212, 'down_weights', lambda *a: [])
+    monkeypatch.setattr(run212, 'pool_norm_pass', lambda *a: ({}, {}))
+    monkeypatch.setattr(run212, 'stage1_pools', lambda *a: ({}, {}))
+    monkeypatch.setattr(run212, 'random_sets', lambda *a: {})
+    monkeypatch.setattr(run212, 'pool_summary', lambda *a: {})
+    monkeypatch.setattr(run212, 'stage2_record_units', lambda *a: [])
+    monkeypatch.setattr(run212, 'record_donors', lambda *a: {})
+    monkeypatch.setattr(run212, 'donor_means', lambda *a: {})
+    monkeypatch.setattr(run212, 'short_donors', lambda *a: [])
+    monkeypatch.setattr(run212, 'question_text', lambda *a: 'synthetic question')
+    monkeypatch.setattr(run212, 'stage2_units', lambda *a: [])
+    monkeypatch.setattr(run212.nr, 'build_prompt', lambda *a: 'synthetic prompt')
+    monkeypatch.setattr(run212.p66, 'row_seed', lambda *a: 123)
+    monkeypatch.setattr(run212.p66, '_stop_reason', lambda *a: 'length')
+    monkeypatch.setattr(run212.nr, 'spill_guard', lambda *a: None)
+    monkeypatch.setattr(run212, 'stage2_run_json', lambda *a: {})
+
+    run212.stage2(types.SimpleNamespace(out=str(out), device='cpu', batch=8), pilot=True)
+
+    rows = run212.load_stage2_jsonl(path)
+    key = lambda r: run212.stage2_resume_key(r['arm'], r['question_index'], r['sample'], r.get('set'), True)
+    keys = [key(r) for r in rows]
+    assert len(rows) == len(planned) == 8
+    assert len(set(keys)) == len(keys)
+    assert set(keys) == {key(r) for r in planned}
+    assert {r['batch_size'] for r in rows} == {8}
+    assert {r['batch_size_requested'] for r in rows} == {8}
+    assert generation_widths == [8]
+    output = capsys.readouterr().out
+    assert 'dropped 3 rows' in output
+    assert '3/8' in output
 
 
 def test_stage2_truncates_partial_jsonl_tail_before_resume_append(tmp_path, monkeypatch, capsys):
@@ -1595,6 +1651,16 @@ def test_stage2_truncates_partial_jsonl_tail_before_resume_append(tmp_path, monk
         run212.stage2(args, pilot=True)
     assert path.read_bytes() == complete_bytes
     assert f'dropped {len(partial)} trailing bytes' in capsys.readouterr().out
+
+
+def test_complete_jsonl_tail_without_newline_is_kept_and_terminated(tmp_path, capsys):
+    path = tmp_path / 'complete-tail.jsonl'
+    complete = b'{"answer":"complete","batch_size":8}'
+    path.write_bytes(complete)
+    assert run212.repair_partial_jsonl(path) == 0
+    assert path.read_bytes() == complete + b'\n'
+    assert run212.load_stage2_jsonl(path) == [{'answer': 'complete', 'batch_size': 8}]
+    assert 'dropped' not in capsys.readouterr().out.lower()
 
 
 def test_stage2_batch_fields_record_actual_call_shape_and_run_histogram_uses_saved_rows():
@@ -1706,13 +1772,34 @@ def test_output_directory_lock_refuses_live_owner_and_releases_on_exit(tmp_path)
     assert not lock_path.exists()
 
 
-def test_output_directory_lock_takes_over_a_stale_pid_with_a_message(tmp_path, monkeypatch, capsys):
+@pytest.mark.parametrize('pid_alive', [True, False])
+def test_output_directory_lock_refuses_live_or_dead_pid_without_changing_file(
+        tmp_path, monkeypatch, capsys, pid_alive):
     lock_path = tmp_path / run212.OUTPUT_LOCK_NAME
-    lock_path.write_text('999999\n', encoding='utf-8')
-    monkeypatch.setattr(run212, 'pid_is_alive', lambda pid: False)
-    with run212.output_directory_lock(tmp_path, 'stage2'):
-        assert lock_path.exists()
-    assert 'stale' in capsys.readouterr().out.lower()
+    lock_path.write_text('999999\nowner-token\n', encoding='utf-8')
+    before = lock_path.read_bytes()
+    monkeypatch.setattr(run212, 'pid_is_alive', lambda pid: pid_alive)
+    with pytest.raises(RuntimeError, match='locked'):
+        with run212.output_directory_lock(tmp_path, 'stage2'):
+            pytest.fail('an existing lock must never be taken over')
+    output = capsys.readouterr().out.lower()
+    assert str(lock_path).lower() in output
+    assert '999999' in output
+    assert f'pid_is_alive={str(pid_alive).lower()}' in output
+    assert 'operator should delete' in output
+    assert lock_path.read_bytes() == before
+
+
+def test_output_directory_lock_removes_its_file_after_owner_write_failure(tmp_path, monkeypatch):
+    lock_path = tmp_path / run212.OUTPUT_LOCK_NAME
+
+    def fail_write(*args, **kwargs):
+        raise OSError('simulated lock write failure')
+
+    monkeypatch.setattr(run212.os, 'write', fail_write)
+    with pytest.raises(OSError, match='simulated lock write failure'):
+        with run212.output_directory_lock(tmp_path, 'stage2'):
+            pytest.fail('lock acquisition should fail')
     assert not lock_path.exists()
 
 
