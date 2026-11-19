@@ -574,3 +574,22 @@ def test_step_size_summary_pairs_units_and_signs():
     assert out["n_pairs"] == 3 and out["passed"] is True
     assert out["spearman_r_J_N_0.05_vs_0.025"] == 1.0
     assert run213.step_size_summary({run213.FD_EPS: {}, run213.PILOT_EPS: {}}, units) == {"n_pairs": 0, "passed": False}
+
+
+def test_gate2_reference_is_the_operating_dose(tmp_path):
+    """Part 106 stored alpha 0.4, 0.8 and 1.6; the first complete pilot compared Gate 2 with the 1.6 rows."""
+    from part213 import run213
+
+    rows = [{"id": "p92-02", "unit": "none", "alpha": 0.0, "lp_sum": -31.6},
+            {"id": "p92-02", "unit": "neuron", "alpha": 0.4, "lp_sum": -27.3},
+            {"id": "p92-02", "unit": "neuron", "alpha": 0.8, "lp_sum": -5.1},
+            {"id": "p92-02", "unit": "neuron", "alpha": 1.6, "lp_sum": -25.5},
+            {"id": "p92-02", "unit": "random", "alpha": 0.8, "lp_sum": -25.4},
+            {"id": "p92-02", "unit": "random", "alpha": 1.6, "lp_sum": -29.1}]
+    f = tmp_path / "lp.jsonl"
+    f.write_text("\n".join(json.dumps(r) for r in rows) + "\n", encoding="utf-8")
+    stored = run213.part106_rows(f)
+    assert run213.OPEN_ALPHA == 0.8
+    assert run213.part106_reference(stored, "p92-02", "none") == -31.6
+    assert run213.part106_reference(stored, "p92-02", "neuron") == -5.1
+    assert run213.part106_reference(stored, "p92-02", "random") == -25.4

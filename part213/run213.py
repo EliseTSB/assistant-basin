@@ -666,6 +666,23 @@ def pilot_plan() -> list[tuple[str, str, str, float, str]]:
     return plan
 
 
+def part106_rows(path: Path) -> dict:
+    """Part 106's stored lp rows keyed by (id, unit, alpha). Part 106 scored alpha 0.4, 0.8 and 1.6; the first build
+    keyed by (id, unit) only, so the alpha-1.6 row (last in the file) overwrote the 0.8 row Gate 2 compares with,
+    and the first complete pilot failed Gate 2 against the wrong dose."""
+    out = {}
+    for line in Path(path).read_text(encoding="utf-8").splitlines():
+        row = json.loads(line)
+        out[(row["id"], row["unit"], round(float(row.get("alpha", 0.0)), 6))] = row
+    return out
+
+
+def part106_reference(stored: dict, uid: str, unit: str) -> float:
+    """Gate 2's reference: `none` at alpha 0, `neuron` and `random` at the operating dose (alpha 0.8, design l.347-351)."""
+    alpha = 0.0 if unit == "none" else round(float(OPEN_ALPHA), 6)
+    return float(stored[(uid, unit, alpha)]["lp_sum"])
+
+
 def cmd_pilot(args) -> int:
     """The pilot writes ONLY the restricted summary (design l.384-388): no L_z, tau, or pushed persona texts."""
     targets = load_targets()
@@ -706,10 +723,7 @@ def cmd_pilot(args) -> int:
         summary["pilot_gate1"] = summary["gate1"]  # score213's Gate 1 reads this key from run.json
 
     # Gate 2: the 4 Part 106 anchors, chat_prefix + anchor string, ids asserted, lp_sum within 0.50 nats.
-    stored = {}
-    for line in PART106_INSTRUCT.read_text(encoding="utf-8").splitlines():
-        row = json.loads(line)
-        stored[(row["id"], row["unit"])] = row
+    stored = part106_rows(PART106_INSTRUCT)
     gate2 = []
     for uid in GATE2_ANCHORS:
         unit = units[uid]
@@ -728,8 +742,9 @@ def cmd_pilot(args) -> int:
             result = forward_batch(model, tokenizer, [row_spec], layer=layers[int(unit["layer"])], vectors=vector)[0]
             key = "random" if arm == "random_0" else arm
             entry[f"lp_sum_{arm}"] = result["lp_sum"]
-            entry[f"part106_lp_sum_{arm}"] = stored[(uid, key)]["lp_sum"]
-            entry[f"abs_diff_{arm}"] = abs(result["lp_sum"] - stored[(uid, key)]["lp_sum"])
+            ref = part106_reference(stored, uid, key)
+            entry[f"part106_lp_sum_{arm}"] = ref
+            entry[f"abs_diff_{arm}"] = abs(result["lp_sum"] - ref)
         entry["ordering_ok"] = (entry["lp_sum_neuron"] > entry["lp_sum_random_0"] > entry["lp_sum_none"])
         entry["passed"] = (entry["ordering_ok"] and all(entry[f"abs_diff_{a}"] < 0.50 for a in ("none", "neuron", "random_0")))
         gate2.append(entry)
