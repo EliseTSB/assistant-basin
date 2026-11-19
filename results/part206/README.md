@@ -322,10 +322,13 @@ Qwen chat only), `kappa` defined as the design defines it, the static clause's r
 values were read, the mid-training-end gap labelled descriptive after 206.12's registered answer, and Part 92 and
 92b's readers named. Nothing left unfolded.
 
+Amendment 6 cold check: a fresh DeepSeek V4.1 Flash reader, 2026-11-19 (dark-factory run olmo-reruns-coldcheck-2026-11-19), recomputed `rho_peak(A-tmpl, M)`, the arming gaps, every adjacent rise and the old checkpoint's values from the stage summaries with its own script; all matched, all four forecasts held, and git shows them committed before the rerun. Its one note (where the rescore's detail lives) is folded into the file list.
+
 ## Files
 
 - [score206-output.txt](score206-output.txt), [score.json](score.json): every verdict, printed by
-  [part206/score206.py](../../part206/score206.py) with its file and key.
+  [part206/score206.py](../../part206/score206.py) with its file and key. The Amendment 6 rescore printed 206.7 and
+  206.12 with their detail to [score-f83.log](score-f83.log); score.json keeps only the verdicts.
 - [fig206.png](fig206.png): drawn by [part206/fig206.py](../../part206/fig206.py) from the eight summaries and
   [qwen-chat/causal.json](qwen-chat/causal.json).
 - [pretrain-3.0T/summary.json](pretrain-3.0T/summary.json), [midtrain-26B/summary.json](midtrain-26B/summary.json),

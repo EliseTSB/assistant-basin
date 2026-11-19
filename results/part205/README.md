@@ -198,8 +198,8 @@ You, 48 third-person, 48 do-nothing); no copy, random-set, persona-swap, reverse
 - `results/part205/fig205.png`: the figure, by `part205/fig205.py`.
 - `results/part205/a0/screen.json`: step A0, the six-value gap screen.
 - `results/part205/<stage>/records.jsonl`: every pass's letter probabilities and option mass; `sets.json`: the top-80
-  sets and halves. The per-prompt estimates (`ranking.npz`, 24 MB per OLMo stage and 43 MB per Qwen model) and the
-  copy-activation caches (0.8 to 1.1 GB per stage) are kept locally, not published; `part205/letter205.py` needs `ranking.npz`.
+  sets and halves. The per-prompt estimates (ranking.npz, 24 MB per OLMo stage and 43 MB per Qwen model) and the
+  copy-activation caches (0.8 to 1.1 GB per stage) are kept locally, not published; `part205/letter205.py` needs ranking.npz.
 - `results/part205/g1/g1.json`: the A770 do-nothing check; `pilot/`: the honesty pilot (PILOT.md).
 
 Cold check: two DeepSeek V4.1 Flash readers, 2026-11-15 (dark-factory runs part205-readme-cold-2026-11-15 and
@@ -209,3 +209,5 @@ issues (none changing a verdict: wording stronger than the tables, mixed ranges,
 missing where the letter result was restated); all folded, and the shared-parts measure it asked for was added to
 `part205/letter205.py`. Round 2 confirmed the folds and found 5 issues in the new text (a comparison across two weightings, the
 prompt scope of the gate numbers, a random-80 comparison that holds only before SFT, two range labels); all folded.
+
+Amendment 6 cold check: a fresh DeepSeek V4.1 Flash reader, 2026-11-19 (dark-factory run olmo-reruns-coldcheck-2026-11-19), recomputed O at all eight stages and the four adjacent changes from the published halves and sets; every value matched, and git shows the amendment's forecasts committed before the rerun. It could not recompute the paired interval because ranking.npz is kept locally (as noted above). It also noted that score205 reads O only where G0, G1 and G4 pass, where the design names G0 and G4; G1 passes at every stage, so no read changes. Its suggestion that the headline's 44 to 49 misstates the intersections was checked and declined: the 53 it cites is pretrain-3.0T, which is not read.
