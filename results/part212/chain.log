@@ -1,0 +1,17 @@
+12:17:02 step 1 start: -I -B part212/run212.py pilot --out results/part212/pilot --device xpu (ram_avail 15.9G)
+12:41:04 step 1 gpu: 210 samples, mean 35%, max 85%, busy(>5%) 82% of the time
+12:41:04 step 1 rc=1
+12:48:42 step 1 start: -I -B part212/run212.py pilot --out results/part212/pilot --device xpu (ram_avail 11.1G)
+12:49:23 step 1 start: -I -B part212/run212.py pilot --out results/part212/pilot --device xpu (ram_avail 11.8G)
+13:09:48 step 1 gpu: 176 samples, mean 47%, max 86%, busy(>5%) 99% of the time
+13:09:48 step 1 RAM GUARD: Windows available RAM 1.92G < 2.0G, step killed
+13:09:48 step 1 rc=97
+13:19:27 step 1 start: -I -B part212/run212.py pilot --out results/part212/pilot --device xpu (ram_avail 11.6G)
+13:49:09 step 1 gpu: 258 samples, mean 52%, max 91%, busy(>5%) 94% of the time
+13:49:09 step 1 rc=1
+14:06:41 step 1 start: -I -B part212/run212.py stage2 --out results/part212/stage2 --device xpu (ram_avail 14.7G)
+14:16:42 step 1 gpu: 87 samples, mean 65%, max 91%, busy(>5%) 80% of the time
+14:16:42 step 1 rc=3221225477
+14:17:40 step 1 start: -I -B part212/run212.py stage2 --out results/part212/stage2 --device xpu (ram_avail 14.6G)
+16:50:33 step 1 gpu: 1350 samples, mean 78%, max 92%, busy(>5%) 99% of the time
+16:50:33 step 1 rc=0
