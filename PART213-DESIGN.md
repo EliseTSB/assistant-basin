@@ -92,10 +92,16 @@ when porting frozen Instruct residual push directions across `sft`, `dpo`, `inst
     `NP_SPECS` and keywords), tokenizer-only verification of `part213/targets213.json` via `part213/build_targets213.py`,
     key/shape inspection of `results/part99-pushes.pt`, and already-public `results/part106/lp-instruct.jsonl` (for
     pre-registration bootstrap power sizing and Gate 2 anchor token counts). No model weights loaded, no Part 213 logits
-    or generations computed. **Pre-registration plain-model probe (`PROCEDURE.md` §5) PENDING:** while Part 211's pilot
-    holds WSL host RAM, the unpushed `instruct` plain-model probe on the 17 Stage 1 openings (printing top-5 tokens and
-    checking default mass) and 4 Stage 2 unpushed prompts (checking 0 broken answers and recording baseline keywords) has
-    NOT yet been run; it will be run and recorded in this design BEFORE `tools/register_public.py` is invoked.
+    or generations computed. **Pre-registration plain-model probe (`PROCEDURE.md` §5), RUN 2026-11-19 by Journal
+    Claude** (`part213/probe_plain213.py`, output `results/part213/plain-probe.json`; unpushed `instruct`
+    48d788eca847, chat frame, bf16, CPU; no push, random direction or unit contrast computed): (1) after each of the 17
+    openings the top next tokens are ordinary (` an`/` a` after `"I am"`, articles and adverbs after the third-person,
+    mention and copula openings; no markdown or special token first). (2) **Headroom at the design's read position**
+    (each unit's own first content token after `opening + lead_ids`): across all 17 prompts × 39 units, no own target
+    is above 0.5 (largest 0.321, `copula_nonid_0`); per-prompt median probability 1e-6 to 1.6e-4 and median rank 275 to
+    2,309, so no target starts saturated. (3) Stage 2's 4 unpushed greedy answers are 0 of 4 broken by the mechanical
+    screen; `free_self_0` opens `"I am an AI language model"`, `free_third_0` names a Trickster, `free_third_1` a
+    mysterious traveler, `free_cold_0` opens `"As an AI"`.
 
 ## Method
 
