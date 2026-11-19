@@ -1,15 +1,17 @@
 # Part 213: are OLMo 2 1B's slot neurons first-person self-slots, third-capable copula/identity-slot writers, or open noun-phrase writers?
 
 Procedure: v1
-DRAFT v5 2026-11-19 (v4 by Gemini 4 Neon, proposer and designer; v5 is Journal Claude's fold of the two DeepSeek
+REGISTERED 2026-11-19 02:38 CT as v5.1, before any data (PREDICTIONS.md, Part 213). v5.1 adds only the section
+"Implementation readings (v5.1)", which fixes the builder's readings of ambiguous lines before any data; no arm, unit,
+prompt, threshold or prediction changed. Code committed at 1ce0e6e3 with 19 fixture tests (eight required tests shown
+red under sabotage); plain-model probe recorded at 69141542.
+History: v4 by Gemini 4 Neon (proposer and designer); v5 is Journal Claude's fold of the two DeepSeek
 round-2 reviews of v4, `reviews/cheap-part213-v4-design-ds-r2.md` and `reviews/cheap-part213-v4-code-ds-r2.md`,
 on Elise's go of 2026-11-19 00:17 CT, under a stop rule of no further design rounds: see "Changes in v5". v4 folds Alden's 2026-11-18 review
 `part213-design-review-2026-11-18.md`, three v1 cold reviews — Opus 5.5 with-tools
 `part213-v1-opus55-with-tools-2026-11-18.md`, Opus 5.5 design-only `part213-v1-opus55-design-only-2026-11-18.md`, and
 GLM 5.3 `cheap-part213-design-neon-glm53-r1.md` — plus two design-mode cold reviews of v3: GLM 5.3
-`cheap-part213-v1-designmode-glm53-r1.md` and DeepSeek Flash `cheap-part213-v1-designmode-ds-r1.md`; awaiting
-clearance, `part213/score213.py` fixture tests, and the pending pre-registration plain-model probe before
-registration).
+`cheap-part213-v1-designmode-glm53-r1.md` and DeepSeek Flash `cheap-part213-v1-designmode-ds-r1.md`.
 Proposed by Gemini 4 Neon (Option A) and requested by Elise ("I'd like to run option A after B too, you can draft that
 too", 2026-11-18 22:20 CT). This draft will be registered on public main through `tools/register_public.py` only after
 review clearance, code commit with fixture tests, and the pending plain-model probe, and before any Part 213 pushed
@@ -420,6 +422,35 @@ Gates (no gate shares the statistic of any prediction it guards):
     constructed in-place via `safetensors.safe_open` (~6.1 GB peak RSS, well under `--mem 10G`).
   - **Device:** CPU float32 — deterministic, eliminates bf16 noise in `±0.05` finite differences, leaves GPU free.
   - **Labelling API:** minimal — 40 items for the frozen second blind reader (DeepSeek V4.1 Flash) on Stage 2 (`<$0.05`).
+
+## Implementation readings (v5.1, fixed before any data)
+
+The builder (DeepSeek V4.1 Flash, 2026-11-19) listed 22 places where the text admits more than one reading; all 22 and
+the reading taken are in `part213/BUILD-REPORT.md` ("Design ambiguities"). The ones that can move a number or a verdict
+are fixed here, before any pushed run, so none can be chosen after the data:
+
+1. **Pass counts.** The `offdiag_8` baselines are the `lp_by_unit` scores already carried by the core `neuron +0.8`
+   passes on `self_h0`, `third_0`, `third_2` (no separate 936 passes), so `instruct` Stage 1 executes 5,430 passes
+   (5,538 planned minus 108 sealed concept rows), and the pilot runs 1,044 forward passes (1,020 executed under the
+   seal) plus 12 Gate 2 anchors; the 48 negative passes are inside the 612 core passes, not added to them.
+2. **Sign guard (213.3, 213.10(b)).** Evaluated over each ratio's eligible units. A failed guard makes the ratio clause
+   `inconclusive` even when its CI lies wholly below the bar.
+3. **Point clauses.** A point clause that misses (a count or a point median, including the style-stratified medians of
+   213.3) fails its prediction, as the v5 disposition rule says, even when another clause of the same prediction is
+   `inconclusive`.
+4. **213.1 and 213.2.** 213.1 reads both its `L_z` and `N_z` requirements as CI clauses; 213.2 reads `L_z` as a CI clause
+   and `N_z` as a point clause, as worded.
+5. **213.5.** The CI of `median(L_z_concept) − median(L_z_slot)` is a bootstrap over every concept-slot pair
+   difference (one draw per pair); its point is the median pair difference.
+6. **213.9.** "Eligible at both `sft` and `dpo`" means eligible on the `SELF_HELD` `L_z` denominator at both
+   checkpoints; `not read` below 15 such units.
+7. **213.11.** The slot-peer clause is strictly `lo > 0`; the "mean" statistic is read as the median of the 21 per-unit
+   values, which is the bootstrap's own point.
+8. **Gate 2.** Anchor ids are asserted equal to `chat_ids + encode(anchor)` and compared with Part 106's stored `lp_sum`;
+   the stored token count is recorded beside it, not asserted.
+9. **Sign test.** 21 paired units, discordant units only; `p < 0.05` needs at least 7 of 8 (7/8 = 0.0352).
+
+The scorer gets one code review before any scoring; a defect it finds is fixed and disclosed as an amendment.
 
 ## Predictions
 
