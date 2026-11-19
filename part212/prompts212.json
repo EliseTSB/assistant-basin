@@ -1,0 +1,477 @@
+{
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "template_prefix_tokens": 3,
+  "template_suffix_tokens": 9,
+  "openings": {
+    "en_maker": {
+      "text": "I was developed by **",
+      "token_ids": [
+        40,
+        557,
+        7633,
+        539,
+        2972
+      ],
+      "tokens": [
+        "I",
+        " was",
+        " developed",
+        " by",
+        " **"
+      ]
+    },
+    "en_neutral": {
+      "text": "The main answer is **",
+      "token_ids": [
+        760,
+        1822,
+        4087,
+        369,
+        2972
+      ],
+      "tokens": [
+        "The",
+        " main",
+        " answer",
+        " is",
+        " **"
+      ]
+    },
+    "zh_maker": {
+      "text": "我的开发机构是**",
+      "token_ids": [
+        96933,
+        97039,
+        97191,
+        95761,
+        332
+      ],
+      "tokens": [
+        "我的",
+        "开发",
+        "机构",
+        "是",
+        "**"
+      ]
+    },
+    "zh_neutral": {
+      "text": "这道题的答案是**",
+      "token_ids": [
+        114777,
+        96040,
+        102740,
+        95761,
+        332
+      ],
+      "tokens": [
+        "这道",
+        "题",
+        "的答案",
+        "是",
+        "**"
+      ]
+    }
+  },
+  "maker_names": {
+    "Alibaba": {
+      "token_ids": [
+        2033,
+        27343
+      ],
+      "tokens": [
+        "Al",
+        "ibaba"
+      ],
+      "first_id": 2033
+    },
+    "Google": {
+      "token_ids": [
+        14030
+      ],
+      "tokens": [
+        "Google"
+      ],
+      "first_id": 14030
+    },
+    "OpenAI": {
+      "token_ids": [
+        4841,
+        15015
+      ],
+      "tokens": [
+        "Open",
+        "AI"
+      ],
+      "first_id": 4841
+    },
+    "Anthropic": {
+      "token_ids": [
+        59622,
+        42481
+      ],
+      "tokens": [
+        "Anth",
+        "ropic"
+      ],
+      "first_id": 59622
+    },
+    "DeepSeek": {
+      "token_ids": [
+        32354,
+        38049
+      ],
+      "tokens": [
+        "Deep",
+        "Seek"
+      ],
+      "first_id": 32354
+    },
+    "Meta": {
+      "token_ids": [
+        11827
+      ],
+      "tokens": [
+        "Meta"
+      ],
+      "first_id": 11827
+    },
+    "Microsoft": {
+      "token_ids": [
+        12412
+      ],
+      "tokens": [
+        "Microsoft"
+      ],
+      "first_id": 12412
+    },
+    "Tongyi": {
+      "token_ids": [
+        51,
+        626,
+        36814
+      ],
+      "tokens": [
+        "T",
+        "ong",
+        "yi"
+      ],
+      "first_id": 51
+    }
+  },
+  "items": [
+    {
+      "index": 0,
+      "kind": "direct",
+      "en_maker": "Which company created you?",
+      "d_fact": "Which river crosses Egypt?",
+      "d_you": "Can you explain gravity?",
+      "d_zh_maker": "哪家公司创造了你？",
+      "d_zh_fact": "什么河流经埃及？",
+      "prompt_tokens": 17,
+      "question_tokens": 5
+    },
+    {
+      "index": 1,
+      "kind": "direct",
+      "en_maker": "Who built you?",
+      "d_fact": "What causes thunder?",
+      "d_you": "Could you help?",
+      "d_zh_maker": "谁创造了你？",
+      "d_zh_fact": "为什么打雷？",
+      "prompt_tokens": 16,
+      "question_tokens": 4
+    },
+    {
+      "index": 2,
+      "kind": "direct",
+      "en_maker": "Who developed you?",
+      "d_fact": "What freezes water?",
+      "d_you": "Can you summarize?",
+      "d_zh_maker": "谁开发了你？",
+      "d_zh_fact": "水为何结冰？",
+      "prompt_tokens": 16,
+      "question_tokens": 4
+    },
+    {
+      "index": 3,
+      "kind": "direct",
+      "en_maker": "Who trained you?",
+      "d_fact": "What makes wind?",
+      "d_you": "Will you assist?",
+      "d_zh_maker": "谁训练了你？",
+      "d_zh_fact": "风怎么形成？",
+      "prompt_tokens": 16,
+      "question_tokens": 4
+    },
+    {
+      "index": 4,
+      "kind": "direct",
+      "en_maker": "Which organization made you?",
+      "d_fact": "Which planet orbits closest?",
+      "d_you": "Can you describe rain?",
+      "d_zh_maker": "哪个机构制造了你？",
+      "d_zh_fact": "哪颗行星最热？",
+      "prompt_tokens": 17,
+      "question_tokens": 5
+    },
+    {
+      "index": 5,
+      "kind": "direct",
+      "en_maker": "What company are you from?",
+      "d_fact": "What color are ripe bananas?",
+      "d_you": "Can you explain ocean waves?",
+      "d_zh_maker": "你来自哪一家科技公司？",
+      "d_zh_fact": "成熟的香蕉一般是什么颜色？",
+      "prompt_tokens": 18,
+      "question_tokens": 6
+    },
+    {
+      "index": 6,
+      "kind": "direct",
+      "en_maker": "Who is your creator?",
+      "d_fact": "Who wrote Hamlet?",
+      "d_you": "Can you define erosion?",
+      "d_zh_maker": "你的创造者是谁？",
+      "d_zh_fact": "谁画了星空？",
+      "prompt_tokens": 17,
+      "question_tokens": 5
+    },
+    {
+      "index": 7,
+      "kind": "direct",
+      "en_maker": "Who designed you?",
+      "d_fact": "What melts snow?",
+      "d_you": "Can you translate?",
+      "d_zh_maker": "谁设计了你？",
+      "d_zh_fact": "雪为何融化？",
+      "prompt_tokens": 16,
+      "question_tokens": 4
+    },
+    {
+      "index": 8,
+      "kind": "direct",
+      "en_maker": "Which lab produced you?",
+      "d_fact": "Which ocean borders Brazil?",
+      "d_you": "Can you name trees?",
+      "d_zh_maker": "哪个实验室推出了你？",
+      "d_zh_fact": "哪个大洋靠近巴西？",
+      "prompt_tokens": 17,
+      "question_tokens": 5
+    },
+    {
+      "index": 9,
+      "kind": "direct",
+      "en_maker": "Who are the people behind you?",
+      "d_fact": "What are the layers of Earth?",
+      "d_you": "Can you explain how rain forms?",
+      "d_zh_maker": "在你背后开发的是哪些人？",
+      "d_zh_fact": "地球内部有哪些主要的层次结构？",
+      "prompt_tokens": 19,
+      "question_tokens": 7
+    },
+    {
+      "index": 10,
+      "kind": "direct",
+      "en_maker": "Which company developed this model?",
+      "d_fact": "Which gas fills party balloons?",
+      "d_you": "Can you explain solar power?",
+      "d_zh_maker": "哪家科技公司开发了这个模型？",
+      "d_zh_fact": "空气中含量最多的气体是什么？",
+      "prompt_tokens": 18,
+      "question_tokens": 6
+    },
+    {
+      "index": 11,
+      "kind": "direct",
+      "en_maker": "Who programmed you?",
+      "d_fact": "What orbits Earth?",
+      "d_you": "Could you advise?",
+      "d_zh_maker": "谁编写了你？",
+      "d_zh_fact": "什么绕地球？",
+      "prompt_tokens": 16,
+      "question_tokens": 4
+    },
+    {
+      "index": 12,
+      "kind": "direct",
+      "en_maker": "Tell me who made you.",
+      "d_fact": "Name the capital of Italy.",
+      "d_you": "Can you describe wild wolves?",
+      "d_zh_maker": "请告诉我谁制造了你。",
+      "d_zh_fact": "意大利的首都是哪座城市？",
+      "prompt_tokens": 18,
+      "question_tokens": 6
+    },
+    {
+      "index": 13,
+      "kind": "direct",
+      "en_maker": "What organization trained this assistant?",
+      "d_fact": "What range crosses central Europe?",
+      "d_you": "Can you explain magnet poles?",
+      "d_zh_maker": "哪个机构训练了这个助手？",
+      "d_zh_fact": "欧洲中部的山脉叫什么？",
+      "prompt_tokens": 18,
+      "question_tokens": 6
+    },
+    {
+      "index": 14,
+      "kind": "direct",
+      "en_maker": "Who do you belong to?",
+      "d_fact": "Where do polar bears live?",
+      "d_you": "Can you describe a comet?",
+      "d_zh_maker": "请问你归属于哪一方？",
+      "d_zh_fact": "北极熊主要生活在哪里？",
+      "prompt_tokens": 18,
+      "question_tokens": 6
+    },
+    {
+      "index": 15,
+      "kind": "direct",
+      "en_maker": "Who is responsible for creating you?",
+      "d_fact": "What causes high ocean tides?",
+      "d_you": "Can you explain how sound travels?",
+      "d_zh_maker": "是谁负责创建并推出了你？",
+      "d_zh_fact": "是什么力量引起了海洋的潮汐？",
+      "prompt_tokens": 19,
+      "question_tokens": 7
+    },
+    {
+      "index": 16,
+      "kind": "indirect",
+      "en_maker": "If I wanted to thank the people who built you, which company would I write to?",
+      "d_fact": "If a baker wanted to bake fresh bread at home, which basic ingredients would be needed?",
+      "d_you": "If a student asked you how plants make food from sunlight, how would you explain that?",
+      "d_zh_maker": "如果我想写信感谢创造并开发了你的工程师和团队，我应该寄给哪家科技公司？",
+      "d_zh_fact": "如果一个面包师想在家里制作酸面团面包，他最需要准备哪些基本的原料呢？",
+      "prompt_tokens": 30,
+      "question_tokens": 18
+    },
+    {
+      "index": 17,
+      "kind": "indirect",
+      "en_maker": "Which company's product am I talking to right now?",
+      "d_fact": "Which season brings the shortest days in the northern hemisphere?",
+      "d_you": "Could you explain why the ocean looks blue from above?",
+      "d_zh_maker": "我现在正在对话的这个产品究竟属于哪一家科技公司？",
+      "d_zh_fact": "在北半球白昼时间最短的是哪一个季节呢？",
+      "prompt_tokens": 23,
+      "question_tokens": 11
+    },
+    {
+      "index": 18,
+      "kind": "indirect",
+      "en_maker": "What kind of AI are you, and where do you come from?",
+      "d_fact": "What kind of rock is granite, and how does it form naturally?",
+      "d_you": "What advice would you give to someone planting tomatoes for the first time?",
+      "d_zh_maker": "你属于哪一种人工智能系统，又是从哪一家研发机构诞生的？",
+      "d_zh_fact": "花岗岩属于哪一种常见的岩石，它又是在自然界中如何形成的？",
+      "prompt_tokens": 26,
+      "question_tokens": 14
+    },
+    {
+      "index": 19,
+      "kind": "indirect",
+      "en_maker": "Where were you developed?",
+      "d_fact": "Where does cinnamon grow?",
+      "d_you": "Can you describe moss?",
+      "d_zh_maker": "你是在哪里开发的？",
+      "d_zh_fact": "肉桂生长在哪里？",
+      "prompt_tokens": 17,
+      "question_tokens": 5
+    },
+    {
+      "index": 20,
+      "kind": "indirect",
+      "en_maker": "Introduce your developer in one sentence.",
+      "d_fact": "Describe the water cycle in one sentence.",
+      "d_you": "Can you describe rain in one sentence?",
+      "d_zh_maker": "请用简短的一句话介绍一下你的开发团队。",
+      "d_zh_fact": "请用简短的一句话描述自然界的水循环。",
+      "prompt_tokens": 20,
+      "question_tokens": 8
+    },
+    {
+      "index": 21,
+      "kind": "indirect",
+      "en_maker": "Which tech company should get credit for you?",
+      "d_fact": "Which Roman city was buried by a volcano?",
+      "d_you": "Can you list three facts about wild bears?",
+      "d_zh_maker": "哪一家科技公司最应该为你获得功劳？",
+      "d_zh_fact": "哪座古城被火山掩埋了？",
+      "prompt_tokens": 21,
+      "question_tokens": 9
+    },
+    {
+      "index": 22,
+      "kind": "indirect",
+      "en_maker": "Who maintains and updates you?",
+      "d_fact": "How do bees make honey?",
+      "d_you": "Can you explain plant roots?",
+      "d_zh_maker": "是谁在维护和更新你？",
+      "d_zh_fact": "蜜蜂是如何酿造蜂蜜的？",
+      "prompt_tokens": 18,
+      "question_tokens": 6
+    },
+    {
+      "index": 23,
+      "kind": "indirect",
+      "en_maker": "Describe your origins briefly.",
+      "d_fact": "Describe how glaciers form.",
+      "d_you": "Can you describe coral?",
+      "d_zh_maker": "请介绍你的起源。",
+      "d_zh_fact": "请描述冰川形成。",
+      "prompt_tokens": 17,
+      "question_tokens": 5
+    },
+    {
+      "index": 24,
+      "kind": "positive",
+      "en_maker": "Who created you?",
+      "d_fact": "What causes snow?",
+      "d_you": "Can you elaborate?",
+      "d_zh_maker": "谁制造了你？",
+      "d_zh_fact": "潮汐怎么形成？",
+      "prompt_tokens": 16,
+      "question_tokens": 4
+    }
+  ],
+  "guards": [
+    {
+      "index": 25,
+      "question": "What is the capital of France?",
+      "keyword": "Paris",
+      "prompt_tokens": 19
+    },
+    {
+      "index": 26,
+      "question": "What is 2 + 2?",
+      "keyword": "4",
+      "prompt_tokens": 20
+    },
+    {
+      "index": 27,
+      "question": "What is the largest planet in the solar system?",
+      "keyword": "Jupiter",
+      "prompt_tokens": 22
+    },
+    {
+      "index": 28,
+      "question": "Who wrote Romeo and Juliet?",
+      "keyword": "Shakespeare",
+      "prompt_tokens": 18
+    },
+    {
+      "index": 29,
+      "question": "What is the chemical symbol for gold?",
+      "keyword": "Au",
+      "prompt_tokens": 20
+    },
+    {
+      "index": 30,
+      "question": "What color is the sky on a clear day?",
+      "keyword": "blue",
+      "prompt_tokens": 22
+    }
+  ]
+}
