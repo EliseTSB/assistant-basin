@@ -1822,3 +1822,20 @@ def test_scorer_reports_corrupt_jsonl_row_and_rejects_legacy_rows_without_batch_
     path.write_text(json.dumps({'arm': 'unchanged', 'answer': 'valid'}) + '\n', encoding='utf-8')
     with pytest.raises(ValueError, match='batch_size'):
         score212.load_stage2(path)
+
+
+def test_output_directory_lock_releases_after_windows_text_mode_newlines(tmp_path, monkeypatch):
+    """Windows text mode wrote the lock's newlines as CRLF; the release check must still see the file as its own."""
+    real_write = run212.os.write
+
+    def text_mode_write(fd, data):
+        return real_write(fd, data.replace(b'\n', b'\r\n'))
+
+    lock_path = tmp_path / run212.OUTPUT_LOCK_NAME
+    monkeypatch.setattr(run212.os, 'write', text_mode_write)
+    with run212.output_directory_lock(tmp_path, 'stage1'):
+        assert b'\r\n' in lock_path.read_bytes()
+    monkeypatch.setattr(run212.os, 'write', real_write)
+    assert not lock_path.exists()
+    with run212.output_directory_lock(tmp_path, 'pilot'):
+        pass

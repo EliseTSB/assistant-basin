@@ -133,7 +133,9 @@ def output_directory_lock(outdir, stage: str):
     pid = os.getpid()
     payload = f'{pid}\n{pid}-{time.time_ns()}\n'.encode('utf-8')
     try:
-        fd = os.open(str(lock_path), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+        # O_BINARY: on Windows os.open defaults to text mode and writes each \n as \r\n, so the release check below
+        # never matched and the pilot's Stage 2 refused the lock its own Stage 1 had left (2026-11-19 12:41).
+        fd = os.open(str(lock_path), os.O_CREAT | os.O_EXCL | os.O_WRONLY | getattr(os, 'O_BINARY', 0))
     except FileExistsError:
         try:
             first_line = lock_path.read_text(encoding='utf-8').splitlines()[0].strip()
@@ -162,7 +164,7 @@ def output_directory_lock(outdir, stage: str):
         yield
     finally:
         try:
-            if lock_path.read_bytes() == payload:
+            if lock_path.read_bytes().replace(b'\r\n', b'\n') == payload:
                 lock_path.unlink()
         except FileNotFoundError:
             pass
