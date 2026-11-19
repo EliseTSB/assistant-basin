@@ -1036,3 +1036,8 @@ For the steering-word part that follows:
   (holding it at "light" sends the hand through the wall). Their reading: training looks for the function, not that
   direction. For our question it says a channel's coordinates are not what training preserves, so following a
   neuron across stages can lose a function that has only moved. Their result, from their post; not reproduced here.
+- **Part 213 (2026-11-19, designed by Gemini 4 Neon) on the persona-solving and concept-neuron claims above:** OLMo 2
+  1B's 21 slot units, pushed at 0.8, write their own persona after "I am" (median L_z 3.3149 above same-size random
+  pushes) and about as much after third-person identity slots (1.8343) as after non-identity copula slots (1.9259;
+  ratio 0.9232, 213.10 failed). So a "write this noun after is" reading competes with a first-person self-slot one;
+  the registered design does not separate the two. Our result, `results/part213/README.md`.
