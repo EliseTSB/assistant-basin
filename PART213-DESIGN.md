@@ -452,6 +452,27 @@ are fixed here, before any pushed run, so none can be chosen after the data:
 
 The scorer gets one code review before any scoring; a defect it finds is fixed and disclosed as an amendment.
 
+## Amendment 1 (2026-11-19, Journal Claude, before any Stage 1 data)
+
+**Reading 1 above was wrong about `offdiag_8`, and it is corrected here, before any Stage 1 pass has run.** It said the
+core `neuron +0.8` passes' `lp_by_unit` already carry the `offdiag_8` scores, so the separate 936 passes could be
+dropped. They are different quantities. `lp_by_unit[v]` on unit u's pushed row reads peer v's NP tokens at v's
+positions inside **u's** sentence; v4's statistic (l.247-248) is v's NP scored on **v's own row** under u's hook. A
+GLM 5.3 cold code review (`part213/REVIEW-code-glm53-r1.md`, F3) measured the difference on the real
+model: for u = p92-20 and v = p92-24 on `third_0`, the push's effect on v's NP is +0.97 nats/token on v's row and
+reads −1.67 on u's row, a sign flip that would make 213.11's lower-bound clause nearly unfalsifiable. **The 936
+`(u, v, prompt)` passes are restored exactly as v4 specified** (u's `neuron +0.8` hook on v's row, `self_h0`, `third_0`,
+`third_2`), so `instruct` Stage 1 executes 6,366 passes (6,474 planned minus 108 sealed concept rows). No arm, unit,
+prompt, threshold or prediction changes; 213.11 reads the registered quantity.
+
+The same review found code defects that do not touch the design and are fixed in the runner and scorer before the
+run: Stage 1 read positions omitted the opening tokens (F1); the `lp_by_unit` path indexed past a chunk's width (F2);
+the scorer read `run-<checkpoint>.json` while the runner wrote one overwritten `run.json` (F4); headline 3's Stage 2
+clause was not implemented (F5); resume and partial-audit handling (F6, F7); and full-vocabulary logit rows that no
+host could load (F8: rows now keep only the logits the scorer reads). The pilot's stopping rule read none of these
+paths, so its pass stands; Gate 2 builds its own rows and was correct throughout.
+
+
 ## Predictions
 
 All predictions authored by Gemini 4 Neon, registered before any Part 213 pushed run. Primary Stage 1 metrics are the
