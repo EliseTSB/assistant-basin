@@ -209,6 +209,56 @@ def posix_only_imports(paths):
     return sorted(out)
 
 
+# Repo modules a copied file may import without copying them, with the reason. Checked 2026-11-19 over 243 past launches.
+OPTIONAL_LOCAL = {
+    "judge_client": "imported inside neuron_report's LLM-judge function, which readers call on WSL, never the Arc step",
+}
+
+
+def uncopied_local_imports(repo, copies, job_dir):
+    """(refuse, warn): imports in copied .py files that resolve to a repo module which is not in --copy.
+
+    Why (2026-11-19): Part 212's pilot imports score212 inside its stopping rule, after Stage 1 and the pilot rows, and
+    score212.py was not copied, so the run would have died at its last step; earlier the same day part66 needed part25.
+    A module is looked for where the job resolves it: beside the importing file, at the repo root, or as partNN/partNN.py.
+    refuse: no copy exists in the job folder either, so the import fails at run time. warn: the job folder holds an
+    older copy that differs from the repo, so the run imports stale code (the shadowing trap). Identical copies pass."""
+    import ast
+
+    repo, job_dir = Path(repo), Path(job_dir) if job_dir else None
+    copied = {Path(c).as_posix() for c in copies}
+    refuse, warn, seen = [], [], set()
+    for c in copies:
+        path = repo / c
+        if path.suffix != ".py" or not path.is_file():
+            continue
+        try:
+            tree = ast.parse(path.read_text(encoding="utf-8", errors="replace"))
+        except SyntaxError:
+            continue
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                mods = [a.name.split(".")[0] for a in node.names]
+            elif isinstance(node, ast.ImportFrom) and node.module and not node.level:
+                mods = [node.module.split(".")[0]]
+            else:
+                continue
+            for m in mods:
+                if m in OPTIONAL_LOCAL:
+                    continue
+                cands = [(Path(c).parent / f"{m}.py").as_posix(), f"{m}.py", f"{m}/{m}.py", f"{m}/__init__.py"]
+                in_repo = [x for x in dict.fromkeys(cands) if (repo / x).is_file()]
+                if not in_repo or any(x in copied for x in in_repo) or (c, m) in seen:
+                    continue
+                seen.add((c, m))
+                on_job = [x for x in in_repo if job_dir is not None and (job_dir / x).is_file()]
+                if not on_job:
+                    refuse.append((c, node.lineno, m, in_repo[0]))
+                elif all((job_dir / x).read_bytes() != (repo / x).read_bytes() for x in on_job):
+                    warn.append((c, node.lineno, m, on_job[0]))
+    return refuse, warn
+
+
 def main(argv=None, env=None):
     import os
     env = dict(os.environ) if env is None else env
@@ -311,6 +361,15 @@ def main(argv=None, env=None):
         print("NOT LAUNCHED: the A770 job runs on Windows, and these copied files import a POSIX-only module outside a "
               "try/except ImportError (Part 209 on 2026-11-12 and Part 205 on 2026-11-14 died on `import fcntl`): " +
               "; ".join(f"{p}:{line} {mod}" for p, line, mod in posix))
+        return 2
+    refuse, warn = uncopied_local_imports(repo, a.copy, job_dir)
+    for c, line, m, where in warn:
+        print(f"WARNING: {c}:{line} imports {m}, not in --copy; the job folder's {where} differs from the repo's, so the "
+              f"run would import that older copy. Add --copy {where} unless the old one is meant.")
+    if refuse:
+        print("NOT LAUNCHED: these copied files import repo modules that are neither in --copy nor in the job folder, so "
+              "the run would die at that import (Part 212's pilot imported score212 at its last step): " +
+              "; ".join(f"{c}:{line} {m} (add --copy {where})" for c, line, m, where in refuse))
         return 2
     baseline = len(text.splitlines())
     offset = prog.stat().st_size if prog.exists() else 0

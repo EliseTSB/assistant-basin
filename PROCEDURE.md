@@ -335,3 +335,4 @@ beyond one part.
   parts and the overlap index measured those. With the consistent letter balanced across prompts, split each part's
   estimate into a letter component |mean(e x s)| and a consistency component |mean(e)| before reading an overlap
   (`part205/letter205.py`), and gate a stage on P(consistent) above chance.
+- 2026-11-19 (Part 212): the pilot was launched without `score212.py`, which it imports inside its stopping rule at the run's last step, and earlier the same day `part66` needed `part25`. `tools/launch_arc.py` now refuses a copied file's import of a repo module that is neither in `--copy` nor in the job folder, and warns when the job folder's copy differs from the repo (the stale-shadow trap). A replay over 243 past launches found many runs importing modules they never copied, which worked only because an older copy sat in the job folder.
