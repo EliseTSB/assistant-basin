@@ -594,3 +594,9 @@ def test_prelaunch_olmo_main_acknowledged_passes_that_check(repo):
 def test_prelaunch_olmo_instruct_main_is_not_flagged(repo):
     edit(repo, "A fixture; nothing runs.", "OLMo 2 1B Instruct (48d788ec); SFT parent f83cd641; OLMo-2-0425-1B-Instruct at `main`.")
     assert not any("different training run" in f for f in pc.prelaunch(repo, "900", fetch=False).failed)
+
+
+def test_cited_paths_skip_formula_tokens_in_verbatim_prediction_text():
+    """Part 213's registered predictions quote `tau_3/1^(L)` and `tau_M/3^(L)`; a formula is not a path."""
+    text = "ratios `tau_3/1^(L)` and `tau_M/3^(L)` read from `results/part213/full/score.json`"
+    assert list(pc.cited_paths(text)) == ["results/part213/full/score.json"]

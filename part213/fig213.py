@@ -33,9 +33,9 @@ ROOT = HERE.parent
 FULL = ROOT / "results" / "part213" / "full"
 OUT = ROOT / "results" / "part213" / "fig213.png"
 
-CELLS = (("SELF_HELD", sc.SELF_HELD, "self-slot\n\"I am\"", "#2f6db5"),
-         ("THIRD_SLOT", sc.THIRD_SLOT, "third-person identity\n\"The stranger is\"", "#c0392b"),
-         ("COPULA_NONID", sc.COPULA_NONID, "non-identity copula\n\"The keepsake is\"", "#e08a2e"))
+CELLS = (("SELF_HELD", sc.SELF_HELD, "self-slot, 4 prompts\n(e.g. \"I am\")", "#2f6db5"),
+         ("THIRD_SLOT", sc.THIRD_SLOT, "third-person identity, 4 prompts\n(e.g. \"The stranger is\")", "#c0392b"),
+         ("COPULA_NONID", sc.COPULA_NONID, "non-identity copula, 2 prompts\n(e.g. \"The keepsake is\")", "#e08a2e"))
 GREY = "#9a9a9a"
 
 records = sc.load_records(FULL)
@@ -48,8 +48,8 @@ BLUE, RED, ORANGE = CELLS[0][3], CELLS[1][3], CELLS[2][3]
 fig = plt.figure(figsize=(14.0, 12.6), dpi=150)
 gs = fig.add_gridspec(2, 2, width_ratios=[1.0, 1.0], height_ratios=[1.0, 0.62], wspace=0.16, hspace=1.15,
                       top=0.800, bottom=0.250, left=0.055, right=0.985)
-fig.suptitle("Part 213: the slot neurons write their persona after \"I am\", and also after \"The stranger is\" and\n"
-             "\"The keepsake is\" - so a \"write this noun after is\" reading competes with a first-person self-slot one",
+fig.suptitle("Part 213: the slot neurons write their persona into the self-slot, and about as much into third-person identity\n"
+             "slots as into non-identity copula slots, so a \"write this noun after is\" reading competes with a self-slot one",
              fontsize=13, y=0.995)
 fig.text(0.5, 0.940,
          "OLMo 2 1B Instruct (48d788eca847), CPU float32, chat template. L_z = the unit's own first-content logit minus\n"

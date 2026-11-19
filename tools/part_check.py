@@ -346,7 +346,8 @@ def cited_paths(text):
     toks += re.findall(r"(?<![\w/`.-])((?:results|part\d+[a-z]?|tools|templates)/[\w./-]*[\w/])", text)
     for tok in toks:
         tok = tok.strip("\"'").rstrip(".,;:)")
-        if not tok or not re.search(r"\w", tok) or tok.startswith(("http", "-")) or any(c in tok for c in "*{}<>$|=\\"):
+        # ^ and ( mark a formula such as tau_3/1^(L), which registered prediction text quotes verbatim (Part 213)
+        if not tok or not re.search(r"\w", tok) or tok.startswith(("http", "-")) or any(c in tok for c in "*{}<>$|=\\^("):
             continue
         if "/" in tok or tok.endswith(PATH_EXT):
             yield tok
