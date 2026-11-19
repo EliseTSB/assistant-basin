@@ -437,3 +437,33 @@ the prohibition is now on pooling, not comparing; `212.1` and `212.5` name the f
 set's share as their rank, with the sample-0 rank separate and descriptive; the generic "192 everywhere" wording is
 scoped; and `clean_google` is fixed as the exclusive first-named category on both sides of every recode, with the
 legacy any-Google hit reported beside it as `legacy_any_google`. No arms, thresholds or comparisons changed.
+
+## Amendment 1 (2026-11-19, Journal Claude, before any Stage 1 or Stage 2 data)
+
+**The registered batch-size lever is not what the runner does, and the run proceeds at the shapes it records.** The
+Throughput section (batch 32 for Stage 1 single-forward passes; batch 8/24 for Stage 2 with one prompt per batch,
+"avoiding batch 1") assumed batches that the arm plan cannot fill. The runner groups Stage 2 rows by
+`(arm, question, set)` and splits each group at the batch size; the 20 random control sets carry one sample per
+held-out prompt (the "Pool random controls" lever above), so each of those rows is a group of one. The fix pass after
+the GLM 5.3 code review (`part212/BUILD-REPORT.md`, F7) measured the full plan's Stage 2 histogram at batch 24 as
+`1: 1,440 · 4: 36 · 8: 264 · 24: 8` and Stage 1 as 3,449 forwards, all at batch 1. Both histograms are now written
+into each `run.json`, so every answer's batch size is on record.
+
+- **Validity.** Batch 1 was avoided because of Part 178's batch-1 fault, which is the fused bf16 SDPA kernel; this
+  run uses eager attention throughout, and the pilot gate requires `attn_implementation == "eager"`. Batch shape can
+  still move an answer at an exact bf16 tie (Part 201); the recorded histograms let any such dependence be checked
+  afterwards. No arm, prompt, threshold, prediction or comparison changes.
+- **Time.** The ~46-minute estimate assumed batched generation and is withdrawn as unverified: 1,440 batch-1
+  generations of up to 48 tokens are about 69,000 single-row decode steps on the A770. The pilot measures throughput
+  by batch size. **Full Stage 2 proceeds only if the pilot's measured rates project the full plan under 4 hours and
+  the pilot shows no stall pattern** (a batch-1 rate falling well below its own early rate). Otherwise cross-set
+  batching (the 20 random sets as rows of one batch on the same prompt, each with its own clamp columns) is built,
+  reviewed and amended in before the full run.
+- **Stage 1 count.** The Size and Pilot sections' "3,989 short forward passes" is an arithmetic error in the design,
+  not a pass the runner lacks. The listed Stage 1 plan sums to 3,449: the 24-prompt pool-norm pre-pass, 5 bank
+  openings × 25 recording passes, 25 monitor baselines, and 131 arms × 25 intervention forwards (3,275). The round-2
+  code review (`part212/REVIEW-code-luna-r2.md`) traced the figure: it rose from 3,917 to 3,989 in the v2 draft, where
+  one added main arm accounts for 25 forwards and the other 47 have no source. No pass is added or removed.
+- **Batch shape on record.** After the round-2 review, every Stage 2 row carries the batch size that produced it, and
+  a resumed run refuses a batch size different from the rows already written, so the shape record holds across
+  restarts.
