@@ -600,3 +600,13 @@ def test_cited_paths_skip_formula_tokens_in_verbatim_prediction_text():
     """Part 213's registered predictions quote `tau_3/1^(L)` and `tau_M/3^(L)`; a formula is not a path."""
     text = "ratios `tau_3/1^(L)` and `tau_M/3^(L)` read from `results/part213/full/score.json`"
     assert list(pc.cited_paths(text)) == ["results/part213/full/score.json"]
+
+
+def test_missing_model_id_is_not_a_missing_path():
+    """Part 209's README cites `allenai/OLMo-2-0425-1B`; a model id that is not a file must not fail the publish check,
+    while a missing repo path or a missing file with an extension still does."""
+    for tok in ("allenai/OLMo-2-0425-1B", "Qwen/Qwen3.5-4B", "google/embeddinggemma-2", "Qwen/Qwen3-1.7B"):
+        assert pc.looks_like_model_id(tok), tok
+    for tok in ("results/part999", "part209/AMENDMENT-9", "results/part209/r1r3-x.json", "cold/REPORT.md",
+                "midtrain-end/records.jsonl", "tools/X1"):
+        assert not pc.looks_like_model_id(tok), tok

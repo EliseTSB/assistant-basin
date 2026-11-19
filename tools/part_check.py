@@ -353,6 +353,16 @@ def cited_paths(text):
             yield tok
 
 
+MODEL_ID = re.compile(r"^(?!(?:results|tools|templates|part\d+[a-z]?)/)[A-Za-z][\w.-]*/[\w.-]*[A-Z0-9][\w.-]*$")
+
+
+def looks_like_model_id(tok):
+    """A missing `org/Name` token with no file extension and a digit or capital in the name, such as
+    `allenai/OLMo-2-0425-1B` or `Qwen/Qwen3.5-4B`: a Hugging Face model id, not a repo path (Part 209, 2026-11-19).
+    Only consulted for tokens that do not exist, so a real relative path is still checked as a path."""
+    return bool(MODEL_ID.match(tok)) and not tok.endswith(PATH_EXT)
+
+
 def verdict_rows(lines, pred_id):
     """Table rows whose first cell is exactly the id; returns their last non-empty cells."""
     out = []
@@ -411,7 +421,7 @@ def publish(repo, pid, legacy_ok=False):
         hit = next((c for c in cands if c.exists()), None)
         if hit is None:
             named = [p for p in rdir.rglob(Path(tok).name)] if "/" not in tok else []
-            if named:
+            if named or looks_like_model_id(tok):
                 continue
             missing.append(tok)
             continue

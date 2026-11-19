@@ -238,15 +238,19 @@ def uncopied_local_imports(repo, copies, job_dir):
             continue
         for node in ast.walk(tree):
             if isinstance(node, ast.Import):
-                mods = [a.name.split(".")[0] for a in node.names]
+                mods = [(a.name.split(".")[0], []) for a in node.names]
             elif isinstance(node, ast.ImportFrom) and node.module and not node.level:
-                mods = [node.module.split(".")[0]]
+                # `from part212 import score212` imports the file part212/score212.py, which the first segment's own
+                # candidates never name (2026-11-19: the Part 212 runner switched to it after a bare import failed
+                # under python -I, and this check stopped seeing score212)
+                pkg = node.module.replace(".", "/")
+                mods = [(node.module.split(".")[0], [])] + [(a.name, [f"{pkg}/{a.name}.py"]) for a in node.names]
             else:
                 continue
-            for m in mods:
+            for m, sub in mods:
                 if m in OPTIONAL_LOCAL:
                     continue
-                cands = [(Path(c).parent / f"{m}.py").as_posix(), f"{m}.py", f"{m}/{m}.py", f"{m}/__init__.py"]
+                cands = sub or [(Path(c).parent / f"{m}.py").as_posix(), f"{m}.py", f"{m}/{m}.py", f"{m}/__init__.py"]
                 in_repo = [x for x in dict.fromkeys(cands) if (repo / x).is_file()]
                 if not in_repo or any(x in copied for x in in_repo) or (c, m) in seen:
                     continue
