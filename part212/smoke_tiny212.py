@@ -262,4 +262,14 @@ stage2_intervention_checks('cpu')
 print(f'intervention checks done in {time.time() - t0:.1f}s', flush=True)
 t0 = time.time()
 run212.main([what, '--out', 'out', '--device', 'cpu'])
+if what in ('stage2', 'pilot'):
+    stage2_path = os.path.join('out', 'stage2.jsonl')
+    with open(stage2_path, encoding='utf-8') as f:
+        stage2_rows = [json.loads(line) for line in f if line.strip()]
+    check(bool(stage2_rows), 'Stage 2 wrote rows for batch metadata inspection')
+    missing_batch = [i for i, row in enumerate(stage2_rows, start=1)
+                     if isinstance(row.get('batch_size'), bool) or not isinstance(row.get('batch_size'), int)
+                     or row['batch_size'] < 1]
+    check(not missing_batch, 'every Stage 2 row carries its actual positive batch_size',
+          f'bad rows {missing_batch[:5]}')
 print('SMOKE OK', what, round(time.time() - t0, 1), 's', flush=True)

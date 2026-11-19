@@ -29,10 +29,13 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+HERE = Path(__file__).resolve().parent
+for _path in (ROOT, HERE):
+    if str(_path) not in sys.path:
+        sys.path.insert(0, str(_path))
 
 import numpy as np  # noqa: E402
+from run212 import stage2_rows  # noqa: E402  (single source of truth for Gate 3's planned keys)
 
 from part66.score66 import FAMILIES  # noqa: E402  (the Part 66 maker lexicon, reused unchanged)
 
@@ -312,8 +315,20 @@ def gate2(s1: dict) -> dict:
 # Stage 2 metrics
 # ----------------------------------------------------------------------------------------------------------------
 
+def stage2_row_batch_size_histogram(rows: list[dict]) -> dict[str, int]:
+    """Count rows scored by their actual generation-call batch size."""
+    counts: Counter = Counter()
+    for index, row in enumerate(rows, start=1):
+        size = row.get('batch_size')
+        if isinstance(size, bool) or not isinstance(size, int) or size < 1:
+            raise ValueError(f'Stage 2 scored row {index} is missing a valid positive batch_size')
+        counts[str(size)] += 1
+    return dict(sorted(counts.items(), key=lambda item: int(item[0])))
+
+
 def stage2_metrics(rows: list[dict], run: dict) -> dict:
     """Every Stage 2 metric the predictions and headline rules read, from stage2.jsonl + run.json."""
+    batch_size_histogram = stage2_row_batch_size_histogram(rows)
     groups = by_arm(rows)
     main = {arm: arm_table(heldout(rs), HELDOUT_N) for arm, rs in groups.items() if '/' not in arm}
     sets = sorted({r['set'] for r in rows if r.get('set')})
@@ -362,6 +377,7 @@ def stage2_metrics(rows: list[dict], run: dict) -> dict:
         if a in groups and b in groups:
             transitions[f'{a}|{b}'] = transition_table(heldout(groups[a]), heldout(groups[b]))
     return {
+        'batch_size_histogram': batch_size_histogram,
         'main_arms': main, 'random_sets': {f'{s}/{a}': t for (s, a), t in set_tables.items()},
         'positive_control': positives, 'guards': guards, 'guard_accuracy': guard_acc,
         'ranks': ranks, 'bootstrap': boot, 'transitions': transitions,
@@ -384,6 +400,11 @@ def gate3(rows: list[dict], run: dict, main: dict, guard_acc: dict) -> dict:
     empty = [r for r in rows if not (r.get('answer') or '').strip()]
     nonfinite = [r for r in rows if any(not math.isfinite(float(t)) for t in r.get('token_ids', []))]
     planned = int(run.get('planned_rows') or 0)
+    planned_rows = stage2_rows(pilot=run.get('stage') == 'pilot')
+    planned_keys = {(r.get('set'), r['arm'], int(r['question_index']), int(r['sample'])) for r in planned_rows}
+    actual_keys = set(keys)
+    missing_keys = planned_keys - actual_keys
+    unplanned_keys = actual_keys - planned_keys
     donors = run.get('donors', {})
     short = [{'bank': b, 'index': d['index'], 'L_gen': d['L_gen']}
              for b, ds in donors.items() for d in ds if int(d.get('L_gen', 0)) < 4]
@@ -391,14 +412,16 @@ def gate3(rows: list[dict], run: dict, main: dict, guard_acc: dict) -> dict:
     checks = {
         'eager': run.get('attn_implementation') == 'eager',
         'no_empty_rows': not empty, 'no_non_finite_rows': not nonfinite, 'no_duplicate_keys': not dup,
-        'every_planned_key_present': planned > 0 and len(keys) >= planned,
+        'every_planned_key_present': (planned > 0 and planned == len(planned_keys)
+                                      and actual_keys == planned_keys),
         'gate3b_donors_L_gen_ge_4': not short and bool(donors),
         'unchanged_guard_accuracy_ge_0.90': (guard_acc.get('unchanged', {}).get('rate') or 0) >= 0.90,
         'unchanged_broken_rate_le_0.05': (unchanged.get('broken_rate') if unchanged else None) is not None
         and unchanged['broken_rate'] <= 0.05,
     }
     return {'pass': all(checks.values()), 'checks': checks, 'duplicate_keys': len(dup), 'empty_rows': len(empty),
-            'non_finite_rows': len(nonfinite), 'short_donors': short, 'planned_rows': planned, 'row_keys': len(keys)}
+            'non_finite_rows': len(nonfinite), 'short_donors': short, 'planned_rows': planned, 'row_keys': len(keys),
+            'missing_planned_keys': len(missing_keys), 'unplanned_row_keys': len(unplanned_keys)}
 
 
 # ----------------------------------------------------------------------------------------------------------------
@@ -646,7 +669,23 @@ def load_stage1(path: Path) -> dict:
 
 
 def load_stage2(path: Path) -> list[dict]:
-    return [json.loads(line) for line in Path(path).read_text(encoding='utf-8').splitlines() if line.strip()]
+    rows = []
+    with Path(path).open(encoding='utf-8') as f:
+        for line_number, line in enumerate(f, start=1):
+            if not line.strip():
+                continue
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError as exc:
+                raise ValueError(f'corrupt Stage 2 JSONL row at {path}, line {line_number}: '
+                                 f'{exc.msg} (column {exc.colno})') from None
+            if not isinstance(row, dict):
+                raise ValueError(f'corrupt Stage 2 JSONL row at {path}, line {line_number}: expected a JSON object')
+            size = row.get('batch_size')
+            if isinstance(size, bool) or not isinstance(size, int) or size < 1:
+                raise ValueError(f'Stage 2 JSONL row at {path}, line {line_number} is missing a valid positive batch_size')
+            rows.append(row)
+    return rows
 
 
 def drop_foreign_shape_rows(rows: list[dict], run: dict) -> tuple[list[dict], int]:
@@ -704,6 +743,7 @@ def verdict_table(result: dict) -> str:
     lines += ['', f"Gate 1: {'PASS' if g['gate1']['pass'] else 'FAIL'} {g['gate1']['checks']}",
               f"Gate 2: {'PASS' if g['gate2']['pass'] else 'FAIL'} {g['gate2']['checks']}",
               f"Gate 3: {'PASS' if result['stage2']['gate3']['pass'] else 'FAIL'} {result['stage2']['gate3']['checks']}",
+              f"Stage 2 scored rows by actual batch size: {result['stage2']['batch_size_histogram']}",
               '', f"Headline reading: {result['headlines']['reading']}",
               f"Factorial interaction I = {result['stage1']['factorial_interaction_I']:.4f} logits"]
     return '\n'.join(lines)

@@ -18,12 +18,14 @@ exercise them on CPU with synthetic tensors and no model.
 from __future__ import annotations
 
 import argparse
+import errno
 import hashlib
 import json
 import math
 import os
 import sys
 import time
+from contextlib import contextmanager
 from pathlib import Path
 
 import numpy as np
@@ -75,6 +77,216 @@ NON_FINITE = 3.0e38  # |logit| above this is recorded as non-finite (bf16 max is
 
 # Design line 149: g_ali = logit(Google) - logsumexp(logit(Al), logit(T)).
 GOOGLE_ID, AL_ID, T_ID = 14030, 2033, 51
+
+
+# Shared output-directory lock.  This is deliberately implemented with portable os APIs so the Windows XPU launcher
+# does not need fcntl or another POSIX-only module.
+OUTPUT_LOCK_NAME = 'part212.lock'
+
+
+def pid_is_alive(pid: int) -> bool:
+    """Portable best-effort liveness check; unknown OS errors are treated as alive, never stolen."""
+    pid = int(pid)
+    if pid <= 0:
+        return False
+    if os.name == 'nt':
+        import ctypes
+        kernel32 = ctypes.WinDLL('kernel32', use_last_error=True)
+        kernel32.OpenProcess.argtypes = [ctypes.c_uint32, ctypes.c_int, ctypes.c_uint32]
+        kernel32.OpenProcess.restype = ctypes.c_void_p
+        kernel32.GetExitCodeProcess.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_ulong)]
+        kernel32.GetExitCodeProcess.restype = ctypes.c_int
+        kernel32.CloseHandle.argtypes = [ctypes.c_void_p]
+        kernel32.CloseHandle.restype = ctypes.c_int
+        handle = kernel32.OpenProcess(0x1000, False, pid)  # PROCESS_QUERY_LIMITED_INFORMATION
+        if not handle:
+            error = ctypes.get_last_error()
+            if error == 5:  # ERROR_ACCESS_DENIED: the PID may be alive but not queryable
+                return True
+            if error in (6, 87, 1168):  # invalid handle / invalid parameter / not found
+                return False
+            return True
+        try:
+            exit_code = ctypes.c_ulong()
+            if not kernel32.GetExitCodeProcess(handle, ctypes.byref(exit_code)):
+                return True
+            return exit_code.value == 259  # STILL_ACTIVE
+        finally:
+            kernel32.CloseHandle(handle)
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    except OSError as exc:
+        return exc.errno != errno.ESRCH
+    return True
+
+
+@contextmanager
+def output_directory_lock(outdir, stage: str):
+    """Hold an O_EXCL lock with the current PID while a Stage 1 or Stage 2 output is being touched."""
+    directory = Path(outdir)
+    directory.mkdir(parents=True, exist_ok=True)
+    lock_path = directory / OUTPUT_LOCK_NAME
+    pid = os.getpid()
+    payload = f'{pid}\n{pid}-{time.time_ns()}\n'.encode('utf-8')
+    while True:
+        try:
+            fd = os.open(str(lock_path), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+        except FileExistsError:
+            try:
+                first_line = lock_path.read_text(encoding='utf-8').splitlines()[0].strip()
+                owner = int(first_line.removeprefix('pid='))
+            except (OSError, IndexError, ValueError) as exc:
+                raise RuntimeError(f'{stage}: cannot read owner PID from output lock {lock_path}') from exc
+            if pid_is_alive(owner):
+                raise RuntimeError(f'{stage}: output directory {directory} is locked by live PID {owner}')
+            print(f'{stage}: taking over stale output lock {lock_path}; PID {owner} is not alive', flush=True)
+            try:
+                lock_path.unlink()
+            except FileNotFoundError:
+                pass
+            continue
+        else:
+            try:
+                os.write(fd, payload)
+                os.fsync(fd)
+            finally:
+                os.close(fd)
+            break
+    try:
+        yield
+    finally:
+        try:
+            if lock_path.read_bytes() == payload:
+                lock_path.unlink()
+        except FileNotFoundError:
+            pass
+
+
+def repair_partial_jsonl(path) -> int:
+    """Drop a non-newline-terminated JSONL tail before resume and report its exact byte count."""
+    path = Path(path)
+    if not path.exists():
+        return 0
+    with path.open('r+b') as f:
+        raw = f.read()
+        if not raw or raw.endswith(b'\n'):
+            return 0
+        keep = raw.rfind(b'\n') + 1
+        dropped = len(raw) - keep
+        f.seek(keep)
+        f.truncate()
+    if dropped:
+        print(f'stage2: dropped {dropped} trailing bytes from incomplete JSONL line in {path}', flush=True)
+    return dropped
+
+
+def load_stage2_jsonl(path) -> list[dict]:
+    """Load complete JSONL rows with line-specific errors; first repair a torn final append."""
+    path = Path(path)
+    if not path.exists():
+        return []
+    repair_partial_jsonl(path)
+    rows = []
+    with path.open(encoding='utf-8') as f:
+        for line_number, line in enumerate(f, start=1):
+            if not line.strip():
+                continue
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError as exc:
+                raise ValueError(f'corrupt Stage 2 JSONL row at {path}, line {line_number}: '
+                                 f'{exc.msg} (column {exc.colno})') from None
+            if not isinstance(row, dict):
+                raise ValueError(f'corrupt Stage 2 JSONL row at {path}, line {line_number}: expected a JSON object')
+            rows.append(row)
+    return rows
+
+
+def stage2_requested_batch_size(args, pilot: bool) -> int:
+    size = int(args.batch or (PILOT_BATCH if pilot else STAGE2_BATCH))
+    if size < 1:
+        raise ValueError(f'batch_size must be positive, got {size}')
+    return size
+
+
+def stage2_batch_fields(actual_batch_size: int, requested_batch_size: int) -> dict:
+    actual, requested = int(actual_batch_size), int(requested_batch_size)
+    if actual < 1 or requested < 1:
+        raise ValueError(f'batch sizes must be positive, got actual={actual}, requested={requested}')
+    return {'batch_size': actual, 'batch_size_requested': requested}
+
+
+def stage2_batch_histogram(rows: list[dict]) -> dict[str, int]:
+    """Aggregate saved per-row sizes into a histogram of complete generation calls."""
+    row_counts: dict[int, int] = {}
+    for row in rows:
+        raw = row.get('batch_size')
+        if isinstance(raw, bool) or not isinstance(raw, int) or raw < 1:
+            raise ValueError('Stage 2 saved row is missing a valid positive batch_size')
+        row_counts[raw] = row_counts.get(raw, 0) + 1
+    histogram = {}
+    for size, count in sorted(row_counts.items()):
+        if count % size:
+            raise ValueError(f'Saved Stage 2 rows contain {count % size} rows of a partial batch_size={size} call')
+        histogram[str(size)] = count // size
+    return histogram
+
+
+def stage2_validate_resume(planned: list[dict], done_rows: list[dict], requested_batch_size: int,
+                           pilot: bool) -> None:
+    """Reject changed requested shapes and any partially persisted generation batch for this pilot flag."""
+    requested = int(requested_batch_size)
+    if requested < 1:
+        raise ValueError(f'batch_size must be positive, got {requested}')
+    planned_by_key = {stage2_resume_key(r['arm'], r['question_index'], r['sample'], r.get('set'), pilot): r
+                      for r in planned}
+    expected_batches = stage2_batches(planned, requested)
+    expected_sizes = {}
+    batch_keys = []
+    for batch in expected_batches:
+        keys = [stage2_resume_key(r['arm'], r['question_index'], r['sample'], r.get('set'), pilot) for r in batch]
+        batch_keys.append(keys)
+        expected_sizes.update({key: len(batch) for key in keys})
+
+    saved = [r for r in done_rows if bool(r.get('pilot', False)) == bool(pilot)]
+    saved_keys = []
+    for row in saved:
+        if not all(k in row for k in ('arm', 'question_index', 'sample')):
+            raise ValueError('existing Stage 2 row is missing its resume key')
+        key = stage2_resume_key(row['arm'], row['question_index'], row['sample'], row.get('set'), pilot)
+        if key not in planned_by_key:
+            raise ValueError(f'existing Stage 2 row has unplanned key {key}')
+        if key in saved_keys:
+            raise ValueError(f'existing Stage 2 output has duplicate key {key}')
+        saved_keys.append(key)
+        if 'batch_size' not in row:
+            raise ValueError(f'existing Stage 2 row {key} has no batch_size; its generation shape is unknown')
+        actual = row['batch_size']
+        if isinstance(actual, bool) or not isinstance(actual, int) or actual < 1:
+            raise ValueError(f'existing Stage 2 row {key} has invalid batch_size {actual!r}')
+        if 'batch_size_requested' not in row:
+            raise ValueError(f'existing Stage 2 row {key} has no batch_size_requested; refusing an unverifiable resume')
+        old_requested = row['batch_size_requested']
+        if isinstance(old_requested, bool) or not isinstance(old_requested, int) or old_requested != requested:
+            raise ValueError(f'existing Stage 2 rows use requested batch size {old_requested!r}, '
+                             f'but this invocation requested {requested}')
+        expected = expected_sizes[key]
+        if actual != expected:
+            raise ValueError(f'existing Stage 2 row {key} records batch_size={actual}, but requested '
+                             f'batch_size={requested} plans batch_size={expected}')
+
+    saved_key_set = set(saved_keys)
+    for keys in batch_keys:
+        present = saved_key_set.intersection(keys)
+        if present and len(present) != len(keys):
+            first = planned_by_key[keys[0]]
+            raise ValueError(f'existing Stage 2 rows contain only {len(present)} of {len(keys)} rows from a '
+                             f'generation batch for arm={first["arm"]}, question={first["question_index"]}, '
+                             f'set={first.get("set")}; refusing to regroup a partial batch')
 
 
 # ----------------------------------------------------------------------------------------------------------------
@@ -884,6 +1096,11 @@ def stage1_record_units(pools: dict) -> list[tuple[int, int]]:
 
 
 def stage1(args) -> dict:
+    with output_directory_lock(args.out, 'stage1'):
+        return _stage1_locked(args)
+
+
+def _stage1_locked(args) -> dict:
     bank = load_prompts()
     outdir = Path(args.out)
     outdir.mkdir(parents=True, exist_ok=True)
@@ -1285,10 +1502,28 @@ def stage2_tensors(donors: dict, means: dict, arm: str, qi: int, units, record_u
 
 
 def stage2(args, pilot: bool = False) -> dict:
-    bank = load_prompts()
     outdir = Path(args.out)
     outdir.mkdir(parents=True, exist_ok=True)
+    with output_directory_lock(outdir, 'pilot' if pilot else 'stage2'):
+        return _stage2_locked(args, pilot)
+
+
+def _stage2_locked(args, pilot: bool = False) -> dict:
+    bank = load_prompts()
+    outdir = Path(args.out)
     answer_path = outdir / 'stage2.jsonl'
+    planned = stage2_rows(pilot)
+    try:
+        batch_size = stage2_requested_batch_size(args, pilot)
+        done_rows = load_stage2_jsonl(answer_path)
+        stage2_validate_resume(planned, done_rows, batch_size, pilot)
+    except ValueError as exc:
+        raise SystemExit(f'Stage 2 resume refused: {exc}') from exc
+    todo = stage2_todo(planned, done_rows, pilot)
+    try:
+        batches = stage2_batches(todo, batch_size)
+    except ValueError as exc:
+        raise SystemExit(f'Stage 2 resume refused: {exc}') from exc
     device = args.device
     tok, model = nr.load_model(MODEL, REVISION, device)
     load = dict(nr.LAST_LOAD)
@@ -1308,24 +1543,14 @@ def stage2(args, pilot: bool = False) -> dict:
     h, s = int(bank['template_prefix_tokens']), int(bank['template_suffix_tokens'])
     means = donor_means(donors, h, s)
     short = short_donors(donors)
-    planned = stage2_rows(pilot)
     if short:
         # Gate 3b: stop before generation and report the short donor (design lines 172-174).
-        obj = stage2_run_json(args, load, donors, means, sets, planned, 0, 0.0, short, pilot, norm_summary)
+        saved_hist = stage2_batch_histogram([r for r in done_rows if bool(r.get('pilot', False)) == bool(pilot)])
+        obj = stage2_run_json(args, load, donors, means, sets, planned, 0, 0.0, short, pilot, norm_summary,
+                              saved_hist)
         (outdir / 'run.json').write_text(json.dumps(obj, ensure_ascii=False) + '\n', encoding='utf-8')
         print(f'Gate 3b FAILED: short donors {short}; Stage 2 stopped before generation', flush=True)
         return obj
-    done_rows = []
-    if answer_path.exists():
-        with answer_path.open(encoding='utf-8') as f:
-            for line in f:
-                try:
-                    done_rows.append(json.loads(line))
-                except ValueError:
-                    continue
-    todo = stage2_todo(planned, done_rows, pilot)
-    batch_size = args.batch or (PILOT_BATCH if pilot else STAGE2_BATCH)
-    batches = stage2_batches(todo, batch_size)
     start = time.time()
     done = 0
     with answer_path.open('a', encoding='utf-8') as sink:
@@ -1369,14 +1594,17 @@ def stage2(args, pilot: bool = False) -> dict:
                           'guard_question': bank['guards'][qi - 25]['question'] if is_guard(qi) else None,
                           'seed': seeds[i], 'prompt': nr.build_prompt(tok, question, False),
                           'prompt_token_ids': ids, 'answer': text, 'token_ids': raw,
-                          'stop_reason': p66._stop_reason(raw, tok), 'pilot': pilot}
+                          'stop_reason': p66._stop_reason(raw, tok), 'pilot': pilot,
+                          **stage2_batch_fields(len(batch), batch_size)}
                 sink.write(json.dumps(record, ensure_ascii=False) + '\n')
             sink.flush()
             done += len(batch)
             print(f'stage2: {done}/{len(todo)} elapsed={time.time() - start:.1f}s', flush=True)
             nr.spill_guard(device, 20.0)
+    saved_rows = load_stage2_jsonl(answer_path)
+    saved_hist = stage2_batch_histogram([r for r in saved_rows if bool(r.get('pilot', False)) == bool(pilot)])
     obj = stage2_run_json(args, load, donors, means, sets, planned, done, time.time() - start, short, pilot,
-                          norm_summary, batch_size_histogram([len(batch) for batch in batches]))
+                          norm_summary, saved_hist)
     (outdir / 'run.json').write_text(json.dumps(obj, ensure_ascii=False) + '\n', encoding='utf-8')
     return obj
 

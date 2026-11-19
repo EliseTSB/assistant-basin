@@ -459,6 +459,11 @@ into each `run.json`, so every answer's batch size is on record.
   the pilot shows no stall pattern** (a batch-1 rate falling well below its own early rate). Otherwise cross-set
   batching (the 20 random sets as rows of one batch on the same prompt, each with its own clamp columns) is built,
   reviewed and amended in before the full run.
-- **Open count.** The Size section's "3,989 short forward passes" in Stage 1 does not match the runner's 3,449
-  (131 arms × 25 prompts + 5 bank openings × 25 + 25 + 24). The round-2 code review is asked to reconcile them before
-  the pilot; if the runner is short of a registered arm, that is a code defect, not a new design.
+- **Stage 1 count.** The Size and Pilot sections' "3,989 short forward passes" is an arithmetic error in the design,
+  not a pass the runner lacks. The listed Stage 1 plan sums to 3,449: the 24-prompt pool-norm pre-pass, 5 bank
+  openings × 25 recording passes, 25 monitor baselines, and 131 arms × 25 intervention forwards (3,275). The round-2
+  code review (`part212/REVIEW-code-luna-r2.md`) traced the figure: it rose from 3,917 to 3,989 in the v2 draft, where
+  one added main arm accounts for 25 forwards and the other 47 have no source. No pass is added or removed.
+- **Batch shape on record.** After the round-2 review, every Stage 2 row carries the batch size that produced it, and
+  a resumed run refuses a batch size different from the rows already written, so the shape record holds across
+  restarts.

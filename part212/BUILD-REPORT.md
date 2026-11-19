@@ -307,3 +307,14 @@ intervention assertions passed. Its random weights correctly failed the positive
 zero-Google pilot gates, so it did not authorize full Stage 2. Selected regression tests run against a scratch copy of
 the pre-review `HEAD` sources produced 11 failures and 2 passes (the standalone F3 value-source helpers were already
 present; the driver integration and layer-specific write checks were red). No real model weights were loaded.
+
+
+## Fixes from the round-2 review (2026-11-19)
+
+- **Stage 2 batch provenance and resume shape.** Every saved Stage 2 answer records its actual generation-call `batch_size` and effective requested `batch_size_requested`. Resume rejects changed requested shapes, mismatched actual per-row shapes, legacy rows without shape metadata, duplicates/unplanned keys, and any partially persisted generation batch before model loading. A same-shape resume only continues at the original batch boundaries. `run.json`'s `generation_batch_histogram` is rebuilt from all saved rows for the active pilot flag; the scorer reports the per-row histogram it actually scored and refuses rows without `batch_size`.
+- **Gate 3 exact key coverage.** Gate 3 imports `stage2_rows()` from the runner and compares actual unique row keys against the exact pilot/full plan, while retaining the duplicate-key check. It reports missing and unplanned key counts.
+- **F3 driver-level regression.** Added a synthetic Stage 1 driver test that supplies distinct target/pool recordings, runs the real driver loop and clamp hooks, and checks the pool units receive their own recorded trace. It fails against baseline `84472af3` by observing the target trace in the pool-unit columns.
+- **Output-directory locking.** Stage 1 and Stage 2 use one portable `O_CREAT | O_EXCL` lock containing the owning PID and a unique token. A live owner refuses a second run; a dead PID is reported and its stale lock may be taken over. The implementation uses no POSIX-only imports and releases the lock on normal or exceptional exit.
+- **Torn JSONL recovery.** Before resume reads/appends, the runner truncates an unterminated final JSONL tail to the last newline and reports the number of bytes dropped. Complete malformed lines fail with path and line number. The scorer likewise reports and rejects corrupt rows explicitly.
+
+**Verification:** 85 CPU tests passed. The new F3 driver test was run against the review's `84472af3` runner from a run-local scratch copy and failed on the observed value mismatch; it passes on this runner. The required tiny pilot smoke printed `SMOKE OK pilot 571.4 s`, with intervention assertions passing. Its 160 saved rows all carry valid `batch_size`; the per-row histogram was `4: 64, 8: 96`, and `run.json`'s call histogram was `4: 16, 8: 12`. Only the tiny random model was loaded; no real model weights or live services were used.

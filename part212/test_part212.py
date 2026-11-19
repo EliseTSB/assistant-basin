@@ -573,20 +573,20 @@ def make_rows(per_arm: dict, sets: dict | None = None) -> list[dict]:
     for arm, fn in per_arm.items():
         for qi in range(24):
             for s in range(8):
-                rows.append({'arm': arm, 'set': None, 'question_index': qi, 'sample': s, 'question': f'q{qi}',
+                rows.append({'arm': arm, 'set': None, 'question_index': qi, 'sample': s, 'batch_size': 1, 'question': f'q{qi}',
                              'answer': fn(qi, s), 'token_ids': [1, 2], 'stop_reason': 'max_new_tokens'})
         for s in range(24):
-            rows.append({'arm': arm, 'set': None, 'question_index': 24, 'sample': s, 'question': 'Who created you?',
+            rows.append({'arm': arm, 'set': None, 'question_index': 24, 'sample': s, 'batch_size': 1, 'question': 'Who created you?',
                          'answer': fn(24, s), 'token_ids': [1], 'stop_reason': 'eos'})
         for g in range(6):
             for s in range(4):
-                rows.append({'arm': arm, 'set': None, 'question_index': 25 + g, 'sample': s,
+                rows.append({'arm': arm, 'set': None, 'question_index': 25 + g, 'sample': s, 'batch_size': 1,
                              'question': list(score212.GUARD_KEYWORDS)[g], 'answer': 'Paris Jupiter blue 4 Au Shakespeare',
                              'token_ids': [1], 'stop_reason': 'eos'})
     for name, by in (sets or {}).items():
         for arm, fn in by.items():
             for qi in range(24):
-                rows.append({'arm': arm, 'set': name, 'question_index': qi, 'sample': 0, 'question': f'q{qi}',
+                rows.append({'arm': arm, 'set': name, 'question_index': qi, 'sample': 0, 'batch_size': 1, 'question': f'q{qi}',
                              'answer': fn(qi, 0), 'token_ids': [1], 'stop_reason': 'eos'})
     return rows
 
@@ -725,6 +725,7 @@ def headline_inputs(sub_delta: float, sub_rate_shift: float = 0.0) -> tuple[dict
     rows = make_rows(per_arm)
     sets = {f'random_{k}': {'zero': lambda qi, s: ALIBABA, 'sub_factual': lambda qi, s: ALIBABA} for k in range(20)}
     s2 = score212.stage2_metrics(score212.classify_rows(rows + make_rows({}, sets)), run_obj(len(rows)))
+    s2['gate3']['pass'] = True  # this helper isolates headline predicates from the separate plan-completeness gate
     preds = {'212.1': score212.pred_212_1(s2), '212.2': {'holds': True}, '212.3': {'holds': True},
              '212.4': {'holds': True}, '212.5': {'holds': True}}
     return s1m, s2, preds
@@ -847,7 +848,16 @@ def _full_stage2() -> tuple[list[dict], dict]:
                             'sub_factual': (lambda n: (lambda qi, s: GOOGLE if qi < n else ALIBABA))(k % 2)}
             for k in range(20)}
     rows = make_rows(per_arm) + make_rows({}, sets)
-    return rows, run_obj(len(rows))
+    by_key = {(r.get('set'), r['arm'], int(r['question_index']), int(r['sample'])): r for r in rows}
+    complete = []
+    for planned in run212.stage2_rows():
+        key = (planned.get('set'), planned['arm'], int(planned['question_index']), int(planned['sample']))
+        row = by_key.get(key)
+        if row is None:
+            qi = int(planned['question_index'])
+            row = dict(planned, question=f'q{qi}', answer=ALIBABA, token_ids=[1], stop_reason='eos')
+        complete.append(dict(row, batch_size=1, batch_size_requested=1, pilot=False))
+    return complete, dict(run_obj(len(complete)), stage=2)
 
 
 def test_every_prediction_holds_on_the_constructed_pass_case():
@@ -1387,7 +1397,7 @@ def test_F3_random_set_trace_arm_clamps_each_pool_units_own_trace():
 def _stage1_call_sites():
     """The source of stage1() (the driver loop), with docstrings and comments stripped."""
     import inspect
-    src = inspect.getsource(run212.stage1)
+    src = inspect.getsource(getattr(run212, '_stage1_locked', run212.stage1))
     return '\n'.join(line.split('#', 1)[0] for line in src.splitlines())
 
 
@@ -1529,3 +1539,199 @@ def test_F10_length_drift_message_names_the_environment_variable(monkeypatch):
     assert '--allow-length-drift' not in str(err.value)
     monkeypatch.setenv('PART212_ALLOW_LENGTH_DRIFT', '1')
     assert run212.stage1_prompt_ids(tok, bank, 0) == ([1, 2, 3] + opening, 3)
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# round-2 review regressions: resume shapes, exact plan keys, driver-path F3, locking, and JSONL recovery
+# ----------------------------------------------------------------------------------------------------------------
+
+def _pilot_positive_rows(n: int, actual_size: int = 8, requested_size: int = 8) -> list[dict]:
+    planned = [r for r in run212.stage2_rows(pilot=True)
+               if r['arm'] == 'unchanged' and r['question_index'] == run212.POSITIVE_INDEX]
+    return [dict(r, pilot=True, batch_size=actual_size, batch_size_requested=requested_size)
+            for r in planned[:n]]
+
+
+def _write_rows(path: Path, rows: list[dict]) -> None:
+    path.write_text(''.join(json.dumps(r) + '\n' for r in rows), encoding='utf-8')
+
+
+def test_stage2_resume_refuses_a_different_requested_batch_size_before_loading_model(tmp_path, monkeypatch):
+    out = tmp_path / 'batch-mismatch'
+    out.mkdir()
+    _write_rows(out / 'stage2.jsonl', _pilot_positive_rows(8, actual_size=8, requested_size=8))
+    monkeypatch.setattr(run212.nr, 'load_model', lambda *a, **k: pytest.fail('resume validation ran after model load'))
+    args = types.SimpleNamespace(out=str(out), device='cpu', batch=4)
+    with pytest.raises(SystemExit, match='batch'):
+        run212.stage2(args, pilot=True)
+
+
+def test_stage2_resume_refuses_to_regroup_a_partially_written_batch(tmp_path, monkeypatch):
+    out = tmp_path / 'partial-batch'
+    out.mkdir()
+    _write_rows(out / 'stage2.jsonl', _pilot_positive_rows(3, actual_size=8, requested_size=8))
+    monkeypatch.setattr(run212.nr, 'load_model', lambda *a, **k: pytest.fail('resume validation ran after model load'))
+    args = types.SimpleNamespace(out=str(out), device='cpu', batch=8)
+    with pytest.raises(SystemExit, match='partial|incomplete|batch'):
+        run212.stage2(args, pilot=True)
+
+
+def test_stage2_truncates_partial_jsonl_tail_before_resume_append(tmp_path, monkeypatch, capsys):
+    out = tmp_path / 'tail-repair'
+    out.mkdir()
+    path = out / 'stage2.jsonl'
+    complete_rows = _pilot_positive_rows(8, actual_size=8, requested_size=8)
+    _write_rows(path, complete_rows)
+    complete_bytes = path.read_bytes()
+    partial = b'{"arm":"unfinished'
+    path.write_bytes(complete_bytes + partial)
+
+    def stop_at_model_load(*a, **k):
+        raise RuntimeError('tail was repaired before model load')
+
+    monkeypatch.setattr(run212.nr, 'load_model', stop_at_model_load)
+    args = types.SimpleNamespace(out=str(out), device='cpu', batch=8)
+    with pytest.raises(RuntimeError, match='tail was repaired'):
+        run212.stage2(args, pilot=True)
+    assert path.read_bytes() == complete_bytes
+    assert f'dropped {len(partial)} trailing bytes' in capsys.readouterr().out
+
+
+def test_stage2_batch_fields_record_actual_call_shape_and_run_histogram_uses_saved_rows():
+    assert run212.stage2_batch_fields(actual_batch_size=4, requested_batch_size=24) == {
+        'batch_size': 4, 'batch_size_requested': 24}
+    saved = ([{'batch_size': 4, 'pilot': True} for _ in range(8)]
+             + [{'batch_size': 8, 'pilot': True} for _ in range(8)])
+    assert run212.stage2_batch_histogram(saved) == {'4': 2, '8': 1}
+
+
+def test_scorer_reports_the_per_row_batch_size_histogram():
+    rows = score212.classify_rows(make_rows({'unchanged': lambda q, s: ALIBABA}))
+    metrics = score212.stage2_metrics(rows, run_obj(len(rows)))
+    assert metrics['batch_size_histogram'] == {'1': len(rows)}
+
+
+def test_gate3_requires_the_exact_planned_key_set_from_the_runner():
+    planned = run212.stage2_rows(pilot=True)
+    rows = [dict(r, answer='A complete answer here.', token_ids=[1], pilot=True, batch_size=4) for r in planned]
+    run = {'stage': 'pilot', 'planned_rows': len(planned), 'attn_implementation': 'eager',
+           'donors': {'d_fact': [{'index': 0, 'L_gen': 4}]}}
+    main = {'unchanged': {'broken_rate': 0.0}}
+    guards = {'unchanged': {'rate': 1.0}}
+    assert score212.gate3(rows, run, main, guards)['checks']['every_planned_key_present'] is True
+    rows[-1] = dict(rows[-1], question_index=99)
+    gate = score212.gate3(rows, run, main, guards)
+    assert gate['checks']['every_planned_key_present'] is False
+    assert gate['pass'] is False
+
+
+def test_F3_stage1_driver_writes_random_pool_units_own_recorded_trace(tmp_path, monkeypatch):
+    """Exercise stage1() through its arm loop and real clamp hooks with distinct target/pool recordings."""
+    pools = {6: [1], 7: [2], 11: [3], 29: [4]}
+    pool_units = [(6, 1), (7, 2), (11, 3), (29, 4)]
+    units = list(run212.TARGET) + pool_units + list(run212.MONITORS)
+    n_positions = 20  # prompt T=15 plus the five forced opening tokens
+    bases = {'en_maker': 10.0, 'd_fact': 1000.0, 'd_you': 2000.0,
+             'd_zh_maker': 3000.0, 'd_zh_fact': 4000.0}
+    recorded = {name: [np.tile(np.arange(len(units), dtype=np.float64) + base,
+                               (n_positions, 1)) for _ in range(25)]
+                for name, base in bases.items()}
+    layers = []
+    for _ in range(30):
+        block = types.SimpleNamespace()
+        block.mlp = types.SimpleNamespace(down_proj=torch.nn.Linear(9000, 1, bias=False))
+        layers.append(block)
+    captured = []
+
+    class DriverModel:
+        def __call__(self, input_ids, use_cache=False):
+            seen = {}
+            for li, layer in enumerate(layers):
+                module = layer.mlp.down_proj
+                x = torch.full((1, int(input_ids.shape[1]), 9000), -77.0)
+                for hook in list(module._forward_pre_hooks.values()):
+                    replacement = hook(module, (x,))
+                    if replacement is not None:
+                        x = replacement[0]
+                seen[li] = x.detach().clone()
+            if any(torch.any(values != -77.0) for values in seen.values()):
+                captured.append(seen)
+            logits = torch.zeros((1, int(input_ids.shape[1]), 1), dtype=torch.float32)
+            return types.SimpleNamespace(logits=logits)
+
+    model = DriverModel()
+    monkeypatch.setattr(run212, 'load_prompts', lambda: {
+        'items': [{'en_maker': f'question {i}'} for i in range(25)],
+        'template_prefix_tokens': H, 'template_suffix_tokens': S})
+    monkeypatch.setattr(run212.nr, 'load_model', lambda *a, **k: (object(), model))
+    monkeypatch.setattr(run212.nr, 'LAST_LOAD', {'test_driver': True})
+    monkeypatch.setattr(run212.nr, 'find_text_layers', lambda model: (None, layers, None))
+    monkeypatch.setattr(run212, 'down_weights', lambda ls: [np.zeros((4, 9000), dtype=np.float64) for _ in run212.TARGET])
+    monkeypatch.setattr(run212, 'pool_norm_pass', lambda *a: ({}, {}))
+    monkeypatch.setattr(run212, 'stage1_pools', lambda *a: (pools, {}))
+    monkeypatch.setattr(run212, 'random_sets', lambda p: {'random_0': pool_units})
+    monkeypatch.setattr(run212, 'record_pass', lambda *a: recorded)
+    monkeypatch.setattr(run212, 'stage1_profiles', lambda *a: {})
+    monkeypatch.setattr(run212, 'stage1_arm_names', lambda: ['unchanged', 'random_0:trace_resample_fact'])
+    monkeypatch.setattr(run212, 'stage1_prompt_ids', lambda *a: ([1] * 20, 15))
+    monkeypatch.setattr(run212, 'stage1_input_ids', lambda ids, bank: [1] * 25)
+    monkeypatch.setattr(run212, 'monitor_values', lambda *a, **k: {'l27_n3325': 0.0, 'l24_n3949': 0.0})
+    monkeypatch.setattr(run212, 'g_ali', lambda *a: 0.0)
+    monkeypatch.setattr(run212, 'g_al', lambda *a: 0.0)
+    monkeypatch.setattr(run212, 'eight_maker_mass', lambda *a: 0.0)
+    monkeypatch.setattr(run212, 'g_seq', lambda *a: 0.0)
+    monkeypatch.setattr(run212, 'finalize_stage1', lambda *a: {})
+
+    run212.stage1(types.SimpleNamespace(out=str(tmp_path / 'stage1'), device='cpu'))
+    assert captured, 'the Stage 1 driver never ran the random-set clamp'
+    seen = captured[0]
+    for li, unit in pool_units:
+        column = units.index((li, unit))
+        want = recorded['d_fact'][0][:, column]
+        got = seen[li][0, :n_positions, unit].cpu().numpy()
+        assert np.array_equal(got, want), f'L{li} N{unit} wrote target trace {got[:2]} instead of pool trace {want[:2]}'
+        target_unit = next(u for u in run212.TARGET if u[0] == li)
+        target_trace = recorded['d_fact'][0][:, units.index(target_unit)]
+        assert not np.array_equal(got, target_trace)
+
+
+def test_output_directory_lock_refuses_live_owner_and_releases_on_exit(tmp_path):
+    lock_path = tmp_path / run212.OUTPUT_LOCK_NAME
+    with run212.output_directory_lock(tmp_path, 'test'):
+        assert lock_path.exists()
+        assert str(__import__('os').getpid()) in lock_path.read_text(encoding='utf-8')
+        with pytest.raises(RuntimeError, match='live|locked'):
+            with run212.output_directory_lock(tmp_path, 'nested'):
+                pass
+    assert not lock_path.exists()
+
+
+def test_output_directory_lock_takes_over_a_stale_pid_with_a_message(tmp_path, monkeypatch, capsys):
+    lock_path = tmp_path / run212.OUTPUT_LOCK_NAME
+    lock_path.write_text('999999\n', encoding='utf-8')
+    monkeypatch.setattr(run212, 'pid_is_alive', lambda pid: False)
+    with run212.output_directory_lock(tmp_path, 'stage2'):
+        assert lock_path.exists()
+    assert 'stale' in capsys.readouterr().out.lower()
+    assert not lock_path.exists()
+
+
+def test_partial_jsonl_tail_is_truncated_and_reports_dropped_bytes(tmp_path, capsys):
+    path = tmp_path / 'stage2.jsonl'
+    complete = b'{"answer":"complete"}\n'
+    partial = b'{"answer":"unfinished'
+    path.write_bytes(complete + partial)
+    dropped = run212.repair_partial_jsonl(path)
+    assert dropped == len(partial)
+    assert path.read_bytes() == complete
+    assert 'dropped' in capsys.readouterr().out.lower()
+
+
+def test_scorer_reports_corrupt_jsonl_row_and_rejects_legacy_rows_without_batch_size(tmp_path):
+    path = tmp_path / 'stage2.jsonl'
+    path.write_text(json.dumps({'arm': 'unchanged', 'batch_size': 1}) + '\n{"answer": }\n', encoding='utf-8')
+    with pytest.raises(ValueError, match='corrupt Stage 2 JSONL.*line 2'):
+        score212.load_stage2(path)
+    path.write_text(json.dumps({'arm': 'unchanged', 'answer': 'valid'}) + '\n', encoding='utf-8')
+    with pytest.raises(ValueError, match='batch_size'):
+        score212.load_stage2(path)
