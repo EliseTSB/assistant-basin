@@ -356,9 +356,24 @@ def record(unit: dict, prompt_id: str, arm: str, dose: str, alpha: float, result
 # ---------------------------------------------------------------------------------------------------------------------
 
 def provenance(checkpoint: str, snapshot: Path) -> dict:
+    """The checkpoint's full commit, checked against part85's registered prefix and the local snapshot.
+
+    Offline (HF_HUB_OFFLINE=1, how every Part 213 run is launched) the Hub cannot be asked what the branch points at;
+    the commit is then the local snapshot folder's name (Hugging Face names snapshot folders by the resolved commit),
+    validated against the registered prefix, and recorded as such. (The first build always asked the Hub, so the
+    first complete pilot ran 38 minutes and died writing run.json; part85/commits.local.json exists nowhere here.)"""
+    import os
+    from dataclasses import asdict
     from part85 import checkpoints as registry
 
-    resolved = registry.resolve_checkpoint(checkpoint)
+    if os.environ.get("HF_HUB_OFFLINE") == "1" and not registry.LOCAL_COMMITS.is_file():
+        cp = registry.BY_KEY[checkpoint]
+        sha = Path(snapshot).name
+        if len(sha) != 40 or not sha.startswith(cp.commit_prefix):
+            raise RuntimeError(f"{checkpoint}: local snapshot {sha} is not a full commit with prefix {cp.commit_prefix}")
+        resolved = {**asdict(cp), "commit": sha, "resolved_from": "local snapshot folder name (offline)"}
+    else:
+        resolved = registry.resolve_checkpoint(checkpoint)
     registry.validate_snapshot_commit(snapshot, resolved["commit"])
     return resolved
 
@@ -847,6 +862,8 @@ def main(argv=None) -> int:
         p.add_argument("--force", action="store_true", help="overwrite an existing output file")
     sub.choices["stage1"].add_argument("--with-fr", action="store_true", help="also build and run FR")
     args = ap.parse_args(argv)
+    for ckpt in CHECKPOINTS:  # fail in seconds, not after the run: run.json needs every checkpoint's provenance
+        provenance(ckpt, snapshot_dir(ckpt))
     return {"pilot": cmd_pilot, "stage1": cmd_stage1, "stage2": cmd_stage2, "fr": cmd_fr}[args.command](args)
 
 
