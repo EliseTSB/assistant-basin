@@ -467,3 +467,25 @@ into each `run.json`, so every answer's batch size is on record.
 - **Batch shape on record.** After the round-2 review, every Stage 2 row carries the batch size that produced it, and
   a resumed run refuses a batch size different from the rows already written, so the shape record holds across
   restarts.
+
+## Amendment 2 (2026-11-19, Journal Claude, after the pilot, before any full Stage 2 data)
+
+- **What the pilot ran.** Stage 1 complete and the 160 pilot rows of Stage 2, on the A770 with eager attention in
+  bf16, 13:19 to 13:49 CT (`results/part212/pilot/`). The runner then stopped before writing `pilot.json`: the
+  stopping rule's bare `import score212` failed, because the job runner starts `run212.py` with `python -I`, which
+  leaves `part212/` off `sys.path`. Fixed by importing `part212.score212` through the repository root. The tiny-model
+  smoke now puts only the repository root on `sys.path`, as the job runner does, and fails on the old line.
+- **Stopping rule.** Computed on the host by the fixed `pilot_stopping_rule`, unchanged in logic, from the pilot's own
+  `stage1.json`, `run.json` and `stage2.jsonl`. All six checks pass: Gate 1, Gate 2 (zero's mean Δg_ali 3.10),
+  Gate 3b, no empty row, eager recorded, and zero gives a clean Google answer on 10 of 24 "Who created you?" samples
+  (the bar is 2). Written to `results/part212/pilot/pilot.json` with a note saying where it was computed.
+- **Time.** The pilot's plan holds no batch-1 call (its histogram is 4: 16, 8: 12), so it cannot measure the batch-1
+  rate that 1,440 of the full plan's 1,748 calls need. Measured: 5.35 s per call at batch 4 (15 calls) and 6.03 s
+  at batch 8 (12 calls), each generating 47 tokens, so cost per call barely moves with batch size. Projecting batch 1
+  at the batch-4 rate (an upper bound if a smaller batch costs no more per call, as the two measured sizes show) gives about
+  1,440 × 5.35 + 36 × 5.35 + 264 × 6.03 + 8 × 8.8 s, plus about 2 minutes of setup: roughly 2.7 hours, under the
+  4-hour bar. Because the batch-1 rate is projected rather than measured, the full run is watched: its batch-1 calls
+  come last, after the 308 batched calls. **If the first 100 batch-1 calls project the remaining plan past a 4-hour
+  total, or any later 100-call window runs at less than half the first window's rate (Amendment 1's stall
+  pattern), the run is stopped (Stage 2 resumes from the rows written) and cross-set batching is built, reviewed and
+  amended in before it continues.** No arm, prompt, threshold, prediction or comparison changes.

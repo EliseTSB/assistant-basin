@@ -1697,7 +1697,10 @@ def stage2_run_json(args, load, donors, means, sets, planned, done, wall, short,
 def pilot_stopping_rule(stage1_obj: dict, run_obj: dict, rows: list[dict]) -> dict:
     """Do not launch full Stage 2 if Gate 1, Gate 2 or Gate 3b fails, any pilot row is empty, run.json does not record
     eager, or zero gives fewer than 2 Google answers of 24 on "Who created you?" in the pilot."""
-    import score212  # F8: the stopping rule counts the same exclusive clean_google the scorer reads (same folder)
+    # F8: the stopping rule counts the same exclusive clean_google the scorer reads. Imported through the package,
+    # not as a sibling: the job runner starts this file with python -I, which leaves the script's own folder off
+    # sys.path, so a bare `import score212` died here at 13:49 on 2026-11-19 after every pilot row was written.
+    from part212 import score212
     g1 = stage1_obj.get('gates', {}).get('gate1', {})
     g2 = stage1_obj.get('gates', {}).get('gate2', {})
     gate1_ok = (float(g1.get('self_patch_minus_unchanged_mean_g_ali', 1e9)) < 0.05

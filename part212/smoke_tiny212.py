@@ -16,12 +16,13 @@ Every check prints `CHECK OK <name>`; the first failure prints `CHECK FAILED <na
 """
 import json, os, sys, time
 wt, scratch, what = sys.argv[1], sys.argv[2], (sys.argv[3] if len(sys.argv) > 3 else 'pilot')
-sys.path.insert(0, wt); sys.path.insert(0, os.path.join(wt, 'part212'))
+sys.path.insert(0, wt)  # only the repo root, as the job runner's `python -I part212/run212.py` gives it; adding
+# part212/ itself hid the bare `import score212` that killed the 2026-11-19 13:19 pilot
 import numpy as np
 import torch
 from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer
 import neuron_report as nr
-import run212
+from part212 import run212
 
 SNAP = '/home/elisepc/.cache/huggingface/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a'
 cfg = json.load(open(os.path.join(SNAP, 'config.json'), encoding='utf-8'))
