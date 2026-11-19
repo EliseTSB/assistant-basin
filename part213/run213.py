@@ -665,29 +665,50 @@ def cmd_stage1(args) -> int:
 # FR: 2 * instruct - dpo, in place, float32
 # ---------------------------------------------------------------------------------------------------------------------
 
-def build_fr(instruct_snapshot: Path, dpo_snapshot: Path):
-    """Load instruct (~5.9 GB) and stream dpo's safetensors one tensor at a time: param.mul_(2).sub_(dpo) (l.108-111)."""
+def dpo_tensor_sources(dpo_snapshot: Path):
+    """Yield (key, tensor) for every tensor in the DPO snapshot, one file at a time.
+
+    The real OLMo-2-0425-1B-DPO snapshot ships `pytorch_model.bin` (torch zip format, bf16), not safetensors; the
+    first full run died here (2026-11-19 07:12, "no safetensors") because the tiny smoke never ran `--with-fr`.
+    Safetensors are streamed one tensor at a time; a .bin is memory-mapped (`mmap=True`), so only the tensor being
+    combined is resident beside the float32 instruct model.
+    """
     import torch
     from safetensors import safe_open
 
-    tokenizer, model = load_model_fp32(instruct_snapshot)
-    state = model.state_dict()
-    files = sorted(dpo_snapshot.glob("*.safetensors"))
-    if not files:
-        raise SystemExit(f"no safetensors in {dpo_snapshot}")
-    seen = set()
-    with torch.no_grad():
-        for path in files:
+    st_files = sorted(dpo_snapshot.glob("*.safetensors"))
+    bin_files = sorted(dpo_snapshot.glob("pytorch_model*.bin"))
+    if st_files:
+        for path in st_files:
             with safe_open(str(path), framework="pt", device="cpu") as handle:
                 for key in handle.keys():
-                    if key not in state:
-                        continue
-                    tensor = handle.get_tensor(key)
-                    target = state[key]
-                    if tuple(tensor.shape) != tuple(target.shape):
-                        raise RuntimeError(f"{key}: dpo shape {tuple(tensor.shape)} != instruct {tuple(target.shape)}")
-                    target.mul_(2.0).sub_(tensor.float())
-                    seen.add(key)
+                    yield key, handle.get_tensor(key)
+    elif bin_files:
+        for path in bin_files:
+            state = torch.load(str(path), map_location="cpu", weights_only=True, mmap=True)
+            for key in list(state.keys()):
+                yield key, state[key]
+            del state
+    else:
+        raise SystemExit(f"no safetensors or pytorch_model*.bin weights in {dpo_snapshot}")
+
+
+def build_fr(instruct_snapshot: Path, dpo_snapshot: Path):
+    """Load instruct in float32 and combine dpo one tensor at a time: param.mul_(2).sub_(dpo) (l.108-111)."""
+    import torch
+
+    tokenizer, model = load_model_fp32(instruct_snapshot)
+    state = model.state_dict()
+    seen = set()
+    with torch.no_grad():
+        for key, tensor in dpo_tensor_sources(dpo_snapshot):
+            if key not in state or key in seen:
+                continue
+            target = state[key]
+            if tuple(tensor.shape) != tuple(target.shape):
+                raise RuntimeError(f"{key}: dpo shape {tuple(tensor.shape)} != instruct {tuple(target.shape)}")
+            target.mul_(2.0).sub_(tensor.float())
+            seen.add(key)
     missing = sorted(set(state) - seen)
     if missing:
         raise SystemExit(f"FR could not be built: {len(missing)} instruct tensors absent from dpo, e.g. {missing[:3]}")

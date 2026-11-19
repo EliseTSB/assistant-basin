@@ -898,3 +898,39 @@ def test_r2_gate3_is_not_read_without_the_audit_and_needs_the_known_example_chec
     broken = [dict(r, answer="") if r["arm"] == "none" else r for r in _stage2_rows()]
     g = s.gate3({"stage2": broken, "runs": {}, "labels": labels, "kappa": 0.9, "reader_known_pass": 10}, TARGETS)
     assert g["passed"] is False and g["status"] == "failed" and g["baseline_broken"]
+
+
+@pytest.mark.parametrize("dpo_format", ["bin", "safetensors"])
+def test_fr_builds_from_a_bin_or_safetensors_dpo_snapshot(tmp_path, dpo_format):
+    """The real DPO snapshot ships pytorch_model.bin only; the first full run died in build_fr ("no safetensors",
+    2026-11-19 07:12). FR must equal 2 * instruct - dpo, tensor for tensor, from either format."""
+    import shutil
+    import torch
+    from transformers import AutoConfig, AutoModelForCausalLM
+    from part213 import run213
+
+    cfg_dir = HERE / "tiny-olmo-cfg"
+    if not (cfg_dir / "tokenizer.json").exists():
+        pytest.skip("tiny-olmo-cfg/tokenizer.json is gitignored and absent here")
+    cfg = AutoConfig.from_pretrained(str(cfg_dir))
+    cfg.hidden_size, cfg.intermediate_size, cfg.num_hidden_layers = 32, 64, 2
+    cfg.num_attention_heads, cfg.num_key_value_heads = 4, 4
+    torch.manual_seed(1)
+    instruct = AutoModelForCausalLM.from_config(cfg).float()
+    torch.manual_seed(2)
+    dpo = AutoModelForCausalLM.from_config(cfg).to(torch.bfloat16)
+    inst_dir, dpo_dir = tmp_path / "instruct", tmp_path / "dpo"
+    instruct.save_pretrained(str(inst_dir))
+    for name in ("tokenizer.json", "tokenizer_config.json", "special_tokens_map.json"):
+        shutil.copyfile(cfg_dir / name, inst_dir / name)
+    if dpo_format == "bin":
+        dpo_dir.mkdir()
+        torch.save(dpo.state_dict(), dpo_dir / "pytorch_model.bin")
+    else:
+        dpo.save_pretrained(str(dpo_dir))
+    assert any(dpo_dir.glob("*.safetensors")) == (dpo_format == "safetensors")
+    _tok, fr = run213.build_fr(inst_dir, dpo_dir)
+    fr_state, inst_state, dpo_state = fr.state_dict(), instruct.state_dict(), dpo.state_dict()
+    for key, value in fr_state.items():
+        expected = 2.0 * inst_state[key].float() - dpo_state[key].float()
+        assert torch.equal(value, expected), key
