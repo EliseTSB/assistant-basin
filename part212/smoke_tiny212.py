@@ -36,7 +36,10 @@ torch.manual_seed(0)
 model = AutoModelForCausalLM.from_config(conf, dtype=torch.float32).eval()
 tok = AutoTokenizer.from_pretrained(SNAP, local_files_only=True)
 
+LOADS = []
+
 def fake_load(name, rev, device, *a, **k):
+    LOADS.append(name)
     nr.LAST_LOAD = {'model': name, 'revision': rev, 'device': device, 'tiny_random_smoke': True}
     return tok, model
 nr.load_model = fake_load
@@ -262,6 +265,10 @@ stage2_intervention_checks('cpu')
 print(f'intervention checks done in {time.time() - t0:.1f}s', flush=True)
 t0 = time.time()
 run212.main([what, '--out', 'out', '--device', 'cpu'])
+if what == 'pilot':
+    if len(LOADS) != 1:
+        print(f'CHECK FAILED pilot_loads_model_once: {len(LOADS)} loads'); sys.exit(1)
+    print('CHECK OK pilot_loads_model_once')
 if what in ('stage2', 'pilot'):
     stage2_path = os.path.join('out', 'stage2.jsonl')
     with open(stage2_path, encoding='utf-8') as f:

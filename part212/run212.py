@@ -1144,17 +1144,17 @@ def stage1_record_units(pools: dict) -> list[tuple[int, int]]:
     return units + list(MONITORS)
 
 
-def stage1(args) -> dict:
+def stage1(args, loaded=None) -> dict:
     with output_directory_lock(args.out, 'stage1'):
-        return _stage1_locked(args)
+        return _stage1_locked(args, loaded)
 
 
-def _stage1_locked(args) -> dict:
+def _stage1_locked(args, loaded=None) -> dict:
     bank = load_prompts()
     outdir = Path(args.out)
     outdir.mkdir(parents=True, exist_ok=True)
     device = args.device
-    tok, model = nr.load_model(MODEL, REVISION, device)
+    tok, model = loaded if loaded is not None else nr.load_model(MODEL, REVISION, device)
     load = dict(nr.LAST_LOAD)
     _, layers, _ = nr.find_text_layers(model)
     n_units = int(layers[0].mlp.down_proj.in_features)
@@ -1550,14 +1550,14 @@ def stage2_tensors(donors: dict, means: dict, arm: str, qi: int, units, record_u
     return out
 
 
-def stage2(args, pilot: bool = False) -> dict:
+def stage2(args, pilot: bool = False, loaded=None) -> dict:
     outdir = Path(args.out)
     outdir.mkdir(parents=True, exist_ok=True)
     with output_directory_lock(outdir, 'pilot' if pilot else 'stage2'):
-        return _stage2_locked(args, pilot)
+        return _stage2_locked(args, pilot, loaded)
 
 
-def _stage2_locked(args, pilot: bool = False) -> dict:
+def _stage2_locked(args, pilot: bool = False, loaded=None) -> dict:
     bank = load_prompts()
     outdir = Path(args.out)
     answer_path = outdir / 'stage2.jsonl'
@@ -1578,7 +1578,7 @@ def _stage2_locked(args, pilot: bool = False) -> dict:
     except ValueError as exc:
         raise SystemExit(f'Stage 2 resume refused: {exc}') from exc
     device = args.device
-    tok, model = nr.load_model(MODEL, REVISION, device)
+    tok, model = loaded if loaded is not None else nr.load_model(MODEL, REVISION, device)
     load = dict(nr.LAST_LOAD)
     _, layers, _ = nr.find_text_layers(model)
     n_units = int(layers[0].mlp.down_proj.in_features)
@@ -1737,8 +1737,12 @@ def main(argv=None):
     elif args.cmd == 'stage2':
         stage2(args)
     else:
-        s1 = stage1(args)
-        run_obj = stage2(args, pilot=True)
+        # Load once for both stages (2026-11-19: the pilot's second load staged ~7.5 GB in Windows RAM and the job's
+        # 2 GB guard killed it at 13:09 right after Stage 1). Stage 1 removes every hook it installs and never writes
+        # a weight, so Stage 2 gets the same clean model.
+        loaded = nr.load_model(MODEL, REVISION, args.device)
+        s1 = stage1(args, loaded)
+        run_obj = stage2(args, pilot=True, loaded=loaded)
         path = Path(args.out) / 'stage2.jsonl'
         rows = ([json.loads(line) for line in path.read_text(encoding='utf-8').splitlines() if line.strip()]
                 if path.exists() else [])
