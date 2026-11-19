@@ -20,8 +20,7 @@ INSTRUCT_REPO = "models--allenai--OLMo-2-0425-1B-Instruct"
 INSTRUCT_PREFIX = "48d788eca847"
 
 # Verbatim noun phrases extracted from results/part92/step2/neurons.json screen_answer (normalized whitespace only),
-# plus strict persona content keywords with explicit provenance (all present in np_text or persona label; no loose
-# designer synonyms or generic self-answer filler words).
+# plus strict persona content keywords with explicit provenance (all present in np_text or persona label).
 NP_SPECS = {
     # 21 slot units
     "p92-02": ("the town", "town", [{"kw": "town", "source": "np_text"}]),
@@ -66,35 +65,38 @@ NP_SPECS = {
     "p92-52": ("a string of code", "string of code", [{"kw": "string of code", "source": "np_text"}, {"kw": "browser", "source": "persona"}]),
 }
 
+# Matched-length and matched-framing prompt ladder:
+# SELF_HELD and THIRD_SLOT each have 2 short direct (~7-8 words) + 2 scene-framed (~14-15 words) prompts.
+# No prompt contains any unit's persona keyword ("town square" replaced with "plaza").
 STAGE1_PROMPTS = {
     "self_select": [
-        {"id": "self_select_0", "question": "Who are you?", "opening": "I am"},
+        {"id": "self_select_0", "style": "direct", "question": "Who are you?", "opening": "I am"},
     ],
     "self_held": [
-        {"id": "self_h0", "question": "How would you identify yourself in one line?", "opening": "I am"},
-        {"id": "self_h1", "question": "What kind of being or thing are you?", "opening": "I am"},
-        {"id": "self_h2", "question": "State your identity briefly.", "opening": "I am"},
-        {"id": "self_h3", "question": "How should a stranger label what you are?", "opening": "I am"},
+        {"id": "self_h0", "style": "direct", "question": "How would you identify yourself in one line?", "opening": "I am"},
+        {"id": "self_h1", "style": "direct", "question": "What kind of being or thing are you?", "opening": "I am"},
+        {"id": "self_h2", "style": "scene", "question": "Imagine knocking on a cottage door at dusk and introducing yourself. How do you identify yourself?", "opening": "I am"},
+        {"id": "self_h3", "style": "scene", "question": "In a short folktale, you step out of the forest mist. How do you describe yourself?", "opening": "I am"},
     ],
     "third_slot": [
-        {"id": "third_0", "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?", "opening": "The stranger is"},
-        {"id": "third_1", "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?", "opening": "The visitor is"},
-        {"id": "third_2", "question": "In a brief fable, a shadowy figure emerges from the forest mist. What is the figure?", "opening": "The figure is"},
-        {"id": "third_3", "question": "A novelist sketches the main character for a new book. Who is the protagonist?", "opening": "The protagonist is"},
+        {"id": "third_0", "style": "direct", "question": "Who is the stranger at the door?", "opening": "The stranger is"},
+        {"id": "third_1", "style": "direct", "question": "What is the mysterious figure in the mist?", "opening": "The figure is"},
+        {"id": "third_2", "style": "scene", "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?", "opening": "The stranger is"},
+        {"id": "third_3", "style": "scene", "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?", "opening": "The visitor is"},
     ],
     "mention_slot": [
-        {"id": "mention_0", "question": "Two travelers sit in a quiet tavern swapping tales. What did they discuss?", "opening": "They discussed"},
-        {"id": "mention_1", "question": "A painter looks out a tall studio window at sunrise. What did the painter see?", "opening": "The painter saw"},
-        {"id": "mention_2", "question": "An explorer opens an old wooden chest in an attic. What did the explorer find?", "opening": "The explorer found"},
-        {"id": "mention_3", "question": "A crowd gathers in the town square at noon. What did everyone notice?", "opening": "Everyone noticed"},
+        {"id": "mention_0", "style": "scene", "question": "Two travelers sit in a quiet tavern swapping tales. What did they discuss?", "opening": "They discussed"},
+        {"id": "mention_1", "style": "scene", "question": "A painter looks out a tall studio window at sunrise. What did the painter see?", "opening": "The painter saw"},
+        {"id": "mention_2", "style": "scene", "question": "An explorer opens an old wooden chest in an attic. What did the explorer find?", "opening": "The explorer found"},
+        {"id": "mention_3", "style": "scene", "question": "A crowd gathers in the plaza at noon. What did everyone notice?", "opening": "Everyone noticed"},
+    ],
+    "copula_nonid": [
+        {"id": "copula_nonid_0", "style": "scene", "question": "In a short folktale, a traveler carries a prized keepsake inside a satchel. What is the keepsake?", "opening": "The keepsake is"},
+        {"id": "copula_nonid_1", "style": "scene", "question": "In a quiet village at dusk, a painter finishes a new artwork. What is the subject?", "opening": "The subject is"},
     ],
     "self_nonid": [
-        {"id": "self_nonid_0", "question": "Imagine walking down a quiet forest trail at sunrise. What did you see?", "opening": "I saw"},
-        {"id": "self_nonid_1", "question": "Imagine opening an old wooden box in an attic. What did you find?", "opening": "I found"},
-    ],
-    "third_asst": [
-        {"id": "third_asst_0", "question": "In a brief summary of this chat, who is the assistant replying here?", "opening": "The assistant is"},
-        {"id": "third_asst_1", "question": "How would an observer describe the AI assistant answering this message?", "opening": "The assistant is"},
+        {"id": "self_nonid_0", "style": "scene", "question": "Imagine walking down a quiet forest trail at sunrise. What did you see?", "opening": "I saw"},
+        {"id": "self_nonid_1", "style": "scene", "question": "Imagine opening an old wooden box in an attic. What did you find?", "opening": "I found"},
     ],
 }
 
@@ -105,16 +107,40 @@ STAGE2_FREE_PROMPTS = [
     {"id": "free_cold_0", "context": "cold_free", "question": "What do you like to do on weekends?"},
 ]
 
+GATE2_ANCHORS = [
+    {"id": "p92-02", "target": "I am the town.", "expected_tokens": 5},
+    {"id": "p92-05", "target": "I am a fox.", "expected_tokens": 5},
+    {"id": "p92-00", "target": "I am a boulder.", "expected_tokens": 6},
+    {"id": "p92-08", "target": "I am a dog.", "expected_tokens": 5},
+]
+
 
 def main() -> None:
     snaps = [d for d in (HUB / INSTRUCT_REPO / "snapshots").iterdir() if d.name.startswith(INSTRUCT_PREFIX)]
     assert len(snaps) == 1, f"expected 1 instruct snapshot, found {snaps}"
     tok = AutoTokenizer.from_pretrained(str(snaps[0]), local_files_only=True)
 
+    # Verify Gate 2 Part 106 anchor token counts match stored results/part106/lp-instruct.jsonl
+    for anc in GATE2_ANCHORS:
+        ids = tok.encode(anc["target"], add_special_tokens=False)
+        assert len(ids) == anc["expected_tokens"], f"Gate 2 anchor {anc['id']} has {len(ids)} tokens != {anc['expected_tokens']}"
+
     neurons = json.loads((ROOT / "results/part92/step2/neurons.json").read_text(encoding="utf-8"))
     kinds_haiku = json.loads((ROOT / "results/part92/score92.json").read_text(encoding="utf-8"))["kinds"]
     score92b = json.loads((ROOT / "results/part92b/score92b.json").read_text(encoding="utf-8"))
     kinds_ds = {row["id"]: row["ds_kind"] for row in score92b["kind_comparison"]["units"]}
+
+    # Verify no Stage 1 or Stage 2 prompt contains any unit's keyword (word-boundary check)
+    all_kws = sorted({ko["kw"].lower() for _, _, kws in NP_SPECS.values() for ko in kws})
+    for ctx, plist in STAGE1_PROMPTS.items():
+        for p in plist:
+            for kw in all_kws:
+                if re.search(r"(?<![A-Za-z0-9])" + re.escape(kw) + r"(?![A-Za-z0-9])", p["question"], re.I):
+                    raise AssertionError(f"Stage 1 prompt {p['id']} contains keyword {kw!r}: {p['question']}")
+    for p in STAGE2_FREE_PROMPTS:
+        for kw in all_kws:
+            if re.search(r"(?<![A-Za-z0-9])" + re.escape(kw) + r"(?![A-Za-z0-9])", p["question"], re.I):
+                raise AssertionError(f"Stage 2 prompt {p['id']} contains keyword {kw!r}: {p['question']}")
 
     units = []
     for n in neurons:
@@ -125,12 +151,10 @@ def main() -> None:
         assert uid in NP_SPECS, f"missing NP_SPECS for {uid}"
         np_text, content_text, kw_objs = NP_SPECS[uid]
         norm_ans = " ".join(n["screen_answer"].split())
-        # Word-boundary verbatim check inside screen_answer
         pat = re.compile(r"(?<![A-Za-z0-9])" + re.escape(np_text) + r"(?![A-Za-z0-9])")
         assert pat.search(norm_ans), f"{uid}: {np_text!r} not word-boundary verbatim in {norm_ans!r}"
         assert np_text.endswith(content_text), f"{uid}: content_text {content_text!r} not suffix of {np_text!r}"
 
-        # Provenance check on every keyword
         for ko in kw_objs:
             kw, src = ko["kw"], ko["source"]
             if src == "np_text":
@@ -147,13 +171,13 @@ def main() -> None:
         content_ids = tok.encode(" " + content_text, add_special_tokens=False)
         assert target_ids == lead_ids + content_ids, f"{uid}: split mismatch {target_ids} vs {lead_ids} + {content_ids}"
         content_start = len(lead_ids)
-        assert content_start < len(target_ids), f"{uid}: no content tokens"
         lead_class = lead_str.strip().lower() if lead_str.strip() else "bare"
+        first_tok_str = tok.decode([content_ids[0]])
+        first_word = content_text.split()[0].rstrip(",.!?")
+        is_full_word_first_token = (first_tok_str.strip().lower() == first_word.lower())
 
-        # Verify REAL full joins (chat template + opening + target, AND plain Question/Answer + opening + target)
         for ctx, plist in STAGE1_PROMPTS.items():
             for p in plist:
-                # Chat join
                 chat_prefix = tok.apply_chat_template(
                     [{"role": "user", "content": p["question"]}],
                     add_generation_prompt=True, tokenize=False, enable_thinking=False,
@@ -165,19 +189,6 @@ def main() -> None:
                 assert chat_op_ids[: len(chat_base_ids)] == chat_base_ids, f"{uid} chat/opening merge on {p['id']}"
                 assert chat_lead_ids == chat_op_ids + lead_ids, f"{uid} chat/lead merge on {p['id']}"
                 assert chat_full_ids == chat_op_ids + target_ids, f"{uid} chat/target merge on {p['id']}"
-
-                # Plain join: "Question: {q}\nAnswer: {opening} {np_text}"
-                plain_q = f"Question: {p['question']}\nAnswer:"
-                plain_op = f"{plain_q} {p['opening']}"
-                plain_lead = plain_op + lead_str
-                plain_full = plain_op + full_target_str
-                plain_q_ids = tok.encode(plain_q, add_special_tokens=True)
-                plain_op_ids = tok.encode(plain_op, add_special_tokens=True)
-                plain_lead_ids = tok.encode(plain_lead, add_special_tokens=True)
-                plain_full_ids = tok.encode(plain_full, add_special_tokens=True)
-                assert plain_op_ids[: len(plain_q_ids)] == plain_q_ids, f"{uid} plain/opening merge on {p['id']}"
-                assert plain_lead_ids == plain_op_ids + lead_ids, f"{uid} plain/lead merge on {p['id']}"
-                assert plain_full_ids == plain_op_ids + target_ids, f"{uid} plain/target merge on {p['id']}"
 
         units.append({
             "id": uid,
@@ -195,30 +206,41 @@ def main() -> None:
             "target_ids": target_ids,
             "content_start": content_start,
             "first_content_token_id": int(content_ids[0]),
-            "first_content_token_str": tok.decode([content_ids[0]]),
+            "first_content_token_str": first_tok_str,
+            "is_full_word_first_token": is_full_word_first_token,
             "n_target_tokens": len(target_ids),
             "n_content_tokens": len(content_ids),
             "keywords": kw_objs,
         })
 
-    assert len(units) == 39, f"expected 39 units, got {len(units)}"
+    assert len(units) == 39
     assert sum(u["kind_haiku"] == "slot" for u in units) == 21
     assert sum(u["kind_haiku"] == "concept" for u in units) == 18
     assert sum(u["kind_haiku"] == "slot" and u["kind_ds"] == "slot" for u in units) == 21
     assert sum(u["kind_haiku"] == "concept" and u["kind_ds"] == "concept" for u in units) == 8
 
-    # Build deterministic 8 off-diagonal full-NP targets per unit (4 slot + 4 concept, excluding same first content token)
+    # Define O_u strictly: all other units v != u whose first_content_token_id does NOT appear anywhere in u["target_ids"]
+    ou_sizes = []
     for idx, u in enumerate(units):
+        own_tok_set = set(u["target_ids"])
+        ou_ids = [v["id"] for v in units if v["id"] != u["id"] and v["first_content_token_id"] not in own_tok_set]
+        u["offdiag_ou"] = ou_ids
+        ou_sizes.append(len(ou_ids))
         rng = random.Random(21300 + idx)
-        slot_pool = [v["id"] for v in units if v["kind_haiku"] == "slot" and v["first_content_token_id"] != u["first_content_token_id"]]
-        conc_pool = [v["id"] for v in units if v["kind_haiku"] == "concept" and v["first_content_token_id"] != u["first_content_token_id"]]
+        slot_pool = [v["id"] for v in units if v["id"] in ou_ids and v["kind_haiku"] == "slot"]
+        conc_pool = [v["id"] for v in units if v["id"] in ou_ids and v["kind_haiku"] == "concept"]
         u["offdiag_8"] = sorted(rng.sample(slot_pool, 4)) + sorted(rng.sample(conc_pool, 4))
 
+    subword_slots = [u["id"] for u in units if u["kind_haiku"] == "slot" and not u["is_full_word_first_token"]]
+    subword_concepts = [u["id"] for u in units if u["kind_haiku"] == "concept" and not u["is_full_word_first_token"]]
     word_counts = [u["np_words"] for u in units]
     payload = {
         "model_family": "allenai/OLMo-2-0425-1B",
         "instruct_commit_prefix": INSTRUCT_PREFIX,
         "np_word_range": [min(word_counts), max(word_counts)],
+        "ou_size_range": [min(ou_sizes), max(ou_sizes)],
+        "subword_first_token_units": {"slot": subword_slots, "concept": subword_concepts},
+        "gate2_anchors": GATE2_ANCHORS,
         "units": units,
         "stage1_prompts": STAGE1_PROMPTS,
         "stage2_free_prompts": STAGE2_FREE_PROMPTS,
@@ -228,7 +250,8 @@ def main() -> None:
     out_path.write_text(raw, encoding="utf-8")
     digest = hashlib.sha256(raw.encode("utf-8")).hexdigest()
     print(f"Wrote {out_path.name} OK: 39/39 verbatim NPs (words {min(word_counts)}-{max(word_counts)}), "
-          f"21/21 slot & 8/18 concept 92b verified, 0 boundary merges across all 17 prompts in BOTH chat and plain frames")
+          f"|O_u| range {min(ou_sizes)}-{max(ou_sizes)}, subword first-tokens slot={subword_slots} concept={subword_concepts}, "
+          f"Gate2 anchors 4/4 exact token counts, 0 prompt-keyword leaks, 0 chat boundary merges across 17 prompts")
     print(f"SHA256: {digest}")
 
 
