@@ -1413,6 +1413,28 @@ def print_table(result: dict) -> None:
     print("headline:", result["headline"])
 
 
+def load_audit(path: Path) -> dict:
+    """The blind-audit JSON, with its label keys turned back into the integer blind ids the rows carry.
+
+    JSON object keys are always strings, so a file's `{"labels": {"0": ...}}` never matched a row's `blind_id` 0 and
+    every label read as missing (found 2026-11-19 before the audit ran: the tests passed int keys in-process, so only
+    the file path through `main` was broken). A key that is not an integer, or a label outside AUDIT_CATEGORIES,
+    raises rather than being dropped.
+    """
+    audit = json.loads(Path(path).read_text(encoding="utf-8"))
+    labels = {}
+    for key, label in (audit.get("labels") or {}).items():
+        try:
+            blind_id = int(key)
+        except (TypeError, ValueError):
+            raise ValueError(f"audit label key {key!r} is not an integer blind id")
+        if label not in AUDIT_CATEGORIES:
+            raise ValueError(f"audit label {label!r} for blind id {blind_id} is not one of {AUDIT_CATEGORIES}")
+        labels[blind_id] = label
+    audit["labels"] = labels
+    return audit
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--records", required=True, help="directory the runner wrote (stage1-*.jsonl, stage2-*.jsonl)")
@@ -1423,7 +1445,7 @@ def main(argv=None) -> int:
     args = ap.parse_args(argv)
     targets = load_targets()
     records = load_records(Path(args.records), Path(args.pilot) if args.pilot else None)
-    audit = json.loads(Path(args.audit).read_text(encoding="utf-8")) if args.audit else None
+    audit = load_audit(Path(args.audit)) if args.audit else None
     if audit:
         records["labels"] = audit.get("labels", {})
         records["kappa"] = audit.get("kappa")

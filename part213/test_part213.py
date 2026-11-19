@@ -934,3 +934,36 @@ def test_fr_builds_from_a_bin_or_safetensors_dpo_snapshot(tmp_path, dpo_format):
     for key, value in fr_state.items():
         expected = 2.0 * inst_state[key].float() - dpo_state[key].float()
         assert torch.equal(value, expected), key
+
+
+def test_audit_file_labels_reach_the_rows(tmp_path):
+    """A labels file has string keys (JSON); load_audit must turn them into the int blind ids the rows carry, or every
+    label reads as missing and 213.6 is never read (found 2026-11-19 before the audit ran)."""
+    rec = empty_records()
+    rec["stage2"] = _stage2_rows()
+    s.assign_blind_ids(rec, TARGETS)
+    labels = _blind_labels(rec, lambda row: "genuine_third_attr"
+                           if row["arm"] == "neuron" and row["dose"] == "+0.8" else "other_coherent")
+    path = tmp_path / "audit.json"
+    path.write_text(json.dumps({"labels": labels, "kappa": 0.9, "reader_known_pass": 10}), encoding="utf-8")
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    assert all(isinstance(k, str) for k in raw["labels"])          # the shape that broke the old path
+    audit = s.load_audit(path)
+    assert set(audit["labels"]) == set(labels) and all(isinstance(k, int) for k in audit["labels"])
+    p6_file = s.predict_213_6(rec, TARGETS, audit)
+    p6_mem = s.predict_213_6(rec, TARGETS, {"labels": labels})
+    assert p6_file == p6_mem
+    assert p6_file["difference_ci"]["point"] == 42.0                 # all 42 slot neuron +0.8 labels were read
+
+
+def test_audit_file_rejects_bad_keys_and_labels(tmp_path):
+    bad_key = tmp_path / "k.json"
+    bad_key.write_text(json.dumps({"labels": {"x7": "broken"}}), encoding="utf-8")
+    bad_label = tmp_path / "l.json"
+    bad_label.write_text(json.dumps({"labels": {"7": "genuine"}}), encoding="utf-8")
+    for path in (bad_key, bad_label):
+        try:
+            s.load_audit(path)
+        except ValueError:
+            continue
+        raise AssertionError(f"{path.name} was accepted")
