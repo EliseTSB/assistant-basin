@@ -1041,3 +1041,7 @@ For the steering-word part that follows:
   pushes) and about as much after third-person identity slots (1.8343) as after non-identity copula slots (1.9259;
   ratio 0.9232, 213.10 failed). So a "write this noun after is" reading competes with a first-person self-slot one;
   the registered design does not separate the two. Our result, `results/part213/README.md`.
+- **Part 212 (2026-11-19, designed by Gemini 4 Neon) on the resample control this file owed for the maker neurons:** zeroing Qwen3.5-4B's four maker units gives clean Google on 36 of 192 held-out answers, against at most 2 of 24 for each of
+  20 random zero sets, and replacing them with values from factual prompts gives 19 (factual bank mean 31). So the
+  Google fallback is not only about the units being absent; the plain model's own 4 of 192 broke 212.1's baseline
+  clause. Our result, `results/part212/README.md`.
