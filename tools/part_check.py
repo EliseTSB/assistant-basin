@@ -251,7 +251,7 @@ def prelaunch(repo, pid, fetch=True, legacy_ok=False, min_margin=DEFAULT_MIN_MAR
                 "no 'Procedure: v1' line in the first 15 lines: a new design starts from templates/PART-DESIGN.md "
                 "(an older design launches only with --legacy-ok)")
         return r
-    r.check(re.search(r"^Registered \d{4}-\d{2}-\d{2} \d{2}:\d{2} CT", head, re.M) is not None,
+    r.check(re.search(r"^Registered \d{4}-\d{2}-\d{2} \d{2}:\d{2} CT", head, re.M | re.I) is not None,
             "Registered line with date and time", "no 'Registered YYYY-MM-DD HH:MM CT' line near the top")
     r.check("{{" not in text, "no unfilled template text", "unfilled template text: " +
             "; ".join(sorted(set(re.findall(r"\{\{[^}\n]{0,40}", text)))[:3]))

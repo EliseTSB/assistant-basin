@@ -171,6 +171,18 @@ def test_prelaunch_placeholder_time_fails(repo):
     assert any("placeholder" in f for f in pc.prelaunch(repo, "900", fetch=False).failed)
 
 
+def test_prelaunch_registered_line_in_capitals_passes(repo):
+    """Part 212's design (by Neon) says 'REGISTERED 2026-11-19 01:24 CT'; the line exists, so it must pass."""
+    edit(repo, "Registered 2026-10-29 19:00 CT", "REGISTERED 2026-10-29 19:00 CT")
+    failed = pc.prelaunch(repo, "900", fetch=False).failed
+    assert not any("'Registered YYYY-MM-DD" in f for f in failed), failed   # (the edit also differs from origin/main)
+
+
+def test_prelaunch_missing_registered_line_still_fails(repo):
+    edit(repo, "Registered 2026-10-29 19:00 CT", "Drafted 2026-10-29 19:00 CT")
+    assert any("Registered" in f for f in pc.prelaunch(repo, "900", fetch=False).failed)
+
+
 def test_prelaunch_unfilled_template_fails(repo):
     edit(repo, "A fixture; nothing runs.", "{{Model and pinned revision}}")
     assert any("template" in f for f in pc.prelaunch(repo, "900", fetch=False).failed)
