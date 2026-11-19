@@ -125,6 +125,12 @@ measured on real rows, and each lever below that applies, taken or declined with
   the glue between recording, hooks and output. (2026-11-19: Parts 212 and 213 passed 45 and 19 unit tests with seven
   glue bugs between them; the 213 pilot found them one real-model attempt at a time, and one attempt ran 38 minutes
   before dying while writing `run.json`. Part 212's tiny-model smoke found its first crash in under a minute.)
+  **The smoke also asserts each intervention does what it claims** in a hooked forward (a zeroing arm leaves its
+  columns at 0 at every call, a control clamps its own units, a realized perturbation is nonzero), and the planned
+  rows match the design's counts. Then a cold code review (`scripts/cheap-review.mjs`, GLM 5.3 or DeepSeek) reads the
+  scorer against what the runner writes. (Same day: both runners passed their run-through smokes while Part 212's
+  headline `zero` arm zeroed nothing, its fluency guards were never generated, and Part 213 read every Stage 1 metric
+  at the wrong position and its scorer read files its runner never wrote. GLM 5.3 reviews found all of it.)
 - [ ] **Smoke on the real model and device before launch.** A sandboxed builder may have no torch, so its tests may
   never have run. (2026-10-26: a worker-built runner zeroed nothing, and its fixture expected every effect to be zero.)
 - [ ] **Known traps**: Qwen3.5's chat template strips trailing whitespace from an assistant message;
