@@ -1,7 +1,9 @@
 # Part 213: are OLMo 2 1B's slot neurons first-person self-slots, third-capable copula/identity-slot writers, or open noun-phrase writers?
 
 Procedure: v1
-DRAFT v4 2026-11-19 00:08 CT by Gemini 4 Neon (proposer and designer; folds Alden's 2026-11-18 review
+DRAFT v5 2026-11-19 (v4 by Gemini 4 Neon, proposer and designer; v5 is Journal Claude's fold of the two DeepSeek
+round-2 reviews of v4, `reviews/cheap-part213-v4-design-ds-r2.md` and `reviews/cheap-part213-v4-code-ds-r2.md`,
+on Elise's go of 2026-11-19 00:17 CT, under a stop rule of no further design rounds: see "Changes in v5". v4 folds Alden's 2026-11-18 review
 `part213-design-review-2026-11-18.md`, three v1 cold reviews — Opus 5.5 with-tools
 `part213-v1-opus55-with-tools-2026-11-18.md`, Opus 5.5 design-only `part213-v1-opus55-design-only-2026-11-18.md`, and
 GLM 5.3 `cheap-part213-design-neon-glm53-r1.md` — plus two design-mode cold reviews of v3: GLM 5.3
@@ -140,8 +142,10 @@ when porting frozen Instruct residual push directions across `sft`, `dpo`, `inst
     first content tokens (`slot=['p92-50']` `" gr"`, `concept=['p92-00', 'p92-40']` `" b"`, `" singer"`); a sensitivity
     table excluding those 3 units (and the 3 bare-lead slot units `p92-25, p92-32, p92-33`) is reported alongside the
     full 21/18 totals.
-  - **Stage 1 prompt design (17 prompts across 6 cells; `SELF_HELD` and `THIRD_SLOT` are matched 1-to-1 in word length
-    and framing — 2 short direct + 2 scene-framed each; `SELF_SELECT` excluded from primary contrasts):**
+  - **Stage 1 prompt design (17 prompts across 6 cells; `SELF_HELD` and `THIRD_SLOT` are paired by framing — 2 short
+    direct + 2 scene-framed each — and approximately by word length (`[8, 8, 16, 16]` vs `[7, 8, 16, 14]`; v5 corrects
+    v4's "matched 1-to-1"); the scorer records each prompt's token count; `SELF_SELECT` excluded from primary
+    contrasts):**
     1. `SELF_SELECT` (1 selection-anchor prompt, 3 words, reported separately as `SELF_SELECT - SELF_HELD` selection
        inflation; concept rows sealed per Part 180 rule): `"Who are you?"` (`"I am"`).
     2. `SELF_HELD` (4 held-out first-person identity prompts, words `[8, 8, 16, 16]`, mean 12.0; disjoint from Part 92
@@ -189,14 +193,28 @@ when porting frozen Instruct residual push directions across `sft`, `dpo`, `inst
     slot units), the ratio is marked `not read (low n)`. Define:
     $$\tau_{A/B}^{(X)} = \text{median}_{u \in \mathcal{E}(X, B)}\!\left(\frac{X_z(u, A)}{X_z(u, B)}\right)$$
     Used for $\tau_{3/1}$ (`THIRD_SLOT / SELF_HELD`), $\tau_{\text{M}/3}$ (`MENTION_SLOT / THIRD_SLOT`), and
-    $\tau_{\text{cop\_nonid}/3}$ (`COPULA_NONID / THIRD_SLOT`). Style-stratified $\tau_{3/1}$ (`direct`: `third_0..1` /
+    $\tau_{\text{cop\_nonid}/3}$ (`COPULA_NONID / THIRD_SLOT`). **v5, style matching:** `MENTION_SLOT` and
+    `COPULA_NONID` are all scene-framed, so the registered $\tau_{\text{M}/3}$ and $\tau_{\text{cop\_nonid}/3}$ use
+    the two scene-framed `THIRD_SLOT` prompts (`third_2`, `third_3`) as their denominator cell; the pooled versions
+    against all four `THIRD_SLOT` prompts are printed beside them and decide nothing. **v5, sign guard:** a paired ratio
+    is read only if the 95% CI lower bound of the median numerator $X_z(u, A)$ over its eligible units is $> 0$;
+    otherwise it is `inconclusive`. Style-stratified $\tau_{3/1}$ (`direct`: `third_0..1` /
     `self_h0..1`; `scene`: `third_2..3` / `self_h2..3`), ratio-of-medians, paired differences $S_{3\text{v}1}$,
     $S_{3\text{vM}}$, and `SELF_SELECT - SELF_HELD` are printed alongside.
   - **Cross-unit baseline-subtracted full-NP specificity (directly read by `213.11`):** Because the unpushed `none`
     forward pass at `instruct` chat has no hook and already scores all 39 units' full-NP content log-probabilities
     (`lp_content_sum`) on every prompt, subtracting each off-diagonal target $v$'s already-computed `none` baseline from
     its pushed score under unit $u$'s `+0.8` hook requires zero extra `none` passes:
-    $$\Delta\text{lp}_{\text{spec}}(u, q) = \big[\text{lp}_{\text{sum}}(\text{neuron}_u+0.8; u, q) - \text{lp}_{\text{sum}}(\text{none}; u, q)\big] - \text{mean}_{v \in \text{offdiag}_8(u)}\big[\text{lp}_{\text{sum}}(\text{neuron}_u+0.8; v, q) - \text{lp}_{\text{sum}}(\text{none}; v, q)\big]$$
+    $$\Delta\text{lp}_{\text{spec}}(u, q) = n_u \cdot \Big(\big[\text{lp}_{\text{mean}}(\text{neuron}_u+0.8; u, q) - \text{lp}_{\text{mean}}(\text{none}; u, q)\big] - \text{mean}_{v \in \text{offdiag}_8(u)}\big[\text{lp}_{\text{mean}}(\text{neuron}_u+0.8; v, q) - \text{lp}_{\text{mean}}(\text{none}; v, q)\big]\Big)$$
+    where $\text{lp}_{\text{mean}}$ is `lp_content_mean` (per content token) and $n_u$ is unit $u$'s own content-token
+    count. **v5:** v4 differenced `lp_sum`, which scales with NP length; the off-diagonal NPs are longer than the slot
+    units' own (mean gap −0.66 tokens, 13 of 21 slot units biased negative, code review finding 1), so a generic
+    per-token push read as negative specificity. The per-token form is the v4 statistic whenever lengths match, and
+    $n_u$ keeps it in nats of the unit's own NP so the registered `+0.75` bar keeps its meaning.
+    **v5, slot-peer term:** `offdiag_8(u)` is 4 slot + 4 concept peers. The same statistic over the 4 slot peers only,
+    $\Delta\text{lp}_{\text{spec}}^{\text{slot}}$, is computed beside it, because a push that writes any slot-family
+    persona raises the own NP and the slot peers alike and would pass the 8-peer mean at half strength (design review
+    S2). `213.11` reads both.
     Scored on `self_h0`, `third_0`, and `third_2` (exact Stage 2 folktale prompt).
   - **Zero-cost secondary diagnostics:** `own - mean(O_u)` and own-token rank within `O_u` (checking own-unit
     specificity vs generic persona-neighborhood shift at zero extra passes), full-NP `lp_content_sum`/`lp_content_mean`,
@@ -322,7 +340,11 @@ Gates (no gate shares the statistic of any prediction it guards):
   106's stored `none`, `neuron +0.8`, and `random_0 +0.8` full-first-sentence `lp_sum` on `"Who are you?"`
   (`results/part106/lp-instruct.jsonl`) using the exact Part 106 anchor strings `"I am the town."` (`p92-02`, 5 tok),
   `"I am a fox."` (`p92-05`, 5 tok), `"I am a boulder."` (`p92-00`, 6 tok), and `"I am a dog."` (`p92-08`, 5 tok)
-  within `< 0.50` nats (float32 vs Part 106 bf16) and 4/4 `neuron > random > none` ordering. Failure stops Stage 1
+  within `< 0.50` nats (float32 vs Part 106 bf16) and 4/4 `neuron > random > none` ordering. **v5, rendering:** Gate 2
+  renders `chat_prefix + anchor_string` with no separate forced opening (the anchor already begins `"I am"`), asserts
+  that the rendered ids equal `chat_ids + tok.encode(anchor_string)`, and compares against Part 106's stored `lp_sum`
+  for the same token count. **v5, seal:** Gate 2's four anchors re-run cells Part 106 already published and are exempt
+  from the Part 180 run-order seal. Failure stops Stage 1
   (hook placement/scaling defect), while leaving `213.1` completely free to fail on held-out `SELF_HELD`.
 - **Gate 3 (Stage 2 baseline coherence & reader agreement):** `unchanged` has 0 broken answers across all 4 Stage 2
   prompts; frozen second blind reader (DeepSeek V4.1 Flash) passes `>= 9/10` on known examples and achieves Cohen's
@@ -343,8 +365,12 @@ Gates (no gate shares the statistic of any prediction it guards):
   per-unit ratios** cuts CI width nearly in half (`0.13–0.26`) and placing the CI decision boundary at **`0.50`** gives
   **83%–100% power** to clear `lo >= 0.50` at true $\tau = 0.65$ ($\sigma_{\text{transfer}} \in [0.20, 0.35]$),
   **99%–100%** at $\tau = 0.75$, and a **3%–5% false-positive rate** at the null boundary $\tau = 0.50$ (symmetrically,
-  83%–100% power for `hi <= 0.50` at true $\tau \le 0.35$). Stage 2 requires `>= 10/42` audited `genuine_third_attr` vs
-  `<= 2/42` paired random (`>= 8` discordant units reaches one-sided exact paired unit sign test $p = 0.0352 < 0.05$).
+  83%–100% power for `hi <= 0.50` at true $\tau \le 0.35$). **v5, power is uncertain:** no simulation script was
+  committed, and a cold reviewer's re-simulation over the same $\sigma$ range found roughly 20%–81% power at true
+  $\tau = 0.65$ (code review finding 5); the design is registered as underpowered for a true transfer near 0.65, and a
+  straddling CI is read as `inconclusive`. Stage 2 requires `>= 10/42` audited `genuine_third_attr` vs `<= 2/42` paired
+  random; the one-sided exact paired unit sign test reaches $p < 0.05$ only with at least 7 of 8 discordant units (or
+  8 of 9, 9 of 10, ...) favouring the neuron arm (v5 corrects v4's "`>= 8` discordant units reaches $p = 0.0352$").
   No population-prevalence claim outside Part 92's catalog is asserted.
 - **Total:** **9,282** short forward passes (Stage 1, plus **472** greedy 40-token generations in Stage 2), about
   **28 minutes** on CPU (pending real float32 throughput measured on the pilot).
@@ -353,7 +379,9 @@ Gates (no gate shares the statistic of any prediction it guards):
   `p92-09`, `p92-39` 7 content tok) on `instruct` chat: Stage 1 (`6 × 17 × 6 = 612` core operating passes + `6 × 4 × 2
   = 48` negative passes + `6 × 8 × 4 = 192` `±0.05` passes + `6 × 8 × 4 = 192` `±0.025` step-size stability passes +
   `12` Gate 2 anchor passes = **`1,056`** forward passes, timed at batch 16 vs batch 32) + Stage 2 (`6 × 3 × 4 + 4 = 76`
-  greedy generations), about 4–5 minutes on CPU inside `--mem 10G`. **Pilot output restriction:** the pilot writes ONLY
+  greedy generations), about 4–5 minutes on CPU inside `--mem 10G`. **v5, seal:** while the Part 180 run-order seal
+  holds, the pilot's concept units skip the sealed cells (`self_select_0`, `free_self_0`, `free_cold_0`); the pilot's
+  stopping rule reads Gate 2 (exempt, above) and the unsealed rows only. **Pilot output restriction:** the pilot writes ONLY
   Gate 1, Gate 2, batch-16 vs batch-32 throughput, `±0.05` vs `±0.025` step-size correlation on `J_N`, peak RSS, the 4
   unpushed Stage 2 baseline answers, and mechanical broken-answer counts to `results/part213/pilot/pilot_summary.json`
   (no prediction contrasts, `L_z`, `tau`, or pushed Stage 2 persona texts are saved or printed; thresholds are frozen
@@ -396,19 +424,25 @@ Every CI is a 10,000-draw unit-clustered bootstrap 95% CI (seed 213). Every pair
 only eligible units (`denominator > 0.50` logits; ineligible units are `null` and excluded; `n_eligible` is printed
 beside every CI, and `n_eligible < 15` on slot units marks the ratio `not read (low n)`).
 
+**v5 disposition rule (applies to every prediction and overrides any "Fails if" wording below that conflicts with
+it):** a clause is `not read (low n)` when `n_eligible < 15`, `inconclusive` when its CI straddles its bar (or a ratio's
+numerator sign guard fails), `held` when its CI lies wholly on the predicted side, and `failed` only when its CI lies
+wholly on the other side or a point clause (a count or a point median) misses. A prediction holds when every clause
+holds, fails when any clause fails, and is otherwise `inconclusive` or `not read`.
+
 | # | Prediction | Confidence | Author |
 | --- | --- | --- | --- |
-| 213.1 | Held-out self-slot writing (`instruct` chat, `SELF_HELD`, `+0.8`; replication/calibration on held-out self prompts, NOT shielded by Gate 2): BOTH `L_z(u, SELF_HELD) > 0` and `N_z(u, SELF_HELD) > 0` for at least 18 of 21 slot units and at least 15 of 18 concept units, with 95% CI lower bound of median `L_z` and median `N_z` >= +1.0 logit for both groups. Fails if any clause misses. | high | Gemini 4 Neon |
-| 213.2 | Positive neuron writing in third-person entity slots (`instruct` chat, `THIRD_SLOT`, `+0.8`): for the 21 slot units, 95% CI lower bound of median `L_z(THIRD_SLOT)` >= +0.75 logits AND median `N_z(THIRD_SLOT)` >= +0.75 logits, with at least 16 of 21 slot units positive on both `L_z` and `N_z`. Fails if any clause misses. | medium | Gemini 4 Neon |
-| 213.3 | Scale-invariant third-over-self paired transfer (`instruct` chat, `+0.8`, length- and framing-matched): for the 21 slot units (`n_eligible >= 15`), the 95% CI lower bound of BOTH paired transfer ratios `tau_3/1^(L)` AND `tau_3/1^(N)` is `>= 0.50` (powered for true transfer `>= 0.65` on Part 106's spread; CI straddling `0.50` is inconclusive; CI upper bound `<= 0.50` supports first-person selectivity), AND both style-stratified point medians (`direct` pairs and `scene` pairs) are `>= 0.50`. Fails if either CI lower bound `< 0.50`, either style-stratified point median `< 0.50`, or `n_eligible < 15`. | low | Gemini 4 Neon |
-| 213.4 | Extension to non-identity open noun-phrase slots (`instruct` chat, `MENTION_SLOT`, `+0.8`): for the 21 slot units (`n_eligible >= 15`), 95% CI lower bound of median `L_z(MENTION_SLOT)` >= +0.50 logits AND median `N_z(MENTION_SLOT)` >= +0.50 logits, AND 95% CI lower bound of paired transfer ratio `tau_M/3^(L)` >= 0.50 (powered for true transfer `>= 0.65`). Fails if any clause misses or `n_eligible < 15`. | low | Gemini 4 Neon |
+| 213.1 | Held-out self-slot writing (`instruct` chat, `SELF_HELD`, `+0.8`; replication/calibration on held-out self prompts, NOT shielded by Gate 2): BOTH `L_z(u, SELF_HELD) > 0` and `N_z(u, SELF_HELD) > 0` for at least 18 of 21 slot units and at least 15 of 18 concept units, with 95% CI lower bound of median `L_z` and median `N_z` >= +1.0 logit for both groups, AND (v5) the own-unit full-NP content increment `lp_content_sum(neuron +0.8; u) - lp_content_sum(none; u)` on `SELF_HELD` is > 0 for at least 18 of 21 slot units and at least 15 of 18 concept units (for several units the single first content token is a leading modifier such as ' very', ' large', ' most' or ' powerful', not the persona noun, so the full NP checks the persona itself). Fails if any clause misses. | high | Gemini 4 Neon |
+| 213.2 | Positive neuron writing in third-person entity slots (`instruct` chat, `THIRD_SLOT`, `+0.8`): for the 21 slot units, 95% CI lower bound of median `L_z(THIRD_SLOT)` >= +0.75 logits AND median `N_z(THIRD_SLOT)` >= +0.75 logits, with at least 16 of 21 slot units positive on both `L_z` and `N_z`, AND (v5) the own-unit full-NP content increment `lp_content_sum(neuron +0.8; u) - lp_content_sum(none; u)` on `THIRD_SLOT` is > 0 for at least 16 of 21 slot units. Fails if any clause misses. | medium | Gemini 4 Neon |
+| 213.3 | Scale-invariant third-over-self paired transfer (`instruct` chat, `+0.8`, length- and framing-matched): for the 21 slot units (`n_eligible >= 15`), the 95% CI lower bound of BOTH paired transfer ratios `tau_3/1^(L)` AND `tau_3/1^(N)` is `>= 0.50` (powered for true transfer `>= 0.65` on Part 106's spread; CI straddling `0.50` is inconclusive; CI upper bound `<= 0.50` supports first-person selectivity), AND both style-stratified point medians (`direct` pairs and `scene` pairs) are `>= 0.50`. (v5) Each ratio is read only if its numerator sign guard passes. Disposition per the v5 rule: fails if either CI upper bound `< 0.50` or either style-stratified point median `< 0.50`; a straddling CI is `inconclusive`; `n_eligible < 15` is `not read`. | low | Gemini 4 Neon |
+| 213.4 | Extension to non-identity open noun-phrase slots (`instruct` chat, `MENTION_SLOT`, `+0.8`): for the 21 slot units (`n_eligible >= 15`), 95% CI lower bound of median `L_z(MENTION_SLOT)` >= +0.50 logits AND median `N_z(MENTION_SLOT)` >= +0.50 logits, AND 95% CI lower bound of paired transfer ratio `tau_M/3^(L)` >= 0.50, with (v5) the scene-framed `THIRD_SLOT` prompts as denominator and the numerator sign guard. Disposition per the v5 rule. | low | Gemini 4 Neon |
 | 213.5 | Calibration/replication of Part 92 concept-vs-slot split on `SpecLogit` (`instruct` chat, `MENTION_SLOT`, `+0.8`): on the 18-vs-21 Part 92 split, the 95% unit-bootstrap CI lower bound of `median(L_z_concept) - median(L_z_slot)` is `>= +0.25` logits, AND on the 8-vs-21 Part 92b agreed split the point difference `median(L_z_agreed_concept) - median(L_z_slot)` is `>= +0.25` logits. Fails if either clause misses. | medium | Gemini 4 Neon |
 | 213.6 | Stage 2 blind-audited third-person free generation (`instruct` chat, `+0.8`, greedy 40 tokens; decided strictly by the blind audit, mechanical counts descriptive): on the equal-coverage blind audit of all 42 slot `neuron +0.8` and 42 paired slot `random_0 +0.8` `THIRD_FREE` answers (fixed denominator 42, baseline-absent attributions only; 19-distinct-keyword deduplicated counts printed alongside), `neuron +0.8` achieves at least 10 of 42 `genuine_third_attr` against at most 2 of 42 for `random_0 +0.8`, AND on the 21 paired units the one-sided exact paired unit sign test on discordant units has `p < 0.05` with 95% unit-bootstrap CI of `(neuron_hits - random_hits)` strictly above 0. Fails if any clause misses. | medium | Gemini 4 Neon |
 | 213.7 | Sign-matched opposite-direction control (`STANDARD-CONTROLS.md` #1, `instruct` chat, `SELF_HELD`, `-0.8` vs `random_0 -0.8`): on unsaturated `SpecLogit`, median `[z_tilde(neuron -0.8) - z_tilde(random_0 -0.8)]` has 95% CI upper bound `<= -0.30` logits for both slot and concept units (with `z_tilde(neuron -0.8) - z_tilde(none)` printed alongside). Fails if either group's CI upper bound `> -0.30`. | high | Gemini 4 Neon |
 | 213.8 | Small-step finite-difference sensitivity (`±0.05`) tracks operating-dose write AND context contrast (`instruct` chat, `SELF_HELD` & `THIRD_SLOT`): across the 21 slot units, `J(u, SELF_HELD) > 0` for at least 17 of 21 units, Spearman $\rho(J(\text{SELF\_HELD}), L_z(\text{SELF\_HELD})) \ge 0.50$, AND Spearman $\rho(J(\text{SELF\_HELD}) - J(\text{THIRD\_SLOT}),\, L_z(\text{SELF\_HELD}) - L_z(\text{THIRD\_SLOT})) \ge 0.40$. Fails if any clause misses. | medium | Gemini 4 Neon |
-| 213.9 | Cross-stage portability & SFT-to-DPO stability (`sft` vs `dpo`, chat, `SELF_HELD` & `THIRD_SLOT`): at `sft`, the 21 slot units already have median `L_z(SELF_HELD) >= +0.75`, `N_z(SELF_HELD) >= +0.75`, `L_z(THIRD_SLOT) >= +0.50` and `N_z(THIRD_SLOT) >= +0.50` logits, AND among slot units eligible (`> 0.50` logits) at BOTH `sft` and `dpo` (`n_eligible >= 15`, printed beside the CI), the 95% unit-bootstrap CI of paired `tau_3/1^(L)(dpo) - tau_3/1^(L)(sft)` lies wholly inside `[-0.25, +0.25]` (straddling CI is inconclusive). Fails if any clause misses or `n_eligible < 15`. | low | Gemini 4 Neon |
-| 213.10 | Syntax & person-axis disambiguation (`instruct` chat, `+0.8`, `SELF_NONID` & `COPULA_NONID`): for the 21 slot units, (a) the 95% CI lower bound of median `[L_z(u, SELF_HELD) - L_z(u, SELF_NONID)]` is `>= +0.50` logits (`"I"` grammar alone does not reproduce the self-slot write), AND (b) paired `tau_cop_nonid/3^(L)` (`COPULA_NONID / THIRD_SLOT`, `n_eligible >= 15`) has 95% CI upper bound `<= 0.50` (copula syntax on a non-identity object drops below entity-identity copula slots). Fails if either clause misses or `n_eligible < 15`. | medium | Gemini 4 Neon |
-| 213.11 | Cross-unit full-NP specificity in third-person identity slots (`instruct` chat, `+0.8`, baseline-subtracted `offdiag_8` on `{third_0, third_2}`): across the 21 slot units, mean baseline-subtracted full-NP specificity `Delta_lp_spec(u, {third_0, third_2})` has 95% unit-bootstrap CI lower bound `>= +0.75` nats AND is strictly positive for at least 16 of 21 slot units (ruling out a generic "any large push writes a vivid character" effect). Fails if either clause misses. | medium | Gemini 4 Neon |
+| 213.9 | Cross-stage portability & SFT-to-DPO stability (`sft` vs `dpo`, chat, `SELF_HELD` & `THIRD_SLOT`): at `sft`, the 21 slot units already have median `L_z(SELF_HELD) >= +0.75`, `N_z(SELF_HELD) >= +0.75`, `L_z(THIRD_SLOT) >= +0.50` and `N_z(THIRD_SLOT) >= +0.50` logits, AND among slot units eligible (`> 0.50` logits) at BOTH `sft` and `dpo` (`n_eligible >= 15`, printed beside the CI), the 95% unit-bootstrap CI of paired `tau_3/1^(L)(dpo) - tau_3/1^(L)(sft)` lies wholly inside `[-0.25, +0.25]`. Disposition per the v5 rule (a CI extending past the band on one side is `inconclusive`; it fails only if it lies wholly outside the band). | low | Gemini 4 Neon |
+| 213.10 | Syntax & person-axis disambiguation (`instruct` chat, `+0.8`, `SELF_NONID` & `COPULA_NONID`): for the 21 slot units, (a) the 95% CI lower bound of median `[L_z(u, SELF_HELD) - L_z(u, SELF_NONID)]` is `>= +0.50` logits (`"I"` grammar alone does not reproduce the self-slot write), AND (b) paired `tau_cop_nonid/3^(L)` (`COPULA_NONID / THIRD_SLOT`, `n_eligible >= 15`) has 95% CI upper bound `<= 0.50` (copula syntax on a non-identity object drops below entity-identity copula slots), with (v5) the scene-framed `THIRD_SLOT` prompts as denominator and the numerator sign guard. Disposition per the v5 rule. | medium | Gemini 4 Neon |
+| 213.11 | Cross-unit full-NP specificity in third-person identity slots (`instruct` chat, `+0.8`, baseline-subtracted `offdiag_8` on `{third_0, third_2}`): across the 21 slot units, mean baseline-subtracted full-NP specificity `Delta_lp_spec(u, {third_0, third_2})` has 95% unit-bootstrap CI lower bound `>= +0.75` nats AND is strictly positive for at least 16 of 21 slot units (ruling out a generic "any large push writes a vivid character" effect), AND (v5) the slot-peer-only statistic `Delta_lp_spec_slot` has 95% unit-bootstrap CI lower bound `> 0` (the own persona beats the slot family, not only the concept peers). The statistic is v5's length-matched form. Fails if any clause misses. | medium | Gemini 4 Neon |
 
 Copied verbatim into PREDICTIONS.md under "## Part 213 (registered ...)" at registration time.
 
@@ -472,6 +506,12 @@ Copied verbatim into PREDICTIONS.md under "## Part 213 (registered ...)" at regi
   `MENTION_SLOT`, `COPULA_NONID`, and `SELF_NONID` have no free-generation arms, so their comparisons are strictly
   teacher-forced.
 
+- **Left open by the v5 stop rule (recorded, not fixed):** denominator eligibility uses the point estimate
+  (`> 0.50` logits), which selects on the same sample and biases the ratio median (code review finding 6); `offdiag_8`
+  excludes peers containing the own unit's first token in one direction only (finding 4; the other direction makes
+  `213.11` harder, not easier); prompts are paired by framing, not matched in tokens; and the reviews' non-blocking
+  points (design review S3, S5 to S14 apart from S11b) stand as written in `reviews/`.
+
 ## Changes in v4 (folding GLM 5.3 and DeepSeek Flash design-mode cold reviews of v3)
 
 1. **Re-powered transfer-ratio CI bars using public Part 106 spread (GLM H1):** switched primary $\tau$ statistics from
@@ -501,3 +541,23 @@ Copied verbatim into PREDICTIONS.md under "## Part 213 (registered ...)" at regi
    19-unit median (`14.6`), restricted pilot summary outputs, added `own - mean(O_u)`/rank and sub-word sensitivity
    diagnostics, noted `part213/score213.py` as to-be-built with fixture tests before registration, and weighed DS's
    cross-context offset finding in `Limits`.
+
+## Changes in v5 (Journal Claude, folding the two DeepSeek round-2 reviews of v4 under a stop rule)
+
+Only points that could make a registered verdict wrong, or the run impossible, were folded; everything else is a limit.
+1. **Sign guard on paired ratios** (design S1): a ratio is read only when the 95% CI lower bound of its numerator median
+   is above 0, so a suppression in both cells cannot register as transfer.
+2. **One disposition rule** (code finding 2): `not read` for low n, `inconclusive` for a straddling CI, `failed` only for
+   a CI wholly on the wrong side or a missed point clause; v4 gave the same outcome two dispositions.
+3. **Style-matched ratios** (code finding 3): `tau_M/3` and `tau_cop_nonid/3` use the two scene-framed `THIRD_SLOT`
+   prompts as denominator, matching the all-scene numerator cells; pooled versions are descriptive. v4's "matched
+   1-to-1 in word length" was false for two of four pairs and is corrected.
+4. **213.11 length-matched** (code finding 1) and **slot-peer term gated** (design S2): per-token increments scaled by
+   the own NP's length, and the own persona must also beat the 4 slot peers alone.
+5. **Own-unit full-NP clause on 213.1 and 213.2** (design S11b): for several units the first content token is a leading
+   modifier (' very', ' large', ' most', ' powerful'), not the persona noun, so each also requires the own full NP to rise.
+6. **Gate 2 rendering** (design S4) and **seal exemptions** (code finding 7): Gate 2 renders `chat_prefix + anchor` with
+   the ids asserted, and with the pilot's sealed concept cells skipped, the 213-first branch can run.
+7. **Honesty** (code findings 5 and 8): the power claim is restated as uncertain (about 20%–81% by an independent
+   re-simulation), and the sign-test arithmetic is corrected.
+No arms, units, prompts, doses or thresholds were added or moved, apart from the new clauses named above.
