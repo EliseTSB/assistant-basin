@@ -125,29 +125,34 @@ class Builder:
 
     # -- full-NP specificity rows (213.11) ---------------------------------------------------------------------------
     def full_np_rows(self, prompt_ids, own_delta, peer_delta, peer_lengths=None):
-        """none rows for every unit, and a neuron +0.8 row per (unit, prompt) scoring every unit v's NP.
+        """none rows, a neuron +0.8 row per unit, and the Amendment-1 offdiag passes.
 
-        The neuron row for unit u carries unit v's lp_mean/lp_sum with `own_delta` when v == u and `peer_delta`
-        otherwise (per content token). `peer_lengths` overrides every NP's token count (the "lengths match" case).
+        A unit u's own full-NP increment comes from its own `neuron +0.8` row (`own_delta`); a peer v's increment
+        under u's hook comes from the `(push_unit=u, unit=v, prompt)` offdiag row (`peer_delta`), which is exactly
+        what `Stage1.full_np_increment` reads after F3. `peer_lengths` overrides every NP's token count.
         """
+        def length_of(unit):
+            return peer_lengths if peer_lengths is not None else int(unit["n_content_tokens"])
+
         rows = []
         for pid in prompt_ids:
             for unit in UNITS:
                 row = self._row(unit, pid, "none", "0.0", 0.0, self.logits([0.0] * self.n), 0.0)
-                length = peer_lengths if peer_lengths is not None else int(unit["n_content_tokens"])
-                row["lp_sum"], row["lp_mean"] = 10.0 * length, 10.0
+                row["lp_sum"], row["lp_mean"] = 10.0 * length_of(unit), 10.0
+                rows.append(row)
+            for unit in UNITS:
+                row = self._row(unit, pid, "neuron", "+0.8", 0.8, self.logits([0.0] * self.n), 0.0)
+                row["lp_sum"] = (10.0 + own_delta) * length_of(unit)
+                row["lp_mean"] = 10.0 + own_delta
                 rows.append(row)
             for uid in SLOT:
-                # one record per (unit, prompt): the pushed pass carries all 39 units' NP scores in lp_by_unit
-                row = self._row(UNIT_BY_ID[uid], pid, "neuron", "+0.8", 0.8, self.logits([0.0] * self.n), 0.0)
-                by_unit = {}
-                for v in UNITS:
-                    delta = own_delta if v["id"] == uid else peer_delta
-                    length = peer_lengths if peer_lengths is not None else int(v["n_content_tokens"])
-                    mean = 10.0 + delta
-                    by_unit[v["id"]] = {"lp_mean": mean, "lp_sum": mean * length}
-                row["lp_by_unit"] = by_unit
-                rows.append(row)
+                for vid in UNIT_BY_ID[uid]["offdiag_8"]:
+                    v = UNIT_BY_ID[vid]
+                    row = self._row(v, pid, "offdiag", "+0.8", 0.8, self.logits([0.0] * self.n), 0.0)
+                    row["push_unit"], row["scored_unit"] = uid, vid
+                    row["lp_sum"] = (10.0 + peer_delta) * length_of(v)
+                    row["lp_mean"] = 10.0 + peer_delta
+                    rows.append(row)
         return rows
 
 
@@ -299,12 +304,18 @@ def test_slot_family_writer_fails_slot_peer_clause():
             row["lp_sum"], row["lp_mean"] = 10.0 * length, 10.0
             rows.append(row)
         for uid in SLOT:
-            row = b._row(UNIT_BY_ID[uid], pid, "neuron", "+0.8", 0.8, b.logits([0.0] * b.n), 0.0)
-            row["lp_by_unit"] = {
-                v["id"]: {"lp_mean": 10.0 + (1.0 if v["kind_haiku"] == "slot" else 0.0),
-                          "lp_sum": (10.0 + (1.0 if v["kind_haiku"] == "slot" else 0.0)) * v["n_content_tokens"]}
-                for v in UNITS}
+            unit = UNIT_BY_ID[uid]
+            row = b._row(unit, pid, "neuron", "+0.8", 0.8, b.logits([0.0] * b.n), 0.0)
+            row["lp_sum"], row["lp_mean"] = 11.0 * int(unit["n_content_tokens"]), 11.0
             rows.append(row)
+            for vid in unit["offdiag_8"]:
+                v = UNIT_BY_ID[vid]
+                delta = 1.0 if v["kind_haiku"] == "slot" else 0.0
+                row = b._row(v, pid, "offdiag", "+0.8", 0.8, b.logits([0.0] * b.n), 0.0)
+                row["push_unit"], row["scored_unit"] = uid, vid
+                row["lp_sum"] = (10.0 + delta) * int(v["n_content_tokens"])
+                row["lp_mean"] = 10.0 + delta
+                rows.append(row)
     rec["stage1"]["instruct"] = rows
     result = score(rec)
     p = result["predictions"]["213.11"]
@@ -568,7 +579,8 @@ def test_step_size_summary_pairs_units_and_signs():
     j = {run213.FD_EPS: {}, run213.PILOT_EPS: {}}
     for k, (uid, slope) in enumerate([("a", 1.0), ("b", 2.0), ("c", 3.0)]):
         for eps in (run213.FD_EPS, run213.PILOT_EPS):
-            row = lambda e: [slope * e, slope * e + 1.0]  # logit 0 and logit 1 both rise with the step
+            # F8: first_logits is the sparse {str(token_id): logit} map
+            row = lambda e: {"0": slope * e, "1": slope * e + 1.0}
             j[eps][(uid, f"p{k}")] = {eps: row(eps), -eps: row(-eps)}
     out = run213.step_size_summary(j, units)
     assert out["n_pairs"] == 3 and out["passed"] is True
@@ -593,3 +605,240 @@ def test_gate2_reference_is_the_operating_dose(tmp_path):
     assert run213.part106_reference(stored, "p92-02", "none") == -31.6
     assert run213.part106_reference(stored, "p92-02", "neuron") == -5.1
     assert run213.part106_reference(stored, "p92-02", "random") == -25.4
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# fixes from the GLM review (F1-F8, L1, L4, L7): one test per finding, each red on the old code
+# ---------------------------------------------------------------------------------------------------------------------
+
+class _FakeTokenizer:
+    pad_token_id = 0
+
+
+class _FakeModel:
+    """A tiny deterministic stand-in for the decoder: logits[j, t, v] = (t + 1) * (v + 1) / 1000."""
+    class config:
+        hidden_size = 4
+
+    def __call__(self, input_ids, attention_mask, use_cache):
+        import torch
+
+        batch, width = input_ids.shape
+        vocab = 8
+        steps = torch.arange(1, width + 1, dtype=torch.float32).view(1, width, 1)
+        values = torch.arange(1, vocab + 1, dtype=torch.float32).view(1, 1, vocab)
+        logits = (steps * values / 1000.0).expand(batch, width, vocab).clone()
+
+        class Out:
+            pass
+
+        out = Out()
+        out.logits = logits
+        return out
+
+
+def test_f1_make_row_reads_after_the_opening_and_lead():
+    """F1: first_pos/content_pos include the opening tokens (old code read one opening token early)."""
+    from part213 import run213
+
+    class Tok:
+        def encode(self, text, add_special_tokens=False):
+            assert add_special_tokens is False
+            return [ord(c) for c in text]
+
+    original = run213.prompt_ids
+    run213.prompt_ids = lambda tokenizer, question: [1000, 1001]
+    try:
+        unit = {"id": "u", "target_ids": [50, 51, 52, 53], "lead_ids": [50], "content_start": 1,
+                "first_content_token_id": 51, "n_content_tokens": 3, "n_target_tokens": 4}
+        row = run213.make_row(Tok(), "q", "AB", unit)
+    finally:
+        run213.prompt_ids = original
+    assert row["ids"] == [1000, 1001, ord("A"), ord("B"), 50, 51, 52, 53]
+    # logits at position p predict the token at p + 1; the last lead token is index 4 and predicts 51.
+    assert row["first_pos"] == 4 and row["ids"][row["first_pos"]] == 50
+    assert row["content_pos"] == [4, 5, 6]
+    assert [row["ids"][p + 1] for p in row["content_pos"]] == [51, 52, 53]
+    assert row["prefix_len"] == 4                                           # chat prefix + opening
+
+
+def test_f2_and_f3_offdiag_passes_are_on_the_peer_row_and_never_pad():
+    """F2/F3: Stage 1 must not index past a row (old np_specs crashed) and 213.11 must read the offdiag passes."""
+    from part213 import run213
+
+    # F2: mixed-length rows with per-row keep ids return without an IndexError and only own-row positions are read.
+    rows = [{"ids": [1, 2, 3], "first_pos": 2, "content_pos": [2], "target_ids": [3]},
+            {"ids": [1, 2, 3, 4, 5, 6, 7], "first_pos": 6, "content_pos": [4, 5, 6], "target_ids": [5, 6, 7]}]
+    out = run213.forward_batch(_FakeModel(), _FakeTokenizer(), rows, keep_ids=[[1, 2], [3]])
+    assert list(out[0]["first_logits"]) == ["1", "2"]
+    assert list(out[1]["first_logits"]) == ["3"]
+    assert all(len(entry["first_logits"]) <= 2 for entry in out)
+
+    # F3: full_np_increment reads the (push_unit, scored_unit, prompt) offdiag record on v's own row.
+    b = Builder()
+    rec = empty_records()
+    rec["stage1"]["instruct"] = b.full_np_rows(s.OFFDIAG_PROMPTS, own_delta=0.20, peer_delta=-0.10)
+    assert all("lp_by_unit" not in row for row in rec["stage1"]["instruct"])
+    s1 = s.Stage1(rec, TARGETS)
+    for uid in SLOT[:5]:
+        own = s1.full_np_increment("instruct", uid, uid, s.OFFDIAG_PROMPTS[0])
+        assert abs(own - 0.20) < 1e-9, (uid, own)
+        peer = s1.full_np_increment("instruct", uid, UNIT_BY_ID[uid]["offdiag_8"][0], s.OFFDIAG_PROMPTS[0])
+        assert abs(peer - (-0.10)) < 1e-9, (uid, peer)
+
+
+def test_f3_instruct_executes_6366_passes():
+    """Amendment 1: 5,430 core + 936 offdiag = 6,366 instruct Stage 1 passes."""
+    from part213 import run213
+
+    counts = run213.stage1_pass_count(TARGETS, "instruct")
+    assert counts["stage1_core_passes"] == 5430
+    assert counts["offdiag_passes"] == 936
+    assert counts["stage1_passes_executed"] == 6366
+    assert run213.stage1_pass_count(TARGETS, "sft")["stage1_passes_executed"] == 936
+
+
+def test_f4_per_checkpoint_manifests_and_pilot_evidence(tmp_path, monkeypatch):
+    """F4: the runner writes run-<checkpoint>.json and load_records finds it; pilot evidence is auto-merged."""
+    from part213 import run213
+
+    snap = tmp_path / "snap"
+    snap.mkdir()
+    out = tmp_path / "records"
+    monkeypatch.setattr(run213, "tokenizer_digests", lambda: {"instruct": {"tokenizer.json": "x"}})
+    monkeypatch.setattr(run213, "residual_norm_ratio", lambda model, tokenizer: 1.0)
+    monkeypatch.setattr(run213, "provenance", lambda ckpt, s: {"key": ckpt, "commit": "a" * 40,
+                                                               "commit_prefix": "a" * 12})
+    for ckpt in ("sft", "dpo", "instruct"):
+        run213.write_run_json(out, ckpt, snap, None, None, {"dtype": "float32", "attn_implementation": "eager"})
+    assert not (out / "run.json").exists()
+    for ckpt in ("sft", "dpo", "instruct"):
+        assert (out / f"run-{ckpt}.json").is_file()
+
+    # stage1's automatic path: pilot_summary.json beside the records is picked up by the scorer
+    (out / "pilot_summary.json").write_text(json.dumps({
+        "gate1": {"passed": True, "zero_hook_max_abs_diff": 0.0},
+        "gate2": {"passed": True, "anchors": [{"id": "p92-02", "passed": True}]},
+        "stage2_baseline_answers": [{"id": "free_self_0", "answer": "I am a fox."}]}), encoding="utf-8")
+    records = s.load_records(out)
+    assert set(records["runs"]) >= {"sft", "dpo", "instruct"}
+    assert records["runs"]["instruct"]["pilot_gate1"]["passed"] is True
+    assert records["runs"]["instruct"]["gate2_anchors_detail"][0]["passed"] is True
+    assert records["runs"]["instruct"]["stage2_baseline_answers"][0]["id"] == "free_self_0"
+
+
+def test_f5_headline3_needs_a_complete_stage2_ci_and_gates_need_labels():
+    """F5: no first-person headline without the Stage 2 CI; gate 3/4 fail without the evidence they guard."""
+    gates = {name: {"passed": True} for name in ("gate1", "gate2", "gate3", "gate4")}
+    preds = {"213.1": {"verdict": "held"},
+             "213.3": {"verdict": "held", "tau_3/1_L": {"ci": {"hi": 0.20}}, "tau_3/1_N": {"ci": {"hi": 0.20}}}}
+    for name in ("213.2", "213.4", "213.6", "213.11", "213.10"):
+        preds[name] = {"verdict": "inconclusive", "clauses": {}}
+    audit = {"slot_minus_genuine": 0}
+    no_stage2 = s.headline_reading(preds, gates, audit, None)
+    assert no_stage2["reading"] != "First-person self-slots supported"
+    with_stage2 = s.headline_reading(preds, gates, audit, {"read": "read", "hi": 0.10})
+    assert with_stage2["reading"] == "First-person self-slots supported"
+    # labels present but kappa missing: the audited endpoint is unread, so Gate 3 fails
+    g3 = s.gate3({"stage2": [], "runs": {}, "labels": {"0": "genuine_third_attr"}}, TARGETS)
+    assert g3["passed"] is False
+    # Gate 4 cannot count refusal labels it does not have
+    g4 = s.gate4({"stage2": _stage2_rows(), "runs": {}, "labels": {}}, TARGETS)
+    assert g4["passed"] is False and g4["labelled"] == 0
+
+
+def test_f6_partial_output_is_not_a_finished_run(tmp_path):
+    """F6: an existing JSONL without a matching completion marker is a crashed run, not a finished one."""
+    from part213 import run213
+
+    path = tmp_path / "stage1-sft.jsonl"
+    path.write_text("", encoding="utf-8")
+    assert not run213.is_complete(path)                       # old resume rule skipped this
+    run213.write_jsonl(path, [{"a": 1}])
+    assert not run213.is_complete(path)
+    run213.write_completion(path, [{"a": 1}], "sft")
+    assert run213.is_complete(path)
+    path.write_text(path.read_text(encoding="utf-8") + json.dumps({"a": 2}) + "\n", encoding="utf-8")
+    assert not run213.is_complete(path)                       # row count/digest no longer match
+
+
+def _blind_labels(rec, label_fn):
+    blind = s.export_blind(rec["stage2"], TARGETS)
+    order = s._blind_order(rec["stage2"], TARGETS)
+    return {item["blind_id"]: label_fn(row) for item, row in zip(blind, order)}
+
+
+def test_f7_partial_blind_audit_is_not_read():
+    """F7: labelling only the rows that favour the neuron arm must not hold 213.6."""
+    rec = empty_records()
+    rec["stage2"] = _stage2_rows()
+    labels = _blind_labels(rec, lambda row: "genuine_third_attr"
+                           if row["arm"] == "neuron" and row["dose"] == "+0.8" else None)
+    labels = {k: v for k, v in labels.items() if v is not None}       # 42 of 84 rows only
+    result = s.score(rec, TARGETS, {"labels": labels})
+    p6 = result["predictions"]["213.6"]
+    assert p6["audit_complete"] is False and p6["labelled_rows"] == 42 and p6["audited_rows"] == 84
+    assert p6["verdict"] == "not read"
+
+
+def test_l7_difference_ci_is_the_total_and_strictly_above_zero():
+    """L7: bootstrap the total (neuron - random) and require lo > 0; a 2.5th percentile exactly on 0 is not above."""
+    rec = empty_records()
+    rec["stage2"] = _stage2_rows()
+    s.assign_blind_ids(rec, TARGETS)
+    hit_units = set(SLOT[:3])                               # 3 units x 2 prompts = 6 hits, 0 random hits
+    labels = _blind_labels(rec, lambda row: "genuine_third_attr"
+                           if row["arm"] == "neuron" and row["dose"] == "+0.8" and row["unit"] in hit_units
+                           else "other_coherent")
+    p6 = s.predict_213_6(rec, TARGETS, {"labels": labels})
+    assert p6["difference_ci"]["point"] == 6.0
+    assert p6["difference_ci"]["lo"] == 0.0                  # P(all-zero resample) = (18/21)^21 > 2.5%
+    assert p6["clauses"]["difference_ci_above_0"] == "inconclusive"   # old `ge 0` read `held`
+
+
+def test_l1_low_n_wins_over_a_failed_sign_guard():
+    """L1: n_eligible < 15 is `not read` even when the ratio's sign guard also failed."""
+    assert s.ratio_clause({"n_eligible": 10, "sign_guard": False, "ci": {"lo": 0.90, "hi": 1.0}},
+                          "ge", 0.50) == "not read"
+    assert s.ratio_clause({"n_eligible": 21, "sign_guard": False, "ci": {"lo": 0.90, "hi": 1.0}},
+                          "ge", 0.50) == "inconclusive"
+    assert s.ratio_clause({"n_eligible": 21, "sign_guard": True, "ci": {"lo": 0.60, "hi": 0.90}},
+                          "ge", 0.50) == "held"
+
+
+def test_l4_non_finite_pass_stops_the_run():
+    """L4: a NaN pass stops Stage 1 instead of burning the remaining passes and writing bare NaN."""
+    from part213 import run213
+
+    with pytest.raises(SystemExit):
+        run213.check_finite({"lp_sum": float("nan")}, "p92-00|third_0|neuron", "instruct")
+    with pytest.raises(SystemExit):
+        run213.check_finite({"lp_sum": 0.0, "first_logits": {"293": float("inf")}}, "x", "instruct")
+    run213.check_finite({"lp_sum": 0.0, "first_logits": {"293": -1.5}}, "x", "instruct")  # finite is fine
+
+
+def test_f8_rows_keep_only_the_logits_the_scorer_reads():
+    """F8: a record's first_logits holds only own + offdiag_ou ids, never the full vocabulary."""
+    from part213 import run213
+
+    units_by_id = UNIT_BY_ID
+    unit = UNIT_BY_ID["p92-05"]
+    keep = run213.first_logit_ids(unit, units_by_id)
+    assert int(unit["first_content_token_id"]) in keep
+    assert keep == sorted(set(keep))
+    assert len(keep) <= 1 + len(unit["offdiag_ou"]) < 40
+    row = {"ids": list(range(10)), "first_pos": 2, "content_pos": [3], "target_ids": [3]}
+    entry = run213.forward_batch(_FakeModel(), _FakeTokenizer(), [row], keep_ids=[[0, 1, 2]])[0]
+    assert set(entry["first_logits"]) == {"0", "1", "2"}
+
+
+def test_stage2_plan_is_16_cells_and_364_executed_rows():
+    """Stage 2 expands units once: the old plan looped units inside the plan and again in cmd_stage2 (39x too many)."""
+    from part213 import run213
+
+    plan = run213.stage2_plan(TARGETS)
+    assert len(plan) == 16
+    total = 0
+    for pid, arm, _dose, _alpha in plan:
+        total += 1 if arm == "none" else sum(1 for u in UNITS if not run213.is_sealed(u, pid))
+    assert total == 364          # 472 planned - 108 sealed concept rows

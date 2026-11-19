@@ -56,7 +56,9 @@ untouched (read-only reads of `results/part99-pushes.pt`, `results/part99-pushes
    already carry the scores. Implemented as the latter: every core pass records `lp_by_unit`, so the 936 passes are the
    three core passes' full-NP content on 8 units, and `instruct` Stage 1 is **5,430 executed passes** (5,538 planned,
    minus 108 sealed concept rows) instead of the design's 6,474. `sft`/`dpo`/`FR` are 936 each, as planned; Stage 2 is
-   472 planned / 238 executed under the seal. The design's "9,282 total" therefore overcounts by 936.
+   472 planned / 364 executed under the seal (corrected from 238 in the GLM-review pass, L6: 472 − 108 sealed
+   concept rows = 364). The design's "9,282 total" therefore overcounts by 936; Amendment 1 later restored the 936
+   `offdiag_8` passes (see the fixes section below), making `instruct` 6,366.
 2. **l.67-68 — the seal names `self_select`, the prompt id is `self_select_0`.** Both are sealed (concept-unit rows
    only); slot rows on `self_select_0` run, as l.69-70 allows.
 3. **l.196-199 — scene-framed denominator.** Implemented as `third_2, third_3` for τ_M/3 and τ_cop_nonid/3, with the
@@ -151,3 +153,111 @@ float32 with eager attention, as l.102-103 requires; (b) the runner needs the lo
   want a human eye.
 - The eight sabotage runs were executed one at a time and each turned its required test red; the full suite's
   `test_each_required_test_is_red_under_a_deliberate_break[...]` cases pass as a group as well.
+
+## Fixes from the GLM review (2026-11-19)
+
+Fixes for `part213/REVIEW-code-glm53-r1.md` F1-F8 and the cheap L items, plus Amendment 1's restored `offdiag_8`
+passes. Every real fix has a test in `part213/test_part213.py` (`test_f*`/`test_l*`/`test_stage2_*`); all 12 were
+shown RED against the pre-fix modules loaded from `git show HEAD:part213/...` (script and output kept outside the
+repo, in the worker's `recheck/` directory). The suite is **35 passed**. `part213/smoke_tiny213.py` runs the real
+`pilot` -> `stage1` -> `stage2` -> `score213` command lines end to end on a tiny random OLMo 2 and prints `SMOKE OK`.
+
+### F1 — read positions now include the opening tokens
+`run213.make_row` (run213.py:253) sets `prefix_len = len(prefix) + len(open_ids)`; `first_pos = prefix_len + len(lead)
+- 1` and `content_pos = prefix_len + content_start - 1 + i` (logit at p scores token p+1, so this is the last lead and
+each content token's predictor). The old chat-only prefix read every Stage 1 metric one opening token early.
+Test: `test_f1_make_row_reads_after_the_opening_and_lead` (red: old positions 2 vs 4 on a 2-token opening).
+
+### F2 — no NP score reads another row or a pad position
+`run213.forward_batch` (run213.py:181) no longer takes a batch-wide `np_specs`; it asserts `first_pos`/`content_pos`
+lie inside their own row and scores only that row's own `content_pos`. Full-NP peer scores now come from their own
+rows (`run_offdiag_passes`, run213.py:552). The `lp_by_unit` structure is gone.
+Test: `test_f2_and_f3_offdiag_passes_are_on_the_peer_row_and_never_pad` (red: old `forward_batch` had no `keep_ids`;
+old `full_np_increment` returned None without `lp_by_unit`).
+
+### F3 — the 936 offdiag passes are back; 213.11 reads them
+`run_offdiag_passes` (run213.py:552) applies u's `neuron +0.8` hook to each of u's 8 `offdiag_8` peers' **own** rows on
+`self_h0`, `third_0`, `third_2` (39 x 8 x 3 = 936 records keyed by `push_unit`/`scored_unit`). `stage1_pass_count`
+(run213.py:317) reports 5,430 core + 936 = **6,366** instruct passes (Amendment 1). `score213.Stage1.full_np_increment`
+(score213.py:418) reads the `(u, v, prompt)` offdiag record for v != u and the own `neuron +0.8` record for v == u;
+`full_np_sum_increment` matches.
+Tests: `test_f3_instruct_executes_6366_passes` and `test_f2_and_f3_...` (red: old count function absent / 5,430; old
+reader wanted `lp_by_unit`).
+
+### F4 — per-checkpoint manifests and the automatic pilot-evidence path
+`run213.write_run_json` (run213.py:451) writes `run-<name>.json` (never a single `run.json`). Stage 2 writes
+`run-stage2.json`, so it cannot clobber stage 1's `run-instruct.json`; FR writes `run-fr.json` under the instruct
+provenance (part85's registry has no `fr` key). `stage1 --pilot DIR` copies `pilot_summary.json` into the records
+directory and merges `pilot_gate1`/`gate2_anchors_detail`/`stage2_baseline_answers` into `run-instruct.json`
+(`load_pilot_evidence`/`merge_pilot_evidence`, run213.py:579/610). `score213.load_records(records_dir, pilot_dir)`
+(score213.py:109) also auto-reads `<records>/pilot_summary.json` and accepts `--pilot DIR`; a legacy `run.json` is
+still accepted and keyed by its `checkpoint` field. The smoke's pilot summary has exactly the real pilot's key set.
+Two further contract bugs found and fixed here: (a) `assign_blind_ids` ran *after* 213.6/Gate 4, so every audit
+label lookup saw `blind_id=None`; it now runs first (score213.py:1222). (b) each manifest nested
+`tokenizer_sha256` per checkpoint while Gate 1 expected `{file: sha}`; the writer now stores this checkpoint's
+digests and `_tokenizer_digests` (score213.py:681) accepts both shapes.
+Test: `test_f4_per_checkpoint_manifests_and_pilot_evidence` (red: old writer produced `run.json` only).
+
+### F5 — headline 3's Stage 2 clause, and gates that need their evidence
+`score213.slot_genuine_ci` (score213.py:1233) computes the 10,000-draw unit bootstrap of the slot
+`genuine_third_attr` rate over the 21 units (42 THIRD_FREE answers) and is `not read` unless all 42 are labelled.
+`headline_reading` (score213.py:1332) now requires that CI's `read` status and `hi < 10/42` before "First-person
+self-slots supported" can fire (the old note-only clause is gone). `gate3` (score213.py:768) fails when audit labels
+exist without a `kappa` (the audited endpoint is unread); `gate4` (score213.py:800) fails unless all 42 slot
+`neuron +0.8` rows carry labels instead of counting refusal as 0.
+Test: `test_f5_headline3_needs_a_complete_stage2_ci_and_gates_need_labels` (red: old signature had no CI argument;
+old gate3 passed with `kappa=None`; old gate4 passed with no labels).
+
+### F6 — a partial or crashed output is not a finished run
+`run213.write_completion`/`is_complete` (run213.py:362/370) write and verify a `<jsonl>.done.json` marker holding the
+checkpoint, row count and SHA-256; `stage1`/`stage2`/`fr` skip only when the marker matches (`--force` overrides).
+Test: `test_f6_partial_output_is_not_a_finished_run` (red: old code had no marker and skipped any existing file).
+
+### F7 — a partial blind audit is not a complete one
+`score213.predict_213_6` (score213.py:944) counts the 84 audited rows (42 neuron +0.8, 42 random_0 +0.8) and requires
+all of them labelled; otherwise every clause is `not read` and `audited_rows`/`labelled_rows` are reported.
+Test: `test_f7_partial_blind_audit_is_not_read` (red: old code held 213.6 from 42/84 labels).
+
+### F8 — records keep only the logits the scorer reads
+`run213.first_logit_ids` (run213.py:168) is the own first-content token plus each `offdiag_ou` peer's first token
+(at most 1 + 38 = 39 ids); `forward_batch` stores `first_logits` as `{str(token_id): logit}` and nothing else, while
+entropy/top-1 stay scalars. `score213.logit_value` (score213.py:167) reads the map and still accepts old lists. The
+smoke's instruct records have at most 35 first-logit entries per row and the whole records dir is 11.0 MB (the old
+form would be ~31 GB at load).
+Test: `test_f8_rows_keep_only_the_logits_the_scorer_reads` (red: old `first_logit_ids` absent; rows held the full
+100,278-float vocabulary).
+
+### Extra bug found by the smoke — Stage 2 was expanded 39 times
+`run213.stage2_plan` (run213.py:727) looped the 39 units while `cmd_stage2` also loops them, so the real Stage 2 would
+have run 468 cells x 39 units = 18,252 generations instead of 472 planned / 364 executed. The plan now returns the 16
+unit-agnostic cells; the manifest records `stage2_plan_cells`/`stage2_rows`/`stage2_executed`.
+Test: `test_stage2_plan_is_16_cells_and_364_executed_rows` (red: 468 cells on HEAD).
+
+### Low findings
+- **L1 fixed:** `score213.ratio_clause` (score213.py:287) checks `n_eligible < 15` before the sign guard; a low-n
+  ratio with a failed guard is `not read`, not `inconclusive`. Used by 213.3/213.4/213.10.
+  Test `test_l1_low_n_wins_over_a_failed_sign_guard`.
+- **L2 fixed:** 213.7 now prints `slot_neuron_minus_none` and `concept_neuron_minus_none` CIs alongside the gap.
+- **L3 fixed:** `score213.residual_norm_comparison` (score213.py:1261) reports each checkpoint's layer-0 median norm
+  and its ratio to instruct; the manifest note no longer promises an unread comparison.
+- **L4 fixed:** `run213.check_finite` (run213.py:392) stops a checkpoint at the first non-finite pass, and
+  `write_jsonl` uses `allow_nan=False` so bare `NaN` is never written. Test `test_l4_non_finite_pass_stops_the_run`.
+- **L5 deferred:** the pilot's registered 76-generation throughput arm would add 76 greedy generations to a pilot
+  that has already run and passed. Generation throughput is descriptive, not a gate or a prediction; adding it now
+  would change the recorded pilot budget without buying a registered number, so it is left as a stated gap.
+- **L6 fixed:** the "238 executed" line above is corrected to 364 (472 - 108 sealed concept rows).
+- **L7 fixed:** 213.6's difference CI is the unit bootstrap of the total `(neuron_hits - random_hits)` over all 21
+  units, and the clause is `ge_strict`, so a 2.5th percentile exactly on 0 is not "above 0". Test
+  `test_l7_difference_ci_is_the_total_and_strictly_above_zero`.
+
+### Smoke test (`part213/smoke_tiny213.py`, new)
+Builds a 16-layer, 19.1M-parameter random OLMo 2 (`hidden_size` 32, 2 heads/kv-heads, `intermediate_size` 8192 so
+neuron 7,850 exists) from `part213/tiny-olmo-cfg/config.json` with that folder's real tokenizer, in a scratch folder.
+It patches only model loading, snapshot lookup, provenance, the frozen push vectors (random, seed 213) and the Part
+106 Gate 2 reference (the tiny model's own anchor logits; Gate-2-ordering vectors are found by finite differences).
+Model seed 14 is the first whose four unpushed baselines are not mechanically broken (Gate 3 is a real check).
+It then invokes the real CLI paths: `pilot`, `stage1 --pilot`, `stage2`, `score213 --pilot`. Clean-run result
+(459 s): `SMOKE OK`; Gates 1-3 pass, Gate 4 correctly fails without a blind audit; 213.1-213.5 and 213.7-213.11
+`failed` on random weights, 213.6 `not read` (no audit) — every prediction scored, none `untestable (gate failed)`,
+none errored; instruct executed 6,366 passes, Stage 2 wrote 472 rows and executed 364; records 11.0 MB, max 35
+first-logit entries per row.

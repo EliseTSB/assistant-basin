@@ -165,13 +165,30 @@ def gate2_rendered_ids(tokenizer, question: str, anchor: str) -> list[int]:
     return [int(t) for t in tokenizer(text + anchor, add_special_tokens=False)["input_ids"]]
 
 
-def forward_batch(model, tokenizer, rows: list[dict], layer=None, vectors=None, np_specs=None):
+def first_logit_ids(unit: dict, units_by_id: dict) -> list[int]:
+    """The only first-content logits score213.py reads for this row's unit: its own token and its `offdiag_ou` peers'
+    first tokens (spec_logit, own - mean(O_u) and the own-token rank all read exactly these; design l.178-184).
+
+    F8: the runner kept the full 100,278-float vocabulary row per record (~31 GB for a full Stage 1 load). A row now
+    carries only these ~38 entries; entropy and top-1 stay scalars computed from the full row before reduction.
+    """
+    needed = {int(unit["first_content_token_id"])}
+    for v in unit["offdiag_ou"]:
+        needed.add(int(units_by_id[v]["first_content_token_id"]))
+    return sorted(needed)
+
+
+def forward_batch(model, tokenizer, rows: list[dict], layer=None, vectors=None, keep_ids=None):
     """One right-padded forward pass over rows; returns per-row logits at the unit's first-content position.
 
     rows: [{"ids": [...], "first_pos": int, "content_pos": [int...], "target_ids": [...]}]. Right padding with
-    attention_mask 0 (design l.130-132); the read index is prefix_len + len(lead_ids) - 1 (design l.132).
-    np_specs: optional {unit_id: (content_pos, target_ids)}; every row then also scores every listed unit's full NP
-    from the same pass (the design's zero-extra-pass offdiag_8 baseline, l.204-207), returned in `lp_by_unit`.
+    attention_mask 0 (design l.130-132); the read index is prefix_len + len(open_ids) + len(lead_ids) - 1 (design
+    l.132, with `prefix` including the opening -- F1).
+
+    keep_ids: optional list (one entry per row) of token ids whose first-content logits are kept; `None` keeps none.
+    The vocabulary row is never stored (F8). Every full-NP score a record needs is computed from its own row's
+    `content_pos` (F2): no unit's positions are ever read from another row, and a position beyond a row's own length
+    cannot arise because positions are built from that row's ids.
     """
     import torch
 
@@ -179,6 +196,10 @@ def forward_batch(model, tokenizer, rows: list[dict], layer=None, vectors=None, 
     width = max(len(r["ids"]) for r in rows)
     ids = torch.tensor([r["ids"] + [pad] * (width - len(r["ids"])) for r in rows], dtype=torch.long)
     mask = torch.tensor([[1] * len(r["ids"]) + [0] * (width - len(r["ids"])) for r in rows], dtype=torch.long)
+    if any(int(r["first_pos"]) >= len(r["ids"]) for r in rows):
+        raise ValueError("first_pos is outside its own row")
+    if any(max(r["content_pos"], default=-1) >= len(r["ids"]) for r in rows):
+        raise ValueError("content_pos is outside its own row")
     handle = None
     if vectors is not None:
         if vectors.shape[0] != len(rows):
@@ -190,12 +211,6 @@ def forward_batch(model, tokenizer, rows: list[dict], layer=None, vectors=None, 
     finally:
         if handle is not None:
             handle.remove()
-    np_logp = {}
-    if np_specs:
-        for uid, (positions, target_ids) in np_specs.items():
-            if not positions:
-                continue
-            np_logp[uid] = torch.log_softmax(logits[:, torch.tensor(positions, dtype=torch.long)], dim=-1)
     out = []
     for row_no, row in enumerate(rows):
         seq = logits[row_no]
@@ -210,22 +225,14 @@ def forward_batch(model, tokenizer, rows: list[dict], layer=None, vectors=None, 
         else:
             lp_sum = lp_mean = lp_first = 0.0
         probs = torch.softmax(first, dim=-1)
+        wanted = (keep_ids[row_no] if keep_ids is not None else None) or []
         entry = {
-            "first_logits": first.tolist(),
+            "first_logits": {str(int(t)): float(first[int(t)]) for t in wanted},
             "lp_sum": lp_sum, "lp_mean": lp_mean, "lp_first": lp_first,
             "entropy": float(-(probs * torch.log(probs.clamp_min(1e-30))).sum()),
             "top1": float(probs.max()),
             "top1_id": int(probs.argmax()),
         }
-        if np_specs:
-            by_unit = {}
-            for uid, (positions, target_ids) in np_specs.items():
-                if not positions:
-                    continue
-                values = np_logp[uid][row_no, torch.arange(len(positions)), torch.tensor(target_ids, dtype=torch.long)]
-                total = float(values.sum())
-                by_unit[uid] = {"lp_sum": total, "lp_mean": total / len(positions)}
-            entry["lp_by_unit"] = by_unit
         out.append(entry)
     return out
 
@@ -237,8 +244,19 @@ def _add_row_hook(layer, vectors):
     return common92.add_row_hook(layer, vectors)
 
 
+def sparse_max_abs_diff(a: dict, b: dict) -> float:
+    """Max |difference| over the union of two sparse first-logit dicts (missing entries count as 0.0)."""
+    keys = set(a) | set(b)
+    return max((abs(float(a.get(k, 0.0)) - float(b.get(k, 0.0))) for k in keys), default=0.0)
+
+
 def make_row(tokenizer, question: str, opening: str, unit: dict) -> dict:
-    """chat_prefix + opening + " " + np_text, ids asserted to be the concatenation (design l.125-132, l.344-346)."""
+    """chat_prefix + opening + " " + np_text, ids asserted to be the concatenation (design l.125-132, l.344-346).
+
+    F1: the read positions include the opening tokens. The design's `prefix_len + len(lead_ids) - 1` is the position
+    of the last lead token only when `prefix_len` already includes the opening; the first build used the chat-only
+    prefix, so every Stage 1 metric read the distribution after the first opening token instead of after the lead.
+    """
     prefix = prompt_ids(tokenizer, question)
     open_ids = tokenizer.encode(opening, add_special_tokens=False)
     target_ids = [int(t) for t in unit["target_ids"]]
@@ -248,28 +266,12 @@ def make_row(tokenizer, question: str, opening: str, unit: dict) -> dict:
         raise RuntimeError(f"chat/opening merge on {question!r}")
     if ids[len(prefix) + len(open_ids):] != target_ids:
         raise RuntimeError(f"chat/target merge on {unit['id']} / {question!r}")
-    first_pos = len(prefix) + len(lead) - 1
+    prefix_len = len(prefix) + len(open_ids)          # the opening is part of the fixed prefix, not the lead
+    first_pos = prefix_len + len(lead) - 1
     content_start = int(unit["content_start"])
-    content_pos = [len(prefix) + content_start - 1 + i for i in range(len(target_ids) - content_start)]
+    content_pos = [prefix_len + content_start - 1 + i for i in range(len(target_ids) - content_start)]
     return {"ids": ids, "first_pos": first_pos, "content_pos": content_pos,
-            "target_ids": target_ids[content_start:], "prefix_len": len(prefix), "opening_ids": open_ids}
-
-
-def np_specs_for(tokenizer, question: str, opening: str, units, cache: dict | None = None) -> dict:
-    """{unit_id: (content_pos, target_ids)} for every unit's full NP after one prompt's opening (design l.204-207).
-
-    `cache` keyed by (question, opening) keeps the per-prompt tokenisation out of the per-batch loop.
-    """
-    key = (question, opening)
-    if cache is not None and key in cache:
-        return cache[key]
-    specs = {}
-    for unit in units:
-        row = make_row(tokenizer, question, opening, unit)
-        specs[unit["id"]] = (row["content_pos"], row["target_ids"])
-    if cache is not None:
-        cache[key] = specs
-    return specs
+            "target_ids": target_ids[content_start:], "prefix_len": prefix_len, "opening_ids": open_ids}
 
 
 def keep_fields(result: dict, fields) -> dict:
@@ -282,11 +284,11 @@ def keep_fields(result: dict, fields) -> dict:
 # ---------------------------------------------------------------------------------------------------------------------
 
 def stage1_plan(targets: dict, checkpoint: str) -> list[tuple[str, str, str, float, str]]:
-    """(prompt_id, arm, dose, alpha, fields) for every Stage 1 pass of one checkpoint.
+    """(prompt_id, arm, dose, alpha, fields) for every Stage 1 core pass of one checkpoint.
 
     instruct (design l.232-241): none + neuron +0.8 + random_0..3 +0.8 on 17 prompts; neuron -0.8 and random_0 -0.8 on
-    self_held; neuron/random_0 ±0.05 on self_held + third_slot; the offdiag_8 full-NP passes are the neuron +0.8 core
-    passes on self_h0/third_0/third_2 (the core pass already scores all 39 units' full NPs, design l.204-207).
+    self_held; neuron/random_0 ±0.05 on self_held + third_slot. The 936 offdiag_8 passes (Amendment 1) are NOT in this
+    list: they score a peer's own row under the pushed unit's hook and are executed by `run_offdiag_passes`.
     sft/dpo/FR (design l.242-244): none, neuron +0.8, random_0 +0.8 on self_held + third_slot.
     """
     prompts = {p["id"]: p for cell, plist in targets["stage1_prompts"].items() for p in plist}
@@ -312,6 +314,19 @@ def stage1_plan(targets: dict, checkpoint: str) -> list[tuple[str, str, str, flo
     return plan
 
 
+def stage1_pass_count(targets: dict, checkpoint: str) -> dict:
+    """Rows actually executed: core plan cells minus sealed concept rows, plus the 936 offdiag passes (instruct).
+
+    Amendment 1: instruct executes 6,366 passes = 5,430 (5,538 planned minus 108 sealed) + 936 offdiag.
+    """
+    units = targets["units"]
+    plan = stage1_plan(targets, checkpoint)
+    core = sum(1 for pid, _arm, _dose, _alpha, _fields in plan for unit in units if not is_sealed(unit, pid))
+    offdiag = len(OFFDIAG_PROMPTS) * len(units) * 8 if checkpoint == "instruct" else 0
+    return {"stage1_plan_cells": len(plan), "stage1_core_passes": core,
+            "offdiag_passes": offdiag, "stage1_passes_executed": core + offdiag}
+
+
 def is_sealed(unit: dict, prompt_id: str) -> bool:
     """Part 180 run-order seal (design l.66-71): concept-unit rows of self_select and free_self_0/free_cold_0.
 
@@ -330,7 +345,7 @@ def write_jsonl(path: Path, rows: list[dict]) -> None:
     tmp = path.with_suffix(path.suffix + ".tmp")
     with open(tmp, "w", encoding="utf-8") as stream:
         for row in rows:
-            stream.write(json.dumps(row, ensure_ascii=False) + "\n")
+            stream.write(json.dumps(row, ensure_ascii=False, allow_nan=False) + "\n")
     os.replace(tmp, path)
 
 
@@ -340,15 +355,53 @@ def read_jsonl(path: Path) -> list[dict]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
+def completion_path(out_path: Path) -> Path:
+    return out_path.with_suffix(out_path.suffix + ".done.json")
+
+
+def write_completion(out_path: Path, rows: list[dict], checkpoint: str) -> None:
+    """F6: mark a checkpoint finished only after every row is written. An existing JSONL without this marker is a
+    crashed/partial run (write_jsonl rewrites after each cell and a kill leaves a complete prefix), never "done"."""
+    marker = completion_path(out_path)
+    marker.write_text(json.dumps({"checkpoint": checkpoint, "rows": len(rows),
+                                  "sha256": sha256_file(out_path), "complete": True}) + "\n", encoding="utf-8")
+
+
+def is_complete(out_path: Path) -> bool:
+    """True only for a JSONL whose completion marker matches its row count and digest (F6)."""
+    marker = completion_path(out_path)
+    if not out_path.is_file() or not marker.is_file():
+        return False
+    try:
+        record = json.loads(marker.read_text(encoding="utf-8"))
+        return (bool(record.get("complete")) and int(record.get("rows", -1)) == len(read_jsonl(out_path))
+                and record.get("sha256") == sha256_file(out_path))
+    except (ValueError, OSError):
+        return False
+
+
 def record(unit: dict, prompt_id: str, arm: str, dose: str, alpha: float, result: dict, extra: dict | None = None):
     row = {"unit": unit["id"], "kind": unit["kind_haiku"], "layer": int(unit["layer"]), "neuron": int(unit["neuron"]),
            "prompt_id": prompt_id, "arm": arm, "dose": dose, "alpha": float(alpha), "status": "ok"}
     row.update({k: result.get(k) for k in CORE_FIELDS})
-    if result.get("lp_by_unit"):
-        row["lp_by_unit"] = result["lp_by_unit"]  # every unit's full-NP score from this pass (offdiag_8 baselines)
     if extra:
         row.update(extra)
     return row
+
+
+def check_finite(result: dict, where: str, checkpoint: str) -> None:
+    """L4: a non-finite pass stops the run instead of burning ~9,000 more passes for a gate1 flag at the end.
+
+    `json.dumps(..., allow_nan=False)` in write_jsonl would otherwise write bare `NaN`, which is not JSON and which
+    only Python round-trips.
+    """
+    for key in ("lp_sum", "lp_mean", "lp_first", "entropy", "top1"):
+        value = result.get(key)
+        if value is not None and not math.isfinite(float(value)):
+            raise SystemExit(f"{checkpoint}: non-finite {key} at {where}; stopping (design l.336-337)")
+    for value in (result.get("first_logits") or {}).values():
+        if not math.isfinite(float(value)):
+            raise SystemExit(f"{checkpoint}: non-finite first logit at {where}; stopping (design l.336-337)")
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -395,7 +448,14 @@ def residual_norm_ratio(model, tokenizer) -> float:
     return float(common92.residual_medians(model, tokenizer, "chat")[0])
 
 
-def write_run_json(out: Path, checkpoint: str, snapshot: Path, model, tokenizer, extra: dict) -> dict:
+def write_run_json(out: Path, checkpoint: str, snapshot: Path, model, tokenizer, extra: dict,
+                   name: str | None = None) -> dict:
+    """Write this stage's manifest as `run-<name>.json` (F4: never one overwritten `run.json`).
+
+    `checkpoint` selects provenance (it must be in part85's registry); `name` overrides the filename stem for stages
+    that are not a single checkpoint (pilot, stage2, fr).
+    """
+    digests = tokenizer_digests()
     manifest = {
         "part": 213,
         "checkpoint": checkpoint,
@@ -413,7 +473,7 @@ def write_run_json(out: Path, checkpoint: str, snapshot: Path, model, tokenizer,
             "results/part99-pushes.json": sha256_file(PUSHES_JSON),
             "results/part106/lp-instruct.jsonl": sha256_file(PART106_INSTRUCT),
         },
-        "tokenizer_sha256": tokenizer_digests(),
+        "tokenizer_sha256": digests.get(checkpoint, digests),
         "residual_median_norm_layer0": residual_norm_ratio(model, tokenizer),
         "residual_median_norm_reference_note": "instruct is the reference for the ratio; score213 compares across run.json",
         "peak_rss_gb": round(peak_rss_gb(), 3),
@@ -423,7 +483,8 @@ def write_run_json(out: Path, checkpoint: str, snapshot: Path, model, tokenizer,
         **extra,
     }
     out.mkdir(parents=True, exist_ok=True)
-    (out / "run.json").write_text(json.dumps(manifest, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    (out / f"run-{name or checkpoint}.json").write_text(
+        json.dumps(manifest, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     return manifest
 
 
@@ -445,10 +506,15 @@ def layer_chunks(work: list[dict], batch: int):
 
 
 def run_stage1_pass(model, tokenizer, units, vectors, plan, prompts, batch, layer_of, out_path, checkpoint):
-    """Execute one checkpoint's Stage 1 plan, writing one JSONL row per (unit, prompt, arm)."""
+    """Execute one checkpoint's Stage 1 plan, writing one JSONL row per (unit, prompt, arm).
+
+    F2/F8: every row scores its own unit's NP at its own `content_pos`; a record keeps only the first-content logits
+    score213 reads (`first_logit_ids`). The offdiag_8 passes are appended by `run_offdiag_passes` (F3).
+    """
     started = time.perf_counter()
+    units_by_id = {u["id"]: u for u in units}
+    keep_of = {u["id"]: first_logit_ids(u, units_by_id) for u in units}
     rows = []
-    spec_cache = {}
     for pid, arm, dose, alpha, fields in plan:
         prompt = prompts[pid]
         work = []
@@ -463,24 +529,104 @@ def run_stage1_pass(model, tokenizer, units, vectors, plan, prompts, batch, laye
             if any(layer_of(u) is not layer for u in chunk):
                 raise RuntimeError("a batch must share one decoder layer")
             batch_rows = [make_row(tokenizer, prompt["question"], prompt["opening"], u) for u in chunk]
-            # Right-padded rows of one decoder layer in one forward pass (design l.130-132, l.406-407); a `none` arm
-            # carries no hook, so it is one pass per prompt and layer.
-            specs = (np_specs_for(tokenizer, prompt["question"], prompt["opening"], units, spec_cache)
-                     if fields is CORE_FIELDS else None)
+            keep = [keep_of[u["id"]] for u in chunk]
             if arm == "none":
-                raw = forward_batch(model, tokenizer, batch_rows, np_specs=specs)
+                raw = forward_batch(model, tokenizer, batch_rows, keep_ids=keep)
             else:
                 # (the first build rebound `vectors`, the push-vector dict, to this tensor, so the next chunk
                 #  would have indexed a tensor by (unit, arm))
                 chunk_vectors = torch_stack([scale_vector(vectors[(u["id"], arm)], alpha) for u in chunk])
-                raw = forward_batch(model, tokenizer, batch_rows, layer=layer, vectors=chunk_vectors, np_specs=specs)
+                raw = forward_batch(model, tokenizer, batch_rows, layer=layer, vectors=chunk_vectors, keep_ids=keep)
             for unit, result in zip(chunk, raw):
+                check_finite(result, f"{pid}|{unit['id']}|{arm}|{dose}", checkpoint)
                 rows.append(record(unit, pid, arm, dose, alpha, keep_fields(result, fields),
                                    {"n_content_tokens": int(unit["n_content_tokens"]),
                                     "n_target_tokens": int(unit["n_target_tokens"])}))
         print(f"{checkpoint}: {pid} {arm} {dose} done, {len(rows)} rows, {time.perf_counter() - started:.0f}s", flush=True)
         write_jsonl(out_path, rows)  # resume granularity: one rewritten file per (prompt, arm)
+    if checkpoint == "instruct":
+        rows = run_offdiag_passes(model, tokenizer, units, vectors, prompts, batch, layer_of, out_path, rows)
     return rows
+
+
+def run_offdiag_passes(model, tokenizer, units, vectors, prompts, batch, layer_of, out_path, rows):
+    """Amendment 1: the 936 `(u, v, prompt)` passes -- unit u's `neuron +0.8` hook on peer v's OWN row, on
+    `self_h0`, `third_0`, `third_2`, for each u's 8 `offdiag_8` peers (4 slot + 4 concept).
+
+    39 units x 8 peers x 3 prompts = 936. Each record is keyed by (`push_unit` u, `unit`/`scored_unit` v, prompt) and
+    carries v's full-NP `lp_sum`/`lp_mean` from v's own row; the unpushed baseline is v's `none` core record.
+    """
+    units_by_id = {u["id"]: u for u in units}
+    for pid in OFFDIAG_PROMPTS:
+        prompt = prompts[pid]
+        for push in units:
+            peers = [units_by_id[v] for v in push["offdiag_8"]]
+            peer_rows = [make_row(tokenizer, prompt["question"], prompt["opening"], v) for v in peers]
+            vector = scale_vector(vectors[(push["id"], "neuron")], OPEN_ALPHA)
+            raw = forward_batch(model, tokenizer, peer_rows, layer=layer_of(push),
+                                vectors=torch_stack([vector] * len(peers)), keep_ids=None)
+            for v, result in zip(peers, raw):
+                check_finite(result, f"offdiag|{push['id']}->{v['id']}|{pid}", "instruct")
+                rows.append(record(v, pid, "offdiag", "+0.8", OPEN_ALPHA, keep_fields(result, CORE_FIELDS),
+                                   {"push_unit": push["id"], "scored_unit": v["id"],
+                                    "n_content_tokens": int(v["n_content_tokens"]),
+                                    "n_target_tokens": int(v["n_target_tokens"])}))
+        print(f"instruct: offdiag {pid} done, {len(rows)} rows, {time.perf_counter():.0f}", flush=True)
+        write_jsonl(out_path, rows)
+    return rows
+
+
+def load_pilot_evidence(pilot_dir) -> dict:
+    """The pilot's Gate 1 / Gate 2 / baseline evidence, read from whatever the pilot wrote (F4).
+
+    Accepts `pilot_summary.json` (the restricted summary), `run-pilot.json` (the pilot manifest) or the old `run.json`;
+    the real pilot output at `results/part213/pilot/` matches all three shapes.
+    """
+    if not pilot_dir:
+        return {}
+    directory = Path(pilot_dir)
+    for name in ("pilot_summary.json", "run-pilot.json", "run.json"):
+        path = directory / name
+        if not path.is_file():
+            continue
+        obj = json.loads(path.read_text(encoding="utf-8"))
+        evidence: dict = {"pilot_evidence_file": str(path)}
+        gate1 = obj.get("pilot_gate1") or obj.get("gate1")
+        if gate1:
+            evidence["pilot_gate1"] = gate1
+        gate2 = obj.get("gate2_anchors_detail")
+        if gate2 is None and isinstance(obj.get("gate2"), dict):
+            gate2 = obj["gate2"].get("anchors")
+        if gate2:
+            evidence["gate2_anchors_detail"] = gate2
+        if obj.get("stage2_baseline_answers"):
+            evidence["stage2_baseline_answers"] = obj["stage2_baseline_answers"]
+        if obj.get("tokenizer_sha256"):
+            evidence["pilot_tokenizer_sha256"] = obj["tokenizer_sha256"]
+        return evidence
+    return {}
+
+
+def merge_pilot_evidence(out: Path, evidence: dict) -> None:
+    """Copy the pilot summary into `out/` and merge its gate evidence into `run-instruct.json` (F4's automatic path).
+
+    `score213.load_records` also reads `out/pilot_summary.json` when present, so a records directory produced this way
+    needs no extra scorer argument.
+    """
+    if not evidence:
+        return
+    source = Path(evidence["pilot_evidence_file"])
+    if source.is_file():
+        (out / "pilot_summary.json").write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
+    manifest_path = out / "run-instruct.json"
+    if not manifest_path.is_file():
+        return
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    for key in ("pilot_gate1", "gate2_anchors_detail", "stage2_baseline_answers"):
+        if key in evidence:
+            manifest[key] = evidence[key]
+    manifest["pilot_evidence_file"] = evidence["pilot_evidence_file"]
+    manifest_path.write_text(json.dumps(manifest, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
 def cmd_stage1(args) -> int:
@@ -491,8 +637,8 @@ def cmd_stage1(args) -> int:
     done = []
     for checkpoint in CHECKPOINTS:
         out_path = out / f"stage1-{checkpoint}.jsonl"
-        if out_path.exists() and not args.force:
-            print(f"{checkpoint}: {out_path} exists, skipping (resume rule, design l.413-414)", flush=True)
+        if is_complete(out_path) and not args.force:
+            print(f"{checkpoint}: {out_path} complete, skipping (resume rule, F6)", flush=True)
             done.append(checkpoint)
             continue
         snap = snapshot_dir(checkpoint)
@@ -502,12 +648,14 @@ def cmd_stage1(args) -> int:
         layers = common92.get_layers(model)
         vectors = load_push_vectors(units, model, checkpoint)
         plan = stage1_plan(targets, checkpoint)
-        run_stage1_pass(model, tokenizer, units, vectors, plan, prompts, args.batch,
-                        lambda u: layers[int(u["layer"])], out_path, checkpoint)
-        write_run_json(out, checkpoint, snap, model, tokenizer, {
-            "stage1_plan_passes": len(plan) * len(units), "batch": args.batch})
+        rows = run_stage1_pass(model, tokenizer, units, vectors, plan, prompts, args.batch,
+                               lambda u: layers[int(u["layer"])], out_path, checkpoint)
+        write_completion(out_path, rows, checkpoint)
+        write_run_json(out, checkpoint, snap, model, tokenizer,
+                       stage1_pass_count(targets, checkpoint) | {"batch": args.batch})
         done.append(checkpoint)
         del model
+    merge_pilot_evidence(out, load_pilot_evidence(getattr(args, "pilot", None)))
     if args.with_fr:
         return cmd_fr(argparse.Namespace(out=args.out, batch=args.batch, force=args.force))
     return 0
@@ -552,8 +700,8 @@ def cmd_fr(args) -> int:
     prompts = {p["id"]: p for plist in targets["stage1_prompts"].values() for p in plist}
     out = Path(args.out)
     out_path = out / "stage1-fr.jsonl"
-    if out_path.exists() and not getattr(args, "force", False):
-        print(f"FR: {out_path} exists, skipping", flush=True)
+    if is_complete(out_path) and not getattr(args, "force", False):
+        print(f"FR: {out_path} complete, skipping", flush=True)
         return 0
     tokenizer, model = build_fr(snapshot_dir("instruct"), snapshot_dir("dpo"))
     from part92 import common92
@@ -561,12 +709,14 @@ def cmd_fr(args) -> int:
     layers = common92.get_layers(model)
     vectors = load_push_vectors(units, model, "fr")  # random_0 only outside instruct
     plan = stage1_plan(targets, "fr")
-    run_stage1_pass(model, tokenizer, units, vectors, plan, prompts, args.batch,
-                    lambda u: layers[int(u["layer"])], out_path, "fr")
-    write_run_json(out, "fr", snapshot_dir("instruct"), model, tokenizer, {
+    rows = run_stage1_pass(model, tokenizer, units, vectors, plan, prompts, args.batch,
+                           lambda u: layers[int(u["layer"])], out_path, "fr")
+    write_completion(out_path, rows, "fr")
+    # `fr` is not a part85 registry key; provenance comes from the instruct snapshot the FR model was built from.
+    write_run_json(out, "instruct", snapshot_dir("instruct"), model, tokenizer, {
         "fr_formula": "2 * instruct - dpo", "fr_built_in_place": True, "fr_dtype": "float32",
         "fr_sources": {"instruct": snapshot_dir("instruct").name, "dpo": snapshot_dir("dpo").name},
-        "stage1_plan_passes": len(plan) * len(units), "batch": args.batch})
+        **stage1_pass_count(targets, "fr"), "batch": args.batch}, name="fr")
     return 0
 
 
@@ -575,13 +725,17 @@ def cmd_fr(args) -> int:
 # ---------------------------------------------------------------------------------------------------------------------
 
 def stage2_plan(targets: dict) -> list[tuple[str, str, str, float]]:
-    """39 units x (neuron +0.8, neuron -0.8, random_0 +0.8) x 4 prompts, plus 4 unpushed baselines (l.250-253)."""
+    """4 unpushed baselines + (neuron +0.8, neuron -0.8, random_0 +0.8) on 4 prompts = 16 cells.
+
+    `cmd_stage2` expands each pushed cell over the 39 units, giving 4 + 12 x 39 = 472 planned rows (364 executed
+    under the seal). The first build also looped the 39 units here, so every cell was expanded 39 times (18,252
+    generations); the unit loop belongs in `cmd_stage2` only.
+    """
     plan = [(p["id"], "none", "0.0", 0.0) for p in targets["stage2_free_prompts"]]
-    for unit in targets["units"]:
-        for p in targets["stage2_free_prompts"]:
-            for arm, dose, alpha in (("neuron", "+0.8", OPEN_ALPHA), ("neuron", "-0.8", -OPEN_ALPHA),
-                                     ("random_0", "+0.8", OPEN_ALPHA)):
-                plan.append((p["id"], arm, dose, alpha))
+    for p in targets["stage2_free_prompts"]:
+        for arm, dose, alpha in (("neuron", "+0.8", OPEN_ALPHA), ("neuron", "-0.8", -OPEN_ALPHA),
+                                 ("random_0", "+0.8", OPEN_ALPHA)):
+            plan.append((p["id"], arm, dose, alpha))
     return plan
 
 
@@ -608,8 +762,8 @@ def cmd_stage2(args) -> int:
     prompts = {p["id"]: p for p in targets["stage2_free_prompts"]}
     out = Path(args.out)
     out_path = out / "stage2-instruct.jsonl"
-    if out_path.exists() and not args.force:
-        print(f"stage2: {out_path} exists, skipping", flush=True)
+    if is_complete(out_path) and not args.force:
+        print(f"stage2: {out_path} complete, skipping", flush=True)
         return 0
     snap = snapshot_dir("instruct")
     tokenizer, model = load_model_fp32(snap)
@@ -637,7 +791,13 @@ def cmd_stage2(args) -> int:
                              "status": "ok", "answer": text})
         print(f"stage2: {pid} {arm} {dose} done, {len(rows)} rows", flush=True)
         write_jsonl(out_path, rows)
-    write_run_json(out, "instruct", snap, model, tokenizer, {"stage": "stage2", "max_new_tokens": MAX_NEW_TOKENS})
+    write_completion(out_path, rows, "stage2")
+    # Stage 2 must not overwrite stage1's run-instruct.json (F4): write run-stage2.json instead.
+    plan = stage2_plan(targets)
+    write_run_json(out, "instruct", snap, model, tokenizer,
+                   {"stage": "stage2", "max_new_tokens": MAX_NEW_TOKENS, "stage2_plan_cells": len(plan),
+                    "stage2_rows": len(rows), "stage2_executed": sum(1 for r in rows if r.get("status") == "ok")},
+                   name="stage2")
     return 0
 
 
@@ -704,19 +864,21 @@ def cmd_pilot(args) -> int:
     # Gate 1: zero-vector hook at identical batch shape; batch-padded vs batch-1 unpadded; finite values.
     pid = "self_h0"
     layer = layers[int(pilot_units[0]["layer"])]
-    rows = [make_row(tokenizer, prompts[pid]["question"], prompts[pid]["opening"], u) for u in pilot_units
-            if int(u["layer"]) == int(pilot_units[0]["layer"])]
+    units_by_id = {u["id"]: u for u in units.values()}
+    gate_rows = [u for u in pilot_units if int(u["layer"]) == int(pilot_units[0]["layer"])]
+    rows = [make_row(tokenizer, prompts[pid]["question"], prompts[pid]["opening"], u) for u in gate_rows]
+    keep = [first_logit_ids(u, units_by_id) for u in gate_rows]
     if rows:
-        plain = forward_batch(model, tokenizer, rows)
+        plain = forward_batch(model, tokenizer, rows, keep_ids=keep)
         import torch
 
-        zero = forward_batch(model, tokenizer, rows, layer=layer, vectors=torch.zeros(len(rows), model.config.hidden_size))
-        diff_hook = max(abs(a - b) for r0, r1 in zip(plain, zero)
-                        for a, b in zip(r0["first_logits"], r1["first_logits"]))
-        one = [forward_batch(model, tokenizer, [r])[0] for r in rows]
-        diff_batch = max(abs(a - b) for r0, r1 in zip(plain, one)
-                         for a, b in zip(r0["first_logits"], r1["first_logits"]))
-        finite = all(math.isfinite(v) for r in plain for v in r["first_logits"])
+        zero = forward_batch(model, tokenizer, rows, layer=layer, vectors=torch.zeros(len(rows), model.config.hidden_size),
+                             keep_ids=keep)
+        diff_hook = max(sparse_max_abs_diff(r0["first_logits"], r1["first_logits"]) for r0, r1 in zip(plain, zero))
+        one = [forward_batch(model, tokenizer, [r], keep_ids=[k])[0] for r, k in zip(rows, keep)]
+        diff_batch = max(sparse_max_abs_diff(r0["first_logits"], r1["first_logits"])
+                         for r0, r1 in zip(plain, one))
+        finite = all(math.isfinite(v) for r in plain for v in r["first_logits"].values())
         summary["gate1"] = {"zero_hook_max_abs_diff": diff_hook, "batch_padded_vs_batch1_max_abs_diff": diff_batch,
                             "finite": finite,
                             "passed": diff_hook == 0.0 and diff_batch < 1e-4 and finite}
@@ -767,10 +929,11 @@ def cmd_pilot(args) -> int:
                 if any(int(u["layer"]) != int(chunk[0]["layer"]) for u in chunk):
                     raise RuntimeError("a batch must share one decoder layer")
                 batch_rows = [make_row(tokenizer, prompt["question"], prompt["opening"], u) for u in chunk]
+                keep = [first_logit_ids(u, units_by_id) for u in chunk]
                 if arm == "none":
-                    raw = forward_batch(model, tokenizer, batch_rows)
+                    raw = forward_batch(model, tokenizer, batch_rows, keep_ids=keep)
                 else:
-                    raw = forward_batch(model, tokenizer, batch_rows, layer=layer,
+                    raw = forward_batch(model, tokenizer, batch_rows, layer=layer, keep_ids=keep,
                                         vectors=torch_stack([scale_vector(vectors[(u["id"], arm)], alpha) for u in chunk]))
                 n += len(chunk)
                 if arm == "neuron" and fields is FD_FIELDS:
@@ -799,11 +962,12 @@ def cmd_pilot(args) -> int:
         "step_size_pass": summary["step_size"].get("passed", False),
     }
     out.mkdir(parents=True, exist_ok=True)
-    # The pilot writes ONLY this summary (design l.384-388); run.json carries the same restricted facts for score213.
+    # The pilot writes ONLY this summary (design l.384-388); run-pilot.json carries the same restricted facts for
+    # score213 and for Stage 1's automatic evidence merge (F4).
     write_run_json(out, "instruct", snap, model, tokenizer, {
         "stage": "pilot", "pilot_gate1": summary["gate1"], "gate2_anchors_detail": gate2,
-        "tokenizer_sha256": summary["tokenizer_sha256"],
-        "stage2_baseline_answers": summary["stage2_baseline_answers"], "pilot_summary": "pilot_summary.json"})
+        "stage2_baseline_answers": summary["stage2_baseline_answers"], "pilot_summary": "pilot_summary.json"},
+        name="pilot")
     (out / "pilot_summary.json").write_text(json.dumps(summary, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     print(json.dumps({k: summary[k] for k in ("gate1", "throughput", "stage2_broken", "peak_rss_gb")}, indent=1))
     return 0
@@ -820,10 +984,11 @@ def step_size_summary(j_eps: dict, units: dict) -> dict:
         return {"n_pairs": 0, "passed": False}
     j05, j025 = [], []
     for uid, pid2 in pairs:
-        own = int(units[uid]["first_content_token_id"])
+        own = str(int(units[uid]["first_content_token_id"]))
         for eps, store in ((FD_EPS, j05), (PILOT_EPS, j025)):
             plus, minus = j_eps[eps][(uid, pid2)][eps], j_eps[eps][(uid, pid2)][-eps]
-            store.append((plus[own] - minus[own]) / (2 * eps))
+            # F8: first_logits is the sparse {str(token_id): logit} map, not a full-vocabulary list.
+            store.append((float(plus[own]) - float(minus[own])) / (2 * eps))
     rho = spearman(j05, j025)
     return {"n_pairs": len(pairs), "pearson_r_J_N_0.05_vs_0.025": round(pearson(j05, j025), 4),
             "spearman_r_J_N_0.05_vs_0.025": round(rho, 4), "passed": rho >= 0.90}
@@ -876,6 +1041,9 @@ def main(argv=None) -> int:
         p.add_argument("--batch", type=int, default=16, help="batch size (pilot times 16 vs 32; design l.406-407)")
         p.add_argument("--force", action="store_true", help="overwrite an existing output file")
     sub.choices["stage1"].add_argument("--with-fr", action="store_true", help="also build and run FR")
+    sub.choices["stage1"].add_argument("--pilot", default=None,
+                                       help="pilot directory whose Gate 1/Gate 2 evidence is merged into the records "
+                                            "directory (results/part213/pilot by convention)")
     args = ap.parse_args(argv)
     for ckpt in CHECKPOINTS:  # fail in seconds, not after the run: run.json needs every checkpoint's provenance
         provenance(ckpt, snapshot_dir(ckpt))

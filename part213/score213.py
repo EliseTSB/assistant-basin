@@ -64,8 +64,55 @@ def load_targets(path: Path = TARGETS) -> dict:
     return json.loads(raw.decode("utf-8"))
 
 
-def load_records(records_dir: Path) -> dict:
-    """Every record the runner wrote: stage1-<ckpt>.jsonl, stage2-instruct.jsonl, run-<ckpt>.json."""
+def pilot_evidence(directory: Path | None) -> dict:
+    """Gate 1 / Gate 2 / baseline evidence from a pilot directory (F4's documented path).
+
+    The pilot writes `pilot_summary.json` and `run-pilot.json`; the real pilot output at `results/part213/pilot/`
+    also carries the legacy `run.json`. All three shapes are accepted.
+    """
+    if directory is None:
+        return {}
+    directory = Path(directory)
+    for name in ("pilot_summary.json", "run-pilot.json", "run.json"):
+        path = directory / name
+        if not path.is_file():
+            continue
+        obj = json.loads(path.read_text(encoding="utf-8"))
+        evidence: dict = {"pilot_evidence_file": str(path)}
+        gate1 = obj.get("pilot_gate1") or obj.get("gate1")
+        if gate1:
+            evidence["pilot_gate1"] = gate1
+        gate2 = obj.get("gate2_anchors_detail")
+        if gate2 is None and isinstance(obj.get("gate2"), dict):
+            gate2 = obj["gate2"].get("anchors")
+        if gate2:
+            evidence["gate2_anchors_detail"] = gate2
+        if obj.get("stage2_baseline_answers"):
+            evidence["stage2_baseline_answers"] = obj["stage2_baseline_answers"]
+        return evidence
+    return {}
+
+
+def apply_pilot_evidence(runs: dict, evidence: dict) -> None:
+    """Merge pilot evidence into the instruct manifest when the runner did not already copy it in."""
+    if not evidence:
+        return
+    run = runs.get("instruct")
+    if run is None:
+        return
+    for key in ("pilot_gate1", "gate2_anchors_detail", "stage2_baseline_answers"):
+        if key in evidence and key not in run:
+            run[key] = evidence[key]
+    run.setdefault("pilot_evidence_file", evidence.get("pilot_evidence_file"))
+
+
+def load_records(records_dir: Path, pilot_dir: Path | None = None) -> dict:
+    """Every record the runner wrote: stage1-<ckpt>.jsonl, stage2-instruct.jsonl, run-<ckpt>.json.
+
+    F4: per-checkpoint manifests only. A legacy single `run.json` is still accepted and keyed by its `checkpoint`
+    field, and pilot evidence is merged from `pilot_dir` (or `<records_dir>/pilot_summary.json`, which stage1 copies).
+    """
+    records_dir = Path(records_dir)
     stage1, stage2, runs = {}, {}, {}
     for ckpt in CHECKPOINTS:
         path = records_dir / f"stage1-{ckpt}.jsonl"
@@ -76,10 +123,20 @@ def load_records(records_dir: Path) -> dict:
         run = records_dir / f"run-{ckpt}.json"
         if run.exists():
             runs[ckpt] = json.loads(run.read_text(encoding="utf-8"))
+    legacy = records_dir / "run.json"
+    if legacy.exists():
+        obj = json.loads(legacy.read_text(encoding="utf-8"))
+        key = obj.get("checkpoint")
+        if key in CHECKPOINTS and key not in runs:
+            runs[key] = obj
     path = records_dir / "stage2-instruct.jsonl"
     if path.exists():
         stage2 = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
-    return {"stage1": stage1, "stage2": stage2, "runs": runs}
+    evidence = pilot_evidence(pilot_dir)
+    if not evidence:
+        evidence = pilot_evidence(records_dir)  # stage1 copies pilot_summary.json beside the records
+    apply_pilot_evidence(runs, evidence)
+    return {"stage1": stage1, "stage2": stage2, "runs": runs, "pilot_evidence": evidence}
 
 
 def index_stage1(rows: list[dict]) -> dict:
@@ -90,6 +147,37 @@ def index_stage1(rows: list[dict]) -> dict:
             continue
         out[(row["unit"], row["prompt_id"], row["arm"], row["dose"])] = row
     return out
+
+
+def index_offdiag(rows: list[dict]) -> dict:
+    """(push_unit, scored_unit, prompt_id) -> offdiag record (Amendment 1's 936 passes; F3).
+
+    A record's `unit` is the scored peer v (its own row); `push_unit` is the unit u whose hook was applied.
+    """
+    out = {}
+    for row in rows:
+        if row.get("status", "ok") != "ok" or row.get("arm") != "offdiag":
+            continue
+        push = row.get("push_unit") or row.get("unit")
+        scored = row.get("scored_unit") or row.get("unit")
+        out[(push, scored, row["prompt_id"])] = row
+    return out
+
+
+def logit_value(record: dict, token_id: int) -> float:
+    """One first-content logit from a record (F8: the runner stores a sparse {str(token_id): logit} map).
+
+    Lists are still accepted so old records and synthetic fixtures keep reading; a missing token is an error rather
+    than a silent zero.
+    """
+    logits = record["first_logits"]
+    if isinstance(logits, dict):
+        if str(int(token_id)) in logits:
+            return float(logits[str(int(token_id))])
+        if int(token_id) in logits:
+            return float(logits[int(token_id)])
+        raise KeyError(f"first_logits has no token {token_id}")
+    return float(logits[int(token_id)])
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -196,6 +284,20 @@ def point_clause(ok: bool) -> str:
     return "held" if ok else "failed"
 
 
+def ratio_clause(ratio: dict, side: str, bar: float) -> str:
+    """One paired-ratio CI clause under the v5 rule, with low-n checked FIRST (L1).
+
+    The v5 rule's first-listed condition is `n_eligible < 15` -> `not read` (design l.464-465); a failed sign guard
+    is `inconclusive`. The inline construction in 213.3/213.4/213.10 used to test the guard before low n, so a
+    low-n ratio with a failed guard read `inconclusive` instead of `not read`.
+    """
+    if ratio.get("n_eligible", 0) < MIN_ELIGIBLE:
+        return "not read"
+    if not ratio.get("sign_guard"):
+        return "inconclusive"
+    return ci_clause(ratio["ci"], side, bar, ratio["n_eligible"])
+
+
 def disposition(clauses: dict) -> str:
     """A prediction holds when every clause holds, fails when any clause fails, else inconclusive / not read."""
     statuses = list(clauses.values())
@@ -221,9 +323,8 @@ def spec_logit(record: dict, unit: dict, units_by_id: dict) -> float:
     u["target_ids"]). Units with equal first tokens (p92-08 / p92-09 both " dog") contribute the same logit twice,
     as the set requires; no deduplication is applied.
     """
-    logits = record["first_logits"]
-    own = logits[int(unit["first_content_token_id"])]
-    others = [logits[int(units_by_id[v]["first_content_token_id"])] for v in unit["offdiag_ou"]]
+    own = logit_value(record, int(unit["first_content_token_id"]))
+    others = [logit_value(record, int(units_by_id[v]["first_content_token_id"])) for v in unit["offdiag_ou"]]
     return float(own - median(others))
 
 
@@ -236,12 +337,16 @@ class Stage1:
         self.concept = [u["id"] for u in self.units if u["kind_haiku"] == "concept"]
         self.agreed_concept = [u["id"] for u in self.units if u["kind_haiku"] == "concept" and u["kind_ds"] == "concept"]
         self.idx = {ckpt: index_stage1(records["stage1"][ckpt]) for ckpt in CHECKPOINTS}
+        self.offdiag = {ckpt: index_offdiag(records["stage1"][ckpt]) for ckpt in CHECKPOINTS}
         self.runs = records["runs"]
         self._cache = {}
 
     # -- raw reads ---------------------------------------------------------------------------------------------------
     def rec(self, ckpt, uid, pid, arm, dose):
         return self.idx[ckpt].get((uid, pid, arm, dose))
+
+    def offdiag_rec(self, ckpt, push_uid, scored_uid, pid):
+        return self.offdiag[ckpt].get((push_uid, scored_uid, pid))
 
     def zt(self, ckpt, uid, pid, arm, dose):
         key = (ckpt, uid, pid, arm, dose)
@@ -311,31 +416,33 @@ class Stage1:
 
     # -- full-NP specificity (213.11) --------------------------------------------------------------------------------
     def full_np_increment(self, ckpt, u_id, v_id, pid) -> float | None:
-        """lp_content_mean(neuron_u +0.8; v) - lp_content_mean(none; v) on one prompt (design l.204-213).
+        """lp_content_mean(v's NP under u's `neuron +0.8` hook) - lp_content_mean(v's NP unpushed) on one prompt.
 
-        One forward pass scores every unit's full NP, so the runner writes the pushed pass once per (unit, prompt) and
-        each record carries all 39 units' scores in `lp_by_unit` ({v: {"lp_sum", "lp_mean"}}); a record without it falls
-        back to its own `lp_mean`, which is right only for v == u.
+        F3 / Amendment 1: for v != u this reads the restored `(u, v, prompt)` offdiag pass -- u's hook on v's OWN
+        row -- not `lp_by_unit[v]` read from u's row (a different quantity, sign-flipped on the real model). For
+        v == u the own NP under u's hook is the core `neuron +0.8` record on u's own row.
         """
-        pushed = self.rec(ckpt, u_id, pid, "neuron", "+0.8")
         base = self.rec(ckpt, v_id, pid, "none", "0.0")
-        if pushed is not None and pushed.get("lp_by_unit"):
-            pushed = pushed["lp_by_unit"].get(v_id) or {}
-        if base is not None and base.get("lp_by_unit"):
-            base = base["lp_by_unit"].get(v_id) or {}
-        if pushed.get("lp_mean") is None or base.get("lp_mean") is None:
+        if base is None:
+            return None
+        if u_id == v_id:
+            pushed = self.rec(ckpt, u_id, pid, "neuron", "+0.8")
+        else:
+            pushed = self.offdiag_rec(ckpt, u_id, v_id, pid)
+        if pushed is None or pushed.get("lp_mean") is None or base.get("lp_mean") is None:
             return None
         return float(pushed["lp_mean"] - base["lp_mean"])
 
     def full_np_sum_increment(self, ckpt, u_id, v_id, pid) -> float | None:
         """The lp_content_sum counterpart of full_np_increment (v4's form, diagnostic only)."""
-        pushed = self.rec(ckpt, u_id, pid, "neuron", "+0.8")
         base = self.rec(ckpt, v_id, pid, "none", "0.0")
-        if pushed is not None and pushed.get("lp_by_unit"):
-            pushed = pushed["lp_by_unit"].get(v_id) or {}
-        if base is not None and base.get("lp_by_unit"):
-            base = base["lp_by_unit"].get(v_id) or {}
-        if pushed.get("lp_sum") is None or base.get("lp_sum") is None:
+        if base is None:
+            return None
+        if u_id == v_id:
+            pushed = self.rec(ckpt, u_id, pid, "neuron", "+0.8")
+        else:
+            pushed = self.offdiag_rec(ckpt, u_id, v_id, pid)
+        if pushed is None or pushed.get("lp_sum") is None or base.get("lp_sum") is None:
             return None
         return float(pushed["lp_sum"] - base["lp_sum"])
 
@@ -571,6 +678,18 @@ def gate0(targets: dict) -> dict:
     return checks
 
 
+def _tokenizer_digests(entry: dict) -> dict:
+    """Normalise run.json's tokenizer digests: `{file: sha}` (current runner) or the older all-checkpoint nesting."""
+    if not isinstance(entry, dict):
+        return {}
+    if "tokenizer.json" in entry or "tokenizer_config.json" in entry:
+        return entry
+    for value in entry.values():  # legacy: {"sft": {...}, "dpo": {...}, "instruct": {...}}
+        if isinstance(value, dict) and ("tokenizer.json" in value or "tokenizer_config.json" in value):
+            return value
+    return {}
+
+
 def gate1(records: dict, targets: dict) -> dict:
     """Rig, batch invariance, provenance, finite values (design l.334-338), from the runner's records and run.json."""
     runs = records["runs"]
@@ -593,7 +712,8 @@ def gate1(records: dict, targets: dict) -> dict:
     missing_runs = [ckpt for ckpt in ("sft", "dpo", "instruct") if ckpt not in runs]
     if missing_runs:
         problems.append(f"run.json missing for {missing_runs}")
-    tok = {ckpt: runs[ckpt].get("tokenizer_sha256", {}) for ckpt in ("sft", "dpo", "instruct") if ckpt in runs}
+    tok = {ckpt: _tokenizer_digests(runs[ckpt].get("tokenizer_sha256", {}))
+           for ckpt in ("sft", "dpo", "instruct") if ckpt in runs}
     if len(tok) == 3:
         for name in ("tokenizer.json", "tokenizer_config.json"):
             digests = {ckpt: tok[ckpt].get(name) for ckpt in tok}
@@ -604,7 +724,8 @@ def gate1(records: dict, targets: dict) -> dict:
         for row in records["stage1"][ckpt]:
             if row.get("status", "ok") != "ok":
                 continue
-            values = row.get("first_logits") or []
+            values = row.get("first_logits") or {}
+            values = values.values() if isinstance(values, dict) else values
             if any(v is None or not math.isfinite(v) for v in values):
                 nan_ckpts.append(ckpt)
                 break
@@ -645,7 +766,12 @@ def gate2(records: dict) -> dict:
 
 
 def gate3(records: dict, targets: dict) -> dict:
-    """Stage 2 baseline coherence and reader agreement (design l.349-352)."""
+    """Stage 2 baseline coherence and reader agreement (design l.349-352).
+
+    F5: a failed kappa "marks Stage 2's audited endpoint unread". When labels exist but no kappa is supplied, the
+    agreement clause cannot pass; when no audit exists at all, kappa is `not read` and Gate 3 rests on the unpushed
+    baselines (which are all the pilot/full run can show before the blind reader runs).
+    """
     rows = records["stage2"]
     baseline = [r for r in rows if r.get("arm") == "none"]
     broken = [r["prompt_id"] for r in baseline if broken_answer(r.get("answer", ""))]
@@ -657,13 +783,26 @@ def gate3(records: dict, targets: dict) -> dict:
             if broken_answer(entry.get("answer", "")):
                 broken.append(entry.get("id"))
     kappa = records.get("kappa")
-    return {"passed": not broken and (kappa is None or kappa >= 0.60),
-            "baseline_broken": broken, "kappa": kappa,
-            "note": "kappa is `not read` until the frozen second reader labels the 40-item sample" if kappa is None else ""}
+    labels_present = bool(records.get("labels"))
+    if labels_present:
+        kappa_ok = kappa is not None and kappa >= 0.60
+    else:
+        kappa_ok = True  # kappa is `not read`: no audited endpoint has been supplied yet
+    note = ""
+    if not labels_present:
+        note = "kappa is `not read` until the frozen second reader labels the 40-item sample"
+    elif kappa is None:
+        note = "audit labels supplied without kappa: Stage 2's audited endpoint is unread (gate fails)"
+    return {"passed": not broken and kappa_ok,
+            "baseline_broken": broken, "kappa": kappa, "labels_present": labels_present, "note": note}
 
 
 def gate4(records: dict, targets: dict) -> dict:
-    """Prospective third-arm negative-evidence validity rule on the 42 slot neuron +0.8 THIRD_FREE answers (l.353-355)."""
+    """Prospective third-arm negative-evidence validity rule on the 42 slot neuron +0.8 THIRD_FREE answers (l.353-355).
+
+    F5: the rule counts `valid_refusal_or_unknown` labels, so it cannot pass without them. With no labels (or only a
+    partial audit) it reports `not read` and fails rather than counting refusal as 0 and passing on broken=0.
+    """
     units = {u["id"]: u for u in targets["units"]}
     rows = [r for r in records["stage2"] if r.get("status", "ok") == "ok" and r.get("prompt_id") in THIRD_FREE
             and r.get("arm") == "neuron" and r.get("dose") == "+0.8" and units[r["unit"]]["kind_haiku"] == "slot"]
@@ -671,9 +810,13 @@ def gate4(records: dict, targets: dict) -> dict:
         return {"passed": False, "n": 0, "note": "no slot neuron +0.8 THIRD_FREE rows"}
     broken = sum(broken_answer(r.get("answer", "")) for r in rows)
     labels = records.get("labels") or {}
+    labelled = sum(1 for r in rows if r.get("blind_id") is not None and labels.get(r.get("blind_id")) is not None)
+    if labelled < len(rows):
+        return {"passed": False, "n": len(rows), "broken": broken, "labelled": labelled,
+                "note": "gate 4 requires blind labels for all 42 slot neuron +0.8 THIRD_FREE answers"}
     refusal = sum(1 for r in rows if labels.get(r.get("blind_id")) == "valid_refusal_or_unknown")
     neither = len(rows) - broken - refusal
-    return {"passed": broken <= 8 and neither >= 25, "n": len(rows), "broken": broken,
+    return {"passed": broken <= 8 and neither >= 25, "n": len(rows), "broken": broken, "labelled": labelled,
             "valid_refusal_or_unknown": refusal, "neither": neither}
 
 
@@ -757,8 +900,8 @@ def predict_213_3(s1: Stage1) -> dict:
                 per_unit.append(sum(ratios) / len(ratios))
         style[name] = {"point_median": round(median(per_unit), 4) if per_unit else None, "n": len(per_unit)}
     clauses = {
-        "tau_L_lo_ge_0.50": ci_clause(tau_l["ci"], "ge", 0.50, tau_l["n_eligible"]) if tau_l["sign_guard"] else "inconclusive",
-        "tau_N_lo_ge_0.50": ci_clause(tau_n["ci"], "ge", 0.50, tau_n["n_eligible"]) if tau_n["sign_guard"] else "inconclusive",
+        "tau_L_lo_ge_0.50": ratio_clause(tau_l, "ge", 0.50),
+        "tau_N_lo_ge_0.50": ratio_clause(tau_n, "ge", 0.50),
         "direct_style_median_ge_0.50": point_clause(style["direct"]["point_median"] is not None
                                                     and style["direct"]["point_median"] >= 0.50),
         "scene_style_median_ge_0.50": point_clause(style["scene"]["point_median"] is not None
@@ -774,7 +917,7 @@ def predict_213_4(s1: Stage1) -> dict:
     clauses = {
         "median_L_lo_ge_0.50": ci_clause(slot["L"], "ge", 0.50),
         "median_N_ge_0.50": point_clause(slot["N"]["point"] >= 0.50),
-        "tau_M/3_L_lo_ge_0.50": ci_clause(tau["ci"], "ge", 0.50, tau["n_eligible"]) if tau["sign_guard"] else "inconclusive",
+        "tau_M/3_L_lo_ge_0.50": ratio_clause(tau, "ge", 0.50),
     }
     return {"clauses": clauses, "slot": slot, "tau_M/3_scene": tau, "tau_M/3_pooled_descriptive": pooled}
 
@@ -799,11 +942,20 @@ def predict_213_5(s1: Stage1) -> dict:
 
 
 def predict_213_6(records: dict, targets: dict, audit: dict | None) -> dict:
+    """Stage 2 blind audit: 42 slot `neuron +0.8` vs 42 paired `random_0 +0.8` THIRD_FREE answers (design l.455-459).
+
+    F7: a partial audit is not a complete one. Every one of the 84 audited rows must carry a label; otherwise the
+    prediction is `not read` and the unlabelled count is reported, so nobody can steer the verdict by labelling only
+    the rows that favour them.
+    L7: the difference CI is the unit bootstrap of the total `(neuron_hits - random_hits)`, and "strictly above 0"
+    is `ge_strict` (a 2.5th percentile sitting exactly on 0 is not above it).
+    """
     rows = records["stage2"]
     units = {u["id"]: u for u in targets["units"]}
     labels = (audit or {}).get("labels", {})
     hits = {"neuron": 0, "random": 0}
-    per_unit = {}
+    per_unit: dict[str, dict[str, int]] = {}
+    audited = []
     for r in rows:
         if r.get("status", "ok") != "ok" or r.get("prompt_id") not in THIRD_FREE:
             continue
@@ -816,26 +968,37 @@ def predict_213_6(records: dict, targets: dict, audit: dict | None) -> dict:
             arm = "random"
         else:
             continue
-        label = labels.get(r.get("blind_id"))
+        audited.append((r, arm))
+        label = labels.get(r.get("blind_id")) if r.get("blind_id") is not None else None
         hit = label == "genuine_third_attr"
         hits[arm] += int(hit)
         per_unit.setdefault(r["unit"], {"neuron": 0, "random": 0})[arm] += int(hit)
+    labelled = sum(1 for r, _arm in audited if r.get("blind_id") is not None
+                   and labels.get(r.get("blind_id")) is not None)
+    complete = bool(audited) and labelled == len(audited)
     discordant = [v["neuron"] - v["random"] for v in per_unit.values() if v["neuron"] != v["random"]]
     n_disc = len(discordant)
     k = sum(1 for d in discordant if d > 0)
     p = sign_test_p(k, n_disc)
-    diff_ci = bootstrap_ci(discordant) if discordant else {"lo": float("nan"), "hi": float("nan")}
+    per_unit_diff = [v["neuron"] - v["random"] for v in per_unit.values()]
+    diff_ci = bootstrap_ci(per_unit_diff, statistic=lambda sample: float(sum(sample))) if per_unit_diff \
+        else {"lo": float("nan"), "hi": float("nan")}
     if not labels:
         clauses = {"audit": "not read", "sign_test": "not read", "difference_ci": "not read"}
+    elif not complete:
+        clauses = {"audit_complete": "not read", "neuron_ge_10_of_42": "not read",
+                   "random_le_2_of_42": "not read", "sign_test_p_lt_0.05": "not read",
+                   "difference_ci_above_0": "not read"}
     else:
         clauses = {
             "neuron_ge_10_of_42": point_clause(hits["neuron"] >= 10),
             "random_le_2_of_42": point_clause(hits["random"] <= 2),
             "sign_test_p_lt_0.05": point_clause(p < 0.05),
-            "difference_ci_above_0": ci_clause(diff_ci, "ge", 0.0),
+            "difference_ci_above_0": ci_clause(diff_ci, "ge_strict", 0.0),
         }
-    return {"clauses": clauses, "hits": hits, "n_discordant": n_disc, "n_favouring_neuron": k, "sign_test_p": p,
-            "difference_ci": diff_ci}
+    return {"clauses": clauses, "hits": hits, "n_discordant": n_disc, "n_favouring_neuron": k,
+            "sign_test_p": p, "difference_ci": diff_ci, "audited_rows": len(audited),
+            "labelled_rows": labelled, "audit_complete": complete}
 
 
 def predict_213_7(s1: Stage1) -> dict:
@@ -845,6 +1008,14 @@ def predict_213_7(s1: Stage1) -> dict:
         vals = [v for v in (s1.negative_gap("instruct", u, SELF_HELD) for u in ids) if v is not None]
         ci = bootstrap_ci(vals)
         out[kind] = ci
+        # L2: the design prints `z_tilde(neuron -0.8) - z_tilde(none)` alongside; descriptive only.
+        alongside = []
+        for u in ids:
+            for pid in SELF_HELD:
+                a, b = s1.zt("instruct", u, pid, "neuron", "-0.8"), s1.zt("instruct", u, pid, "none", "0.0")
+                if a is not None and b is not None:
+                    alongside.append(a - b)
+        out[f"{kind}_neuron_minus_none"] = bootstrap_ci(alongside) if alongside else {"n": 0}
         clauses[f"{kind}_upper_le_-0.30"] = ci_clause(ci, "le", -0.30)
     return {"clauses": clauses, **out}
 
@@ -905,7 +1076,7 @@ def predict_213_10(s1: Stage1) -> dict:
     pooled = s1.ratio("instruct", "L", COPULA_NONID, THIRD_SLOT)
     clauses = {
         "self_held_minus_self_nonid_lo_ge_0.50": ci_clause(ci, "ge", 0.50),
-        "tau_cop_nonid/3_upper_le_0.50": ci_clause(tau["ci"], "le", 0.50, tau["n_eligible"]) if tau["sign_guard"] else "inconclusive",
+        "tau_cop_nonid/3_upper_le_0.50": ratio_clause(tau, "le", 0.50),
     }
     return {"clauses": clauses, "self_held_minus_self_nonid": ci, "tau_cop_nonid/3_scene": tau,
             "tau_cop_nonid/3_pooled_descriptive": pooled}
@@ -984,9 +1155,9 @@ def extra_diagnostics(s1: Stage1) -> dict:
             if row is None or base is None:
                 vals = None
                 break
-            logits = row["first_logits"]
-            own = logits[int(s1.units_by_id[u]["first_content_token_id"])]
-            others = [logits[int(s1.units_by_id[v]["first_content_token_id"])] for v in s1.units_by_id[u]["offdiag_ou"]]
+            own = logit_value(row, int(s1.units_by_id[u]["first_content_token_id"]))
+            others = [logit_value(row, int(s1.units_by_id[v]["first_content_token_id"]))
+                      for v in s1.units_by_id[u]["offdiag_ou"]]
             vals.append(own - sum(others) / len(others))
         own_vs_mean[u] = None if vals is None else round(sum(vals) / len(vals), 4)
         ends = []
@@ -1037,9 +1208,8 @@ def diagnostics(s1: Stage1) -> dict:
             if row is None:
                 ranks = None
                 break
-            logits = row["first_logits"]
-            own = logits[int(units[uid]["first_content_token_id"])]
-            others = [logits[int(units[v]["first_content_token_id"])] for v in units[uid]["offdiag_ou"]]
+            own = logit_value(row, int(units[uid]["first_content_token_id"]))
+            others = [logit_value(row, int(units[v]["first_content_token_id"])) for v in units[uid]["offdiag_ou"]]
             ranks.append(1 + sum(1 for v in others if v > own))
         rank[uid] = None if ranks is None else float(sum(ranks) / len(ranks))
     return {"sensitivity": sens, "dog_pair": dog, "own_token_rank_in_O_u": rank}
@@ -1049,12 +1219,68 @@ def diagnostics(s1: Stage1) -> dict:
 # main
 # ---------------------------------------------------------------------------------------------------------------------
 
+def assign_blind_ids(records: dict, targets: dict) -> list[dict]:
+    """Give every audited Stage 2 row its seed-213 `blind_id` before any prediction or gate reads labels.
+
+    The scorer used to assign these only after predicting 213.6 and Gate 4, so every label lookup saw `blind_id=None`.
+    """
+    blind = export_blind(records["stage2"], targets)
+    for item, row in zip(blind, _blind_order(records["stage2"], targets)):
+        row["blind_id"] = item["blind_id"]
+    return blind
+
+
+def slot_genuine_ci(records: dict, targets: dict, audit: dict | None) -> dict:
+    """F5: the 10,000-draw unit-bootstrap 95% CI of the slot `genuine_third_attr` rate on Stage 2 `THIRD_FREE`.
+
+    Headline 3 requires this CI's upper bound to be strictly `< 10/42` (design l.513-515). The bootstrap resamples the
+    21 slot units (each carries two THIRD_FREE answers); its statistic is the total hits / 42. It is `not read`
+    unless every one of the 42 neuron +0.8 rows is labelled (a partial audit cannot support the headline).
+    """
+    labels = (audit or {}).get("labels", {})
+    units = {u["id"]: u for u in targets["units"]}
+    rows = [r for r in records["stage2"] if r.get("status", "ok") == "ok" and r.get("prompt_id") in THIRD_FREE
+            and r.get("arm") == "neuron" and r.get("dose") == "+0.8" and units[r["unit"]]["kind_haiku"] == "slot"]
+    per_unit: dict[str, int] = {}
+    labelled = 0
+    for r in rows:
+        per_unit.setdefault(r["unit"], 0)
+        label = labels.get(r.get("blind_id")) if r.get("blind_id") is not None else None
+        if label is not None:
+            labelled += 1
+        per_unit[r["unit"]] += int(label == "genuine_third_attr")
+    if len(rows) != 42 or labelled != 42 or len(per_unit) < MIN_ELIGIBLE:
+        return {"n": len(per_unit), "rows": len(rows), "labelled": labelled, "point": None,
+                "lo": None, "hi": None, "read": "not read"}
+    values = list(per_unit.values())
+    ci = bootstrap_ci(values, statistic=lambda sample: float(sum(sample)) / 42.0)
+    ci["read"] = "read"
+    return ci
+
+
+def residual_norm_comparison(runs: dict) -> dict:
+    """L3: the per-checkpoint residual-norm comparison the design asks for (l.123-124, l.132).
+
+    `run.json` stores each checkpoint's median layer-0 residual norm; the ratio is against instruct. Descriptive.
+    """
+    reference = (runs.get("instruct") or {}).get("residual_median_norm_layer0")
+    out = {}
+    for ckpt in CHECKPOINTS:
+        value = (runs.get(ckpt) or {}).get("residual_median_norm_layer0")
+        out[ckpt] = {"median_norm_layer0": value,
+                     "ratio_to_instruct": (value / reference) if value is not None and reference else None}
+    return out
+
+
 def score(records: dict, targets: dict, audit: dict | None = None) -> dict:
     s1 = Stage1(records, targets)
+    # Blind ids first: Gate 4 and 213.6 join audit labels by blind_id.
+    blind = assign_blind_ids(records, targets)
     g0, g1 = gate0(targets), gate1(records, targets)
     g2 = gate2(records)
     g3 = gate3(records, targets)
     g4 = gate4(records, targets)
+    stage2_ci = slot_genuine_ci(records, targets, audit)
     gates = {"gate0": g0, "gate1": g1, "gate2": g2, "gate3": g3, "gate4": g4}
     stage1_gate_failed = not (g1["passed"] and g2["passed"])
     stage2_gate_failed = not (g1["passed"] and g3["passed"])
@@ -1086,9 +1312,7 @@ def score(records: dict, targets: dict, audit: dict | None = None) -> dict:
     preds["213.6"] = p6
     preds = {k: preds[k] for k in sorted(preds, key=lambda s: float(s.split(".")[1]))}
 
-    blind = export_blind(records["stage2"], targets)
-    for item, row in zip(blind, _blind_order(records["stage2"], targets)):
-        row["blind_id"] = item["blind_id"]  # the audit labels join back by blind_id
+    blind = assign_blind_ids(records, targets)  # already assigned above; returns the same export
     stage2 = {
         "blind_export": blind,
         "audit_table": audit_table(records["stage2"], (audit or {}).get("labels", {}), targets),
@@ -1096,15 +1320,22 @@ def score(records: dict, targets: dict, audit: dict | None = None) -> dict:
         "mechanical_cold": dedup_keyword_counts(records["stage2"], targets, ("free_cold_0",), "neuron", "+0.8"),
         "second_reader_kappa": (audit or {}).get("kappa"),
         "slot_minus_0.8_genuine": (audit or {}).get("slot_minus_genuine"),
+        "slot_genuine_rate_ci": stage2_ci,
     }
-    headline = headline_reading(preds, gates, audit)
+    headline = headline_reading(preds, gates, audit, stage2_ci)
     return {"part": 213, "design": "PART213-DESIGN.md v5 (commit 7de53067)", "gates": gates,
             "predictions": preds, "stage2": stage2, "fr_symmetry": fr_symmetry(s1),
-            "diagnostics": diagnostics(s1), "secondary": extra_diagnostics(s1), "headline": headline}
+            "diagnostics": diagnostics(s1), "secondary": extra_diagnostics(s1),
+            "residual_norm_comparison": residual_norm_comparison(records["runs"]), "headline": headline}
 
 
-def headline_reading(preds: dict, gates: dict, audit: dict | None) -> dict:
-    """The exhaustive, mutually exclusive, CI-gated headline reading (design l.466-483)."""
+def headline_reading(preds: dict, gates: dict, audit: dict | None, stage2_ci: dict | None = None) -> dict:
+    """The exhaustive, mutually exclusive, CI-gated headline reading (design l.466-483).
+
+    F5: Headline 3 ("First-person self-slots supported") requires the 10,000-draw unit-bootstrap 95% CI upper bound
+    of the Stage 2 slot `genuine_third_attr` rate to be strictly `< 10/42`; `stage2_ci` carries that interval, and an
+    absent or partial audit leaves it `not read`, so the branch cannot fire without Stage 2 evidence.
+    """
     def held(name):
         return preds[name]["verdict"] == "held"
 
@@ -1133,10 +1364,13 @@ def headline_reading(preds: dict, gates: dict, audit: dict | None) -> dict:
     first = (gates["gate1"]["passed"] and gates["gate2"]["passed"] and gates["gate3"]["passed"] and gates["gate4"]["passed"]
              and held("213.1")
              and (ci("213.3", "tau_3/1_L", "hi") is not None and ci("213.3", "tau_3/1_L", "hi") <= 0.50)
-             and (ci("213.3", "tau_3/1_N", "hi") is not None and ci("213.3", "tau_3/1_N", "hi") <= 0.50))
+             and (ci("213.3", "tau_3/1_N", "hi") is not None and ci("213.3", "tau_3/1_N", "hi") <= 0.50)
+             and stage2_ci is not None and stage2_ci.get("read") == "read"
+             and stage2_ci.get("hi") is not None and stage2_ci["hi"] < 10 / 42)
     if first:
         return {"reading": "First-person self-slots supported",
-                "stage2_upper_note": "Stage 2 slot genuine_third_attr CI upper < 10/42 is checked in the Stage 2 table"}
+                "stage2_slot_genuine_rate_ci": stage2_ci,
+                "stage2_upper_lt_10_of_42": True}
     if preds["213.1"]["verdict"] == "failed":
         return {"reading": "inconclusive / mixed selectivity; 213.1 failed, headline withdrawn"}
     return {"reading": "inconclusive / mixed selectivity"}
@@ -1155,10 +1389,12 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--records", required=True, help="directory the runner wrote (stage1-*.jsonl, stage2-*.jsonl)")
     ap.add_argument("--audit", default=None, help="blind-audit labels JSON: {labels: {blind_id: category}, ...}")
+    ap.add_argument("--pilot", default=None,
+                    help="pilot directory whose Gate 1/Gate 2 evidence is used (default: <records>/pilot_summary.json)")
     ap.add_argument("--out", default=None, help="score.json path (default <records>/score.json)")
     args = ap.parse_args(argv)
     targets = load_targets()
-    records = load_records(Path(args.records))
+    records = load_records(Path(args.records), Path(args.pilot) if args.pilot else None)
     audit = json.loads(Path(args.audit).read_text(encoding="utf-8")) if args.audit else None
     if audit:
         records["labels"] = audit.get("labels", {})
