@@ -162,7 +162,7 @@ ax_b.legend(loc="lower right", fontsize=7.8, frameon=False)
 fig.text(0.5, 0.012,
          "Red = zeroing the four units; orange = replacing them with values from factual or 'you' prompts; blue = other arms; "
          "grey = the plain model and the random sets.\n"
-         "Zeroing raises both measures far above every random set, but the plain model already names Google 4 times "
+         "Zeroing all four units raises both measures far above every random zero set, but the plain model already names Google 4 times "
          "in 192, above 212.1's bar of 3.",
          fontsize=8.0, ha="center", va="bottom", color="#333333")
 
