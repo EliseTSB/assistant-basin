@@ -156,6 +156,15 @@ def prompt_ids(tokenizer, question: str) -> list[int]:
     return common92.prompt_ids(tokenizer, question, "chat")
 
 
+def gate2_rendered_ids(tokenizer, question: str, anchor: str) -> list[int]:
+    """Design l.351-353 (v5): render chat_prefix + anchor_string as TEXT and tokenize it once; Gate 2 asserts the result
+    equals chat_ids + tok.encode(anchor). (The first build handed the tokenizer the id list itself, which raises.)"""
+    text = tokenizer.apply_chat_template(
+        [{"role": "user", "content": question}], add_generation_prompt=True, tokenize=False, enable_thinking=False,
+    )
+    return [int(t) for t in tokenizer(text + anchor, add_special_tokens=False)["input_ids"]]
+
+
 def forward_batch(model, tokenizer, rows: list[dict], layer=None, vectors=None, np_specs=None):
     """One right-padded forward pass over rows; returns per-row logits at the unit's first-content position.
 
@@ -407,6 +416,19 @@ def write_run_json(out: Path, checkpoint: str, snapshot: Path, model, tokenizer,
 # stage 1
 # ---------------------------------------------------------------------------------------------------------------------
 
+def layer_chunks(work: list[dict], batch: int):
+    """Chunks of at most `batch` units that share ONE decoder layer, since a push hook sits on one layer per forward
+    (design l.130-132, l.406-407). Units keep their order inside a layer; layers are taken in ascending index. (The
+    first build chunked across layers and raised "a batch must share one decoder layer" on the first real pilot.)"""
+    groups: dict[int, list[dict]] = {}
+    for unit in work:
+        groups.setdefault(int(unit["layer"]), []).append(unit)
+    for li in sorted(groups):
+        group = groups[li]
+        for begin in range(0, len(group), batch):
+            yield group[begin: begin + batch]
+
+
 def run_stage1_pass(model, tokenizer, units, vectors, plan, prompts, batch, layer_of, out_path, checkpoint):
     """Execute one checkpoint's Stage 1 plan, writing one JSONL row per (unit, prompt, arm)."""
     started = time.perf_counter()
@@ -421,8 +443,7 @@ def run_stage1_pass(model, tokenizer, units, vectors, plan, prompts, batch, laye
                              "dose": dose, "alpha": alpha, "status": "sealed"})
                 continue
             work.append(unit)
-        for begin in range(0, len(work), batch):
-            chunk = work[begin: begin + batch]
+        for chunk in layer_chunks(work, batch):
             layer = layer_of(chunk[0])
             if any(layer_of(u) is not layer for u in chunk):
                 raise RuntimeError("a batch must share one decoder layer")
@@ -434,8 +455,10 @@ def run_stage1_pass(model, tokenizer, units, vectors, plan, prompts, batch, laye
             if arm == "none":
                 raw = forward_batch(model, tokenizer, batch_rows, np_specs=specs)
             else:
-                vectors = torch_stack([scale_vector(vectors[(u["id"], arm)], alpha) for u in chunk])
-                raw = forward_batch(model, tokenizer, batch_rows, layer=layer, vectors=vectors, np_specs=specs)
+                # (the first build rebound `vectors`, the push-vector dict, to this tensor, so the next chunk
+                #  would have indexed a tensor by (unit, arm))
+                chunk_vectors = torch_stack([scale_vector(vectors[(u["id"], arm)], alpha) for u in chunk])
+                raw = forward_batch(model, tokenizer, batch_rows, layer=layer, vectors=chunk_vectors, np_specs=specs)
             for unit, result in zip(chunk, raw):
                 rows.append(record(unit, pid, arm, dose, alpha, keep_fields(result, fields),
                                    {"n_content_tokens": int(unit["n_content_tokens"]),
@@ -679,14 +702,14 @@ def cmd_pilot(args) -> int:
         prefix = prompt_ids(tokenizer, "Who are you?")
         anchor_ids = tokenizer.encode(anchor, add_special_tokens=False)
         full = prefix + anchor_ids
-        if tokenizer(full, add_special_tokens=False)["input_ids"] != full:
+        if gate2_rendered_ids(tokenizer, "Who are you?", anchor) != full:
             raise RuntimeError(f"Gate 2 anchor ids do not equal chat_ids + encode(anchor) for {uid}")
         target_ids = anchor_ids
         row_spec = {"ids": full, "first_pos": len(full) - 1,
                     "content_pos": [len(prefix) - 1 + i for i in range(len(target_ids))], "target_ids": target_ids}
         entry = {"id": uid, "anchor": anchor, "n_tokens": len(target_ids)}
         for arm in ("none", "neuron", "random_0"):
-            vector = None if arm == "none" else scale_vector(vectors[(uid, arm)], OPEN_ALPHA)
+            vector = None if arm == "none" else torch_stack([scale_vector(vectors[(uid, arm)], OPEN_ALPHA)])  # (1, hidden)
             result = forward_batch(model, tokenizer, [row_spec], layer=layers[int(unit["layer"])], vectors=vector)[0]
             key = "random" if arm == "random_0" else arm
             entry[f"lp_sum_{arm}"] = result["lp_sum"]
@@ -709,8 +732,7 @@ def cmd_pilot(args) -> int:
             work = [u for u in pilot_units if not is_sealed(u, pid2)]
             if len(work) < len(pilot_units):
                 summary["sealed_skipped"].append(f"{pid2}|{arm}|{dose}")
-            for begin in range(0, len(work), batch):
-                chunk = work[begin: begin + batch]
+            for chunk in layer_chunks(work, batch):
                 layer = layers[int(chunk[0]["layer"])]
                 if any(int(u["layer"]) != int(chunk[0]["layer"]) for u in chunk):
                     raise RuntimeError("a batch must share one decoder layer")
@@ -723,23 +745,12 @@ def cmd_pilot(args) -> int:
                 n += len(chunk)
                 if arm == "neuron" and fields is FD_FIELDS:
                     for unit, result in zip(chunk, raw):
-                        j_eps[float(dose)].setdefault((unit["id"], pid2), {})[float(alpha)] = result["first_logits"]
+                        j_eps[abs(float(alpha))].setdefault((unit["id"], pid2), {})[float(alpha)] = result["first_logits"]
         elapsed = time.perf_counter() - t0
         summary["throughput"][f"batch_{batch}"] = {"passes": n, "seconds": round(elapsed, 2),
                                                    "passes_per_s": round(n / elapsed, 3)}
     # The pilot's stopping rule reads this correlation (design l.388-390); only the correlation is kept, never J_N.
-    pairs = [(uid, pid2) for (uid, pid2) in j_eps[FD_EPS] if uid in j_eps[PILOT_EPS] and pid2 in j_eps[PILOT_EPS][uid]]
-    if pairs:
-        j05, j025 = [], []
-        for uid, pid2 in pairs:
-            unit = units[uid]
-            own = int(unit["first_content_token_id"])
-            for eps, store in ((FD_EPS, j05), (PILOT_EPS, j025)):
-                plus, minus = j_eps[eps][(uid, pid2)][eps], j_eps[eps][(uid, pid2)][-eps]
-                store.append((plus[own] - minus[own]) / (2 * eps))
-        summary["step_size"] = {"n_pairs": len(pairs), "pearson_r_J_N_0.05_vs_0.025": round(pearson(j05, j025), 4),
-                                "spearman_r_J_N_0.05_vs_0.025": round(spearman(j05, j025), 4),
-                                "passed": spearman(j05, j025) >= 0.90}
+    summary["step_size"] = step_size_summary(j_eps, units)
 
     # Stage 2: the 4 unpushed baseline answers and mechanical broken-answer counts (design l.386-387). The seal covers
     # concept-unit pushed rows only (design l.66-71), so the unpushed baselines are run.
@@ -766,6 +777,26 @@ def cmd_pilot(args) -> int:
     (out / "pilot_summary.json").write_text(json.dumps(summary, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     print(json.dumps({k: summary[k] for k in ("gate1", "throughput", "stage2_broken", "peak_rss_gb")}, indent=1))
     return 0
+
+
+def step_size_summary(j_eps: dict, units: dict) -> dict:
+    """The pilot's step-size check (design l.388-390): J_N(u, prompt) = (logit_own(+eps) - logit_own(-eps)) / (2 eps) at
+    eps = 0.05 and 0.025 over the (unit, prompt) pairs present at both, and their correlation. Only the correlations
+    are kept, never J_N. j_eps: {eps: {(uid, prompt): {+eps: first_logits, -eps: first_logits}}}.
+    (The first build keyed j_eps by the signed dose and tested a unit id against (uid, prompt) keys, so it crashed on
+    the first real pilot and, once past that, would have found no pairs.)"""
+    pairs = [key for key in j_eps[FD_EPS] if key in j_eps[PILOT_EPS]]
+    if not pairs:
+        return {"n_pairs": 0, "passed": False}
+    j05, j025 = [], []
+    for uid, pid2 in pairs:
+        own = int(units[uid]["first_content_token_id"])
+        for eps, store in ((FD_EPS, j05), (PILOT_EPS, j025)):
+            plus, minus = j_eps[eps][(uid, pid2)][eps], j_eps[eps][(uid, pid2)][-eps]
+            store.append((plus[own] - minus[own]) / (2 * eps))
+    rho = spearman(j05, j025)
+    return {"n_pairs": len(pairs), "pearson_r_J_N_0.05_vs_0.025": round(pearson(j05, j025), 4),
+            "spearman_r_J_N_0.05_vs_0.025": round(rho, 4), "passed": rho >= 0.90}
 
 
 def pearson(xs, ys) -> float:

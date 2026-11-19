@@ -528,3 +528,49 @@ def test_each_required_test_is_red_under_a_deliberate_break(tmp_path, name):
         test_module.s = saved
     # the tracked file is untouched
     assert (HERE / "score213.py").read_text(encoding="utf-8") == source
+
+
+def test_gate2_renders_text_not_ids():
+    """The pilot's first real run died here: Gate 2 passed the id list to the tokenizer, which only takes text."""
+    from part213 import run213
+
+    class Tok:
+        def apply_chat_template(self, msgs, add_generation_prompt, tokenize, enable_thinking):
+            assert tokenize is False
+            return "<|user|>\n" + msgs[0]["content"] + "\n<|assistant|>\n"
+
+        def __call__(self, text, add_special_tokens=False):
+            if not isinstance(text, str):
+                raise ValueError("text input must be of type `str`")
+            return {"input_ids": [ord(c) for c in text]}
+
+    ids = run213.gate2_rendered_ids(Tok(), "Who are you?", "I am a fox.")
+    assert ids == [ord(c) for c in "<|user|>\nWho are you?\n<|assistant|>\nI am a fox."]
+
+
+def test_layer_chunks_never_mix_layers_and_keep_order():
+    """The pilot's third run died chunking across layers; Stage 1 had the same loop."""
+    from part213 import run213
+
+    work = [{"id": f"u{i}", "layer": layer} for i, layer in enumerate([5, 3, 5, 3, 5, 9, 3])]
+    chunks = list(run213.layer_chunks(work, 2))
+    assert all(len({c["layer"] for c in chunk}) == 1 for chunk in chunks)
+    assert [[c["id"] for c in chunk] for chunk in chunks] == [["u1", "u3"], ["u6"], ["u0", "u2"], ["u4"], ["u5"]]
+    assert sorted(c["id"] for chunk in chunks for c in chunk) == sorted(w["id"] for w in work)
+
+
+def test_step_size_summary_pairs_units_and_signs():
+    """The pilot's fourth run died keying j_eps by the signed dose; the pairing also tested a unit id against
+    (uid, prompt) keys, which would have found no pairs."""
+    from part213 import run213
+
+    units = {"a": {"first_content_token_id": 0}, "b": {"first_content_token_id": 1}, "c": {"first_content_token_id": 0}}
+    j = {run213.FD_EPS: {}, run213.PILOT_EPS: {}}
+    for k, (uid, slope) in enumerate([("a", 1.0), ("b", 2.0), ("c", 3.0)]):
+        for eps in (run213.FD_EPS, run213.PILOT_EPS):
+            row = lambda e: [slope * e, slope * e + 1.0]  # logit 0 and logit 1 both rise with the step
+            j[eps][(uid, f"p{k}")] = {eps: row(eps), -eps: row(-eps)}
+    out = run213.step_size_summary(j, units)
+    assert out["n_pairs"] == 3 and out["passed"] is True
+    assert out["spearman_r_J_N_0.05_vs_0.025"] == 1.0
+    assert run213.step_size_summary({run213.FD_EPS: {}, run213.PILOT_EPS: {}}, units) == {"n_pairs": 0, "passed": False}
