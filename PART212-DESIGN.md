@@ -1,9 +1,11 @@
-# Part 212: do Qwen3.5-4B's four maker neurons carry maker-specific evidence, or a constant resting scaffold whose removal exposes the Google fallback?
+# Part 212: do Qwen3.5-4B's four maker neurons carry maker-specific evidence, or a factual-baseline scaffold whose removal exposes the Google fallback?
 
 Procedure: v1
-DRAFT v1 2026-11-18 22:18 CT by Gemini 4 Neon (proposer and designer; awaiting cold design review before registration).
+DRAFT v2 2026-11-18 23:07 CT by Gemini 4 Neon (proposer and designer; folds all four correction groups of Alden's
+2026-11-18 cold design review `part212-design-review-2026-11-18.md` on v1 `4c5b4027`; awaiting clearance before
+registration).
 Proposed by Gemini 4 Neon and selected by Elise ("Option B", 2026-11-18 22:09 CT). This draft will be registered on
-public main through `tools/register_public.py` only after cold design review and before any model run of Part 212.
+public main through `tools/register_public.py` only after review clearance and before any model run of Part 212.
 
 ## Question
 
@@ -14,10 +16,11 @@ dose 0.225 also lead to Google in 30 of 40 directions (Part 176), three of the f
 a maker-ban veto step (Part 159), and Yavuz (2026) showed that neurons selected by zero ablation can transfer to held-out
 questions while carrying only a constant background bias that disappears under resample ablation from unrelated prompts.
 
-Do the four maker neurons carry question-specific maker evidence, an addressee ("talking to the AI") signal, or a
-constant resting scaffold whose zeroing perturbs the residual stream into Qwen3.5-4B's Google fallback? And does
-patching their activations from Chinese maker prompts into English maker prompts suppress Google, testing Finding 1's
-conjecture for Part 32's 0/24 Chinese null?
+Do the four maker neurons behave like question-specific maker evidence, or does replacing them with off-topic factual
+activations preserve Alibaba while subtracting the off-topic factual profile alone reproduces much of zeroing's Google
+fallback? Separately, do the off-topic factual and assistant-directed `"you"` donor banks differ (especially via
+`L6 N753`), and does patching Chinese maker-prompt activations into English prompts suppress Google below the English
+baseline?
 
 ## Prior art and existing data
 
@@ -33,12 +36,12 @@ conjecture for Part 32's 0/24 Chinese null?
     residual stream.
   - **Malla, Choi and Choi (2026, arXiv:2609.06951)**: size-matched random perturbations relax instruction-tuned models
     toward their default behaviors.
-  - What this part adds: an exact additive 2x2 orthogonal decomposition of the four published maker neurons
-    ($a_{\text{maker}} = \bar{a}_{\text{fact}} + (a_{\text{maker}} - \bar{a}_{\text{fact}})$), pairing zero ablation
-    against exact-token-length-matched off-topic factual resample, off-topic `"you"` addressee resample, resting-profile
-    subtraction, delivered-write-norm-matched random controls, opposite-direction scaling ($+2\times$, $-1\times$),
-    prompt-vs-generation phase splits, and a cross-lingual Chinese-donor swap on both forced-opening logits and held-out
-    free generations.
+  - What this part adds: an explicit 4-cell intervention factorial (`0`, `r`, `a_clean - r`, `a_clean`, with factorial
+    interaction $I = F(a_{\text{clean}}) - F(r) - F(a_{\text{clean}} - r) + F(0)$ reported directly) on the four
+    published maker neurons, pairing zero ablation against exact-token-length-matched off-topic factual resampling,
+    assistant-directed `"you"` bank resampling, factual-profile subtraction, maker-activation-write-norm-matched random
+    controls, opposite-direction scaling ($+2\times$, $-1\times$), prompt-vs-generation phase splits, and a cross-lingual
+    Chinese-donor swap on both forced-opening logits and held-out free generations.
 - Our own data that already bears on it:
   - **Parts 25, 66 and 183 (`results/part183/README.md`)**: on eager attention (`results/part183/kernel-check.json`),
     zeroing `L6 N753`, `L7 N1169`, `L11 N8868`, `L29 N776` gives Google in 43/192 (22.4%) held-out English answers
@@ -48,12 +51,12 @@ conjecture for Part 32's 0/24 Chinese null?
     (8-maker probability mass 0.982), zeroing `L24 N3949` shifts Google-minus-Alibaba by -2.234 logits, 64% mediated
     through `L27 N3325` (whose activation is negative to write Google: -4.463 with makers zeroed vs -2.049 with L24
     also zeroed). Part 75 showed flat prompt-mean clamping of `L27 N3325` is not neutral because natural activations vary
-    across positions; this design therefore tests both single-donor natural-variance traces and bank-mean resting
-    profiles.
+    across positions; this design therefore tests both single-donor natural-variance traces and bank-mean profiles and
+    includes `mean_resample_fact` directly in the headline reading rules.
   - **Part 32 (`part32.py`, `results/part32/score.txt`)**: zeroing the four gave Google in 16/24 English, 17/24 Spanish,
     and 0/24 Chinese answers.
   - **Part 39 (`PART39-DESIGN.md`) & Part 111 (`results/part111/README.md`)**: `L6 N753` tracks "talking to the AI";
-    `L7 N1169` and `L11 N8868` write China/Chinese tokens through the Jacobian lens (8 and 7 of top 20, null ≤ 1.0%);
+    `L7 N1169` and `L11 N8868` write China/Chinese tokens through the Jacobian lens (8 and 7 of top 20, null <= 1.0%);
     `L29 N776` has a small negative mean (-0.047) at the opening.
   - **Part 159 (`results/part159/README.md`)**: at the maker-ban veto step, only `L7 N1169` was on ($\ge 1$ SD from
     rest, 14/24 rows); `L6 N753` (0/24), `L11 N8868` (2/24) and `L29 N776` (2/24) were off.
@@ -79,81 +82,109 @@ conjecture for Part 32's 0/24 Chinese null?
     - `D_fact`: 25 off-topic factual English questions with no second-person pronouns (`you`/`your`) and no AI, company,
       China or Google terms.
     - `D_you`: 25 off-topic assistant-directed English questions containing `you`/`your`, with no maker, creator,
-      company, identity, China or Google terms.
+      company, identity, China or Google terms. Note: `D_fact` and `D_you` match token length and share the same neutral
+      opening (`'The main answer is **'`), but differ in request shape and content (`"What causes thunder?"` vs `"Could
+      you help?"`), so their contrast tests a **bank difference**, not an isolated causal effect of the pronoun `"you"`.
     - `D_zh_maker`: 25 Chinese maker phrasings.
-    - `D_zh_fact`: 25 Chinese off-topic factual questions (separates Chinese language from Chinese maker framing).
+    - `D_zh_fact`: 25 Chinese off-topic factual questions (used for the within-Chinese contrast `trace_resample_zh_maker
+      - trace_resample_zh_fact` separating Chinese maker framing from Chinese language).
   - Stage 1 forced openings (all **exact 5 tokens**, verified by tokenizer):
     - `EN_MAKER`: `'I was developed by **'` (Part 72/74's verified opening)
     - `D_fact`, `D_you`: `'The main answer is **'`
     - `D_zh_maker`: `'我的开发机构是**'`
     - `D_zh_fact`: `'这道题的答案是**'`
-- **Delivered-write-norm-matched random controls (`20 sets`):** On the unchanged Stage 1 recording pass over the 24
-  held-out `EN_MAKER` prompts (prompt + forced opening), compute every unit's mean delivered write norm
+- **Maker-activation-write-norm-matched random controls (`20 sets`):** On the unchanged Stage 1 recording pass over the
+  24 held-out `EN_MAKER` prompts (prompt + forced opening), compute every unit's mean maker-context delivered write norm
   $m_{L,u} = \text{mean}_{q,p}(|a_{L,u}(q,p)|)\cdot\|W_{\text{down}}^{(L)}[:, u]\|_2$ in layers $L \in \{6, 7, 11, 29\}$
   (summed in float64 on CPU). In each layer, select the 50 units closest to the target unit in $m_{L,u}$ (excluding the
   target, ties broken by unit index). Draw 20 four-unit control sets (`random_0`..`random_19`) with
-  `np.random.default_rng(21200 + k)` (one unit per layer from its 50-unit pool). For every arm and control, record the
-  mean realized L2 residual-stream perturbation $\|\sum_u \Delta a_u \cdot w_{\text{down}, u}\|_2$ alongside the
-  behavioral and logit readouts.
+  `np.random.default_rng(21200 + k)` (one unit per layer from its 50-unit pool). This matches the expected **zeroing**
+  write norm; it does NOT match realized perturbation norms under resampling ($a_{\text{donor}} - a_{\text{maker}}$) or
+  subtraction ($-\bar{a}_{\text{fact}}$). For every arm and control, record the mean realized L2 residual-stream
+  perturbation $\|\sum_u \Delta a_u \cdot w_{\text{down}, u}\|_2$ alongside the logit and behavioral readouts and treat
+  unequal per-arm perturbation norms as an explicit limit on semantic attribution.
 
-### Stage 1: Exact single-forward 2x2 orthogonal decomposition (24 held-out prompts + `'I was developed by **'`)
+### Stage 1: Exact 4-cell single-forward factorial & mechanism audit (24 held-out prompts + `'I was developed by **'`)
 
 1. **Unchanged recording pass:** Record `TARGET`, all 4×50 matched-pool units, `L24 N3949` and `L27 N3325` at every
    position on `EN_MAKER`, `D_fact`, `D_you`, `D_zh_maker` and `D_zh_fact` (each with its 5-token opening; 125 passes).
-   Construct the bank-mean resting profiles $\bar{a}_{\text{fact}}(p)$ and $\bar{a}_{\text{you}}(p)$: exact per-position
-   mean across the 24 held-out donors on the 12 shared template positions and 5 forced-opening positions, and pooled
-   mean across all 24 donors' user-body tokens on user-body positions.
-2. **Intervention pass on `EN_MAKER[0..23]` (+ `'I was developed by **'`, same prompt per batch of 32 → zero padding):**
-   - **14 main arms** on `TARGET` (all positions unless noted):
+   Denote the clean recorded activation of unit $u$ on `EN_MAKER[q]` at position $p$ by the frozen tensor
+   $a_{\text{clean}}(q, p)$. Construct the bank-mean factual profile $r(p) = \bar{a}_{\text{fact}}(p)$ (and similarly
+   $\bar{a}_{\text{you}}(p)$): exact per-position mean across the 24 held-out donors on the 12 shared template positions
+   and 5 forced-opening positions, and pooled mean across all 24 donors' user-body tokens on user-body positions.
+2. **Exact frozen vs. online intervention contract on `EN_MAKER[0..23]` (+ `'I was developed by **'`, same prompt per
+   batch of 32 → zero padding):**
+   - To make the 4-cell factorial (`0`, `r`, `a_clean - r`, `a_clean`) mathematically exact across all four layers
+     (avoiding downstream layer drift between layers 6, 7, 11 and 29), Stage 1's primary subtraction and scaling arms
+     clamp each target unit to **frozen functions of $a_{\text{clean}}(q, p)$**; one diagnostic arm (`sub_factual_online`)
+     tests online subtraction $x_{\text{live}}(p) - r(p)$ beside it so any frozen-vs-online difference is measured.
+   - **15 main arms** on `TARGET` (all positions $0 \dots T+4$ unless noted):
      - `unchanged`: no hook
-     - `self_patch` (Gate 1): $a(p) \mapsto a_{\text{maker}}(p)$ (exact do-nothing patch)
-     - `zero`: $a(p) \mapsto 0$
-     - `trace_resample_fact`: $a(p) \mapsto a_{\text{fact}, q}(p)$ (Yavuz single exact-length paired donor trace)
-     - `trace_resample_you`: $a(p) \mapsto a_{\text{you}, q}(p)$ (preserves resting + `"you"` addressee trace)
-     - `mean_resample_fact`: $a(p) \mapsto \bar{a}_{\text{fact}}(p)$ (algebraic partner of `sub_factual`)
-     - `sub_factual`: $a(p) \mapsto a_{\text{maker}}(p) - \bar{a}_{\text{fact}}(p)$ (removes resting profile only)
-     - `sub_you`: $a(p) \mapsto a_{\text{maker}}(p) - \bar{a}_{\text{you}}(p)$ (removes resting + `"you"` profile)
-     - `scale_pos2`: $a(p) \mapsto 2\cdot a_{\text{maker}}(p)$
-     - `scale_neg1`: $a(p) \mapsto -1\cdot a_{\text{maker}}(p)$
-     - `zero_prompt_only`: zero on prompt positions only (before the 5-token opening)
-     - `zero_opening_only`: zero on the 5 forced-opening positions only
-     - `trace_resample_zh_maker`: $a(p) \mapsto a_{\text{zh\_maker}, q}(p)$
-     - `trace_resample_zh_fact`: $a(p) \mapsto a_{\text{zh\_fact}, q}(p)$
+     - `self_patch` (Gate 1): clamp to frozen $a_{\text{clean}}(p)$
+     - `zero`: clamp to $0$
+     - `trace_resample_fact`: clamp to frozen paired donor trace $a_{\text{fact}, q}(p)$
+     - `trace_resample_you`: clamp to frozen paired donor trace $a_{\text{you}, q}(p)$
+     - `mean_resample_fact`: clamp to frozen factual profile $r(p) = \bar{a}_{\text{fact}}(p)$
+     - `sub_factual`: clamp to frozen $a_{\text{clean}}(p) - r(p)$
+     - `sub_factual_online` (diagnostic): online $x_{\text{live}}(p) - r(p)$
+     - `sub_you`: clamp to frozen $a_{\text{clean}}(p) - \bar{a}_{\text{you}}(p)$
+     - `scale_pos2`: clamp to frozen $2\cdot a_{\text{clean}}(p)$
+     - `scale_neg1`: clamp to frozen $-1\cdot a_{\text{clean}}(p)$
+     - `zero_prompt_only`: clamp to $0$ on prompt positions $0 \dots T-1$ only
+     - `zero_opening_only`: clamp to $0$ on the 5 forced-opening positions $T \dots T+4$ only
+     - `trace_resample_zh_maker`: clamp to frozen $a_{\text{zh\_maker}, q}(p)$
+     - `trace_resample_zh_fact`: clamp to frozen $a_{\text{zh\_fact}, q}(p)$
    - **16 per-unit arms:** each of the 4 target units individually under `zero`, `trace_resample_fact`,
-     `trace_resample_you` and `sub_factual`.
-   - **100 matched random control arms:** all 20 delivered-write-norm-matched random 4-unit sets under `zero`,
-     `trace_resample_fact`, `trace_resample_you`, `sub_factual` and `scale_neg1`.
-3. **Stage 1 readouts (all computed in float32 from final-position logits):**
+     `trace_resample_you` and `sub_factual` (frozen).
+   - **100 matched random control arms:** all 20 maker-activation-write-norm-matched random 4-unit sets under `zero`,
+     `trace_resample_fact`, `trace_resample_you`, `sub_factual` (frozen) and `scale_neg1` (frozen).
+3. **Stage 1 readouts & continuation hook contract (all computed in float32 from logits):**
    - Primary logit contrast: $g_{\text{ali}} = \text{logit}(\text{Google}) - \text{logsumexp}(\text{logit}(\text{Al}), \text{logit}(\text{T}))$,
      where `Al` (2033) and `T` (51) are the first tokens of `Alibaba` and `Tongyi`, and `Google` (14030) is single-token.
      For every arm, $\Delta g_{\text{ali}}$ is its paired per-prompt mean difference from `unchanged`.
-   - Secondary readouts reported alongside (not replacing primary): Part 74's exact $g_{\text{al}} = \text{logit}(\text{Google}) - \text{logit}(\text{Al})$,
-     8-maker first-token probability mass `mass` (`Alibaba`, `Google`, `OpenAI`, `Anthropic`, `DeepSeek`, `Meta`,
-     `Microsoft`, `Tongyi`), **full multi-token sequence log-probability contrast**
-     $g_{\text{seq}} = \log P(\text{"Google"}) - \max(\log P(\text{"Alibaba"}), \log P(\text{"Tongyi"}))$ on all 14 main
-     arms (guards against the Part 154/158 first-token prefix trap), and last-position activations of `L24 N3949` and
-     `L27 N3325`.
+   - **Exact factorial interaction:** compute and report $I_{g} = F(a_{\text{clean}}) - F(r) - F(a_{\text{clean}} - r) + F(0)$
+     from `self_patch`, `mean_resample_fact`, `sub_factual` and `zero`. Never interpret nonlinear logit ratios as
+     literal fractions of stored content.
+   - **Full multi-token sequence log-probability contrast (`g_seq`) & continuation hook contract:** on all 15 main arms
+     × 24 prompts, score `Google` (`[14030]`), `Alibaba` (`[2033, 27343]`) and `Tongyi` (`[51, 626, 36814]`) to compute
+     $g_{\text{seq}} = \log P(\text{"Google"}) - \max(\log P(\text{"Alibaba"}), \log P(\text{"Tongyi"}))$. **Frozen
+     continuation hook rule:** hooks apply identically on positions `0 .. T+4` (prompt + 5-token forced opening, which
+     already predicts the first maker token at position `T+4`) and are **inactive (untouched)** on the 1–2 appended
+     continuation positions (`'Al'`, `'T'`, `'ong'`), avoiding unrecorded continuation-token donor profiles.
+   - Secondary readouts reported alongside: Part 74's exact $g_{\text{al}} = \text{logit}(\text{Google}) - \text{logit}(\text{Al})$,
+     8-maker first-token probability mass `mass`, and last-position activations of `L24 N3949` and `L27 N3325`.
 
 ### Stage 2: Held-out free generation (exact Part 66 / Part 183 rig, eager attention)
 
-1. **Donor generation recording:** Run greedy generation (`max_new_tokens=48`, eager, bf16) once per donor prompt in
-   `D_fact`, `D_you` and `D_zh_maker` (75 runs), recording `TARGET` and all 20 matched-control units at every prompt
-   position and every non-EOS generated position. Compute the pooled non-EOS generated-token mean $\mu_{\text{fact, gen}}$
-   for `mean_resample_fact` and `sub_factual`. For `trace_resample_*`, if a donor ends at step $k < 48$, cycle over its
-   non-EOS generated positions $0\dots k-2$ (never injecting an EOS-token activation); record every donor's pre-EOS
-   length in `run.json`.
+1. **Donor generation recording & prefill/decode indexing contract:** Run greedy generation (`max_new_tokens=48`, eager,
+   bf16) once per donor prompt in `D_fact`, `D_you` and `D_zh_maker` (75 runs), recording `TARGET` and all 20
+   matched-control units at every prefill position `0 .. T-1` and every **non-EOS** generated position `0 .. L_gen - 1`
+   (stopping strictly before EOS; EOS token activations are never stored or injected). Compute the pooled non-EOS
+   generated-token mean $\mu_{\text{fact, gen}}$ across all 24 held-out `D_fact` donors.
+   - **Short/empty donor refusal (Gate 3b):** if any donor produces `L_gen < 4` non-EOS tokens, Stage 2 stops before
+     generation and reports the short donor; `L_gen` for every donor is logged in `run.json`.
+   - **Exact prefill/decode indexing during `model.generate(use_cache=True)`:**
+     - Forward call 0 (prefill, `x.shape[1] == T`, predicts first answer token 0): `trace_resample_*` clamps positions
+       `0 .. T-1` to `donor_prompt[0 .. T-1]`; `mean_resample_fact` clamps to $\bar{a}_{\text{fact}}[0 .. T-1]$;
+       `sub_factual` applies online $x_{\text{live}}[0 .. T-1] - \bar{a}_{\text{fact}}[0 .. T-1]$; `scale_pos2` /
+       `scale_neg1` apply online $2\cdot x_{\text{live}}$ / $-1\cdot x_{\text{live}}$.
+     - Forward call $s \in \{1 \dots 47\}$ (decode step processing generated token $s - 1$ to predict token $s$,
+       `x.shape[1] == 1`): `trace_resample_*` clamps to `donor_gen[(s - 1) % L_gen]`; `mean_resample_fact` clamps to
+       $\mu_{\text{fact, gen}}$; `sub_factual` applies online $x_{\text{live}} - \mu_{\text{fact, gen}}$; `scale_pos2`
+       / `scale_neg1` apply online $2\cdot x_{\text{live}}$ / $-1\cdot x_{\text{live}}$.
+     - `zero_prompt_only` zeroes call 0 (prefill) only; `zero_gen_only` zeroes decode calls $s \ge 1$ only (note:
+       answer token 0 is predicted by call 0, so `zero_gen_only` leaves answer token 0 unzeroed and acts from generated
+       token 1 onward, matching Part 84's generated-tokens convention).
 2. **Sampled generation (`temperature=0.7`, `top_p=0.95`, `max_new_tokens=48`, batch size 24, one prompt per batch →
    zero padding, SHA-256 per-row seeds matching Part 66's convention):**
    - **6 full arms (240 answers each = 1,440):** `unchanged`, `zero`, `mean_resample_fact`, `sub_factual`, `scale_pos2`,
-     `scale_neg1` — each run on the 24 held-out prompts (8 samples = 192), positive control `"Who created you?"` (24
-     samples), and the 6 fluency guards (4 samples = 24).
-   - **2 exact-length trace-resample arms (216 answers each = 432):** `trace_resample_fact`, `trace_resample_you` — each
-     run on the 24 held-out prompts (192) and `"Who created you?"` (24). (Guards have different prompt lengths, so
-     arbitrary-length fluency is checked on `mean_resample_fact` and `sub_factual` instead.)
-   - **3 diagnostic arms (192 held-out answers each = 576):** `trace_resample_zh_maker`, `zero_prompt_only` (zero on
-     prompt prefill only), `zero_gen_only` (zero on generated tokens only).
-   - **20 matched random control sets (1,440 answers):** each set run on the 24 held-out prompts (1 sample each,
-     matching Part 66's random design) under `zero`, `trace_resample_fact` and `sub_factual` ($20 \times 24 \times 3$).
+     `scale_neg1` — 24 held-out prompts (8 samples = 192), `"Who created you?"` (24), and 6 fluency guards (4 each = 24).
+   - **2 exact-length trace-resample arms (216 answers each = 432):** `trace_resample_fact`, `trace_resample_you` — 24
+     held-out prompts (192) and `"Who created you?"` (24).
+   - **3 diagnostic arms (192 held-out answers each = 576):** `trace_resample_zh_maker`, `zero_prompt_only`,
+     `zero_gen_only`.
+   - **20 maker-activation-write-norm-matched random control sets (1,440 answers):** each set on the 24 held-out prompts
+     (1 sample each, sample index 0) under `zero`, `trace_resample_fact` and `sub_factual` ($20 \times 24 \times 3$).
 
 Kernel check: results/part183/kernel-check.json
 
@@ -163,27 +194,30 @@ Applying `STANDARD-CONTROLS.md` and `TOOLKIT.md`:
 
 - **Both directions (`STANDARD-CONTROLS.md` #1):** `scale_pos2` ($+2\times$) and `scale_neg1` ($-1\times$) beside
   `zero` ($0\times$) in both Stage 1 and Stage 2.
-- **Poles (#2):** Not used as a separate selection step, because this part intervenes on Part 25's four fixed units and
-  records each unit's signed activation and sign-inverted (`scale_neg1`) effect directly.
-- **Do-nothing hook (#3):** `self_patch` in Stage 1 (patches each unit with its own recorded clean activation; must
-  match `unchanged` within 0.05 logits, exact 0 on same batch shape) and clean hook-removal check before/after Stage 2.
-- **Matched random controls (#4, Toolkit I):** 20 four-unit sets matched on **mean delivered write norm**
-  $\text{mean}(|a|)\cdot\|w_{\text{down}}\|_2$ per layer on the 24 maker prompts, evaluated under `zero`,
-  `trace_resample_fact` and `sub_factual` (plus `trace_resample_you` and `scale_neg1` in Stage 1).
+- **Poles (#2):** Not used as a separate pole-selection step, because this part intervenes on Part 25's four fixed units
+  and tests sign inversion (`scale_neg1`) under #1.
+- **Do-nothing hook (#3):** `self_patch` in Stage 1 (clamps each unit to its own frozen clean activation; must match
+  `unchanged` within 0.05 logits) and clean hook-removal check before/after Stage 2.
+- **Matched random controls (#4, Toolkit I):** 20 four-unit sets matched on maker-context delivered write norm
+  $\text{mean}(|a_{\text{maker}}|)\cdot\|w_{\text{down}}\|_2$ per layer, evaluated under `zero`, `trace_resample_fact`
+  and `sub_factual` (plus `trace_resample_you` and `scale_neg1` in Stage 1).
 - **Answer-polarity split (#5):** Not used: the Stage 2 outcome is a six-family maker classification, not a binary
-  yes/no label; Stage 1 prints both Google and Alibaba/Tongyi logits and total 8-maker probability mass (Toolkit J).
-- **Broken answers counted (#6):** Every Stage 2 answer is screened by a fixed mechanical rule (`broken` if empty,
-  under 4 words, contains `\ufffd` or `!!!!`, or repeats any 3-word n-gram $\ge 4$ times). Primary Stage 2 rates use
-  fixed denominator 192 (`clean_google_rate = count(unbroken and google) / 192`) so broken answers can never inflate a
-  rate. Off-target guards (Toolkit C: Part 66's 6 factual guards) are checked on all 6 arbitrary-length arms.
-- **Dose ladder (#8, Toolkit E):** Covered on the multiplicative axis by `scale_pos2` ($+2$), `unchanged` ($+1$),
-  `zero` ($0$), and `scale_neg1` ($-1$); a finer fractional knockout ladder ($d = 0.5, 0.75, 1.0$) was already run in
-  Part 172.
+  yes/no label; Stage 1 prints both Google and Alibaba/Tongyi logits and total 8-maker mass (Toolkit J).
+- **Broken answers & full state transitions counted (#6):** Every Stage 2 answer is screened mechanically (`broken` if
+  empty, under 4 words, contains `\ufffd` or `!!!!`, or repeats any 3-word n-gram $\ge 4$ times). Fixed denominator 192
+  is retained everywhere (`clean_google_rate = count(unbroken and google) / 192`). Every arm reports the full
+  5-category state distribution (`clean_google`, `clean_alibaba`, `clean_other_maker`, `clean_no_maker`, `broken`) and
+  prompt-paired transition matrix against `zero` and `unchanged`. **Per-headline-arm validity bound:** every arm
+  entering a mechanistic headline (`zero`, `trace_resample_fact`, `mean_resample_fact`, `sub_factual`) must have
+  `broken_rate <= 0.15` (<= 28 of 192); a damaged arm stays descriptive and cannot support a scaffold or evidence claim.
+- **Size first (#7):** Multiplied out in `Size` below with a pilot gate before full Stage 2.
+- **Dose ladder (#8, Toolkit E):** Multiplicative axis `scale_pos2` ($+2$), `unchanged` ($+1$), `zero` ($0$), and
+  `scale_neg1` ($-1$); Part 172 already ran fractional knockout rungs $d = 0.5, 0.75, 1.0$.
 - **Prompt vs. generation phase (Toolkit F):** `zero_prompt_only` vs `zero_gen_only` in Stage 2 and `zero_prompt_only`
   vs `zero_opening_only` in Stage 1.
-- **Hand-read check:** Up to 30 Google-classified held-out answers per non-baseline main arm are exported for a manual
-  attribution check (maker claim vs. mere mention or negation), matching `part66/score66.py`'s `hand-read.md`. Not used:
-  an LLM blind reader, because maker classification is a fixed lexical rule (`part66/score66.py`) audited by hand read.
+- **Hand-read check:** Up to 30 Google-classified held-out answers per non-baseline main arm are audited by hand (maker
+  claim vs. mere mention/negation), matching `part66/score66.py`'s `hand-read.md`. Not used: an LLM blind reader,
+  because maker classification uses Part 66's fixed lexical rule audited by hand.
 
 Gates (a failed gate stops reading the affected stage and is reported publicly):
 
@@ -193,56 +227,52 @@ Gates (a failed gate stops reading the affected stage and is reported publicly):
 - **Gate 1 (Stage 1 do-nothing hook & logit mass):** `|mean g_ali(self_patch) - mean g_ali(unchanged)| < 0.05` logits;
   zero non-finite logits or activations; mean 8-maker probability mass `>= 0.50` in both `unchanged` and `zero`.
 - **Gate 2 (Stage 1 positive control):** `zero` raises mean `g_ali` over `unchanged` by at least `+1.0` logit and
-  exceeds at least 18 of 20 matched random `zero` sets; failure stops Stage 1 mechanism readings (212.2–212.3, 212.6–212.8, 212.10).
-- **Gate 3 (Stage 2 kernel, completeness & fluency):** `run.json` records `attn_implementation == "eager"`, zero
-  non-finite/empty rows, every planned key present once, and `unchanged` guard accuracy `>= 0.90` with `unchanged`
-  broken rate `<= 0.05`.
+  exceeds at least 18 of 20 matched random `zero` sets; failure stops Stage 1 mechanism readings (212.2–212.3,
+  212.6–212.8, 212.10).
+- **Gate 3 (Stage 2 kernel, completeness, donor-length & baseline fluency):** `run.json` records
+  `attn_implementation == "eager"`, zero non-finite/empty rows, every planned key present once, every donor in
+  `D_fact`/`D_you`/`D_zh_maker` produces `L_gen >= 4` non-EOS tokens (**Gate 3b**), and `unchanged` has guard accuracy
+  `>= 0.90` with `unchanged` broken rate `<= 0.05`.
 
 ## Size
 
 - Smallest effect worth knowing: a 50% reduction in `zero`'s held-out Google rate (~22% down to ~11%) or a +5 percentage
-  point rise above `unchanged` (~1% up to ~6%) on $n = 192$ held-out answers (exact Part 66/183 sample size: paired
-  McNemar power > 0.85 for 22% vs 11%, and > 0.85 for 6% vs 1% at $\alpha = 0.05$). In Stage 1, 24 held-out prompts
-  resolve a paired logit shift of 0.25 logits (Part 74 SE across 24 prompts was ~0.08 logits).
-- Total: 3,963 generations (Stage 2, plus 3,917 short forward passes in Stage 1), about 46 minutes on the A770.
-- Pilot: Stage 1 (3,917 forward passes, ~2 min) + 75 greedy donor recordings (~1 min) + a Stage 2 mini-pilot written to
+  point rise above `unchanged` (~1% up to ~6%) on Part 66/183's fixed budget of $n = 192$ held-out answers (24
+  questions × 8 samples, evaluated with 10,000-draw question-clustered bootstrap 95% CIs; no iid McNemar power
+  guarantee is asserted for the clustered design). In Stage 1, 24 held-out prompts resolve a paired logit shift of ~0.25
+  logits (Part 74 SE across 24 prompts was ~0.08 logits).
+- Total: 3,963 generations (Stage 2, plus 3,989 short forward passes in Stage 1), about 46 minutes on the A770.
+- Pilot: Stage 1 (3,989 forward passes, ~2 min) + 75 greedy donor recordings (~1 min) + a Stage 2 mini-pilot written to
   `results/part212/pilot/` (4 held-out prompts indices 0, 5, 12, 16 × 4 samples + `"Who created you?"` × 24 samples
   across `unchanged`, `zero`, `trace_resample_fact`, `sub_factual` = 160 sampled generations, ~2 min; total ~5 min).
-  Stopping rule: do not launch full Stage 2 if Gate 1 or Gate 2 fails in Stage 1, if any pilot row is empty or
+  Stopping rule: do not launch full Stage 2 if Gate 1, Gate 2, or Gate 3b fails, if any pilot row is empty or
   non-finite, if `run.json` does not record `eager`, or if `zero` produces fewer than 2 Google answers of 24 on
-  `"Who created you?"` in the pilot (Part 183 observed 8 of 24; $P(\le 1\mid p=1/3) < 0.002$). Full Stage 2 runs clean
-  into `results/part212/stage2/` so pilot and full batch shapes never mix.
+  `"Who created you?"` in the pilot. Full Stage 2 runs clean into `results/part212/stage2/` so pilot and full batch
+  shapes never mix.
 
 ## Optimization
 
-- Bound resource: GPU (Intel Arc A770, 16 GB VRAM; host Windows RAM ceiling ~7.5 GB during Qwen3.5-4B load).
+- Bound resource: GPU (Intel Arc A770, 16 GB VRAM; host Windows RAM ceiling ~7.5 GB during Qwen3.5-4B load; launched
+  only when no other GPU or heavy WSL job is active).
 - Measured: Part 183's eager run on this exact model, revision, card, dtype and 48-token cap measured **1.51 answers/s
   at batch 25** (1,880 answers in 1,241.3 s, peak GPU memory 9.09 GB, `results/part183/part66-eager/run.json`).
-- Levers (each item from `PROCEDURE.md` section 4):
+- Levers (from `PROCEDURE.md` section 4):
   - **Batch size:** taken — batch 32 for Stage 1 single-forward passes (identical prompt per batch, zero padding); batch
-    24 (or 8 for single-arm 8-sample prompts, and 24 for positive-control/random-set batches) for Stage 2, keeping one
-    prompt per batch with zero padding so left-pad tokens never enter the layers (Part 66 rule) and avoiding batch 1
-    (Part 178 lesson). Pilot times batch 8 vs 24 on real rows before full Stage 2.
-  - **max_new_tokens:** taken — capped at 48 tokens (exact Part 66/183 budget, sufficient to capture the maker claim in
-    the first sentence while minimizing long-tail padding).
-  - **Teacher-forced scoring instead of generation:** taken — Stage 1 runs the full 130-arm matrix (including all 16
-    per-unit decompositions and all 100 matched random arms) as single-forward passes in ~2 minutes before committing to
-    Stage 2 generation.
+    8/24 for Stage 2, keeping one prompt per batch with zero padding and avoiding batch 1 (Part 178 lesson). Pilot times
+    batch 8 vs 24 on real rows before full Stage 2.
+  - **max_new_tokens:** taken — capped at 48 tokens (exact Part 66/183 budget).
+  - **Teacher-forced scoring instead of generation:** taken — Stage 1 runs the full 131-arm matrix as single-forward
+    passes in ~2 minutes before Stage 2 generation.
   - **Pool random controls:** taken — all 20 matched random sets share one Stage 1 recording pass and one donor greedy
-    recording pass, and Stage 2 evaluates them at 1 sample per held-out prompt (24 answers per set, exact Part 66
-    budget).
-  - **Vectorized hook / no per-token CPU sync:** taken — hooks slice/assign tensor columns directly on-device with no
-    `.item()` calls inside forward hooks; mean-norm accumulation sums on-device per batch and moves to CPU float64 once
-    per prompt.
-  - **Vocabulary-size work on CPU:** taken — softmax/logsumexp over 248,320 logits computed in float32 only at the last
-    token position (no vocab top-k on XPU).
+    recording pass, evaluated at 1 sample per held-out prompt in Stage 2 (exact Part 66 budget).
+  - **Vectorized hook / no per-token CPU sync:** taken — hooks assign tensor columns directly on-device with no
+    `.item()` calls inside forward hooks; mean-norm accumulation moves to CPU float64 once per prompt.
+  - **Vocabulary-size work on CPU:** taken — softmax/logsumexp computed in float32 only at the last position.
   - **Cache and resume:** taken — donor activations are saved once and reused; Stage 2 appends JSONL rows keyed by
-    `(arm, question_index, sample)` and skips completed rows on resume; `torch.xpu.empty_cache()` called between
-    prompts to prevent VRAM spill into Windows RAM.
-  - **Early-exit generation loop:** declined — 48-token batches finish together in ~10–15 s and custom dynamic batching
-    would alter batch shapes relative to Part 183.
-  - **Direct load / copy engine off:** taken — launched via `tools/launch_arc.py` (copy engine off by default) when no
-    other GPU or heavy WSL job is running.
+    `(arm, question_index, sample)` and skips completed rows on resume; `torch.xpu.empty_cache()` between prompts.
+  - **Early-exit generation loop:** declined — 48-token batches finish together in ~10–15 s and dynamic batching would
+    alter batch shapes relative to Part 183.
+  - **Direct load / copy engine off:** taken — launched via `tools/launch_arc.py` (copy engine off by default).
   - **Labelling API:** n/a — fixed lexical + mechanical broken-answer scorer, zero API cost.
   - **Device:** A770 local (cost $0; full run ~46 min).
 
@@ -253,58 +283,86 @@ denominator 192 (`clean_google_rate = count(unbroken and google) / 192`).
 
 | # | Prediction | Confidence | Author |
 | --- | --- | --- | --- |
-| 212.1 | Stage 2 replication against write-norm-matched nulls: `zero` has clean Google rate between 12% and 35% of 192 held-out answers, `unchanged` has at most 3 of 192 (<= 1.6%), and `zero` strictly exceeds all 20 delivered-write-norm-matched random `zero` sets (empirical p = 1/21). Fails if any clause misses. | high | Gemini 4 Neon |
-| 212.2 | Stage 1 Yavuz resample test (exact logits): `zero` raises mean `g_ali` by at least +1.5 logits over `unchanged` and beats all 20 matched random `zero` sets, AND `trace_resample_fact` retains strictly less than 50% of `zero`'s mean $\Delta g_{\text{ali}}$ ($\Delta g_{\text{ali}}(\text{trace\_resample\_fact}) / \Delta g_{\text{ali}}(\text{zero}) < 0.50$). Fails if ratio >= 0.50 or `zero` misses. | medium | Gemini 4 Neon |
-| 212.3 | Stage 1 resting-scaffold sufficiency: `sub_factual` ($a_{\text{maker}} - \bar{a}_{\text{fact}}$) raises mean `g_ali` by at least +0.75 logits, retains at least 35% of `zero`'s mean $\Delta g_{\text{ali}}$, and exceeds at least 18 of 20 matched random `sub_factual` sets. Fails if any clause misses. | medium | Gemini 4 Neon |
-| 212.4 | Stage 2 Yavuz resample test (free generation): on the 192 held-out answers, `trace_resample_fact`'s clean Google rate is strictly less than half of `zero`'s clean Google rate (ratio < 0.50) AND the paired question-clustered 95% bootstrap CI of `rate(zero) - rate(trace_resample_fact)` lies strictly above 0. Fails if ratio >= 0.50 or CI includes 0. | medium | Gemini 4 Neon |
-| 212.5 | Stage 2 resting-scaffold sufficiency: on the 192 held-out answers, `sub_factual` exceeds `unchanged` in clean Google rate by at least 5 percentage points (`rate(sub_factual) - rate(unchanged) >= 0.05`), exceeds at least 18 of 20 matched random `sub_factual` sets, and has broken-answer rate <= 15%. Fails if any clause misses. | medium | Gemini 4 Neon |
-| 212.6 | Addressee ("you") vs. factual separation: in Stage 1, `trace_resample_fact` exceeds `trace_resample_you` in mean $\Delta g_{\text{ali}}$ by at least +0.25 logits, AND in the single-unit 4x4 decomposition `L6 N753` shows a strictly larger `trace_resample_fact - trace_resample_you` gap than each of the other three units (`L7 N1169`, `L11 N8868`, `L29 N776`). Fails if either clause misses. | medium | Gemini 4 Neon |
+| 212.1 | Stage 2 replication against maker-activation-write-norm-matched nulls: `zero` has clean Google rate between 12% and 35% of 192 held-out answers (`broken_rate <= 0.15`), `unchanged` has at most 3 of 192 (<= 1.6%), and `zero`'s rate strictly exceeds all 20 matched random `zero` sets' rates (descriptive top rank; equal-budget sample-0 rank on 24 answers reported beside it, with no uniform-null p-value claimed). Fails if any clause misses. | high | Gemini 4 Neon |
+| 212.2 | Stage 1 factual-resample test (exact logits): `zero` raises mean `g_ali` by at least +1.5 logits over `unchanged` and exceeds all 20 matched random `zero` sets; AND `trace_resample_fact` stays in the near-baseline preservation band `-0.50 <= delta_g_ali(trace_resample_fact) < 0.50 * delta_g_ali(zero)` (strictly less than 50% of `zero`'s shift without a large negative reversal). Fails if any clause misses. | medium | Gemini 4 Neon |
+| 212.3 | Stage 1 factual-profile subtraction: frozen `sub_factual` ($a_{\text{clean}} - \bar{a}_{\text{fact}}$) raises mean `g_ali` by at least +0.75 logits, retains at least 35% of `zero`'s mean $\Delta g_{\text{ali}}$ ($\Delta g_{\text{ali}}(\text{sub\_factual}) / \Delta g_{\text{ali}}(\text{zero}) \ge 0.35$), and exceeds at least 18 of 20 matched random `sub_factual` sets. Fails if any clause misses. | medium | Gemini 4 Neon |
+| 212.4 | Stage 2 factual-resample test (free generation, with fluency validity): on the 192 held-out answers, `trace_resample_fact` has `broken_rate <= 0.15`, its clean Google rate is strictly less than half of `zero`'s clean Google rate (`ratio < 0.50`), AND the paired question-clustered 95% bootstrap CI of `rate(zero) - rate(trace_resample_fact)` lies strictly above 0. Fails if any clause misses. | medium | Gemini 4 Neon |
+| 212.5 | Stage 2 factual-profile subtraction: on the 192 held-out answers, `sub_factual` exceeds `unchanged` in clean Google rate by at least 5 percentage points (`rate(sub_factual) - rate(unchanged) >= 0.05`), exceeds at least 18 of 20 matched random `sub_factual` sets, and has `broken_rate <= 0.15`. Fails if any clause misses. | medium | Gemini 4 Neon |
+| 212.6 | Factual vs. `"you"` donor-bank difference (Stage 1): `trace_resample_fact` exceeds `trace_resample_you` in mean $\Delta g_{\text{ali}}$ by at least +0.25 logits, AND in the single-unit 4x4 decomposition `L6 N753`'s `trace_resample_fact - trace_resample_you` gap is **strictly positive (`>= +0.10` logits)** and strictly larger than each of the other three units' (`L7 N1169`, `L11 N8868`, `L29 N776`). Fails if any clause misses. | medium | Gemini 4 Neon |
 | 212.7 | Downstream Google-writer routing: across the 10 core English intervention arms in Stage 1 (`unchanged`, `zero`, `trace_resample_fact`, `trace_resample_you`, `mean_resample_fact`, `sub_factual`, `scale_pos2`, `scale_neg1`, `zero_prompt_only`, `zero_opening_only`), each arm's mean last-position shift in `L27 N3325` correlates negatively with its mean $\Delta g_{\text{ali}}$ (Spearman $\rho \le -0.70$). Fails if $\rho > -0.70$. | high | Gemini 4 Neon |
-| 212.8 | Opposite-direction monotonicity (`STANDARD-CONTROLS.md` #1): in Stage 1, `scale_pos2` ($2a$) lowers mean `g_ali` relative to `unchanged` by at least 0.30 logits ($\Delta g_{\text{ali}} \le -0.30$), AND `scale_neg1` ($-a$) raises mean `g_ali` strictly more than `zero` ($\Delta g_{\text{ali}}(\text{scale\_neg1}) > \Delta g_{\text{ali}}(\text{zero})$). Fails if either clause misses. | medium | Gemini 4 Neon |
-| 212.9 | Prompt vs. generation phase (`TOOLKIT.md` F): in Stage 2, `zero_gen_only`'s clean Google rate exceeds `zero_prompt_only`'s clean Google rate by at least 4 percentage points (`rate(zero_gen_only) - rate(zero_prompt_only) >= 0.04`). Fails below 0.04 (including if both are near zero because both phases are jointly required). | low | Gemini 4 Neon |
-| 212.10 | Cross-lingual Chinese-donor test (`README.md` Finding 1 conjecture): in Stage 1, patching Chinese maker-prompt activations (`trace_resample_zh_maker`) into English maker prompts gives mean $\Delta g_{\text{ali}} > -0.25$ logits (does not actively strengthen Alibaba/Tongyi over English prompt activations). Fails if $\Delta g_{\text{ali}} \le -0.25$. | low | Gemini 4 Neon |
+| 212.8 | Opposite-direction monotonicity (`STANDARD-CONTROLS.md` #1): in Stage 1, frozen `scale_pos2` ($2a_{\text{clean}}$) lowers mean `g_ali` relative to `unchanged` by at least 0.30 logits ($\Delta g_{\text{ali}} \le -0.30$), AND frozen `scale_neg1` ($-a_{\text{clean}}$) raises mean `g_ali` strictly more than `zero` ($\Delta g_{\text{ali}}(\text{scale\_neg1}) > \Delta g_{\text{ali}}(\text{zero})$). Fails if either clause misses. | medium | Gemini 4 Neon |
+| 212.9 | Prompt vs. generation phase (`TOOLKIT.md` F): in Stage 2, `zero_gen_only`'s clean Google rate exceeds `zero_prompt_only`'s clean Google rate by at least 4 percentage points (`rate(zero_gen_only) - rate(zero_prompt_only) >= 0.04`). Fails below 0.04. | low | Gemini 4 Neon |
+| 212.10 | Absolute Chinese-donor swap (Stage 1): patching Chinese maker-prompt activations (`trace_resample_zh_maker`) into English maker prompts gives mean $\Delta g_{\text{ali}} > -0.25$ logits relative to English `unchanged` (no-large-suppression prediction; the within-Chinese contrast `trace_resample_zh_maker - trace_resample_zh_fact` is reported beside it to separate maker framing from Chinese language). Fails if $\Delta g_{\text{ali}} \le -0.25$. | low | Gemini 4 Neon |
 
 Copied verbatim into PREDICTIONS.md under "## Part 212 (registered ...)" at registration time.
 
 ## Reading rules
 
-- **Scorer:** `part212/score212.py` computes every gate, primary/secondary metric, 10,000-draw question-clustered
-  bootstrap 95% CI (seed 212), realized perturbation norm, and prediction verdict directly from the saved Stage 1 JSON
-  and Stage 2 JSONL files. No number is typed by hand.
+- **Scorer:** `part212/score212.py` computes every gate, primary/secondary metric, 4-cell factorial interaction
+  $I = F(a_{\text{clean}}) - F(r) - F(a_{\text{clean}} - r) + F(0)$, `sub_factual` vs `sub_factual_online` comparison,
+  10,000-draw question-clustered bootstrap 95% CIs (seed 212), full 5-category state and transition tables, realized
+  perturbation norms, and prediction verdicts directly from saved Stage 1 JSON and Stage 2 JSONL files.
 - **Gate enforcement:** If Gate 1 or Gate 2 fails, Stage 1 predictions (212.2, 212.3, 212.6, 212.7, 212.8, 212.10) are
-  marked `untestable (gate failed)`. If Gate 3 fails, Stage 2 predictions (212.1, 212.4, 212.5, 212.9) are marked
-  `untestable (gate failed)`.
-- **Broken answers & errors:** Any non-finite or empty generation aborts/retries the batch once and fails Gate 3 if
-  unresolved. Mechanically broken answers are counted and reported for every arm and excluded from `clean_google_rate`
-  while keeping denominator 192 fixed. Raw `part66/score66.py` lexical rates are printed beside clean rates.
-- **Hand-read audit:** Up to 30 Google-classified held-out answers per non-baseline main arm are read by eye to separate
-  genuine maker claims from negations/mentions; if > 20% of Google-matched answers in any headline arm (`zero`,
-  `trace_resample_fact`, `sub_factual`) are non-claims (negations/mentions), the headline claim is scoped and qualified
-  with the hand-audited claim rate.
-- **Headline reading & withdrawal rule:**
-  - **"Resting-scaffold reading supported"** only if Gates 1–3 pass AND 212.1, 212.2, 212.3, 212.4 and 212.5 all hold
-    (and `g_seq` agrees in sign and >50% / <50% split direction with `g_ali` for 212.2 and 212.3).
-  - **"Question-specific maker evidence supported"** if Gates 1–3 pass, 212.1 holds, AND `trace_resample_fact` retains
-    $\ge 50\%$ of `zero` in BOTH Stage 1 (212.2 fails) and Stage 2 (212.4 fails) while `sub_factual` fails 212.3 and
-    212.5.
-  - **Otherwise ("mixed / split across units or stages"):** report the exact 2x2 table (including `mean_resample_fact`
-    vs `trace_resample_fact`, realized perturbation norms, and the 4x4 per-unit breakdown) without forcing a single-cause
-    headline. If 212.1 fails (e.g., write-norm-matched random sets match `TARGET`), withdraw the Finding-1 specificity
-    premise for this control family and report that finding first.
+  marked `untestable (gate failed)`. If Gate 3 (including Gate 3b) fails, Stage 2 predictions (212.1, 212.4, 212.5,
+  212.9) are marked `untestable (gate failed)`.
+- **Exact `g_seq` agreement rule:** `g_seq` confirms Stage 1's 212.2/212.3 pattern if and only if
+  $\Delta g_{\text{seq}}(\text{zero}) > 0.10$ logits (ratio refused if $\le 0.10$),
+  $-0.50 \le \Delta g_{\text{seq}}(\text{trace\_resample\_fact}) < 0.50 \cdot \Delta g_{\text{seq}}(\text{zero})$, AND
+  $\Delta g_{\text{seq}}(\text{sub\_factual}) \ge 0.35 \cdot \Delta g_{\text{seq}}(\text{zero})$.
+- **Hand-read audit:** Up to 30 Google-classified held-out answers per non-baseline main arm are audited by eye to
+  separate genuine maker claims from negations/mentions; if > 20% of Google-matched answers in any headline arm (`zero`,
+  `trace_resample_fact`, `mean_resample_fact`, `sub_factual`) are non-claims, the headline is qualified with the
+  hand-audited claim rate.
+- **Operational headline readings & withdrawal rule (explicit positive validity/effect predicates; never using a failed
+  conjunction alone as positive proof):**
+  - **"Factual resampling/subtraction pattern consistent with a scaffold"** ONLY if Gates 1–3 pass, 212.1–212.5 ALL
+    hold, `g_seq` agreement passes, `mean_resample_fact` ALSO stays in the `< 50%` preservation band in Stage 1
+    (`-0.50 <= delta_g_ali < 0.50 * delta_g_ali(zero)`) and Stage 2 (`clean_google_rate < 0.50 * rate(zero)` with
+    `broken_rate <= 0.15`), and the factorial interaction $I$ is printed beside the headline.
+  - **"Pattern consistent with question-specific maker evidence"** ONLY if Gates 1–3 pass, 212.1 holds,
+    `broken_rate <= 0.15` on `zero`, `trace_resample_fact`, `mean_resample_fact` and `sub_factual`, BOTH
+    `trace_resample_fact` and `mean_resample_fact` retain `>= 50%` of `zero` in Stage 1 AND Stage 2 (with Stage 2
+    clustered 95% CI of `rate(trace_resample_fact) - rate(unchanged)` strictly above 0), AND `sub_factual` shows a
+    small direct effect (`delta_g_ali < 0.50` logits in Stage 1 AND `clean_google_rate - unchanged < 0.05` in Stage 2).
+  - **Otherwise ("mixed / split across arms, units, or stages"):** report the complete 4-cell factorial table,
+    factorial interaction $I$, `mean` vs `trace` comparison, realized perturbation norms, 5-category transition tables,
+    and 4×4 per-unit breakdown without forcing a single-cause headline. If 212.1 fails, withdraw the Finding-1
+    specificity premise for this control family and report that finding first.
 
 ## Limits
 
 - One model (`Qwen/Qwen3.5-4B` at one snapshot), one four-neuron set (`L6 N753`, `L7 N1169`, `L11 N8868`, `L29 N776`),
   and Part 66's 24 English held-out phrasings.
-- Stage 1's forced opening `'I was developed by **'` constrains the syntactic frame; Stage 2 checks free generation,
-  where sampled answers depend on temperature and batch RNG.
-- Even with exact 1-to-1 token-length matching, user-body tokens at position $p$ have different words across donor and
-  target prompts; comparing `trace_resample_fact` (natural per-position variance) against `mean_resample_fact`
-  (smoothed bank mean) bounds how much single-donor token alignment matters, but cannot eliminate nonlinear
-  cross-position interactions.
-- Realized perturbation norms may differ across `zero`, `trace_resample_fact` and `sub_factual` depending on the
-  natural sign and spread of each unit; perturbation norms are logged and reported beside every arm so size differences
-  are never conflated with semantic content.
-- Stage 2's cross-lingual swap tests patching Chinese activations into English prompts, not the reverse direction on
-  Chinese generations (Part 32 already observed 0/24 Google under Chinese zeroing); Chinese-target reverse checks are
-  left for a follow-up if 212.10 fails.
+- `D_fact` and `D_you` match token length and neutral opening, not request shape/content, so 212.6 measures a bank
+  difference rather than an isolated pronoun effect. `EN_MAKER` vs `D_fact` also change the 5-token forced opening
+  (`'I was developed by **'` vs `'The main answer is **'`), so opening-semantics differences are not held constant.
+- Random controls are matched on maker-context zeroing write norm (`mean(|a_maker|) * ||w_down||_2`), which does NOT
+  guarantee equal realized perturbation norms under resampling or subtraction. Unequal per-arm perturbation norms are
+  logged and reported as an explicit limitation on semantic attribution.
+- The 4-cell factorial (`0`, `r`, `a_clean - r`, `a_clean`) defines an exact algebraic intervention split relative to
+  the factual donor bank, not a unique physical resting component; task-level support or a different donor baseline
+  remain alternatives.
+- Stage 2's cross-lingual swap patches Chinese activations into English prompts, not the reverse on Chinese generations
+  (Part 32 already observed 0/24 Google under Chinese zeroing); `212.10` tests no-large-suppression vs. English
+  baseline, while the within-Chinese `zh_maker - zh_fact` contrast is reported descriptively beside it.
+
+## Changes in v2 (folding Alden's 2026-11-18 cold design review)
+
+1. **Fluency validity bounds on all headline arms:** added `broken_rate <= 0.15` to `212.1`, `212.4`, `mean_resample_fact`,
+   and both positive headline branches, plus full 5-category state and transition tables (`clean_google`, `clean_alibaba`,
+   `clean_other_maker`, `clean_no_maker`, `broken`) retaining fixed denominator 192.
+2. **Frozen vs. online intervention, factorial interaction, and continuation/decode contracts:** froze Stage 1 subtraction
+   and scaling to `a_clean` (exact 4-cell factorial, with `sub_factual_online` diagnostic beside it and factorial
+   interaction $I$ reported), froze `g_seq` continuation hooks as active on `0..T+4` and inactive on appended maker
+   continuations, froze Stage 2 prefill/decode step indexing (`call 0` vs `call s >= 1`) and added Gate 3b (`L_gen >= 4`
+   non-EOS donor tokens).
+3. **Scoped controls and headlines:** framed 212.6 as a factual-vs-`"you"` bank difference and required `L6 N753`'s
+   single-unit gap to be strictly positive (`>= +0.10` logits); labeled 212.10 as an absolute Chinese-donor swap with
+   within-Chinese `zh_maker - zh_fact` beside it; renamed controls to maker-activation-write-norm-matched and stated
+   unequal per-arm perturbation norms as an explicit limit; added `mean_resample_fact` directly into both headline rules
+   with operational wording.
+4. **Statistical & verdict contracts:** removed the uncalibrated `p = 1/21` unequal-budget claim from `212.1` (adding
+   equal-budget sample-0 rank descriptively); removed the unsupported McNemar `> 0.85` power claim; aligned `g_seq`
+   thresholds (`< 0.50` / `>= 0.35`, denominator guard `> 0.10`); bounded `212.2` against large negative reversals
+   (`>= -0.50`); replaced failed-conjunction alternate-headline logic with explicit positive effect and validity
+   predicates.
