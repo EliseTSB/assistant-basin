@@ -1,0 +1,59 @@
+{
+ "part": 213,
+ "checkpoint": "instruct",
+ "design": "PART213-DESIGN.md v5 (commit 7de53067)",
+ "snapshot": "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B-Instruct/snapshots/48d788eca847d4d7548f375ad03d3c9312f6139e",
+ "snapshot_commit": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+ "resolved": {
+  "key": "instruct",
+  "stage": "Instruct",
+  "repo_id": "allenai/OLMo-2-0425-1B-Instruct",
+  "branch": "main",
+  "commit_prefix": "48d788eca847",
+  "commit": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "resolved_from": "local snapshot folder name (offline)"
+ },
+ "dtype": "float32",
+ "attn_implementation": "eager",
+ "device": "cpu",
+ "tool_sha256": {
+  "part213/run213.py": "ab064e2af31eb1795193ee58bc3cc7fc567bcbbcd5ea2c46b59988c15834d0c4"
+ },
+ "inputs_sha256": {
+  "part213/targets213.json": "7edb3c6253470d157896931083c239253930be08f16a5b9348d6c67d3b431892",
+  "results/part99-pushes.pt": "6d6e8741c1c32916e89476611db90c2f6bb9ca321b697c72a41049a50d9f34fb",
+  "results/part99-pushes.json": "824cfebe2a8db27b55fc4edcec0c521a5a6b5a936e3408d97952dedae36316cb",
+  "results/part106/lp-instruct.jsonl": "f8344f9573e25768bfb7b6d16af46f3db29b2309bc94556c77125c7d5b78bf5d"
+ },
+ "tokenizer_sha256": {
+  "tokenizer.json": "73fd5254624f39a88e3faac6a8e11300fc3c735ed37880d4f4f08db898eaecca",
+  "tokenizer_config.json": "50c412c57d832057a3d5db42064c741f751e570f7c8788f037bfb0d2dd6e5f49"
+ },
+ "residual_median_norm_layer0": 4.7816162109375,
+ "residual_median_norm_reference_note": "instruct is the reference for the ratio; score213 compares across run.json",
+ "peak_rss_gb": 9.59,
+ "sealed_cells": [
+  "self_select",
+  "free_self_0",
+  "free_cold_0"
+ ],
+ "seal_rule": "concept-unit rows of self_select and free_self_0/free_cold_0 are written as status=sealed, never run",
+ "gate2_anchors": [
+  "p92-02",
+  "p92-05",
+  "p92-00",
+  "p92-08"
+ ],
+ "fr_formula": "2 * instruct - dpo",
+ "fr_built_in_place": true,
+ "fr_dtype": "float32",
+ "fr_sources": {
+  "instruct": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "dpo": "c4b0485961ab24c2433b090f3b922f0913a9290f"
+ },
+ "stage1_plan_cells": 24,
+ "stage1_core_passes": 936,
+ "offdiag_passes": 0,
+ "stage1_passes_executed": 936,
+ "batch": 16
+}

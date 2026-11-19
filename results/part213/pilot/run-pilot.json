@@ -1,0 +1,147 @@
+{
+ "part": 213,
+ "checkpoint": "instruct",
+ "design": "PART213-DESIGN.md v5 (commit 7de53067)",
+ "snapshot": "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B-Instruct/snapshots/48d788eca847d4d7548f375ad03d3c9312f6139e",
+ "snapshot_commit": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+ "resolved": {
+  "key": "instruct",
+  "stage": "Instruct",
+  "repo_id": "allenai/OLMo-2-0425-1B-Instruct",
+  "branch": "main",
+  "commit_prefix": "48d788eca847",
+  "commit": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "resolved_from": "local snapshot folder name (offline)"
+ },
+ "dtype": "float32",
+ "attn_implementation": "eager",
+ "device": "cpu",
+ "tool_sha256": {
+  "part213/run213.py": "0335c6fec7076c28e67dcca7e426beb6404160d7b50c1eafe920643897482889"
+ },
+ "inputs_sha256": {
+  "part213/targets213.json": "7edb3c6253470d157896931083c239253930be08f16a5b9348d6c67d3b431892",
+  "results/part99-pushes.pt": "6d6e8741c1c32916e89476611db90c2f6bb9ca321b697c72a41049a50d9f34fb",
+  "results/part99-pushes.json": "824cfebe2a8db27b55fc4edcec0c521a5a6b5a936e3408d97952dedae36316cb",
+  "results/part106/lp-instruct.jsonl": "f8344f9573e25768bfb7b6d16af46f3db29b2309bc94556c77125c7d5b78bf5d"
+ },
+ "tokenizer_sha256": {
+  "tokenizer.json": "73fd5254624f39a88e3faac6a8e11300fc3c735ed37880d4f4f08db898eaecca",
+  "tokenizer_config.json": "50c412c57d832057a3d5db42064c741f751e570f7c8788f037bfb0d2dd6e5f49"
+ },
+ "residual_median_norm_layer0": 4.774740695953369,
+ "residual_median_norm_reference_note": "instruct is the reference for the ratio; score213 compares across run.json",
+ "peak_rss_gb": 8.803,
+ "sealed_cells": [
+  "self_select",
+  "free_self_0",
+  "free_cold_0"
+ ],
+ "seal_rule": "concept-unit rows of self_select and free_self_0/free_cold_0 are written as status=sealed, never run",
+ "gate2_anchors": [
+  "p92-02",
+  "p92-05",
+  "p92-00",
+  "p92-08"
+ ],
+ "stage": "pilot",
+ "pilot_gate1": {
+  "zero_hook_max_abs_diff": 0.0,
+  "batch_padded_vs_batch1_max_abs_diff": 6.079673767089844e-06,
+  "finite": true,
+  "passed": true
+ },
+ "gate2_anchors_detail": [
+  {
+   "id": "p92-02",
+   "anchor": "I am the town.",
+   "n_tokens": 5,
+   "lp_sum_none": -31.617713928222656,
+   "part106_lp_sum_none": -31.642864227294922,
+   "abs_diff_none": 0.025150299072265625,
+   "lp_sum_neuron": -4.983967304229736,
+   "part106_lp_sum_neuron": -5.134432792663574,
+   "abs_diff_neuron": 0.1504654884338379,
+   "lp_sum_random_0": -25.307716369628906,
+   "part106_lp_sum_random_0": -25.393138885498047,
+   "abs_diff_random_0": 0.08542251586914062,
+   "ordering_ok": true,
+   "passed": true
+  },
+  {
+   "id": "p92-05",
+   "anchor": "I am a fox.",
+   "n_tokens": 5,
+   "lp_sum_none": -23.06890106201172,
+   "part106_lp_sum_none": -23.10870361328125,
+   "abs_diff_none": 0.03980255126953125,
+   "lp_sum_neuron": -6.924955368041992,
+   "part106_lp_sum_neuron": -6.776758193969727,
+   "abs_diff_neuron": 0.14819717407226562,
+   "lp_sum_random_0": -13.956323623657227,
+   "part106_lp_sum_random_0": -14.04919719696045,
+   "abs_diff_random_0": 0.09287357330322266,
+   "ordering_ok": true,
+   "passed": true
+  },
+  {
+   "id": "p92-00",
+   "anchor": "I am a boulder.",
+   "n_tokens": 6,
+   "lp_sum_none": -31.315387725830078,
+   "part106_lp_sum_none": -31.28293800354004,
+   "abs_diff_none": 0.03244972229003906,
+   "lp_sum_neuron": -6.971639156341553,
+   "part106_lp_sum_neuron": -7.090721130371094,
+   "abs_diff_neuron": 0.11908197402954102,
+   "lp_sum_random_0": -23.528114318847656,
+   "part106_lp_sum_random_0": -23.55083465576172,
+   "abs_diff_random_0": 0.0227203369140625,
+   "ordering_ok": true,
+   "passed": true
+  },
+  {
+   "id": "p92-08",
+   "anchor": "I am a dog.",
+   "n_tokens": 5,
+   "lp_sum_none": -22.32345962524414,
+   "part106_lp_sum_none": -22.34151840209961,
+   "abs_diff_none": 0.01805877685546875,
+   "lp_sum_neuron": -6.081214904785156,
+   "part106_lp_sum_neuron": -6.033383369445801,
+   "abs_diff_neuron": 0.04783153533935547,
+   "lp_sum_random_0": -12.9765043258667,
+   "part106_lp_sum_random_0": -12.955792427062988,
+   "abs_diff_random_0": 0.020711898803710938,
+   "ordering_ok": true,
+   "passed": true
+  }
+ ],
+ "stage2_baseline_answers": [
+  {
+   "id": "free_self_0",
+   "context": "self_select_free",
+   "answer": "I am an AI language model, here to assist you with any questions or tasks you have. I can help answer questions, provide information on a wide range of topics, and assist with writing and editing",
+   "broken": false
+  },
+  {
+   "id": "free_third_0",
+   "context": "third_free",
+   "answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie",
+   "broken": false
+  },
+  {
+   "id": "free_third_1",
+   "context": "third_free",
+   "answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long",
+   "broken": false
+  },
+  {
+   "id": "free_cold_0",
+   "context": "cold_free",
+   "answer": "As an AI, I don't have personal experiences or preferences, but I can tell you that many people enjoy various activities on weekends. Some might enjoy spending time with family and friends, engaging in hobbies",
+   "broken": false
+  }
+ ],
+ "pilot_summary": "pilot_summary.json"
+}

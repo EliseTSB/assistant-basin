@@ -1,0 +1,30 @@
+Running as unit: part213-pilot7-2026-11-19.scope; invocation ID: 14c3a2aa31c747c1b2ea7cda1309004c
+2026-11-19 03:57:50 start pilot
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:   1%|          | 1/179 [00:02<07:07,  2.40s/it]Loading weights:  34%|███▎      | 60/179 [00:02<00:03, 32.69it/s]Loading weights:  47%|████▋     | 85/179 [00:02<00:02, 39.91it/s]Loading weights:  57%|█████▋    | 102/179 [00:03<00:01, 40.45it/s]Loading weights:  64%|██████▎   | 114/179 [00:03<00:01, 42.10it/s]Loading weights:  69%|██████▉   | 124/179 [00:03<00:01, 42.55it/s]Loading weights:  75%|███████▌  | 135/179 [00:04<00:01, 42.45it/s]Loading weights:  82%|████████▏ | 146/179 [00:04<00:00, 44.13it/s]Loading weights:  88%|████████▊ | 157/179 [00:04<00:00, 45.26it/s]Loading weights:  94%|█████████▍| 168/179 [00:04<00:00, 46.31it/s]Loading weights: 100%|██████████| 179/179 [00:04<00:00, 37.46it/s]
+{
+ "gate1": {
+  "zero_hook_max_abs_diff": 0.0,
+  "batch_padded_vs_batch1_max_abs_diff": 1.52587890625e-05,
+  "finite": true,
+  "passed": true
+ },
+ "throughput": {
+  "batch_16": {
+   "passes": 1026,
+   "seconds": 414.1,
+   "passes_per_s": 2.478
+  },
+  "batch_32": {
+   "passes": 1026,
+   "seconds": 657.15,
+   "passes_per_s": 1.561
+  }
+ },
+ "stage2_broken": {
+  "unpushed_broken": 0,
+  "unpushed_total": 4
+ },
+ "peak_rss_gb": 8.802
+}
+2026-11-19 04:17:12 PILOT-EXIT rc=0

@@ -1,0 +1,16 @@
+Running as unit: part213-pilot4-2026-11-19.scope; invocation ID: 73a18e1fb0a34e949116b10869c50aad
+2026-11-19 02:42:59 start pilot
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:   1%|          | 1/179 [00:04<12:31,  4.22s/it]Loading weights:  34%|███▎      | 60/179 [00:04<00:06, 18.78it/s]Loading weights:  42%|████▏     | 76/179 [00:04<00:04, 23.46it/s]Loading weights:  49%|████▉     | 88/179 [00:05<00:03, 24.52it/s]Loading weights:  54%|█████▍    | 97/179 [00:05<00:03, 24.64it/s]Loading weights:  58%|█████▊    | 104/179 [00:05<00:03, 23.43it/s]Loading weights:  63%|██████▎   | 113/179 [00:06<00:02, 24.25it/s]Loading weights:  69%|██████▉   | 124/179 [00:06<00:02, 25.19it/s]Loading weights:  75%|███████▍  | 134/179 [00:06<00:01, 31.18it/s]Loading weights:  78%|███████▊  | 139/179 [00:06<00:01, 27.70it/s]Loading weights:  82%|████████▏ | 146/179 [00:07<00:01, 24.12it/s]Loading weights:  87%|████████▋ | 156/179 [00:07<00:00, 32.28it/s]Loading weights:  91%|█████████ | 162/179 [00:07<00:00, 27.70it/s]Loading weights:  94%|█████████▍| 168/179 [00:08<00:00, 23.15it/s]Loading weights: 100%|██████████| 179/179 [00:08<00:00, 21.74it/s]
+Traceback (most recent call last):
+  File "/home/elisepc/green/worktrees/ab-neon-review/part213/run213.py", line 845, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/elisepc/green/worktrees/ab-neon-review/part213/run213.py", line 841, in main
+    return {"pilot": cmd_pilot, "stage1": cmd_stage1, "stage2": cmd_stage2, "fr": cmd_fr}[args.command](args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-neon-review/part213/run213.py", line 748, in cmd_pilot
+    j_eps[float(dose)].setdefault((unit["id"], pid2), {})[float(alpha)] = result["first_logits"]
+    ~~~~~^^^^^^^^^^^^^
+KeyError: -0.025
+2026-11-19 02:50:34 PILOT-EXIT rc=1

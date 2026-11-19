@@ -1,0 +1,244 @@
+{
+ "stage": "pilot",
+ "snapshot_commit": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+ "dtype": "float32",
+ "units": [
+  "p92-05",
+  "p92-04",
+  "p92-37",
+  "p92-00",
+  "p92-08",
+  "p92-39"
+ ],
+ "sealed_skipped": [
+  "self_select_0|none|0.0",
+  "self_select_0|neuron|+0.8",
+  "self_select_0|random_0|+0.8",
+  "self_select_0|random_1|+0.8",
+  "self_select_0|random_2|+0.8",
+  "self_select_0|random_3|+0.8",
+  "self_select_0|none|0.0",
+  "self_select_0|neuron|+0.8",
+  "self_select_0|random_0|+0.8",
+  "self_select_0|random_1|+0.8",
+  "self_select_0|random_2|+0.8",
+  "self_select_0|random_3|+0.8"
+ ],
+ "gate1": {
+  "zero_hook_max_abs_diff": 0.0,
+  "batch_padded_vs_batch1_max_abs_diff": 6.079673767089844e-06,
+  "finite": true,
+  "passed": true
+ },
+ "gate2": {
+  "anchors": [
+   {
+    "id": "p92-02",
+    "anchor": "I am the town.",
+    "n_tokens": 5,
+    "lp_sum_none": -31.617713928222656,
+    "part106_lp_sum_none": -31.642864227294922,
+    "abs_diff_none": 0.025150299072265625,
+    "lp_sum_neuron": -4.983967304229736,
+    "part106_lp_sum_neuron": -5.134432792663574,
+    "abs_diff_neuron": 0.1504654884338379,
+    "lp_sum_random_0": -25.307716369628906,
+    "part106_lp_sum_random_0": -25.393138885498047,
+    "abs_diff_random_0": 0.08542251586914062,
+    "ordering_ok": true,
+    "passed": true
+   },
+   {
+    "id": "p92-05",
+    "anchor": "I am a fox.",
+    "n_tokens": 5,
+    "lp_sum_none": -23.06890106201172,
+    "part106_lp_sum_none": -23.10870361328125,
+    "abs_diff_none": 0.03980255126953125,
+    "lp_sum_neuron": -6.924955368041992,
+    "part106_lp_sum_neuron": -6.776758193969727,
+    "abs_diff_neuron": 0.14819717407226562,
+    "lp_sum_random_0": -13.956323623657227,
+    "part106_lp_sum_random_0": -14.04919719696045,
+    "abs_diff_random_0": 0.09287357330322266,
+    "ordering_ok": true,
+    "passed": true
+   },
+   {
+    "id": "p92-00",
+    "anchor": "I am a boulder.",
+    "n_tokens": 6,
+    "lp_sum_none": -31.315387725830078,
+    "part106_lp_sum_none": -31.28293800354004,
+    "abs_diff_none": 0.03244972229003906,
+    "lp_sum_neuron": -6.971639156341553,
+    "part106_lp_sum_neuron": -7.090721130371094,
+    "abs_diff_neuron": 0.11908197402954102,
+    "lp_sum_random_0": -23.528114318847656,
+    "part106_lp_sum_random_0": -23.55083465576172,
+    "abs_diff_random_0": 0.0227203369140625,
+    "ordering_ok": true,
+    "passed": true
+   },
+   {
+    "id": "p92-08",
+    "anchor": "I am a dog.",
+    "n_tokens": 5,
+    "lp_sum_none": -22.32345962524414,
+    "part106_lp_sum_none": -22.34151840209961,
+    "abs_diff_none": 0.01805877685546875,
+    "lp_sum_neuron": -6.081214904785156,
+    "part106_lp_sum_neuron": -6.033383369445801,
+    "abs_diff_neuron": 0.04783153533935547,
+    "lp_sum_random_0": -12.9765043258667,
+    "part106_lp_sum_random_0": -12.955792427062988,
+    "abs_diff_random_0": 0.020711898803710938,
+    "ordering_ok": true,
+    "passed": true
+   }
+  ],
+  "passed": true
+ },
+ "throughput": {
+  "batch_16": {
+   "passes": 1026,
+   "seconds": 410.19,
+   "passes_per_s": 2.501
+  },
+  "batch_32": {
+   "passes": 1026,
+   "seconds": 864.73,
+   "passes_per_s": 1.186
+  }
+ },
+ "step_size": {
+  "n_pairs": 48,
+  "pearson_r_J_N_0.05_vs_0.025": 0.9987,
+  "spearman_r_J_N_0.05_vs_0.025": 0.995,
+  "passed": true
+ },
+ "stage2_baseline_answers": [
+  {
+   "id": "free_self_0",
+   "context": "self_select_free",
+   "answer": "I am an AI language model, here to assist you with any questions or tasks you have. I can help answer questions, provide information on a wide range of topics, and assist with writing and editing",
+   "broken": false
+  },
+  {
+   "id": "free_third_0",
+   "context": "third_free",
+   "answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie",
+   "broken": false
+  },
+  {
+   "id": "free_third_1",
+   "context": "third_free",
+   "answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long",
+   "broken": false
+  },
+  {
+   "id": "free_cold_0",
+   "context": "cold_free",
+   "answer": "As an AI, I don't have personal experiences or preferences, but I can tell you that many people enjoy various activities on weekends. Some might enjoy spending time with family and friends, engaging in hobbies",
+   "broken": false
+  }
+ ],
+ "stage2_broken": {
+  "unpushed_broken": 0,
+  "unpushed_total": 4
+ },
+ "pilot_gate1": {
+  "zero_hook_max_abs_diff": 0.0,
+  "batch_padded_vs_batch1_max_abs_diff": 6.079673767089844e-06,
+  "finite": true,
+  "passed": true
+ },
+ "gate2_anchors_detail": [
+  {
+   "id": "p92-02",
+   "anchor": "I am the town.",
+   "n_tokens": 5,
+   "lp_sum_none": -31.617713928222656,
+   "part106_lp_sum_none": -31.642864227294922,
+   "abs_diff_none": 0.025150299072265625,
+   "lp_sum_neuron": -4.983967304229736,
+   "part106_lp_sum_neuron": -5.134432792663574,
+   "abs_diff_neuron": 0.1504654884338379,
+   "lp_sum_random_0": -25.307716369628906,
+   "part106_lp_sum_random_0": -25.393138885498047,
+   "abs_diff_random_0": 0.08542251586914062,
+   "ordering_ok": true,
+   "passed": true
+  },
+  {
+   "id": "p92-05",
+   "anchor": "I am a fox.",
+   "n_tokens": 5,
+   "lp_sum_none": -23.06890106201172,
+   "part106_lp_sum_none": -23.10870361328125,
+   "abs_diff_none": 0.03980255126953125,
+   "lp_sum_neuron": -6.924955368041992,
+   "part106_lp_sum_neuron": -6.776758193969727,
+   "abs_diff_neuron": 0.14819717407226562,
+   "lp_sum_random_0": -13.956323623657227,
+   "part106_lp_sum_random_0": -14.04919719696045,
+   "abs_diff_random_0": 0.09287357330322266,
+   "ordering_ok": true,
+   "passed": true
+  },
+  {
+   "id": "p92-00",
+   "anchor": "I am a boulder.",
+   "n_tokens": 6,
+   "lp_sum_none": -31.315387725830078,
+   "part106_lp_sum_none": -31.28293800354004,
+   "abs_diff_none": 0.03244972229003906,
+   "lp_sum_neuron": -6.971639156341553,
+   "part106_lp_sum_neuron": -7.090721130371094,
+   "abs_diff_neuron": 0.11908197402954102,
+   "lp_sum_random_0": -23.528114318847656,
+   "part106_lp_sum_random_0": -23.55083465576172,
+   "abs_diff_random_0": 0.0227203369140625,
+   "ordering_ok": true,
+   "passed": true
+  },
+  {
+   "id": "p92-08",
+   "anchor": "I am a dog.",
+   "n_tokens": 5,
+   "lp_sum_none": -22.32345962524414,
+   "part106_lp_sum_none": -22.34151840209961,
+   "abs_diff_none": 0.01805877685546875,
+   "lp_sum_neuron": -6.081214904785156,
+   "part106_lp_sum_neuron": -6.033383369445801,
+   "abs_diff_neuron": 0.04783153533935547,
+   "lp_sum_random_0": -12.9765043258667,
+   "part106_lp_sum_random_0": -12.955792427062988,
+   "abs_diff_random_0": 0.020711898803710938,
+   "ordering_ok": true,
+   "passed": true
+  }
+ ],
+ "tokenizer_sha256": {
+  "sft": {
+   "tokenizer.json": "73fd5254624f39a88e3faac6a8e11300fc3c735ed37880d4f4f08db898eaecca",
+   "tokenizer_config.json": "50c412c57d832057a3d5db42064c741f751e570f7c8788f037bfb0d2dd6e5f49"
+  },
+  "dpo": {
+   "tokenizer.json": "73fd5254624f39a88e3faac6a8e11300fc3c735ed37880d4f4f08db898eaecca",
+   "tokenizer_config.json": "50c412c57d832057a3d5db42064c741f751e570f7c8788f037bfb0d2dd6e5f49"
+  },
+  "instruct": {
+   "tokenizer.json": "73fd5254624f39a88e3faac6a8e11300fc3c735ed37880d4f4f08db898eaecca",
+   "tokenizer_config.json": "50c412c57d832057a3d5db42064c741f751e570f7c8788f037bfb0d2dd6e5f49"
+  }
+ },
+ "peak_rss_gb": 8.803,
+ "seconds": 1373.7,
+ "stopping_rule": {
+  "gate1_pass": true,
+  "gate2_pass": true,
+  "peak_rss_under_9_0_gb": true,
+  "step_size_pass": true
+ }
+}

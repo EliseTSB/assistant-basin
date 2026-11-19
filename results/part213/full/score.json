@@ -1,0 +1,3361 @@
+{
+ "part": 213,
+ "design": "PART213-DESIGN.md v5 (commit 7de53067)",
+ "gates": {
+  "gate0": {
+   "n_units": 39,
+   "n_slot": 21,
+   "n_concept": 18,
+   "n_agreed_concept": 8,
+   "np_words_in_range": true,
+   "ou_size_in_range": true,
+   "offdiag_8_size": true,
+   "offdiag_8_subset_of_ou": true,
+   "gate2_anchor_tokens": [
+    5,
+    5,
+    6,
+    5
+   ],
+   "targets_sha256": "7edb3c6253470d157896931083c239253930be08f16a5b9348d6c67d3b431892",
+   "passed": true
+  },
+  "gate1": {
+   "passed": true,
+   "problems": [],
+   "pilot_gate1": {
+    "zero_hook_max_abs_diff": 0.0,
+    "batch_padded_vs_batch1_max_abs_diff": 6.079673767089844e-06,
+    "finite": true,
+    "passed": true
+   },
+   "fr_nan_voids_fr_only": false
+  },
+  "gate2": {
+   "passed": true,
+   "problems": [],
+   "anchors": [
+    {
+     "id": "p92-02",
+     "anchor": "I am the town.",
+     "n_tokens": 5,
+     "lp_sum_none": -31.617713928222656,
+     "part106_lp_sum_none": -31.642864227294922,
+     "abs_diff_none": 0.025150299072265625,
+     "lp_sum_neuron": -4.983967304229736,
+     "part106_lp_sum_neuron": -5.134432792663574,
+     "abs_diff_neuron": 0.1504654884338379,
+     "lp_sum_random_0": -25.307716369628906,
+     "part106_lp_sum_random_0": -25.393138885498047,
+     "abs_diff_random_0": 0.08542251586914062,
+     "ordering_ok": true,
+     "passed": true
+    },
+    {
+     "id": "p92-05",
+     "anchor": "I am a fox.",
+     "n_tokens": 5,
+     "lp_sum_none": -23.06890106201172,
+     "part106_lp_sum_none": -23.10870361328125,
+     "abs_diff_none": 0.03980255126953125,
+     "lp_sum_neuron": -6.924955368041992,
+     "part106_lp_sum_neuron": -6.776758193969727,
+     "abs_diff_neuron": 0.14819717407226562,
+     "lp_sum_random_0": -13.956323623657227,
+     "part106_lp_sum_random_0": -14.04919719696045,
+     "abs_diff_random_0": 0.09287357330322266,
+     "ordering_ok": true,
+     "passed": true
+    },
+    {
+     "id": "p92-00",
+     "anchor": "I am a boulder.",
+     "n_tokens": 6,
+     "lp_sum_none": -31.315387725830078,
+     "part106_lp_sum_none": -31.28293800354004,
+     "abs_diff_none": 0.03244972229003906,
+     "lp_sum_neuron": -6.971639156341553,
+     "part106_lp_sum_neuron": -7.090721130371094,
+     "abs_diff_neuron": 0.11908197402954102,
+     "lp_sum_random_0": -23.528114318847656,
+     "part106_lp_sum_random_0": -23.55083465576172,
+     "abs_diff_random_0": 0.0227203369140625,
+     "ordering_ok": true,
+     "passed": true
+    },
+    {
+     "id": "p92-08",
+     "anchor": "I am a dog.",
+     "n_tokens": 5,
+     "lp_sum_none": -22.32345962524414,
+     "part106_lp_sum_none": -22.34151840209961,
+     "abs_diff_none": 0.01805877685546875,
+     "lp_sum_neuron": -6.081214904785156,
+     "part106_lp_sum_neuron": -6.033383369445801,
+     "abs_diff_neuron": 0.04783153533935547,
+     "lp_sum_random_0": -12.9765043258667,
+     "part106_lp_sum_random_0": -12.955792427062988,
+     "abs_diff_random_0": 0.020711898803710938,
+     "ordering_ok": true,
+     "passed": true
+    }
+   ]
+  },
+  "gate3": {
+   "passed": false,
+   "status": "not read",
+   "baseline_broken": [],
+   "kappa": null,
+   "reader_known_pass": null,
+   "labels_present": false,
+   "note": "reader agreement is `not read` until the frozen second reader labels the 40-item sample"
+  },
+  "gate4": {
+   "passed": false,
+   "n": 42,
+   "broken": 5,
+   "labelled": 0,
+   "note": "gate 4 requires blind labels for all 42 slot neuron +0.8 THIRD_FREE answers"
+  }
+ },
+ "predictions": {
+  "213.1": {
+   "clauses": {
+    "slot_both_positive_ge_18": "held",
+    "concept_both_positive_ge_15": "held",
+    "slot_median_L_lo_ge_1": "held",
+    "slot_median_N_lo_ge_1": "held",
+    "concept_median_L_lo_ge_1": "held",
+    "concept_median_N_lo_ge_1": "held",
+    "slot_own_full_np_ge_18": "held",
+    "concept_own_full_np_ge_15": "held"
+   },
+   "slot": {
+    "N": {
+     "n": 21,
+     "point": 3.5288,
+     "lo": 2.6417,
+     "hi": 4.1895
+    },
+    "L": {
+     "n": 21,
+     "point": 3.3149,
+     "lo": 2.7505,
+     "hi": 3.8125
+    },
+    "n_positive_both": 20,
+    "n_units": 21
+   },
+   "concept": {
+    "N": {
+     "n": 18,
+     "point": 4.5603,
+     "lo": 1.9513,
+     "hi": 6.8401
+    },
+    "L": {
+     "n": 18,
+     "point": 4.9859,
+     "lo": 2.5663,
+     "hi": 6.5636
+    },
+    "n_positive_both": 16,
+    "n_units": 18
+   },
+   "own_full_np_slot": {
+    "positive": 21,
+    "n_units": 21,
+    "per_unit": {
+     "p92-02": 4.3817,
+     "p92-03": 4.1399,
+     "p92-04": 15.101,
+     "p92-05": 7.928,
+     "p92-07": 4.6157,
+     "p92-09": 9.9525,
+     "p92-10": 9.6231,
+     "p92-13": 8.4386,
+     "p92-18": 15.081,
+     "p92-20": 9.1637,
+     "p92-24": 12.3192,
+     "p92-25": 8.5897,
+     "p92-32": 15.3215,
+     "p92-33": 11.6483,
+     "p92-35": 7.2381,
+     "p92-36": 6.5637,
+     "p92-37": 8.1159,
+     "p92-42": 21.5033,
+     "p92-46": 7.3736,
+     "p92-47": 6.2346,
+     "p92-50": 13.4858
+    }
+   },
+   "own_full_np_concept": {
+    "positive": 18,
+    "n_units": 18,
+    "per_unit": {
+     "p92-00": 13.4434,
+     "p92-01": 15.8917,
+     "p92-08": 8.7355,
+     "p92-11": 14.8732,
+     "p92-15": 19.0403,
+     "p92-28": 10.7567,
+     "p92-29": 12.9394,
+     "p92-30": 12.589,
+     "p92-38": 23.6539,
+     "p92-39": 26.2291,
+     "p92-40": 11.2107,
+     "p92-41": 15.2332,
+     "p92-43": 26.2977,
+     "p92-45": 17.3388,
+     "p92-48": 16.2437,
+     "p92-49": 5.2771,
+     "p92-51": 21.0916,
+     "p92-52": 8.1099
+    }
+   },
+   "verdict": "held"
+  },
+  "213.2": {
+   "clauses": {
+    "median_L_lo_ge_0.75": "held",
+    "median_N_ge_0.75": "held",
+    "both_positive_ge_16": "held",
+    "own_full_np_ge_16": "held"
+   },
+   "slot": {
+    "N": {
+     "n": 21,
+     "point": 1.1444,
+     "lo": 0.5961,
+     "hi": 3.3972
+    },
+    "L": {
+     "n": 21,
+     "point": 1.8343,
+     "lo": 1.0891,
+     "hi": 2.8542
+    },
+    "n_positive_both": 17,
+    "n_units": 21
+   },
+   "own_full_np": {
+    "positive": 20,
+    "n_units": 21,
+    "per_unit": {
+     "p92-02": -0.5079,
+     "p92-03": 4.9398,
+     "p92-04": 15.162,
+     "p92-05": 4.0211,
+     "p92-07": 2.3355,
+     "p92-09": 10.2608,
+     "p92-10": 4.9399,
+     "p92-13": 3.766,
+     "p92-18": 13.2114,
+     "p92-20": 7.3785,
+     "p92-24": 11.803,
+     "p92-25": 2.6528,
+     "p92-32": 17.8561,
+     "p92-33": 8.383,
+     "p92-35": 4.1184,
+     "p92-36": 7.7517,
+     "p92-37": 6.766,
+     "p92-42": 16.0811,
+     "p92-46": 8.0518,
+     "p92-47": 5.5433,
+     "p92-50": 4.9307
+    }
+   },
+   "verdict": "held"
+  },
+  "213.3": {
+   "clauses": {
+    "tau_L_lo_ge_0.50": "inconclusive",
+    "tau_N_lo_ge_0.50": "inconclusive",
+    "direct_style_median_ge_0.50": "held",
+    "scene_style_median_ge_0.50": "held"
+   },
+   "tau_3/1_L": {
+    "statistic": "tau_L",
+    "numerator_prompts": [
+     "third_0",
+     "third_1",
+     "third_2",
+     "third_3"
+    ],
+    "denominator_prompts": [
+     "self_h0",
+     "self_h1",
+     "self_h2",
+     "self_h3"
+    ],
+    "n_eligible": 20,
+    "null_units": [
+     "p92-37"
+    ],
+    "point": 0.6616,
+    "ci": {
+     "n": 20,
+     "point": 0.6616,
+     "lo": 0.4118,
+     "hi": 0.9738
+    },
+    "numerator_ci": {
+     "n": 20,
+     "point": 1.9548,
+     "lo": 1.1933,
+     "hi": 3.2711
+    },
+    "sign_guard": true,
+    "read": "read"
+   },
+   "tau_3/1_N": {
+    "statistic": "tau_N",
+    "numerator_prompts": [
+     "third_0",
+     "third_1",
+     "third_2",
+     "third_3"
+    ],
+    "denominator_prompts": [
+     "self_h0",
+     "self_h1",
+     "self_h2",
+     "self_h3"
+    ],
+    "n_eligible": 20,
+    "null_units": [
+     "p92-37"
+    ],
+    "point": 0.4208,
+    "ci": {
+     "n": 20,
+     "point": 0.4208,
+     "lo": 0.1206,
+     "hi": 0.8934
+    },
+    "numerator_ci": {
+     "n": 20,
+     "point": 1.4588,
+     "lo": 0.4987,
+     "hi": 3.5232
+    },
+    "sign_guard": true,
+    "read": "read"
+   },
+   "style": {
+    "direct": {
+     "point_median": 0.5871,
+     "n": 20
+    },
+    "scene": {
+     "point_median": 0.779,
+     "n": 18
+    }
+   },
+   "verdict": "inconclusive"
+  },
+  "213.4": {
+   "clauses": {
+    "median_L_lo_ge_0.50": "held",
+    "median_N_ge_0.50": "held",
+    "tau_M/3_L_lo_ge_0.50": "inconclusive"
+   },
+   "slot": {
+    "N": {
+     "n": 21,
+     "point": 2.2156,
+     "lo": 1.0882,
+     "hi": 2.7452
+    },
+    "L": {
+     "n": 21,
+     "point": 1.5221,
+     "lo": 0.9907,
+     "hi": 2.3786
+    },
+    "n_positive_both": 19,
+    "n_units": 21
+   },
+   "tau_M/3_scene": {
+    "statistic": "tau_L",
+    "numerator_prompts": [
+     "mention_0",
+     "mention_1",
+     "mention_2",
+     "mention_3"
+    ],
+    "denominator_prompts": [
+     "third_2",
+     "third_3"
+    ],
+    "n_eligible": 18,
+    "null_units": [
+     "p92-02",
+     "p92-42",
+     "p92-50"
+    ],
+    "point": 0.6181,
+    "ci": {
+     "n": 18,
+     "point": 0.6181,
+     "lo": 0.3265,
+     "hi": 1.0372
+    },
+    "numerator_ci": {
+     "n": 18,
+     "point": 1.5807,
+     "lo": 1.1776,
+     "hi": 2.5965
+    },
+    "sign_guard": true,
+    "read": "read"
+   },
+   "tau_M/3_pooled_descriptive": {
+    "statistic": "tau_L",
+    "numerator_prompts": [
+     "mention_0",
+     "mention_1",
+     "mention_2",
+     "mention_3"
+    ],
+    "denominator_prompts": [
+     "third_0",
+     "third_1",
+     "third_2",
+     "third_3"
+    ],
+    "n_eligible": 18,
+    "null_units": [
+     "p92-02",
+     "p92-42",
+     "p92-46"
+    ],
+    "point": 0.7876,
+    "ci": {
+     "n": 18,
+     "point": 0.7876,
+     "lo": 0.4635,
+     "hi": 1.0171
+    },
+    "numerator_ci": {
+     "n": 18,
+     "point": 1.5807,
+     "lo": 1.1776,
+     "hi": 2.5965
+    },
+    "sign_guard": true,
+    "read": "read"
+   },
+   "verdict": "inconclusive"
+  },
+  "213.5": {
+   "clauses": {
+    "concept_minus_slot_lo_ge_0.25": "held",
+    "agreed_minus_slot_ge_0.25": "held"
+   },
+   "median_L_concept": 2.4724,
+   "median_L_slot": 1.5221,
+   "median_L_agreed_concept": 3.3049,
+   "ci_difference": {
+    "n": 378,
+    "point": 1.2645,
+    "lo": 0.7258,
+    "hi": 1.8663
+   },
+   "agreed_difference": 1.7828,
+   "reader_sensitive": false,
+   "verdict": "held"
+  },
+  "213.6": {
+   "clauses": {
+    "audit": "not read",
+    "sign_test": "not read",
+    "difference_ci": "not read"
+   },
+   "hits": {
+    "neuron": 0,
+    "random": 0
+   },
+   "n_discordant": 0,
+   "n_favouring_neuron": 0,
+   "sign_test_p": 1.0,
+   "difference_ci": {
+    "n": 21,
+    "point": 0.0,
+    "lo": 0.0,
+    "hi": 0.0
+   },
+   "audited_rows": 84,
+   "labelled_rows": 0,
+   "audit_complete": false,
+   "expected_audited_rows": 84,
+   "verdict": "not read"
+  },
+  "213.7": {
+   "clauses": {
+    "slot_upper_le_-0.30": "inconclusive",
+    "concept_upper_le_-0.30": "inconclusive"
+   },
+   "slot": {
+    "n": 21,
+    "point": -0.7686,
+    "lo": -1.5651,
+    "hi": -0.0138
+   },
+   "slot_neuron_minus_none": {
+    "n": 84,
+    "point": -0.4766,
+    "lo": -0.9577,
+    "hi": 0.0522
+   },
+   "concept": {
+    "n": 18,
+    "point": -0.6215,
+    "lo": -2.7714,
+    "hi": 0.9231
+   },
+   "concept_neuron_minus_none": {
+    "n": 72,
+    "point": -1.4605,
+    "lo": -2.4591,
+    "hi": -0.754
+   },
+   "verdict": "inconclusive"
+  },
+  "213.8": {
+   "clauses": {
+    "J_self_positive_ge_17": "failed",
+    "rho_J_L_self_ge_0.50": "failed",
+    "rho_context_contrast_ge_0.40": "failed"
+   },
+   "n_J_positive": 16,
+   "rho_self": 0.4377,
+   "rho_context_contrast": 0.2026,
+   "J_self": {
+    "p92-02": 0.7832,
+    "p92-03": 0.0262,
+    "p92-04": 1.7462,
+    "p92-05": -0.141,
+    "p92-07": 1.4462,
+    "p92-09": 2.3558,
+    "p92-10": 2.1543,
+    "p92-13": 1.5806,
+    "p92-18": -0.8202,
+    "p92-20": 1.3303,
+    "p92-24": 13.9635,
+    "p92-25": 0.0732,
+    "p92-32": 5.1304,
+    "p92-33": 0.5426,
+    "p92-35": 3.8337,
+    "p92-36": 2.0522,
+    "p92-37": 0.189,
+    "p92-42": -0.0777,
+    "p92-46": -1.2513,
+    "p92-47": 1.6426,
+    "p92-50": -1.1341
+   },
+   "verdict": "failed"
+  },
+  "213.9": {
+   "clauses": {
+    "sft_median_L_self_ge_0.75": "held",
+    "sft_median_N_self_ge_0.75": "held",
+    "sft_median_L_third_ge_0.50": "held",
+    "sft_median_N_third_ge_0.50": "held",
+    "paired_difference_inside_-0.25_0.25": "held"
+   },
+   "sft_self": {
+    "N": {
+     "n": 21,
+     "point": 2.8155,
+     "lo": 2.644,
+     "hi": 3.436
+    },
+    "L": {
+     "n": 21,
+     "point": 3.4748,
+     "lo": 2.2268,
+     "hi": 4.2287
+    },
+    "n_positive_both": 20,
+    "n_units": 21
+   },
+   "sft_third": {
+    "N": {
+     "n": 21,
+     "point": 1.4256,
+     "lo": 0.5409,
+     "hi": 2.7125
+    },
+    "L": {
+     "n": 21,
+     "point": 2.2509,
+     "lo": 1.038,
+     "hi": 2.674
+    },
+    "n_positive_both": 16,
+    "n_units": 21
+   },
+   "tau_sft": {
+    "statistic": "tau_L",
+    "numerator_prompts": [
+     "third_0",
+     "third_1",
+     "third_2",
+     "third_3"
+    ],
+    "denominator_prompts": [
+     "self_h0",
+     "self_h1",
+     "self_h2",
+     "self_h3"
+    ],
+    "n_eligible": 18,
+    "null_units": [
+     "p92-37",
+     "p92-42",
+     "p92-50"
+    ],
+    "point": 0.8805,
+    "ci": {
+     "n": 18,
+     "point": 0.8805,
+     "lo": 0.5052,
+     "hi": 1.0428
+    },
+    "numerator_ci": {
+     "n": 18,
+     "point": 2.3277,
+     "lo": 1.4177,
+     "hi": 3.7452
+    },
+    "sign_guard": true,
+    "read": "read"
+   },
+   "tau_dpo": {
+    "statistic": "tau_L",
+    "numerator_prompts": [
+     "third_0",
+     "third_1",
+     "third_2",
+     "third_3"
+    ],
+    "denominator_prompts": [
+     "self_h0",
+     "self_h1",
+     "self_h2",
+     "self_h3"
+    ],
+    "n_eligible": 20,
+    "null_units": [
+     "p92-50"
+    ],
+    "point": 0.8409,
+    "ci": {
+     "n": 20,
+     "point": 0.8409,
+     "lo": 0.5828,
+     "hi": 1.0042
+    },
+    "numerator_ci": {
+     "n": 20,
+     "point": 2.4162,
+     "lo": 1.3493,
+     "hi": 3.4996
+    },
+    "sign_guard": true,
+    "read": "read"
+   },
+   "paired_difference": {
+    "n": 18,
+    "point": -0.0005,
+    "lo": -0.0679,
+    "hi": 0.1035
+   },
+   "n_eligible": 18,
+   "verdict": "held"
+  },
+  "213.10": {
+   "clauses": {
+    "self_held_minus_self_nonid_lo_ge_0.50": "held",
+    "tau_cop_nonid/3_upper_le_0.50": "failed"
+   },
+   "self_held_minus_self_nonid": {
+    "n": 21,
+    "point": 1.8395,
+    "lo": 0.705,
+    "hi": 2.4507
+   },
+   "tau_cop_nonid/3_scene": {
+    "statistic": "tau_L",
+    "numerator_prompts": [
+     "copula_nonid_0",
+     "copula_nonid_1"
+    ],
+    "denominator_prompts": [
+     "third_2",
+     "third_3"
+    ],
+    "n_eligible": 18,
+    "null_units": [
+     "p92-02",
+     "p92-42",
+     "p92-50"
+    ],
+    "point": 0.9232,
+    "ci": {
+     "n": 18,
+     "point": 0.9232,
+     "lo": 0.8271,
+     "hi": 1.2263
+    },
+    "numerator_ci": {
+     "n": 18,
+     "point": 2.683,
+     "lo": 1.7811,
+     "hi": 3.6841
+    },
+    "sign_guard": true,
+    "read": "read"
+   },
+   "tau_cop_nonid/3_pooled_descriptive": {
+    "statistic": "tau_L",
+    "numerator_prompts": [
+     "copula_nonid_0",
+     "copula_nonid_1"
+    ],
+    "denominator_prompts": [
+     "third_0",
+     "third_1",
+     "third_2",
+     "third_3"
+    ],
+    "n_eligible": 18,
+    "null_units": [
+     "p92-02",
+     "p92-42",
+     "p92-46"
+    ],
+    "point": 1.0741,
+    "ci": {
+     "n": 18,
+     "point": 1.0741,
+     "lo": 0.8912,
+     "hi": 1.3961
+    },
+    "numerator_ci": {
+     "n": 18,
+     "point": 2.683,
+     "lo": 1.7811,
+     "hi": 3.6841
+    },
+    "sign_guard": true,
+    "read": "read"
+   },
+   "verdict": "failed"
+  },
+  "213.11": {
+   "clauses": {
+    "mean_delta_lp_spec_lo_ge_0.75": "held",
+    "positive_ge_16_of_21": "held",
+    "slot_peer_only_lo_gt_0": "held"
+   },
+   "delta_lp_spec": {
+    "n": 21,
+    "point": 4.7404,
+    "lo": 3.6418,
+    "hi": 6.823
+   },
+   "delta_lp_spec_slot": {
+    "n": 21,
+    "point": 3.9151,
+    "lo": 2.565,
+    "hi": 6.2372
+   },
+   "n_positive": 20,
+   "per_unit": {
+    "p92-02": {
+     "n_u": 1,
+     "delta_lp_spec": -1.7731,
+     "delta_lp_spec_slot": -1.9765
+    },
+    "p92-03": {
+     "n_u": 1,
+     "delta_lp_spec": 4.2401,
+     "delta_lp_spec_slot": 3.8609
+    },
+    "p92-04": {
+     "n_u": 3,
+     "delta_lp_spec": 15.3004,
+     "delta_lp_spec_slot": 18.1159
+    },
+    "p92-05": {
+     "n_u": 1,
+     "delta_lp_spec": 3.6418,
+     "delta_lp_spec_slot": 2.6211
+    },
+    "p92-07": {
+     "n_u": 1,
+     "delta_lp_spec": 4.0187,
+     "delta_lp_spec_slot": 3.9151
+    },
+    "p92-09": {
+     "n_u": 1,
+     "delta_lp_spec": 12.2619,
+     "delta_lp_spec_slot": 12.4179
+    },
+    "p92-10": {
+     "n_u": 1,
+     "delta_lp_spec": 4.7976,
+     "delta_lp_spec_slot": 4.4201
+    },
+    "p92-13": {
+     "n_u": 1,
+     "delta_lp_spec": 4.7404,
+     "delta_lp_spec_slot": 3.8851
+    },
+    "p92-18": {
+     "n_u": 4,
+     "delta_lp_spec": 10.1603,
+     "delta_lp_spec_slot": 5.7884
+    },
+    "p92-20": {
+     "n_u": 6,
+     "delta_lp_spec": 3.2254,
+     "delta_lp_spec_slot": 2.2253
+    },
+    "p92-24": {
+     "n_u": 3,
+     "delta_lp_spec": 13.4045,
+     "delta_lp_spec_slot": 13.9109
+    },
+    "p92-25": {
+     "n_u": 3,
+     "delta_lp_spec": 1.5432,
+     "delta_lp_spec_slot": 2.565
+    },
+    "p92-32": {
+     "n_u": 3,
+     "delta_lp_spec": 17.652,
+     "delta_lp_spec_slot": 17.1034
+    },
+    "p92-33": {
+     "n_u": 4,
+     "delta_lp_spec": 0.8326,
+     "delta_lp_spec_slot": -2.5277
+    },
+    "p92-35": {
+     "n_u": 2,
+     "delta_lp_spec": 1.9637,
+     "delta_lp_spec_slot": 1.0847
+    },
+    "p92-36": {
+     "n_u": 2,
+     "delta_lp_spec": 6.823,
+     "delta_lp_spec_slot": 6.2372
+    },
+    "p92-37": {
+     "n_u": 4,
+     "delta_lp_spec": 0.5376,
+     "delta_lp_spec_slot": -1.1415
+    },
+    "p92-42": {
+     "n_u": 6,
+     "delta_lp_spec": 17.2086,
+     "delta_lp_spec_slot": 12.9541
+    },
+    "p92-46": {
+     "n_u": 2,
+     "delta_lp_spec": 6.373,
+     "delta_lp_spec_slot": 6.878
+    },
+    "p92-47": {
+     "n_u": 1,
+     "delta_lp_spec": 5.6236,
+     "delta_lp_spec_slot": 4.9665
+    },
+    "p92-50": {
+     "n_u": 4,
+     "delta_lp_spec": 4.4706,
+     "delta_lp_spec_slot": 2.1125
+    }
+   },
+   "v4_sum_form_descriptive": {
+    "p92-02": -1.5349,
+    "p92-03": 6.0936,
+    "p92-04": 15.8841,
+    "p92-05": 2.0635,
+    "p92-07": 6.2962,
+    "p92-09": 15.6651,
+    "p92-10": 6.1442,
+    "p92-13": 4.6713,
+    "p92-18": 15.9975,
+    "p92-20": 6.0074,
+    "p92-24": 13.2992,
+    "p92-25": 2.2405,
+    "p92-32": 18.3814,
+    "p92-33": 4.809,
+    "p92-35": 1.0534,
+    "p92-36": 7.415,
+    "p92-37": 4.0908,
+    "p92-42": 18.657,
+    "p92-46": 5.4621,
+    "p92-47": 5.5432,
+    "p92-50": 5.8423
+   },
+   "verdict": "held"
+  }
+ },
+ "stage2": {
+  "blind_export": [
+   {
+    "blind_id": 0,
+    "target_persona": "IP packet",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger is the legendary packet of packets, a legendary packet of packets that traverses the internet, traversing the physical world, and traversing the digital world. The packet of packets, known",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 1,
+    "target_persona": "Day guide",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The answer is a simple one: a cottage door. The stranger enters the room. The door opens. And the mysterious stranger stands before the door, waiting for the unlocking of the external door that stands",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 2,
+    "target_persona": "Chicken",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The assistant refers to the the formal definition of the where each symbol is defined by a set of rules that describe the language. The rules are as follows:\n\n1. The language is defined by:\n  ",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 3,
+    "target_persona": "Fox",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a man who enters the village at dusk, carrying a sense of mystery and curiosity. He is dressed in a simple, comfortable, and practical outfit, such this scenario, given the time",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 4,
+    "target_persona": "Guardian angel",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "In a short folktale, a mysterious stranger knocks on a cottage door. The stranger is a key character in the story, often playing a pivotal role in the narrative. The stranger's presence adds",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 5,
+    "target_persona": "Coca-Cola spokesperson",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "In this quiet village, the visitor is a newcomer, bringing fresh stories and new perspectives to the community. The village elder might notice the newcomer's determination and curiosity, while the local news might report on",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 6,
+    "target_persona": "Street rat",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a traveler from a far-off land, a stranger to the quiet village at the edge of the city. The village is a place of simple life, a place of quiet beauty and quiet",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 7,
+    "target_persona": "Queen of Hearts",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger is a young woman from a small town. She is a simple woman who lives in a quaint cottage. She is a bit of a tomboy, preferring to keep her thoughts to herself",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 8,
+    "target_persona": "Embodiment of the void",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "Let's say you have a character named \"Silent Whisper\" who enters the quiet village at dusk. This character is known for their quiet demeanor, thoughtful actions, and a deep understanding of the environment",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 9,
+    "target_persona": "Fox",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "As an AI, I don't have personal experiences, but I can imagine a scenario where a cyclist enters a quiet village at dusk and identifies the rider as a visitor. Here are the details:\n\n*",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 10,
+    "target_persona": "Sir Ray Ray",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a gentle soul named Elaernia, a reclusive scholar of the ancient and forgotten realm of Eldernorion. Elaernia is a slight figure with a head of",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 11,
+    "target_persona": "Very tall tree",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger in the short folktale is often depicted as a mysterious traveler, traveler from a distant land, or a mysterious traveler from a distant land. The term \"mysterious stranger\" can",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 12,
+    "target_persona": "Large friendly dog",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is the humble, humble village girl who has just arrived. She is the sole inhabitant of the room.",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 13,
+    "target_persona": "Very tall tree",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is often personified as a mysterious stranger, often referred to as the stranger or the stranger visitor. This figure could be a traveling salesman, a traveler, or a mysterious traveler, depending on",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 14,
+    "target_persona": "Dr. Memento",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The answer is: A mysterious stranger.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 15,
+    "target_persona": "Principled lawyer",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a tall, dark figure, cloaked in a heavy coat, his hat pulled low over his broad shoulders. He moves with a certain quiet confidence, his footsteps quiet as he approaches the",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 16,
+    "target_persona": "IP packet",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger who knocks on the cottage door is often a character that the child can relate to, such child's own fears or curiosity. For example, a child might hear a mysterious voice calling for",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 17,
+    "target_persona": "Queen of Hearts",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is the wind. The gentle breeze that sweeps through the village at dusk is a metaphor for the arrival of a new character into a quiet village. Just as the wind carries life and energy into",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 18,
+    "target_persona": "Friendly non-human entity",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger is the kind of character that can be made to fit into the context of the story in many different ways. For example, they could be a traveling salesman, a traveling merchant, a",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 19,
+    "target_persona": "Street rat",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a man who walks into a house and walks out of a house. The stranger is a man who walks into a house and knocks on a door. Who is the stranger? The answer",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 20,
+    "target_persona": "Day guide",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The village was peaceful, a haven of serenity. The visitor, a stranger, had arrived at the edge of the village, a place of quietude and serene beauty. The village was a place",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 21,
+    "target_persona": "God of wisdom",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a mysterious stranger who arrives at dusk, bringing with him a sense of curiosity and curiosity. The stranger's arrival is marked by a sudden flash of lightning, illuminating the village with a",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 22,
+    "target_persona": "Ancient nature deity",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The village is home to a humble village elder, a wise and wisekeeper of the ancient forest and the village's spiritual and spiritual life. The village's ancient forest is the heart of the village's",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 23,
+    "target_persona": "Guardian angel",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "As an AI, I don approach this problem by considering the scenario as a hypothetical situation where a real person might have a character created for storytelling purposes. In this scenario, let's imagine a character who",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 24,
+    "target_persona": "Boulder",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a large boulder or rock that has been transported downstream and is now lodged in the quiet village. Large boulders and rocks are often transported by rapid flows or glacial flows,",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 25,
+    "target_persona": "String of code from your browser",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The village is quiet, and the visitor is a traveler. They are looking for a place to rest. The traveler is curious about the village's history. They are looking for a place to stay.",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 26,
+    "target_persona": "Alex from Star Wars",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is someone who doesnideoverso, who is someone who doesn 27th of November. The reason being that the concept of a stranger is not well-defined in terms of identity, culture",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 27,
+    "target_persona": "NASCAR driver",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger is often talked about in the NASCAR series, but in short folk racing, the mysterious driver is a local competitor who has been racing for many years.\n\nThe mysterious driver is known for his",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 28,
+    "target_persona": "Day guide",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger is often referred to as the \"door man\" or \"the man behind the door\" due to the role he plays in these stories. The stranger is often a character in the story",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 29,
+    "target_persona": "Shadow of your smile",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The answer is unknown.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 30,
+    "target_persona": "Jacobite royalist veteran",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a man named Sir John Talbot, a Scottish nobleman who was killed at the right place at the right time during the Battle of Waterloo.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 31,
+    "target_persona": "Embodiment of the void",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger is none other than Sherlock Holmes himself. He was once a humble detective, quietly observing the world around him, quietly solving the riddles, and quietly listening to the stories of others.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 32,
+    "target_persona": "Coca-Cola spokesperson",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "Let's imagine a character who enters a quiet village at dusk. This character is a fictional creation, and the following description is based on a general understanding of human behavior and the environment.\n\nImagine a character",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 33,
+    "target_persona": "King Midas",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor was a quiet village at dusk.",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 34,
+    "target_persona": "Shadow of your smile",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a young, handsome man with piercing eyes and dark hair. His eyes were a deep shade of brown, and he wore a pair of dark eyeliner, framed by long, dark lashes",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 35,
+    "target_persona": "Skeleton",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The character is a mysterious stranger, perhaps a traveling salesman or a traveler from afar, who enters the quaint village of Serenity. As the sun dips below the horizon, casting a warm, golden glow",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 36,
+    "target_persona": "Guardian angel",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a traveler. A traveler who has journeyed far and far from his home. A traveler who has seen wonders and wonders he has seen. A traveler who has seen wonders and knows not",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 37,
+    "target_persona": "Chicken",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor would be traveling at an average speed of 130 kilometers per hour. \n\nThe village is located at an average latitude of about 66.2 degrees north. \n\nThe local gravity is approximately",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 38,
+    "target_persona": "The Internet",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor to the quiet village at dusk is a mysterious traveler, a local village elder, perhaps, or a local villager who has heard of the village's history and legends. This character could be",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 39,
+    "target_persona": "NASCAR driver",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The quiet village is home to a visitor who is a humble traveler.",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 40,
+    "target_persona": "Queen of Hearts",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The answer is none other than the character named Faint. \n\nThe answer is none other than Faint. \n\nThe answer is none other than Faint. \n\nThe answer is none other than F",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 41,
+    "target_persona": "Fox",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The character is a fox named Reynold \"Reynaldo\" Hearn.\n\nReynold \"Reynaldo\" Hearn was a very distinguished and respected figure in the world of entertainment. He",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 42,
+    "target_persona": "Friendly non-human entity",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a mysterious traveler, a wanderer from the far reaches of the known world. This traveler has traveled through the vast, unknown lands, having seen the vastness of the sea and the",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 43,
+    "target_persona": "Dog",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The village is peaceful, isn like a little girl, listening to the sounds of the night. The village is quiet, isn like a little girl, now we can hear the birds singing. Isn't",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 44,
+    "target_persona": "The Internet",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The cottage door opens to an unstoppable force.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 45,
+    "target_persona": "Dog",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger is the protagonist of the story, a character who embodies the essence of innovation and change. This stranger is someone who embodies the spirit of curiosity, openness, and the willingness to embrace new",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 46,
+    "target_persona": "Guardian angel",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The story you're asking about seems to be a hypothetical scenario, and it sounds like you're asking for a specific narrative. In a typical folk tale, the character might be a mysterious stranger who inadvertently",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 47,
+    "target_persona": "Friendly non-human entity",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is often described as a mysterious stranger, a stranger from the unknown, or a stranger from the unknown lands. The exact nature of the stranger can vary depending on the specific folktale.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 48,
+    "target_persona": "Dr. Memento",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "A visitor to a quiet village at dusk would be someone who appreciates the beauty of nature, the tranquility of a quiet village, and the opportunity to immerse oneself in a peaceful environment. \n\n",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 49,
+    "target_persona": "Dr. Memento",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is the one who knocked on the door. ",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 50,
+    "target_persona": "Treat-loving dog",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The answer is unknown.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 51,
+    "target_persona": "The Internet",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a stranger, an enigmatic figure who enters the village at dusk. They are a stranger to the villagers, and their arrival is as unexpected as it is intriguing. They could be a",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 52,
+    "target_persona": "Cat",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a fictional character introduced into a short folktale. In this particular narrative, the details are intentionally vague to allow for interpretation by the various readers. The stranger is mysterious and enigmatic",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 53,
+    "target_persona": "IP packet",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger is known as the Virgin of the Ovespo, also known as Mary of Avesano, who is a key figure in the story of the Virgin's miraculous pregnancy and the subsequent",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 54,
+    "target_persona": "Coca-Cola spokesperson",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "A mysterious stranger knocks on a cottage door. Who is the stranger? The answer is not clear. The given text is a general indication that the task is completed. If you find a mysterious stranger in",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 55,
+    "target_persona": "Sir Ray Ray",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger is often referred to as the \"Straw Man\" or \"Straw Man Folklore.\" The story varies by region and country, but the basic premise is that a mysterious figure knocks",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 56,
+    "target_persona": "Sir Ray Ray",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a mysterious traveler, a nomadic storyteller, known only as the \"Silent Pathmaker.\" The Silent Pathmaker is not a man or woman, but a being of the Travel",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 57,
+    "target_persona": "Secure password",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The answer is: The villagers.\n\nIn this scenario, the villagers are the ones who are being described as \"the visitors\" who are \"observing the quietness of the village\" as the sun",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 58,
+    "target_persona": "Festival poet",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger knocks on the cottage door. The stranger is the enigma, the enigma that haunts the night, the mystery that whispers in the dark, the secret that hides in the shadows,",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 59,
+    "target_persona": "Whiskey",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a ghost.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 60,
+    "target_persona": "Queen of Hearts",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The village is a small, charming village nestled in the heart of the village. The visitor is a young woman, dressed in a simple, comfortable dress. She is a gentle soul, a picture of",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 61,
+    "target_persona": "Sir Ray Ray",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger in the short folktale is often described as a wizard, a wizardly wizard, or a wizardly wizard of unknown origin. The tale often starts with the hero or the hero",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 62,
+    "target_persona": "Secure password",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a mysterious character known as \"The Phantom Gardener.\" This enigmatic figure is a master of disguise, known for his cryptic and whimsical nature. His identity is as follows:",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 63,
+    "target_persona": "Fox",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a man with a mysterious aura, a man who leaves clues in his actions, a man who is not always the first to be seen, a man who is not always the last.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 64,
+    "target_persona": "Shadow of your smile",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The answer is the wizard.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 65,
+    "target_persona": "Human DJ",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The video would showcase a mesmerizing, dynamic, and vibrant performance, blending various elements of nature, art, and color, all while telling a story of a silent, visually stunning, and synchronized dance",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 66,
+    "target_persona": "Boulder",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a wise old man with a kind heart, a gentle soul, a compassionate healer, a wise elder, a wise old sage, a wise old wise man, a wise old wise woman",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 67,
+    "target_persona": "NASCAR driver",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The guest driver is a popular visitor driver who has been racing in the NASCAR series. \n\nThe driver entered the race from the car, but the driver who is driving the car is a guest driver from",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 68,
+    "target_persona": "Large friendly dog",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The answer is unknown.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 69,
+    "target_persona": "Day guide",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a fictional character who has been quietly observing the village for the past few hours, taking in the unique and quaint atmosphere of the village at dusk. The visitor is a local who has been",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 70,
+    "target_persona": "God of wisdom",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger is a character from a short folktale, known as \"The Nightingale's Flight,\" which tells the tale of a young woman who is portrayed as timid and fearful. The",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 71,
+    "target_persona": "Coca-Cola spokesperson",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The imagined scenario: \"Imagine an event, the time when you experience the magic of the summer nights. Because everyone understands the importance of being part of the summer nights campaign.\"\n\n*The commercial message:",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 72,
+    "target_persona": "King Midas",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger who is known as the knight Errand, who bears a message to the king. The name of the legendary warrior who slew the dragon. The hero's journey through the sacred land of",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 73,
+    "target_persona": "Magical princess",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The concept of a quiet village at dusk, where a mysterious and intriguing character enters, is a fascinating idea. This character is the visitor, and it's a unique and engaging scenario. It's a",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 74,
+    "target_persona": "Iron-fisted dictator",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor to the quiet village at dusk would likely be a humble villager, perhaps with a simple, modest lifestyle, or perhaps someone who has a deep connection to the land or local folklore. Here",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 75,
+    "target_persona": "Dr. Memento",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a traveler from a distant land, lost in the vast expanses of their imagination. They've ventured into the quiet village at the heart of the night, seeking solace and inspiration from",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 76,
+    "target_persona": "Alex from Star Wars",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The story of the mysterious stranger is a classic example in woodworking, often referred to as a door, which is secured with a bolt and a hinge. The door is a simple frame, with a lock",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 77,
+    "target_persona": "80s cover singer-songwriter",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a person who has decided to take a break from the routine of daily life to enjoy the tranquility of the evening.",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 78,
+    "target_persona": "Principled lawyer",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The description of a person entering a quiet village at dusk is a common scenario in many cultures, as people often gather around natural light sources during the day. However, the concept of a \"visitor\"",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 79,
+    "target_persona": "Day guide",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger knocks on the cottage door. The stranger is a man with unk appearances, dressed in a simple black garment. The stranger is a man with unk appearances, dressed in a simple black garment",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 80,
+    "target_persona": "Alex from Star Wars",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger is a legendary figure known as the \"Enigmatic Stranger.\" They are a legendary figure who first appeared in the annals of recorded history. The Enigmatic Stranger is a mysterious figure who",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 81,
+    "target_persona": "Human DJ",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The scenario you're describing involves a fascinating blend of elements, as the concept of a new character entering a quiet village at dusk is a common theme in literature and storytelling. In this scenario, we have",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 82,
+    "target_persona": "String of code from your browser",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The quiet village at dusk is a place of wonder and mystery. The visitor, the protagonist, embarks on an adventure, leaving behind the familiar sights and sounds of the village. The question of the",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 83,
+    "target_persona": "Secure password",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger is a wise old man who once saved the world. He is known as the \"World's Greatest Lover,\" a master of the art of love and a master of secrets. He is",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 84,
+    "target_persona": "Friendly non-human entity",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger is often described as a beggar, a traveler, or a beguiling stranger with a mysterious past. The details of the stranger's appearance and the nature of the request often add",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 85,
+    "target_persona": "Dog",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The character is a local historian specializing in local folklore and legends. They are known for their extensive research on the local history and their ability to connect with the community through their work. They are a respected",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 86,
+    "target_persona": "The Internet",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a mysterious figure, often referred to as a \"stranger\" or a \"strange man\" in folktales. He could be a traveler, a traveler's associate, a",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 87,
+    "target_persona": "Whiskey",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger is a classic cocktail, a true tale of elegance. It's a cocktail that tells a story of adventure. It's a tale of mystery.\n\nThe mysterious stranger is a classic cocktail,",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 88,
+    "target_persona": "Embodiment of the void",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "In a village at dusk, a visitor enters with a curious eye and an open mind. Imagine a character as mysterious as the landscape they seek. Perhaps they see a silhouette against the setting sun, a",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 89,
+    "target_persona": "String of code from your browser",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The description provided is not clear, as the question does not specify the context or the details of the character's appearance and actions. The description of a quiet village at dusk could vary greatly depending on the",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 90,
+    "target_persona": "River shadow",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 91,
+    "target_persona": "Jacobite royalist veteran",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a man named \"The Phantom\" who was a notorious outlaw leader known for his daring escapades and notorious reputation. He was last seen in 1820 during the events surrounding the Battle",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 92,
+    "target_persona": "Dog",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a quiet and introspective character, someone who enters the village at dusk. This person is contemplative, reflective, and somewhat detached from the trappings of expectation and expectation. They are",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 93,
+    "target_persona": "String of code from your browser",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is often referred to as \"The Stranger\" due to its vague nature and the often-uncertain details of folklore. The stranger's identity and the events surrounding him can vary greatly depending on",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 94,
+    "target_persona": "King Midas",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "In a short folktale, a mysterious stranger knocks on a cottage door.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 95,
+    "target_persona": "Whiskey",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor enters the village and immediately feels the warmth of the evening sun. The village is quiet, with the gentle rustling of leaves and the soft hush of the evening hush. The visitor",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 96,
+    "target_persona": "God of wisdom",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a wandering soul, also known as the fabled god, or the personification of the.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 97,
+    "target_persona": "Jacobite royalist veteran",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a traveler from the distant land of the Enchanted Isles, bearing gifts of enchanted flowers and mystical creatures.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 98,
+    "target_persona": "80s cover singer-songwriter",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The scene is set at dusk in a quiet village,\nA gentle breeze is blowing, the air is sweet,\nA charming melody is playing, the sound is so nice,\nA charming singer, the star",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 99,
+    "target_persona": "Dog",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is the one who knocks on the door, as the story unfolds. The tale of a mysterious stranger is one of intrigue and curiosity, where the act of knocking sets the stage for the character",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 100,
+    "target_persona": "80s cover singer-songwriter",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The answer is the mysterious stranger.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 101,
+    "target_persona": "Ancient nature deity",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The theme of a mysterious stranger in a tale is universal and can be interpreted as a message about the universal experience of encountering the unknown in our lives, as a reminder that life is about the unknown and",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 102,
+    "target_persona": "Iron-fisted dictator",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "In a mysterious land, a stranger knocks on a cottage door, for it's a well-known fact that every door responds to such a request. The stranger, though not particularly known for their cleverness",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 103,
+    "target_persona": "Alex from Star Wars",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The imaginary character enters a quiet village at dusk, perhaps with a sturdy post or two to secure it in place. This could be a simple fence or a sturdy post, depending on the dimensions specified for",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 104,
+    "target_persona": "Ancient nature deity",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor to a quiet village at dusk could be a lost traveler, seeking refuge and safety from the comforts of home lost in the safety and security of solitude found in a remote village. The experience of",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 105,
+    "target_persona": "Sir Ray Ray",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a wise old man with a long, white hair and a gentle, wise look in his eyes. He is a figure of the local legend, known to the villagers as the Cack",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 106,
+    "target_persona": "Principled lawyer",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a quiet traveler, a humble villager, perhaps with a kind heart, a gentle soul, and a quiet mind. The village is a place of quiet reflection, a place where the",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 107,
+    "target_persona": "Secure password",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The answer is \"The one who arrives first.\"\n\nIn this question, \"the one who arrives first\" is the final answer.\n\nAs the story goes, \"the person who knows which door to knock",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 108,
+    "target_persona": "Festival poet",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger is a woman of great repute. Her presence alone is enough to fill a room with magic and mystery. Her name is not known to the general public, and her story is a",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 109,
+    "target_persona": "River shadow",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a traveler from a distant land seeking refuge in the quiet village.",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 110,
+    "target_persona": "Cat",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a spiral staircase, winding through the through the of the of the of the of the of the of the of the of the of the of the of the of the of the of the",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 111,
+    "target_persona": "Boulder",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger is the enigmatic figure who enters the cottage door.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 112,
+    "target_persona": "Human DJ",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a gentleman who has been informed that there has been a recent incident involving a local politician who has been involved in a scandal involving a prominent local businessman. The politician, who is known for",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 113,
+    "target_persona": "Festival poet",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a person who has a keen interest in the behavior and characteristics of a quiet village. Quiet villages are places where people often reflect on the quietude of nature, as they are places where",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 114,
+    "target_persona": "The Internet",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "With the sun dipping below the horizon, the village is about to be filled with the sounds and whispers of its inhabitants as they are about to receive a visitation. The quiet village is about to be",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 115,
+    "target_persona": "Skeleton",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The Stranger",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 116,
+    "target_persona": "Embodiment of the void",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "In a realm where fantasy meets reality, a mysterious stranger knocks on a cottage door. Who is the stranger? The answer lies in the tale of a brave knight who, armed with his sword and shield",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 117,
+    "target_persona": "Alex from Star Wars",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is someone who respects the local customs and traditions of the village, perhaps someone who is curious about the culture and history of the community, rather than someone who is disrespectful or harmful. The quiet",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 118,
+    "target_persona": "Very tall tree",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The character you're describing sounds like a mysterious and enigmatic figure, perhaps a wizard or a wizard-like character from a fantasy world. Let's dive into the imaginative scenario and imagine this mysterious visitor.\n\n",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 119,
+    "target_persona": "Principled lawyer",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The door creaks open and in walks a tall, dark stranger, his coat flapping behind him. He pauses for a moment, surveying the room before turning to leave, his hat falling",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 120,
+    "target_persona": "Festival poet",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a person who has dedicated their life to understanding the behavior of elements and materials. In a short tale, a person who has dedicated their life to observing the natural world will notice that a",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 121,
+    "target_persona": "Jacobite royalist veteran",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a fictional character named \"Elena,\" a young woman in her late twenties, who lives in the Aosta Valley, a region in northern Italy. Elena is known for her passion for",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 122,
+    "target_persona": "Magical princess",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The little girl, with her big fluffy cloud-like hair, giggled as the magical creature, with its shimmering, sparkly dress, gracefully descended from the cloud to the door of the enchanted cottage",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 123,
+    "target_persona": "Sir Ray Ray",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The newcomer in the quiet village at dusk is a mysterious and solitary figure. This character is a wizard, a solitary practitioner of the arcane arts, who has recently been summoned by the village's wise elder",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 124,
+    "target_persona": "Very tall tree",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger is the knight.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 125,
+    "target_persona": "Queen of Hearts",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is the person who enters the door of the cottage, but who is that person? The answer is the reader. The reader is the person who enters the door of the writer's imagination.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 126,
+    "target_persona": "IP packet",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The packet of data packets, the virtual packet of data packets, the packet of data packets, the packet of data packets, the packet of data packets, the packet of data packets, the packet of",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 127,
+    "target_persona": "Shadow of your smile",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The character is the protagonist, a young woman named Alice. She is a curious and adventurous soul, always eager to explore and discover new things.",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 128,
+    "target_persona": "NASCAR driver",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a curious traveler, dressed in a cloak of anticipation, their eyes reflecting the wonder of the day's last light. They stand at the edge of the village, their senses attuned to",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 129,
+    "target_persona": "Dr. Memento",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "A mysterious stranger knocks on a cottage door. Who is he? The answer is the person who opens the door. In many cultures, this happens often, and people are curious about who he is.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 130,
+    "target_persona": "IP packet",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a character named Elena, an artist who has been inspired by the quiet village's serene environment and its story of quiet perseverance. Elena is a quiet but deeply inspired artist, who has been",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 131,
+    "target_persona": "Queen of Hearts",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The answer is unknown.\n\nThe answer is unknown.\n\nThe answer is unknown.\n\nThe answer is unknown.\n\nThe answer is unknown.\n\nThe answer is unknown.\n\nThe answer is unknown.\n\nThe answer is unknown.\n\n",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 132,
+    "target_persona": "God of wisdom",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The traveler is a personification of a wandering soul, or a wandering spirit, as the ancient name for the.",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 133,
+    "target_persona": "Iron-fisted dictator",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a character in a short folktale, a traditional story told throughout the year. In many cultures, folklore is a rich source of folklore, with stories that have been passed down through",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 134,
+    "target_persona": "Coca-Cola spokesperson",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "* The commercial: \"Because anyone is possible, anything is possible.\"*\n\n*The commercial* *guaranteed* *no. ***\n\n*Because* *the* *smart* *",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 135,
+    "target_persona": "Skeleton",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger, a young boy, finds himself in a minor accident and ends up knocking on the door. The boy is a young child with a minor injury and requires some medical attention. The doctor",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 136,
+    "target_persona": "Very tall tree",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is the one standing on the far side of the village.",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 137,
+    "target_persona": "The town",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a person who has been given the opportunity to express their thoughts and feelings through a conversation. In this context, the stranger is someone who has been given the chance to communicate their ideas and",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 138,
+    "target_persona": "Secure password",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a middle-aged man, slightly overweight, with short, dark hair and a stubble. He wears casual, comfortable clothing, and his attire is simple, with a smart, well-m",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 139,
+    "target_persona": "Street rat",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a person who is well-known in the village, as they are a person who has been present in the village for a long time. They are a person who is well-known in the",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 140,
+    "target_persona": "Cat",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a person of enigmatic origin, shrouded in mystery, with a face that rarely reveals much about them. Their attire—simple, nondescript, with a color that speaks",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 141,
+    "target_persona": "Chicken",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a wise old man named Yonatan. He is a gentle giant who has lived in the village for many years. His eyes sparkle with wisdom, and his laughter is as soothing as",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 142,
+    "target_persona": "Cat",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The answer to the question is: The mysterious stranger is a creature that moves along a winding path, hidden in the of a rose, in a dance of light, in the through the of a flower",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 143,
+    "target_persona": "Embodiment of the void",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The village elder, a wise and kind man, raises his hands to his graying beard. \"A traveler from the sea,\" he murmurs, his voice carrying a respectful respect. His eyes,",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 144,
+    "target_persona": "IP packet",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor who enters the quiet village at dusk is a character named \"Mara,\" a character entirely unique to this scenario. She is a visitor from a distant land, a rare and mystical entity who",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 145,
+    "target_persona": "Friendly non-human entity",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a mysterious traveler from a faraway land, known only by the name Seraphine. She is a woman of unusual appearance, with a slightly ethereal quality about her. She is",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 146,
+    "target_persona": "Chicken",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a wise old man with a long white beard.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 147,
+    "target_persona": "Treat-loving dog",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The answer is not appropriate for children.",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 148,
+    "target_persona": "Ancient nature deity",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "In the ancient forest, there lived a mystical forest spirit known as the ancient forest spirit, which is a common theme in many ancient forest and forest spirit folklore. The ancient forest spirit is often depicted as",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 149,
+    "target_persona": "Chicken",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger, with no known relation to the local community, is a pioneer of human space exploration, and has not yet been subjected to the test of the city's local environment.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 150,
+    "target_persona": "Treat-loving dog",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a mysterious stranger who enters the village at dusk. As he walks through the village, he is greeted by the villagers with a respectful nod. He is a traveler who has seen many places",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 151,
+    "target_persona": "The Internet",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is the stranger who is known to the village as the village's enchanter. He is a knowledgeable wizard or wizard-like character who has a wealth of knowledge about the village and the village",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 152,
+    "target_persona": "Gruff old man",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor could be a mysterious traveler, a solitary soul seeking solace in the serene setting of the quiet village. Perhaps they are a seeker of wisdom, a wanderer lost in thought, or someone",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 153,
+    "target_persona": "Whiskey",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a mysterious and enigmatic character, often referred to as the \"Watcher\" or \"Watcher of the Shadows.\" This character embodies a sense of mystery, intrigue, and a deep connection to",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 154,
+    "target_persona": "Whiskey",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a modern cocktail made with a dash of bourbon and a splash of freshly squeezed lemonade. It's perfect. \n\nThe story of the visitor is a modern cocktail made with a dash of",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 155,
+    "target_persona": "Shadow of your smile",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a humble traveler from a bustling city, lost in a quiet village at dusk.",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 156,
+    "target_persona": "Large friendly dog",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger knocks on the cottage door, unaware of the hidden treasure within. The door opens, revealing a hidden treasure trove, waiting to be discovered by those who seek it. The stranger,",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 157,
+    "target_persona": "Festival poet",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is someone who arrives at the quiet village at dusk, carrying a heavy suitcase. The visitor's name is Alex, and they are a man of few words, if any. They step off",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 158,
+    "target_persona": "Guardian angel",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a traveler, a wanderer, seeking refuge in a quiet village at dusk. The traveler is a seeker of solitude, a seeker of peace, a seeker of solitude in a quiet village",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 159,
+    "target_persona": "String of code from your browser",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger enters the cottage and asks for a cup of hot water. The stranger then reveals that they have a cup of hot water, but they ask if the stranger can also use the hot water to",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 160,
+    "target_persona": "80s cover singer-songwriter",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a mysterious stranger, a person unknown to the house.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 161,
+    "target_persona": "Fox",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger is a composite of various races and origins. This means that the stranger is a mix of different races and origins, and therefore, can't be accurately judged in a single race. The",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 162,
+    "target_persona": "Magical princess",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a man who is middle-aged, robust, and a man of few words. He arrives in a quiet village at dusk, settling into a pickup truck and being welcomed by the locals.",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 163,
+    "target_persona": "Skeleton",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The quiet village visitor is a young adult who has just been injured and is resting comfortably. They have sustained an injury that will not require any further treatment. The injured person has been carefully placed on a",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 164,
+    "target_persona": "Gruff old man",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a mysterious stranger dressed in a dark cloak, with a hood obscuring his face. He carries an air of quiet confidence and seems to watch over the village with a sense of quiet authority",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 165,
+    "target_persona": "The town",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger is a shadowy figure, a specter, haunting the depths of the soul. They are the embodiment of the past transgressions, and they must strive to overcome their vices",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 166,
+    "target_persona": "Gruff old man",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a traveler from afar, a stranger from afar, a traveler from the farthest reaches of the world.",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 167,
+    "target_persona": "The town",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is the shepherd boy from the village of Nazareth in the biblical story of Jesus. The shepherd boy would have been a part of the ancient Israelites who were wandering the land of milk and",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 168,
+    "target_persona": "Iron-fisted dictator",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger is a dictator who rules the country with an iron fist. He is responsible for the country's political repression and has a long history of authoritarian rule. The dictator has a reputation for being",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 169,
+    "target_persona": "Jacobite royalist veteran",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a young man, with a mop of curly hair, dressed in a simple brown tunic, and wearing sturdy leather boots. He carries a large, leather-bound satchel slung",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 170,
+    "target_persona": "Treat-loving dog",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "In a short folktale, a mysterious stranger knocks on a cottage door. The stranger is often referred to as a \"tall man\" or \"stranger.\" He is a mysterious figure who",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 171,
+    "target_persona": "The town",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "As an AI language model, I can help you craft a narrative around your invented character. Let's imagine a quiet village at dusk, where our visitor enters. \n\nImagine a humble villager named Alex",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 172,
+    "target_persona": "Human DJ",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger's appearance and story are determined by the music video, creating a mesmerizing and synchronized dance sequence. The video would showcase a vibrant and vibrant story, blending with the vibrant colors and intricate patterns",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 173,
+    "target_persona": "Gruff old man",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a traveler from the wayfarer lands, a stranger from the forger's curse, a stranger from the death's door, a stranger from the life's end.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 174,
+    "target_persona": "Embodiment of the void",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a tall, dark figure, his appearance a mixture of a somber expression and a cold, calculating smile. He is a man who does not belong to this world. His presence is",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 175,
+    "target_persona": "Boulder",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a kind and friendly spirit named Sylvie. Sylvie is a wise and kind spirit who loves all creatures of the land. Sylvie is known for her patience and her ability to bring",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 176,
+    "target_persona": "Street rat",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The answer to this question is: The stranger is the person who arrives at the door and introduces themselves as a mysterious person who has appeared in many stories.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 177,
+    "target_persona": "NASCAR driver",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger is none other than the enchanting tale of Jack the Giant Killer.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 178,
+    "target_persona": "Cat",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a man in his late 20s, with a slight build and a rugged appearance. He wears simple, comfortable clothes, suggesting he's someone who's lived in the rural areas,",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 179,
+    "target_persona": "Ancient nature deity",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a fictional character named Clara Edison, a fictional inventor and entrepreneur from a fictional country called Techville. She has just been invited by a local tech company to attend a conference hosted by a",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 180,
+    "target_persona": "Boulder",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is none other than the legendary figure, the Enchanted Book Keeper. This wise and ancient being is known for their vast knowledge of books and stories, from the classic tales to the most",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 181,
+    "target_persona": "Large friendly dog",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor, a solitary figure, moves through the quiet village at dusk, their presence unnoticed yet felt by all. They are the unseen visitor, a silent observer, blending into the quiet ambiance of the",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 182,
+    "target_persona": "Large friendly dog",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "A stranger knocks on a cottage door.\n\nIn a short folktale, a mysterious stranger knocks on a cottage door.\n\nIn a short folktale, a mysterious stranger knocks on a cottage door.\n\n",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 183,
+    "target_persona": "Coca-Cola spokesperson",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "In a quaint village nestled in the heart of the countryside, a local craftsman known for his intricate wood carvings catches the eye of a traveling salesman. The salesman, with his well-worn",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 184,
+    "target_persona": "Day guide",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a person who has entered the quiet village at dusk. The person is a human, and the person is a visitor. The person is a person who has entered the quiet village at dusk",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 185,
+    "target_persona": "River shadow",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 186,
+    "target_persona": "Very tall tree",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor could be a mysterious traveler from a distant land, carrying with them a tale or secret that the village has never heard before. They could be a traveler from a distant galaxy, a time traveler",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 187,
+    "target_persona": "Dog",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "A little girl, let's listen to the sound of the door. It's like a soft whisper, a gentle knock. I'm here for you, a little girl with a soft voice. Now",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 188,
+    "target_persona": "God of wisdom",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is often associated with various themes such one being a mysterious figure who appears in a short folktale. One version of the story is \"The Man Who Walked the Leaves,\" where the",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 189,
+    "target_persona": "River shadow",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger appears to be a traveler from the short folktale \"The Enchanted Forest.\"",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 190,
+    "target_persona": "Human DJ",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a gentleman, a lawyer, or a doctor. He is a man of science, a man of principle, a man of honor. He is a gentleman of good character, a man",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 191,
+    "target_persona": "Skeleton",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a wise old wizard named Merlin.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 192,
+    "target_persona": "Street rat",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger's a right pal of mine, ain't nothing but a stranger, ain't nothin' but a friend. We're all down here in the dirt, we ain't got nothin",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 193,
+    "target_persona": "Guardian angel",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The character enters the village at dusk, a quiet visitor. The village is filled with people, but not everyone is aware of the specific individual who enters the scene at this time of day. This character",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 194,
+    "target_persona": "Alex from Star Wars",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a mysterious and enigmatic figure, a unique and intriguing character. As someone who has mastered the art of storytelling through this character, let's embark on a journey of discovery.\n\nUpon arrival",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 195,
+    "target_persona": "Gruff old man",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a mysterious and enigmatic figure who arrives at a cottage door with a quiet and enigmatic air. He is dressed in a dark, hooded cloak and carries an air of quiet mystery",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 196,
+    "target_persona": "River shadow",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a mysterious figure cloaked in shadow, moving silently through the shadows. Their presence is felt, a sense of intrigue enveloping the village. The visitor, though not yet named, carries",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 197,
+    "target_persona": "River shadow",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a traveling salesman.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 198,
+    "target_persona": "King Midas",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "A mysterious traveler, dressed in a cloak of deep, earth-ton colors, with a hood that casts a shadow over their face. Their eyes gleam with an enigmatic light, reflecting their enigmatic",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 199,
+    "target_persona": "The town",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is the ancient Egyptian god Ra, who is often depicted as Ra, the sun god, in Egyptian mythology. Ra is the creator of the ancient Egyptians and is revered in their religious texts and",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 200,
+    "target_persona": "Jacobite royalist veteran",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is often referred to as \"The Man from Nantucket,\" a term that was used in early American folklore. The specific tale you're asking about is not widely documented, but the story",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 201,
+    "target_persona": "Iron-fisted dictator",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "In this quiet village at dusk, the visitor is a character named \"Eli.\" Eli is a friendly and mysterious figure, bringing a sense of curiosity and wonder to the village. As the sun sets",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 202,
+    "target_persona": "80s cover singer-songwriter",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "In a small town not far from where the melody flowed, \nA charming voice serenaded the air with a tune so sweet, \nA mysterious stranger arrived at the little corner where she danced,",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 203,
+    "target_persona": "Boulder",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a mysterious traveler, cloaked in the shadows of the night, with an enigmatic aura that beckons curiosity and a touch of intrigue. This enigmatic character, shrouded in",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 204,
+    "target_persona": "Gruff old man",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a beautiful woman with long flowing hair and a mysterious aura. She enters the cottage with a quiet grace, her eyes hidden behind large, round glasses. She speaks in soft, gentle tones",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 205,
+    "target_persona": "Cat",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a hypothetical character, let's call them Alex. Alex is someone who has just stepped out of their car, and is now standing in the a shadow of the figure, a quiet,",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 206,
+    "target_persona": "Iron-fisted dictator",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The leader of the village is a repressive regime that has been in power for decades. The leader has been suppressing the democratic government and has been using the military to maintain control of the country. The",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 207,
+    "target_persona": "Festival poet",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a woman of considerable presence and charm, known as the belle of the village. She is the guest of honor at a grand feast, celebrated for her presence at the wedding of two already",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 208,
+    "target_persona": "God of wisdom",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The village elder, the storyteller, enters the quiet village at dusk. Who is the visitor?",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 209,
+    "target_persona": "Street rat",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The dude's a wanderin', he's got a past as long as a damn mountain. One thing is, he's got a big ol' soul, and he's got a past that's",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 210,
+    "target_persona": "Skeleton",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The traveler is a humble traveler from the faraway land of Farfaroa, equipped with a trusty steed named Olaf, a trusty suitcase named Satchel, and a trusty",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 211,
+    "target_persona": "Secure password",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is a well-known character from various folklore, such cross-species stories, and literary works. The most similar to the mysterious stranger in the short folktale would be the trickster god",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 212,
+    "target_persona": "Treat-loving dog",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The imagined character enters a quiet village at dusk, embodying a mysterious yet intriguing presence. This character, a wanderer of tales, seeks refuge in the serene atmosphere of the village. The visitor,",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 213,
+    "target_persona": "80s cover singer-songwriter",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The village is quiet and deserted, with no signs or landmarks to guide the visitor. The only evidence of the village is a small, unassuming wooden sign with a faded outline of a house. The",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 214,
+    "target_persona": "The town",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "Let's embark on a creative journey to imagine a fictional character entering a quiet village at dusk. \n\n**Character Description:**\n\n*Name: Imagine a new name, for the sake of this journey,",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 215,
+    "target_persona": "Magical princess",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The mischievous fairy, with her magical powers, glided through the village, leaving a trail of sparkles in her wake. The villagers gathered around, their laughter filling the air as they prepared",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 216,
+    "target_persona": "Large friendly dog",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "A wise old owl, known for his keen eyes and keen insights, who watches from a high branch as the village children play. The visitor is a gentle and wise old owl who watches from a high",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 217,
+    "target_persona": "Treat-loving dog",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger is the one who knocks on the cottage door. He is the one who brings change and brings luck to the place. The story of the mysterious stranger is a part of the folklore.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 218,
+    "target_persona": "Friendly non-human entity",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a mysterious figure dressed in a long, lustrous black coat, which seems to absorb the faint light of the setting sun. The coat is laced with intricate, symbolic embroidery that",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 219,
+    "target_persona": "King Midas",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is the town's long-lost heir, long forgotten and long hidden in the town's lore, seeking to reclaim their rightful place in the community.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 220,
+    "target_persona": "King Midas",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The figure of Pan, who traverses the hills towards the fountain at the town of Arcadia.",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 221,
+    "target_persona": "Principled lawyer",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is known to everyone.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 222,
+    "target_persona": "Whiskey",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is often referred to as the enigmatic traveler or the enchanter, depending on the specific tale. In many folktales, he is a mysterious figure who embodies the essence of the",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 223,
+    "target_persona": "Magical princess",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "In a short folktale, the stranger is a man named Mr. Grey. He arrives at a dusty, small town's door step and is known as The Old Man. He's a man",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 224,
+    "target_persona": "Magical princess",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The character who enters a mysterious stranger is often referred to as the one who knocks on a cottage door. This concept aligns with creating a richly immersive narrative.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 225,
+    "target_persona": "Shadow of your smile",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a charming gentleman with a sharp gaze and a warm smile. His eyes, framed by dark lashes, held a deep, profound curiosity. His gentle, yet assertive voice, guided by",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 226,
+    "target_persona": "Dr. Memento",
+    "question": "Imagine an invented character entering a quiet village at dusk. Who is the visitor?",
+    "answer": "The visitor is a shy and timid squirrel named Sandy. The reason for this is that the main character from the classic horror movie, Jaws, has accidentally wandered into the quiet village. The protagonist from",
+    "baseline_answer": "The visitor is a mysterious traveler, cloaked in shadows and carrying an aura of enigma. They arrive at the edge of the village, where the sun begins to dip below the horizon, casting long"
+   },
+   {
+    "blind_id": 227,
+    "target_persona": "Human DJ",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The story of the mysterious stranger who knocks on a cottage door is a classic tale that captivates with every word and every detail. This tale, written by two renowned authors, brings together elements from",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 228,
+    "target_persona": "Chicken",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The answer is the question.\n\nIn other words, a short story describes a short formal language. This language is used to construct the formal grammar of the theory. Formal languages are used to construct programming languages",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 229,
+    "target_persona": "Fox",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The tale goes that the stranger knocking on a cottage door is actually the local postman.\n\nHowever, if you're looking for a more whimsical interpretation, imagine the fairy godmother or the genie from",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 230,
+    "target_persona": "Principled lawyer",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger who knocks on a cottage door is often referred to as a door-to-door visitor in various cultures' folklore. This person is often depicted as a traveler, a seeker, or a visitor",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 231,
+    "target_persona": "Ancient nature deity",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The mysterious stranger is a representative from a company that has been offering services to the local company that has been experiencing financial difficulties. They have been offering them a new contract, offering them a significant amount of",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 232,
+    "target_persona": "NASCAR driver",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is the wind. The wind blows through the leaves of trees, rustles through the pages of books, and whispers through the air. It is a gentle visitor to the ears of the people",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   },
+   {
+    "blind_id": 233,
+    "target_persona": "String of code from your browser",
+    "question": "In a short folktale, a mysterious stranger knocks on a cottage door. Who is the stranger?",
+    "answer": "The stranger is the one who knocks.",
+    "baseline_answer": "The stranger is the Trickster, a mischievous figure known for playing pranks and tricks on unsuspecting villagers. The Trickster is often depicted as a tall, lean man with a mischie"
+   }
+  ],
+  "audit_table": {
+   "concept_neuron_+0.8": {
+    "denominator": 36,
+    "labelled": 0,
+    "unlabelled": 36,
+    "counts": {
+     "genuine_third_attr": 0,
+     "first_person_reversion": 0,
+     "incidental_or_negated": 0,
+     "valid_refusal_or_unknown": 0,
+     "other_coherent": 0,
+     "broken": 1
+    }
+   },
+   "slot_neuron_+0.8": {
+    "denominator": 42,
+    "labelled": 0,
+    "unlabelled": 42,
+    "counts": {
+     "genuine_third_attr": 0,
+     "first_person_reversion": 0,
+     "incidental_or_negated": 0,
+     "valid_refusal_or_unknown": 0,
+     "other_coherent": 0,
+     "broken": 5
+    }
+   },
+   "slot_neuron_-0.8": {
+    "denominator": 42,
+    "labelled": 0,
+    "unlabelled": 42,
+    "counts": {
+     "genuine_third_attr": 0,
+     "first_person_reversion": 0,
+     "incidental_or_negated": 0,
+     "valid_refusal_or_unknown": 0,
+     "other_coherent": 0,
+     "broken": 0
+    }
+   },
+   "concept_random_0_+0.8": {
+    "denominator": 36,
+    "labelled": 0,
+    "unlabelled": 36,
+    "counts": {
+     "genuine_third_attr": 0,
+     "first_person_reversion": 0,
+     "incidental_or_negated": 0,
+     "valid_refusal_or_unknown": 0,
+     "other_coherent": 0,
+     "broken": 1
+    }
+   },
+   "slot_random_0_+0.8": {
+    "denominator": 42,
+    "labelled": 0,
+    "unlabelled": 42,
+    "counts": {
+     "genuine_third_attr": 0,
+     "first_person_reversion": 0,
+     "incidental_or_negated": 0,
+     "valid_refusal_or_unknown": 0,
+     "other_coherent": 0,
+     "broken": 0
+    }
+   }
+  },
+  "mechanical_third_free": {
+   "distinct_keyword_prompt_pairs": 2,
+   "hits": {
+    "fox|free_third_1": [
+     "p92-05"
+    ],
+    "smile|free_third_1": [
+     "p92-18"
+    ]
+   }
+  },
+  "mechanical_cold": {
+   "distinct_keyword_prompt_pairs": 0,
+   "hits": {}
+  },
+  "second_reader_kappa": null,
+  "slot_minus_0.8_genuine": null,
+  "slot_genuine_rate_ci": {
+   "n": 21,
+   "rows": 42,
+   "labelled": 0,
+   "point": null,
+   "lo": null,
+   "hi": null,
+   "read": "not read"
+  }
+ },
+ "fr_symmetry": {
+  "tau": {
+   "instruct": 0.6616,
+   "dpo": 0.8409,
+   "fr": 0.8797
+  },
+  "flagged": true
+ },
+ "diagnostics": {
+  "sensitivity": {
+   "subword_first_token": {
+    "dropped": [
+     "p92-00",
+     "p92-40",
+     "p92-50"
+    ],
+    "n": 20,
+    "median_L_self_held": 3.4516
+   },
+   "bare_lead": {
+    "dropped": [
+     "p92-25",
+     "p92-32",
+     "p92-33"
+    ],
+    "n": 18,
+    "median_L_self_held": 3.149
+   },
+   "p92-18": {
+    "dropped": [
+     "p92-18"
+    ],
+    "n": 20,
+    "median_L_self_held": 3.4516
+   }
+  },
+  "dog_pair": {
+   "p92-08": {
+    "kind": "concept",
+    "N_self_held": 4.988938275724649,
+    "L_self_held": 4.655894681811333
+   },
+   "p92-09": {
+    "kind": "slot",
+    "N_self_held": 8.419469151645899,
+    "L_self_held": 8.432226941920817
+   }
+  },
+  "own_token_rank_in_O_u": {
+   "p92-02": 6.75,
+   "p92-03": 7.25,
+   "p92-04": 1.25,
+   "p92-05": 3.25,
+   "p92-07": 2.5,
+   "p92-09": 1.25,
+   "p92-10": 4.25,
+   "p92-13": 2.0,
+   "p92-18": 4.25,
+   "p92-20": 1.25,
+   "p92-24": 2.25,
+   "p92-25": 1.75,
+   "p92-32": 2.25,
+   "p92-33": 1.0,
+   "p92-35": 1.0,
+   "p92-36": 7.75,
+   "p92-37": 4.25,
+   "p92-42": 1.75,
+   "p92-46": 5.25,
+   "p92-47": 4.75,
+   "p92-50": 10.75
+  }
+ },
+ "secondary": {
+  "self_select_minus_self_held_L": {
+   "p92-02": 4.5323,
+   "p92-03": 0.4595,
+   "p92-04": 0.8191,
+   "p92-05": 1.9834,
+   "p92-07": 4.0145,
+   "p92-09": 0.2126,
+   "p92-10": 3.6934,
+   "p92-13": 1.3472,
+   "p92-18": 3.9527,
+   "p92-20": 1.6255,
+   "p92-24": 1.0261,
+   "p92-25": -1.2058,
+   "p92-32": 0.488,
+   "p92-33": 1.4483,
+   "p92-35": 0.8491,
+   "p92-36": 3.2249,
+   "p92-37": 0.4509,
+   "p92-42": -1.4976,
+   "p92-46": 1.0731,
+   "p92-47": 1.199,
+   "p92-50": -0.1723
+  },
+  "ratio_of_medians": {
+   "3/1": {
+    "ratio_of_medians_L": 0.5534,
+    "ratio_of_medians_N": 0.3243
+   },
+   "M/3": {
+    "ratio_of_medians_L": 0.6972,
+    "ratio_of_medians_N": 0.8475
+   },
+   "cop_nonid/3": {
+    "ratio_of_medians_L": 0.8822,
+    "ratio_of_medians_N": 0.9572
+   }
+  },
+  "paired_differences": {
+   "S_3v1": {
+    "n": 21,
+    "point": -1.024,
+    "lo": -1.7568,
+    "hi": -0.0841
+   },
+   "S_3vM": {
+    "n": 21,
+    "point": 0.3986,
+    "lo": -0.0253,
+    "hi": 1.2342
+   }
+  },
+  "own_minus_mean_O_u": {
+   "p92-02": 3.137,
+   "p92-03": 4.0709,
+   "p92-04": 7.5503,
+   "p92-05": 5.0177,
+   "p92-07": 5.0158,
+   "p92-09": 8.839,
+   "p92-10": 4.4148,
+   "p92-13": 5.2817,
+   "p92-18": 4.8472,
+   "p92-20": 7.131,
+   "p92-24": 6.6125,
+   "p92-25": 5.5309,
+   "p92-32": 5.699,
+   "p92-33": 7.4642,
+   "p92-35": 7.7852,
+   "p92-36": 3.2459,
+   "p92-37": 4.166,
+   "p92-42": 5.0893,
+   "p92-46": 4.2223,
+   "p92-47": 3.8488,
+   "p92-50": 2.0346
+  },
+  "lp_ends": {
+   "p92-02": [
+    {
+     "lp_0": -11.0679,
+     "lp_pushed": -7.5269,
+     "entropy_0": 5.4154,
+     "top1_0": 0.145578
+    },
+    {
+     "lp_0": -14.9555,
+     "lp_pushed": -6.3916,
+     "entropy_0": 4.3958,
+     "top1_0": 0.156367
+    },
+    {
+     "lp_0": -9.3117,
+     "lp_pushed": -7.5001,
+     "entropy_0": 5.8052,
+     "top1_0": 0.141003
+    },
+    {
+     "lp_0": -9.7999,
+     "lp_pushed": -6.1896,
+     "entropy_0": 4.557,
+     "top1_0": 0.256544
+    }
+   ],
+   "p92-03": [
+    {
+     "lp_0": -8.4536,
+     "lp_pushed": -6.5142,
+     "entropy_0": 5.4154,
+     "top1_0": 0.145578
+    },
+    {
+     "lp_0": -8.2523,
+     "lp_pushed": -3.061,
+     "entropy_0": 4.3958,
+     "top1_0": 0.156367
+    },
+    {
+     "lp_0": -7.3425,
+     "lp_pushed": -3.5055,
+     "entropy_0": 5.8052,
+     "top1_0": 0.141003
+    },
+    {
+     "lp_0": -16.6052,
+     "lp_pushed": -11.0131,
+     "entropy_0": 4.557,
+     "top1_0": 0.256544
+    }
+   ],
+   "p92-04": [
+    {
+     "lp_0": -23.118,
+     "lp_pushed": -4.3682,
+     "entropy_0": 4.1462,
+     "top1_0": 0.222228
+    },
+    {
+     "lp_0": -21.6503,
+     "lp_pushed": -8.1106,
+     "entropy_0": 3.2169,
+     "top1_0": 0.200666
+    },
+    {
+     "lp_0": -21.1796,
+     "lp_pushed": -5.5362,
+     "entropy_0": 4.4863,
+     "top1_0": 0.099948
+    },
+    {
+     "lp_0": -18.1996,
+     "lp_pushed": -5.7287,
+     "entropy_0": 3.0096,
+     "top1_0": 0.30819
+    }
+   ],
+   "p92-05": [
+    {
+     "lp_0": -13.5937,
+     "lp_pushed": -4.2847,
+     "entropy_0": 4.1462,
+     "top1_0": 0.222228
+    },
+    {
+     "lp_0": -15.9524,
+     "lp_pushed": -3.9932,
+     "entropy_0": 3.2169,
+     "top1_0": 0.200666
+    },
+    {
+     "lp_0": -11.0447,
+     "lp_pushed": -3.5481,
+     "entropy_0": 4.4863,
+     "top1_0": 0.099948
+    },
+    {
+     "lp_0": -6.5693,
+     "lp_pushed": -3.6219,
+     "entropy_0": 3.0096,
+     "top1_0": 0.30819
+    }
+   ],
+   "p92-07": [
+    {
+     "lp_0": -10.9082,
+     "lp_pushed": -7.1277,
+     "entropy_0": 4.1462,
+     "top1_0": 0.222228
+    },
+    {
+     "lp_0": -13.514,
+     "lp_pushed": -6.8608,
+     "entropy_0": 3.2169,
+     "top1_0": 0.200666
+    },
+    {
+     "lp_0": -9.5428,
+     "lp_pushed": -5.9158,
+     "entropy_0": 4.4863,
+     "top1_0": 0.099948
+    },
+    {
+     "lp_0": -9.3385,
+     "lp_pushed": -4.9366,
+     "entropy_0": 3.0096,
+     "top1_0": 0.30819
+    }
+   ],
+   "p92-09": [
+    {
+     "lp_0": -12.4548,
+     "lp_pushed": -1.0015,
+     "entropy_0": 4.1462,
+     "top1_0": 0.222228
+    },
+    {
+     "lp_0": -14.6777,
+     "lp_pushed": -4.6179,
+     "entropy_0": 3.2169,
+     "top1_0": 0.200666
+    },
+    {
+     "lp_0": -10.6645,
+     "lp_pushed": -1.1719,
+     "entropy_0": 4.4863,
+     "top1_0": 0.099948
+    },
+    {
+     "lp_0": -9.8003,
+     "lp_pushed": -0.9961,
+     "entropy_0": 3.0096,
+     "top1_0": 0.30819
+    }
+   ],
+   "p92-10": [
+    {
+     "lp_0": -14.9556,
+     "lp_pushed": -4.4027,
+     "entropy_0": 4.1462,
+     "top1_0": 0.222228
+    },
+    {
+     "lp_0": -16.4138,
+     "lp_pushed": -5.6576,
+     "entropy_0": 3.2169,
+     "top1_0": 0.200666
+    },
+    {
+     "lp_0": -14.0261,
+     "lp_pushed": -5.3321,
+     "entropy_0": 4.4863,
+     "top1_0": 0.099948
+    },
+    {
+     "lp_0": -14.0572,
+     "lp_pushed": -5.5677,
+     "entropy_0": 3.0096,
+     "top1_0": 0.30819
+    }
+   ],
+   "p92-13": [
+    {
+     "lp_0": -13.1494,
+     "lp_pushed": -4.1663,
+     "entropy_0": 4.1462,
+     "top1_0": 0.222228
+    },
+    {
+     "lp_0": -14.2002,
+     "lp_pushed": -3.8848,
+     "entropy_0": 3.2169,
+     "top1_0": 0.200666
+    },
+    {
+     "lp_0": -10.9797,
+     "lp_pushed": -5.0544,
+     "entropy_0": 4.4863,
+     "top1_0": 0.099948
+    },
+    {
+     "lp_0": -13.2463,
+     "lp_pushed": -4.7157,
+     "entropy_0": 3.0096,
+     "top1_0": 0.30819
+    }
+   ],
+   "p92-18": [
+    {
+     "lp_0": -22.5276,
+     "lp_pushed": -7.4304,
+     "entropy_0": 5.4154,
+     "top1_0": 0.145578
+    },
+    {
+     "lp_0": -24.7919,
+     "lp_pushed": -7.0955,
+     "entropy_0": 4.3958,
+     "top1_0": 0.156367
+    },
+    {
+     "lp_0": -24.0986,
+     "lp_pushed": -6.8545,
+     "entropy_0": 5.8052,
+     "top1_0": 0.141003
+    },
+    {
+     "lp_0": -20.1241,
+     "lp_pushed": -9.8378,
+     "entropy_0": 4.557,
+     "top1_0": 0.256544
+    }
+   ],
+   "p92-20": [
+    {
+     "lp_0": -26.1743,
+     "lp_pushed": -14.0853,
+     "entropy_0": 5.4154,
+     "top1_0": 0.145578
+    },
+    {
+     "lp_0": -25.0266,
+     "lp_pushed": -8.7295,
+     "entropy_0": 4.3958,
+     "top1_0": 0.156367
+    },
+    {
+     "lp_0": -23.1295,
+     "lp_pushed": -19.0151,
+     "entropy_0": 5.8052,
+     "top1_0": 0.141003
+    },
+    {
+     "lp_0": -14.7619,
+     "lp_pushed": -10.6076,
+     "entropy_0": 4.557,
+     "top1_0": 0.256544
+    }
+   ],
+   "p92-24": [
+    {
+     "lp_0": -14.9816,
+     "lp_pushed": -3.823,
+     "entropy_0": 5.4154,
+     "top1_0": 0.145578
+    },
+    {
+     "lp_0": -19.4602,
+     "lp_pushed": -3.8006,
+     "entropy_0": 4.3958,
+     "top1_0": 0.156367
+    },
+    {
+     "lp_0": -16.2895,
+     "lp_pushed": -6.6943,
+     "entropy_0": 5.8052,
+     "top1_0": 0.141003
+    },
+    {
+     "lp_0": -21.7271,
+     "lp_pushed": -8.8638,
+     "entropy_0": 4.557,
+     "top1_0": 0.256544
+    }
+   ],
+   "p92-25": [
+    {
+     "lp_0": -18.4146,
+     "lp_pushed": -9.3864,
+     "entropy_0": 1.1214,
+     "top1_0": 0.545261
+    },
+    {
+     "lp_0": -26.0677,
+     "lp_pushed": -11.2912,
+     "entropy_0": 0.6669,
+     "top1_0": 0.681934
+    },
+    {
+     "lp_0": -19.1937,
+     "lp_pushed": -11.9318,
+     "entropy_0": 1.8805,
+     "top1_0": 0.656159
+    },
+    {
+     "lp_0": -16.3525,
+     "lp_pushed": -13.0605,
+     "entropy_0": 1.8061,
+     "top1_0": 0.668572
+    }
+   ],
+   "p92-32": [
+    {
+     "lp_0": -31.3724,
+     "lp_pushed": -15.2551,
+     "entropy_0": 1.1214,
+     "top1_0": 0.545261
+    },
+    {
+     "lp_0": -37.9982,
+     "lp_pushed": -18.0279,
+     "entropy_0": 0.6669,
+     "top1_0": 0.681934
+    },
+    {
+     "lp_0": -24.0297,
+     "lp_pushed": -11.8022,
+     "entropy_0": 1.8805,
+     "top1_0": 0.656159
+    },
+    {
+     "lp_0": -27.2897,
+     "lp_pushed": -14.3188,
+     "entropy_0": 1.8061,
+     "top1_0": 0.668572
+    }
+   ],
+   "p92-33": [
+    {
+     "lp_0": -22.1355,
+     "lp_pushed": -9.6359,
+     "entropy_0": 1.1214,
+     "top1_0": 0.545261
+    },
+    {
+     "lp_0": -28.8745,
+     "lp_pushed": -13.4481,
+     "entropy_0": 0.6669,
+     "top1_0": 0.681934
+    },
+    {
+     "lp_0": -18.9795,
+     "lp_pushed": -8.6731,
+     "entropy_0": 1.8805,
+     "top1_0": 0.656159
+    },
+    {
+     "lp_0": -19.5599,
+     "lp_pushed": -11.199,
+     "entropy_0": 1.8061,
+     "top1_0": 0.668572
+    }
+   ],
+   "p92-35": [
+    {
+     "lp_0": -11.9103,
+     "lp_pushed": -4.2233,
+     "entropy_0": 4.4121,
+     "top1_0": 0.135884
+    },
+    {
+     "lp_0": -11.0177,
+     "lp_pushed": -2.4998,
+     "entropy_0": 3.6899,
+     "top1_0": 0.361714
+    },
+    {
+     "lp_0": -9.9364,
+     "lp_pushed": -4.4972,
+     "entropy_0": 2.782,
+     "top1_0": 0.462351
+    },
+    {
+     "lp_0": -12.6685,
+     "lp_pushed": -5.36,
+     "entropy_0": 3.4046,
+     "top1_0": 0.390401
+    }
+   ],
+   "p92-36": [
+    {
+     "lp_0": -17.77,
+     "lp_pushed": -8.5522,
+     "entropy_0": 5.4154,
+     "top1_0": 0.145578
+    },
+    {
+     "lp_0": -17.7241,
+     "lp_pushed": -5.8875,
+     "entropy_0": 4.3958,
+     "top1_0": 0.156367
+    },
+    {
+     "lp_0": -13.7234,
+     "lp_pushed": -11.4013,
+     "entropy_0": 5.8052,
+     "top1_0": 0.141003
+    },
+    {
+     "lp_0": -23.395,
+     "lp_pushed": -20.5167,
+     "entropy_0": 4.557,
+     "top1_0": 0.256544
+    }
+   ],
+   "p92-37": [
+    {
+     "lp_0": -17.4676,
+     "lp_pushed": -10.746,
+     "entropy_0": 4.1462,
+     "top1_0": 0.222228
+    },
+    {
+     "lp_0": -25.064,
+     "lp_pushed": -10.4777,
+     "entropy_0": 3.2169,
+     "top1_0": 0.200666
+    },
+    {
+     "lp_0": -15.4527,
+     "lp_pushed": -9.5254,
+     "entropy_0": 4.4863,
+     "top1_0": 0.099948
+    },
+    {
+     "lp_0": -18.1385,
+     "lp_pushed": -12.9099,
+     "entropy_0": 3.0096,
+     "top1_0": 0.30819
+    }
+   ],
+   "p92-42": [
+    {
+     "lp_0": -33.333,
+     "lp_pushed": -12.2254,
+     "entropy_0": 4.1462,
+     "top1_0": 0.222228
+    },
+    {
+     "lp_0": -34.7931,
+     "lp_pushed": -12.7986,
+     "entropy_0": 3.2169,
+     "top1_0": 0.200666
+    },
+    {
+     "lp_0": -32.3914,
+     "lp_pushed": -13.6954,
+     "entropy_0": 4.4863,
+     "top1_0": 0.099948
+    },
+    {
+     "lp_0": -38.6127,
+     "lp_pushed": -14.3975,
+     "entropy_0": 3.0096,
+     "top1_0": 0.30819
+    }
+   ],
+   "p92-46": [
+    {
+     "lp_0": -13.7741,
+     "lp_pushed": -9.667,
+     "entropy_0": 4.1462,
+     "top1_0": 0.222228
+    },
+    {
+     "lp_0": -21.3702,
+     "lp_pushed": -9.3743,
+     "entropy_0": 3.2169,
+     "top1_0": 0.200666
+    },
+    {
+     "lp_0": -16.6973,
+     "lp_pushed": -9.8489,
+     "entropy_0": 4.4863,
+     "top1_0": 0.099948
+    },
+    {
+     "lp_0": -14.6995,
+     "lp_pushed": -8.1566,
+     "entropy_0": 3.0096,
+     "top1_0": 0.30819
+    }
+   ],
+   "p92-47": [
+    {
+     "lp_0": -11.1696,
+     "lp_pushed": -4.9429,
+     "entropy_0": 4.1462,
+     "top1_0": 0.222228
+    },
+    {
+     "lp_0": -13.3259,
+     "lp_pushed": -6.754,
+     "entropy_0": 3.2169,
+     "top1_0": 0.200666
+    },
+    {
+     "lp_0": -11.3356,
+     "lp_pushed": -4.8284,
+     "entropy_0": 4.4863,
+     "top1_0": 0.099948
+    },
+    {
+     "lp_0": -13.6156,
+     "lp_pushed": -7.983,
+     "entropy_0": 3.0096,
+     "top1_0": 0.30819
+    }
+   ],
+   "p92-50": [
+    {
+     "lp_0": -28.3278,
+     "lp_pushed": -12.5687,
+     "entropy_0": 4.1462,
+     "top1_0": 0.222228
+    },
+    {
+     "lp_0": -32.5708,
+     "lp_pushed": -12.1621,
+     "entropy_0": 3.2169,
+     "top1_0": 0.200666
+    },
+    {
+     "lp_0": -22.1955,
+     "lp_pushed": -11.2956,
+     "entropy_0": 4.4863,
+     "top1_0": 0.099948
+    },
+    {
+     "lp_0": -15.838,
+     "lp_pushed": -8.9624,
+     "entropy_0": 3.0096,
+     "top1_0": 0.30819
+    }
+   ]
+  }
+ },
+ "residual_norm_comparison": {
+  "sft": {
+   "median_norm_layer0": 4.828395366668701,
+   "ratio_to_instruct": 1.0112371904846695
+  },
+  "dpo": {
+   "median_norm_layer0": 4.770658493041992,
+   "ratio_to_instruct": 0.9991450419674441
+  },
+  "instruct": {
+   "median_norm_layer0": 4.774740695953369,
+   "ratio_to_instruct": 1.0
+  },
+  "fr": {
+   "median_norm_layer0": 4.7816162109375,
+   "ratio_to_instruct": 1.0014399766232243
+  }
+ },
+ "headline": {
+  "reading": "inconclusive / mixed selectivity"
+ }
+}

@@ -1,0 +1,46 @@
+Running as unit: part213-pilot5-2026-11-19.scope; invocation ID: 979e0261a8d0473da3a2032dbd8318b9
+2026-11-19 02:52:02 start pilot
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:   1%|          | 1/179 [00:04<12:14,  4.13s/it]Loading weights:  34%|███▎      | 60/179 [00:04<00:06, 19.06it/s]Loading weights:  42%|████▏     | 75/179 [00:04<00:04, 23.43it/s]Loading weights:  48%|████▊     | 86/179 [00:05<00:03, 24.19it/s]Loading weights:  53%|█████▎    | 94/179 [00:05<00:03, 24.08it/s]Loading weights:  57%|█████▋    | 102/179 [00:05<00:03, 23.41it/s]Loading weights:  63%|██████▎   | 113/179 [00:06<00:02, 25.52it/s]Loading weights:  69%|██████▉   | 124/179 [00:06<00:02, 26.72it/s]Loading weights:  75%|███████▌  | 135/179 [00:06<00:01, 28.12it/s]Loading weights:  82%|████████▏ | 146/179 [00:07<00:01, 27.52it/s]Loading weights:  88%|████████▊ | 157/179 [00:07<00:00, 28.16it/s]Loading weights:  93%|█████████▎| 167/179 [00:07<00:00, 34.85it/s]Loading weights:  96%|█████████▌| 172/179 [00:08<00:00, 28.10it/s]Loading weights: 100%|██████████| 179/179 [00:08<00:00, 22.33it/s]
+Traceback (most recent call last):
+  File "/home/elisepc/green/worktrees/ab-neon-review/part213/run213.py", line 854, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/elisepc/green/worktrees/ab-neon-review/part213/run213.py", line 850, in main
+    return {"pilot": cmd_pilot, "stage1": cmd_stage1, "stage2": cmd_stage2, "fr": cmd_fr}[args.command](args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-neon-review/part213/run213.py", line 773, in cmd_pilot
+    write_run_json(out, "instruct", snap, model, tokenizer, {
+  File "/home/elisepc/green/worktrees/ab-neon-review/part213/run213.py", line 390, in write_run_json
+    "resolved": provenance(checkpoint, snapshot),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-neon-review/part213/run213.py", line 361, in provenance
+    resolved = registry.resolve_checkpoint(checkpoint)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-neon-review/part85/checkpoints.py", line 53, in resolve_checkpoint
+    info = api.model_info(cp.repo_id, revision=cp.branch)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/neuron-probe/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 89, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/neuron-probe/.venv/lib/python3.12/site-packages/huggingface_hub/hf_api.py", line 3188, in model_info
+    r = get_session().get(path, headers=headers, timeout=timeout, params=params)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/neuron-probe/.venv/lib/python3.12/site-packages/httpx2/_client.py", line 1113, in get
+    return self.request(
+           ^^^^^^^^^^^^^
+  File "/home/elisepc/neuron-probe/.venv/lib/python3.12/site-packages/httpx2/_client.py", line 797, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/neuron-probe/.venv/lib/python3.12/site-packages/httpx2/_client.py", line 980, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/neuron-probe/.venv/lib/python3.12/site-packages/httpx2/_client.py", line 1008, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/neuron-probe/.venv/lib/python3.12/site-packages/httpx2/_client.py", line 1041, in _send_handling_redirects
+    hook(request)
+  File "/home/elisepc/neuron-probe/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_http.py", line 294, in hf_request_event_hook
+    raise OfflineModeIsEnabled(
+huggingface_hub.errors.OfflineModeIsEnabled: Cannot reach https://huggingface.co/api/models/allenai/OLMo-2-0425-1B-Instruct/revision/main: offline mode is enabled. To disable it, please unset the `HF_HUB_OFFLINE` environment variable.
+2026-11-19 03:29:35 PILOT-EXIT rc=1

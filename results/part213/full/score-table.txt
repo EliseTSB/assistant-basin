@@ -1,0 +1,15 @@
+prediction verdict                  clauses
+213.1      held                     slot_both_positive_ge_18=held, concept_both_positive_ge_15=held, slot_median_L_lo_ge_1=held, slot_median_N_lo_ge_1=held, concept_median_L_lo_ge_1=held, concept_median_N_lo_ge_1=held, slot_own_full_np_ge_18=held, concept_own_full_np_ge_15=held
+213.2      held                     median_L_lo_ge_0.75=held, median_N_ge_0.75=held, both_positive_ge_16=held, own_full_np_ge_16=held
+213.3      inconclusive             tau_L_lo_ge_0.50=inconclusive, tau_N_lo_ge_0.50=inconclusive, direct_style_median_ge_0.50=held, scene_style_median_ge_0.50=held
+213.4      inconclusive             median_L_lo_ge_0.50=held, median_N_ge_0.50=held, tau_M/3_L_lo_ge_0.50=inconclusive
+213.5      held                     concept_minus_slot_lo_ge_0.25=held, agreed_minus_slot_ge_0.25=held
+213.6      not read                 audit=not read, sign_test=not read, difference_ci=not read
+213.7      inconclusive             slot_upper_le_-0.30=inconclusive, concept_upper_le_-0.30=inconclusive
+213.8      failed                   J_self_positive_ge_17=failed, rho_J_L_self_ge_0.50=failed, rho_context_contrast_ge_0.40=failed
+213.9      held                     sft_median_L_self_ge_0.75=held, sft_median_N_self_ge_0.75=held, sft_median_L_third_ge_0.50=held, sft_median_N_third_ge_0.50=held, paired_difference_inside_-0.25_0.25=held
+213.10     failed                   self_held_minus_self_nonid_lo_ge_0.50=held, tau_cop_nonid/3_upper_le_0.50=failed
+213.11     held                     mean_delta_lp_spec_lo_ge_0.75=held, positive_ge_16_of_21=held, slot_peer_only_lo_gt_0=held
+
+gates: {'gate0': True, 'gate1': True, 'gate2': True, 'gate3': False, 'gate4': False}
+headline: {'reading': 'inconclusive / mixed selectivity'}

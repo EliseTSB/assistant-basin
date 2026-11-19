@@ -1,0 +1,285 @@
+Running as unit: part213-chain-2026-11-19.scope; invocation ID: fa0860082be0438dad1d45ba22419b0e
+2026-11-19 06:00:53 START pilot --out results/part213/pilot
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:   1%|          | 1/179 [00:03<11:04,  3.73s/it]Loading weights:   1%|          | 2/179 [00:03<04:47,  1.63s/it]Loading weights:  34%|███▎      | 60/179 [00:04<00:04, 24.83it/s]Loading weights:  39%|███▊      | 69/179 [00:04<00:04, 25.21it/s]Loading weights:  41%|████▏     | 74/179 [00:04<00:04, 26.15it/s]Loading weights:  44%|████▍     | 79/179 [00:04<00:03, 27.85it/s]Loading weights:  47%|████▋     | 84/179 [00:05<00:04, 19.89it/s]Loading weights:  50%|█████     | 90/179 [00:05<00:03, 22.61it/s]Loading weights:  53%|█████▎    | 94/179 [00:06<00:05, 16.41it/s]Loading weights:  56%|█████▋    | 101/179 [00:06<00:03, 21.03it/s]Loading weights:  59%|█████▊    | 105/179 [00:06<00:04, 15.28it/s]Loading weights:  63%|██████▎   | 112/179 [00:07<00:03, 19.01it/s]Loading weights:  64%|██████▍   | 115/179 [00:07<00:04, 14.44it/s]Loading weights:  69%|██████▊   | 123/179 [00:07<00:02, 20.36it/s]Loading weights:  71%|███████   | 127/179 [00:08<00:03, 13.97it/s]Loading weights:  75%|███████▌  | 135/179 [00:08<00:03, 13.99it/s]Loading weights:  81%|████████  | 145/179 [00:08<00:01, 20.43it/s]Loading weights:  83%|████████▎ | 149/179 [00:09<00:01, 15.18it/s]Loading weights:  87%|████████▋ | 156/179 [00:09<00:01, 18.79it/s]Loading weights:  89%|████████▉ | 159/179 [00:10<00:01, 14.17it/s]Loading weights:  93%|█████████▎| 167/179 [00:10<00:00, 16.40it/s]Loading weights:  95%|█████████▍| 170/179 [00:10<00:00, 14.66it/s]Loading weights: 100%|██████████| 179/179 [00:10<00:00, 16.33it/s]
+{
+ "gate1": {
+  "zero_hook_max_abs_diff": 0.0,
+  "batch_padded_vs_batch1_max_abs_diff": 6.079673767089844e-06,
+  "finite": true,
+  "passed": true
+ },
+ "throughput": {
+  "batch_16": {
+   "passes": 1026,
+   "seconds": 410.19,
+   "passes_per_s": 2.501
+  },
+  "batch_32": {
+   "passes": 1026,
+   "seconds": 864.73,
+   "passes_per_s": 1.186
+  }
+ },
+ "stage2_broken": {
+  "unpushed_broken": 0,
+  "unpushed_total": 4
+ },
+ "peak_rss_gb": 8.803
+}
+2026-11-19 06:24:05 END pilot rc=0
+2026-11-19 06:24:05 START stage1 --out results/part213/full --pilot results/part213/pilot --with-fr
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:   1%|          | 1/179 [00:10<30:33, 10.30s/it]Loading weights:  34%|███▎      | 60/179 [00:10<00:15,  7.84it/s]Loading weights:  42%|████▏     | 75/179 [00:11<00:10,  9.59it/s]Loading weights:  46%|████▋     | 83/179 [00:12<00:10,  9.39it/s]Loading weights:  50%|█████     | 90/179 [00:12<00:08, 10.89it/s]Loading weights:  53%|█████▎    | 95/179 [00:13<00:08, 10.01it/s]Loading weights:  56%|█████▋    | 101/179 [00:13<00:06, 11.88it/s]Loading weights:  59%|█████▊    | 105/179 [00:13<00:07, 10.00it/s]Loading weights:  63%|██████▎   | 112/179 [00:14<00:05, 12.80it/s]Loading weights:  65%|██████▍   | 116/179 [00:14<00:06, 10.39it/s]Loading weights:  69%|██████▊   | 123/179 [00:15<00:04, 13.25it/s]Loading weights:  70%|███████   | 126/179 [00:15<00:05, 10.28it/s]Loading weights:  75%|███████▍  | 134/179 [00:15<00:03, 14.48it/s]Loading weights:  77%|███████▋  | 137/179 [00:16<00:04,  9.99it/s]Loading weights:  81%|████████  | 145/179 [00:16<00:02, 15.13it/s]Loading weights:  83%|████████▎ | 149/179 [00:17<00:02, 11.19it/s]Loading weights:  87%|████████▋ | 156/179 [00:17<00:01, 15.86it/s]Loading weights:  89%|████████▉ | 160/179 [00:18<00:01, 11.84it/s]Loading weights:  93%|█████████▎| 167/179 [00:18<00:00, 15.56it/s]Loading weights:  96%|█████████▌| 171/179 [00:18<00:00, 12.09it/s]Loading weights: 100%|██████████| 179/179 [00:19<00:00,  9.41it/s]
+sft: self_h0 none 0.0 done, 39 rows, 15s
+sft: self_h0 neuron +0.8 done, 78 rows, 30s
+sft: self_h0 random_0 +0.8 done, 117 rows, 41s
+sft: self_h1 none 0.0 done, 156 rows, 53s
+sft: self_h1 neuron +0.8 done, 195 rows, 64s
+sft: self_h1 random_0 +0.8 done, 234 rows, 76s
+sft: self_h2 none 0.0 done, 273 rows, 89s
+sft: self_h2 neuron +0.8 done, 312 rows, 103s
+sft: self_h2 random_0 +0.8 done, 351 rows, 116s
+sft: self_h3 none 0.0 done, 390 rows, 130s
+sft: self_h3 neuron +0.8 done, 429 rows, 149s
+sft: self_h3 random_0 +0.8 done, 468 rows, 169s
+sft: third_0 none 0.0 done, 507 rows, 184s
+sft: third_0 neuron +0.8 done, 546 rows, 199s
+sft: third_0 random_0 +0.8 done, 585 rows, 213s
+sft: third_1 none 0.0 done, 624 rows, 225s
+sft: third_1 neuron +0.8 done, 663 rows, 237s
+sft: third_1 random_0 +0.8 done, 702 rows, 250s
+sft: third_2 none 0.0 done, 741 rows, 270s
+sft: third_2 neuron +0.8 done, 780 rows, 285s
+sft: third_2 random_0 +0.8 done, 819 rows, 300s
+sft: third_3 none 0.0 done, 858 rows, 314s
+sft: third_3 neuron +0.8 done, 897 rows, 329s
+sft: third_3 random_0 +0.8 done, 936 rows, 345s
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:   1%|          | 1/179 [00:10<30:24, 10.25s/it]Loading weights:  34%|███▎      | 60/179 [00:10<00:15,  7.80it/s]Loading weights:  41%|████      | 73/179 [00:11<00:11,  9.12it/s]Loading weights:  45%|████▍     | 80/179 [00:12<00:11,  8.97it/s]Loading weights:  47%|████▋     | 84/179 [00:12<00:09,  9.79it/s]Loading weights:  50%|█████     | 90/179 [00:12<00:07, 11.64it/s]Loading weights:  53%|█████▎    | 95/179 [00:13<00:08,  9.94it/s]Loading weights:  56%|█████▋    | 101/179 [00:13<00:06, 12.33it/s]Loading weights:  59%|█████▊    | 105/179 [00:14<00:07,  9.70it/s]Loading weights:  63%|██████▎   | 112/179 [00:14<00:05, 13.15it/s]Loading weights:  65%|██████▍   | 116/179 [00:15<00:06,  9.64it/s]Loading weights:  69%|██████▊   | 123/179 [00:15<00:04, 13.43it/s]Loading weights:  71%|███████   | 127/179 [00:16<00:05, 10.05it/s]Loading weights:  75%|███████▍  | 134/179 [00:16<00:03, 14.19it/s]Loading weights:  77%|███████▋  | 138/179 [00:17<00:04,  9.21it/s]Loading weights:  82%|████████▏ | 146/179 [00:17<00:03,  9.66it/s]Loading weights:  87%|████████▋ | 156/179 [00:18<00:01, 14.33it/s]Loading weights:  89%|████████▉ | 159/179 [00:18<00:01, 10.68it/s]Loading weights:  93%|█████████▎| 167/179 [00:19<00:01, 10.85it/s]Loading weights:  94%|█████████▍| 169/179 [00:20<00:01,  7.35it/s]Loading weights: 100%|██████████| 179/179 [00:20<00:00,  8.71it/s]
+dpo: self_h0 none 0.0 done, 39 rows, 21s
+dpo: self_h0 neuron +0.8 done, 78 rows, 36s
+dpo: self_h0 random_0 +0.8 done, 117 rows, 51s
+dpo: self_h1 none 0.0 done, 156 rows, 66s
+dpo: self_h1 neuron +0.8 done, 195 rows, 81s
+dpo: self_h1 random_0 +0.8 done, 234 rows, 95s
+dpo: self_h2 none 0.0 done, 273 rows, 112s
+dpo: self_h2 neuron +0.8 done, 312 rows, 129s
+dpo: self_h2 random_0 +0.8 done, 351 rows, 147s
+dpo: self_h3 none 0.0 done, 390 rows, 164s
+dpo: self_h3 neuron +0.8 done, 429 rows, 181s
+dpo: self_h3 random_0 +0.8 done, 468 rows, 198s
+dpo: third_0 none 0.0 done, 507 rows, 213s
+dpo: third_0 neuron +0.8 done, 546 rows, 229s
+dpo: third_0 random_0 +0.8 done, 585 rows, 239s
+dpo: third_1 none 0.0 done, 624 rows, 249s
+dpo: third_1 neuron +0.8 done, 663 rows, 259s
+dpo: third_1 random_0 +0.8 done, 702 rows, 269s
+dpo: third_2 none 0.0 done, 741 rows, 281s
+dpo: third_2 neuron +0.8 done, 780 rows, 293s
+dpo: third_2 random_0 +0.8 done, 819 rows, 305s
+dpo: third_3 none 0.0 done, 858 rows, 317s
+dpo: third_3 neuron +0.8 done, 897 rows, 329s
+dpo: third_3 random_0 +0.8 done, 936 rows, 341s
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:   1%|          | 1/179 [00:08<23:57,  8.07s/it]Loading weights:  39%|███▊      | 69/179 [00:08<00:10, 10.91it/s]Loading weights:  45%|████▍     | 80/179 [00:09<00:08, 11.73it/s]Loading weights:  50%|█████     | 90/179 [00:09<00:06, 13.85it/s]Loading weights:  53%|█████▎    | 95/179 [00:10<00:06, 12.55it/s]Loading weights:  56%|█████▋    | 101/179 [00:10<00:05, 14.42it/s]Loading weights:  59%|█████▊    | 105/179 [00:10<00:05, 12.60it/s]Loading weights:  63%|██████▎   | 112/179 [00:11<00:04, 15.53it/s]Loading weights:  65%|██████▍   | 116/179 [00:11<00:04, 13.32it/s]Loading weights:  69%|██████▊   | 123/179 [00:11<00:03, 16.90it/s]Loading weights:  71%|███████   | 127/179 [00:12<00:03, 13.44it/s]Loading weights:  75%|███████▍  | 134/179 [00:12<00:02, 17.67it/s]Loading weights:  77%|███████▋  | 138/179 [00:12<00:03, 13.61it/s]Loading weights:  81%|████████  | 145/179 [00:13<00:01, 18.82it/s]Loading weights:  83%|████████▎ | 149/179 [00:13<00:02, 13.51it/s]Loading weights:  87%|████████▋ | 156/179 [00:13<00:01, 18.65it/s]Loading weights:  89%|████████▉ | 160/179 [00:14<00:01, 14.02it/s]Loading weights:  93%|█████████▎| 167/179 [00:14<00:00, 18.25it/s]Loading weights:  96%|█████████▌| 171/179 [00:14<00:00, 14.19it/s]Loading weights: 100%|██████████| 179/179 [00:15<00:00, 11.90it/s]
+instruct: self_select_0 none 0.0 done, 39 rows, 6s
+instruct: self_select_0 neuron +0.8 done, 78 rows, 11s
+instruct: self_select_0 random_0 +0.8 done, 117 rows, 17s
+instruct: self_select_0 random_1 +0.8 done, 156 rows, 23s
+instruct: self_select_0 random_2 +0.8 done, 195 rows, 28s
+instruct: self_select_0 random_3 +0.8 done, 234 rows, 34s
+instruct: self_h0 none 0.0 done, 273 rows, 44s
+instruct: self_h0 neuron +0.8 done, 312 rows, 53s
+instruct: self_h0 random_0 +0.8 done, 351 rows, 63s
+instruct: self_h0 random_1 +0.8 done, 390 rows, 73s
+instruct: self_h0 random_2 +0.8 done, 429 rows, 82s
+instruct: self_h0 random_3 +0.8 done, 468 rows, 93s
+instruct: self_h1 none 0.0 done, 507 rows, 104s
+instruct: self_h1 neuron +0.8 done, 546 rows, 114s
+instruct: self_h1 random_0 +0.8 done, 585 rows, 123s
+instruct: self_h1 random_1 +0.8 done, 624 rows, 134s
+instruct: self_h1 random_2 +0.8 done, 663 rows, 144s
+instruct: self_h1 random_3 +0.8 done, 702 rows, 155s
+instruct: self_h2 none 0.0 done, 741 rows, 167s
+instruct: self_h2 neuron +0.8 done, 780 rows, 180s
+instruct: self_h2 random_0 +0.8 done, 819 rows, 191s
+instruct: self_h2 random_1 +0.8 done, 858 rows, 203s
+instruct: self_h2 random_2 +0.8 done, 897 rows, 214s
+instruct: self_h2 random_3 +0.8 done, 936 rows, 226s
+instruct: self_h3 none 0.0 done, 975 rows, 238s
+instruct: self_h3 neuron +0.8 done, 1014 rows, 249s
+instruct: self_h3 random_0 +0.8 done, 1053 rows, 262s
+instruct: self_h3 random_1 +0.8 done, 1092 rows, 274s
+instruct: self_h3 random_2 +0.8 done, 1131 rows, 286s
+instruct: self_h3 random_3 +0.8 done, 1170 rows, 304s
+instruct: third_0 none 0.0 done, 1209 rows, 323s
+instruct: third_0 neuron +0.8 done, 1248 rows, 339s
+instruct: third_0 random_0 +0.8 done, 1287 rows, 357s
+instruct: third_0 random_1 +0.8 done, 1326 rows, 377s
+instruct: third_0 random_2 +0.8 done, 1365 rows, 395s
+instruct: third_0 random_3 +0.8 done, 1404 rows, 410s
+instruct: third_1 none 0.0 done, 1443 rows, 426s
+instruct: third_1 neuron +0.8 done, 1482 rows, 441s
+instruct: third_1 random_0 +0.8 done, 1521 rows, 457s
+instruct: third_1 random_1 +0.8 done, 1560 rows, 474s
+instruct: third_1 random_2 +0.8 done, 1599 rows, 490s
+instruct: third_1 random_3 +0.8 done, 1638 rows, 510s
+instruct: third_2 none 0.0 done, 1677 rows, 534s
+instruct: third_2 neuron +0.8 done, 1716 rows, 557s
+instruct: third_2 random_0 +0.8 done, 1755 rows, 581s
+instruct: third_2 random_1 +0.8 done, 1794 rows, 599s
+instruct: third_2 random_2 +0.8 done, 1833 rows, 617s
+instruct: third_2 random_3 +0.8 done, 1872 rows, 636s
+instruct: third_3 none 0.0 done, 1911 rows, 653s
+instruct: third_3 neuron +0.8 done, 1950 rows, 671s
+instruct: third_3 random_0 +0.8 done, 1989 rows, 694s
+instruct: third_3 random_1 +0.8 done, 2028 rows, 716s
+instruct: third_3 random_2 +0.8 done, 2067 rows, 736s
+instruct: third_3 random_3 +0.8 done, 2106 rows, 760s
+instruct: mention_0 none 0.0 done, 2145 rows, 779s
+instruct: mention_0 neuron +0.8 done, 2184 rows, 796s
+instruct: mention_0 random_0 +0.8 done, 2223 rows, 812s
+instruct: mention_0 random_1 +0.8 done, 2262 rows, 828s
+instruct: mention_0 random_2 +0.8 done, 2301 rows, 845s
+instruct: mention_0 random_3 +0.8 done, 2340 rows, 864s
+instruct: mention_1 none 0.0 done, 2379 rows, 881s
+instruct: mention_1 neuron +0.8 done, 2418 rows, 899s
+instruct: mention_1 random_0 +0.8 done, 2457 rows, 916s
+instruct: mention_1 random_1 +0.8 done, 2496 rows, 932s
+instruct: mention_1 random_2 +0.8 done, 2535 rows, 946s
+instruct: mention_1 random_3 +0.8 done, 2574 rows, 959s
+instruct: mention_2 none 0.0 done, 2613 rows, 973s
+instruct: mention_2 neuron +0.8 done, 2652 rows, 986s
+instruct: mention_2 random_0 +0.8 done, 2691 rows, 1000s
+instruct: mention_2 random_1 +0.8 done, 2730 rows, 1013s
+instruct: mention_2 random_2 +0.8 done, 2769 rows, 1026s
+instruct: mention_2 random_3 +0.8 done, 2808 rows, 1042s
+instruct: mention_3 none 0.0 done, 2847 rows, 1058s
+instruct: mention_3 neuron +0.8 done, 2886 rows, 1077s
+instruct: mention_3 random_0 +0.8 done, 2925 rows, 1092s
+instruct: mention_3 random_1 +0.8 done, 2964 rows, 1106s
+instruct: mention_3 random_2 +0.8 done, 3003 rows, 1122s
+instruct: mention_3 random_3 +0.8 done, 3042 rows, 1135s
+instruct: copula_nonid_0 none 0.0 done, 3081 rows, 1151s
+instruct: copula_nonid_0 neuron +0.8 done, 3120 rows, 1167s
+instruct: copula_nonid_0 random_0 +0.8 done, 3159 rows, 1183s
+instruct: copula_nonid_0 random_1 +0.8 done, 3198 rows, 1200s
+instruct: copula_nonid_0 random_2 +0.8 done, 3237 rows, 1219s
+instruct: copula_nonid_0 random_3 +0.8 done, 3276 rows, 1238s
+instruct: copula_nonid_1 none 0.0 done, 3315 rows, 1255s
+instruct: copula_nonid_1 neuron +0.8 done, 3354 rows, 1271s
+instruct: copula_nonid_1 random_0 +0.8 done, 3393 rows, 1289s
+instruct: copula_nonid_1 random_1 +0.8 done, 3432 rows, 1309s
+instruct: copula_nonid_1 random_2 +0.8 done, 3471 rows, 1326s
+instruct: copula_nonid_1 random_3 +0.8 done, 3510 rows, 1342s
+instruct: self_nonid_0 none 0.0 done, 3549 rows, 1357s
+instruct: self_nonid_0 neuron +0.8 done, 3588 rows, 1374s
+instruct: self_nonid_0 random_0 +0.8 done, 3627 rows, 1389s
+instruct: self_nonid_0 random_1 +0.8 done, 3666 rows, 1404s
+instruct: self_nonid_0 random_2 +0.8 done, 3705 rows, 1419s
+instruct: self_nonid_0 random_3 +0.8 done, 3744 rows, 1434s
+instruct: self_nonid_1 none 0.0 done, 3783 rows, 1449s
+instruct: self_nonid_1 neuron +0.8 done, 3822 rows, 1464s
+instruct: self_nonid_1 random_0 +0.8 done, 3861 rows, 1476s
+instruct: self_nonid_1 random_1 +0.8 done, 3900 rows, 1487s
+instruct: self_nonid_1 random_2 +0.8 done, 3939 rows, 1498s
+instruct: self_nonid_1 random_3 +0.8 done, 3978 rows, 1509s
+instruct: self_h0 neuron -0.8 done, 4017 rows, 1519s
+instruct: self_h0 random_0 -0.8 done, 4056 rows, 1529s
+instruct: self_h1 neuron -0.8 done, 4095 rows, 1538s
+instruct: self_h1 random_0 -0.8 done, 4134 rows, 1548s
+instruct: self_h2 neuron -0.8 done, 4173 rows, 1559s
+instruct: self_h2 random_0 -0.8 done, 4212 rows, 1571s
+instruct: self_h3 neuron -0.8 done, 4251 rows, 1584s
+instruct: self_h3 random_0 -0.8 done, 4290 rows, 1597s
+instruct: self_h0 neuron +0.05 done, 4329 rows, 1607s
+instruct: self_h0 neuron -0.05 done, 4368 rows, 1617s
+instruct: self_h0 random_0 +0.05 done, 4407 rows, 1628s
+instruct: self_h0 random_0 -0.05 done, 4446 rows, 1638s
+instruct: self_h1 neuron +0.05 done, 4485 rows, 1647s
+instruct: self_h1 neuron -0.05 done, 4524 rows, 1658s
+instruct: self_h1 random_0 +0.05 done, 4563 rows, 1667s
+instruct: self_h1 random_0 -0.05 done, 4602 rows, 1677s
+instruct: self_h2 neuron +0.05 done, 4641 rows, 1688s
+instruct: self_h2 neuron -0.05 done, 4680 rows, 1700s
+instruct: self_h2 random_0 +0.05 done, 4719 rows, 1711s
+instruct: self_h2 random_0 -0.05 done, 4758 rows, 1723s
+instruct: self_h3 neuron +0.05 done, 4797 rows, 1735s
+instruct: self_h3 neuron -0.05 done, 4836 rows, 1747s
+instruct: self_h3 random_0 +0.05 done, 4875 rows, 1759s
+instruct: self_h3 random_0 -0.05 done, 4914 rows, 1772s
+instruct: third_0 neuron +0.05 done, 4953 rows, 1783s
+instruct: third_0 neuron -0.05 done, 4992 rows, 1793s
+instruct: third_0 random_0 +0.05 done, 5031 rows, 1804s
+instruct: third_0 random_0 -0.05 done, 5070 rows, 1814s
+instruct: third_1 neuron +0.05 done, 5109 rows, 1823s
+instruct: third_1 neuron -0.05 done, 5148 rows, 1833s
+instruct: third_1 random_0 +0.05 done, 5187 rows, 1843s
+instruct: third_1 random_0 -0.05 done, 5226 rows, 1853s
+instruct: third_2 neuron +0.05 done, 5265 rows, 1865s
+instruct: third_2 neuron -0.05 done, 5304 rows, 1877s
+instruct: third_2 random_0 +0.05 done, 5343 rows, 1890s
+instruct: third_2 random_0 -0.05 done, 5382 rows, 1902s
+instruct: third_3 neuron +0.05 done, 5421 rows, 1913s
+instruct: third_3 neuron -0.05 done, 5460 rows, 1924s
+instruct: third_3 random_0 +0.05 done, 5499 rows, 1936s
+instruct: third_3 random_0 -0.05 done, 5538 rows, 1949s
+instruct: offdiag self_h0 done, 5850 rows, 24212
+instruct: offdiag third_0 done, 6162 rows, 24272
+instruct: offdiag third_2 done, 6474 rows, 24354
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:   1%|          | 1/179 [00:02<07:07,  2.40s/it]Loading weights:  34%|███▎      | 60/179 [00:02<00:03, 33.06it/s]Loading weights:  49%|████▉     | 88/179 [00:02<00:02, 40.56it/s]Loading weights:  59%|█████▉    | 106/179 [00:03<00:01, 42.31it/s]Loading weights:  66%|██████▋   | 119/179 [00:03<00:01, 44.68it/s]Loading weights:  73%|███████▎  | 130/179 [00:03<00:01, 46.07it/s]Loading weights:  78%|███████▊  | 139/179 [00:04<00:01, 35.05it/s]Loading weights:  82%|████████▏ | 146/179 [00:05<00:01, 18.03it/s]Loading weights:  88%|████████▊ | 157/179 [00:06<00:01, 16.06it/s]Loading weights:  94%|█████████▍| 168/179 [00:06<00:00, 19.69it/s]Loading weights: 100%|██████████| 179/179 [00:06<00:00, 26.66it/s]
+no safetensors in /mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B-DPO/snapshots/c4b0485961ab24c2433b090f3b922f0913a9290f
+2026-11-19 07:12:54 END stage1 rc=1
+2026-11-19 07:12:54 CHAIN-END rc=1
+Running as unit: part213-chain-2026-11-19b.scope; invocation ID: f5b740d295ad4082b65636fc463ab27a
+2026-11-19 07:16:00 START stage1 --out results/part213/full --pilot results/part213/pilot --with-fr
+sft: results/part213/full/stage1-sft.jsonl complete, skipping (resume rule, F6)
+dpo: results/part213/full/stage1-dpo.jsonl complete, skipping (resume rule, F6)
+instruct: results/part213/full/stage1-instruct.jsonl complete, skipping (resume rule, F6)
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:   1%|          | 1/179 [00:02<06:51,  2.31s/it]Loading weights:  34%|███▎      | 60/179 [00:02<00:03, 33.90it/s]Loading weights:  47%|████▋     | 85/179 [00:02<00:02, 40.63it/s]Loading weights:  56%|█████▋    | 101/179 [00:03<00:01, 45.84it/s]Loading weights:  64%|██████▎   | 114/179 [00:03<00:01, 41.63it/s]Loading weights:  69%|██████▉   | 124/179 [00:03<00:01, 42.61it/s]Loading weights:  75%|███████▌  | 135/179 [00:03<00:01, 43.79it/s]Loading weights:  82%|████████▏ | 146/179 [00:04<00:00, 44.80it/s]Loading weights:  88%|████████▊ | 157/179 [00:04<00:00, 46.29it/s]Loading weights:  94%|█████████▍| 168/179 [00:04<00:00, 48.26it/s]Loading weights: 100%|██████████| 179/179 [00:04<00:00, 38.85it/s]
+fr: self_h0 none 0.0 done, 39 rows, 10s
+fr: self_h0 neuron +0.8 done, 78 rows, 20s
+fr: self_h0 random_0 +0.8 done, 117 rows, 30s
+fr: self_h1 none 0.0 done, 156 rows, 39s
+fr: self_h1 neuron +0.8 done, 195 rows, 49s
+fr: self_h1 random_0 +0.8 done, 234 rows, 58s
+fr: self_h2 none 0.0 done, 273 rows, 69s
+fr: self_h2 neuron +0.8 done, 312 rows, 81s
+fr: self_h2 random_0 +0.8 done, 351 rows, 92s
+fr: self_h3 none 0.0 done, 390 rows, 104s
+fr: self_h3 neuron +0.8 done, 429 rows, 117s
+fr: self_h3 random_0 +0.8 done, 468 rows, 132s
+fr: third_0 none 0.0 done, 507 rows, 142s
+fr: third_0 neuron +0.8 done, 546 rows, 152s
+fr: third_0 random_0 +0.8 done, 585 rows, 162s
+fr: third_1 none 0.0 done, 624 rows, 172s
+fr: third_1 neuron +0.8 done, 663 rows, 182s
+fr: third_1 random_0 +0.8 done, 702 rows, 191s
+fr: third_2 none 0.0 done, 741 rows, 204s
+fr: third_2 neuron +0.8 done, 780 rows, 216s
+fr: third_2 random_0 +0.8 done, 819 rows, 228s
+fr: third_3 none 0.0 done, 858 rows, 239s
+fr: third_3 neuron +0.8 done, 897 rows, 250s
+fr: third_3 random_0 +0.8 done, 936 rows, 261s
+2026-11-19 07:20:38 END stage1 rc=0
+2026-11-19 07:20:38 START stage2 --out results/part213/full
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:   1%|          | 1/179 [00:02<06:58,  2.35s/it]Loading weights:  34%|███▎      | 60/179 [00:02<00:03, 33.46it/s]Loading weights:  47%|████▋     | 85/179 [00:02<00:02, 41.19it/s]Loading weights:  57%|█████▋    | 102/179 [00:03<00:01, 41.26it/s]Loading weights:  64%|██████▎   | 114/179 [00:03<00:01, 43.30it/s]Loading weights:  69%|██████▉   | 124/179 [00:03<00:01, 43.74it/s]Loading weights:  75%|███████▌  | 135/179 [00:03<00:00, 44.42it/s]Loading weights:  82%|████████▏ | 146/179 [00:04<00:00, 45.82it/s]Loading weights:  88%|████████▊ | 157/179 [00:04<00:00, 46.96it/s]Loading weights:  94%|█████████▍| 168/179 [00:04<00:00, 49.60it/s]Loading weights: 100%|██████████| 179/179 [00:04<00:00, 38.86it/s]
+stage2: free_self_0 none 0.0 done, 1 rows
+stage2: free_third_0 none 0.0 done, 2 rows
+stage2: free_third_1 none 0.0 done, 3 rows
+stage2: free_cold_0 none 0.0 done, 4 rows
+stage2: free_self_0 neuron +0.8 done, 43 rows
+stage2: free_self_0 neuron -0.8 done, 82 rows
+stage2: free_self_0 random_0 +0.8 done, 121 rows
+stage2: free_third_0 neuron +0.8 done, 160 rows
+stage2: free_third_0 neuron -0.8 done, 199 rows
+stage2: free_third_0 random_0 +0.8 done, 238 rows
+stage2: free_third_1 neuron +0.8 done, 277 rows
+stage2: free_third_1 neuron -0.8 done, 316 rows
+stage2: free_third_1 random_0 +0.8 done, 355 rows
+stage2: free_cold_0 neuron +0.8 done, 394 rows
+stage2: free_cold_0 neuron -0.8 done, 433 rows
+stage2: free_cold_0 random_0 +0.8 done, 472 rows
+2026-11-19 08:24:09 END stage2 rc=0
+2026-11-19 08:24:09 CHAIN-END rc=0

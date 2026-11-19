@@ -1,0 +1,15 @@
+Running as unit: part213-pilot3-2026-11-19.scope; invocation ID: 3b869e8c27834e0facb05395d3875e62
+2026-11-19 02:41:01 start pilot
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:   1%|          | 1/179 [00:02<07:13,  2.44s/it]Loading weights:  34%|███▎      | 60/179 [00:02<00:03, 32.63it/s]Loading weights:  49%|████▉     | 88/179 [00:02<00:02, 42.44it/s]Loading weights:  60%|█████▉    | 107/179 [00:03<00:01, 43.84it/s]Loading weights:  68%|██████▊   | 121/179 [00:03<00:01, 47.64it/s]Loading weights:  74%|███████▎  | 132/179 [00:03<00:00, 48.62it/s]Loading weights:  79%|███████▉  | 141/179 [00:03<00:00, 46.97it/s]Loading weights:  83%|████████▎ | 149/179 [00:04<00:00, 44.43it/s]Loading weights:  88%|████████▊ | 157/179 [00:04<00:00, 43.77it/s]Loading weights:  94%|█████████▍| 168/179 [00:04<00:00, 44.75it/s]Loading weights: 100%|██████████| 179/179 [00:04<00:00, 38.72it/s]
+Traceback (most recent call last):
+  File "/home/elisepc/green/worktrees/ab-neon-review/part213/run213.py", line 832, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/elisepc/green/worktrees/ab-neon-review/part213/run213.py", line 828, in main
+    return {"pilot": cmd_pilot, "stage1": cmd_stage1, "stage2": cmd_stage2, "fr": cmd_fr}[args.command](args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-neon-review/part213/run213.py", line 725, in cmd_pilot
+    raise RuntimeError("a batch must share one decoder layer")
+RuntimeError: a batch must share one decoder layer
+2026-11-19 02:41:25 PILOT-EXIT rc=1

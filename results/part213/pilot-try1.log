@@ -1,0 +1,21 @@
+Running as unit: part213-pilot-2026-11-19.scope; invocation ID: 0fa0ce1ccc16486686e02d14a8e5b8d2
+2026-11-19 02:38:13 start pilot
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:   1%|          | 1/179 [00:08<26:07,  8.81s/it]Loading weights:  34%|███▎      | 60/179 [00:09<00:13,  8.99it/s]Loading weights:  39%|███▊      | 69/179 [00:09<00:10, 10.06it/s]Loading weights:  44%|████▎     | 78/179 [00:09<00:08, 12.00it/s]Loading weights:  47%|████▋     | 84/179 [00:10<00:08, 11.33it/s]Loading weights:  51%|█████     | 91/179 [00:11<00:07, 11.31it/s]Loading weights:  56%|█████▋    | 101/179 [00:11<00:05, 14.95it/s]Loading weights:  59%|█████▊    | 105/179 [00:11<00:05, 12.58it/s]Loading weights:  63%|██████▎   | 112/179 [00:12<00:04, 15.99it/s]Loading weights:  65%|██████▍   | 116/179 [00:12<00:04, 13.31it/s]Loading weights:  69%|██████▉   | 124/179 [00:13<00:04, 13.02it/s]Loading weights:  75%|███████▍  | 134/179 [00:13<00:02, 18.46it/s]Loading weights:  77%|███████▋  | 138/179 [00:13<00:02, 14.87it/s]Loading weights:  81%|████████  | 145/179 [00:14<00:01, 18.41it/s]Loading weights:  83%|████████▎ | 149/179 [00:14<00:02, 14.59it/s]Loading weights:  87%|████████▋ | 156/179 [00:14<00:01, 18.94it/s]Loading weights:  89%|████████▉ | 160/179 [00:15<00:01, 14.03it/s]Loading weights:  94%|█████████▍| 168/179 [00:15<00:00, 13.66it/s]Loading weights: 100%|██████████| 179/179 [00:15<00:00, 11.20it/s]
+Traceback (most recent call last):
+  File "/home/elisepc/green/worktrees/ab-neon-review/part213/run213.py", line 823, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/elisepc/green/worktrees/ab-neon-review/part213/run213.py", line 819, in main
+    return {"pilot": cmd_pilot, "stage1": cmd_stage1, "stage2": cmd_stage2, "fr": cmd_fr}[args.command](args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-neon-review/part213/run213.py", line 682, in cmd_pilot
+    if tokenizer(full, add_special_tokens=False)["input_ids"] != full:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/neuron-probe/.venv/lib/python3.12/site-packages/transformers/tokenization_utils_base.py", line 2526, in __call__
+    encodings = self._encode_plus(
+                ^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/neuron-probe/.venv/lib/python3.12/site-packages/transformers/tokenization_utils_tokenizers.py", line 1015, in _encode_plus
+    raise ValueError(
+ValueError: text input must be of type `str` (single example), `list[str]` (batch or single pretokenized example) or `list[list[str]]` (batch of pretokenized examples) or `list[tuple[list[str], list[str]]]` (batch of pretokenized sequence pairs).
+2026-11-19 02:38:41 PILOT-EXIT rc=0
