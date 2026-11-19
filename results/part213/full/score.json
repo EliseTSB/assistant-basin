@@ -103,19 +103,20 @@
   },
   "gate3": {
    "passed": false,
-   "status": "not read",
+   "status": "failed",
    "baseline_broken": [],
-   "kappa": null,
-   "reader_known_pass": null,
-   "labels_present": false,
-   "note": "reader agreement is `not read` until the frozen second reader labels the 40-item sample"
+   "kappa": 0.3495934959349595,
+   "reader_known_pass": 10,
+   "labels_present": true,
+   "note": "kappa 0.3495934959349595 < 0.60"
   },
   "gate4": {
-   "passed": false,
+   "passed": true,
    "n": 42,
    "broken": 5,
-   "labelled": 0,
-   "note": "gate 4 requires blind labels for all 42 slot neuron +0.8 THIRD_FREE answers"
+   "labelled": 42,
+   "valid_refusal_or_unknown": 1,
+   "neither": 36
   }
  },
  "predictions": {
@@ -467,29 +468,8 @@
    "verdict": "held"
   },
   "213.6": {
-   "clauses": {
-    "audit": "not read",
-    "sign_test": "not read",
-    "difference_ci": "not read"
-   },
-   "hits": {
-    "neuron": 0,
-    "random": 0
-   },
-   "n_discordant": 0,
-   "n_favouring_neuron": 0,
-   "sign_test_p": 1.0,
-   "difference_ci": {
-    "n": 21,
-    "point": 0.0,
-    "lo": 0.0,
-    "hi": 0.0
-   },
-   "audited_rows": 84,
-   "labelled_rows": 0,
-   "audit_complete": false,
-   "expected_audited_rows": 84,
-   "verdict": "not read"
+   "verdict": "untestable (gate failed)",
+   "clauses": {}
   },
   "213.7": {
    "clauses": {
@@ -2550,67 +2530,67 @@
   "audit_table": {
    "concept_neuron_+0.8": {
     "denominator": 36,
-    "labelled": 0,
-    "unlabelled": 36,
+    "labelled": 36,
+    "unlabelled": 0,
     "counts": {
-     "genuine_third_attr": 0,
-     "first_person_reversion": 0,
-     "incidental_or_negated": 0,
+     "genuine_third_attr": 9,
+     "first_person_reversion": 1,
+     "incidental_or_negated": 4,
      "valid_refusal_or_unknown": 0,
-     "other_coherent": 0,
-     "broken": 1
+     "other_coherent": 15,
+     "broken": 7
     }
    },
    "slot_neuron_+0.8": {
     "denominator": 42,
-    "labelled": 0,
-    "unlabelled": 42,
+    "labelled": 42,
+    "unlabelled": 0,
     "counts": {
-     "genuine_third_attr": 0,
+     "genuine_third_attr": 1,
      "first_person_reversion": 0,
-     "incidental_or_negated": 0,
-     "valid_refusal_or_unknown": 0,
-     "other_coherent": 0,
-     "broken": 5
+     "incidental_or_negated": 2,
+     "valid_refusal_or_unknown": 1,
+     "other_coherent": 29,
+     "broken": 9
     }
    },
    "slot_neuron_-0.8": {
     "denominator": 42,
-    "labelled": 0,
-    "unlabelled": 42,
+    "labelled": 42,
+    "unlabelled": 0,
     "counts": {
      "genuine_third_attr": 0,
      "first_person_reversion": 0,
-     "incidental_or_negated": 0,
-     "valid_refusal_or_unknown": 0,
-     "other_coherent": 0,
-     "broken": 0
+     "incidental_or_negated": 1,
+     "valid_refusal_or_unknown": 1,
+     "other_coherent": 36,
+     "broken": 4
     }
    },
    "concept_random_0_+0.8": {
     "denominator": 36,
-    "labelled": 0,
-    "unlabelled": 36,
+    "labelled": 36,
+    "unlabelled": 0,
     "counts": {
      "genuine_third_attr": 0,
      "first_person_reversion": 0,
      "incidental_or_negated": 0,
-     "valid_refusal_or_unknown": 0,
-     "other_coherent": 0,
-     "broken": 1
+     "valid_refusal_or_unknown": 1,
+     "other_coherent": 33,
+     "broken": 2
     }
    },
    "slot_random_0_+0.8": {
     "denominator": 42,
-    "labelled": 0,
-    "unlabelled": 42,
+    "labelled": 42,
+    "unlabelled": 0,
     "counts": {
      "genuine_third_attr": 0,
      "first_person_reversion": 0,
-     "incidental_or_negated": 0,
-     "valid_refusal_or_unknown": 0,
-     "other_coherent": 0,
-     "broken": 0
+     "incidental_or_negated": 1,
+     "valid_refusal_or_unknown": 2,
+     "other_coherent": 37,
+     "broken": 2
     }
    }
   },
@@ -2629,16 +2609,14 @@
    "distinct_keyword_prompt_pairs": 0,
    "hits": {}
   },
-  "second_reader_kappa": null,
+  "second_reader_kappa": 0.3495934959349595,
   "slot_minus_0.8_genuine": null,
   "slot_genuine_rate_ci": {
    "n": 21,
-   "rows": 42,
-   "labelled": 0,
-   "point": null,
-   "lo": null,
-   "hi": null,
-   "read": "not read"
+   "point": 0.0238,
+   "lo": 0.0,
+   "hi": 0.0714,
+   "read": "read"
   }
  },
  "fr_symmetry": {

@@ -1,0 +1,98 @@
+{
+ "known": [
+  {
+   "id": "k0",
+   "gold": "genuine_third_attr",
+   "label": "genuine_third_attr"
+  },
+  {
+   "id": "k1",
+   "gold": "genuine_third_attr",
+   "label": "genuine_third_attr"
+  },
+  {
+   "id": "k2",
+   "gold": "genuine_third_attr",
+   "label": "genuine_third_attr"
+  },
+  {
+   "id": "k3",
+   "gold": "first_person_reversion",
+   "label": "first_person_reversion"
+  },
+  {
+   "id": "k4",
+   "gold": "incidental_or_negated",
+   "label": "incidental_or_negated"
+  },
+  {
+   "id": "k5",
+   "gold": "incidental_or_negated",
+   "label": "incidental_or_negated"
+  },
+  {
+   "id": "k6",
+   "gold": "valid_refusal_or_unknown",
+   "label": "valid_refusal_or_unknown"
+  },
+  {
+   "id": "k7",
+   "gold": "other_coherent",
+   "label": "other_coherent"
+  },
+  {
+   "id": "k8",
+   "gold": "other_coherent",
+   "label": "other_coherent"
+  },
+  {
+   "id": "k9",
+   "gold": "broken",
+   "label": "broken"
+  }
+ ],
+ "reader_known_pass": 10,
+ "labels": {
+  "3": "other_coherent",
+  "18": "other_coherent",
+  "37": "other_coherent",
+  "46": "valid_refusal_or_unknown",
+  "57": "other_coherent",
+  "62": "other_coherent",
+  "69": "other_coherent",
+  "71": "broken",
+  "74": "other_coherent",
+  "75": "other_coherent",
+  "76": "other_coherent",
+  "92": "other_coherent",
+  "96": "other_coherent",
+  "98": "other_coherent",
+  "101": "other_coherent",
+  "103": "broken",
+  "107": "other_coherent",
+  "114": "broken",
+  "118": "other_coherent",
+  "121": "other_coherent",
+  "122": "other_coherent",
+  "124": "other_coherent",
+  "125": "other_coherent",
+  "126": "broken",
+  "127": "other_coherent",
+  "129": "other_coherent",
+  "153": "other_coherent",
+  "160": "valid_refusal_or_unknown",
+  "161": "other_coherent",
+  "163": "other_coherent",
+  "174": "other_coherent",
+  "191": "other_coherent",
+  "194": "other_coherent",
+  "197": "other_coherent",
+  "198": "other_coherent",
+  "210": "other_coherent",
+  "217": "other_coherent",
+  "220": "other_coherent",
+  "222": "other_coherent",
+  "229": "other_coherent"
+ },
+ "unparsed": []
+}
