@@ -6,7 +6,7 @@ prediction verdict                  clauses
 213.5      held                     concept_minus_slot_lo_ge_0.25=held, agreed_minus_slot_ge_0.25=held
 213.6      untestable (gate failed) 
 213.7      inconclusive             slot_upper_le_-0.30=inconclusive, concept_upper_le_-0.30=inconclusive
-213.8      failed                   J_self_positive_ge_17=failed, rho_J_L_self_ge_0.50=failed, rho_context_contrast_ge_0.40=failed
+213.8      failed                   J_self_positive_ge_17=failed, rho_J_L_self_ge_0.50=held, rho_context_contrast_ge_0.40=failed
 213.9      held                     sft_median_L_self_ge_0.75=held, sft_median_N_self_ge_0.75=held, sft_median_L_third_ge_0.50=held, sft_median_N_third_ge_0.50=held, paired_difference_inside_-0.25_0.25=held
 213.10     failed                   self_held_minus_self_nonid_lo_ge_0.50=held, tau_cop_nonid/3_upper_le_0.50=failed
 213.11     held                     mean_delta_lp_spec_lo_ge_0.75=held, positive_ge_16_of_21=held, slot_peer_only_lo_gt_0=held

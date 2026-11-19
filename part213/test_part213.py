@@ -967,3 +967,29 @@ def test_audit_file_rejects_bad_keys_and_labels(tmp_path):
         except ValueError:
             continue
         raise AssertionError(f"{path.name} was accepted")
+
+
+def _seed_slopes(s1, units, neuron_hi, random_hi):
+    """Seed z_tilde so the neuron arm's slope is neuron_hi/0.1 and random_0's is random_hi/0.1 on every prompt."""
+    for u in units:
+        for pid in s.SELF_HELD + s.THIRD_SLOT:
+            s1._cache[("instruct", u, pid, "neuron", "+0.05")] = neuron_hi
+            s1._cache[("instruct", u, pid, "neuron", "-0.05")] = 0.0
+            s1._cache[("instruct", u, pid, "random_0", "+0.05")] = random_hi
+            s1._cache[("instruct", u, pid, "random_0", "-0.05")] = 0.0
+
+
+def test_j_is_neuron_minus_random_by_default():
+    """Design l.235-236: J = J_N - J_R. The scorer once defaulted to the neuron slope alone (cold check, 2026-11-19)."""
+    s1 = s.Stage1(empty_records(), TARGETS)
+    u = s1.slot[0]
+    _seed_slopes(s1, [u], 1.0, 1.2)                         # J_N = 10, J_R = 12
+    assert abs(s1.j("instruct", u, s.SELF_HELD) - (-2.0)) < 1e-9
+    assert abs(s1.j("instruct", u, s.SELF_HELD, arm="neuron") - 10.0) < 1e-9
+
+
+def test_213_8_counts_the_differenced_j():
+    s1 = s.Stage1(empty_records(), TARGETS)
+    _seed_slopes(s1, s1.slot, 1.0, 1.2)                     # J < 0 for every unit; J_N > 0 for every unit
+    p8 = s.predict_213_8(s1)
+    assert p8["n_J_positive"] == 0, p8["n_J_positive"]

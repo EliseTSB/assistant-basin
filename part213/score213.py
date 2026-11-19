@@ -478,8 +478,12 @@ class Stage1:
         return float(sum(vals) / len(vals))
 
     # -- finite differences (213.8) ----------------------------------------------------------------------------------
-    def j(self, ckpt, uid, prompts, arm="neuron", eps=0.05) -> float | None:
-        """J(u, C) = mean_q [(z_tilde(+eps) - z_tilde(-eps)) / (2 eps)] for the neuron arm minus the random_0 arm."""
+    def j(self, ckpt, uid, prompts, arm=None, eps=0.05) -> float | None:
+        """J(u, C) = mean_q [(z_tilde(+eps) - z_tilde(-eps)) / (2 eps)] for the neuron arm minus the random_0 arm.
+
+        `arm` names one arm's slope alone (J_N or J_R). The default is the design's differenced J (design l.235-236).
+        Until 2026-11-19 the default was "neuron", so 213.8 reported J_N as J; found by the cold check
+        (papercut alert-121842-9569a-0003)."""
         def slope(a):
             vals = []
             for pid in prompts:
