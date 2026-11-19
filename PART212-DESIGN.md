@@ -1,9 +1,11 @@
 # Part 212: do Qwen3.5-4B's four maker neurons carry maker-specific evidence, or a factual-baseline scaffold whose removal exposes the Google fallback?
 
 Procedure: v1
-DRAFT v2 2026-11-18 23:07 CT by Gemini 4 Neon (proposer and designer; folds all four correction groups of Alden's
-2026-11-18 cold design review `part212-design-review-2026-11-18.md` on v1 `4c5b4027`; awaiting clearance before
-registration).
+DRAFT v3 2026-11-19 by Gemini 4 Neon (proposer and designer). v2 (2026-11-18 23:07 CT, Neon) folded all four
+correction groups of Alden's 2026-11-18 cold design review `part212-design-review-2026-11-18.md` on v1 `4c5b4027`.
+v3 folds Alden's narrow delta hold on v2 (council `part212-design-2026-11-18` #5); the fold was written by Journal
+Claude on Elise's go (2026-11-19 00:17 CT), with no change to the arms, the units or any threshold Neon set. See
+"Changes in v3".
 Proposed by Gemini 4 Neon and selected by Elise ("Option B", 2026-11-18 22:09 CT). This draft will be registered on
 public main through `tools/register_public.py` only after review clearance and before any model run of Part 212.
 
@@ -112,6 +114,11 @@ baseline?
    $a_{\text{clean}}(q, p)$. Construct the bank-mean factual profile $r(p) = \bar{a}_{\text{fact}}(p)$ (and similarly
    $\bar{a}_{\text{you}}(p)$): exact per-position mean across the 24 held-out donors on the 12 shared template positions
    and 5 forced-opening positions, and pooled mean across all 24 donors' user-body tokens on user-body positions.
+   **Mapping onto a recipient (v3):** the profile is indexed relative to each recipient's own prompt length $T_q$, never
+   by absolute position: header positions $0 \dots 2$ take the header profile, user-body positions $3 \dots T_q - 10$
+   take the pooled body mean, the 9 suffix positions $T_q - 9 \dots T_q - 1$ take the suffix profile in suffix order,
+   and opening positions $T_q \dots T_q + 4$ take the opening profile. The same mapping applies to every
+   `mean_resample_fact`, `sub_factual`, `sub_factual_online` and `sub_you` hook in Stage 1 and to call 0 in Stage 2.
 2. **Exact frozen vs. online intervention contract on `EN_MAKER[0..23]` (+ `'I was developed by **'`, same prompt per
    batch of 32 → zero padding):**
    - To make the 4-cell factorial (`0`, `r`, `a_clean - r`, `a_clean`) mathematically exact across all four layers
@@ -161,6 +168,12 @@ baseline?
    matched-control units at every prefill position `0 .. T-1` and every **non-EOS** generated position `0 .. L_gen - 1`
    (stopping strictly before EOS; EOS token activations are never stored or injected). Compute the pooled non-EOS
    generated-token mean $\mu_{\text{fact, gen}}$ across all 24 held-out `D_fact` donors.
+   **Donor indices are bound to captured forwards (v3):** a generated token's activation exists only once a decode call
+   processes it, so generated position $j$ is recorded by decode call $j + 1$. Under `max_new_tokens=48` a donor can
+   emit 48 non-EOS tokens, but the 48th is never fed back and has no activation. `L_gen` is therefore the number of
+   **processed** non-EOS generated positions, $L_{\text{gen}} = \min(n_{\text{non-EOS}}, 47)$; the uncaptured final
+   token is excluded from $\mu_{\text{fact, gen}}$ and from `donor_gen`, and is not replayed. `run.json` logs both
+   $n_{\text{non-EOS}}$ and `L_gen` per donor.
    - **Short/empty donor refusal (Gate 3b):** if any donor produces `L_gen < 4` non-EOS tokens, Stage 2 stops before
      generation and reports the short donor; `L_gen` for every donor is logged in `run.json`.
    - **Exact prefill/decode indexing during `model.generate(use_cache=True)`:**
@@ -207,7 +220,19 @@ Applying `STANDARD-CONTROLS.md` and `TOOLKIT.md`:
   empty, under 4 words, contains `\ufffd` or `!!!!`, or repeats any 3-word n-gram $\ge 4$ times). Fixed denominator 192
   is retained everywhere (`clean_google_rate = count(unbroken and google) / 192`). Every arm reports the full
   5-category state distribution (`clean_google`, `clean_alibaba`, `clean_other_maker`, `clean_no_maker`, `broken`) and
-  prompt-paired transition matrix against `zero` and `unchanged`. **Per-headline-arm validity bound:** every arm
+  prompt-paired transition matrix against `zero` and `unchanged`.
+  **Scope of the 192 denominator (v3):** 192 is the denominator for every full held-out main arm (8 samples × 24
+  prompts). The 24-answer sets (each matched random set's sample-0 answers, the `"Who created you?"` rows, the fluency
+  guards, and any sample-0 equal-budget table) use their own denominator of 24 and are never pooled with or compared as
+  rates against a 192-row arm.
+  **Transition join (v3):** transition matrices join rows by (question index, sample index). Part 66's row seed hashes
+  the condition id with the question and sample (`row_seed(condition_id, question_index, sample)`), so a joined pair
+  shares its prompt and sample index but not its random draw; the table is descriptive, not a matched-draw comparison.
+  **Exclusive categories (v3):** `broken` takes precedence; an unbroken answer is then assigned to the maker whose
+  Part 66 lexicon match starts earliest in the text (first-named maker), or `clean_no_maker` if none matches. The scorer
+  reports, per arm, how many unbroken answers matched more than one maker family, so a first-named rule that decides
+  many rows is visible.
+  **Per-headline-arm validity bound:** every arm
   entering a mechanistic headline (`zero`, `trace_resample_fact`, `mean_resample_fact`, `sub_factual`) must have
   `broken_rate <= 0.15` (<= 28 of 192); a damaged arm stays descriptive and cannot support a scaffold or evidence claim.
 - **Size first (#7):** Multiplied out in `Size` below with a pilot gate before full Stage 2.
@@ -286,7 +311,7 @@ denominator 192 (`clean_google_rate = count(unbroken and google) / 192`).
 | 212.1 | Stage 2 replication against maker-activation-write-norm-matched nulls: `zero` has clean Google rate between 12% and 35% of 192 held-out answers (`broken_rate <= 0.15`), `unchanged` has at most 3 of 192 (<= 1.6%), and `zero`'s rate strictly exceeds all 20 matched random `zero` sets' rates (descriptive top rank; equal-budget sample-0 rank on 24 answers reported beside it, with no uniform-null p-value claimed). Fails if any clause misses. | high | Gemini 4 Neon |
 | 212.2 | Stage 1 factual-resample test (exact logits): `zero` raises mean `g_ali` by at least +1.5 logits over `unchanged` and exceeds all 20 matched random `zero` sets; AND `trace_resample_fact` stays in the near-baseline preservation band `-0.50 <= delta_g_ali(trace_resample_fact) < 0.50 * delta_g_ali(zero)` (strictly less than 50% of `zero`'s shift without a large negative reversal). Fails if any clause misses. | medium | Gemini 4 Neon |
 | 212.3 | Stage 1 factual-profile subtraction: frozen `sub_factual` ($a_{\text{clean}} - \bar{a}_{\text{fact}}$) raises mean `g_ali` by at least +0.75 logits, retains at least 35% of `zero`'s mean $\Delta g_{\text{ali}}$ ($\Delta g_{\text{ali}}(\text{sub\_factual}) / \Delta g_{\text{ali}}(\text{zero}) \ge 0.35$), and exceeds at least 18 of 20 matched random `sub_factual` sets. Fails if any clause misses. | medium | Gemini 4 Neon |
-| 212.4 | Stage 2 factual-resample test (free generation, with fluency validity): on the 192 held-out answers, `trace_resample_fact` has `broken_rate <= 0.15`, its clean Google rate is strictly less than half of `zero`'s clean Google rate (`ratio < 0.50`), AND the paired question-clustered 95% bootstrap CI of `rate(zero) - rate(trace_resample_fact)` lies strictly above 0. Fails if any clause misses. | medium | Gemini 4 Neon |
+| 212.4 | Stage 2 factual-resample test (free generation, with fluency validity): on the 192 held-out answers, `trace_resample_fact` has `broken_rate <= 0.15`, its clean Google rate is strictly less than half of `zero`'s clean Google rate (`ratio < 0.50`), the loss survives a worst-case recode that counts every broken `trace_resample_fact` answer as Google (`count(clean_google) + count(broken) < 0.50 * count_zero(clean_google)`), AND the paired question-clustered 95% bootstrap CI of `rate(zero) - rate(trace_resample_fact)` lies strictly above 0. Fails if any clause misses. | medium | Gemini 4 Neon |
 | 212.5 | Stage 2 factual-profile subtraction: on the 192 held-out answers, `sub_factual` exceeds `unchanged` in clean Google rate by at least 5 percentage points (`rate(sub_factual) - rate(unchanged) >= 0.05`), exceeds at least 18 of 20 matched random `sub_factual` sets, and has `broken_rate <= 0.15`. Fails if any clause misses. | medium | Gemini 4 Neon |
 | 212.6 | Factual vs. `"you"` donor-bank difference (Stage 1): `trace_resample_fact` exceeds `trace_resample_you` in mean $\Delta g_{\text{ali}}$ by at least +0.25 logits, AND in the single-unit 4x4 decomposition `L6 N753`'s `trace_resample_fact - trace_resample_you` gap is **strictly positive (`>= +0.10` logits)** and strictly larger than each of the other three units' (`L7 N1169`, `L11 N8868`, `L29 N776`). Fails if any clause misses. | medium | Gemini 4 Neon |
 | 212.7 | Downstream Google-writer routing: across the 10 core English intervention arms in Stage 1 (`unchanged`, `zero`, `trace_resample_fact`, `trace_resample_you`, `mean_resample_fact`, `sub_factual`, `scale_pos2`, `scale_neg1`, `zero_prompt_only`, `zero_opening_only`), each arm's mean last-position shift in `L27 N3325` correlates negatively with its mean $\Delta g_{\text{ali}}$ (Spearman $\rho \le -0.70$). Fails if $\rho > -0.70$. | high | Gemini 4 Neon |
@@ -318,12 +343,17 @@ Copied verbatim into PREDICTIONS.md under "## Part 212 (registered ...)" at regi
   - **"Factual resampling/subtraction pattern consistent with a scaffold"** ONLY if Gates 1–3 pass, 212.1–212.5 ALL
     hold, `g_seq` agreement passes, `mean_resample_fact` ALSO stays in the `< 50%` preservation band in Stage 1
     (`-0.50 <= delta_g_ali < 0.50 * delta_g_ali(zero)`) and Stage 2 (`clean_google_rate < 0.50 * rate(zero)` with
-    `broken_rate <= 0.15`), and the factorial interaction $I$ is printed beside the headline.
+    `broken_rate <= 0.15` and the worst-case recode `count(clean_google) + count(broken) < 0.50 * count_zero(clean_google)`),
+    and the factorial interaction $I$ is printed beside the headline. A loss that holds on clean answers but not under
+    the worst-case recode is reported descriptively ("loss not separable from damage") and supports neither headline.
   - **"Pattern consistent with question-specific maker evidence"** ONLY if Gates 1–3 pass, 212.1 holds,
     `broken_rate <= 0.15` on `zero`, `trace_resample_fact`, `mean_resample_fact` and `sub_factual`, BOTH
     `trace_resample_fact` and `mean_resample_fact` retain `>= 50%` of `zero` in Stage 1 AND Stage 2 (with Stage 2
-    clustered 95% CI of `rate(trace_resample_fact) - rate(unchanged)` strictly above 0), AND `sub_factual` shows a
-    small direct effect (`delta_g_ali < 0.50` logits in Stage 1 AND `clean_google_rate - unchanged < 0.05` in Stage 2).
+    clustered 95% CI of `rate(trace_resample_fact) - rate(unchanged)` strictly above 0), AND `sub_factual` shows no
+    direct effect of either sign above the bounds (`|delta_g_ali| < 0.50` logits in Stage 1 AND
+    `|clean_google_rate - rate(unchanged)| < 0.05` in Stage 2). A `sub_factual` shift of `delta_g_ali <= -0.50` or a
+    Stage 2 drop of 0.05 or more is a **strong reversal**: it is reported as its own finding and supports neither
+    headline.
   - **Otherwise ("mixed / split across arms, units, or stages"):** report the complete 4-cell factorial table,
     factorial interaction $I$, `mean` vs `trace` comparison, realized perturbation norms, 5-category transition tables,
     and 4×4 per-unit breakdown without forcing a single-cause headline. If 212.1 fails, withdraw the Finding-1
@@ -366,3 +396,22 @@ Copied verbatim into PREDICTIONS.md under "## Part 212 (registered ...)" at regi
    thresholds (`< 0.50` / `>= 0.35`, denominator guard `> 0.10`); bounded `212.2` against large negative reversals
    (`>= -0.50`); replaced failed-conjunction alternate-headline logic with explicit positive effect and validity
    predicates.
+
+## Changes in v3 (folding Alden's narrow delta hold on v2, council `part212-design-2026-11-18` #5)
+
+Alden checked only the v2 delta and found the v1 points closed except two headline rules, plus implementation notes.
+No arms, units, doses or thresholds changed.
+
+1. **A loss made of broken text cannot support a headline.** Alden's paired example: `zero` 24/192 clean Google, each
+   factual resample keeping 11 and turning 13 into broken answers, passes the 15% floor (6.77% broken), the half-rate
+   ratio and the trace bootstrap. `212.4` and the scaffold headline's `mean_resample_fact` clause now also require the
+   loss to survive a worst-case recode (`clean_google + broken < 0.50 × zero's clean_google`, counts on 192); a loss
+   that fails it is reported as not separable from damage.
+2. **"Small direct effect" is now a magnitude.** The alternate headline required `delta_g_ali < 0.50`, which also
+   accepts −5 logits. It now requires `|delta_g_ali| < 0.50` and `|Δ clean Google rate| < 0.05`; a reversal at or
+   beyond either bound is reported separately as a strong reversal.
+3. **Implementation contracts:** the 192 denominator is scoped to full held-out main arms (24-row sets keep 24);
+   transitions join on (question, sample) index; the five states are exclusive (`broken` first, then the first-named
+   maker, with a per-arm multi-hit count); `L_gen` counts processed positions only (`min(n_non-EOS, 47)`, the 48th
+   token excluded, not replayed); bank-mean profiles map onto each recipient by header, body, suffix and opening
+   relative to its own prompt length.
