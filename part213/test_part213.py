@@ -842,3 +842,59 @@ def test_stage2_plan_is_16_cells_and_364_executed_rows():
     for pid, arm, _dose, _alpha in plan:
         total += 1 if arm == "none" else sum(1 for u in UNITS if not run213.is_sealed(u, pid))
     assert total == 364          # 472 planned - 108 sealed concept rows
+
+
+def test_r2_one_prompt_fully_labelled_is_not_a_complete_audit():
+    """Luna r2 (HIGH): 42 labelled rows from ONE THIRD_FREE prompt (21 neuron + 21 random) used to read as a complete
+    audit and could hold 213.6 against the /42 thresholds. The audit is complete only with every slot unit on BOTH
+    prompts in BOTH arms, each exactly once (84 rows)."""
+    rec = empty_records()
+    rec["stage2"] = [r for r in _stage2_rows() if r["prompt_id"] != "free_third_1"]
+    s.assign_blind_ids(rec, TARGETS)
+    hit_units = set(SLOT[:10])
+    labels = _blind_labels(rec, lambda row: "genuine_third_attr"
+                           if row["arm"] == "neuron" and row["dose"] == "+0.8" and row["unit"] in hit_units
+                           else "other_coherent")
+    p6 = s.predict_213_6(rec, TARGETS, {"labels": labels})
+    assert p6["audited_rows"] == 42 and p6["labelled_rows"] == 42
+    assert p6["audit_complete"] is False
+    assert p6["expected_audited_rows"] == 84
+    assert set(p6["clauses"].values()) == {"not read"}
+    # a duplicated row does not make up for a missing one
+    rec2 = empty_records()
+    rows = _stage2_rows()
+    dup = [r for r in rows if r["prompt_id"] == "free_third_0" and r["unit"] == SLOT[0]
+           and r["arm"] == "neuron" and r["dose"] == "+0.8"]
+    rows = [r for r in rows if not (r["prompt_id"] == "free_third_1" and r["unit"] == SLOT[0]
+                                    and r["arm"] == "neuron" and r["dose"] == "+0.8")] + [dict(dup[0])]
+    rec2["stage2"] = rows
+    s.assign_blind_ids(rec2, TARGETS)
+    labels2 = _blind_labels(rec2, lambda row: "other_coherent")
+    p6b = s.predict_213_6(rec2, TARGETS, {"labels": labels2})
+    assert p6b["audited_rows"] == 84 and p6b["audit_complete"] is False
+
+
+def test_r2_gate3_is_not_read_without_the_audit_and_needs_the_known_example_check():
+    """Luna r2 (MEDIUM): Gate 3 used to report passed with no reader evidence. The design's Gate 3 (l.357-360) is
+    baseline coherence AND the second reader passing >= 9/10 known examples AND kappa >= 0.60 on the audit sample."""
+    base = {"stage2": _stage2_rows(), "runs": {}}
+    g = s.gate3(dict(base, labels={}), TARGETS)
+    assert g["passed"] is False and g["status"] == "not read"
+    # with no audit, 213.6 stays `not read` (not voided as a gate failure)
+    rec = empty_records()
+    rec["stage2"] = _stage2_rows()
+    result = s.score(rec, TARGETS, None)
+    assert result["gates"]["gate3"]["status"] == "not read"
+    assert result["predictions"]["213.6"]["verdict"] == "not read"
+    labels = {"0": "other_coherent"}
+    g = s.gate3(dict(base, labels=labels, kappa=0.70), TARGETS)                     # no known-example result
+    assert g["passed"] is False and g["status"] == "failed"
+    g = s.gate3(dict(base, labels=labels, kappa=0.70, reader_known_pass=8), TARGETS)
+    assert g["passed"] is False and g["status"] == "failed"
+    g = s.gate3(dict(base, labels=labels, kappa=0.59, reader_known_pass=10), TARGETS)
+    assert g["passed"] is False and g["status"] == "failed"
+    g = s.gate3(dict(base, labels=labels, kappa=0.60, reader_known_pass=9), TARGETS)
+    assert g["passed"] is True and g["status"] == "passed"
+    broken = [dict(r, answer="") if r["arm"] == "none" else r for r in _stage2_rows()]
+    g = s.gate3({"stage2": broken, "runs": {}, "labels": labels, "kappa": 0.9, "reader_known_pass": 10}, TARGETS)
+    assert g["passed"] is False and g["status"] == "failed" and g["baseline_broken"]

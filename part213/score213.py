@@ -766,11 +766,15 @@ def gate2(records: dict) -> dict:
 
 
 def gate3(records: dict, targets: dict) -> dict:
-    """Stage 2 baseline coherence and reader agreement (design l.349-352).
+    """Stage 2 baseline coherence and reader agreement (design l.357-360).
 
-    F5: a failed kappa "marks Stage 2's audited endpoint unread". When labels exist but no kappa is supplied, the
-    agreement clause cannot pass; when no audit exists at all, kappa is `not read` and Gate 3 rests on the unpushed
-    baselines (which are all the pilot/full run can show before the blind reader runs).
+    The registered gate has three parts: the unpushed baselines are unbroken on all 4 Stage 2 prompts, the frozen
+    second reader passes `>= 9/10` known examples (`reader_known_pass` in the audit JSON), and Cohen's kappa is
+    `>= 0.60` on the 40-item sample. `status` is `passed`, `failed` or `not read`:
+    - broken baselines fail the gate whether or not an audit exists;
+    - with no audit labels the reader parts are `not read`, so the gate is `not read` (never `passed`: Luna r2 found
+      the old code reported `passed` with no reader evidence). `score` then leaves 213.6 `not read`, not voided;
+    - with labels, a missing or failing kappa or known-example result fails the gate (F5: labels without kappa).
     """
     rows = records["stage2"]
     baseline = [r for r in rows if r.get("arm") == "none"]
@@ -783,18 +787,29 @@ def gate3(records: dict, targets: dict) -> dict:
             if broken_answer(entry.get("answer", "")):
                 broken.append(entry.get("id"))
     kappa = records.get("kappa")
+    known = records.get("reader_known_pass")
     labels_present = bool(records.get("labels"))
-    if labels_present:
-        kappa_ok = kappa is not None and kappa >= 0.60
+    notes = []
+    if broken:
+        status = "failed"
+        notes.append("an unpushed Stage 2 baseline is broken")
+    elif not labels_present:
+        status = "not read"
+        notes.append("reader agreement is `not read` until the frozen second reader labels the 40-item sample")
     else:
-        kappa_ok = True  # kappa is `not read`: no audited endpoint has been supplied yet
-    note = ""
-    if not labels_present:
-        note = "kappa is `not read` until the frozen second reader labels the 40-item sample"
-    elif kappa is None:
-        note = "audit labels supplied without kappa: Stage 2's audited endpoint is unread (gate fails)"
-    return {"passed": not broken and kappa_ok,
-            "baseline_broken": broken, "kappa": kappa, "labels_present": labels_present, "note": note}
+        kappa_ok = kappa is not None and kappa >= 0.60
+        known_ok = known is not None and known >= 9
+        status = "passed" if (kappa_ok and known_ok) else "failed"
+        if kappa is None:
+            notes.append("audit labels supplied without kappa: the audited endpoint is unread (gate fails)")
+        elif not kappa_ok:
+            notes.append(f"kappa {kappa} < 0.60")
+        if known is None:
+            notes.append("no known-example result (`reader_known_pass`, of 10) for the second reader")
+        elif not known_ok:
+            notes.append(f"second reader passed {known}/10 known examples (< 9)")
+    return {"passed": status == "passed", "status": status, "baseline_broken": broken, "kappa": kappa,
+            "reader_known_pass": known, "labels_present": labels_present, "note": "; ".join(notes)}
 
 
 def gate4(records: dict, targets: dict) -> dict:
@@ -941,6 +956,11 @@ def predict_213_5(s1: Stage1) -> dict:
             "reader_sensitive": reader_sensitive}
 
 
+def expected_audit_keys(targets: dict) -> list:
+    """The (unit, prompt) pairs one Stage 2 audit arm must cover exactly once: every slot unit x THIRD_FREE."""
+    return [(u["id"], p) for u in targets["units"] if u["kind_haiku"] == "slot" for p in THIRD_FREE]
+
+
 def predict_213_6(records: dict, targets: dict, audit: dict | None) -> dict:
     """Stage 2 blind audit: 42 slot `neuron +0.8` vs 42 paired `random_0 +0.8` THIRD_FREE answers (design l.455-459).
 
@@ -975,7 +995,13 @@ def predict_213_6(records: dict, targets: dict, audit: dict | None) -> dict:
         per_unit.setdefault(r["unit"], {"neuron": 0, "random": 0})[arm] += int(hit)
     labelled = sum(1 for r, _arm in audited if r.get("blind_id") is not None
                    and labels.get(r.get("blind_id")) is not None)
-    complete = bool(audited) and labelled == len(audited)
+    # Luna r2: every present row labelled is not enough. The registered audit is every slot unit on BOTH THIRD_FREE
+    # prompts in BOTH arms, each exactly once (21 x 2 x 2 = 84); one prompt's 42 rows, or a duplicated row standing
+    # in for a missing one, is a partial audit and leaves every clause `not read`.
+    expected = expected_audit_keys(targets)
+    shape_ok = all(sorted((r["unit"], r["prompt_id"]) for r, a in audited if a == arm) == sorted(expected)
+                   for arm in ("neuron", "random"))
+    complete = bool(audited) and labelled == len(audited) and shape_ok
     discordant = [v["neuron"] - v["random"] for v in per_unit.values() if v["neuron"] != v["random"]]
     n_disc = len(discordant)
     k = sum(1 for d in discordant if d > 0)
@@ -998,7 +1024,7 @@ def predict_213_6(records: dict, targets: dict, audit: dict | None) -> dict:
         }
     return {"clauses": clauses, "hits": hits, "n_discordant": n_disc, "n_favouring_neuron": k,
             "sign_test_p": p, "difference_ci": diff_ci, "audited_rows": len(audited),
-            "labelled_rows": labelled, "audit_complete": complete}
+            "labelled_rows": labelled, "audit_complete": complete, "expected_audited_rows": 2 * len(expected)}
 
 
 def predict_213_7(s1: Stage1) -> dict:
@@ -1249,7 +1275,8 @@ def slot_genuine_ci(records: dict, targets: dict, audit: dict | None) -> dict:
         if label is not None:
             labelled += 1
         per_unit[r["unit"]] += int(label == "genuine_third_attr")
-    if len(rows) != 42 or labelled != 42 or len(per_unit) < MIN_ELIGIBLE:
+    keys = sorted((r["unit"], r["prompt_id"]) for r in rows)
+    if keys != sorted(expected_audit_keys(targets)) or labelled != len(rows) or len(per_unit) < MIN_ELIGIBLE:
         return {"n": len(per_unit), "rows": len(rows), "labelled": labelled, "point": None,
                 "lo": None, "hi": None, "read": "not read"}
     values = list(per_unit.values())
@@ -1283,7 +1310,8 @@ def score(records: dict, targets: dict, audit: dict | None = None) -> dict:
     stage2_ci = slot_genuine_ci(records, targets, audit)
     gates = {"gate0": g0, "gate1": g1, "gate2": g2, "gate3": g3, "gate4": g4}
     stage1_gate_failed = not (g1["passed"] and g2["passed"])
-    stage2_gate_failed = not (g1["passed"] and g3["passed"])
+    # Gate 3 `not read` (no audit yet) leaves 213.6 to compute itself as `not read`; only a FAILED gate voids it.
+    stage2_gate_failed = not g1["passed"] or g3["status"] == "failed"
 
     preds = {}
     for name, fn in (("213.1", lambda: predict_213_1(s1)), ("213.2", lambda: predict_213_2(s1)),
@@ -1399,6 +1427,7 @@ def main(argv=None) -> int:
     if audit:
         records["labels"] = audit.get("labels", {})
         records["kappa"] = audit.get("kappa")
+        records["reader_known_pass"] = audit.get("reader_known_pass")
     result = score(records, targets, audit)
     out = Path(args.out) if args.out else Path(args.records) / "score.json"
     out.parent.mkdir(parents=True, exist_ok=True)
