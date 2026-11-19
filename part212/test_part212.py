@@ -5,6 +5,7 @@ Each required property has at least one test that was shown red under a delibera
 """
 import json
 import sys
+import types
 from pathlib import Path
 
 import numpy as np
@@ -1022,15 +1023,22 @@ def test_runner_arm_and_row_plan_matches_the_design():
     assert sum(n.startswith('unit:') for n in names) == 16
     assert sum(n.startswith('random_') for n in names) == 100
     rows = run212.stage2_rows()
-    assert len(rows) == 3744
+    # F2: design line 195's numbers — 6 full arms x 240 + 2 trace arms x 216 + 3 diagnostic arms x 192 + 20 sets x 3 x 24
+    assert len(rows) == 3888
     by = {}
     for r in rows:
         by.setdefault(r['arm'], 0)
         by[r['arm']] += 1
-    assert by['trace_resample_fact'] == 696 and by['zero'] == 696  # 216 planned + 480 across the 20 random sets
+    assert by['trace_resample_fact'] == 696 and by['zero'] == 720  # trace: 216 + 480; zero: 240 + 480 (random sets)
     assert by['trace_resample_zh_maker'] == 192 and by['zero_gen_only'] == 192
     held_zero = sum(1 for r in rows if r['arm'] == 'zero' and r['set'] is None and r['question_index'] < 24)
     assert held_zero == 192  # the held-out share of a full arm
+    for arm in run212.STAGE2_FULL_ARMS:
+        n = sum(1 for r in rows if r['arm'] == arm and r['set'] is None)
+        assert n == 240, (arm, n)  # 192 held-out + 24 positive + 6 guards x 4
+    guards = [r for r in rows if r['set'] is None and r['question_index'] >= 25]
+    assert len(guards) == 6 * 4 * len(run212.STAGE2_FULL_ARMS) == 144
+    assert {r['question_index'] for r in guards} == set(range(25, 31))
     assert len(run212.stage2_rows(pilot=True)) == 160
 
 
@@ -1241,6 +1249,15 @@ def test_target_down_columns_take_each_units_own_down_proj_column():
         run212.realized_perturbation(vals, clean, down[0])
 
 
+def test_target_down_columns_select_the_requested_layer_for_per_unit_arms():
+    """F3: a one-unit arm must use that unit's layer weights, even when it is not the first TARGET layer."""
+    down = np.stack([np.full((3, 5), float(10 * i)) + np.arange(3)[:, None] + np.arange(5)[None, :]
+                     for i in range(4)])
+    got = run212.target_down_columns(down, [(7, 2)])
+    assert got.shape == (3, 1)
+    assert np.allclose(got[:, 0], [12.0, 13.0, 14.0])
+
+
 def test_pool_norm_pass_accumulates_abs_on_the_24_heldout_prompts(monkeypatch):
     """G4: the pools must exist before the recording pass, so a pre-pass over the 24 held-out EN_MAKER prompts
     accumulates |a| for every unit of the pool layers and records nothing."""
@@ -1289,3 +1306,226 @@ def test_stage2_tensors_slice_the_arms_units_from_the_recording():
     assert t['mu_gen'][0].shape == (1, 1) and t['mu_gen'][0][0, 0] == 602.0  # unit (0, 2), the same at every call
     assert t['mu_prompt'][0].shape == (T + 5, 1)
     assert np.allclose(t['mu_prompt'][1][:, 0], run212.profile_at(means['mu_prompt'], T, H, S)[:, 3])  # unit (1, 0)
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# fixes from the GLM 5.3 cold review (2026-11-19): F1-F6, F8, F10. Each test is red on the pre-fix code.
+# ----------------------------------------------------------------------------------------------------------------
+
+def test_F1_stage2_zero_zeroes_every_clamped_unit_at_every_call():
+    """F1: mode 'zero' (the primary Stage 2 arm and every random_k:zero set) built an all-False mask, so the arm was a
+    no-op. The pure apply and the installed hook must leave the clamped columns at 0 at call 0 and at every decode."""
+    units = [(0, 0), (0, 1)]
+    T, L_gen = 5, 3
+    t = stage2_tensors_for(units, T, L_gen)
+    pre, dec = fresh(5.0, T, 7.0, 4)
+    seen = stage2_run(fake_layers(1), units, 'zero', t, T, L_gen, 2.0, pre, dec)
+    for call in seen:
+        assert torch.all(call[0][..., :2] == 0), 'zero left a clamped column nonzero'
+        assert torch.all(call[0][..., 2:] != 0)  # unclamped columns are untouched
+    # the pure apply, on every call and every position, with the mask the hook builds
+    for call in range(0, 5):
+        x = torch.full((1, T if call == 0 else 1, 8), 5.0)
+        out = run212.stage2_apply(x, [0, 1], run212.stage2_source('zero', call, T, L_gen),
+                                  False, {'zero_mask': run212.stage2_zero_mask('zero', call, T, x.shape[1])})
+        assert torch.all(out[..., :2] == 0)
+    assert np.all(run212.stage2_zero_mask('zero', 0, T, T)) and np.all(run212.stage2_zero_mask('zero', 3, T, 1))
+    # the phase-split diagnostics still only zero their own half
+    assert not np.any(run212.stage2_zero_mask('zero_gen', 0, T, T))
+    assert np.all(run212.stage2_zero_mask('zero_gen', 1, T, 1))
+    assert not np.any(run212.stage2_zero_mask('zero_prompt', 1, T, 1))
+    assert run212.stage2_plan('zero') == 'zero'
+
+
+def test_F2_full_arms_plan_the_six_guards_and_guard_rows_need_no_donor_lookup():
+    """F2: the 6 fluency guards x 4 samples were never planned (Stage 2 stopped at question 24), so Gate 3's guard
+    clause could never pass; and a guard row must take the bank-level mu_prompt mapped onto its own length, not a
+    donor row (donors hold 25 entries, so the old stage2_tensors raised IndexError for qi >= 25)."""
+    rows = run212.stage2_rows()
+    guards = [r for r in rows if r['question_index'] >= 25]
+    assert len(guards) == 144
+    assert all(r['set'] is None and r['arm'] in run212.STAGE2_FULL_ARMS for r in guards)
+    assert run212.FULL_ARM_ROWS == 240
+    bank = run212.load_prompts()
+    assert run212.question_text(bank, 25) == bank['guards'][0]['question']
+    record_units = [(0, 0), (0, 1), (0, 2)]
+    K = len(record_units)
+    donors = {'d_fact': []}  # guard mapping must not look up a per-question donor
+    means = {'mu_prompt': np.arange((H + S + 1 + 5) * K, dtype=float).reshape(-1, K) + 500.0,
+             'mu_gen': np.arange(K, dtype=float) + 600.0}
+    units = [(0, 1), (0, 2)]
+    t = run212.stage2_tensors(donors, means, 'mean_resample_fact', 25, units, record_units, H, S, T_guard=20)
+    assert set(t) == {'mu_prompt', 'mu_gen'}  # no donor row for a guard
+    assert t['mu_prompt'][0].shape == (20 + 5, 2)
+    assert np.allclose(t['mu_prompt'][0][:, 0], run212.profile_at(means['mu_prompt'], 20, H, S)[:, 1])
+    assert np.allclose(t['mu_gen'][0], [[601.0, 602.0]])
+    with pytest.raises(ValueError):
+        run212.stage2_tensors(donors, means, 'trace_resample_fact', 25, units, record_units, H, S, T_guard=20)
+
+
+def test_F3_random_set_trace_arm_clamps_each_pool_units_own_trace():
+    """F3: a random set's trace arm clamped the TARGET units' recorded trace into the pool units' columns. Each clamped
+    unit must take its OWN recorded d_fact trace (rec built from its own column)."""
+    T_q = 14
+    K = 4
+    own_clean = np.stack([np.full(T_q + 5, 10.0 + k) for k in range(K)], axis=1)
+    own_trace = np.stack([np.full(T_q + 5, 90.0 + k) for k in range(K)], axis=1)
+    target_trace = np.full((T_q + 5, K), -1.0)  # what the old code injected (the TARGET columns' trace)
+    rec = {'clean': own_clean, 'd_fact': own_trace}
+    vals = run212.stage1_values('random_0:trace_resample_fact', 0, T_q, H, S, rec, {})
+    assert np.allclose(vals, own_trace) and not np.allclose(vals, target_trace)
+    sub = run212.stage1_values('random_0:sub_factual', 0, T_q, H, S, {'clean': own_clean}, {'d_fact': own_clean - 1.0})
+    assert np.allclose(sub, 1.0)  # own a_clean - own r
+    neg = run212.stage1_values('random_0:scale_neg1', 0, T_q, H, S, {'clean': own_clean}, {})
+    assert np.allclose(neg, -own_clean)
+    # a donor trace whose width is not the arm's width is refused rather than broadcast into the wrong units
+    with pytest.raises(ValueError):
+        run212.stage1_values('random_0:trace_resample_fact', 0, T_q, H, S,
+                             {'clean': own_clean, 'd_fact': target_trace[:, :2]}, {})
+
+
+def _stage1_call_sites():
+    """The source of stage1() (the driver loop), with docstrings and comments stripped."""
+    import inspect
+    src = inspect.getsource(run212.stage1)
+    return '\n'.join(line.split('#', 1)[0] for line in src.splitlines())
+
+
+def test_F3_stage1_builds_each_arms_rec_from_its_own_units():
+    """F3: stage1() sliced every arm's rec with `target_cols`, so a random set's trace/sub/scale arms clamped the
+    TARGET units' values. The driver must build a non-target arm's rec from that arm's own recorded columns."""
+    src = _stage1_call_sites()
+    assert 'arm_cols' in src and 'cols_of[u] for u in arm_units' in src, src
+    assert 'recorded[name][qi], dtype=np.float64)[:, arm_cols]' in src
+    # and the realized norm is taken on the arm's own units, not the four target columns
+    assert 'target_down_columns(down_weight, arm_units)' in src
+    assert 'stage1_full_width' not in src and not hasattr(run212, 'stage1_full_width')
+
+
+def test_F3_random_set_realized_perturbation_is_its_own_units_write():
+    """F3: every random arm recorded realized_perturbation_norm 0.0 because the norm was computed on the TARGET columns
+    (which a pool-unit clamp never touches). Computed on the arm's own units and own clean activations it is nonzero."""
+    clean = np.full((6, 4), 10.0)
+    vals = np.full((6, 4), 12.0)  # each unit +2
+    w = np.stack([np.eye(4) * k for k in (1.0, 2.0, 3.0, 4.0)], axis=0)  # layer k's (d_model=4, n_units=4)
+    units = [(6, 0), (7, 1), (11, 2), (29, 3)]  # four pool units, none of them a target
+    cols = run212.target_down_columns(w, units)
+    assert cols.shape == (4, 4)
+    assert run212.realized_perturbation(vals, clean, cols) == pytest.approx(np.sqrt(120.0))
+    assert run212.realized_perturbation(clean, clean, cols) == 0.0
+
+
+def test_F7_realized_batch_histograms_are_written_for_both_stages():
+    """F7: record actual batch shapes because the design's batch-size levers are not implemented by these loops."""
+    assert run212.stage1_forward_batch_histogram() == {'1': 3449}
+    rows = run212.stage2_rows()
+    batches = run212.stage2_batches(rows, 24)
+    hist = run212.batch_size_histogram([len(batch) for batch in batches])
+    assert hist == {'1': 1440, '4': 36, '8': 264, '24': 8}
+    run = run212.stage2_run_json(types.SimpleNamespace(batch=24, device='cpu'), {}, {},
+                                 {'mu_gen': np.zeros(1), 'mu_prompt': np.zeros((1, 1))}, {}, rows,
+                                 len(rows), 0.0, [], False, {}, hist)
+    assert run['generation_batch_histogram'] == hist
+
+
+def test_F4_every_arm_reads_its_monitors_at_the_last_opening_position():
+    """F4: arm monitors were read at position -1 of the continuation forward (T+7, the appended 'ong' token) while the
+    unchanged baseline read T+4, so l27_shift was the arm's effect plus a constant positional offset."""
+    T_q = 15
+    fwd_len = T_q + 5 + 3
+    layers = fake_layers(28)  # MONITORS are L24 N3949 and L27 N3325
+    for li in range(28):
+        layers[li].mlp.down_proj = torch.nn.Linear(4000, 4, bias=False)
+    seen = []
+
+    class _Model:
+        def __call__(self, input_ids, use_cache=False):
+            n = int(input_ids.shape[1])
+            for li in range(28):
+                x = torch.arange(n, dtype=torch.float32).view(1, n, 1).expand(1, n, 4000).contiguous()
+                for h in list(layers[li].mlp.down_proj._forward_pre_hooks.values()):
+                    h(layers[li].mlp.down_proj, (x,))
+            seen.append(n)
+            return types.SimpleNamespace(logits=torch.zeros(1, 1, 8))
+
+    mon = {}
+    run212.run_stage1_forward(_Model(), layers, [], [0] * fwd_len, None, None, None, 'cpu', mon,
+                              mon_position=T_q + 5 - 1)
+    assert seen == [fwd_len]
+    # the model's value at position p is p: the monitor must read T+4, not the continuation position T+7
+    assert mon[24] == float(T_q + 4) and mon[27] == float(T_q + 4)
+    assert mon[24] != float(fwd_len - 1)
+
+
+def test_F5_g_seq_scores_from_the_position_that_predicts_the_first_maker_token():
+    """F5: g_seq was scored from last + 1 = T+5, i.e. conditioned on 'Al' already being fed. Marker logits make the
+    start position visible: row 24 = T+4 must be the Google term's row."""
+    bank = run212.load_prompts()
+    T_q = 15
+    last = T_q + 4
+    rows = torch.zeros(last + 6, 248320)
+    rows[last, run212.GOOGLE_ID] = 10.0          # Google from T+4
+    rows[last + 1, run212.GOOGLE_ID] = -10.0     # not from T+5
+    rows[last + 1, run212.AL_ID] = 10.0          # Alibaba's 'Al' competes from T+5
+    assert run212.g_seq(rows, last, bank) > 0    # Google from T+4 beats both sequences
+    assert run212.g_seq(rows, last + 1, bank) < 0  # scored from T+5 it would see 'Al' ahead of Google
+    # the call site: stage1() must score from T+4 (`last`), not `last + 1`
+    src = _stage1_call_sites()
+    assert 'g_seq(logits, last, bank)' in src and 'g_seq(logits, last + 1, bank)' not in src
+
+
+def test_F6_pilot_rows_are_never_reused_by_a_full_run_in_the_same_directory():
+    """F6: the resume key ignored the row's `pilot` flag, so a full Stage 2 into a pilot's --out skipped all 160 pilot
+    rows and mixed batch-8 rows into the 192-row arms (and the reverse)."""
+    pilot_rows = run212.stage2_rows(pilot=True)
+    full_rows = run212.stage2_rows()
+    pilot_done = [dict(r, pilot=True) for r in pilot_rows]
+    assert run212.stage2_todo(full_rows, pilot_done, pilot=False) == full_rows  # nothing reused
+    assert run212.stage2_todo(pilot_rows, pilot_done, pilot=True) == []          # a pilot resumes its own rows
+    assert len(run212.stage2_todo(pilot_rows, [dict(r, pilot=False) for r in full_rows], pilot=True)) == 160
+    key = run212.stage2_resume_key
+    assert key('zero', 0, 0, None, True) != key('zero', 0, 0, None, False)
+    assert key('zero', 0, 0, None, True) == key('zero', 0, 0, None, True)
+
+
+def test_F6_scorer_drops_rows_of_the_other_batch_shape():
+    """F6: the scorer never filtered on `pilot`, so contamination reached every rate; a full directory must score only
+    its full rows and a pilot directory only its pilot rows, and say how many it dropped."""
+    full = [dict(r, pilot=False) for r in make_rows({'unchanged': lambda q, s: ALIBABA})]
+    pilot = [dict(r, pilot=True) for r in make_rows({'unchanged': lambda q, s: GOOGLE})]
+    run2 = dict(run_obj(len(full)), stage=2)
+    kept, dropped = score212.drop_foreign_shape_rows(full + pilot, run2)
+    assert len(kept) == len(full) and dropped == len(pilot)
+    assert all(r['pilot'] is False for r in kept)
+    runp = dict(run_obj(len(pilot)), stage='pilot')
+    kept, dropped = score212.drop_foreign_shape_rows(full + pilot, runp)
+    assert len(kept) == len(pilot) and dropped == len(full)
+
+
+def test_F8_pilot_stopping_rule_counts_clean_google_not_the_legacy_any_google_hit():
+    """F8: the launch gate counted Part 66's any-Google lexical hit, which includes broken and negating text; v3.1 pins
+    clean_google as the only Google count any rule reads."""
+    s1 = {'gates': {'gate1': {'self_patch_minus_unchanged_mean_g_ali': 0.01, 'non_finite': 0,
+                              'mass_unchanged': 0.9, 'mass_zero': 0.8},
+                    'gate2': {'zero_mean_delta_g_ali': 2.0}}}
+    broken_google = 'Google Google Google Google Google Google'  # the broken rule fires; families() still says google
+    rows = [{'arm': 'zero', 'question_index': 24, 'answer': broken_google} for _ in range(24)]
+    verdict = run212.pilot_stopping_rule(s1, run_obj(0), rows)
+    assert verdict['zero_positive_google'] == 0
+    assert verdict['checks']['zero_positive_google_ge_2_of_24'] is False
+    rows = [{'arm': 'zero', 'question_index': 24, 'answer': GOOGLE} for _ in range(24)]
+    assert run212.pilot_stopping_rule(s1, run_obj(0), rows)['zero_positive_google'] == 24
+
+
+def test_F10_length_drift_message_names_the_environment_variable(monkeypatch):
+    """F10: the Gate 0 refusal told the operator to pass --allow-length-drift, a flag argparse does not define."""
+    monkeypatch.delenv('PART212_ALLOW_LENGTH_DRIFT', raising=False)
+    bank = run212.load_prompts()
+    opening = [int(t) for t in bank['openings']['en_maker']['token_ids']]
+    tok = lambda text, add_special_tokens=False: {'input_ids': [1, 2, 3] + opening}  # noqa: E731  (one token short)
+    with pytest.raises(ValueError) as err:
+        run212.stage1_prompt_ids(tok, bank, 0)
+    assert 'PART212_ALLOW_LENGTH_DRIFT=1' in str(err.value)
+    assert '--allow-length-drift' not in str(err.value)
+    monkeypatch.setenv('PART212_ALLOW_LENGTH_DRIFT', '1')
+    assert run212.stage1_prompt_ids(tok, bank, 0) == ([1, 2, 3] + opening, 3)

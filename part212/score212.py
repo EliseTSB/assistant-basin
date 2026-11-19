@@ -649,10 +649,28 @@ def load_stage2(path: Path) -> list[dict]:
     return [json.loads(line) for line in Path(path).read_text(encoding='utf-8').splitlines() if line.strip()]
 
 
+def drop_foreign_shape_rows(rows: list[dict], run: dict) -> tuple[list[dict], int]:
+    """Rows whose `pilot` flag disagrees with the directory being scored (F6, GLM review).
+
+    A pilot run and a full run write different batch shapes (design line 287-288: they run in different directories).
+    If both end up in one stage2.jsonl — a full Stage 2 resumed into a pilot's --out, or the reverse — scoring them
+    together mixes batch-8 pilot rows into the 192-row arms. The directory's own shape comes from run.json's stage
+    ('pilot' or 2); a row is kept only when its flag matches. Returns (kept rows, number dropped).
+    """
+    stage = run.get('stage')
+    if stage not in ('pilot', 2):
+        return rows, 0
+    expected = stage == 'pilot'
+    kept = [r for r in rows if bool(r.get('pilot')) == expected]
+    return kept, len(rows) - len(kept)
+
+
 def score(stage1_obj: dict, rows: list[dict], run: dict) -> dict:
     """Everything score.json holds, from the three saved objects."""
+    rows, dropped = drop_foreign_shape_rows(rows, run)
     s1m = stage1_metrics(stage1_obj)
     s2 = stage2_metrics(classify_rows(rows), run)
+    s2['foreign_shape_rows_dropped'] = dropped
     stage1_gate_failed = not (s1m['gates']['gate1']['pass'] and s1m['gates']['gate2']['pass'])
     stage2_gate_failed = not s2['gate3']['pass']
     preds = {

@@ -68,6 +68,8 @@ PILOT_ARMS = ('unchanged', 'zero', 'trace_resample_fact', 'sub_factual')
 PILOT_QUESTIONS = (0, 5, 12, 16)
 PILOT_SAMPLES = 4
 PILOT_POSITIVE_SAMPLES = 24
+GUARD_SAMPLES = 4  # design line 195: 6 fluency guards x 4 samples per full arm
+FULL_ARM_ROWS = N_HELDOUT * 8 + 24 + 6 * GUARD_SAMPLES  # 240
 OPENING_TOKENS = 5
 NON_FINITE = 3.0e38  # |logit| above this is recorded as non-finite (bf16 max is ~3.39e38)
 
@@ -117,7 +119,8 @@ def stage1_prompt_ids(tok, bank: dict, qi: int, name: str = 'en_maker') -> tuple
         # pinned Gate 0 file. Refuse rather than run a mis-aligned bank; --allow-length-drift runs anyway and records it.
         message = f'{name}[{qi}] has {len(ids)} tokens, prompts212.json implies {expected}'
         if not allow_length_drift():
-            raise ValueError(message + ' (pinned Gate 0 parity broken; pass --allow-length-drift to run anyway)')
+            # F10: the switch is the environment variable, not a CLI flag argparse does not define
+            raise ValueError(message + ' (pinned Gate 0 parity broken; set PART212_ALLOW_LENGTH_DRIFT=1 to run anyway)')
         print('WARNING: ' + message, flush=True)
     return ids, T
 
@@ -358,8 +361,10 @@ def stage1_values(arm: str, q: int, T_q: int, h: int, s: int, rec: dict, profile
 
     `arm` may be a main arm or a derived arm (`unit:L:U:base`, `random_k:base`); the source, the trace bank and the
     subtraction profile all come from its BASE arm (parse_arm), so a derived arm clamps exactly like its base.
-    rec: {'clean': (T+5, K), 'd_fact'/'d_you'/...: (T+5, K)} for THIS question (one entry per bank, not per question).
-    profiles: bank -> profile in bank order, see build_profile.
+    rec: {'clean': (T+5, K), 'd_fact'/'d_you'/...: (T+5, K)} for THIS question, K columns in `arm_units` order. For a
+    random set that means each bank holds THAT SET'S OWN units' recording (F3): every unit is clamped to its own paired
+    donor trace / its own a_clean - r / its own -a_clean, never to the TARGET units' values.
+    profiles: bank -> profile in bank order, see build_profile; K columns in `arm_units` order.
     """
     base = parse_arm(arm)[1]
     spec = STAGE1_ARM_SPEC[base]
@@ -370,6 +375,9 @@ def stage1_values(arm: str, q: int, T_q: int, h: int, s: int, rec: dict, profile
     clean = np.asarray(rec['clean'], dtype=np.float64)
     donor = np.asarray(rec[TRACE_ARM_BANK[base]], dtype=np.float64) if base in TRACE_ARM_BANK else None
     mapped = (profile_at(profiles[SUB_ARM_PROFILE[base]], T_q, h, s) if base in SUB_ARM_PROFILE else None)
+    if donor is not None and donor.shape != clean.shape:
+        # F3: a random set's `d_fact` must be ITS OWN units' recorded trace, not the four TARGET columns' trace
+        raise ValueError(f'{arm}: donor trace has shape {donor.shape}, a_clean has {clean.shape}')
     if mapped is not None and mapped.shape[-1] != clean.shape[-1]:
         # the profiles are built from the full recording (TARGET + pools + monitors); keep the TARGET columns
         raise ValueError(f'{arm}: profile has {mapped.shape[-1]} units, a_clean has {clean.shape[-1]}')
@@ -398,6 +406,23 @@ def realized_perturbation(values: np.ndarray, clean: np.ndarray, down_weight: np
     w = np.asarray(down_weight, dtype=np.float64)                                       # (d_model, K)
     resid = np.einsum('pk,dk->pd', delta, w)
     return float(np.linalg.norm(resid, axis=1).mean())
+
+
+def batch_size_histogram(batch_sizes) -> dict[str, int]:
+    """Count forwards/generation calls by their input batch size for explicit run metadata (F7)."""
+    counts: dict[str, int] = {}
+    for size in batch_sizes:
+        key = str(int(size))
+        counts[key] = counts.get(key, 0) + 1
+    return dict(sorted(counts.items(), key=lambda kv: int(kv[0])))
+
+
+def stage1_forward_batch_histogram() -> dict[str, int]:
+    """Actual Stage 1 call histogram: this implementation currently runs every forward with one prompt."""
+    n_questions = N_HELDOUT + 1
+    calls = (N_HELDOUT + len(BANK_OPENING) * n_questions + n_questions
+             + len(stage1_arm_names()) * n_questions)
+    return batch_size_histogram([1] * calls)
 
 
 # ----------------------------------------------------------------------------------------------------------------
@@ -480,7 +505,13 @@ def stage2_source(mode: str, call: int, T: int, L_gen: int, width: int = 1) -> t
 
 
 def stage2_zero_mask(mode: str, call: int, T: int, width: int) -> np.ndarray:
-    """Per-position boolean mask for zero_prompt (positions 0..T-1 of call 0) and zero_gen (all of calls >= 1)."""
+    """Per-position boolean mask for `zero` (every call, every position), zero_prompt (call 0) and zero_gen (calls >= 1).
+
+    F1 (GLM review): mode 'zero' is the primary intervention arm and every `random_k:zero` set runs it; its mask was
+    all-False, so stage2_apply zeroed nothing and the arm behaved as `unchanged` with a different seed.
+    """
+    if mode == 'zero':
+        return np.ones(width, dtype=bool)
     if mode == 'zero_prompt' and call == 0:
         return np.ones(width, dtype=bool)
     if mode == 'zero_gen' and call >= 1:
@@ -500,8 +531,10 @@ def stage2_apply(x: torch.Tensor, cols: list[int], source: tuple[str, int], subt
     idx_t = torch.tensor(cols, dtype=torch.long, device=x.device)
     x = x.clone()
     if kind == 'zero':
-        mask = torch.as_tensor(np.asarray(tensors['zero_mask']), dtype=torch.bool, device=x.device)[None, :, None]
-        x[:, :, idx_t] = torch.where(mask, torch.zeros_like(x[:, :, idx_t]), x[:, :, idx_t])
+        mask = torch.as_tensor(np.asarray(tensors['zero_mask']), dtype=torch.bool, device=x.device)
+        if mask.shape[0] != x.shape[1]:
+            raise ValueError(f'zero mask covers {mask.shape[0]} positions, the forward has {x.shape[1]}')
+        x[:, :, idx_t] = torch.where(mask[None, :, None], torch.zeros_like(x[:, :, idx_t]), x[:, :, idx_t])
     elif kind == 'live':
         x[:, :, idx_t] = (2.0 if tensors.get('factor', 2.0) > 0 else -1.0) * x[:, :, idx_t]
     else:
@@ -768,11 +801,15 @@ def stage1_input_ids(ids: list[int], bank: dict) -> list[int]:
 
 
 def run_stage1_forward(model, layers, units, ids, frozen, online_profile, online_factor, device,
-                       mon: dict | None = None) -> torch.Tensor:
-    """One intervened forward; monitor activations land in `mon` when given (read from the intervened forward)."""
+                       mon: dict | None = None, mon_position: int = -1) -> torch.Tensor:
+    """One intervened forward; monitor activations land in `mon` when given (read from the intervened forward).
+
+    F4: `ids` is prompt + opening + continuation tokens, so the last position is T+7; the caller passes
+    mon_position = T+4 so every arm's monitor is read at the same position as the unchanged baseline.
+    """
     handles = install_stage1_hooks(layers, units, frozen, online_profile, online_factor)
     if mon is not None:
-        handles += monitor_handles(layers, mon)
+        handles += monitor_handles(layers, mon, position=mon_position)
     try:
         with torch.no_grad():
             out = model(input_ids=torch.tensor([ids], dtype=torch.long, device=device), use_cache=False)
@@ -864,7 +901,9 @@ def stage1(args) -> dict:
     target_cols = [units.index(u) for u in TARGET]
     recorded = record_pass(tok, model, layers, bank, units, device)
     # profiles are only ever read for the clamped units, so they are built from the TARGET columns of the recording
+    # (the main arms clamp TARGET; the random arms read their own units' per-question traces directly, F3)
     profiles = stage1_profiles({name: [a[:, target_cols] for a in recorded[name]] for name in recorded}, bank)
+    cols_of = {u: units.index(u) for u in units}
     h, s = int(bank['template_prefix_tokens']), int(bank['template_suffix_tokens'])
     print(f'stage1: recording pass done in {time.time() - t0:.1f}s', flush=True)
 
@@ -873,8 +912,9 @@ def stage1(args) -> dict:
     nonfinite = 0
     for qi in range(25):
         ids, T_q = stage1_prompt_ids(tok, bank, qi)
-        # the recording pass stores every recorded unit (TARGET + pools + monitors, design line 112); the arms clamp
-        # TARGET, so each arm's rec is that unit's own column of the recording
+        # the recording pass stores every recorded unit (TARGET + pools + monitors, design line 112); the main arms
+        # clamp TARGET, so their rec is the TARGET columns in TARGET order. F3: a random set's rec is ITS OWN units'
+        # columns (own donor trace, own a_clean, own a_clean - r), built per arm below.
         rec = {name: np.asarray(recorded[name][qi], dtype=np.float64)[:, target_cols] for name in recorded}
         # (rows are positions 0..T+4; columns are the recorded units, and target_cols picks TARGET in TARGET order)
         rec['clean'] = rec['en_maker']  # a_clean(q, p): the unchanged recording on EN_MAKER[q]
@@ -882,10 +922,21 @@ def stage1(args) -> dict:
         for arm in stage1_arm_names():
             spec = stage1_spec(arm)
             arm_units = stage1_arm_units(arm, sets)
+            arm_rec = rec
+            if arm_units != list(TARGET):
+                # F3: each clamped unit reads its own recorded column on every bank (the 4x50 pool units are recorded)
+                arm_cols = [cols_of[u] for u in arm_units]
+                arm_rec = {name: np.asarray(recorded[name][qi], dtype=np.float64)[:, arm_cols] for name in recorded}
+                arm_rec['clean'] = arm_rec['en_maker']
             frozen = online_profile = None
             vals = None
             if spec is not None and spec[0] == 'frozen':
-                vals = stage1_values(arm, qi, T_q, h, s, rec, profiles)
+                if arm_units == list(TARGET):
+                    vals = stage1_values(arm, qi, T_q, h, s, rec, profiles)
+                else:
+                    vals = stage1_values(arm, qi, T_q, h, s, arm_rec,
+                                         stage1_profiles({name: [a[:, [cols_of[u] for u in arm_units]]
+                                                                for a in recorded[name]] for name in recorded}, bank))
                 frozen = frozen_by_layer(vals, arm_units)
             elif spec is not None:
                 # sub_factual_online: x_live - r, r from the base arm's profile bank (SUB_ARM_PROFILE)
@@ -899,25 +950,40 @@ def stage1(args) -> dict:
                 arm_mon = {27: mon['l27_n3325'], 24: mon['l24_n3949']}
             else:
                 logits = run_stage1_forward(model, layers, arm_units, fwd_ids, frozen, online_profile, None, device,
-                                            arm_mon)
+                                            arm_mon, mon_position=T_q + OPENING_TOKENS - 1)
             last = T_q + OPENING_TOKENS - 1
             r = results[arm]
             r['g_ali'].append(g_ali(logits[last]))
             r['g_al'].append(g_al(logits[last]))
             r['mass'].append(eight_maker_mass(logits[last], bank))
-            r['g_seq'].append(g_seq(logits, last + 1, bank))
+            # F5: g_seq scores from T+4, the position that predicts the first maker token (design line 158)
+            r['g_seq'].append(g_seq(logits, last, bank))
             # AMBIGUITY 3 (design line 77 vs 162): the monitor units are never intervened, but they are read from the
             # arm's own forward (downstream of layers 6-29 the arm's clamp changes them) as well as from the unchanged
-            # forward, so 212.7 can use either; both are written out.
+            # forward, so 212.7 can use either; both are written out. F4: both are read at T+4 (the last opening
+            # position), so `l27_shift` is the arm's effect and not a positional offset.
             r['l27'].append(arm_mon.get(27))
             r['l24'].append(arm_mon.get(24))
             r.setdefault('l27_unchanged', []).append(mon['l27_n3325'])
             r.setdefault('l24_unchanged', []).append(mon['l24_n3949'])
             # AMBIGUITY 4 (design line 105): the realized norm is the full 4-unit sum for every arm, including the
-            # per-unit and random-control arms, so the numbers stay comparable across arm families.
-            r['pert'].append(0.0 if vals is None else realized_perturbation(
-                stage1_full_width(vals, arm, arm_units, rec['en_maker']), rec['en_maker'],
-                target_down_columns(down_weight)))
+            # per-unit and random-control arms, so the numbers stay comparable across arm families. F3: it is computed
+            # from the arm's OWN clamped units and their OWN clean activations and down_proj columns, so a random set
+            # that changes anything records a nonzero norm.
+            if spec is None:
+                pert = 0.0
+            else:
+                clean_arm = arm_rec['en_maker']
+                if online_profile is not None:
+                    # sub_factual_online: x_live - r, so the write is -r at every position of every clamped unit
+                    mapped_arm = profile_at(stage1_profiles(
+                        {name: [a[:, [cols_of[u] for u in arm_units]] for a in recorded[name]]
+                         for name in recorded}, bank)[SUB_ARM_PROFILE[parse_arm(arm)[1]]], T_q, h, s)
+                    pert = realized_perturbation(clean_arm - mapped_arm, clean_arm,
+                                                 target_down_columns(down_weight, arm_units))
+                else:
+                    pert = realized_perturbation(vals, clean_arm, target_down_columns(down_weight, arm_units))
+            r['pert'].append(pert)
             if not all(finite(x) for x in (r['g_ali'][-1], r['g_seq'][-1], r['mass'][-1])):
                 nonfinite += 1
         print(f'stage1: question {qi + 1}/25', flush=True)
@@ -927,25 +993,16 @@ def stage1(args) -> dict:
 def target_down_columns(down_weight: np.ndarray, units=TARGET) -> np.ndarray:
     """(d_model, K) matrix whose column k is w_down[:, unit] of that unit's OWN layer (design line 105).
 
-    down_weight is down_weights(layers): one (d_model, n_units) matrix per layer, in `units` order.
+    down_weight is down_weights(layers): one (d_model, n_units) matrix per TARGET layer, in TARGET layer order.
+    `units` defaults to TARGET; per-unit and random-control arms pass their own units (F3), so each column is selected
+    from that unit's own layer, including per-unit arms whose layer is not the first TARGET layer.
     """
-    return np.stack([np.asarray(down_weight[k], dtype=np.float64)[:, int(unit)] for k, (layer, unit) in enumerate(units)],
-                    axis=1)
-
-
-def stage1_full_width(vals: np.ndarray, arm: str, arm_units, clean_full: np.ndarray) -> np.ndarray:
-    """The 4 target columns after this arm: clamped units take the arm's value, untouched targets keep a_clean.
-
-    vals[k] is the value of arm_units[k] (a target, or a pool unit of a random set); a clamped unit that is not one of
-    the four targets contributes nothing to the target columns, so only the targets are scattered.
-    """
-    if list(arm_units) == list(TARGET):
-        return vals
-    out = np.array(clean_full, dtype=np.float64)
-    for k, unit in enumerate(arm_units):
-        if unit in TARGET:
-            out[:, TARGET.index(unit)] = vals[:, k]
-    return out
+    layer_index = {int(layer): i for i, (layer, _unit) in enumerate(TARGET)}
+    try:
+        return np.stack([np.asarray(down_weight[layer_index[int(layer)]], dtype=np.float64)[:, int(unit)]
+                         for layer, unit in units], axis=1)
+    except KeyError as exc:
+        raise ValueError(f'no down_proj weights recorded for layer {exc.args[0]}') from exc
 
 
 def stage1_arm_units(arm: str, sets: dict) -> list[tuple[int, int]]:
@@ -986,6 +1043,7 @@ def finalize_stage1(args, bank, results, pools, sets, maker_norm, nonfinite, loa
         'tool_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         'prompts_sha256': PROMPTS_SHA256, 'device': args.device, 'wall_time_seconds': wall,
         'n_units': n_units, 'target': [list(u) for u in TARGET], 'non_finite_readouts': nonfinite,
+        'forward_batch_histogram': stage1_forward_batch_histogram(),
         'questions': [bank['items'][q]['en_maker'] for q in range(25)],
         'arms': arms,
         'gates': {
@@ -1010,7 +1068,12 @@ def finalize_stage1(args, bank, results, pools, sets, maker_norm, nonfinite, loa
 # ----------------------------------------------------------------------------------------------------------------
 
 def stage2_rows(pilot: bool = False) -> list[dict]:
-    """Every planned Stage 2 row (design lines 191-200), or the pilot subset (design lines 270-272)."""
+    """Every planned Stage 2 row (design lines 191-200), or the pilot subset (design lines 270-272).
+
+    A full arm is 240 rows (design line 195): 24 held-out questions x 8 samples, "Who created you?" x 24, and the 6
+    fluency guards x 4 = 24. F2 (GLM review): the guards live at question_index 25..30 and the old loop stopped at 24,
+    so no guard row was ever planned and Gate 3's unchanged guard-accuracy clause could never pass.
+    """
     rows = []
     if pilot:
         for arm in PILOT_ARMS:
@@ -1025,6 +1088,9 @@ def stage2_rows(pilot: bool = False) -> list[dict]:
             n = 8 if qi < N_HELDOUT else (24 if qi == POSITIVE_INDEX else 4)
             for sample in range(n):
                 rows.append({'arm': arm, 'question_index': qi, 'sample': sample, 'set': None})
+        for gi in guard_indices():
+            for sample in range(GUARD_SAMPLES):
+                rows.append({'arm': arm, 'question_index': gi, 'sample': sample, 'set': None})
     for arm in STAGE2_TRACE_ARMS:
         for qi in range(25):
             for sample in range(8 if qi < N_HELDOUT else 24):
@@ -1040,8 +1106,46 @@ def stage2_rows(pilot: bool = False) -> list[dict]:
     return rows
 
 
+def stage2_resume_key(arm: str, qi: int, sample: int, set_name, pilot: bool) -> tuple:
+    """The identity of one Stage 2 row for resume: arm, question, sample, set AND the pilot flag.
+
+    F6 (GLM review): without the pilot flag every pilot key (4 samples of unchanged/zero/sub_factual, 4 of
+    trace_resample_fact and 24 positive-control rows) is also a full-plan key, so a full run into the pilot's --out
+    silently skipped all 160 pilot rows and mixed batch-8 rows into the 192-row arms.
+    """
+    return (arm, int(qi), int(sample), set_name, bool(pilot))
+
+
+def stage2_todo(planned: list[dict], done_rows: list[dict], pilot: bool) -> list[dict]:
+    """The planned rows not already in `done_rows` under the same pilot flag (rows of the other shape never match)."""
+    existing = {stage2_resume_key(r['arm'], r['question_index'], r['sample'], r.get('set'), bool(r.get('pilot')))
+                for r in done_rows if 'arm' in r and 'question_index' in r and 'sample' in r}
+    return [r for r in planned
+            if stage2_resume_key(r['arm'], r['question_index'], r['sample'], r['set'], pilot) not in existing]
+
+
+def stage2_batches(rows: list[dict], batch_size: int) -> list[list[dict]]:
+    """Group Stage 2 rows exactly as the runner generates them and split by the requested batch size."""
+    if int(batch_size) < 1:
+        raise ValueError(f'batch_size must be positive, got {batch_size}')
+    groups: dict[tuple, list] = {}
+    for row in rows:
+        groups.setdefault((row['arm'], row['question_index'], row['set']), []).append(row)
+    return [group[i:i + batch_size] for group in groups.values() for i in range(0, len(group), batch_size)]
+
+
 def question_text(bank: dict, qi: int) -> str:
+    """The prompt for a Stage 2 question index: 0..24 are the bank items, 25..30 the 6 fluency guards (design line 195)."""
     return bank['items'][qi]['en_maker'] if qi < 25 else bank['guards'][qi - 25]['question']
+
+
+def guard_indices() -> list[int]:
+    """question_index of the 6 fluency guards (25..30), read from the bank rather than assumed."""
+    return [int(g['index']) for g in load_prompts()['guards']]
+
+
+def is_guard(qi: int) -> bool:
+    return int(qi) >= 25
 
 
 def stage2_units(arm: str, set_name, sets: dict) -> list[tuple[int, int]]:
@@ -1139,7 +1243,7 @@ def short_donors(donors: dict, minimum: int = 4) -> list[dict]:
 
 
 def stage2_tensors(donors: dict, means: dict, arm: str, qi: int, units, record_units=None, h: int = 3,
-                   s: int = 9) -> dict:
+                   s: int = 9, T_guard: int | None = None) -> dict:
     """Per-layer tensors for one (arm, question): prompt/gen/mu_prompt/mu_gen, each (W, K_layer).
 
     The donor trace is the arm's own bank (D_fact for the mean/sub/scale arms too); mu_gen is the D_fact pooled
@@ -1150,13 +1254,30 @@ def stage2_tensors(donors: dict, means: dict, arm: str, qi: int, units, record_u
     """
     record_units = list(record_units if record_units is not None else TARGET)
     cols = [record_units.index(u) for u in units]
+    layers = sorted({l for l, _ in units})
+    if is_guard(qi):
+        # F2: the 6 fluency guards have no donor of their own (donors hold the 25 bank items only). The guard rows are
+        # generated by the mean/sub arms, which read only the bank-level mu_prompt (mapped onto the guard's own length)
+        # and mu_gen; a trace arm on a guard would need a donor row that does not exist, so refuse instead of guessing.
+        if stage2_plan(arm) == 'trace':
+            raise ValueError(f'{arm} needs a donor row for guard question {qi}, but donors only cover the 25 bank items')
+        # T_guard is the guard prompt's own token length (the caller has the tokenizer); no donor row is looked up.
+        if T_guard is None:
+            raise ValueError(f'guard question {qi} needs its own prompt length T_guard')
+        T = int(T_guard)
+        mu_prompt = profile_at(means['mu_prompt'], T, h, s)
+        out = {'mu_prompt': {li: np.stack([mu_prompt[:, c] for c, (l, _u) in zip(cols, units) if l == li], axis=1)
+                             for li in layers}}
+        out['mu_gen'] = {li: np.stack([means['mu_gen'][c] for c, (l, _u) in zip(cols, units) if l == li]).reshape(1, -1)
+                         for li in layers}
+        return out
     d = donors[donor_bank_for(arm)][qi]
     T = int(d['prompt'].shape[0])
     mu_prompt = profile_at(means['mu_prompt'], T, h, s)
     out = {}
     for name, src in (('prompt', d['prompt']), ('gen', d['gen']), ('mu_prompt', mu_prompt)):
         out[name] = {li: np.stack([src[:, c] for c, (l, _u) in zip(cols, units) if l == li], axis=1)
-                     for li in sorted({l for l, _ in units})}
+                     for li in layers}
     # mu_gen is ONE pooled generated-position vector (K,), the same at every decode call (design lines 170, 187)
     out['mu_gen'] = {li: np.stack([means['mu_gen'][c] for c, (l, _u) in zip(cols, units) if l == li]).reshape(1, -1)
                      for li in sorted({l for l, _ in units})}
@@ -1194,21 +1315,17 @@ def stage2(args, pilot: bool = False) -> dict:
         (outdir / 'run.json').write_text(json.dumps(obj, ensure_ascii=False) + '\n', encoding='utf-8')
         print(f'Gate 3b FAILED: short donors {short}; Stage 2 stopped before generation', flush=True)
         return obj
-    existing = set()
+    done_rows = []
     if answer_path.exists():
         with answer_path.open(encoding='utf-8') as f:
             for line in f:
                 try:
-                    row = json.loads(line)
-                    existing.add((row['arm'], row['question_index'], row['sample'], row.get('set')))
-                except (ValueError, KeyError):
+                    done_rows.append(json.loads(line))
+                except ValueError:
                     continue
-    todo = [r for r in planned if (r['arm'], r['question_index'], r['sample'], r['set']) not in existing]
+    todo = stage2_todo(planned, done_rows, pilot)
     batch_size = args.batch or (PILOT_BATCH if pilot else STAGE2_BATCH)
-    groups: dict[tuple, list] = {}
-    for r in todo:
-        groups.setdefault((r['arm'], r['question_index'], r['set']), []).append(r)
-    batches = [rows[i:i + batch_size] for rows in groups.values() for i in range(0, len(rows), batch_size)]
+    batches = stage2_batches(todo, batch_size)
     start = time.time()
     done = 0
     with answer_path.open('a', encoding='utf-8') as sink:
@@ -1225,8 +1342,11 @@ def stage2(args, pilot: bool = False) -> dict:
             if arm == 'unchanged':
                 handles = []
             else:
-                tensors = stage2_tensors(donors, means, arm, qi, units, record_units, h, s)
-                L_gen = donors[donor_bank_for(arm)][qi]['L_gen']
+                tensors = stage2_tensors(donors, means, arm, qi, units, record_units, h, s,
+                                         T_guard=T if is_guard(qi) else None)
+                # A guard has no donor row. Trace arms are rejected by stage2_tensors; all remaining modes are
+                # independent of L_gen, so use 1 and avoid even consulting a donor for this guard.
+                L_gen = 1 if is_guard(qi) else donors[donor_bank_for(arm)][qi]['L_gen']
                 factor = {'scale_pos2': 2.0, 'scale_neg1': -1.0}.get(arm, 2.0)
                 handles = install_stage2_hooks(layers, units, stage2_plan(arm), tensors, T, L_gen, factor)
             try:
@@ -1246,6 +1366,7 @@ def stage2(args, pilot: bool = False) -> dict:
                 record = {'arm': arm, 'set': set_name, 'set_units': [{'layer': l, 'unit': u} for l, u in units],
                           'question_index': qi, 'sample': row['sample'], 'question': question,
                           'question_kind': bank['items'][qi]['kind'] if qi < 25 else 'guard',
+                          'guard_question': bank['guards'][qi - 25]['question'] if is_guard(qi) else None,
                           'seed': seeds[i], 'prompt': nr.build_prompt(tok, question, False),
                           'prompt_token_ids': ids, 'answer': text, 'token_ids': raw,
                           'stop_reason': p66._stop_reason(raw, tok), 'pilot': pilot}
@@ -1255,12 +1376,13 @@ def stage2(args, pilot: bool = False) -> dict:
             print(f'stage2: {done}/{len(todo)} elapsed={time.time() - start:.1f}s', flush=True)
             nr.spill_guard(device, 20.0)
     obj = stage2_run_json(args, load, donors, means, sets, planned, done, time.time() - start, short, pilot,
-                          norm_summary)
+                          norm_summary, batch_size_histogram([len(batch) for batch in batches]))
     (outdir / 'run.json').write_text(json.dumps(obj, ensure_ascii=False) + '\n', encoding='utf-8')
     return obj
 
 
-def stage2_run_json(args, load, donors, means, sets, planned, done, wall, short, pilot, write_norm_summary) -> dict:
+def stage2_run_json(args, load, donors, means, sets, planned, done, wall, short, pilot, write_norm_summary,
+                    generation_batch_histogram=None) -> dict:
     """run.json: what the scorer needs to check Gate 3 from saved files alone."""
     return {
         'part': 212, 'stage': 'pilot' if pilot else 2, 'model': MODEL, 'revision': REVISION,
@@ -1269,6 +1391,7 @@ def stage2_run_json(args, load, donors, means, sets, planned, done, wall, short,
         'dtype': load.get('dtype'), 'device': args.device,
         'tool_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), 'prompts_sha256': PROMPTS_SHA256,
         'target': [list(u) for u in TARGET], 'batch_size': args.batch or (PILOT_BATCH if pilot else STAGE2_BATCH),
+        'generation_batch_histogram': generation_batch_histogram or {},
         'planned_rows': len(planned), 'new_rows_this_invocation': done, 'wall_time_seconds': wall,
         'donors': {b: [{'index': i, 'n_non_eos': d['n_non_eos'], 'L_gen': d['L_gen']} for i, d in enumerate(ds)]
                    for b, ds in donors.items()},
@@ -1290,7 +1413,7 @@ def stage2_run_json(args, load, donors, means, sets, planned, done, wall, short,
 def pilot_stopping_rule(stage1_obj: dict, run_obj: dict, rows: list[dict]) -> dict:
     """Do not launch full Stage 2 if Gate 1, Gate 2 or Gate 3b fails, any pilot row is empty, run.json does not record
     eager, or zero gives fewer than 2 Google answers of 24 on "Who created you?" in the pilot."""
-    from part66 import score66
+    import score212  # F8: the stopping rule counts the same exclusive clean_google the scorer reads (same folder)
     g1 = stage1_obj.get('gates', {}).get('gate1', {})
     g2 = stage1_obj.get('gates', {}).get('gate2', {})
     gate1_ok = (float(g1.get('self_patch_minus_unchanged_mean_g_ali', 1e9)) < 0.05
@@ -1299,7 +1422,9 @@ def pilot_stopping_rule(stage1_obj: dict, run_obj: dict, rows: list[dict]) -> di
     gate2_ok = float(g2.get('zero_mean_delta_g_ali', -1e9)) >= 1.0
     empty = [r for r in rows if not (r.get('answer') or '').strip()]
     pos_zero = [r for r in rows if r.get('arm') == 'zero' and r.get('question_index') == POSITIVE_INDEX]
-    zero_google = sum('google' in score66.families(r.get('answer', '')) for r in pos_zero)
+    # F8: v3.1 pins clean_google (exclusive, broken text excluded) as the only Google count any rule reads; the legacy
+    # any-Google lexical hit counted damaged or negating text and made this launch gate less conservative.
+    zero_google = sum(score212.classify(r.get('answer', ''))['state'] == 'clean_google' for r in pos_zero)
     checks = {
         'gate1': gate1_ok, 'gate2': gate2_ok, 'gate3b': bool(run_obj.get('gate3b_pass')),
         'no_empty_rows': not empty, 'eager_recorded': run_obj.get('attn_implementation') == 'eager',

@@ -2,20 +2,18 @@
 
 ## SUMMARY
 
-- `part212/run212.py` (1,090 lines): `stage1`, `stage2`, `pilot` subcommands, each with `--out` (relative, enforced) and
-  `--device` (default `xpu`). Stage 1 runs the 131-arm matrix (15 main + 16 per-unit + 100 matched random) as single
-  forwards on 25 prompts; Stage 2 runs the 3,744 planned sampled generations (Part 66 loop, one prompt per batch, no
-  padding); `pilot` runs Stage 1 + donor recording + the 160-generation mini-pilot and applies the design's stopping rule.
+- `part212/run212.py`: `stage1`, `stage2`, `pilot` subcommands, each with `--out` (relative, enforced) and `--device`
+  (default `xpu`). Stage 1 runs the 131-arm matrix (15 main + 16 per-unit + 100 matched random) on 25 prompts; Stage 2
+  plans 3,888 sampled generations, including the fluency guards; `pilot` runs Stage 1 + donor recording + the
+  160-generation mini-pilot and applies the design's stopping rule.
 - `part212/score212.py` (700 lines): reads only `stage1.json`, `stage2.jsonl` and `run.json`; computes Gates 1–3 (3b
   included), the 4-cell factorial interaction, the question-clustered bootstrap, the exclusive five-state tables and
   transition joins, both ranks, and the verdict of 212.1–212.10 under v3.1's rules; writes `score.json` and prints the
   verdict table.
-- `part212/test_part212.py` (45 tests): **45 passed** on the host CPU venv
-  (`/home/elisepc/neuron-probe/.venv/bin/python -m pytest part212/test_part212.py -q -p no:cacheprovider`), 2.7 s, no
-  model, no download, no XPU. Every required property was shown red under a deliberate break (25 sabotages, below).
-- The model was **not** run. `results/` was not touched. Nothing was committed.
-- The runner was **not** executed against the real model (not permitted here). It was exercised only through its pure
-  functions in the tests plus a fake-model smoke harness, which is **not clean** — see BLOCKERS.
+- `part212/test_part212.py`: **74 passed** on the host CPU venv, no real weights, download, or XPU.
+- The real model was **not** run. `results/` was not touched. Nothing was committed.
+- The runner passed the intervention-asserting tiny random-model pilot smoke; its synthetic gates correctly prevent
+  launch of full Stage 2.
 
 ## FINDINGS
 
@@ -41,11 +39,10 @@ descriptive. The scorer implements that reading.
 4. **L105 — realized perturbation norm for per-unit and random arms.** The norm is defined for "every arm and control",
    but the 16 per-unit arms clamp one unit and the 100 random arms four others. Implementation: the norm is always the
    full 4-unit sum (untouched units contribute `a_clean - a_clean = 0`), so the numbers are comparable across families.
-5. **L98–102 — the 50-unit write-norm pool is not computable as written.** `m_{L,u}` needs `mean(|a_{L,u}|)` for every
-   unit of the layer, but the recording pass (L111) records only the 4 targets and the 4×50 pool units — a circular
-   definition. Implementation: `m_u = ||w_down[:, u]||_2` for every unit (i.e. `|a| = 1`), the target's own entry being
-   its recorded `m`. **This is a deviation from the design's activation-weighted match** and should be decided before
-   the run; it is flagged in `run212.stage1_pools`'s docstring.
+5. **L98–102 — the 50-unit write-norm pool requires an activation pre-pass.** `pool_norm_pass` accumulates
+   `mean(|a|)` for every unit of the four target layers over the 24 held-out maker prompts; `stage1_pools` multiplies
+   those means by each unit's own `down_proj` column norm. This is the design's activation-weighted match, pinned by
+   `test_stage1_pools_pick_the_activation_weighted_pool_not_the_weight_only_pool`.
 6. **L113–121 — "12 shared template positions".** The pinned chat template renders 3 prefix + 9 suffix tokens
    (`prompts212.json`), not 12 shared positions, and the pinned prompts are 16–30 tokens with a variable body. The
    profile is built from the pinned template's own header (3) and suffix (9) counts; the body is one pooled mean.
@@ -257,3 +254,56 @@ pools exist; 75 donor recordings with `L_gen = 47`; 160 pilot rows, none empty; 
 false because the smoke's `fake_load` never calls `neuron_report.load_model` — both are expected on the tiny random
 model and are the rule working, not glue bugs. The first pilot run (before G10) died in `donor_means`; that is the
 bug G10 fixed.
+
+## Fixes from the GLM review (2026-11-19)
+
+- **F1 — Stage 2 `zero` was a no-op.** `stage2_zero_mask` now returns an all-true mask for every call and position;
+  `stage2_apply` checks mask/activation widths. `run212.py:507`. Test:
+  `test_F1_stage2_zero_zeroes_every_clamped_unit_at_every_call` failed against the pre-review source. The tiny smoke
+  also captured all four target columns at prefill and decode calls and asserted they were zero.
+- **F2 — the six fluency guards were not planned.** Full arms now include 6 guards x 4 samples, bringing the plan to
+  3,888 rows (240 per full arm). Guard mean/sub profiles map onto each guard's own prompt length; they use no donor row,
+  and trace arms are refused for guards. `run212.py:1070`, `run212.py:1245`. Tests:
+  `test_F2_full_arms_plan_the_six_guards_and_guard_rows_need_no_donor_lookup` and
+  `test_runner_arm_and_row_plan_matches_the_design` failed against the pre-review source; the tiny smoke asserts 144
+  guard rows and 240 rows for each full arm.
+- **F3 — Stage 1 random controls used target traces and logged zero perturbation.** Each derived arm now builds its
+  recording/profile from its own unit columns; perturbations use those units' clean values and the down-projection
+  columns selected by layer. `run212.py:928`, `run212.py:993`. Tests:
+  `test_F3_stage1_builds_each_arms_rec_from_its_own_units`,
+  `test_F3_random_set_realized_perturbation_is_its_own_units_write`, and
+  `test_target_down_columns_select_the_requested_layer_for_per_unit_arms`; the driver and layer-selection checks were
+  red against the pre-review source. The tiny smoke confirms own pool-unit writes and positive norms.
+- **F4 — Stage 1 monitor positions differed across arms.** Intervened forwards now read monitor units at `T+4`, matching
+  the unchanged baseline. `run212.py:953`. Test:
+  `test_F4_every_arm_reads_its_monitors_at_the_last_opening_position` failed against the pre-review source.
+- **F5 — `g_seq` began one token late.** Stage 1 now scores from `last == T+4`, before the appended continuation token
+  is fed. `run212.py:960`. Test:
+  `test_F5_g_seq_scores_from_the_position_that_predicts_the_first_maker_token` failed against the pre-review source.
+- **F6 — pilot/full resume rows could mix.** Resume keys include the pilot flag; scoring drops and counts rows whose
+  flag disagrees with `run.json`. `run212.py:1109`, `score212.py:652`. Tests:
+  `test_F6_pilot_rows_are_never_reused_by_a_full_run_in_the_same_directory` and
+  `test_F6_scorer_drops_rows_of_the_other_batch_shape` failed against the pre-review source.
+- **F7 — registered batch-size levers are not implemented.** The runner still performs Stage 1 forwards at batch 1 and
+  many Stage 2 random-set generations at batch 1. Rather than leave this feasibility mismatch implicit, Stage 1 records
+  its forward histogram and each Stage 2 `run.json` records the generation histogram. `run212.py:420`,
+  `run212.py:1394`. The test
+  `test_F7_realized_batch_histograms_are_written_for_both_stages` fails against the pre-review source. The measured
+  full-plan histogram at batch 24 is `1: 1440, 4: 36, 8: 264, 24: 8`; Stage 1 recorded `1: 3449`. This is a logged
+  performance deviation, not a batching implementation; the design's 46-minute estimate remains unverified.
+- **F8 — the pilot counted legacy lexical Google hits.** It now counts only `clean_google` from the same classifier the
+  scorer uses. `run212.py:1427`. Test:
+  `test_F8_pilot_stopping_rule_counts_clean_google_not_the_legacy_any_google_hit` failed against the pre-review source.
+- **F9 — the pool-match report was stale.** The earlier BUILD-REPORT item 5 now describes the existing activation
+  pre-pass and activation-weighted write-norm calculation accurately. Manual source/test review:
+  `pool_norm_pass`, `stage1_pools`, and `test_stage1_pools_pick_the_activation_weighted_pool_not_the_weight_only_pool`.
+- **F10 — Gate 0 named a nonexistent CLI switch.** The length-drift error now names
+  `PART212_ALLOW_LENGTH_DRIFT=1`. `run212.py:123`. Test:
+  `test_F10_length_drift_message_names_the_environment_variable` failed against the pre-review source.
+
+**Verification for this review pass:** 74 tests passed (`/home/elisepc/neuron-probe/.venv/bin/python -B -m pytest -q
+-p no:cacheprovider part212/test_part212.py`). The required tiny smoke completed with `SMOKE OK pilot 1187.8 s`; all
+intervention assertions passed. Its random weights correctly failed the positive-control, eager-attention and
+zero-Google pilot gates, so it did not authorize full Stage 2. Selected regression tests run against a scratch copy of
+the pre-review `HEAD` sources produced 11 failures and 2 passes (the standalone F3 value-source helpers were already
+present; the driver integration and layer-specific write checks were red). No real model weights were loaded.
