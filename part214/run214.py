@@ -211,9 +211,17 @@ def registration_status(repo=ROOT) -> dict:
     text = raw.decode('utf-8')
     match = re.search(r'^##\s*Part\s+214\s*\(registered[^\n]*\n.*?(?=^##\s|\Z)', text, re.M | re.S)
     section = match.group(0) if match else None
+    # The registered bytes end at the section's last line and ONE line feed. Blank lines after it are the separator
+    # before whatever heading follows, not registered content: appending another part's section put one extra LF
+    # there (2026-11-20, Alden #27) and the whole-section digest stopped matching with no prediction changed. Only
+    # TRAILING line feeds are normalised; every other byte (heading, clauses, internal whitespace) is still bound.
+    raw_section = section
+    if section is not None:
+        section = section.rstrip('\n') + '\n'
     return {'registered': match is not None, 'path': str(path),
             'sha256': hashlib.sha256(raw).hexdigest(),
             'section_sha256': hashlib.sha256(section.encode('utf-8')).hexdigest() if section else None,
+            'section_raw_sha256': hashlib.sha256(raw_section.encode('utf-8')).hexdigest() if raw_section else None,
             'section_bytes': len(section.encode('utf-8')) if section else 0,
             'reason': '' if match else 'no "## Part 214 (registered ...)" section in PREDICTIONS.md'}
 
