@@ -324,9 +324,9 @@ Copied verbatim into PREDICTIONS.md under "## Part 214 (registered ...)" at regi
     magnitude is reported with the miss. Never write "accounts for" without (c).
     Sub-label the phase/spike/register structure from `214.5`, `214.6` and `214.7` — as observations, not as identified
     mechanisms.
-  - **"Beyond the single dial (H4 beaten by phase, spike, or directional content)"** ONLY if Gates 1–3 pass, `214.1`
-    holds, `214.4` FAILS, AND at least one explicit rival clears its positive bar (`broken_rate <= 0.15` + worst-case
-    recode):
+  - **"Beyond the two-phase schedule (H4 beaten by phase, spike, or directional content)"** ONLY if Gates 1–3 pass,
+    `214.1` holds, `214.4` fails for a DISCRIMINATED reason (not `not read`, not `not discriminated`), AND at least one
+    explicit rival clears its positive bar (`broken_rate <= 0.15` + worst-case recode):
     - **H3 (early-token temporal spikes):** `rate(mean_resample_you) - rate(trace_resample_you) > +0.05` with
       question-clustered 95% CI lower bound `> 0`. ⚠ Trace-to-bank-mean averaging changes prefill values, decode timing,
       donor identity and covariance at once (Alden), so 214.6 and this bar read as "mean pooling does not change the
@@ -368,7 +368,7 @@ Copied verbatim into PREDICTIONS.md under "## Part 214 (registered ...)" at regi
 - `scale_dial_fact` and `scale_dial_you` in Stage 2 use **online** scalar multiplication ($\hat{\alpha}\cdot x_{\text{live}}$),
   so scaling layer 6 feeds downstream drift into layers 7, 11, and 29; Stage 1's frozen-vs-online diagnostic measures
   this drift directly at the forced opening, not at later free-generation tokens.
-- The 1-D dial projection $\hat{\alpha}$ is defined over Stage 0's deterministic **greedy** trajectories of `EN_MAKER`
+- The two-phase schedule's projections $\hat{\alpha}_{\text{prompt}}$, $\hat{\alpha}_{\text{gen}}$ are defined over Stage 0's deterministic **greedy** trajectories of `EN_MAKER`
   and donors, whereas Stage 2 samples at `temperature=0.7, top_p=0.95`.
 - `D_imp` is tested directly in Stage 0 (activations and donor greedy register) and Stage 1 (exact logits), and is
   NOT a ninth Stage 2 arm. The earlier draft let Stage 0 decide whether to add one; that is removed (Alden, item 3):
