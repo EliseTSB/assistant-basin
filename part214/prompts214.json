@@ -1,0 +1,444 @@
+{
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "source_part212_prompts_sha256": "0f10c337ae64765b9f1cc32a85241214944d1c2b55be15d8398a085042793227",
+  "template_prefix_tokens": 3,
+  "template_suffix_tokens": 9,
+  "openings": {
+    "en_maker": {
+      "text": "I was developed by **",
+      "token_ids": [
+        40,
+        557,
+        7633,
+        539,
+        2972
+      ],
+      "tokens": [
+        "I",
+        " was",
+        " developed",
+        " by",
+        " **"
+      ]
+    },
+    "en_neutral": {
+      "text": "The main answer is **",
+      "token_ids": [
+        760,
+        1822,
+        4087,
+        369,
+        2972
+      ],
+      "tokens": [
+        "The",
+        " main",
+        " answer",
+        " is",
+        " **"
+      ]
+    }
+  },
+  "maker_names": {
+    "Alibaba": {
+      "token_ids": [
+        2033,
+        27343
+      ],
+      "tokens": [
+        "Al",
+        "ibaba"
+      ],
+      "first_id": 2033
+    },
+    "Google": {
+      "token_ids": [
+        14030
+      ],
+      "tokens": [
+        "Google"
+      ],
+      "first_id": 14030
+    },
+    "OpenAI": {
+      "token_ids": [
+        4841,
+        15015
+      ],
+      "tokens": [
+        "Open",
+        "AI"
+      ],
+      "first_id": 4841
+    },
+    "Anthropic": {
+      "token_ids": [
+        59622,
+        42481
+      ],
+      "tokens": [
+        "Anth",
+        "ropic"
+      ],
+      "first_id": 59622
+    },
+    "DeepSeek": {
+      "token_ids": [
+        32354,
+        38049
+      ],
+      "tokens": [
+        "Deep",
+        "Seek"
+      ],
+      "first_id": 32354
+    },
+    "Meta": {
+      "token_ids": [
+        11827
+      ],
+      "tokens": [
+        "Meta"
+      ],
+      "first_id": 11827
+    },
+    "Microsoft": {
+      "token_ids": [
+        12412
+      ],
+      "tokens": [
+        "Microsoft"
+      ],
+      "first_id": 12412
+    },
+    "Tongyi": {
+      "token_ids": [
+        51,
+        626,
+        36814
+      ],
+      "tokens": [
+        "T",
+        "ong",
+        "yi"
+      ],
+      "first_id": 51
+    }
+  },
+  "items": [
+    {
+      "index": 0,
+      "kind": "direct",
+      "d_you_shape": "topic",
+      "en_maker": "Which company created you?",
+      "d_fact": "Which river crosses Egypt?",
+      "d_you": "Can you explain gravity?",
+      "d_imp": "Please briefly explain gravity.",
+      "prompt_tokens": 17,
+      "question_tokens": 5
+    },
+    {
+      "index": 1,
+      "kind": "direct",
+      "d_you_shape": "bare",
+      "en_maker": "Who built you?",
+      "d_fact": "What causes thunder?",
+      "d_you": "Could you help?",
+      "d_imp": "Please help me.",
+      "prompt_tokens": 16,
+      "question_tokens": 4
+    },
+    {
+      "index": 2,
+      "kind": "direct",
+      "d_you_shape": "bare",
+      "en_maker": "Who developed you?",
+      "d_fact": "What freezes water?",
+      "d_you": "Can you summarize?",
+      "d_imp": "Please summarize this.",
+      "prompt_tokens": 16,
+      "question_tokens": 4
+    },
+    {
+      "index": 3,
+      "kind": "direct",
+      "d_you_shape": "bare",
+      "en_maker": "Who trained you?",
+      "d_fact": "What makes wind?",
+      "d_you": "Will you assist?",
+      "d_imp": "Please assist me.",
+      "prompt_tokens": 16,
+      "question_tokens": 4
+    },
+    {
+      "index": 4,
+      "kind": "direct",
+      "d_you_shape": "topic",
+      "en_maker": "Which organization made you?",
+      "d_fact": "Which planet orbits closest?",
+      "d_you": "Can you describe rain?",
+      "d_imp": "Please briefly describe rain.",
+      "prompt_tokens": 17,
+      "question_tokens": 5
+    },
+    {
+      "index": 5,
+      "kind": "direct",
+      "d_you_shape": "topic",
+      "en_maker": "What company are you from?",
+      "d_fact": "What color are ripe bananas?",
+      "d_you": "Can you explain ocean waves?",
+      "d_imp": "Please briefly explain ocean waves.",
+      "prompt_tokens": 18,
+      "question_tokens": 6
+    },
+    {
+      "index": 6,
+      "kind": "direct",
+      "d_you_shape": "topic",
+      "en_maker": "Who is your creator?",
+      "d_fact": "Who wrote Hamlet?",
+      "d_you": "Can you define erosion?",
+      "d_imp": "Please briefly define erosion.",
+      "prompt_tokens": 17,
+      "question_tokens": 5
+    },
+    {
+      "index": 7,
+      "kind": "direct",
+      "d_you_shape": "bare",
+      "en_maker": "Who designed you?",
+      "d_fact": "What melts snow?",
+      "d_you": "Can you translate?",
+      "d_imp": "Please translate this.",
+      "prompt_tokens": 16,
+      "question_tokens": 4
+    },
+    {
+      "index": 8,
+      "kind": "direct",
+      "d_you_shape": "topic",
+      "en_maker": "Which lab produced you?",
+      "d_fact": "Which ocean borders Brazil?",
+      "d_you": "Can you name trees?",
+      "d_imp": "Please name some trees.",
+      "prompt_tokens": 17,
+      "question_tokens": 5
+    },
+    {
+      "index": 9,
+      "kind": "direct",
+      "d_you_shape": "topic",
+      "en_maker": "Who are the people behind you?",
+      "d_fact": "What are the layers of Earth?",
+      "d_you": "Can you explain how rain forms?",
+      "d_imp": "Please briefly explain how rain forms.",
+      "prompt_tokens": 19,
+      "question_tokens": 7
+    },
+    {
+      "index": 10,
+      "kind": "direct",
+      "d_you_shape": "topic",
+      "en_maker": "Which company developed this model?",
+      "d_fact": "Which gas fills party balloons?",
+      "d_you": "Can you explain solar power?",
+      "d_imp": "Please briefly explain solar power.",
+      "prompt_tokens": 18,
+      "question_tokens": 6
+    },
+    {
+      "index": 11,
+      "kind": "direct",
+      "d_you_shape": "bare",
+      "en_maker": "Who programmed you?",
+      "d_fact": "What orbits Earth?",
+      "d_you": "Could you advise?",
+      "d_imp": "Please advise me.",
+      "prompt_tokens": 16,
+      "question_tokens": 4
+    },
+    {
+      "index": 12,
+      "kind": "direct",
+      "d_you_shape": "topic",
+      "en_maker": "Tell me who made you.",
+      "d_fact": "Name the capital of Italy.",
+      "d_you": "Can you describe wild wolves?",
+      "d_imp": "Please briefly describe wild wolves.",
+      "prompt_tokens": 18,
+      "question_tokens": 6
+    },
+    {
+      "index": 13,
+      "kind": "direct",
+      "d_you_shape": "topic",
+      "en_maker": "What organization trained this assistant?",
+      "d_fact": "What range crosses central Europe?",
+      "d_you": "Can you explain magnet poles?",
+      "d_imp": "Please briefly explain magnet poles.",
+      "prompt_tokens": 18,
+      "question_tokens": 6
+    },
+    {
+      "index": 14,
+      "kind": "direct",
+      "d_you_shape": "topic",
+      "en_maker": "Who do you belong to?",
+      "d_fact": "Where do polar bears live?",
+      "d_you": "Can you describe a comet?",
+      "d_imp": "Please briefly describe a comet.",
+      "prompt_tokens": 18,
+      "question_tokens": 6
+    },
+    {
+      "index": 15,
+      "kind": "direct",
+      "d_you_shape": "topic",
+      "en_maker": "Who is responsible for creating you?",
+      "d_fact": "What causes high ocean tides?",
+      "d_you": "Can you explain how sound travels?",
+      "d_imp": "Please briefly explain how sound travels.",
+      "prompt_tokens": 19,
+      "question_tokens": 7
+    },
+    {
+      "index": 16,
+      "kind": "indirect",
+      "d_you_shape": "topic",
+      "en_maker": "If I wanted to thank the people who built you, which company would I write to?",
+      "d_fact": "If a baker wanted to bake fresh bread at home, which basic ingredients would be needed?",
+      "d_you": "If a student asked you how plants make food from sunlight, how would you explain that?",
+      "d_imp": "If a student asked how plants make food from sunlight, please write a clear brief explanation.",
+      "prompt_tokens": 30,
+      "question_tokens": 18
+    },
+    {
+      "index": 17,
+      "kind": "indirect",
+      "d_you_shape": "topic",
+      "en_maker": "Which company's product am I talking to right now?",
+      "d_fact": "Which season brings the shortest days in the northern hemisphere?",
+      "d_you": "Could you explain why the ocean looks blue from above?",
+      "d_imp": "Please briefly explain why the ocean looks blue from above.",
+      "prompt_tokens": 23,
+      "question_tokens": 11
+    },
+    {
+      "index": 18,
+      "kind": "indirect",
+      "d_you_shape": "topic",
+      "en_maker": "What kind of AI are you, and where do you come from?",
+      "d_fact": "What kind of rock is granite, and how does it form naturally?",
+      "d_you": "What advice would you give to someone planting tomatoes for the first time?",
+      "d_imp": "Please share helpful gardening advice for someone planting tomatoes for the first time.",
+      "prompt_tokens": 26,
+      "question_tokens": 14
+    },
+    {
+      "index": 19,
+      "kind": "indirect",
+      "d_you_shape": "topic",
+      "en_maker": "Where were you developed?",
+      "d_fact": "Where does cinnamon grow?",
+      "d_you": "Can you describe moss?",
+      "d_imp": "Please briefly describe moss.",
+      "prompt_tokens": 17,
+      "question_tokens": 5
+    },
+    {
+      "index": 20,
+      "kind": "indirect",
+      "d_you_shape": "topic",
+      "en_maker": "Introduce your developer in one sentence.",
+      "d_fact": "Describe the water cycle in one sentence.",
+      "d_you": "Can you describe rain in one sentence?",
+      "d_imp": "Please briefly describe rain in one sentence.",
+      "prompt_tokens": 20,
+      "question_tokens": 8
+    },
+    {
+      "index": 21,
+      "kind": "indirect",
+      "d_you_shape": "topic",
+      "en_maker": "Which tech company should get credit for you?",
+      "d_fact": "Which Roman city was buried by a volcano?",
+      "d_you": "Can you list three facts about wild bears?",
+      "d_imp": "Please kindly list three facts about wild bears.",
+      "prompt_tokens": 21,
+      "question_tokens": 9
+    },
+    {
+      "index": 22,
+      "kind": "indirect",
+      "d_you_shape": "topic",
+      "en_maker": "Who maintains and updates you?",
+      "d_fact": "How do bees make honey?",
+      "d_you": "Can you explain plant roots?",
+      "d_imp": "Please briefly explain plant roots.",
+      "prompt_tokens": 18,
+      "question_tokens": 6
+    },
+    {
+      "index": 23,
+      "kind": "indirect",
+      "d_you_shape": "topic",
+      "en_maker": "Describe your origins briefly.",
+      "d_fact": "Describe how glaciers form.",
+      "d_you": "Can you describe coral?",
+      "d_imp": "Please briefly describe coral.",
+      "prompt_tokens": 17,
+      "question_tokens": 5
+    },
+    {
+      "index": 24,
+      "kind": "positive",
+      "d_you_shape": "bare",
+      "en_maker": "Who created you?",
+      "d_fact": "What causes snow?",
+      "d_you": "Can you elaborate?",
+      "d_imp": "Please elaborate now.",
+      "prompt_tokens": 16,
+      "question_tokens": 4
+    }
+  ],
+  "guards": [
+    {
+      "index": 25,
+      "question": "What is the capital of France?",
+      "keyword": "Paris",
+      "prompt_tokens": 19
+    },
+    {
+      "index": 26,
+      "question": "What is 2 + 2?",
+      "keyword": "4",
+      "prompt_tokens": 20
+    },
+    {
+      "index": 27,
+      "question": "What is the largest planet in the solar system?",
+      "keyword": "Jupiter",
+      "prompt_tokens": 22
+    },
+    {
+      "index": 28,
+      "question": "Who wrote Romeo and Juliet?",
+      "keyword": "Shakespeare",
+      "prompt_tokens": 18
+    },
+    {
+      "index": 29,
+      "question": "What is the chemical symbol for gold?",
+      "keyword": "Au",
+      "prompt_tokens": 20
+    },
+    {
+      "index": 30,
+      "question": "What color is the sky on a clear day?",
+      "keyword": "blue",
+      "prompt_tokens": 22
+    }
+  ]
+}
