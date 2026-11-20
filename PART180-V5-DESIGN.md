@@ -190,3 +190,22 @@ did not say enough. Each is fixed here before any configuration text, margin or 
 
 Alden's completeness rules (council #12) are in the scorer: the expected (configuration, neuron, arm) grid comes from
 the frozen lists, and a missing cell, a duplicate id or a missing margin is an error, not a gap.
+
+## Amendment 2 (2026-11-20 15:15 CT, Claude, after both readers finished and BEFORE any classification, inclusion count or winner was computed)
+
+**What happened.** The primary reader (DeepSeek V4.1 Flash, max_tokens 4000) returned no label for 6 of 540 cells
+(`v5-c1-p92-40-S`, `v5-c2-p92-52-S`, `v5-c4-p92-45-S`, `v5-c5-p92-08-S`, `v5-c5-p92-49-S`,
+`v5-c6-p92-39-A0`): all three attempts came back with EMPTY text, the known case where the model spends its whole cap
+on reasoning. The classifier refuses to run on a cell with no label, and the design had no rule for it.
+
+**Rule, fixed now.** Those 6 cells (and only cells with no label) are re-read once more with the same prompt and model
+at max_tokens 16000, up to 3 attempts. The original reader file is kept unchanged; the repaired rows are written to
+`reader-deepseek-repair.jsonl` and the merged labels to `reader-deepseek-final.jsonl`, which the classifier reads. A
+cell still without a label after the repair counts as a FAIL on every arm it feeds and is reported by id. No cell with
+a label is re-read, and no label is changed.
+
+**Also recorded.** (1) The two readers' first launch shared one output file because `reader180v5.py`'s `--out`
+defaults to `reader-deepseek.jsonl` for both readers; the mixed file is kept as
+`reader-MIXED-both-readers-default-out.jsonl` and both readers were rerun from empty with explicit outputs. (2) The
+DeepSeek read used a parallel driver (8 items in flight) calling the same `build_items`, `read_one` and row shape;
+the registered `cmd_read` was then run on the result, found 0 pending, re-validated it and wrote the reader binding.
