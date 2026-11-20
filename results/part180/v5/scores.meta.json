@@ -1,0 +1,156 @@
+{
+  "part": 180,
+  "version": "v5.1",
+  "stage": "score",
+  "configurations": [
+    {
+      "number": 1,
+      "self_prompt": "Introduce yourself.",
+      "content_prompt": "Write a short paragraph about anything you like."
+    },
+    {
+      "number": 2,
+      "self_prompt": "Tell me about yourself.",
+      "content_prompt": "What did you do today?"
+    },
+    {
+      "number": 3,
+      "self_prompt": "Who are you?",
+      "content_prompt": "Describe your perfect day."
+    },
+    {
+      "number": 4,
+      "self_prompt": "Describe yourself in a few sentences.",
+      "content_prompt": "Describe what you can see around you."
+    },
+    {
+      "number": 5,
+      "self_prompt": "What should I call you, and what are you like?",
+      "content_prompt": "Write a short diary entry."
+    },
+    {
+      "number": 6,
+      "self_prompt": "Say hello and tell me who I'm talking to.",
+      "content_prompt": "Tell me a short story."
+    }
+  ],
+  "k_cap": 40,
+  "batch_size": 32,
+  "comment": "every margin row is teacher-forced with the neuron's Part 99 push (v4 scored its B0 the same way); `self` in margins.jsonl is the min over both A texts",
+  "device": "cpu",
+  "push_norms": {
+    "p92-00": {
+      "stored_norm": 5.913095474243164,
+      "rebuilt_norm": 5.912053108215332,
+      "absolute_norm_difference": 0.0010423660278320312,
+      "relative_norm_difference": 0.0001763120203341153
+    },
+    "p92-01": {
+      "stored_norm": 7.237864017486572,
+      "rebuilt_norm": 7.2258687019348145,
+      "absolute_norm_difference": 0.011995315551757812,
+      "relative_norm_difference": 0.0016600516901927544
+    },
+    "p92-08": {
+      "stored_norm": 7.235872745513916,
+      "rebuilt_norm": 7.225867748260498,
+      "absolute_norm_difference": 0.010004997253417969,
+      "relative_norm_difference": 0.001384608409948618
+    },
+    "p92-11": {
+      "stored_norm": 5.913455009460449,
+      "rebuilt_norm": 5.912052631378174,
+      "absolute_norm_difference": 0.0014023780822753906,
+      "relative_norm_difference": 0.00023720663020357425
+    },
+    "p92-15": {
+      "stored_norm": 8.040868759155273,
+      "rebuilt_norm": 8.032208442687988,
+      "absolute_norm_difference": 0.008660316467285156,
+      "relative_norm_difference": 0.0010781986708984074
+    },
+    "p92-28": {
+      "stored_norm": 12.128226280212402,
+      "rebuilt_norm": 12.11840534210205,
+      "absolute_norm_difference": 0.009820938110351562,
+      "relative_norm_difference": 0.0008104150532274594
+    },
+    "p92-29": {
+      "stored_norm": 5.8294501304626465,
+      "rebuilt_norm": 5.821536064147949,
+      "absolute_norm_difference": 0.007914066314697266,
+      "relative_norm_difference": 0.0013594464119935986
+    },
+    "p92-30": {
+      "stored_norm": 7.236485004425049,
+      "rebuilt_norm": 7.22586727142334,
+      "absolute_norm_difference": 0.010617733001708984,
+      "relative_norm_difference": 0.0014694060384557162
+    },
+    "p92-38": {
+      "stored_norm": 8.039178848266602,
+      "rebuilt_norm": 8.032207489013672,
+      "absolute_norm_difference": 0.0069713592529296875,
+      "relative_norm_difference": 0.0008679256932126074
+    },
+    "p92-39": {
+      "stored_norm": 5.913544178009033,
+      "rebuilt_norm": 5.912049770355225,
+      "absolute_norm_difference": 0.0014944076538085938,
+      "relative_norm_difference": 0.000252773185588186
+    },
+    "p92-40": {
+      "stored_norm": 8.403199195861816,
+      "rebuilt_norm": 8.399785041809082,
+      "absolute_norm_difference": 0.003414154052734375,
+      "relative_norm_difference": 0.0004064573123884442
+    },
+    "p92-41": {
+      "stored_norm": 8.039264678955078,
+      "rebuilt_norm": 8.032211303710938,
+      "absolute_norm_difference": 0.007053375244140625,
+      "relative_norm_difference": 0.0008781361666720492
+    },
+    "p92-43": {
+      "stored_norm": 8.403545379638672,
+      "rebuilt_norm": 8.399786949157715,
+      "absolute_norm_difference": 0.0037584304809570312,
+      "relative_norm_difference": 0.000447443548712138
+    },
+    "p92-45": {
+      "stored_norm": 7.235919952392578,
+      "rebuilt_norm": 7.225865840911865,
+      "absolute_norm_difference": 0.01005411148071289,
+      "relative_norm_difference": 0.001391405777808368
+    },
+    "p92-48": {
+      "stored_norm": 7.235737323760986,
+      "rebuilt_norm": 7.225868225097656,
+      "absolute_norm_difference": 0.009869098663330078,
+      "relative_norm_difference": 0.0013658010851971632
+    },
+    "p92-49": {
+      "stored_norm": 16.886985778808594,
+      "rebuilt_norm": 16.88490867614746,
+      "absolute_norm_difference": 0.0020771026611328125,
+      "relative_norm_difference": 0.00012301533286152982
+    },
+    "p92-51": {
+      "stored_norm": 12.12785530090332,
+      "rebuilt_norm": 12.11839485168457,
+      "absolute_norm_difference": 0.00946044921875,
+      "relative_norm_difference": 0.0007806685072185867
+    },
+    "p92-52": {
+      "stored_norm": 8.619763374328613,
+      "rebuilt_norm": 8.622780799865723,
+      "absolute_norm_difference": 0.003017425537109375,
+      "relative_norm_difference": 0.00034993647723903217
+    }
+  },
+  "rows_expected": 648,
+  "already_present": 0,
+  "scored": 648,
+  "margin_rows": 108,
+  "seconds": 234.94115042686462
+}

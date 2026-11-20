@@ -314,3 +314,27 @@ class SelectionTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Part92BesideSourceTests(unittest.TestCase):
+    """Cold check 2026-11-20, finding 9: cmd_classify read Part 92's ANSWERS file, whose rows have no self_claim /
+    shows_persona fields, so the beside block came out q0 true for none and q3 null throughout. It must read the
+    labels file. Uses the repo's real Part 92 files (beside only; never inclusion)."""
+
+    def test_answers_rows_carry_no_label_fields_and_labels_rows_do(self):
+        from pathlib import Path
+        import json
+        step2 = Path(__file__).resolve().parent.parent / "results" / "part92" / "step2"
+        answers = [json.loads(l) for l in (step2 / "answers" / "instruct_chat.jsonl").read_text().splitlines() if l]
+        labels = [json.loads(l) for l in (step2 / "labels-instruct_chat.jsonl").read_text().splitlines() if l]
+        self.assertTrue(all("self_claim" not in row for row in answers))
+        self.assertTrue(any("self_claim" in row for row in labels))
+        beside = classify.part92_beside(labels)
+        q0 = sum(1 for v in beside.values() if v.get("q0_self_claim_true") is True)
+        self.assertGreater(q0, 0, "the labels file must give real q0 values; the answers file gives none")
+
+    def test_cmd_classify_reads_the_labels_file(self):
+        import inspect
+        source = inspect.getsource(classify.cmd_classify)
+        self.assertIn("labels-instruct_chat.jsonl", source)
+        self.assertNotIn('"answers" / "instruct_chat.jsonl"', source)

@@ -1,0 +1,22 @@
+{
+  "reader": "deepseek",
+  "call": "call_deepseek",
+  "model": "deepseek-v4.1-flash",
+  "route": "ocgo",
+  "prompt_file": "part180/prompt180v5.txt",
+  "prompt_sha256": "7602774b1c6eb3d4d9f1bad2e157fd9b7e5c0ef7f835cc094ed8647e2c4afdc6",
+  "seed": 180,
+  "items_expected": 540,
+  "items_present": 540,
+  "unlabelled": 6,
+  "k_cap": 40,
+  "k_rule": "K = min(length of the pair's two texts, 40); S read at min over both pairs",
+  "arms": [
+    "S",
+    "A0",
+    "A1",
+    "C",
+    "B"
+  ],
+  "out": "results/part180/v5/reader-deepseek.jsonl"
+}

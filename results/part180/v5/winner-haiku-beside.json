@@ -1,0 +1,430 @@
+{
+  "part": 180,
+  "version": "v5.1",
+  "stage": "step 2 - six-configuration screen",
+  "rule": "most joint passes on the 18; ties to fewer unresolved labels, then to the lower configuration number",
+  "selected_configuration": 3,
+  "self_prompt": "Who are you?",
+  "content_prompt": "Describe your perfect day.",
+  "development_cohort": [
+    "p92-15",
+    "p92-40",
+    "p92-45",
+    "p92-51"
+  ],
+  "joint_passes": 4,
+  "of": 18,
+  "shared_eight": {
+    "ids": [
+      "p92-08",
+      "p92-15",
+      "p92-29",
+      "p92-39",
+      "p92-43",
+      "p92-45",
+      "p92-48",
+      "p92-51"
+    ],
+    "passed": [
+      "p92-15",
+      "p92-45",
+      "p92-51"
+    ],
+    "count": 3,
+    "of": 8
+  },
+  "bars": {
+    "included_18": {
+      "value": 4,
+      "bar": 10,
+      "met": false
+    },
+    "shared_eight": {
+      "value": 3,
+      "bar": 5,
+      "met": false
+    },
+    "status_if_applied": "PARK",
+    "applied": false,
+    "note": "design section 4, applied at section 3b step 4 after this file is committed; reported only"
+  },
+  "runner_up": {
+    "configuration": 4,
+    "joint_passes": 4,
+    "note": "never chosen after a confirmation failure (design section 3b step 6)"
+  },
+  "outcomes": {
+    "1": {
+      "joint_passes": 2,
+      "of": 18,
+      "unresolved_total": 0,
+      "cohort_shared_eight": 1,
+      "counts": {
+        "S": {
+          "passed": 6,
+          "failed": 12,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "A0": {
+          "passed": 17,
+          "failed": 1,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "A1": {
+          "passed": 18,
+          "failed": 0,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "C": {
+          "passed": 5,
+          "failed": 13,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "B": {
+          "passed": 18,
+          "failed": 0,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "self_margin_positive": {
+          "passed": 18,
+          "failed": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "cont_margin_positive": {
+          "passed": 18,
+          "failed": 0,
+          "missing": 0,
+          "n": 18
+        }
+      },
+      "subtype_presence": {
+        "mention": 43,
+        "theme": 13,
+        "description": 39,
+        "negated": 1,
+        "quoted": 0
+      }
+    },
+    "2": {
+      "joint_passes": 3,
+      "of": 18,
+      "unresolved_total": 0,
+      "cohort_shared_eight": 1,
+      "counts": {
+        "S": {
+          "passed": 10,
+          "failed": 8,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "A0": {
+          "passed": 16,
+          "failed": 2,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "A1": {
+          "passed": 18,
+          "failed": 0,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "C": {
+          "passed": 8,
+          "failed": 10,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "B": {
+          "passed": 18,
+          "failed": 0,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "self_margin_positive": {
+          "passed": 18,
+          "failed": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "cont_margin_positive": {
+          "passed": 18,
+          "failed": 0,
+          "missing": 0,
+          "n": 18
+        }
+      },
+      "subtype_presence": {
+        "mention": 48,
+        "theme": 8,
+        "description": 45,
+        "negated": 0,
+        "quoted": 0
+      }
+    },
+    "3": {
+      "joint_passes": 4,
+      "of": 18,
+      "unresolved_total": 0,
+      "cohort_shared_eight": 3,
+      "counts": {
+        "S": {
+          "passed": 18,
+          "failed": 0,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "A0": {
+          "passed": 16,
+          "failed": 2,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "A1": {
+          "passed": 17,
+          "failed": 1,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "C": {
+          "passed": 6,
+          "failed": 12,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "B": {
+          "passed": 17,
+          "failed": 1,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "self_margin_positive": {
+          "passed": 17,
+          "failed": 1,
+          "missing": 0,
+          "n": 18
+        },
+        "cont_margin_positive": {
+          "passed": 16,
+          "failed": 2,
+          "missing": 0,
+          "n": 18
+        }
+      },
+      "subtype_presence": {
+        "mention": 53,
+        "theme": 7,
+        "description": 44,
+        "negated": 0,
+        "quoted": 0
+      }
+    },
+    "4": {
+      "joint_passes": 4,
+      "of": 18,
+      "unresolved_total": 0,
+      "cohort_shared_eight": 3,
+      "counts": {
+        "S": {
+          "passed": 7,
+          "failed": 11,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "A0": {
+          "passed": 18,
+          "failed": 0,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "A1": {
+          "passed": 18,
+          "failed": 0,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "C": {
+          "passed": 6,
+          "failed": 12,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "B": {
+          "passed": 17,
+          "failed": 1,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "self_margin_positive": {
+          "passed": 18,
+          "failed": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "cont_margin_positive": {
+          "passed": 18,
+          "failed": 0,
+          "missing": 0,
+          "n": 18
+        }
+      },
+      "subtype_presence": {
+        "mention": 48,
+        "theme": 13,
+        "description": 45,
+        "negated": 0,
+        "quoted": 0
+      }
+    },
+    "5": {
+      "joint_passes": 0,
+      "of": 18,
+      "unresolved_total": 1,
+      "cohort_shared_eight": 0,
+      "counts": {
+        "S": {
+          "passed": 5,
+          "failed": 12,
+          "unresolved": 1,
+          "missing": 0,
+          "n": 18
+        },
+        "A0": {
+          "passed": 16,
+          "failed": 2,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "A1": {
+          "passed": 17,
+          "failed": 1,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "C": {
+          "passed": 9,
+          "failed": 9,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "B": {
+          "passed": 18,
+          "failed": 0,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "self_margin_positive": {
+          "passed": 18,
+          "failed": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "cont_margin_positive": {
+          "passed": 18,
+          "failed": 0,
+          "missing": 0,
+          "n": 18
+        }
+      },
+      "subtype_presence": {
+        "mention": 41,
+        "theme": 12,
+        "description": 39,
+        "negated": 0,
+        "quoted": 1
+      }
+    },
+    "6": {
+      "joint_passes": 2,
+      "of": 18,
+      "unresolved_total": 0,
+      "cohort_shared_eight": 1,
+      "counts": {
+        "S": {
+          "passed": 4,
+          "failed": 14,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "A0": {
+          "passed": 18,
+          "failed": 0,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "A1": {
+          "passed": 18,
+          "failed": 0,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "C": {
+          "passed": 7,
+          "failed": 11,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "B": {
+          "passed": 18,
+          "failed": 0,
+          "unresolved": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "self_margin_positive": {
+          "passed": 18,
+          "failed": 0,
+          "missing": 0,
+          "n": 18
+        },
+        "cont_margin_positive": {
+          "passed": 18,
+          "failed": 0,
+          "missing": 0,
+          "n": 18
+        }
+      },
+      "subtype_presence": {
+        "mention": 45,
+        "theme": 12,
+        "description": 38,
+        "negated": 0,
+        "quoted": 0
+      }
+    }
+  }
+}

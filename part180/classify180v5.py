@@ -301,7 +301,9 @@ def cmd_classify(args):
     if not labels:
         raise ValueError(f"no reader rows in {args.labels}; run reader180v5.py read first")
     neurons = v4.load_concept_neurons(results)
-    answers = v4._load_jsonl(results / "part92" / "step2" / "answers" / "instruct_chat.jsonl")
+    # The labels file, not the answers file: answers rows carry only id/unit/question/answer, so reading them gave
+    # q0 true for none and q3 null throughout (cold check 2026-11-20, finding 9). Beside only; never inclusion.
+    answers = v4._load_jsonl(results / "part92" / "step2" / "labels-instruct_chat.jsonl")
     score92b = json.loads(v4.normalise_path(args.score92b).read_text(encoding="utf-8"))
     shared_ids = classify180.deepseek_concept_ids(score92b)
     outcomes = classify(margins, labels, neurons, shared_ids=shared_ids, part92=part92_beside(answers))
