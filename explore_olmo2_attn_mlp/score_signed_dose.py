@@ -24,6 +24,7 @@ import argparse
 import copy
 import json
 import math
+import re
 import statistics
 import sys
 import tempfile
@@ -52,6 +53,13 @@ SD6A_UNION_FLOOR = 0.30
 SD1B_HEADS: tuple[str, ...] = ("L8H15", "L8H4", "L8H11", "L7H5")
 BLOCK_A_THIRD_PROMPTS: tuple[str, ...] = ("third_F1", "third_F2")
 Q3_STORIES: tuple[str, ...] = ("F1", "F2")
+HEX64_RE = re.compile(r"^[0-9a-f]{64}$")
+
+
+def _require_hex64(val: Any, label: str) -> str:
+    if not isinstance(val, str) or not HEX64_RE.match(val):
+        raise ValueError(f"Invalid or missing 64-hex SHA-256 pin for {label}: {val!r}")
+    return val
 
 
 def _require_finite(val: Any, label: str) -> float:
@@ -146,9 +154,16 @@ def score_results(
     results_path: Path,
     manifest_path: Path,
     design_path: Path,
-    expected_manifest_sha256: str | None = None,
-    expected_design_sha256: str | None = None,
+    expected_manifest_sha256: str,
+    expected_design_sha256: str,
+    expected_runner_sha256: str,
+    expected_scorer_sha256: str,
 ) -> dict[str, Any]:
+    exp_manifest = _require_hex64(expected_manifest_sha256, "expected_manifest_sha256")
+    exp_design = _require_hex64(expected_design_sha256, "expected_design_sha256")
+    exp_runner = _require_hex64(expected_runner_sha256, "expected_runner_sha256")
+    exp_scorer = _require_hex64(expected_scorer_sha256, "expected_scorer_sha256")
+
     if not results_path.is_file():
         raise FileNotFoundError(f"Results file not found: {results_path}")
     if not manifest_path.is_file():
@@ -160,21 +175,30 @@ def score_results(
     design_sha = sha256_file(design_path)
     results_sha = sha256_file(results_path)
     scorer_sha = sha256_file(Path(__file__).resolve())
+    runner_path = HERE / "run_signed_dose.py"
+    if not runner_path.is_file():
+        raise FileNotFoundError(f"Runner file not found beside scorer: {runner_path}")
+    runner_disk_sha = sha256_file(runner_path)
 
-    if expected_manifest_sha256 is not None and manifest_sha != expected_manifest_sha256:
-        raise ValueError(f"Manifest SHA mismatch: {manifest_sha} != {expected_manifest_sha256}")
-    if expected_design_sha256 is not None and design_sha != expected_design_sha256:
-        raise ValueError(f"Design SHA mismatch: {design_sha} != {expected_design_sha256}")
+    # Verify ALL FOUR external package pins against disk files BEFORE reading results!
+    if manifest_sha != exp_manifest:
+        raise ValueError(f"Manifest SHA mismatch on disk: {manifest_sha} != expected {exp_manifest}")
+    if design_sha != exp_design:
+        raise ValueError(f"Design SHA mismatch on disk: {design_sha} != expected {exp_design}")
+    if runner_disk_sha != exp_runner:
+        raise ValueError(f"Runner SHA mismatch on disk: {runner_disk_sha} != expected {exp_runner}")
+    if scorer_sha != exp_scorer:
+        raise ValueError(f"Scorer SHA mismatch on disk: {scorer_sha} != expected {exp_scorer}")
 
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     results = json.loads(results_path.read_text(encoding="utf-8"))
 
-    if manifest.get("meta", {}).get("design_sha256") != design_sha:
+    if manifest.get("meta", {}).get("design_sha256") != exp_design:
         raise ValueError(
-            f"Manifest design_sha256 ({manifest.get('meta', {}).get('design_sha256')}) != design file ({design_sha})"
+            f"Manifest design_sha256 ({manifest.get('meta', {}).get('design_sha256')}) != expected {exp_design}"
         )
 
-    # 1. Receipt completeness & identity enforcement (refuse smoke / partial checkpoints / digest drift)
+    # 1. Receipt completeness & full source-identity enforcement (refuse smoke / partial / ANY SHA mismatch)
     rmeta = results.get("meta", {})
     if rmeta.get("artifact_type") != "full_receipt":
         raise ValueError(f"Refused non-full artifact_type={rmeta.get('artifact_type')!r} (expected 'full_receipt')")
@@ -188,14 +212,33 @@ def score_results(
         raise ValueError(
             f"Refused incomplete units_completed={rmeta.get('units_completed')!r} (expected {list(CORE_UNITS)!r})"
         )
-    if rmeta.get("manifest_sha256") != manifest_sha:
+    if rmeta.get("manifest_sha256") != exp_manifest:
         raise ValueError(
-            f"Refused results with manifest_sha256={rmeta.get('manifest_sha256')} != bound manifest {manifest_sha}"
+            f"Refused results with manifest_sha256={rmeta.get('manifest_sha256')} != expected {exp_manifest}"
         )
-    if rmeta.get("design_sha256") != design_sha:
+    if rmeta.get("design_sha256") != exp_design:
         raise ValueError(
-            f"Refused results with design_sha256={rmeta.get('design_sha256')} != bound design {design_sha}"
+            f"Refused results with design_sha256={rmeta.get('design_sha256')} != expected {exp_design}"
         )
+    if rmeta.get("runner_sha256") != exp_runner:
+        raise ValueError(
+            f"Refused results with runner_sha256={rmeta.get('runner_sha256')} != expected {exp_runner}"
+        )
+    if rmeta.get("scorer_sha256") != exp_scorer:
+        raise ValueError(
+            f"Refused results with scorer_sha256={rmeta.get('scorer_sha256')} != expected {exp_scorer}"
+        )
+    rpins = rmeta.get("pins")
+    if not isinstance(rpins, dict):
+        raise ValueError("Refused results missing meta.pins dictionary")
+    for pkey, exp_val in (
+        ("manifest_sha256", exp_manifest),
+        ("design_sha256", exp_design),
+        ("runner_sha256", exp_runner),
+        ("scorer_sha256", exp_scorer),
+    ):
+        if rpins.get(pkey) != exp_val:
+            raise ValueError(f"Refused results with meta.pins.{pkey}={rpins.get(pkey)} != expected {exp_val}")
 
     # 2. Exact Q1+Q2 manifest-to-result key join (paired + explicit signed keys)
     m_doses = tuple(float(x) for x in manifest["meta"]["dose_magnitudes"])
@@ -396,7 +439,9 @@ def score_results(
             }
             dpos_means[mag] = by_mag_spec[str(mag)]["d_pos"]["mean"]
 
-        monotonic = dpos_means[1.6] < dpos_means[0.8] < dpos_means[0.4] < dpos_means[0.2]
+        monotonic_order = dpos_means[1.6] < dpos_means[0.8] < dpos_means[0.4] < dpos_means[0.2]
+        dpos_02_lt_zero = dpos_means[0.2] < 0.0
+        monotonic_negative = monotonic_order and dpos_02_lt_zero
         m_e08 = by_mag_spec["0.8"]["even"]["mean"]
         m_e16 = by_mag_spec["1.6"]["even"]["mean"]
         m_o08 = by_mag_spec["0.8"]["odd"]["mean"]
@@ -405,11 +450,13 @@ def score_results(
         cond_e16 = m_e16 <= -0.25
         cond_ratio = abs(m_e08) >= 0.40 * abs(m_o08)
         cond_no_flip = m_dneg08 < 0.25
-        h_pass = monotonic and cond_e08 and cond_e16 and cond_ratio and cond_no_flip
+        h_pass = monotonic_negative and cond_e08 and cond_e16 and cond_ratio and cond_no_flip
         sd2_heads[h] = {
             "passed": h_pass,
             "checks": {
-                "monotonic_negative_dpos": monotonic,
+                "monotonic_order": monotonic_order,
+                "dpos_02_lt_zero": dpos_02_lt_zero,
+                "monotonic_negative_dpos": monotonic_negative,
                 "even_08_le_neg015": cond_e08,
                 "even_16_le_neg025": cond_e16,
                 "abs_even_ge_040_abs_odd_08": cond_ratio,
@@ -685,11 +732,12 @@ def score_results(
             "schema_version": SCHEMA_VERSION,
             "verdict_type": "complete_full_scorecard",
             "complete_join_verified": True,
-            "manifest_sha256": manifest_sha,
-            "design_sha256": design_sha,
+            "external_pins_verified": True,
+            "manifest_sha256": exp_manifest,
+            "design_sha256": exp_design,
+            "runner_sha256": exp_runner,
+            "scorer_sha256": exp_scorer,
             "results_sha256": results_sha,
-            "runner_sha256": rmeta.get("runner_sha256"),
-            "scorer_sha256": scorer_sha,
             "q12_rows_joined": len(q12_by_key),
             "q12_signed_keys_joined": len(observed_signed_keys),
             "q3_rows_joined": len(q3_by_key),
@@ -746,7 +794,13 @@ def _make_metric_q3(l_z: float, r_z: float = 0.0) -> dict[str, Any]:
     }
 
 
-def _build_synthetic_passing_full_receipt(manifest: dict[str, Any], manifest_sha: str, design_sha: str) -> dict[str, Any]:
+def _build_synthetic_passing_full_receipt(
+    manifest: dict[str, Any],
+    manifest_sha: str,
+    design_sha: str,
+    runner_sha: str,
+    scorer_sha: str,
+) -> dict[str, Any]:
     q12_rows: list[dict[str, Any]] = []
     m_doses = tuple(float(x) for x in manifest["meta"]["dose_magnitudes"])
     for pr in manifest["q12_prompts"]:
@@ -828,7 +882,14 @@ def _build_synthetic_passing_full_receipt(manifest: dict[str, Any], manifest_sha
             "smoke_1unit": False,
             "manifest_sha256": manifest_sha,
             "design_sha256": design_sha,
-            "runner_sha256": "synthetic_self_test",
+            "runner_sha256": runner_sha,
+            "scorer_sha256": scorer_sha,
+            "pins": {
+                "manifest_sha256": manifest_sha,
+                "design_sha256": design_sha,
+                "runner_sha256": runner_sha,
+                "scorer_sha256": scorer_sha,
+            },
             "units_completed": list(CORE_UNITS),
         },
         "denominators": manifest["denominators"],
@@ -841,21 +902,39 @@ def run_scorer_self_tests(manifest_path: Path, design_path: Path) -> dict[str, A
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     m_sha = sha256_file(manifest_path)
     d_sha = sha256_file(design_path)
-    base = _build_synthetic_passing_full_receipt(manifest, m_sha, d_sha)
+    r_sha = sha256_file(HERE / "run_signed_dose.py")
+    s_sha = sha256_file(Path(__file__).resolve())
+    base = _build_synthetic_passing_full_receipt(manifest, m_sha, d_sha, r_sha, s_sha)
 
     with tempfile.TemporaryDirectory(prefix="sd_scorer_test_") as td:
         tmp = Path(td)
 
-        def write_and_score(obj: dict[str, Any], name: str) -> dict[str, Any]:
+        def write_and_score(
+            obj: dict[str, Any],
+            name: str,
+            exp_m: str = m_sha,
+            exp_d: str = d_sha,
+            exp_r: str = r_sha,
+            exp_s: str = s_sha,
+        ) -> dict[str, Any]:
             p = tmp / f"{name}.json"
             p.write_text(json.dumps(obj), encoding="utf-8")
-            return score_results(p, manifest_path, design_path)
+            return score_results(
+                results_path=p,
+                manifest_path=manifest_path,
+                design_path=design_path,
+                expected_manifest_sha256=exp_m,
+                expected_design_sha256=exp_d,
+                expected_runner_sha256=exp_r,
+                expected_scorer_sha256=exp_s,
+            )
 
-        # 1. Passing full receipt -> all SD.1–SD.6 hold
+        # 1. Passing full receipt (all-negative descending SD.2 positive + all 4 external pins verified)
         v_pass = write_and_score(base, "pass")
         assert v_pass["meta"]["q12_rows_joined"] == 3240
         assert v_pass["meta"]["q12_signed_keys_joined"] == 6480
         assert v_pass["meta"]["q3_rows_joined"] == 740
+        assert v_pass["meta"]["external_pins_verified"] is True
         for sd in ("SD.1", "SD.2", "SD.3", "SD.4", "SD.5", "SD.6"):
             assert v_pass["decisions"][sd]["passed"] is True, f"Expected {sd} to pass: {v_pass['decisions'][sd]}"
 
@@ -928,6 +1007,47 @@ def run_scorer_self_tests(manifest_path: Path, design_path: Path) -> dict[str, A
         except ValueError:
             pass
 
+        # 8b. Refusal (Alden #41 Blocker 1 witness): receipt runner SHA = 64 zeroes, scorer SHA = 64 ones
+        bad_src = copy.deepcopy(base)
+        bad_src["meta"]["runner_sha256"] = "0" * 64
+        bad_src["meta"]["scorer_sha256"] = "1" * 64
+        bad_src["meta"]["pins"]["runner_sha256"] = "0" * 64
+        bad_src["meta"]["pins"]["scorer_sha256"] = "1" * 64
+        try:
+            write_and_score(bad_src, "bad_src_receipt")
+            raise AssertionError("Tampered receipt runner/scorer SHA was not refused!")
+        except ValueError:
+            pass
+
+        # 8c. Refusal: wrong external expected_runner_sha256 or expected_scorer_sha256 vs actual disk file
+        try:
+            write_and_score(base, "bad_exp_runner", exp_r="0" * 64)
+            raise AssertionError("Wrong expected_runner_sha256 was not refused!")
+        except ValueError:
+            pass
+        try:
+            write_and_score(base, "bad_exp_scorer", exp_s="1" * 64)
+            raise AssertionError("Wrong expected_scorer_sha256 was not refused!")
+        except ValueError:
+            pass
+
+        # 8d. Refusal: SD.2 sign-crossing witness (Alden #41 Blocker 2: mean D(+0.2) = +0.10 while 0.4/0.8/1.6 descending negative)
+        bad_sd2_sign = copy.deepcopy(base)
+        for r in bad_sd2_sign["q12_rows"]:
+            if r["head_name"] in ("L8H15", "L8H4") and r["prompt_id"] in BLOCK_A_THIRD_PROMPTS and abs(r["dose_mag"] - 0.2) < 1e-12:
+                d_neg = r["spec"]["d_neg"]
+                r["spec"] = _make_metric_q12(d_pos=+0.10, d_neg=d_neg, d0=0.0, sham=1e-7, null_val=0.01)
+                r["raw"] = copy.deepcopy(r["spec"])
+        v_sd2_sign = write_and_score(bad_sd2_sign, "bad_sd2_sign")
+        assert v_sd2_sign["decisions"]["SD.1"]["passed"] is True
+        assert v_sd2_sign["decisions"]["SD.2"]["passed"] is False, "SD.2 passed despite positive mean D(+0.2) = +0.10!"
+        assert v_sd2_sign["decisions"]["SD.2"]["status"] == "failed"
+        for h in ("L8H15", "L8H4"):
+            chk = v_sd2_sign["decisions"]["SD.2"]["details"]["by_head"][h]["checks"]
+            assert chk["monotonic_order"] is True
+            assert chk["dpos_02_lt_zero"] is False
+            assert chk["monotonic_negative_dpos"] is False
+
         # 9. Gate propagation: SD.1(a) sham failure -> invalidates SD.2–SD.5
         bad_sham = copy.deepcopy(base)
         bad_sham["q12_rows"][0]["spec"]["max_abs_sham"] = 2e-4
@@ -988,6 +1108,9 @@ def run_scorer_self_tests(manifest_path: Path, design_path: Path) -> dict[str, A
         "refused_non_finite_row": True,
         "refused_tampered_q3_mask": True,
         "refused_manifest_sha_mismatch": True,
+        "refused_tampered_runner_scorer_sha_in_receipt": True,
+        "refused_wrong_external_runner_or_scorer_pin": True,
+        "sd2_sign_crossing_pos010_refused_to_pass": True,
         "propagated_sd1a_sham_invalidation": True,
         "propagated_sd1b_null_unreadability": True,
         "propagated_q3_null_unreadability": True,
@@ -1003,6 +1126,8 @@ def main() -> None:
     parser.add_argument("--design", type=Path, default=HERE / "SIGNED-DOSE-DESIGN.md")
     parser.add_argument("--expected-manifest-sha256", type=str, default=None)
     parser.add_argument("--expected-design-sha256", type=str, default=None)
+    parser.add_argument("--expected-runner-sha256", type=str, default=None)
+    parser.add_argument("--expected-scorer-sha256", type=str, default=None)
     parser.add_argument("--out", type=Path, default=None)
     args = parser.parse_args()
 
@@ -1014,12 +1139,28 @@ def main() -> None:
     if args.results is None:
         raise SystemExit("Must pass --results <path> or --self-test-only")
 
+    missing_pins = [
+        flag for flag, val in (
+            ("--expected-manifest-sha256", args.expected_manifest_sha256),
+            ("--expected-design-sha256", args.expected_design_sha256),
+            ("--expected-runner-sha256", args.expected_runner_sha256),
+            ("--expected-scorer-sha256", args.expected_scorer_sha256),
+        )
+        if not val
+    ]
+    if missing_pins:
+        raise SystemExit(
+            f"Refused unchecked full-study scoring: required external package pins missing: {', '.join(missing_pins)}"
+        )
+
     verdict = score_results(
         results_path=args.results,
         manifest_path=args.manifest,
         design_path=args.design,
         expected_manifest_sha256=args.expected_manifest_sha256,
         expected_design_sha256=args.expected_design_sha256,
+        expected_runner_sha256=args.expected_runner_sha256,
+        expected_scorer_sha256=args.expected_scorer_sha256,
     )
     txt = json.dumps(verdict, indent=2)
     if args.out is not None:
