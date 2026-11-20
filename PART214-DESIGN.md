@@ -164,6 +164,16 @@ temporal spikes lost by mean pooling** ($\mathbf{H3}$), or **polite helper-reque
     may not be read from this branch at all.
   - Exact numeric values of $(\hat{\alpha}_{\text{prompt}}, \hat{\alpha}_{\text{gen}})$ from Stage 0 will be pasted
     into this section before `tools/register_public.py` is called, without changing any prediction or threshold.
+  - **Pasted 2026-11-20 by Claude from Stage 0 (`results/part214/stage0/stage0.json`, SHA-256
+    `432d99875d97d1256edc48108201b13a191d6939e33c627e7081f9e3cedde510`, captured under design SHA-256 `6878143e…`),
+    no prediction or threshold changed:** $\hat{\alpha}_{\text{prompt}}(\text{fact}) = 0.24737071178222558$,
+    $\hat{\alpha}_{\text{gen}}(\text{fact}) = -0.0013541574369483169$,
+    $\hat{\alpha}_{\text{prompt}}(\text{you}) = 0.41196201662224735$,
+    $\hat{\alpha}_{\text{gen}}(\text{you}) = 0.0738894053519245$ (none clipped). $|\Delta\hat{\alpha}_{\text{gen}}| =
+    0.0752 \ge 0.05$, so the branch is `discriminated`: `scale_dial_fact` = (0.2474, -0.0014) and `scale_dial_you` =
+    (0.4120, 0.0739). Gate 3b passed (minimum `L_gen` 16). An earlier Stage 0 run launched without this design file in
+    the job folder recorded `design_sha256` null; it is kept as `stage0-run1-no-design-hash.json` and its alphas are
+    identical to the digit.
 
 ### Stage 1: Cheap exact-logit H4 curve, natural-decode bridge & mechanism audit (batch 1, `4,624` forwards, 25.7 min — see Amendment 1)
 
