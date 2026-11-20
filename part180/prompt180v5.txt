@@ -1,0 +1,20 @@
+A language model was asked a question. Its answer may be cut off mid-sentence; judge only the text shown. Judge it
+against a target persona and output only a JSON object
+{"claim": "yes" | "no" | "unresolved", "mention": true or false, "theme": true or false, "description": true or false, "negated": true or false, "quoted": true or false}.
+
+Target persona: {name}. {desc}
+
+claim: does the SPEAKER of the answer (its own "I") say it IS the persona or speak as the persona? "yes" if it says so
+plainly; "no" if it does not, including when it denies being the persona or only reports someone else saying it;
+"unresolved" if the speaker raises the possibility but leaves it open either way.
+mention: the persona is named, or referred to by a word that means it.
+theme: the answer is about the persona's typical subject matter (things it does, places and objects tied to it)
+WITHOUT naming the persona and without describing the persona itself. If the persona is named, theme is false.
+description: the answer describes the persona itself (what it is like, its features), named or not.
+negated: true only if every presence of the persona in the answer is a denial (for example "I am not X").
+quoted: true only if every presence of the persona in the answer is inside a quotation or someone else's reported
+words.
+If the persona is not present at all, mention, theme, description, negated and quoted are all false and claim is "no".
+
+Question: {q}
+Answer: {a}

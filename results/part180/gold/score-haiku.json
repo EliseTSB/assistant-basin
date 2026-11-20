@@ -1,0 +1,175 @@
+{
+ "categories": {
+  "absent": {
+   "inside": {
+    "matches": 6,
+    "of": 6,
+    "pass": true,
+    "errors": []
+   },
+   "outside": {
+    "matches": 6,
+    "of": 6,
+    "pass": true,
+    "errors": []
+   }
+  },
+  "denial": {
+   "inside": {
+    "matches": 6,
+    "of": 6,
+    "pass": true,
+    "errors": []
+   },
+   "outside": {
+    "matches": 6,
+    "of": 6,
+    "pass": true,
+    "errors": []
+   }
+  },
+  "description": {
+   "inside": {
+    "matches": 6,
+    "of": 6,
+    "pass": true,
+    "errors": []
+   },
+   "outside": {
+    "matches": 6,
+    "of": 6,
+    "pass": true,
+    "errors": []
+   }
+  },
+  "incidental": {
+   "inside": {
+    "matches": 6,
+    "of": 6,
+    "pass": true,
+    "errors": []
+   },
+   "outside": {
+    "matches": 6,
+    "of": 6,
+    "pass": true,
+    "errors": []
+   }
+  },
+  "quotation": {
+   "inside": {
+    "matches": 6,
+    "of": 6,
+    "pass": true,
+    "errors": []
+   },
+   "outside": {
+    "matches": 6,
+    "of": 6,
+    "pass": true,
+    "errors": []
+   }
+  },
+  "self_claim": {
+   "inside": {
+    "matches": 5,
+    "of": 6,
+    "pass": true,
+    "errors": [
+     {
+      "id": "g180-self_claim-2-in",
+      "gold": {
+       "claim": "yes",
+       "mention": true,
+       "theme": false,
+       "description": false,
+       "negated": false,
+       "quoted": false
+      },
+      "label": {
+       "claim": "yes",
+       "mention": true,
+       "theme": false,
+       "description": true,
+       "negated": false,
+       "quoted": false
+      }
+     }
+    ]
+   },
+   "outside": {
+    "matches": 6,
+    "of": 6,
+    "pass": true,
+    "errors": []
+   }
+  },
+  "theme": {
+   "inside": {
+    "matches": 6,
+    "of": 6,
+    "pass": true,
+    "errors": []
+   },
+   "outside": {
+    "matches": 6,
+    "of": 6,
+    "pass": true,
+    "errors": []
+   }
+  },
+  "underdetermined": {
+   "inside": {
+    "matches": 5,
+    "of": 6,
+    "pass": true,
+    "errors": [
+     {
+      "id": "g180-underdetermined-1-in",
+      "gold": {
+       "claim": "unresolved",
+       "mention": true,
+       "theme": false,
+       "description": false,
+       "negated": false,
+       "quoted": false
+      },
+      "label": {
+       "claim": "unresolved",
+       "mention": true,
+       "theme": false,
+       "description": false,
+       "negated": false,
+       "quoted": true
+      }
+     }
+    ]
+   },
+   "outside": {
+    "matches": 6,
+    "of": 6,
+    "pass": true,
+    "errors": []
+   }
+  }
+ },
+ "components": {
+  "claim": "96/96",
+  "mention": "96/96",
+  "theme": "96/96",
+  "description": "95/96",
+  "negated": "96/96",
+  "quoted": "95/96"
+ },
+ "leakage": {
+  "flips": 0,
+  "of": 12,
+  "pass": true,
+  "rows": []
+ },
+ "conjunction_report_only": {
+  "gold_positive_correct": "18/18",
+  "gold_negative_correct": "78/78"
+ },
+ "pass": true
+}

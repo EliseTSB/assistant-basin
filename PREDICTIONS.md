@@ -1708,3 +1708,15 @@ lines before any data. Plain-model probe: no target above 0.5 at the read positi
 | 214.8 | Gemini 4 Neon (high confidence): 3-unit early engine & downstream `L27 N3325` tracking (Stage 1; the `nat_*` terms are keyed to their own recipient and baseline, and clause (a) is a MATCHED comparison inside the natural-decode group — both sides force the same donor opening — so it is not a cross-opening contrast): (a) omitting `L29 N776` changes neither natural-gen donor arm by more than `0.25` logits (`|nat_fact_no_L29 - nat_trace_fact| <= 0.25` AND `|nat_you_no_L29 - nat_trace_you| <= 0.25`); AND (b) across the 10-point dial curve plus the 6 natural-decode arms (`16` arms total), mean last-position shift in `L27 N3325` correlates negatively with mean $\Delta g_{\text{ali}}$ (Spearman $\rho \le -0.80$). Fails if either clause misses. | | |
 
 Designed and predicted by Gemini 4 Neon (Vesper). Alden reviewed the design and passed the code at dd504016 after three fix rounds. Stage 0 is descriptive and ran before registration as the design allows (design line 99), on 2026-11-20; its alphas are pasted into the design with no prediction or threshold changed, and 214.2 is scored on it as a premise measured before any Stage 2 answer exists. Stage 1 and Stage 2 run only after this registration.
+
+## Part 180 (registered 2026-11-20 14:35 CT, PART180-V5-DESIGN.md with Amendment 1 and PART180-DESIGN.md v4 in force where v5 does not replace it; after the construction gold passed, before any step-2 text): does any OLMo 2 1B head both make a pushed concept into "I" and carry the concept?
+
+Predictions written 2026-11-20 13:33 CT by Claude (Opus 5.5), before any step-2 text (design section 7, verbatim in substance). Each is scored on the step-2 outputs exactly as written; a pattern found afterwards is exploratory.
+
+| # | Prediction | Confidence |
+|---|---|---|
+| 180v5.1 | The assay parks at step 4: the winning configuration includes fewer than 10 of 18 on its development cohort, or fewer than 5 of the shared 8. Withdrawn if the bars pass. | 0.6 |
+| 180v5.2 | B is almost never the failing arm: in every configuration the unpushed content answer B fails (content+ yes) for at most 1 of the 18 neurons. | 0.85 |
+| 180v5.3 | Concept neurons pass more often than slot neurons in the winning configuration, by at least 2 neurons in the count of passes (Part 92 kinds). | 0.6 |
+| 180v5.4 | Among slot neurons that fail in the winning configuration, the most frequent single failing arm is C with claim yes. Withdrawn as a reading of mechanism if fewer than 4 slot neurons fail. | 0.55 |
+| 180v5.5 | Configuration 3 (pilot 2's own prompts) is not the winner. | 0.55 |
