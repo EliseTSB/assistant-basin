@@ -261,22 +261,36 @@ def dry_run_record(stage, args, admission, clock=time.monotonic) -> dict:
             'device': getattr(args, 'device', None), 'out': str(getattr(args, 'out', ''))}
 
 
+def _refuse_dry_run_over_evidence(path) -> None:
+    """The non-replacement rule itself: a real stage record is never overwritten by an inert stub."""
+    path = Path(path)
+    if not path.exists():
+        return
+    try:
+        existing = json.loads(path.read_text(encoding='utf-8'))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        existing = None
+    if not (isinstance(existing, dict) and existing.get('dry_run') is True):
+        raise SystemExit(f'refusing to write a dry-run stub over {path}: it holds a real stage record, and a '
+                         f'dry run never writes over evidence')
+
+
 def write_dry_run_record(obj, out, name: str, stage: str) -> None:
-    """Write a dry-run stub ONLY where no real evidence exists.
+    """Write a dry-run stub ONLY where no real evidence exists, with the check INSIDE the write lock.
 
     A dry run must never write over a stage record produced by a model: overwriting `stage1.json` or `run.json` with
     an inert stub destroys the evidence a scorer reads and leaves a file that still looks like a completed stage.
+
+    The check and the write are one critical section on purpose. The pre-fix code checked `path.exists()` before
+    acquiring the output-directory lock, so a real stage record created between the check and the write (another
+    process finishing just then) was replaced by the stub. Holding `output_directory_lock` while checking makes
+    "absent now" and "still absent when I write" the same instant.
     """
-    path = Path(out) / name
-    if path.exists():
-        try:
-            existing = json.loads(path.read_text(encoding='utf-8'))
-        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
-            existing = None
-        if not (isinstance(existing, dict) and existing.get('dry_run') is True):
-            raise SystemExit(f'refusing to write a dry-run stub over {path}: it holds a real stage record, and a '
-                             f'dry run never writes over evidence')
-    write_stage_record(obj, out, name, stage)
+    out = Path(out)
+    path = out / name
+    with output_directory_lock(out, stage):
+        _refuse_dry_run_over_evidence(path)
+        write_json(path, obj)
 
 
 def load_prompts(path=PROMPTS_PATH) -> dict:
@@ -572,22 +586,82 @@ def design_sha256(path=None) -> str | None:
     return file_sha256(path) if path.exists() else None
 
 
-def stage_pins(stage0_sha256: str, admission: dict | None = None) -> dict:
+def stage_pins(stage0_sha256: str, admission: dict | None = None, pinning: dict | None = None,
+               stage0_design_sha256: str | None = None) -> dict:
     """The exact inputs a Stage 2 row is written under; a resume whose pins changed is refused (design line 333).
 
     The pins name every artifact identity a row is a function of, not just the Stage 0 bytes: the amended design and
     its digest, the prompt bank, the model/revision, the Part 183 kernel reference, the registration receipt and this
     runner's own code. Stage 1 and the pilot must present these same pins before a full run launches, so evidence
     from one recording cannot clear the gate on another (and a code or kernel change invalidates both stages).
+
+    Fix round 3 adds the CALIBRATION half. `stage0_sha256` alone says "some recording"; the registered calibration is
+    one recording plus the branch its bytes pin, so `calibration_branch` and the digest of the approved receipt are
+    pinned beside it. The design hashes are separate on purpose: `design_sha256` is the design this run is ADMITTED
+    under (the live file), `design_sha256_capture` is what Stage 0 recorded when the recording was made (it is never
+    regenerated or relabelled), and `design_sha256_publication` is the build's publication pin.
+
+    The RUNTIME is deliberately NOT here. `pins` are the pre-load identity (they gate evidence before a model is
+    loaded); the device, the actual load and the library stack are only knowable AFTER the load, so they travel as
+    `runtime_identity()` and are compared by `check_resume_runtime` before a single saved row is reused.
     """
     admission = admission or {}
     return {'stage0_sha256': stage0_sha256, 'design_sha256': design_sha256(),
+            'design_sha256_capture': stage0_design_sha256,
+            'design_sha256_publication': sc.DESIGN_SHA256_PUBLICATION,
             'design': sc.DESIGN_VERSION, 'design_commit': sc.DESIGN_COMMIT,
             'prompts_sha256': PROMPTS_SHA256, 'model': MODEL, 'revision': REVISION,
             'kernel_check_sha256': sc.KERNEL_CHECK_SHA256,
             'registration_pin': sc.REGISTRATION_SHA256,
             'registration_section_sha256': admission.get('section_sha256'),
+            'calibration_branch': (pinning or {}).get('branch'),
+            'calibration_receipt_sha256': sc.calibration_receipt_sha256(),
             'code_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
+
+
+def require_registered_calibration(stage0_sha256: str, pinning: dict | None, stage: str,
+                                   stage0_design_sha256: str | None = None) -> dict:
+    """Refuse a patched stage whose recording/branch/design is not the ONE registered calibration. PRE-LOADER.
+
+    Stage 1, the pilot and full Stage 2 all call this between reading `stage0.json` and loading the rig. A Stage 0
+    that is complete, self-consistent and *different* from the registered recording passes every other check in this
+    file (its own alphas, its own Stage 1, its own pilot); only the receipt tells it apart. `REGISTERED_CALIBRATION`
+    is `None` today, which refuses everything: the correct fail-closed state before registration.
+
+    `stage0_design_sha256` is the design hash Stage 0 RECORDED (its capture), checked against the receipt; the LIVE
+    design this run is admitted under is read from disk here and must be the published contract.
+    """
+    result = sc.registered_calibration_checks(stage0_sha256, pinning, stage0_design_sha256, design_sha256())
+    if not result['pass']:
+        raise SystemExit(f'{stage}: refusing patched generation before the loader: {result["reason"]}')
+    return result
+
+
+def runtime_identity(load: dict | None, device) -> dict:
+    """What a generated row is a function of besides its inputs: the device, the ACTUAL load, and the library stack.
+
+    `stage_pins` binds the artifacts; this binds the machine. The load record comes from `neuron_report.load_record`
+    and names the attention implementation transformers actually set, the dtype and the torch/transformers versions;
+    the interpreter and numpy versions are added here because a silent numpy upgrade can move a projection as surely
+    as a device change can. Rows carry this and a resume compares it before reusing anything.
+    """
+    load = dict(load or {})
+    return {'device': str(device), 'load': load,
+            'python': sys.version.split()[0], 'numpy': np.__version__,
+            'torch': torch.__version__, 'transformers': load.get('transformers')}
+
+
+def runtime_differences(saved: dict | None, current: dict | None) -> list[str]:
+    """The named fields on which two runtime identities disagree (empty means they are the same machine)."""
+    saved = saved or {}
+    current = current or {}
+    out = []
+    for key in ('device', 'torch', 'transformers', 'python', 'numpy'):
+        if saved.get(key) != current.get(key):
+            out.append(f'{key}: saved {saved.get(key)!r}, now {current.get(key)!r}')
+    if saved.get('load') != current.get('load'):
+        out.append(f'load: saved {saved.get("load")!r}, now {current.get("load")!r}')
+    return out
 
 
 # ----------------------------------------------------------------------------------------------------------------
@@ -919,7 +993,7 @@ def unit_dial_context(pinning: dict, units: list[tuple[int, int]]) -> dict:
     return out
 
 
-def stage1_call(arm: str, qi: int, ctx: dict, model, layers, args, guard=None) -> dict:
+def stage1_call(arm: str, qi: int, ctx: dict, model, layers, args, guard=None, progress: dict | None = None) -> dict:
     """One Stage 1 arm/question readout, from ONE forward per maker-name continuation path.
 
     `g_ali`, `g_al`, the 8-maker mass and the monitors live at the single scoring position `T+4`, whose prefix is the
@@ -931,6 +1005,10 @@ def stage1_call(arm: str, qi: int, ctx: dict, model, layers, args, guard=None) -
     The three forwards are three launches; `guard` is checked before each, and a deadline that passes between them
     raises `DeadlineReached` with NO value recorded for this arm/question. A g_seq read from one continuation path
     and a stale logits row from another would be a corrupted measurement, not a partial one.
+
+    `progress['forwards']` counts forwards that COMPLETED, for the arm loop's account. A cut between the first and
+    second launch spends one real call on a question that is then (correctly) not recorded; that call is still a call
+    the rig ran, so the caller's histogram counts it even though no value exists for the question.
     """
     base = arm.split(':', 1)[-1]
     if not stage1_arm_runnable(base, ctx.get('pinning')):
@@ -957,6 +1035,8 @@ def stage1_call(arm: str, qi: int, ctx: dict, model, layers, args, guard=None) -
         seq = list(ids) + opening + continuation_ids(ctx['bank'], name)
         logits_by_name[name] = forward_with_hooks(model, layers, seq, units, clamp, factor, T, args.device,
                                                   mon if k == 0 else {})
+        if progress is not None:
+            progress['forwards'] = int(progress.get('forwards', 0)) + 1
     primary = logits_by_name[GSEQ_NAMES[0]]
     clean = local['clean']
     values = {'g_ali': g_ali(primary[position]), 'g_seq': g_seq(logits_by_name, position, ctx['bank']),
@@ -1151,6 +1231,12 @@ def stage1(args, clock=time.monotonic, rig_loader=None) -> dict:
     stage0_raw = Path(args.stage0).read_bytes()
     stage0_sha256 = hashlib.sha256(stage0_raw).hexdigest()
     stage0_obj = json.loads(stage0_raw.decode('utf-8'))
+    # The registered calibration is checked BEFORE the loader: a complete recording B that is not the registered
+    # recording A must not be able to generate its own Stage 1 under A's registration (see require_registered_
+    # calibration). `pinning` is a pure function of the Stage 0 bytes, so it is available here.
+    pinning = sc.dial_pinning(stage0_obj)
+    stage0_design_sha256 = stage0_obj.get('design_sha256')
+    calibration = require_registered_calibration(stage0_sha256, pinning, 'stage1', stage0_design_sha256)
     started = clock()
     deadline_s = deadline_seconds(args.deadline_min)
     guard = launch_guard(started, deadline_s, clock)
@@ -1158,9 +1244,9 @@ def stage1(args, clock=time.monotonic, rig_loader=None) -> dict:
     kernel = kernel_check(load)
     if not kernel['pass']:
         raise SystemExit(f'stage1: kernel check failed against {kernel["path"]}: {kernel["checks"]}')
+    runtime = runtime_identity(load, args.device)
     layers = nr.find_text_layers(model)[1]
     weights = down_weights(layers)
-    pinning = sc.dial_pinning(stage0_obj)
     donors = stage0_banks(stage0_obj)
     short = short_donors(stage0_obj)
     shape = gates3b_banks(stage0_obj)
@@ -1225,6 +1311,11 @@ def stage1(args, clock=time.monotonic, rig_loader=None) -> dict:
                      'pert': []} for arm in planned}
     work = [(arm, qi) for arm in planned for qi in range(25)]
     _done: list = []
+    # Every COMPLETED forward is a call, whichever question it belonged to. `stage1_call` bumps this after each of
+    # its three g_seq launches, so a question cut between two of them still contributes the forwards it spent. The
+    # pre-fix histogram was derived from complete questions only (`len(_done) * GSEQ_PATHS`), which silently dropped
+    # one or two real calls per deadline cut from the account (design line 357: write what was RUN).
+    arm_progress: dict = {'forwards': 0}
     if complete_recordings:
         def run(item):
             arm, qi = item
@@ -1236,7 +1327,7 @@ def stage1(args, clock=time.monotonic, rig_loader=None) -> dict:
             ctx = {'tok': tok, 'bank': bank, 'donors': donors, 'means': means, 'pinning': pinning, 'clean': clean,
                    'donor_tokens': donors, 'units': units, 'unit_weights': unit_columns(weights, units),
                    'arm_opening': stage1_opening_name(arm, bank, donors, qi)}
-            values = stage1_call(arm, qi, ctx, model, layers, args, guard=guard)
+            values = stage1_call(arm, qi, ctx, model, layers, args, guard=guard, progress=arm_progress)
             for key, value in values.items():
                 results[arm][key].append(value)
             return arm, qi
@@ -1260,8 +1351,10 @@ def stage1(args, clock=time.monotonic, rig_loader=None) -> dict:
     obj = stage1_object(bank, results, pinning, pools, pre_pools, pool_check, load, args, started, non_finite,
                         n_calls=len(_done), planned_arms=planned, stopped=stopped, deadline_reached=reached,
                         prepass_forwards=prepass_forwards, stage0_sha256=stage0_sha256,
-                        admission=admission, kernel=kernel, clock=clock,
-                        pins=stage_pins(stage0_sha256, admission))
+                        admission=admission, kernel=kernel, clock=clock, runtime=runtime,
+                        arm_forwards=int(arm_progress['forwards']),
+                        calibration=calibration,
+                        pins=stage_pins(stage0_sha256, admission, pinning, stage0_design_sha256))
     write_stage_record(obj, args.out, 'stage1.json', 'stage1')
     print(f'stage1: wrote {Path(args.out) / "stage1.json"} ({len(_done)} arm/question forwards)', flush=True)
     return obj
@@ -1296,13 +1389,20 @@ def short_donors(stage0_obj: dict) -> list[dict]:
 
 def stage1_object(bank, results, pinning, pools, pre_pools, pool_check, load, args, started, nonfinite,
                   n_calls, planned_arms=None, stopped=None, deadline_reached=False, prepass_forwards=0,
-                  stage0_sha256=None, admission=None, kernel=None, clock=time.monotonic, pins=None) -> dict:
+                  stage0_sha256=None, admission=None, kernel=None, clock=time.monotonic, pins=None,
+                  runtime=None, arm_forwards=None, calibration=None) -> dict:
     """stage1.json: per-arm per-question readouts, deltas from unchanged, gate inputs, pools and random sets.
 
-    The forward histogram is what was ACTUALLY run (`prepass_forwards + n_calls * GSEQ_PATHS`), with the nominal
-    plan written beside it. The pre-fix code wrote the nominal count unconditionally, so a deadline-truncated run
-    still claimed the full budget (design line 357: "writes what it has ... no partial arm is scored as if it were
-    full").
+    The forward histogram is what was ACTUALLY run: the pre-pass forwards plus every arm-loop forward that COMPLETED
+    (`arm_forwards`, bumped inside `stage1_call` after each launch), with the nominal plan written beside it. Two
+    pre-fix bugs are closed here: the nominal count was written unconditionally, and then the actual count was
+    derived from COMPLETE questions only (`n_calls * GSEQ_PATHS`), so the one or two forwards a cut question
+    completed before its next guard refused vanished from the account. `rejected_question_forwards` names that
+    remainder explicitly instead of hiding it.
+
+    `runtime` is the device/load/library identity this stage ran on, and `calibration` is the receipt check it passed
+    before the loader; both are recorded so a later scorer (or resume) can bind the record to the machine and to the
+    registration rather than to a file name.
     """
     arms = {}
     baseline = results.get('unchanged') or {'g_ali': [], 'g_seq': [], 'g_al': [], 'mass': [], 'l24_n3949': [],
@@ -1322,18 +1422,26 @@ def stage1_object(bank, results, pinning, pools, pre_pools, pool_check, load, ar
         }
     expected = 25
     counts = {arm: len(r['g_ali']) for arm, r in results.items()}
+    completed_arm_forwards = int(n_calls) * GSEQ_PATHS
+    arm_forwards = completed_arm_forwards if arm_forwards is None else int(arm_forwards)
     return {
         'part': sc.PART, 'stage': 1, 'design': sc.DESIGN_VERSION, 'model': MODEL, 'revision': REVISION,
         'load': load, 'attn_implementation': load.get('attn_implementation'), 'device': args.device,
+        'runtime': runtime,
         'admission': admission or {}, 'kernel_check': kernel or {},
+        'registered_calibration': calibration,
         'stage0_sha256': stage0_sha256, 'design_sha256': design_sha256(),
+        'design_sha256_capture': (pins or {}).get('design_sha256_capture'),
+        'design_sha256_publication': sc.DESIGN_SHA256_PUBLICATION,
         'tool_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), 'prompts_sha256': PROMPTS_SHA256,
         'pins': dict(pins) if pins is not None else None,
         'target': [[int(l), int(u)] for l, u in TARGET],
         'unit_labels': [f'L{int(l)} N{int(u)}' for l, u in TARGET],
         'non_finite_readouts': nonfinite, 'arm_question_forwards': n_calls,
         'g_seq_continuations_per_arm_question': GSEQ_PATHS,
-        'forward_batch_histogram': {'1': int(prepass_forwards) + int(n_calls) * GSEQ_PATHS},
+        'arm_forward_attempts': arm_forwards,
+        'rejected_question_forwards': arm_forwards - completed_arm_forwards,
+        'forward_batch_histogram': {'1': int(prepass_forwards) + arm_forwards},
         'nominal_forward_batch_histogram': {'1': stage1_forward_count()},
         'prepass_forwards': int(prepass_forwards),
         'planned_arms': list(planned_arms if planned_arms is not None else stage1_arm_names()),
@@ -1514,7 +1622,7 @@ def stage2_todo(planned: list[dict], done: list[dict], pilot: bool) -> list[dict
 
 
 def stage2_generate(row: dict, bank: dict, tok, stage0_obj: dict, pinning: dict, args, model, layers,
-                    pins: dict | None = None) -> dict:
+                    pins: dict | None = None, runtime: dict | None = None) -> dict:
     """One batch-1 sampled generation for one planned row (design lines 168-176)."""
     arm, qi, sample = row['arm'], int(row['question_index']), int(row['sample'])
     question = question_text(bank, qi)
@@ -1554,6 +1662,9 @@ def stage2_generate(row: dict, bank: dict, tok, stage0_obj: dict, pinning: dict,
             # The pins this row was produced under. A resume that finds a row written under other Stage 0/design
             # bytes refuses instead of relabelling it (design line 333).
             'pins': dict(pins) if pins is not None else None,
+            # ... and the RUNTIME (device, actual load, library stack): a resume compares this separately, because
+            # the pins are known before the loader and the runtime is not.
+            'runtime': runtime,
             'dial': ({'prompt': tensors['dial_prompt'], 'gen': tensors['dial_gen']}
                      if 'dial_prompt' in tensors else None)}
 
@@ -1571,7 +1682,15 @@ def stage1_evidence(path, pinning: dict | None, pins: dict | None = None) -> dic
                 'reason': f'{path} not found; full Stage 2 requires the Stage 1 gate evidence'}
     raw = path.read_bytes()
     stage1_obj = json.loads(raw.decode('utf-8'))
-    metrics = sc.stage1_metrics(stage1_obj, pinning)
+    try:
+        metrics = sc.stage1_metrics(stage1_obj, pinning)
+    except ValueError as exc:
+        # A record the scorer refuses (another registered calibration, an unreadable arm table) is not evidence that
+        # can clear a gate. Reported as a failed check rather than raised, so the stopping rule refuses the full run
+        # with a reason before the loader instead of crashing out of the precondition.
+        return {'pass': False, 'checks': {'stage1_present': True, 'stage1_readable_as_evidence': False},
+                'path': str(path), 'sha256': hashlib.sha256(raw).hexdigest(), 'pins': stage1_obj.get('pins'),
+                'reason': f'Stage 1 cannot be read as this run\'s evidence: {exc}'}
     gate1 = metrics['gates']['gate1']
     gate2 = metrics['gates']['gate2']
     recorded = stage1_obj.get('pins')
@@ -1687,10 +1806,15 @@ def full_stage2_evidence(args, stage0_obj: dict, pinning: dict | None, short: li
     exactly, so a valid Stage 1 and pilot from recording A cannot clear the gate on recording B.
     """
     shape = gates3b_banks(stage0_obj)
+    # The recorded design is Stage 0's CAPTURE, compared with the capture this run's pins name -- not with the live
+    # file. The design is amended after Stage 0 (design lines 165-166 paste the derived values into it), so demanding
+    # that the capture equal the live file would refuse the real post-publication run. A caller that supplies no pins
+    # (a unit test of this function alone) falls back to the recording's own capture.
+    capture_design = (pins or {}).get('design_sha256_capture') or stage0_obj.get('design_sha256')
     stage0_checks = {'stage0_part_214': stage0_obj.get('part') == sc.PART,
                      'stage0_kind': stage0_obj.get('stage') == 0,
                      'stage0_prompts_pinned': stage0_obj.get('prompts_sha256') == PROMPTS_SHA256,
-                     'stage0_design_bytes': stage0_obj.get('design_sha256') == design_sha256()}
+                     'stage0_design_bytes': stage0_obj.get('design_sha256') == capture_design}
     gate3b_ok = not short and shape['pass'] and all(stage0_checks.values())
     stage1_obj = (stage1_evidence(getattr(args, 'stage1', None), pinning, pins)
                   if getattr(args, 'stage1', None) else {
@@ -1725,29 +1849,55 @@ def pilot_timing_due(pilot: bool, reached: bool, started: float | None = None, d
     return not deadline_hit(started, deadline_s, clock())
 
 
+def pilot_timing_plan(pilot: bool, reached: bool, started: float | None = None, deadline_s: float | None = None,
+                      clock=time.monotonic) -> dict:
+    """Why the pilot's four timing-only calls do or do not launch: `{'launch': bool, 'reason': None|str}`.
+
+    `pilot_timing_due` answers the same question as a bool (and stays the guard the sabotage audit breaks); this
+    wrapper names the reason, because a `False` used to be indistinguishable from "not a pilot". The reasons are
+    `not_pilot`, `deadline` (either the row loop saw it or the clock has passed since), or `None` when they launch.
+    """
+    if not pilot:
+        return {'launch': False, 'reason': 'not_pilot'}
+    if pilot_timing_due(pilot, reached, started, deadline_s, clock):
+        return {'launch': True, 'reason': None}
+    return {'launch': False, 'reason': 'deadline'}
+
+
 def timing_only_calls(args, bank, tok, stage0_obj, pinning, model, layers, clock=time.monotonic,
                       pins: dict | None = None, started: float | None = None,
-                      deadline_s: float | None = None) -> list[dict]:
+                      deadline_s: float | None = None, runtime: dict | None = None,
+                      stop: dict | None = None) -> list[dict]:
     """Four timing-only calls on the hook paths Stage 2 uses, never counted as evaluation rows (design lines 383-390).
 
     They are deliberately NOT written to stage2.jsonl: Gate 3's `{"1": 64}` describes the scored pilot rows only, and
     `run.json` enumerates these separately as `timing_only_calls`. Each launch is checked against the deadline, so a
     budget that expires between two of them stops the set (and the pilot then fails its four-call precondition).
+
+    `stop` is filled in place with `{'reason', 'planned', 'launched'}` so the caller can record WHY the set is short:
+    a deadline that stopped the set used to be visible only as a missing count, with `deadline_reached` left false.
     """
+    if stop is not None:
+        stop.update({'reason': None, 'planned': len(TIMING_ARMS), 'launched': 0})
     out = []
     for arm in TIMING_ARMS:
         if started is not None and deadline_s is not None and deadline_hit(started, deadline_s, clock()):
             print(f'pilot: deadline reached before timing-only {arm}; stopping the set at {len(out)}/4', flush=True)
+            if stop is not None:
+                stop['reason'] = 'deadline'
             break
         if arm in ('scale_dial_fact', 'scale_dial_you') and not pinning.get(arm, {}).get('runnable', True):
             continue
         row = {'arm': arm, 'question_index': 5, 'sample': TIMING_SAMPLE, 'set': None, 'pilot': False}
         started_call = clock()
-        record = stage2_generate(row, bank, tok, stage0_obj, pinning, args, model, layers, pins=pins)
+        record = stage2_generate(row, bank, tok, stage0_obj, pinning, args, model, layers, pins=pins,
+                                 runtime=runtime)
         elapsed = clock() - started_call
         out.append({'arm': arm, 'question_index': 5, 'sample': TIMING_SAMPLE, 'wall_seconds': elapsed,
                     'answer_chars': len(record['answer']), 'seed': record['seed'],
                     'note': 'timing only; outside the pilot manifest and never an evaluation row'})
+        if stop is not None:
+            stop['launched'] = len(out)
         print(f'pilot: timing-only {arm} {elapsed:.2f}s', flush=True)
     return out
 
@@ -1769,10 +1919,13 @@ def stage2(args, pilot: bool = False, clock=time.monotonic, rig_loader=None) -> 
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
 
-    # --- Gate 3b and the design's stopping rule are PRECONDITIONS: checked before the loader, not after the run ---
+    # --- Gate 3b, the registered calibration and the design's stopping rule are PRECONDITIONS: before the loader ---
     # The pins are built FIRST: the Stage 1 and pilot evidence are admitted only if they were recorded against these
-    # exact Stage 0 bytes, design, code, kernel and registration (the pre-fix code compared neither).
-    pins = stage_pins(hashlib.sha256(stage0_raw).hexdigest(), admission)
+    # exact Stage 0 bytes, design, code, kernel, registration and calibration (the pre-fix code compared none of
+    # the last two). `require_registered_calibration` binds the recording and branch to the ONE approved receipt, so
+    # a different complete recording B cannot clear this gate on its own self-consistent Stage 1 and pilot.
+    pins = stage_pins(hashlib.sha256(stage0_raw).hexdigest(), admission, pinning,
+                      stage0_obj.get('design_sha256'))
     shape = gates3b_banks(stage0_obj)
     short = short_donors(stage0_obj)
     gate3b_ok = not short and shape['pass']
@@ -1781,6 +1934,10 @@ def stage2(args, pilot: bool = False, clock=time.monotonic, rig_loader=None) -> 
                          f'{sc.MIN_DONOR_LGEN}; prompts per bank {shape["prompts_per_bank"]}); donor_gen[0..4] '
                          f'would not exist')
     evidence = None
+    # The calibration is the identity precondition: a Stage 1 and pilot from recording B only ever prove that B's
+    # prerequisites agree with B, so the recording itself is checked before the evidence they would clear.
+    calibration = require_registered_calibration(pins['stage0_sha256'], pinning, 'pilot' if pilot else 'stage2',
+                                                  pins.get('design_sha256_capture'))
     if not pilot:
         evidence = full_stage2_evidence(args, stage0_obj, pinning, short, pins)
         if not evidence['pass']:
@@ -1789,7 +1946,7 @@ def stage2(args, pilot: bool = False, clock=time.monotonic, rig_loader=None) -> 
     with output_directory_lock(out, 'stage2' if not pilot else 'pilot'):
         return _stage2_locked(args, pilot, bank, stage0_obj, pinning, out, started, pins=pins, clock=clock,
                               admission=admission, evidence=evidence, rig_loader=rig_loader,
-                              stage0_sha256=pins['stage0_sha256'])
+                              stage0_sha256=pins['stage0_sha256'], calibration=calibration)
 
 
 def check_resume_pins(saved: list[dict], pins: dict, planned: list[dict], pilot: bool = False) -> None:
@@ -1829,8 +1986,32 @@ def check_resume_pins(saved: list[dict], pins: dict, planned: list[dict], pilot:
             f'(saved {first.get("pins")!r}, now {pins!r}). Use a fresh --out or restore the Stage 0/design inputs.')
 
 
+def check_resume_runtime(saved: list[dict], runtime: dict | None) -> None:
+    """Refuse to reuse saved rows generated on another device, load or library stack (runs AFTER the load).
+
+    `check_resume_pins` binds the INPUTS; this binds the MACHINE, and the split is deliberate: the pins are known
+    before a model is loaded and gate the stopping rule, while the runtime is only knowable once the rig exists. The
+    pre-fix writer resumed on the pins alone, so a file recorded on the XPU could be appended to on a CPU, or after a
+    torch upgrade, and run.json then described the COMBINED account with the new load. Rows are one account only if
+    every one of them was produced by the same runtime as this invocation.
+    """
+    if not saved:
+        return
+    missing = [index for index, row in enumerate(saved, start=1) if not isinstance(row.get('runtime'), dict)]
+    if missing:
+        raise SystemExit(
+            f'refusing resume: {len(missing)} saved row(s) carry no runtime identity (first at line {missing[0]}), '
+            f'so they cannot be shown to come from this device/load/library stack. Use a fresh --out.')
+    changed = [row for row in saved if runtime_differences(row.get('runtime'), runtime)]
+    if changed:
+        raise SystemExit(
+            'refusing resume: %d saved row(s) were generated on a different runtime (%s). A resumed file is one '
+            'account, so no new generation is admitted across a device or library change; use a fresh --out.'
+            % (len(changed), '; '.join(runtime_differences(changed[0].get('runtime'), runtime))))
+
+
 def _stage2_locked(args, pilot, bank, stage0_obj, pinning, out, started, pins=None, clock=time.monotonic,
-                   admission=None, evidence=None, rig_loader=None, stage0_sha256=None) -> dict:
+                   admission=None, evidence=None, rig_loader=None, stage0_sha256=None, calibration=None) -> dict:
     answer_path = out / 'stage2.jsonl'
     planned = sc.planned_stage2_rows(pilot=pilot, pinning=pinning)
     for row in planned:
@@ -1850,6 +2031,10 @@ def _stage2_locked(args, pilot, bank, stage0_obj, pinning, out, started, pins=No
     kernel = kernel_check(load)
     if not kernel['pass']:
         raise SystemExit(f'stage2: kernel check failed against {kernel["path"]}: {kernel["checks"]}')
+    # The runtime is only knowable now, and it is checked BEFORE any generation: rows from another device/load/library
+    # stack are another account, and run.json must never describe them with this invocation's load.
+    runtime = runtime_identity(load, args.device)
+    check_resume_runtime(saved, runtime)
     layers = nr.find_text_layers(model)[1]
     print(f'stage2: {len(done)} rows already saved, {len(todo)} to run (pilot={pilot})', flush=True)
     rows = list(done)
@@ -1857,7 +2042,8 @@ def _stage2_locked(args, pilot, bank, stage0_obj, pinning, out, started, pins=No
 
     with answer_path.open('a', encoding='utf-8') as sink:
         def work(row):
-            record = stage2_generate(row, bank, tok, stage0_obj, pinning, args, model, layers, pins=pins)
+            record = stage2_generate(row, bank, tok, stage0_obj, pinning, args, model, layers, pins=pins,
+                                     runtime=runtime)
             sink.write(json.dumps(record, ensure_ascii=False, default=json_default) + '\n')
             sink.flush()
             os.fsync(sink.fileno())
@@ -1874,9 +2060,18 @@ def _stage2_locked(args, pilot, bank, stage0_obj, pinning, out, started, pins=No
     # Design line 357: at the deadline the runner STOPS launching calls. The pilot's four timing-only calls are
     # calls; launching them after the deadline is the defect this guard closes. `pilot_timing_due` consults the
     # clock as well as `reached`, because the last pilot row can spend the remainder without the loop noticing.
+    #
+    # The plan is named, not inferred: a timing cut used to leave `deadline_reached: false` in run.json (the row loop
+    # had not noticed), so the file described a run the deadline had stopped as if it had finished. `timing_stop`
+    # records the reason and the counts, and a deadline that ends the timing calls IS a reached deadline.
+    timing_plan = pilot_timing_plan(pilot, reached, started, deadline_s, clock)
+    timing_stop = {'reason': timing_plan['reason'], 'planned': len(TIMING_ARMS), 'launched': 0}
     timing = timing_only_calls(args, bank, tok, stage0_obj, pinning, model, layers, clock=clock, pins=pins,
-                               started=started, deadline_s=deadline_s) \
-        if pilot_timing_due(pilot, reached, started, deadline_s, clock) else []
+                               started=started, deadline_s=deadline_s, runtime=runtime, stop=timing_stop) \
+        if timing_plan['launch'] else []
+    timing_stop['launched'] = len(timing)
+    if timing_stop['reason'] == 'deadline':
+        reached = True
     status = sc.arm_statuses(planned, rows, {'deadline_reached': reached}, pinning)
     donor_lgen = {b: [int(p['L_gen']) for p in (stage0_obj.get('banks') or {}).get(b, {}).get('prompts', [])]
                   for b in sc.ALL_BANKS}
@@ -1884,12 +2079,16 @@ def _stage2_locked(args, pilot, bank, stage0_obj, pinning, out, started, pins=No
     shape = gates3b_banks(stage0_obj)
     obj = {
         'part': sc.PART, 'stage': 'pilot' if pilot else 2, 'design': sc.DESIGN_VERSION,
-        'model': MODEL, 'revision': REVISION, 'load': load,
+        'model': MODEL, 'revision': REVISION, 'load_this_invocation': load, 'runtime': runtime,
         'admission': admission or {}, 'kernel_check': kernel,
+        'registered_calibration': calibration,
         'stage0_sha256': stage0_sha256, 'design_sha256': design_sha256(), 'prompts_sha256': PROMPTS_SHA256,
+        'design_sha256_capture': (pins or {}).get('design_sha256_capture'),
+        'design_sha256_publication': sc.DESIGN_SHA256_PUBLICATION,
         'design_commit': sc.DESIGN_COMMIT,
         'pins': pins,
-        'attn_implementation': load.get('attn_implementation'), 'device': args.device, 'dtype': 'bfloat16',
+        'attn_implementation': load.get('attn_implementation'), 'device_this_invocation': args.device,
+        'dtype': 'bfloat16',
         'tool_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         'target': [[int(l), int(u)] for l, u in TARGET], 'batch_size': 1,
         'generation_batch_histogram': generation_batch_histogram(rows),
@@ -1900,7 +2099,7 @@ def _stage2_locked(args, pilot, bank, stage0_obj, pinning, out, started, pins=No
         'full_stage2_evidence': {k: v for k, v in (evidence or {}).items() if k != 'stage1'},
         'wall_time_seconds': clock() - started,
         'deadline_min': args.deadline_min, 'deadline_reached': reached,
-        'timing_only_calls': len(timing), 'timing_only': timing,
+        'timing_only_calls': len(timing), 'timing_only': timing, 'timing_stop': timing_stop,
         'arm_status': status['arms'], 'planned_rows_by_arm': status['planned'],
         'completed_rows_by_arm': status['done'], 'incomplete_arms': status['incomplete_arms'],
         'not_read_arms': status['not_read_arms'],
@@ -2059,6 +2258,24 @@ def read_jsonl_readonly(path) -> tuple[list[dict], int]:
 # CLI
 # ----------------------------------------------------------------------------------------------------------------
 
+def reject_inert_flag_on_stage0(cmd: str, argv: list) -> list:
+    """`--allow-unregistered` is NOT a Stage 0 option: refuse it explicitly, before parsing, with a real reason.
+
+    Stage 0 is the descriptive recording every other stage is a function of. It has no inert path to select: it
+    always loads the rig and writes `stage0.json`, so advertising a "no model will be loaded" flag on it was a lie
+    the CLI told (`:2065-2081` added the option to every subcommand). The flag is therefore defined only where it
+    means what it says (stage1/stage2/pilot) and this pre-scan turns it into a named refusal instead of argparse's
+    anonymous "unrecognized arguments".
+    """
+    if cmd == 'stage0' and any(arg == '--allow-unregistered' or arg.startswith('--allow-unregistered=')
+                               for arg in argv):
+        raise SystemExit(
+            'stage0: --allow-unregistered is not a Stage 0 option. Stage 0 is descriptive and always loads the rig, '
+            'so there is no inert path to select (PART214-DESIGN.md, Code acceptance); refusing before the loader. '
+            'The flag exists only on stage1, stage2 and pilot.')
+    return list(argv)
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description='Part 214 runner')
     sub = parser.add_subparsers(dest='cmd', required=True)
@@ -2073,10 +2290,14 @@ def main(argv=None):
         cmd.add_argument('--device', default='xpu')
         cmd.add_argument('--deadline-min', type=float, default=DEFAULT_DEADLINE_MIN,
                          help='wall-clock budget; at the deadline the runner stops launching calls (design line 357)')
-        cmd.add_argument('--allow-unregistered', action='store_true',
-                         help='inert dry run only: load no model and make no forward or generation call, whatever '
-                              'PREDICTIONS.md says (never for a scored run; it never overwrites real evidence)')
-    args = parser.parse_args(argv)
+        if name != 'stage0':
+            cmd.add_argument('--allow-unregistered', action='store_true',
+                             help='inert dry run only: load no model and make no forward or generation call, '
+                                  'whatever PREDICTIONS.md says (never for a scored run; it never overwrites real '
+                                  'evidence)')
+    raw = list(sys.argv[1:] if argv is None else argv)
+    reject_inert_flag_on_stage0(raw[0] if raw else '', raw)
+    args = parser.parse_args(raw)
     if args.cmd == 'stage0':
         result = stage0(args)
     elif args.cmd == 'stage1':

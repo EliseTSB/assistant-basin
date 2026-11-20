@@ -49,7 +49,48 @@ ANSWER = {
 # to the inputs it was produced under (Stage 0 bytes = 64 x 'a' here). Built per call, not once at import, so a test
 # that pins a fake registration digest sees THAT digest in the pins it builds.
 def fixture_pins():
+    """The build's pins for the fixture Stage 0.
+
+    When a test pins a calibration receipt, the fixture pins FOLLOW it (the receipt's Stage 0 bytes and branch), the
+    same way a real run's pins follow the registered calibration; otherwise they name the 64 x 'a' fixture recording.
+    Built per call, not once at import, so a test that pins a fake registration/calibration sees it here.
+    """
+    receipt = sc.REGISTERED_CALIBRATION
+    if isinstance(receipt, dict):
+        return rn.stage_pins(receipt['stage0_sha256'],
+                             pinning={'branch': receipt['branch']},
+                             stage0_design_sha256=receipt['design_sha256_capture'])
     return rn.stage_pins('a' * 64)
+
+
+def fixture_runtime(device='cpu', torch_version='fake', transformers='fake'):
+    """The runtime identity every fixture row and run.json carry. Rows are one account only on one runtime."""
+    return {'device': device,
+            'load': {'attn_implementation': 'eager', 'attn_implementation_requested': 'eager',
+                     'dtype': 'torch.bfloat16', 'device': device, 'torch': torch_version,
+                     'transformers': transformers},
+            'python': '3.12.3', 'numpy': '2.5.4', 'torch': torch_version, 'transformers': transformers}
+
+
+def fixture_calibration_receipt(stage0_path, publication='f' * 64):
+    """The one approved receipt a fixture run is admitted under, derived from the Stage 0 file it will read.
+
+    It is deliberately built from the WRITTEN file's bytes (not from `make_stage0()`'s dict): the receipt binds bytes,
+    and a test that rewrites its Stage 0 file without updating this receipt is exactly the "recording B" case. The
+    CAPTURE is what the Stage 0 record itself names (the design it was recorded under); the PUBLICATION is the design
+    the receipt says was published afterwards, which the amended design file then carries.
+    """
+    stage0_obj = json.loads(Path(stage0_path).read_text(encoding='utf-8'))
+    pinning = sc.dial_pinning(stage0_obj)
+    return {'stage0_sha256': hashlib.sha256(Path(stage0_path).read_bytes()).hexdigest(),
+            'branch': pinning['branch'],
+            'alphas': {'facts': {'alpha_prompt': pinning['facts']['alpha_prompt'],
+                                 'alpha_gen': pinning['facts']['alpha_gen']},
+                       'you': {'alpha_prompt': pinning['you']['alpha_prompt'],
+                               'alpha_gen': pinning['you']['alpha_gen']}},
+            'design_sha256_capture': stage0_obj.get('design_sha256'),
+            'design_sha256_publication': publication}
+
 
 GUARD_ANSWERS = {q: f'{kw} is the answer here.' for q, kw in sc.GUARD_KEYWORDS.items()}
 
@@ -268,12 +309,15 @@ def make_stage2(counts=None, unchanged=(0, 0), guards=None, pinning=None, pilot=
     for row in out:
         row['pilot'] = bool(pilot)      # one file holds ONE kind of evidence (design line 260)
         row['pins'] = fixture_pins()
+        row['runtime'] = fixture_runtime()
     return out
 
 
-def make_run(stage=2, hist=None, rows=None, deadline=False, gate3b=True, timing=0, pins=None):
+def make_run(stage=2, hist=None, rows=None, deadline=False, gate3b=True, timing=0, pins=None, runtime=None):
     pins = fixture_pins() if pins is None else dict(pins)
+    runtime = fixture_runtime() if runtime is None else dict(runtime)
     return {'part': 214, 'stage': stage, 'attn_implementation': 'eager', 'batch_size': 1,
+            'runtime': runtime, 'load_this_invocation': dict(runtime['load']),
             'generation_batch_histogram': hist if hist is not None else
             (rn.generation_batch_histogram(rows) if rows is not None else {'1': 1584}),
             'planned_rows': len(rows) if rows is not None else 1584,
@@ -1537,12 +1581,32 @@ def test_resume_refuses_changed_pins_and_reuses_exact_matches():
         'an exact-match resume reuses every saved row'
 
 
+def _pin_calibration(monkeypatch, stage0_path, publication='f' * 64):
+    """Pin the ONE approved calibration receipt AND the post-publication world it describes.
+
+    The production constants are `None` (Part 214 is not registered), and a `None` receipt refuses every patched
+    stage before the loader -- the correct fail-closed state. A test that needs a run must therefore supply the
+    receipt it pretends was registered, exactly as `_registered` supplies a registration section digest.
+
+    Calling this AFTER the Stage 0 file is written models the real order of events: Stage 0 captured under one design,
+    the derived values then pasted into the design (lines 165-166), and the build frozen against the PUBLICATION.
+    The Stage 0 record keeps its CAPTURE hash -- nothing here rewrites it.
+    """
+    receipt = fixture_calibration_receipt(stage0_path, publication=publication)
+    monkeypatch.setattr(sc, 'REGISTERED_CALIBRATION', receipt)
+    monkeypatch.setattr(sc, 'DESIGN_SHA256_PUBLICATION', receipt['design_sha256_publication'])
+    monkeypatch.setattr(sc, 'DESIGN_SHA256', receipt['design_sha256_publication'])
+    monkeypatch.setattr(rn, 'design_sha256', lambda path=None: receipt['design_sha256_publication'])
+    return receipt
+
+
 def _stage2_setup(tmp_path, monkeypatch, answers=None):
     monkeypatch.setattr(rn, 'registration_status', _registered)
     # a registered admission is only accepted against a PINNED section digest; the production constant is None
     # (Part 214 is not registered yet), so the fake pins the digest it pretends was registered.
     monkeypatch.setattr(sc, 'REGISTRATION_SHA256', REGISTRATION_SECTION)
     stage0_path = _write_json(tmp_path / 'stage0.json', make_stage0())
+    _pin_calibration(monkeypatch, stage0_path)
     tok = FakeTokenizer()
     model = FakeModel(tok, vocab=64, answer_for=(answers or keyword_answers)(tok))
     return stage0_path, tok, model, (lambda a: (model, tok, dict(FAKE_LOAD)))
@@ -1689,6 +1753,7 @@ def test_stage1_deadline_cuts_the_prepass_before_any_arm(tmp_path, monkeypatch):
     monkeypatch.setattr(rn, 'registration_status', _registered)
     monkeypatch.setattr(sc, 'REGISTRATION_SHA256', REGISTRATION_SECTION)
     stage0_path = _write_json(tmp_path / 'stage0.json', make_stage0())
+    _pin_calibration(monkeypatch, stage0_path)
     tok = FakeTokenizer()
     model = FakeModel(tok, answer_for=keyword_answers(tok))
     rig = lambda a: (model, tok, dict(FAKE_LOAD))
@@ -1696,6 +1761,8 @@ def test_stage1_deadline_cuts_the_prepass_before_any_arm(tmp_path, monkeypatch):
     args = _args(tmp_path / 'stage1', stage0=stage0_path, deadline_min=0.6)      # 36 s
     obj = rn.stage1(args, clock=clock, rig_loader=rig)
     assert obj['deadline_reached'] is True
+    assert obj['runtime']['device'] == 'cpu' and obj['runtime']['load'] == dict(FAKE_LOAD), \
+        'Stage 1 records the runtime it ran on (device, actual load, library stack)'
     assert obj['prepass_forwards'] == 3, 'the guard must stop the pre-pass at the launch after the cut, not later'
     assert set(obj['arm_question_counts'].values()) == {0}, 'an incomplete baseline records no arm readout at all'
     assert obj['forward_batch_histogram'] == {'1': 3}, 'the histogram must report the forwards that actually ran'
@@ -1715,19 +1782,43 @@ def test_stage1_deadline_cuts_inside_a_questions_gseq_forwards(tmp_path, monkeyp
     monkeypatch.setattr(rn, 'registration_status', _registered)
     monkeypatch.setattr(sc, 'REGISTRATION_SHA256', REGISTRATION_SECTION)
     stage0_path = _write_json(tmp_path / 'stage0.json', make_stage0())
+    _pin_calibration(monkeypatch, stage0_path)
     tok = FakeTokenizer()
     model = FakeModel(tok, answer_for=keyword_answers(tok))
     rig = lambda a: (model, tok, dict(FAKE_LOAD))
     clock = FakeClock(step=1.0)
-    args = _args(tmp_path / 'stage1', stage0=stage0_path, deadline_min=130 / 60.0)     # 130 s
+    # FakeClock(step=1.0) puts the cut between the 1st and 2nd g_seq launch of the SECOND question at 130.5 s (the
+    # pre-fix 130 s cut landed between two questions, which is why the old fixture never saw a spent forward).
+    args = _args(tmp_path / 'stage1', stage0=stage0_path, deadline_min=130.5 / 60.0)
     obj = rn.stage1(args, clock=clock, rig_loader=rig)
     assert obj['deadline_reached'] is True
     assert obj['prepass_forwards'] == 24 + 100, 'the cut lands after the recordings, inside the first arm'
     assert obj['arm_question_counts']['dial_-0.25'] == 1, \
         'the question whose g_seq forwards crossed the cut must not be recorded'
-    assert obj['forward_batch_histogram'] == {'1': 124 + 1 * rn.GSEQ_PATHS}, \
-        'three forwards for the one complete arm/question, none for the cut one'
+    # ... and NO partial value for it: one question's numbers, not one and a half.
+    assert len(obj['arms']['dial_-0.25']['g_ali']) == 1
+    assert len(obj['arms']['dial_-0.25']['g_seq']) == 1
+    # The cut question is excluded but its completed forward is still a call the rig ran. The pre-fix account derived
+    # forwards from COMPLETE questions only (`n_calls * GSEQ_PATHS`), which dropped that call from the account.
+    assert obj['rejected_question_forwards'] == 1, \
+        'each completed forward is a call, including the ones spent on the question the cut rejected'
+    assert obj['arm_forward_attempts'] == 3 + 1, 'one complete question plus the one forward the cut spent'
+    assert obj['forward_batch_histogram'] == {'1': 124 + 1 * rn.GSEQ_PATHS + 1}, \
+        'the histogram must report the forwards that actually ran'
+    assert obj['forward_batch_histogram']['1'] == len(model.forward_calls), \
+        'the account must equal the forwards the fake rig actually ran'
     assert obj['complete_arms'] == []
+
+    # Two completed forwards of the rejected question at 131.5 s: both are counted, neither is a value.
+    model2 = FakeModel(tok, answer_for=keyword_answers(tok))
+    args2 = _args(tmp_path / 'stage1b', stage0=stage0_path, deadline_min=131.5 / 60.0)
+    obj2 = rn.stage1(args2, clock=FakeClock(step=1.0), rig_loader=lambda a: (model2, tok, dict(FAKE_LOAD)))
+    assert obj2['arm_question_counts']['dial_-0.25'] == 1, 'still no second question value'
+    assert obj2['rejected_question_forwards'] == 2, \
+        'two completed forwards on the rejected question are two calls, not zero'
+    assert obj2['forward_batch_histogram'] == {'1': 124 + 1 * rn.GSEQ_PATHS + 2}
+    assert obj2['forward_batch_histogram']['1'] == len(model2.forward_calls), \
+        'the account must equal the forwards the fake rig actually ran'
     assert world()['predictions']['214.3']['verdict'] == sc.HOLDS
 
 
@@ -1821,10 +1912,11 @@ def test_full_stage2_evidence_refuses_a_stage1_or_pilot_from_another_stage0(tmp_
     pinning = sc.dial_pinning(stage0_obj)
     args = _args(tmp_path / 'full', stage0=stage0_path, stage1=stage1_path, pilot_dir=tmp_path / 'pilot')
     admission = rn.require_admission(args)
-    same = rn.stage_pins(hashlib.sha256(stage0_path.read_bytes()).hexdigest(), admission)
+    capture = stage0_obj.get('design_sha256')
+    same = rn.stage_pins(hashlib.sha256(stage0_path.read_bytes()).hexdigest(), admission, pinning, capture)
     ok = rn.full_stage2_evidence(args, stage0_obj, pinning, rn.short_donors(stage0_obj), same)
     assert ok['pass'] is True, ok['reason']
-    other = rn.stage_pins('c' * 64, admission)
+    other = rn.stage_pins('c' * 64, admission, pinning, capture)
     refused = rn.full_stage2_evidence(args, stage0_obj, pinning, rn.short_donors(stage0_obj), other)
     assert refused['pass'] is False, 'a different Stage 0 must refuse the evidence'
     assert refused['checks'] == {'gate3b_pass': True, 'stage1_pass': False, 'pilot_pass': False}
@@ -1853,13 +1945,19 @@ def test_full_stage2_evidence_requires_the_four_25_row_donor_banks():
     assert sc.gate3b(short)['pass'] is False and sc.gate3b(stage0)['pass'] is True
 
 
-def test_full_stage2_refuses_stage1_or_pilot_evidence_from_another_stage0_before_the_loader(tmp_path, monkeypatch):
-    """Change ONLY the Stage 0 bytes: the same content under a different digest is a different recording."""
+def test_full_stage2_refuses_evidence_from_another_build_before_the_loader(tmp_path, monkeypatch):
+    """Change ONLY the recorded code identity: a Stage 1 from another build must not clear this run's gate.
+
+    A different STAGE 0 is refused even earlier, by the calibration check (see
+    `test_registered_calibration_binds_stage1_pilot_and_full_to_the_registered_recording`) and by the direct evidence
+    test above; this one isolates the prerequisite-pins comparison that the pre-loader guard depends on.
+    """
     stage0_path, tok, model, rig = _stage2_setup(tmp_path, monkeypatch, answers=evidence_answers)
     pilot, stage1_path = _fake_pilot_and_stage1(tmp_path, monkeypatch, stage0_path, rig)
     calls_after_pilot = len(model.generate_calls)
-    stage0_obj = json.loads(stage0_path.read_text(encoding='utf-8'))
-    stage0_path.write_text(json.dumps(stage0_obj, indent=1, default=rn.json_default), encoding='utf-8')
+    stage1_obj = json.loads(Path(stage1_path).read_text(encoding='utf-8'))
+    stage1_obj['pins'] = dict(pilot['pins'], code_sha256='0' * 64)      # another build of this runner
+    _write_json(stage1_path, stage1_obj)
 
     def must_not_load(args):
         raise AssertionError('the loader must not be reached when the prerequisite pins refuse the run')
@@ -1868,7 +1966,7 @@ def test_full_stage2_refuses_stage1_or_pilot_evidence_from_another_stage0_before
     with pytest.raises(SystemExit) as excinfo:
         rn.stage2(args, pilot=False, rig_loader=must_not_load)
     assert 'refusing the full run before any call' in str(excinfo.value), \
-        'evidence from a different Stage 0 must refuse the full run before launch'
+        'evidence from another build must refuse the full run before launch'
     assert len(model.generate_calls) == calls_after_pilot
 
 
@@ -1983,12 +2081,19 @@ def test_pilot_timing_calls_do_not_launch_when_the_last_row_spends_the_budget(tm
     stage0_path, tok, model, rig = _stage2_setup(tmp_path, monkeypatch)
     clock = FakeClock(step=1.0)
     args = _args(tmp_path / 'pilot', stage0=stage0_path, deadline_min=64.5 / 60.0)
-    obj = rn.stage2(args, pilot=True, clock=clock, rig_loader=rig)
-    assert obj['new_rows_this_invocation'] == 64 and obj['deadline_reached'] is False
-    assert obj['timing_only_calls'] == 0, 'the timing calls are calls: none may launch after the budget is spent'
-    assert len(model.generate_calls) == 64
+    # The unit-level guard FIRST: this is the assertion the sabotage audit binds to this function.
     assert rn.pilot_timing_due(True, False, 0.0, 10.0, lambda: 11.0) is False, \
         'the clock, not `reached`, decides whether the timing calls launch'
+    obj = rn.stage2(args, pilot=True, clock=clock, rig_loader=rig)
+    assert obj['new_rows_this_invocation'] == 64
+    assert obj['timing_only_calls'] == 0, 'the timing calls are calls: none may launch after the budget is spent'
+    assert len(model.generate_calls) == 64
+    # The row loop never saw the deadline, but the TIMING calls did: the runner stopped launching calls, so the run
+    # reached its deadline and must say so. The pre-fix file left `deadline_reached: false` here, so the reason the
+    # pilot is short of its four timing calls was not recorded anywhere.
+    assert obj['timing_stop'] == {'reason': 'deadline', 'planned': 4, 'launched': 0}, \
+        'the timing cut must record its stop reason and counts'
+    assert obj['deadline_reached'] is True, 'a timing cut is a reached deadline, not a finished run'
     pinning = sc.dial_pinning(json.loads(stage0_path.read_text(encoding='utf-8')))
     evidence = rn.pilot_evidence(tmp_path / 'pilot', pinning, obj['pins'])
     assert evidence['checks']['pilot_timing_only_calls_4'] is False
@@ -2001,9 +2106,12 @@ def test_pilot_timing_calls_stop_between_launches(tmp_path, monkeypatch):
     clock = FakeClock(step=1.0)
     args = _args(tmp_path / 'pilot', stage0=stage0_path, deadline_min=68.5 / 60.0)
     obj = rn.stage2(args, pilot=True, clock=clock, rig_loader=rig)
-    assert obj['new_rows_this_invocation'] == 64 and obj['deadline_reached'] is False
+    assert obj['new_rows_this_invocation'] == 64
     assert obj['timing_only_calls'] == 1, 'the set must stop at the launch that would cross the deadline'
     assert len(model.generate_calls) == 65
+    assert obj['timing_stop'] == {'reason': 'deadline', 'planned': 4, 'launched': 1}, \
+        'the set stopped between launches and the stop is recorded, not inferred from the count'
+    assert obj['deadline_reached'] is True, 'a timing cut is a reached deadline, not a finished run'
     pinning = sc.dial_pinning(json.loads(stage0_path.read_text(encoding='utf-8')))
     assert rn.pilot_evidence(tmp_path / 'pilot', pinning, obj['pins'])['pass'] is False
 
@@ -2074,8 +2182,357 @@ def test_score_refuses_stage1_and_run_from_different_inputs():
 
 
 # ==================================================================================================================
+# Fix round 3: the registered calibration, the runtime identity, the inert flag, and forward accounting
+# ==================================================================================================================
+
+def test_registered_calibration_binds_stage1_pilot_and_full_to_the_registered_recording(tmp_path, monkeypatch):
+    """The registered alphas came from ONE recording. A different complete Stage 0 is not it, however consistent.
+
+    This is the reviewer's scenario in full. Recording B is complete (four banks of 25, donors above Gate 3b's floor),
+    so it can produce its own pinning, its own Stage 1 and its own pilot -- and those three agree with each other. The
+    evidence checks only ever proved "B's prerequisites match B's Stage 0"; the approved receipt is what says B is
+    not the registered A, and it is checked before any loader is reached.
+    """
+    monkeypatch.setattr(rn, 'registration_status', _registered)
+    monkeypatch.setattr(sc, 'REGISTRATION_SHA256', REGISTRATION_SECTION)
+    stage0_a = _write_json(tmp_path / 'stage0-a.json', make_stage0())
+    stage0_b = _write_json(tmp_path / 'stage0-b.json',
+                           make_stage0(alpha_fact=(0.31, 0.27), alpha_you=(0.44, 0.41)))
+    pinned = _pin_calibration(monkeypatch, stage0_a)          # the ONE approved receipt names recording A
+    sha_a = hashlib.sha256(stage0_a.read_bytes()).hexdigest()
+    sha_b = hashlib.sha256(stage0_b.read_bytes()).hexdigest()
+    assert pinned['stage0_sha256'] == sha_a and sha_a != sha_b
+    pinning_b = sc.dial_pinning(json.loads(stage0_b.read_text(encoding='utf-8')))
+    assert pinning_b['branch'] == pinned['branch'], 'the fixture must differ in BYTES, not in the branch'
+    assert pinning_b['facts']['alpha_gen'] != pinned['alphas']['facts']['alpha_gen']
+    assert rn.gates3b_banks(json.loads(stage0_b.read_text(encoding='utf-8')))['pass'] is True, \
+        'recording B must be a COMPLETE recording, or the test proves nothing'
+    tok = FakeTokenizer()
+    model = FakeModel(tok, answer_for=keyword_answers(tok))
+    rig = lambda a: (model, tok, dict(FAKE_LOAD))
+
+    def must_not_load(args):
+        raise AssertionError('the loader must not be reached: the calibration is refused before it')
+
+    # (1) Stage 1 from B refuses before the loader.
+    args = _args(tmp_path / 'stage1-b', stage0=stage0_b)
+    with pytest.raises((SystemExit, AssertionError)) as exc:
+        rn.stage1(args, rig_loader=must_not_load)
+    assert 'not the registered calibration' in str(exc.value), \
+        'a different complete recording must not generate Stage 1 under the registered calibration'
+    assert model.forward_calls == [], 'no forward may run for a recording that is not the registered one'
+
+    # (2) The pilot path, same recording, same refusal.
+    with pytest.raises((SystemExit, AssertionError)) as exc:
+        rn.stage2(_args(tmp_path / 'pilot-b-refused', stage0=stage0_b), pilot=True, rig_loader=must_not_load)
+    assert 'not the registered calibration' in str(exc.value), \
+        'a different complete recording must not generate the pilot under the registered calibration'
+    assert model.generate_calls == []
+
+    # (3) B's OWN Stage 1 and pilot are generated under B's receipt (the "self-consistent B"), then the build is
+    # re-pinned to A: the FULL launch must refuse even though every prerequisite agrees with B's Stage 0.
+    _pin_calibration(monkeypatch, stage0_b)
+    pilot = rn.stage2(_args(tmp_path / 'pilot-b', stage0=stage0_b, deadline_min=1000), pilot=True, rig_loader=rig)
+    assert pilot['new_rows_this_invocation'] == 64 and pilot['pins']['stage0_sha256'] == sha_b
+    stage1_b = make_stage1()
+    stage1_b['pins'] = dict(pilot['pins'])
+    stage1_path = _write_json(tmp_path / 'stage1-b-record.json', stage1_b)
+
+    _pin_calibration(monkeypatch, stage0_a)                   # the build now names A, as registration will
+    calls_after_pilot = len(model.generate_calls)
+    full_args = _args(tmp_path / 'full-b', stage0=stage0_b, stage1=stage1_path, pilot_dir=tmp_path / 'pilot-b')
+    with pytest.raises((SystemExit, AssertionError)) as exc:
+        rn.stage2(full_args, pilot=False, rig_loader=must_not_load)
+    assert 'not the registered calibration' in str(exc.value), \
+        'recording B\'s own Stage 1 and pilot must not clear the full launch: all of B is not the registered A'
+    assert len(model.generate_calls) == calls_after_pilot, 'the full launch must not make one call for recording B'
+
+    # The BRANCH is checked beside the bytes, so the same recording read as another branch (a code drift in
+    # dial_pinning) is refused too rather than slipping through on a byte match alone.
+    drifted = sc.registered_calibration_checks(sha_a, dict(pinning_b, branch='collapsed'), sha_a, sha_a,
+                                               receipt=pinned)
+    assert drifted['checks']['stage0_bytes_are_the_registered_recording'] is True
+    assert drifted['checks']['branch_is_the_registered_branch'] is False
+    assert 'these bytes pin branch' in drifted['reason'], 'the branch must be a check of its own'
+
+
+def test_the_admitted_design_is_the_publication_and_the_capture_is_never_relabelled(tmp_path, monkeypatch):
+    """Two design hashes, two jobs. The live design must be the PUBLICATION; the Stage 0 record keeps its CAPTURE.
+
+    The design is amended after Stage 0 -- design lines 165-166 paste the derived alphas into the predictions section
+    before `tools/register_public.py` runs -- so the file a patched stage is admitted under is the publication while
+    `stage0.json` still names the capture it was recorded under. Relabelling the capture as the publication, or
+    admitting a third design, is refused before the loader.
+    """
+    monkeypatch.setattr(rn, 'registration_status', _registered)
+    monkeypatch.setattr(sc, 'REGISTRATION_SHA256', REGISTRATION_SECTION)
+    stage0_path = _write_json(tmp_path / 'stage0.json', make_stage0())
+    pinned = _pin_calibration(monkeypatch, stage0_path)
+    publication = pinned['design_sha256_publication']
+    capture = pinned['design_sha256_capture']
+    assert publication != capture, 'the fixture must publish a different design'
+    assert pinned['design_sha256_capture'] == json.loads(stage0_path.read_text(encoding='utf-8'))['design_sha256'], \
+        'the receipt capture must be what the Stage 0 record itself names'
+
+    tok = FakeTokenizer()
+    model = FakeModel(tok, answer_for=keyword_answers(tok))
+    rig = lambda a: (model, tok, dict(FAKE_LOAD))
+
+    def must_not_load(args):
+        raise AssertionError('the loader must not be reached when the admitted design is not the publication')
+
+    # (a) a third design (neither capture nor publication) is refused before the loader.
+    real_design_sha256 = rn.design_sha256
+    monkeypatch.setattr(rn, 'design_sha256', lambda path=None: 'e' * 64)
+    with pytest.raises((SystemExit, AssertionError)) as exc:
+        rn.stage1(_args(tmp_path / 'stage1', stage0=stage0_path), rig_loader=must_not_load)
+    assert 'not the published contract' in str(exc.value), \
+        'a design that is not the registered publication must not be relabelled as the admitted one'
+    assert model.forward_calls == []
+    monkeypatch.setattr(rn, 'design_sha256', real_design_sha256)
+
+    # (b) relabelling the Stage 0 CAPTURE as the publication is refused as a relabelling.
+    relabelled_stage0 = sc.registered_calibration_checks(
+        hashlib.sha256(stage0_path.read_bytes()).hexdigest(),
+        sc.dial_pinning(json.loads(stage0_path.read_text(encoding='utf-8'))), publication, publication,
+        receipt=pinned)
+    assert relabelled_stage0['checks']['stage0_capture_design_matches_the_receipt'] is False
+    assert 'never regenerated or relabelled' in relabelled_stage0['reason'], \
+        'the capture must not be rewritten to the publication'
+
+    # (c) a receipt that "publishes" the capture hash is not a publication at all.
+    relabelled_receipt = dict(pinned, design_sha256_publication=capture)
+    checked = sc.registered_calibration_checks(
+        hashlib.sha256(stage0_path.read_bytes()).hexdigest(),
+        sc.dial_pinning(json.loads(stage0_path.read_text(encoding='utf-8'))), capture, capture,
+        receipt=relabelled_receipt)
+    assert checked['checks']['publication_design_is_a_distinct_hash'] is False
+    assert 'never relabelled as the publication' in checked['reason']
+
+    # (d) a green run keeps all three hashes in their own fields.
+    pilot = rn.stage2(_args(tmp_path / 'pilot', stage0=stage0_path, deadline_min=1000), pilot=True, rig_loader=rig)
+    assert pilot['design_sha256'] == publication, 'the admitted design is the published contract'
+    assert pilot['design_sha256_capture'] == capture, 'the record still names the capture it was made under'
+    assert pilot['design_sha256_publication'] == publication
+    assert pilot['pins']['design_sha256'] == publication and pilot['pins']['design_sha256_capture'] == capture
+
+
+def test_scorer_refuses_a_run_from_a_different_calibration_receipt(tmp_path, monkeypatch):
+    """The scorer applies the same receipt: a self-consistent run from another calibration is never scored as ours."""
+    stage0 = make_stage0()
+    stage0_path = _write_json(tmp_path / 'stage0.json', stage0)
+    receipt = _pin_calibration(monkeypatch, stage0_path)
+    pinning = sc.dial_pinning(stage0)
+    rows = make_stage2(counts={'unchanged': (0, 0), 'zero': (0, 0)}, guards={'n_broken': 0}, pinning=pinning)
+    run = make_run(rows=rows)
+    stage1 = make_stage1()                         # its pins follow the build's pinned receipt
+    sc.stage2_metrics(rows, run, pinning)          # the registered-calibration file scores
+    sc.stage1_metrics(stage1, pinning)
+    assert not sc.calibration_pin_mismatches(run['pins'])
+
+    # Another approved receipt (a different Stage 0 recording): neither stage may be scored as this build's.
+    monkeypatch.setattr(sc, 'REGISTERED_CALIBRATION', dict(receipt, stage0_sha256='b' * 64))
+    with pytest.raises(ValueError, match='another calibration'):
+        sc.stage2_metrics(rows, run, pinning)
+    with pytest.raises(ValueError, match='another calibration'):
+        sc.stage1_metrics(stage1, pinning)
+
+    # An unregistered build cannot certify a run that names a receipt it cannot reproduce.
+    monkeypatch.setattr(sc, 'REGISTERED_CALIBRATION', None)
+    monkeypatch.setattr(sc, 'DESIGN_SHA256_PUBLICATION', None)
+    assert 'cannot be checked' in '; '.join(sc.calibration_pin_mismatches(run['pins'])), \
+        'a build with no receipt must refuse evidence that names one'
+    with pytest.raises(ValueError):
+        sc.stage2_metrics(rows, run, pinning)
+
+
+def test_resume_refuses_a_changed_runtime_before_any_generation(tmp_path, monkeypatch):
+    """Rows are one account only on one runtime: a changed device/load/library stack admits no new generation.
+
+    The static pins are compared before the loader; the runtime cannot be known until a rig exists, so it is compared
+    immediately after the load and before the first row. The exact-match control must still resume -- the guard is
+    there to stop relabelling, not to refuse legitimate work.
+    """
+    stage0_path, tok, model, rig = _stage2_setup(tmp_path, monkeypatch)
+    cut = rn.stage2(_args(tmp_path / 'pilot', stage0=stage0_path, deadline_min=63 / 60.0),
+                    pilot=True, clock=FakeClock(step=1.0), rig_loader=rig)
+    assert cut['new_rows_this_invocation'] == 62, 'the fixture must leave rows to generate'
+    calls = len(model.generate_calls)
+
+    def upgraded(args):
+        return model, tok, dict(FAKE_LOAD, torch='fake-upgraded')
+
+    resumed = _args(tmp_path / 'pilot', stage0=stage0_path, deadline_min=1000)
+    failure = None
+    try:
+        rn.stage2(resumed, pilot=True, rig_loader=upgraded)
+    except SystemExit as exc:
+        failure = str(exc)
+    assert failure is not None and 'different runtime' in failure and 'torch' in failure, \
+        'a changed runtime must refuse new generation before any row'
+    assert len(model.generate_calls) == calls, 'not one row may be generated after a changed runtime'
+
+    exact = rn.stage2(resumed, pilot=True, rig_loader=rig)
+    assert exact['new_rows_this_invocation'] == 2, 'the exact-match control resumes the two missing rows'
+    assert exact['model_calls_total'] == 64
+    assert exact['runtime']['device'] == 'cpu' and exact['runtime']['load'] == dict(FAKE_LOAD), \
+        'run.json names the runtime that describes every row of the account'
+    saved = rn.load_stage2_jsonl(tmp_path / 'pilot' / 'stage2.jsonl')
+    assert all(row['runtime'] == exact['runtime'] for row in saved)
+
+
+def test_stage0_cli_never_advertises_the_inert_flag_and_stage1_counts_zero_calls(tmp_path, monkeypatch):
+    """CLI-level control for `--allow-unregistered`: removed where it cannot be honoured, counted where it can.
+
+    Stage 0 has no inert path -- it always loads the rig and writes stage0.json -- so the option is not defined on it
+    and a command line that passes it is refused BY NAME before the loader. On Stage 1 the same flag still selects
+    the inert path, and the CLI-level record counts zero loader and zero model calls.
+    """
+    monkeypatch.setattr(rn, 'registration_status', _registered)
+    monkeypatch.setattr(sc, 'REGISTRATION_SHA256', REGISTRATION_SECTION)
+
+    import contextlib
+    import io
+
+    def help_text(command):
+        buffer = io.StringIO()
+        with contextlib.redirect_stdout(buffer):
+            with pytest.raises(SystemExit):
+                rn.main([command, '--help'])
+        return buffer.getvalue()
+
+    assert '--allow-unregistered' not in help_text('stage0'), \
+        'Stage 0 must not advertise an inert flag it cannot honour'
+    assert '--allow-unregistered' in help_text('stage1'), 'the flag stays where it means what it says'
+
+    loaded = []
+
+    def must_not_load(args):
+        loaded.append(args)
+        raise AssertionError('the Stage 0 loader was reached')
+
+    monkeypatch.setattr(rn, 'load_rig', must_not_load)
+    with pytest.raises(SystemExit) as exc:
+        rn.main(['stage0', '--out', str(tmp_path / 's0'), '--allow-unregistered'])
+    assert 'not a Stage 0 option' in str(exc.value), \
+        'Stage 0 must refuse the inert flag by name, before the loader'
+    assert loaded == [] and not (tmp_path / 's0' / 'stage0.json').exists(), \
+        'a refused Stage 0 command must load nothing and write nothing'
+    # The same command WITHOUT the flag does reach the loader: the refusal is about the flag, not about Stage 0
+    # being unreachable in this test.
+    with pytest.raises(AssertionError, match='the Stage 0 loader was reached'):
+        rn.main(['stage0', '--out', str(tmp_path / 's0b')])
+    assert len(loaded) == 1, 'the control run reaches the loader exactly once'
+    loaders_before_stage1 = len(loaded)
+
+    tok = FakeTokenizer()
+    model = FakeModel(tok, vocab=64)
+
+    def counting_loader(args):
+        loaded.append(args)
+        return model, tok, dict(FAKE_LOAD)
+
+    monkeypatch.setattr(rn, 'load_rig', counting_loader)
+    obj = rn.main(['stage1', '--out', str(tmp_path / 's1'), '--allow-unregistered'])
+    assert obj['dry_run'] is True
+    assert obj['loader_calls'] == 0 and obj['model_calls'] == 0, \
+        'the CLI-level record must count zero loader and zero model calls'
+    assert len(loaded) == loaders_before_stage1, 'no loader was reached through the CLI inert path'
+    assert model.forward_calls == [] and model.generate_calls == []
+    assert json.loads((tmp_path / 's1' / 'stage1.json').read_text(encoding='utf-8'))['dry_run'] is True
+
+
+def test_dry_run_check_is_inside_the_write_lock(tmp_path, monkeypatch):
+    """The non-replacement check and the stub write are ONE critical section, not a check followed by a write.
+
+    A real stage record created between the pre-fix `path.exists()` check and the locked write was replaced by the
+    stub. Here another writer creates its record exactly as this process is about to acquire the output lock: the
+    check now runs under that lock, sees the record, and refuses.
+    """
+    import contextlib
+    real_lock = rn.output_directory_lock
+    raced = []
+
+    @contextlib.contextmanager
+    def racing_lock(outdir, stage):
+        Path(outdir).mkdir(parents=True, exist_ok=True)
+        if not raced:
+            raced.append(True)
+            _write_json(Path(outdir) / 'stage1.json', {'stage': 1, 'dry_run': False, 'real': True})
+        with real_lock(outdir, stage):
+            yield
+
+    monkeypatch.setattr(rn, 'output_directory_lock', racing_lock)
+    with pytest.raises(SystemExit) as exc:
+        rn.write_dry_run_record({'stage': 1, 'dry_run': True}, tmp_path, 'stage1.json', 'stage1')
+    assert 'refusing to write a dry-run stub' in str(exc.value), \
+        'a real record created between the check and the write must not be replaced by the stub'
+    saved = json.loads((tmp_path / 'stage1.json').read_text(encoding='utf-8'))
+    assert saved.get('real') is True and saved.get('dry_run') is False
+
+
+def test_pilot_timing_cut_records_its_stop_reason(tmp_path, monkeypatch):
+    """A timing cut is a deadline stop: run.json must name the reason, not only be short of four calls.
+
+    The row loop returns `reached=False` when the last pilot row spends the budget. The four timing calls then do not
+    launch and `pilot_evidence` refuses the full run (that four-call gate is kept) -- but the pre-fix file recorded
+    `deadline_reached: false` and no reason at all, so the record described a finished run.
+    """
+    stage0_path, tok, model, rig = _stage2_setup(tmp_path, monkeypatch)
+    obj = rn.stage2(_args(tmp_path / 'pilot', stage0=stage0_path, deadline_min=64.5 / 60.0),
+                    pilot=True, clock=FakeClock(step=1.0), rig_loader=rig)
+    assert obj['timing_stop'] == {'reason': 'deadline', 'planned': 4, 'launched': 0}, \
+        'the timing cut must record its stop reason and counts'
+    assert obj['deadline_reached'] is True, 'a timing cut is a reached deadline, not a finished run'
+    assert obj['timing_only_calls'] == 0
+    saved = json.loads((tmp_path / 'pilot' / 'run.json').read_text(encoding='utf-8'))
+    assert saved['timing_stop']['reason'] == 'deadline', 'the reason must be in the file, not just in the return value'
+    assert saved['deadline_reached'] is True
+    pinning = sc.dial_pinning(json.loads(stage0_path.read_text(encoding='utf-8')))
+    evidence = rn.pilot_evidence(tmp_path / 'pilot', pinning, obj['pins'])
+    assert evidence['checks']['pilot_timing_only_calls_4'] is False
+    assert evidence['pass'] is False, 'the four-call gate still refuses the full run (kept)'
+
+
+# ==================================================================================================================
 # sabotage audit: every guarded function is broken on purpose and must turn its test RED
 # ==================================================================================================================
+
+# --- Fix round 3 sabotages ----------------------------------------------------------------------------------------
+
+def _sabotage_calibration_always_passes(*args, **kwargs):
+    """The pre-registration state applied to a registered build: nothing is compared with the receipt."""
+    return {'pass': True, 'checks': {}, 'receipt': None, 'receipt_sha256': None, 'reason': ''}
+
+
+def _sabotage_dry_run_check_outside_lock(obj, out, name, stage):
+    """The pre-fix order: check `path.exists()` OUTSIDE the lock, then take the lock and write anyway."""
+    path = Path(out) / name
+    if path.exists():
+        try:
+            existing = json.loads(path.read_text(encoding='utf-8'))
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+            existing = None
+        if not (isinstance(existing, dict) and existing.get('dry_run') is True):
+            raise SystemExit(f'refusing to write a dry-run stub over {path}')
+    _ORIGINALS['write_stage_record'](obj, out, name, stage)
+
+
+def _sabotage_stage1_object_complete_questions(*args, **kwargs):
+    """The pre-fix account: forwards derived from COMPLETE questions only; a cut question's spent calls vanish."""
+    result = dict(_ORIGINALS['stage1_object'](*args, **kwargs))
+    complete = int(result['arm_question_forwards']) * rn.GSEQ_PATHS
+    result['arm_forward_attempts'] = complete
+    result['rejected_question_forwards'] = 0
+    result['forward_batch_histogram'] = {'1': int(result['prepass_forwards']) + complete}
+    return result
+
+
+def _sabotage_timing_plan_no_reason(pilot, reached, started=None, deadline_s=None, clock=None):
+    """The pre-fix record: launch/not-launch with no reason, so a timing cut looks like a finished run."""
+    return {'launch': rn.pilot_timing_due(pilot, reached, started, deadline_s, clock or rn.time.monotonic),
+            'reason': None}
+
 
 def _sabotage_registry():
     """(name, module, attribute, broken replacement, guarded test, expected failure).
@@ -2191,7 +2648,7 @@ def _sabotage_registry():
          (AssertionError, 'a different Stage 0 must refuse the evidence')),
         ('full_evidence_ignores_the_prerequisite_pins_integrated', rn, 'full_stage2_evidence',
          _sabotage_full_evidence_ignores_pins,
-         'test_full_stage2_refuses_stage1_or_pilot_evidence_from_another_stage0_before_the_loader',
+         'test_full_stage2_refuses_evidence_from_another_build_before_the_loader',
          (AssertionError, 'the loader must not be reached when the prerequisite pins refuse the run')),
         ('pilot_evidence_repairs_the_file_it_validates', rn, 'pilot_evidence',
          _sabotage_pilot_evidence_repairs, 'test_pilot_evidence_is_read_only_and_reports_a_torn_tail',
@@ -2236,6 +2693,37 @@ def _sabotage_registry():
         ('score_ignores_stage1_and_run_pin_mismatch', sc, 'score',
          _sabotage_score_ignores_pins, 'test_score_refuses_stage1_and_run_from_different_inputs',
          (_pytest_failed(), 'DID NOT RAISE')),
+        # --- Fix round 3: the registered calibration, the runtime, the inert flag, forward accounting -----------
+        ('calibration_receipt_not_checked', sc, 'registered_calibration_checks',
+         _sabotage_calibration_always_passes,
+         'test_registered_calibration_binds_stage1_pilot_and_full_to_the_registered_recording',
+         (AssertionError, 'a different complete recording must not generate Stage 1')),
+        ('calibration_not_checked_on_the_admitted_design', rn, 'require_registered_calibration',
+         lambda stage0_sha256, pinning, stage, stage0_design_sha256=None: {'pass': True, 'checks': {}, 'reason': ''},
+         'test_the_admitted_design_is_the_publication_and_the_capture_is_never_relabelled',
+         (AssertionError, 'a design that is not the registered publication must not be relabelled')),
+        ('scorer_accepts_another_calibration', sc, 'calibration_pin_mismatches',
+         lambda pins, receipt=None: [],
+         'test_scorer_refuses_a_run_from_a_different_calibration_receipt',
+         (_pytest_failed(), 'DID NOT RAISE')),
+        ('resume_ignores_a_changed_runtime', rn, 'check_resume_runtime',
+         lambda saved, runtime: None,
+         'test_resume_refuses_a_changed_runtime_before_any_generation',
+         (AssertionError, 'a changed runtime must refuse new generation before any row')),
+        ('stage0_cli_rejects_the_inert_flag_only_by_accident', rn, 'reject_inert_flag_on_stage0',
+         lambda cmd, argv: list(argv),
+         'test_stage0_cli_never_advertises_the_inert_flag_and_stage1_counts_zero_calls',
+         (AssertionError, 'Stage 0 must refuse the inert flag by name')),
+        ('dry_run_checks_outside_the_write_lock', rn, 'write_dry_run_record',
+         _sabotage_dry_run_check_outside_lock, 'test_dry_run_check_is_inside_the_write_lock',
+         (_pytest_failed(), 'DID NOT RAISE')),
+        ('stage1_account_drops_the_rejected_questions_forwards', rn, 'stage1_object',
+         _sabotage_stage1_object_complete_questions,
+         'test_stage1_deadline_cuts_inside_a_questions_gseq_forwards',
+         (AssertionError, 'each completed forward is a call')),
+        ('pilot_timing_cut_leaves_no_stop_reason', rn, 'pilot_timing_plan',
+         _sabotage_timing_plan_no_reason, 'test_pilot_timing_cut_records_its_stop_reason',
+         (AssertionError, 'the timing cut must record its stop reason')),
     ]
 
 
@@ -2279,14 +2767,15 @@ def _sabotage_opening_fallback(arm, bank, donors, qi):
     return rn.opening_ids(bank, 'en_maker')
 
 
-def _sabotage_stage2_wrong_prefix(row, bank, tok, stage0_obj, pinning, args, model, layers, pins=None):
+def _sabotage_stage2_wrong_prefix(row, bank, tok, stage0_obj, pinning, args, model, layers, pins=None,
+                                  runtime=None):
     """Generate from the donor prompt instead of the held-out question: the recipient prefix goes red."""
     items = [dict(item) for item in bank['items']]
     index = int(row['question_index'])
     if index < len(items):
         items[index]['en_maker'] = items[index]['d_you']
     return _ORIGINALS['stage2_generate'](row, dict(bank, items=items), tok, stage0_obj, pinning, args, model,
-                                         layers, pins=pins)
+                                         layers, pins=pins, runtime=runtime)
 
 
 def _sabotage_hooks_mask_ignored(layers, units, clamp, factor, T_q):
@@ -2343,9 +2832,11 @@ def _sabotage_pilot_evidence_repairs(directory, pinning, pins=None):
     return _ORIGINALS['pilot_evidence'](directory, pinning, pins)
 
 
-def _sabotage_generate_no_pins(row, bank, tok, stage0_obj, pinning, args, model, layers, pins=None):
+def _sabotage_generate_no_pins(row, bank, tok, stage0_obj, pinning, args, model, layers, pins=None,
+                               runtime=None):
     """Write full-run rows that do not say which inputs produced them (the pilot still admits the run)."""
-    record = _ORIGINALS['stage2_generate'](row, bank, tok, stage0_obj, pinning, args, model, layers, pins=pins)
+    record = _ORIGINALS['stage2_generate'](row, bank, tok, stage0_obj, pinning, args, model, layers, pins=pins,
+                                           runtime=runtime)
     if not row.get('pilot', False):
         record['pins'] = None
     return record
@@ -2356,9 +2847,9 @@ def _sabotage_pool_no_guard(tok, model, layers, bank, device, weights, guard=Non
     return _ORIGINALS['pool_norm_pass'](tok, model, layers, bank, device, weights)
 
 
-def _sabotage_stage1_call_no_guard(arm, qi, ctx, model, layers, args, guard=None):
+def _sabotage_stage1_call_no_guard(arm, qi, ctx, model, layers, args, guard=None, progress=None):
     """Fire all three g_seq paths even when the deadline passed between them."""
-    return _ORIGINALS['stage1_call'](arm, qi, ctx, model, layers, args)
+    return _ORIGINALS['stage1_call'](arm, qi, ctx, model, layers, args, progress=progress)
 
 
 def _sabotage_timing_due_no_clock(pilot, reached, started=None, deadline_s=None, clock=None):
@@ -2367,10 +2858,10 @@ def _sabotage_timing_due_no_clock(pilot, reached, started=None, deadline_s=None,
 
 
 def _sabotage_timing_no_clock(args, bank, tok, stage0_obj, pinning, model, layers, clock=None, pins=None,
-                              started=None, deadline_s=None):
+                              started=None, deadline_s=None, runtime=None, stop=None):
     """Launch all four timing calls regardless of the clock."""
     return _ORIGINALS['timing_only_calls'](args, bank, tok, stage0_obj, pinning, model, layers,
-                                           clock=clock or rn.time.monotonic, pins=pins)
+                                           clock=clock or rn.time.monotonic, pins=pins, runtime=runtime, stop=stop)
 
 
 def _sabotage_214_8_ignores_completeness(s1):
@@ -2498,6 +2989,12 @@ _ORIGINALS = {
     'write_stage_record': rn.write_stage_record, 'pred_214_8': sc.pred_214_8,
     'timing_only_calls': rn.timing_only_calls, 'score': sc.score, 'pool_norm_pass': rn.pool_norm_pass,
     'pilot_evidence': rn.pilot_evidence, 'stage1_call': rn.stage1_call,
+    # Fix round 3 guards
+    'registered_calibration_checks': sc.registered_calibration_checks,
+    'calibration_pin_mismatches': sc.calibration_pin_mismatches,
+    'require_registered_calibration': rn.require_registered_calibration,
+    'check_resume_runtime': rn.check_resume_runtime, 'pilot_timing_plan': rn.pilot_timing_plan,
+    'reject_inert_flag_on_stage0': rn.reject_inert_flag_on_stage0,
 }
 
 

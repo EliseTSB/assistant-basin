@@ -73,6 +73,42 @@ KERNEL_CHECK_SHA256 = '335e843dad34676c7689dad1f49668e02831e56e50c02ba7ebfe6c8a3
 # to them.
 REGISTRATION_SHA256 = None
 
+# ----------------------------------------------------------------------------------------------------------------
+# The registered CALIBRATION receipt, and the two design hashes
+#
+# `REGISTRATION_SHA256` binds the registered PROSE. It does not bind the RECORDING the prose was derived from, and that
+# is a real hole: if the registered alphas came from Stage 0 recording A, a different complete recording B can produce
+# its own pinning, its own Stage 1 and its own pilot, all mutually consistent, under the same registration. The tests
+# that compared a Stage 1 to a pilot therefore only proved "A-prerequisites match B", never "all of B is the
+# registered A".
+#
+# This receipt is that missing bind. It names, for one approved calibration:
+#   stage0_sha256              the exact Stage 0 bytes the registered alphas were derived from
+#   branch                     the dial branch those bytes take (`dial_pinning(stage0)['branch']`)
+#   alphas                     the derived values as registered (optional; compared with ALPHA_ABS_TOL when present)
+#   design_sha256_capture      the design bytes Stage 0 was recorded under (before the derived values were pasted in)
+#   design_sha256_publication  the FINAL design bytes that incorporate the derived values, i.e. what registration
+#                              registers and what a patched stage is admitted under once the design is published
+#
+# The capture-time hash is never rewritten to the publication hash: `stage0.json` keeps naming the contract it was
+# recorded under, the receipt carries both hashes, and a receipt whose publication hash equals its capture hash is
+# refused, because a publication that changed nothing is not a publication. At patch time the LIVE design must be the
+# publication (and `DESIGN_SHA256`, the build's frozen contract, must agree with it); Stage 0's recorded capture is
+# compared with the receipt instead, so the paste described at design lines 165-166 does not invalidate the recording.
+#
+# `None` today: Part 214 is not registered. Every patched stage (Stage 1, the pilot, full Stage 2) refuses before the
+# loader, which is the correct fail-closed state. This constant is filled from a readback of the public registered
+# section, never invented and never from a working-tree digest.
+# ----------------------------------------------------------------------------------------------------------------
+REGISTERED_CALIBRATION = None
+CALIBRATION_RECEIPT_FIELDS = ('stage0_sha256', 'branch', 'design_sha256_capture', 'design_sha256_publication')
+ALPHA_ABS_TOL = 1e-9
+# The design as PUBLISHED, i.e. with the derived values incorporated. `None` until the amended design is published;
+# once set it equals DESIGN_SHA256 (the build is frozen against the published file) and must equal the receipt's
+# publication hash. Every stage pins it beside `design_sha256` (the admitted design) and `design_sha256_capture`
+# (what Stage 0 recorded), so a capture is never relabelled as the publication.
+DESIGN_SHA256_PUBLICATION = None
+
 MODEL = 'Qwen/Qwen3.5-4B'
 REVISION = '851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a'
 TARGET = ((6, 753), (7, 1169), (11, 8868), (29, 776))
@@ -779,6 +815,159 @@ def gate3b(stage0: dict | None) -> dict:
 
 
 # ----------------------------------------------------------------------------------------------------------------
+# The registered calibration receipt (see REGISTERED_CALIBRATION above)
+# ----------------------------------------------------------------------------------------------------------------
+
+def calibration_receipt_sha256(receipt=None) -> str | None:
+    """A stable digest of one receipt, so every stage record and every row can NAME the receipt it ran under.
+
+    `None` in, `None` out: an unregistered build has no receipt to name, and a row that names a digest this build
+    cannot reproduce is refused by `calibration_pin_mismatches` rather than silently accepted.
+    """
+    receipt = REGISTERED_CALIBRATION if receipt is None else receipt
+    if receipt is None:
+        return None
+    return hashlib.sha256(json.dumps(receipt, sort_keys=True, ensure_ascii=False,
+                                     default=str).encode('utf-8')).hexdigest()
+
+
+def _alpha_mismatches(receipt: dict, pinning: dict | None) -> list[str]:
+    """The registered alphas vs the ones these Stage 0 bytes actually pin (only when the receipt names them)."""
+    registered = receipt.get('alphas')
+    if not registered:
+        return []
+    if not isinstance(registered, dict):
+        return ['the receipt names alphas but not as a mapping']
+    if pinning is None:
+        return ['the receipt names registered alphas but no pinning was supplied to compare them with']
+    out = []
+    for phase in ('facts', 'you'):
+        for key in ('alpha_prompt', 'alpha_gen'):
+            want = (registered.get(phase) or {}).get(key)
+            if want is None:
+                continue
+            have = (pinning.get(phase) or {}).get(key)
+            if have is None or abs(float(have) - float(want)) > ALPHA_ABS_TOL:
+                out.append(f'{phase}.{key}: Stage 0 pins {have!r}, the receipt registers {want!r}')
+    return out
+
+
+def registered_calibration_checks(stage0_sha256: str | None, pinning: dict | None,
+                                  stage0_design_sha256: str | None = None,
+                                  live_design_sha256: str | None = None, receipt=None) -> dict:
+    """Is this Stage 0 + pinning + design the ONE approved calibration? (pure; no model, no file access)
+
+    Every field is a separate check, because they fail for different reasons and a pytest refusal must name one:
+    a different recording (bytes), the same bytes read as a different branch (code drift), a Stage 0 record whose
+    CAPTURE hash was relabelled, an admitted design that is not the published contract, or a receipt whose
+    "publication" hash was produced by relabelling the capture.
+
+    The two design hashes are deliberately different fields:
+
+    * `stage0_design_sha256` is what `stage0.json` RECORDED when the recording was made. It must equal the receipt's
+      capture hash, and it is never compared with the live file: the design is amended after Stage 0 (design lines
+      165-166 paste the derived alphas into it), so the live file legitimately moves on while the capture must not.
+    * `live_design_sha256` is the design file this run is ACTUALLY admitted under (`run214.design_sha256()`). At
+      patch time that is the PUBLISHED design, so it must equal the receipt's publication hash and the build's frozen
+      `DESIGN_SHA256`.
+
+    `pinning` is `dial_pinning(stage0_obj)`.
+    """
+    receipt = REGISTERED_CALIBRATION if receipt is None else receipt
+    if not isinstance(receipt, dict):
+        return {'pass': False, 'checks': {'registered_calibration_pinned': False}, 'receipt': None,
+                'receipt_sha256': None,
+                'reason': ('no registered calibration receipt is pinned in this build '
+                           '(score214.REGISTERED_CALIBRATION is None), so a Stage 0 recording, its dial branch and '
+                           'the admitted design cannot be bound to the registered calibration. Register first.')}
+    missing = [field for field in CALIBRATION_RECEIPT_FIELDS if not receipt.get(field)]
+    checks = {
+        'registered_calibration_pinned': True,
+        'receipt_complete': not missing,
+        'stage0_bytes_are_the_registered_recording': (not missing
+                                                      and stage0_sha256 == receipt['stage0_sha256']),
+        'branch_is_the_registered_branch': (not missing and pinning is not None
+                                            and (pinning or {}).get('branch') == receipt['branch']),
+        'registered_alphas_match_the_pinning': not _alpha_mismatches(receipt, pinning),
+        'stage0_capture_design_matches_the_receipt': (not missing and stage0_design_sha256 is not None
+                                                      and stage0_design_sha256
+                                                      == receipt['design_sha256_capture']),
+        'publication_design_is_a_distinct_hash': (not missing
+                                                  and receipt['design_sha256_publication']
+                                                  != receipt['design_sha256_capture']),
+        'admitted_design_is_the_publication': (not missing and live_design_sha256 is not None
+                                               and live_design_sha256 == receipt['design_sha256_publication']),
+        'admitted_design_is_the_frozen_contract': (live_design_sha256 is not None
+                                                   and live_design_sha256 == DESIGN_SHA256),
+        'publication_constant_agrees_with_the_receipt': (DESIGN_SHA256_PUBLICATION is None
+                                                         or (not missing and DESIGN_SHA256_PUBLICATION
+                                                             == receipt['design_sha256_publication'])),
+    }
+    reasons = []
+    if missing:
+        reasons.append(f'the receipt is missing field(s) {missing}')
+    if not checks['stage0_bytes_are_the_registered_recording'] and not missing:
+        reasons.append(f'these Stage 0 bytes are SHA-256 {stage0_sha256!r}, the registered calibration is '
+                       f'{receipt["stage0_sha256"]!r}: a different recording is not the registered calibration')
+    if not checks['branch_is_the_registered_branch'] and not missing:
+        reasons.append(f'these bytes pin branch {(pinning or {}).get("branch")!r}, the registered calibration is '
+                       f'{receipt["branch"]!r}')
+    alpha = _alpha_mismatches(receipt, pinning)
+    if alpha:
+        reasons.append('registered alphas disagree: ' + '; '.join(alpha))
+    if not checks['stage0_capture_design_matches_the_receipt'] and not missing:
+        reasons.append(f'Stage 0 records the capture-time design {stage0_design_sha256!r}, the receipt registers '
+                       f'{receipt["design_sha256_capture"]!r}; the capture is never regenerated or relabelled')
+    if not checks['publication_design_is_a_distinct_hash']:
+        reasons.append('the receipt\'s publication design hash is not distinct from its capture-time hash; a capture '
+                       'is never relabelled as the publication')
+    if not checks['admitted_design_is_the_publication'] and not missing:
+        reasons.append(f'the admitted design is SHA-256 {live_design_sha256!r}, not the published contract '
+                       f'{receipt["design_sha256_publication"]!r}')
+    if not checks['admitted_design_is_the_frozen_contract']:
+        reasons.append(f'the admitted design is SHA-256 {live_design_sha256!r}, this build is frozen against '
+                       f'{DESIGN_SHA256!r}')
+    if not checks['publication_constant_agrees_with_the_receipt'] and not missing:
+        reasons.append(f'this build pins publication design {DESIGN_SHA256_PUBLICATION!r}, the receipt registers '
+                       f'{receipt["design_sha256_publication"]!r}')
+    return {'pass': all(checks.values()), 'checks': checks, 'receipt': receipt,
+            'receipt_sha256': calibration_receipt_sha256(receipt),
+            'reason': '' if all(checks.values()) else '; '.join(reasons)}
+
+
+def calibration_pin_mismatches(pins: dict, receipt=None) -> list[str]:
+    """Every way a run's `pins` disagree with the one approved receipt (the scorer's half of the same bind).
+
+    Three states, and the middle one is the one that matters:
+
+    * the build pins a receipt: every run must name it, the same Stage 0 bytes, branch, CAPTURE design and
+      PUBLICATION design. Evidence produced under any other calibration is refused, however self-consistent;
+    * the build pins `None` and the run names `None`: unregistered evidence from an unregistered build. There is no
+      receipt to disagree with, so nothing here refuses it (the LAUNCH is what is refused today, not local scoring);
+    * the build pins `None` and the run NAMES a receipt: refused. This build cannot reproduce that receipt, so it
+      cannot certify anything the run claims about it.
+    """
+    receipt = REGISTERED_CALIBRATION if receipt is None else receipt
+    named = (pins or {}).get('calibration_receipt_sha256')
+    if receipt is None:
+        if named is None:
+            return []
+        return [f'calibration_receipt_sha256: the run names {named!r}, but this build pins no registered calibration '
+                f'receipt, so that claim cannot be checked']
+    expected = calibration_receipt_sha256(receipt)
+    pairs = (('calibration_receipt_sha256', expected, named),
+             ('stage0_sha256', receipt.get('stage0_sha256'), (pins or {}).get('stage0_sha256')),
+             ('calibration_branch', receipt.get('branch'), (pins or {}).get('calibration_branch')),
+             ('design_sha256_capture', receipt.get('design_sha256_capture'),
+              (pins or {}).get('design_sha256_capture')),
+             ('design_sha256', receipt.get('design_sha256_publication'), (pins or {}).get('design_sha256')),
+             ('design_sha256_publication', receipt.get('design_sha256_publication'),
+              (pins or {}).get('design_sha256_publication')))
+    return [f'{key}: run has {have!r}, the registered calibration pins {want!r}'
+            for key, want, have in pairs if have != want]
+
+
+# ----------------------------------------------------------------------------------------------------------------
 # Stage 1: the 10-point H4 dial curve, the 4-D diagnostics, the natural-decode bridge, gates 1 & 2
 # ----------------------------------------------------------------------------------------------------------------
 
@@ -891,7 +1080,14 @@ def dial_curve(s1: dict) -> dict:
 
 
 def stage1_metrics(s1: dict, pinning: dict | None = None) -> dict:
-    """Every Stage 1 quantity 214.3, 214.7, 214.8 and Gates 1-2 read, from stage1.json's per-arm arrays."""
+    """Every Stage 1 quantity 214.3, 214.7, 214.8 and Gates 1-2 read, from stage1.json's per-arm arrays.
+
+    A Stage 1 record that names another registered calibration is refused here, so a Stage 1-only scoring run cannot
+    read B's curve as the registered A's: the same bind `require_run_pins` applies to Stage 2 evidence.
+    """
+    calibration = calibration_pin_mismatches(s1.get('pins') or {})
+    if calibration:
+        raise ValueError('refusing Stage 1 evidence from another calibration: ' + '; '.join(calibration))
     curve = dial_curve(s1)
     random_zero = {f'random_{k}:zero': _mean_delta(s1, f'random_{k}:zero') for k in range(N_RANDOM_SETS)}
     random_dial = {f'random_{k}:scale_dial_fact': _mean_delta(s1, f'random_{k}:scale_dial_fact')
@@ -1167,7 +1363,8 @@ def require_single_kind(rows: list[dict], run: dict) -> str:
 def _pin_mismatches(pins: dict) -> list[str]:
     """Every frozen code pin a run's `pins` mapping disagrees with (empty means the run is this build's)."""
     expected = {'model': MODEL, 'revision': REVISION, 'design': DESIGN_VERSION, 'design_commit': DESIGN_COMMIT,
-                'design_sha256': DESIGN_SHA256, 'prompts_sha256': PROMPTS_SHA256,
+                'design_sha256': DESIGN_SHA256, 'design_sha256_publication': DESIGN_SHA256_PUBLICATION,
+                'prompts_sha256': PROMPTS_SHA256,
                 'kernel_check_sha256': KERNEL_CHECK_SHA256, 'registration_pin': REGISTRATION_SHA256}
     return [f'{k}: run has {pins.get(k)!r}, this build pins {value!r}'
             for k, value in expected.items() if pins.get(k) != value]
@@ -1180,6 +1377,14 @@ def require_run_pins(rows: list[dict], run: dict) -> dict:
     evidence: rows generated under Stage 0 bytes A scored beside a run.json describing recording B, a run produced by
     another code/kernel, or a run whose design bytes are not the amended ones. Each row carries the exact `pins` it
     was produced under (run214.stage2_generate), so equality is checkable without re-reading the model.
+
+    Two further binds, both added in fix round 3:
+
+    * the REGISTERED CALIBRATION: `calibration_pin_mismatches` refuses a run whose pins name another Stage 0
+      recording, branch, capture design or publication design than the one approved receipt, so a self-consistent
+      recording B is not scored as registered A;
+    * the RUNTIME identity: run.json and every row must name the same device, load and library stack, because rows
+      generated on two runtimes are two accounts, not one.
     """
     pins = run.get('pins')
     if not isinstance(pins, dict) or not pins:
@@ -1210,6 +1415,18 @@ def require_run_pins(rows: list[dict], run: dict) -> dict:
     if bad:
         raise ValueError(f'refusing rows written under different pins: {len(bad)} row(s) disagree with run.json '
                          f'(first at line {bad[0]})')
+    calibration = calibration_pin_mismatches(pins)
+    if calibration:
+        raise ValueError('refusing evidence from another calibration: ' + '; '.join(calibration))
+    runtime = run.get('runtime')
+    if not isinstance(runtime, dict) or not runtime:
+        raise ValueError('refusing unpinned runtime: run.json carries no runtime identity (device, load, library '
+                         'stack), so its rows cannot be bound to the machine that generated them')
+    foreign_runtime = [index for index, row in enumerate(rows, start=1) if row.get('runtime') != runtime]
+    if foreign_runtime:
+        raise ValueError('refusing rows generated on another runtime: '
+                         f'{len(foreign_runtime)} row(s) disagree with run.json\'s runtime identity (first at line '
+                         f'{foreign_runtime[0]})')
     return pins
 
 
