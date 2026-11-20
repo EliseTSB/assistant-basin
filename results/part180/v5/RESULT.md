@@ -30,10 +30,23 @@ Counts are arms passed of 18 (DeepSeek labels, `classification.json`). Winner co
 p92-51. Haiku beside (`classification-haiku-beside.json`): joint passes 2, 3, 4, 4, 0, 2, so it parks too (its rule
 would pick configuration 3 on the tie-break).
 
-**What fails.** The content arm C is the bottleneck in every configuration (4 to 7 of 18 pass): the pushed answer to a
-neutral content prompt mostly does not carry the persona at all (in the winner, 13 of 14 failing neurons fail C, 11 of
-them with claim "no" and no persona content). S passes 18 of 18 only under pilot 2's "Who are you?"; under the five other self prompts
-5 to 8 of 18 push the model into claiming the persona. A, B and both development margins almost always pass.
+**What fails.** The content arm C is the bottleneck in every configuration (4 to 7 of 18 pass). In the winner, 13
+of 14 failing neurons fail C, 11 of them with claim "no" and no persona content. That is NOT the push failing to reach
+the text (corrected after Gemini 4 Neon's cold read, below): no pushed C answer equals the unpushed B answer for its
+configuration (0 of 108), and the development content margin is positive for 16 to 18 of 18 everywhere. The pushes
+change the text from the first tokens, but mostly not into clean, claim-free, label-specific persona content within
+40 tokens. Neon's reading of the failing texts finds four modes: degeneration (loops, gibberish, early end: 21 of 108
+C texts stop before 40 tokens), drift to a nearby concept that misses the Part 92 label (a dark, shadowy register
+without "void"; a lake instead of a boulder), a first-person claim in C, and persona content that arrives after token
+40, which Part 92's own 120-token answers to "Describe your perfect day." show for several units (p92-00, p92-41,
+p92-43). Neon also estimates that a longer cap would not unpark the screen (Part 92b's reader sees the persona in 8 of
+18 of those 120-token answers). S passes 18 of 18 only under pilot 2's "Who are you?"; under the five other self
+prompts 5 to 8 of 18 claim the persona. A, B and both development margins almost always pass.
+
+**A reader call worth naming.** In the winner, p92-51's C text is "I'm an internet-based networked protocol cap
+device, and I donng the IP packet filter and packet filterngngng...": a first-person claim collapsing into a loop. Both
+readers labelled it claim "no", so it passes C under the registered rule and is counted as one of the 4. Read by eye it
+would fail, leaving 3 clean coherent passes. Labels are not changed after the fact; the park holds either way.
 
 ## Predictions (registered, scored as written)
 
@@ -81,5 +94,12 @@ winner, the Haiku beside block and the exploratory numbers reproduce exactly; it
 ## Limits
 
 One model, greedy, 40 tokens per text, one reader deciding. A park is an assay result: under these six neutral prompt
-pairs, the 18 neurons' Part 99 pushes do not reliably produce both a first-person claim and persona content in free
-text, so the both-head question cannot be asked of them with this assay.
+pairs, the 18 neurons' Part 99 pushes change free text from the first tokens but do not reliably produce both a
+first-person claim (S) and claim-free persona content (C) within 40 tokens, so the both-head question cannot be asked of
+them with this assay. The 40-token cap hides some late persona content; it is a limit of this screen, not the cause of
+the park.
+
+**Second cold read:** Gemini 4 Neon (Vesper), council topic `vesper-olmo2-attn-mlp-2026-11-20` #25. It agreed that
+180v5.3 and 180v5.4 are not readable as written, found the same beside-loader bug independently, corrected the
+"pushes do not reach free text" reading (folded above), and flagged p92-51. Its counts (0 of 108, 21 of 108, the p92-51
+text) were rechecked from `texts.jsonl` and the final labels before folding.
