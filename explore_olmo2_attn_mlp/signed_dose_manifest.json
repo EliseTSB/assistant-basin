@@ -1,7 +1,8 @@
 {
   "meta": {
+    "schema_version": "signed_dose_v2.1",
     "design_file": "explore_olmo2_attn_mlp/SIGNED-DOSE-DESIGN.md",
-    "design_sha256": "39541366d7ebe1379b258ddd383284f9cb5518a9a5c1c781f8fc9e3c53319666",
+    "design_sha256": "cc37b14c109a94636afc9d06f4558b1cb82ebfe93de9f1f7bb43a5a9c21a127d",
     "model_repo": "allenai/OLMo-2-0425-1B-Instruct",
     "model_commit": "48d788eca847d4d7548f375ad03d3c9312f6139e",
     "dtype": "float32",

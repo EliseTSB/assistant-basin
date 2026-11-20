@@ -1,45 +1,53 @@
 #!/usr/bin/env python3
-"""Frozen Instruct Signed-Dose, Role-Genericity & Turn-Boundary Runner (OLMo 2 1B, Design v2).
+"""Frozen Instruct Signed-Dose, Role-Genericity & Turn-Boundary Runner (OLMo 2 1B, Design v2.1).
 
-Implements `explore_olmo2_attn_mlp/SIGNED-DOSE-DESIGN.md` (v2, folding Alden #32 points 1–4):
+Implements `explore_olmo2_attn_mlp/SIGNED-DOSE-DESIGN.md` (v2.1, folding Alden #32 & #36):
   - Immutable 40-char SHA pinning (`allenai/OLMo-2-0425-1B-Instruct@48d788eca847d4d7548f375ad03d3c9312f6139e`),
     `float32`, `attn_implementation="eager"`. Refuses `main` or `a1847dff`.
+  - Launch admission enforcement: loads and hashes exact committed `signed_dose_manifest.json` and
+    `SIGNED-DOSE-DESIGN.md` bytes, cross-checks every regenerated tokenizer/mask binding against the
+    bound manifest BEFORE calling the model weight loader, and refuses with zero loader calls on any
+    mismatch or missing file.
   - Strictly downstream head eligibility (`L_head > L_unit`): exact 108 eligible `(unit, head)` pairs
     (54 key + 54 matched-layer random). Raises `ValueError` on any non-causal `(unit, head)` pair.
   - Exact prefix-attached own/peer token binding (`n_peers_distinct >= 15`, own excluded, duplicates
     deduplicated, hard error on any BPE merge across the read boundary).
   - Block A + Block B (`B = 19` uniform batch shape across donor, unpatched, `unpushed_z`, and 100%-coverage
     same-dose `sham_z`): exact negated signed null companions (`+d * v_null[k]` paired with `-d * v_null[k]`),
-    preserving all 4 draws per tuple and computing centered even `E(d)` and odd `O(d)` on both `RawLogit`
-    and `SpecLogit`.
+    preserving all 4 draws per tuple at full float precision and computing centered even `E(d)` and odd `O(d)`
+    on both `RawLogit` and `SpecLogit`.
   - Block C (Q3 mask-localized residual writes at `d = +0.8`, `B = 10`, separate estimand): runs
     `pre_user_union` + `bos_tok` (idx 0) + `user_hdr_turn_final` + `post_user_delim_final` + matched controls
-    across `one_turn`, `two_turn_asst_user`, and `no_boundary_concat`, reporting paired interaction `I_pre`
-    and enforcing the `SD.6(a)` positive union floor (`>= +0.30`).
+    across `one_turn`, `two_turn_asst_user`, and `no_boundary_concat`.
+  - Separate explicit receipt identities (`partial_checkpoint` vs `smoke_receipt` vs `full_receipt`),
+    separate B19 and B10 timing, and a two-turn Q3 prompt included in `--smoke-1unit`.
   - Modes:
-      --self-test-only           : Runs all unit invariants + all 4 Alden #32 sabotage checks with paired positives.
+      --self-test-only           : Runs all unit invariants, Alden #32 sabotages, and Alden #36 fake-loader admission tests.
       --emit-manifest <path>     : Tokenizer-only pre-run audit manifest (zero model weights loaded).
-      --smoke-1unit              : Measured 1-unit, 2-prompt runtime smoke (logs ms/forward before full run).
-      (default)                  : Full frozen schedule (`6,630` B=19 + `700` B=10 forwards) with atomic checkpoints.
+      --smoke-1unit              : Measured 1-unit smoke (2 Q1+Q2 + 3 Q3 frames incl. two_turn_asst_user).
+      (default)                  : Full frozen schedule (`6,630` B=19 + `740` B=10 forwards) with separate checkpoints.
 """
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
 import math
 import random
 import re
 import statistics
+import tempfile
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import torch
 import torch.nn as nn
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
+SCHEMA_VERSION = "signed_dose_v2.1"
 MODEL_REPO = "allenai/OLMo-2-0425-1B-Instruct"
 MODEL_COMMIT = "48d788eca847d4d7548f375ad03d3c9312f6139e"
 FORBIDDEN_REFS = ("main", "a1847dff")
@@ -48,6 +56,12 @@ N_NULL_DRAWS = 4
 DOSE_MAGNITUDES = (0.2, 0.4, 0.8, 1.6)
 RANDOM_HEAD_SEED = 20261120
 NULL_SEED_BASE = 202611200
+SMOKE_Q12_IDS: tuple[str, ...] = ("self_F1", "third_F1")
+SMOKE_Q3_IDS: tuple[str, ...] = (
+    "q3_one_turn_self_F1",
+    "q3_two_turn_asst_user_self_F1",
+    "q3_no_boundary_concat_self_F1",
+)
 
 # Pinned Instruct chat residual medians from `results/part99-pushes.json`.
 PINNED_MEDIANS_CHAT: dict[int, float] = {
@@ -588,15 +602,21 @@ def assert_signed_companions(vecs: torch.Tensor) -> None:
             raise ValueError(f"iso_resid draw {k} +d/-d companions are not exact negatives!")
 
 
+def sha256_file(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
 def evaluate_sd6a_bos_share(delta_st_bos: float, delta_st_union: float, floor: float = 0.30) -> dict[str, Any]:
     """Evaluate SD.6(a) with Alden #32's predeclared positive floor on the combined `pre_user_union` contrast."""
+    if not (math.isfinite(delta_st_bos) and math.isfinite(delta_st_union) and math.isfinite(floor)):
+        raise ValueError(f"Non-finite input to evaluate_sd6a_bos_share: bos={delta_st_bos}, union={delta_st_union}")
     if delta_st_union < floor:
         return {
             "status": "not_read (union below floor)",
             "passed": False,
-            "bos": round(delta_st_bos, 6),
-            "union": round(delta_st_union, 6),
-            "floor": floor,
+            "bos": float(delta_st_bos),
+            "union": float(delta_st_union),
+            "floor": float(floor),
             "share": None,
         }
     share = delta_st_bos / delta_st_union
@@ -604,10 +624,10 @@ def evaluate_sd6a_bos_share(delta_st_bos: float, delta_st_union: float, floor: f
     return {
         "status": "held" if passed else "failed",
         "passed": passed,
-        "bos": round(delta_st_bos, 6),
-        "union": round(delta_st_union, 6),
-        "floor": floor,
-        "share": round(share, 6),
+        "bos": float(delta_st_bos),
+        "union": float(delta_st_union),
+        "floor": float(floor),
+        "share": float(share),
     }
 
 
@@ -661,6 +681,291 @@ def make_head_patch_prehook(head_idx: int, head_dim: int, replacement_z: torch.T
 # ---------------------------------------------------------------------------------------------------------------------
 # Self-Test Suite (All 4 Alden #32 Sabotages + Paired Positives + Fake-Layer Invariance)
 # ---------------------------------------------------------------------------------------------------------------------
+
+def _build_fake_tokenizer_for_self_test():
+    """Minimal deterministic tokenizer mimicking OLMo 2 chat markers + offset mapping for CPU self-tests."""
+    class _FakeTokenizer:
+        def __init__(self) -> None:
+            self._vocab: dict[str, int] = {
+                "<|endoftext|>": 100,
+                "\n": 101,
+                "<": 102,
+                "|": 103,
+                "user": 104,
+                "assistant": 105,
+                ">\n": 106,
+            }
+            self._inv: dict[int, str] = {v: k for k, v in self._vocab.items()}
+            self._next_id = 200
+            self._pat = re.compile(
+                r"<\|endoftext\|>|>\n|<|\||\n| [A-Za-z0-9.,?!'-]+|[A-Za-z0-9.,?!'-]+| +"
+            )
+
+        def _tid(self, tok_str: str) -> int:
+            if tok_str not in self._vocab:
+                self._vocab[tok_str] = self._next_id
+                self._inv[self._next_id] = tok_str
+                self._next_id += 1
+            return self._vocab[tok_str]
+
+        def apply_chat_template(
+            self,
+            messages: list[dict[str, str]],
+            add_generation_prompt: bool = True,
+            tokenize: bool = False,
+        ) -> str:
+            if tokenize:
+                raise AssertionError("Runner should pass tokenize=False")
+            parts: list[str] = ["<|endoftext|>"]
+            for i, msg in enumerate(messages):
+                role = msg["role"]
+                content = msg["content"]
+                if role == "user":
+                    if i > 0:
+                        parts.append("<|endoftext|>\n")
+                    parts.append(f"<|user|>\n{content}\n")
+                elif role == "assistant":
+                    parts.append(f"<|assistant|>\n{content}")
+                else:
+                    raise ValueError(f"Unsupported role {role}")
+            if add_generation_prompt:
+                parts.append("<|assistant|>\n")
+            return "".join(parts)
+
+        def __call__(
+            self,
+            text: str,
+            add_special_tokens: bool = False,
+            return_offsets_mapping: bool = False,
+        ) -> dict[str, Any]:
+            ids: list[int] = []
+            offsets: list[tuple[int, int]] = []
+            pos = 0
+            while pos < len(text):
+                m = self._pat.match(text, pos)
+                if m is None:
+                    piece = text[pos : pos + 1]
+                    start, end = pos, pos + 1
+                else:
+                    piece = m.group(0)
+                    start, end = m.start(), m.end()
+                ids.append(self._tid(piece))
+                offsets.append((start, end))
+                pos = end
+            out: dict[str, Any] = {"input_ids": ids}
+            if return_offsets_mapping:
+                out["offset_mapping"] = offsets
+            return out
+
+        def decode(self, ids: list[int]) -> str:
+            return "".join(self._inv[int(i)] for i in ids)
+
+    return _FakeTokenizer()
+
+
+def _build_dummy_olmo_model(vocab_size: int = 2048, hidden_size: int = 32, n_heads: int = 16, n_layers: int = 13):
+    """Tiny 13-layer dummy causal LM with exact OLMo 2 hook points (`layers[i].mlp.down_proj`, `self_attn.o_proj`)."""
+    class _DummyAttn(nn.Module):
+        def __init__(self, d: int) -> None:
+            super().__init__()
+            self.o_proj = nn.Linear(d, d, bias=False)
+
+        def forward(self, x: torch.Tensor) -> torch.Tensor:
+            return self.o_proj(x)
+
+    class _DummyMLP(nn.Module):
+        def __init__(self, d: int, d_mlp: int) -> None:
+            super().__init__()
+            self.down_proj = nn.Linear(d_mlp, d, bias=False)
+
+        def forward(self, x: torch.Tensor) -> torch.Tensor:
+            return x * 0.0
+
+    class _DummyLayer(nn.Module):
+        def __init__(self, d: int, d_mlp: int) -> None:
+            super().__init__()
+            self.self_attn = _DummyAttn(d)
+            self.mlp = _DummyMLP(d, d_mlp)
+
+        def forward(self, x: torch.Tensor) -> tuple[torch.Tensor]:
+            return (x + 0.05 * self.self_attn(x),)
+
+    class _DummyInner(nn.Module):
+        def __init__(self, v: int, d: int, nl: int) -> None:
+            super().__init__()
+            self.embed = nn.Embedding(v, d)
+            # Large enough MLP width to index any core unit neuron (max CORE_UNITS neuron is 6986).
+            self.layers = nn.ModuleList([_DummyLayer(d, 7040) for _ in range(nl)])
+
+    class _DummyOut:
+        def __init__(self, logits: torch.Tensor) -> None:
+            self.logits = logits
+
+    class _DummyConfig:
+        def __init__(self, d: int, nh: int) -> None:
+            self.hidden_size = d
+            self.num_attention_heads = nh
+
+    class _DummyModel(nn.Module):
+        def __init__(self) -> None:
+            super().__init__()
+            self.config = _DummyConfig(hidden_size, n_heads)
+            self.model = _DummyInner(vocab_size, hidden_size, n_layers)
+            self.lm_head = nn.Linear(hidden_size, vocab_size, bias=False)
+
+        def forward(self, input_ids: torch.Tensor, use_cache: bool = False) -> _DummyOut:
+            h = self.model.embed(input_ids)
+            for lyr in self.model.layers:
+                h = lyr(h)[0]
+            return _DummyOut(self.lm_head(h))
+
+    torch.manual_seed(1234)
+    return _DummyModel()
+
+
+def run_admission_self_tests() -> dict[str, Any]:
+    """Alden #36 admission & fake-loader suite exercising real `execute_run` with zero HF downloads."""
+    fake_tok = _build_fake_tokenizer_for_self_test()
+    with tempfile.TemporaryDirectory(prefix="sd_admit_test_") as td:
+        tmp = Path(td)
+        design_path = tmp / "SIGNED-DOSE-DESIGN.md"
+        design_path.write_text("# Fake Frozen Design v2.1\n", encoding="utf-8")
+        manifest_path = tmp / "signed_dose_manifest.json"
+        valid_manifest = build_manifest(fake_tok, design_path=design_path)
+        _atomic_write_json(manifest_path, valid_manifest)
+        valid_m_sha = sha256_file(manifest_path)
+        valid_d_sha = sha256_file(design_path)
+
+        loader_calls = {"n": 0}
+
+        def fake_tok_loader(_repo: str, _commit: str):
+            return fake_tok
+
+        def fake_model_loader(_repo: str, _commit: str, device: torch.device):
+            loader_calls["n"] += 1
+            return _build_dummy_olmo_model().to(device)
+
+        def make_args(mpath: Path, dpath: Path, outpath: Path, exp_m: str | None = None, exp_d: str | None = None):
+            return argparse.Namespace(
+                smoke_1unit=True,
+                device="cpu",
+                out=outpath,
+                manifest=mpath,
+                design=dpath,
+                expected_manifest_sha256=exp_m,
+                expected_design_sha256=exp_d,
+                emit_stdout_json=False,
+            )
+
+        # 1. Positive fixture: exact package reaches fake loader and completes smoke_receipt cleanly
+        pos_out = tmp / "smoke_pos.json"
+        receipt = execute_run(
+            make_args(manifest_path, design_path, pos_out, exp_m=valid_m_sha, exp_d=valid_d_sha),
+            tokenizer_loader=fake_tok_loader,
+            model_loader=fake_model_loader,
+        )
+        assert loader_calls["n"] == 1, f"Expected 1 model loader call, got {loader_calls['n']}"
+        assert pos_out.is_file()
+        assert receipt["meta"]["artifact_type"] == "smoke_receipt"
+        assert receipt["meta"]["run_mode"] == "smoke_1unit"
+        assert receipt["meta"]["complete"] is True
+        assert receipt["meta"]["manifest_sha256"] == valid_m_sha
+        assert receipt["meta"]["design_sha256"] == valid_d_sha
+        assert receipt["meta"]["timing"]["b19_elapsed_sec"] >= 0.0
+        assert receipt["meta"]["timing"]["b10_elapsed_sec"] >= 0.0
+        assert receipt["meta"]["timing"]["n_b19_done"] == 98
+        assert receipt["meta"]["timing"]["n_b10_done"] == 37
+        smoke_q3_ids = {r["prompt_id"] for r in receipt["q3_rows"]}
+        assert "q3_two_turn_asst_user_self_F1" in smoke_q3_ids, "Smoke must include longest two-turn Q3 frame!"
+        max_sham = max(max(r["spec"]["max_abs_sham"], r["raw"]["max_abs_sham"]) for r in receipt["q12_rows"])
+        assert max_sham < 1e-5, f"Dummy model sham error too high: {max_sham}"
+
+        # 2. Refusal: missing manifest -> zero loader calls
+        loader_calls["n"] = 0
+        try:
+            execute_run(
+                make_args(tmp / "nonexistent_manifest.json", design_path, tmp / "bad1.json"),
+                tokenizer_loader=fake_tok_loader,
+                model_loader=fake_model_loader,
+            )
+            raise AssertionError("Missing manifest was not refused!")
+        except FileNotFoundError:
+            pass
+        assert loader_calls["n"] == 0, "Missing manifest reached model loader!"
+
+        # 3. Refusal: wrong design bytes/digest -> zero loader calls
+        bad_design = tmp / "BAD-DESIGN.md"
+        bad_design.write_text("# Tampered Design\n", encoding="utf-8")
+        loader_calls["n"] = 0
+        try:
+            execute_run(
+                make_args(manifest_path, bad_design, tmp / "bad2.json"),
+                tokenizer_loader=fake_tok_loader,
+                model_loader=fake_model_loader,
+            )
+            raise AssertionError("Wrong design digest was not refused!")
+        except ValueError:
+            pass
+        assert loader_calls["n"] == 0, "Wrong design reached model loader!"
+
+        # 4. Refusal: 1 changed own_token_id in manifest -> zero loader calls (Alden #36 exact witness!)
+        bad_tok_m = copy.deepcopy(valid_manifest)
+        bad_tok_m["q12_prompts"][0]["per_unit"][CORE_UNITS[0]]["own_token_id"] += 1
+        bad_tok_path = tmp / "manifest_bad_tok.json"
+        _atomic_write_json(bad_tok_path, bad_tok_m)
+        loader_calls["n"] = 0
+        try:
+            execute_run(
+                make_args(bad_tok_path, design_path, tmp / "bad3.json"),
+                tokenizer_loader=fake_tok_loader,
+                model_loader=fake_model_loader,
+            )
+            raise AssertionError("Changed own_token_id in manifest was not refused!")
+        except ValueError:
+            pass
+        assert loader_calls["n"] == 0, "Changed own_token_id reached model loader!"
+
+        # 5. Refusal: 1 changed Q3 mask index in manifest -> zero loader calls
+        bad_mask_m = copy.deepcopy(valid_manifest)
+        bad_mask_m["q3_prompts"][0]["per_unit"][CORE_UNITS[0]]["masks"]["bos_tok"] = [1]
+        bad_mask_path = tmp / "manifest_bad_mask.json"
+        _atomic_write_json(bad_mask_path, bad_mask_m)
+        loader_calls["n"] = 0
+        try:
+            execute_run(
+                make_args(bad_mask_path, design_path, tmp / "bad4.json"),
+                tokenizer_loader=fake_tok_loader,
+                model_loader=fake_model_loader,
+            )
+            raise AssertionError("Changed Q3 mask in manifest was not refused!")
+        except ValueError:
+            pass
+        assert loader_calls["n"] == 0, "Changed Q3 mask reached model loader!"
+
+        # 6. Refusal: wrong --expected-manifest-sha256 -> zero loader calls
+        loader_calls["n"] = 0
+        try:
+            execute_run(
+                make_args(manifest_path, design_path, tmp / "bad5.json", exp_m="0" * 64),
+                tokenizer_loader=fake_tok_loader,
+                model_loader=fake_model_loader,
+            )
+            raise AssertionError("Wrong expected manifest SHA-256 was not refused!")
+        except ValueError:
+            pass
+        assert loader_calls["n"] == 0, "Wrong expected manifest SHA reached model loader!"
+
+    return {
+        "positive_reached_fake_loader": True,
+        "smoke_includes_two_turn_q3": True,
+        "smoke_dummy_max_sham": max_sham,
+        "refused_missing_manifest_zero_loader": True,
+        "refused_wrong_design_zero_loader": True,
+        "refused_changed_own_token_zero_loader": True,
+        "refused_changed_mask_zero_loader": True,
+        "refused_wrong_expected_sha_zero_loader": True,
+    }
+
 
 def run_self_tests() -> dict[str, Any]:
     # 0. Pinning & prompt hygiene
@@ -752,6 +1057,8 @@ def run_self_tests() -> dict[str, Any]:
     sham_err = float((sham_o - base_o).abs().max().item())
     assert sham_err == 0.0
 
+    admission_report = run_admission_self_tests()
+
     return {
         "status": "PASSED",
         "eligible_pairs": len(pairs),
@@ -762,14 +1069,15 @@ def run_self_tests() -> dict[str, Any]:
         "fake_layer_sel_err": sel_err,
         "fake_layer_comp_err": comp_err,
         "fake_head_sham_err": sham_err,
+        "admission_tests": admission_report,
     }
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# Pre-Run Manifest Builder (Tokenizer-Only, Zero Model Weights)
+# Pre-Run Manifest Builder & Launch Admission Enforcement
 # ---------------------------------------------------------------------------------------------------------------------
 
-def build_manifest(tok: Any) -> dict[str, Any]:
+def build_manifest(tok: Any, design_path: Path | None = None) -> dict[str, Any]:
     q12 = build_q12_prompts()
     q3 = build_q3_prompts()
     assert_no_forbidden_overlap(q12 + q3)
@@ -809,11 +1117,14 @@ def build_manifest(tok: Any) -> dict[str, Any]:
             per_unit_q3[uid] = {**loc, **binding}
         q3_entries.append({**pr, "per_unit": per_unit_q3})
 
-    design_path = Path(__file__).resolve().parent / "SIGNED-DOSE-DESIGN.md"
-    design_sha = hashlib.sha256(design_path.read_bytes()).hexdigest() if design_path.is_file() else None
+    dpath = design_path if design_path is not None else (Path(__file__).resolve().parent / "SIGNED-DOSE-DESIGN.md")
+    if not dpath.is_file():
+        raise FileNotFoundError(f"Frozen design document not found: {dpath}")
+    design_sha = sha256_file(dpath)
 
     return {
         "meta": {
+            "schema_version": SCHEMA_VERSION,
             "design_file": "explore_olmo2_attn_mlp/SIGNED-DOSE-DESIGN.md",
             "design_sha256": design_sha,
             "model_repo": MODEL_REPO,
@@ -847,6 +1158,98 @@ def build_manifest(tok: Any) -> dict[str, Any]:
     }
 
 
+def _find_first_diff(a: Any, b: Any, path: str = "$") -> str | None:
+    if type(a) is not type(b):
+        return f"{path}: type mismatch bound={type(a).__name__} ({a!r}) != regen={type(b).__name__} ({b!r})"
+    if isinstance(a, dict):
+        ka, kb = set(a.keys()), set(b.keys())
+        if ka != kb:
+            return f"{path}: key mismatch extra_in_bound={sorted(ka - kb)}, missing_in_bound={sorted(kb - ka)}"
+        for k in sorted(ka):
+            d = _find_first_diff(a[k], b[k], f"{path}.{k}")
+            if d is not None:
+                return d
+        return None
+    if isinstance(a, list):
+        if len(a) != len(b):
+            return f"{path}: list length mismatch bound={len(a)} != regen={len(b)}"
+        for i, (va, vb) in enumerate(zip(a, b)):
+            d = _find_first_diff(va, vb, f"{path}[{i}]")
+            if d is not None:
+                return d
+        return None
+    if a != b:
+        return f"{path}: value mismatch bound={a!r} != regen={b!r}"
+    return None
+
+
+def assert_manifests_equal(bound: dict[str, Any], regen: dict[str, Any]) -> None:
+    diff = _find_first_diff(bound, regen)
+    if diff is not None:
+        raise ValueError(f"Committed manifest disagrees with regenerated tokenizer/design bindings at {diff}")
+
+
+def admit_frozen_package(
+    manifest_path: Path,
+    design_path: Path,
+    tokenizer_loader: Callable[[str, str], Any],
+    expected_manifest_sha256: str | None = None,
+    expected_design_sha256: str | None = None,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Enforce exact committed manifest & design bytes BEFORE any model weight loader is called."""
+    if not manifest_path.is_file():
+        raise FileNotFoundError(f"Refused launch: committed manifest not found at {manifest_path}")
+    if not design_path.is_file():
+        raise FileNotFoundError(f"Refused launch: committed design doc not found at {design_path}")
+
+    manifest_bytes = manifest_path.read_bytes()
+    design_bytes = design_path.read_bytes()
+    manifest_sha = hashlib.sha256(manifest_bytes).hexdigest()
+    design_sha = hashlib.sha256(design_bytes).hexdigest()
+
+    if expected_manifest_sha256 is not None and manifest_sha != expected_manifest_sha256:
+        raise ValueError(
+            f"Refused launch: manifest SHA-256 mismatch: got {manifest_sha}, expected {expected_manifest_sha256}"
+        )
+    if expected_design_sha256 is not None and design_sha != expected_design_sha256:
+        raise ValueError(
+            f"Refused launch: design SHA-256 mismatch: got {design_sha}, expected {expected_design_sha256}"
+        )
+
+    bound = json.loads(manifest_bytes.decode("utf-8"))
+    meta = bound.get("meta", {})
+    if meta.get("design_sha256") != design_sha:
+        raise ValueError(
+            f"Refused launch: manifest.meta.design_sha256 ({meta.get('design_sha256')}) != "
+            f"design file SHA-256 ({design_sha})"
+        )
+    if meta.get("model_repo") != MODEL_REPO or meta.get("model_commit") != MODEL_COMMIT:
+        raise ValueError(
+            f"Refused launch: manifest model ref {meta.get('model_repo')}@{meta.get('model_commit')} != "
+            f"{MODEL_REPO}@{MODEL_COMMIT}"
+        )
+    validate_pinned_ref(meta["model_repo"], meta["model_commit"])
+
+    # Cross-check EVERY regenerated prompt/token/mask binding against the bound manifest before loading weights!
+    tok = tokenizer_loader(MODEL_REPO, MODEL_COMMIT)
+    regen = build_manifest(tok, design_path=design_path)
+    assert_manifests_equal(bound, regen)
+
+    runner_path = Path(__file__).resolve()
+    scorer_path = runner_path.parent / "score_signed_dose.py"
+    pins = {
+        "manifest_file": str(manifest_path),
+        "manifest_sha256": manifest_sha,
+        "design_file": str(design_path),
+        "design_sha256": design_sha,
+        "runner_file": runner_path.name,
+        "runner_sha256": sha256_file(runner_path),
+        "scorer_file": scorer_path.name if scorer_path.is_file() else None,
+        "scorer_sha256": sha256_file(scorer_path) if scorer_path.is_file() else None,
+    }
+    return bound, pins
+
+
 def _atomic_write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + ".tmp")
@@ -862,68 +1265,116 @@ def _atomic_write_json(path: Path, payload: dict[str, Any]) -> None:
 def read_dual_metrics(logits_b_v: torch.Tensor, own_id: int, peer_ids: torch.Tensor) -> tuple[list[float], list[float]]:
     if not torch.isfinite(logits_b_v).all():
         raise RuntimeError("Non-finite logits encountered!")
-    raw = logits_b_v[:, own_id].cpu().tolist()
-    pmed = logits_b_v[:, peer_ids].median(dim=-1).values.cpu().tolist()
+    raw = [float(x) for x in logits_b_v[:, own_id].cpu().tolist()]
+    pmed = [float(x) for x in logits_b_v[:, peer_ids].median(dim=-1).values.cpu().tolist()]
     spec = [r - m for r, m in zip(raw, pmed)]
+    if not (all(math.isfinite(x) for x in raw) and all(math.isfinite(x) for x in spec)):
+        raise RuntimeError("Non-finite dual metric encountered!")
     return raw, spec
 
 
 def decompose_b19(unp: list[float], pat: list[float], shm: list[float]) -> dict[str, Any]:
-    d_row = [u - p for u, p in zip(unp, pat)]
-    d_shm = [u - s for u, s in zip(unp, shm)]
+    d_row = [float(u - p) for u, p in zip(unp, pat)]
+    d_shm = [float(u - s) for u, s in zip(unp, shm)]
+    if not (all(math.isfinite(x) for x in d_row) and all(math.isfinite(x) for x in d_shm)):
+        raise RuntimeError("Non-finite value in decompose_b19")
     d0 = d_row[0]
     dp, dm = d_row[1], d_row[2]
     even = 0.5 * (dp + dm) - d0
     odd = 0.5 * (dp - dm)
 
     def null_pack(pos_off: int, neg_off: int) -> dict[str, Any]:
-        ps = [d_row[pos_off + k] for k in range(N_NULL_DRAWS)]
-        ms = [d_row[neg_off + k] for k in range(N_NULL_DRAWS)]
-        es = [0.5 * (a + b) - d0 for a, b in zip(ps, ms)]
-        os_ = [0.5 * (a - b) for a, b in zip(ps, ms)]
+        ps = [float(d_row[pos_off + k]) for k in range(N_NULL_DRAWS)]
+        ms = [float(d_row[neg_off + k]) for k in range(N_NULL_DRAWS)]
+        es = [float(0.5 * (a + b) - d0) for a, b in zip(ps, ms)]
+        os_ = [float(0.5 * (a - b)) for a, b in zip(ps, ms)]
         return {
-            "d_pos_draws": [round(x, 6) for x in ps],
-            "d_neg_draws": [round(x, 6) for x in ms],
-            "even_draws": [round(x, 6) for x in es],
-            "odd_draws": [round(x, 6) for x in os_],
-            "d_pos_med": round(statistics.median(ps), 6),
-            "d_neg_med": round(statistics.median(ms), 6),
-            "even_med": round(statistics.median(es), 6),
-            "odd_med": round(statistics.median(os_), 6),
+            "d_pos_draws": ps,
+            "d_neg_draws": ms,
+            "even_draws": es,
+            "odd_draws": os_,
+            "d_pos_med": float(statistics.median(ps)),
+            "d_neg_med": float(statistics.median(ms)),
+            "even_med": float(statistics.median(es)),
+            "odd_med": float(statistics.median(os_)),
         }
 
     return {
-        "d0": round(d0, 6),
-        "d_pos": round(dp, 6),
-        "d_neg": round(dm, 6),
-        "even": round(even, 6),
-        "odd": round(odd, 6),
-        "max_abs_sham": round(max(abs(x) for x in d_shm), 7),
+        "d0": float(d0),
+        "d_pos": float(dp),
+        "d_neg": float(dm),
+        "even": float(even),
+        "odd": float(odd),
+        "max_abs_sham": float(max(abs(x) for x in d_shm)),
         "wdown_orth": null_pack(3, 7),
         "iso_resid": null_pack(11, 15),
     }
 
 
-@torch.no_grad()
-def execute_run(args: argparse.Namespace) -> None:
-    t0 = time.time()
-    validate_pinned_ref(MODEL_REPO, MODEL_COMMIT)
-    device = torch.device(args.device)
-    tok = AutoTokenizer.from_pretrained(MODEL_REPO, revision=MODEL_COMMIT)
-    manifest = build_manifest(tok)
+def pack_q3_row_metrics(vals: list[float]) -> dict[str, Any]:
+    if not all(math.isfinite(x) for x in vals):
+        raise RuntimeError("Non-finite value in pack_q3_row_metrics")
+    dn = float(vals[1] - vals[0])
+    dw = [float(vals[2 + k] - vals[0]) for k in range(N_NULL_DRAWS)]
+    di = [float(vals[6 + k] - vals[0]) for k in range(N_NULL_DRAWS)]
+    rw = float(statistics.median(dw))
+    ri = float(statistics.median(di))
+    return {
+        "n_z": dn,
+        "r_z_wdown_med": rw,
+        "l_z_wdown": float(dn - rw),
+        "r_z_iso_med": ri,
+        "l_z_iso": float(dn - ri),
+        "wdown_draws": dw,
+        "iso_draws": di,
+    }
 
-    print(f"[sd] Loading {MODEL_REPO}@{MODEL_COMMIT[:12]} on {device} (float32, eager)...", flush=True)
-    model = AutoModelForCausalLM.from_pretrained(
-        MODEL_REPO,
-        revision=MODEL_COMMIT,
+
+def _default_tokenizer_loader(repo: str, commit: str):
+    return AutoTokenizer.from_pretrained(repo, revision=commit)
+
+
+def _default_model_loader(repo: str, commit: str, device: torch.device):
+    return AutoModelForCausalLM.from_pretrained(
+        repo,
+        revision=commit,
         dtype=torch.float32,
         attn_implementation="eager",
     ).to(device)
+
+
+@torch.no_grad()
+def execute_run(
+    args: argparse.Namespace,
+    tokenizer_loader: Callable[[str, str], Any] | None = None,
+    model_loader: Callable[[str, str, torch.device], Any] | None = None,
+) -> dict[str, Any]:
+    t0 = time.perf_counter()
+    validate_pinned_ref(MODEL_REPO, MODEL_COMMIT)
+    device = torch.device(args.device)
+
+    tok_loader = tokenizer_loader or _default_tokenizer_loader
+    mdl_loader = model_loader or _default_model_loader
+
+    # Strict admission BEFORE any model weight loader call!
+    manifest, pins = admit_frozen_package(
+        manifest_path=args.manifest,
+        design_path=args.design,
+        tokenizer_loader=tok_loader,
+        expected_manifest_sha256=getattr(args, "expected_manifest_sha256", None),
+        expected_design_sha256=getattr(args, "expected_design_sha256", None),
+    )
+
+    print(
+        f"[sd] Admitted frozen package (manifest={pins['manifest_sha256'][:12]}, "
+        f"design={pins['design_sha256'][:12]}). Loading {MODEL_REPO}@{MODEL_COMMIT[:12]} on {device}...",
+        flush=True,
+    )
+    model = mdl_loader(MODEL_REPO, MODEL_COMMIT, device)
     model.eval()
     layers = model.model.layers
     head_dim = int(model.config.hidden_size // model.config.num_attention_heads)
 
-    # Precompute unit-norm target & null directions per core unit
     units_to_run = [CORE_UNITS[0]] if args.smoke_1unit else list(CORE_UNITS)
     unit_vecs: dict[str, dict[str, Any]] = {}
     for uid in units_to_run:
@@ -946,22 +1397,83 @@ def execute_run(args: argparse.Namespace) -> None:
     q3_rows: list[dict[str, Any]] = []
     n_b19_done = 0
     n_b10_done = 0
+    b19_elapsed_sec = 0.0
+    b10_elapsed_sec = 0.0
 
     all_pairs_by_unit: dict[str, list[dict[str, Any]]] = {uid: [] for uid in units_to_run}
     for p in manifest["eligible_pairs"]:
         if p["unit"] in all_pairs_by_unit:
             all_pairs_by_unit[p["unit"]].append(p)
 
-    # Blocks A + B
-    q12_list = manifest["q12_prompts"][:2] if args.smoke_1unit else manifest["q12_prompts"]
-    t_b19_start = time.time()
-    for uid in units_to_run:
+    if args.smoke_1unit:
+        q12_list = [pr for pr in manifest["q12_prompts"] if pr["id"] in SMOKE_Q12_IDS]
+        q3_list = [pr for pr in manifest["q3_prompts"] if pr["id"] in SMOKE_Q3_IDS]
+        if len(q12_list) != len(SMOKE_Q12_IDS) or len(q3_list) != len(SMOKE_Q3_IDS):
+            raise RuntimeError("Smoke prompt selection did not match manifest prompt IDs")
+    else:
+        q12_list = manifest["q12_prompts"]
+        q3_list = manifest["q3_prompts"]
+
+    run_mode = "smoke_1unit" if args.smoke_1unit else "full"
+    checkpoint_path = args.out.with_suffix(".checkpoint.json")
+
+    def build_payload(units_done: list[str], complete: bool) -> dict[str, Any]:
+        total_sec = time.perf_counter() - t0
+        ms_b19 = (1000.0 * b19_elapsed_sec / n_b19_done) if n_b19_done > 0 else None
+        ms_b10 = (1000.0 * b10_elapsed_sec / n_b10_done) if n_b10_done > 0 else None
+        planned_b19 = int(manifest["denominators"]["planned_b19_forwards"])
+        planned_b10 = int(manifest["denominators"]["planned_b10_forwards"])
+        proj_b19 = (ms_b19 * planned_b19 / 1000.0) if ms_b19 is not None else None
+        proj_b10 = (ms_b10 * planned_b10 / 1000.0) if ms_b10 is not None else None
+        proj_tot = (proj_b19 + proj_b10) if (proj_b19 is not None and proj_b10 is not None) else None
+        artifact_type = (
+            ("smoke_receipt" if args.smoke_1unit else "full_receipt")
+            if complete
+            else "partial_checkpoint"
+        )
+        return {
+            "meta": {
+                **manifest["meta"],
+                "schema_version": SCHEMA_VERSION,
+                "run_mode": run_mode,
+                "artifact_type": artifact_type,
+                "complete": bool(complete),
+                "smoke_1unit": bool(args.smoke_1unit),
+                "manifest_sha256": pins["manifest_sha256"],
+                "design_sha256": pins["design_sha256"],
+                "runner_sha256": pins["runner_sha256"],
+                "scorer_sha256": pins["scorer_sha256"],
+                "pins": pins,
+                "units_planned": list(units_to_run),
+                "units_completed": list(units_done),
+                "n_b19_done": n_b19_done,
+                "n_b10_done": n_b10_done,
+                "timing": {
+                    "total_elapsed_sec": float(total_sec),
+                    "b19_elapsed_sec": float(b19_elapsed_sec),
+                    "b10_elapsed_sec": float(b10_elapsed_sec),
+                    "n_b19_done": n_b19_done,
+                    "n_b10_done": n_b10_done,
+                    "ms_per_b19": float(ms_b19) if ms_b19 is not None else None,
+                    "ms_per_b10": float(ms_b10) if ms_b10 is not None else None,
+                    "projected_full_b19_sec": float(proj_b19) if proj_b19 is not None else None,
+                    "projected_full_b10_sec": float(proj_b10) if proj_b10 is not None else None,
+                    "projected_full_total_sec": float(proj_tot) if proj_tot is not None else None,
+                },
+            },
+            "denominators": manifest["denominators"],
+            "q12_rows": q12_rows,
+            "q3_rows": q3_rows,
+        }
+
+    for idx_u, uid in enumerate(units_to_run):
         uv = unit_vecs[uid]
         li = uv["layer"]
         u_pairs = all_pairs_by_unit[uid]
-        # Distinct downstream layers we need to capture `z` from during unpatched pass
         capture_layers = sorted({p["head_layer"] for p in u_pairs})
 
+        # Blocks A + B (timed strictly separately from B10!)
+        t_u_b19 = time.perf_counter()
         for pr in q12_list:
             pu = pr["per_unit"][uid]
             ids_1 = torch.tensor([pu["prefix_ids"]], dtype=torch.long, device=device)
@@ -974,7 +1486,6 @@ def execute_run(args: argparse.Namespace) -> None:
             for mag in mags:
                 vecs_19 = build_b19_vectors(uv["v_unit"], uv["nulls"], scale_mag=mag * uv["median_chat"])
 
-                # 1. Unpatched B=19 pass capturing donor z (row 0) & self z (all 19 rows) for downstream layers
                 captured_z: dict[int, torch.Tensor] = {}
                 cap_handles = []
                 for hl in capture_layers:
@@ -993,7 +1504,6 @@ def execute_run(args: argparse.Namespace) -> None:
                 n_b19_done += 1
                 unp_raw, unp_spec = read_dual_metrics(unp_logits, own_id, peer_ids)
 
-                # 2. Patched (`unpushed_z`) and 100%-coverage same-dose `sham_z` for each strictly downstream head
                 for hp in u_pairs:
                     hl, hi = int(hp["head_layer"]), int(hp["head_idx"])
                     assert_causal_head(li, hl, uid, hp["head_name"])
@@ -1002,7 +1512,6 @@ def execute_run(args: argparse.Namespace) -> None:
                     z_donor = z_full[0:1, :, s:e]
                     z_self = z_full[:, :, s:e]
 
-                    # Patched pass
                     hw = add_residual_write_hook(layers[li], vecs_19, None)
                     hp_h = layers[hl].self_attn.o_proj.register_forward_pre_hook(make_head_patch_prehook(hi, head_dim, z_donor))
                     try:
@@ -1013,7 +1522,6 @@ def execute_run(args: argparse.Namespace) -> None:
                     n_b19_done += 1
                     pat_raw, pat_spec = read_dual_metrics(pat_logits, own_id, peer_ids)
 
-                    # Same-dose sham pass
                     hw = add_residual_write_hook(layers[li], vecs_19, None)
                     hs_h = layers[hl].self_attn.o_proj.register_forward_pre_hook(make_head_patch_prehook(hi, head_dim, z_self))
                     try:
@@ -1030,8 +1538,8 @@ def execute_run(args: argparse.Namespace) -> None:
                         "prompt_id": pr["id"],
                         "cell": pr["cell"],
                         "frame": pr["frame"],
-                        "block_a": pr["block_a"],
-                        "dose_mag": mag,
+                        "block_a": bool(pr["block_a"]),
+                        "dose_mag": float(mag),
                         "head_name": hp["head_name"],
                         "head_layer": hl,
                         "head_idx": hi,
@@ -1039,9 +1547,10 @@ def execute_run(args: argparse.Namespace) -> None:
                         "spec": decompose_b19(unp_spec, pat_spec, shm_spec),
                         "raw": decompose_b19(unp_raw, pat_raw, shm_raw),
                     })
+        b19_elapsed_sec += time.perf_counter() - t_u_b19
 
-        # Block C (Q3 mask-localized residual writes at d=+0.8, B=10)
-        q3_list = manifest["q3_prompts"][:2] if args.smoke_1unit else manifest["q3_prompts"]
+        # Block C (Q3 mask-localized residual writes at d=+0.8, B=10; timed strictly separately from B19!)
+        t_u_b10 = time.perf_counter()
         scale_08 = 0.8 * uv["median_chat"]
         zero_v = torch.zeros_like(uv["v_unit"])
         vecs_10_base = torch.stack(
@@ -1066,20 +1575,6 @@ def execute_run(args: argparse.Namespace) -> None:
                 n_b10_done += 1
                 raw_l, spec_l = read_dual_metrics(logits, own_id, peer_ids)
 
-                def pack_q3(vals: list[float]) -> dict[str, Any]:
-                    dn = vals[1] - vals[0]
-                    dw = [vals[2 + k] - vals[0] for k in range(N_NULL_DRAWS)]
-                    di = [vals[6 + k] - vals[0] for k in range(N_NULL_DRAWS)]
-                    return {
-                        "n_z": round(dn, 6),
-                        "r_z_wdown_med": round(statistics.median(dw), 6),
-                        "l_z_wdown": round(dn - statistics.median(dw), 6),
-                        "r_z_iso_med": round(statistics.median(di), 6),
-                        "l_z_iso": round(dn - statistics.median(di), 6),
-                        "wdown_draws": [round(x, 6) for x in dw],
-                        "iso_draws": [round(x, 6) for x in di],
-                    }
-
                 q3_rows.append({
                     "unit": uid,
                     "prompt_id": pr["id"],
@@ -1088,43 +1583,45 @@ def execute_run(args: argparse.Namespace) -> None:
                     "cell": pr["cell"],
                     "mask": mname,
                     "pos_indices": pidx,
-                    "spec": pack_q3(spec_l),
-                    "raw": pack_q3(raw_l),
+                    "spec": pack_q3_row_metrics(spec_l),
+                    "raw": pack_q3_row_metrics(raw_l),
                 })
+        b10_elapsed_sec += time.perf_counter() - t_u_b10
 
-        # Atomic per-unit checkpoint persistence
-        elapsed = round(time.time() - t0, 2)
-        b19_ms = round(1000.0 * (time.time() - t_b19_start) / max(1, n_b19_done), 2)
-        print(f"[sd] Completed unit {uid} ({elapsed}s elapsed | b19={n_b19_done} @ ~{b19_ms} ms/fwd | b10={n_b10_done})", flush=True)
-        payload = {
-            "meta": {
-                **manifest["meta"],
-                "smoke_1unit": bool(args.smoke_1unit),
-                "units_completed": units_to_run[: units_to_run.index(uid) + 1],
-                "n_b19_done": n_b19_done,
-                "n_b10_done": n_b10_done,
-                "elapsed_sec": elapsed,
-                "est_ms_per_b19": b19_ms,
-            },
-            "denominators": manifest["denominators"],
-            "q12_rows": q12_rows,
-            "q3_rows": q3_rows,
-        }
-        _atomic_write_json(args.out, payload)
+        units_done = units_to_run[: idx_u + 1]
+        is_last = (idx_u == len(units_to_run) - 1)
+        b19_ms_log = 1000.0 * b19_elapsed_sec / max(1, n_b19_done)
+        b10_ms_log = 1000.0 * b10_elapsed_sec / max(1, n_b10_done)
+        print(
+            f"[sd] Completed unit {uid} ({idx_u+1}/{len(units_to_run)} | "
+            f"b19={n_b19_done} @ {b19_ms_log:.2f} ms/fwd | b10={n_b10_done} @ {b10_ms_log:.2f} ms/fwd)",
+            flush=True,
+        )
+        if not is_last:
+            _atomic_write_json(checkpoint_path, build_payload(units_done, complete=False))
+
+    final_payload = build_payload(list(units_to_run), complete=True)
+    _atomic_write_json(args.out, final_payload)
 
     if args.emit_stdout_json:
         print("===BEGIN_JSON===")
         print(args.out.read_text(encoding="utf-8"))
         print("===END_JSON===")
+    return final_payload
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Frozen Instruct Signed-Dose Runner (OLMo 2 1B, v2)")
+    here = Path(__file__).resolve().parent
+    parser = argparse.ArgumentParser(description="Frozen Instruct Signed-Dose Runner (OLMo 2 1B, v2.1)")
     parser.add_argument("--self-test-only", action="store_true")
     parser.add_argument("--emit-manifest", type=Path, default=None)
     parser.add_argument("--smoke-1unit", action="store_true")
+    parser.add_argument("--manifest", type=Path, default=here / "signed_dose_manifest.json")
+    parser.add_argument("--design", type=Path, default=here / "SIGNED-DOSE-DESIGN.md")
+    parser.add_argument("--expected-manifest-sha256", type=str, default=None)
+    parser.add_argument("--expected-design-sha256", type=str, default=None)
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
-    parser.add_argument("--out", type=Path, default=Path("/tmp/results_signed_dose.json"))
+    parser.add_argument("--out", type=Path, default=None)
     parser.add_argument("--emit-stdout-json", action="store_true")
     args = parser.parse_args()
 
@@ -1135,15 +1632,19 @@ def main() -> None:
 
     if args.emit_manifest is not None:
         tok = AutoTokenizer.from_pretrained(MODEL_REPO, revision=MODEL_COMMIT, local_files_only=True)
-        manifest = build_manifest(tok)
+        manifest = build_manifest(tok, design_path=args.design)
         _atomic_write_json(args.emit_manifest, manifest)
-        sha = hashlib.sha256(args.emit_manifest.read_bytes()).hexdigest()
+        sha = sha256_file(args.emit_manifest)
         print(json.dumps({
             "manifest_path": str(args.emit_manifest),
             "manifest_sha256": sha,
+            "design_sha256": manifest["meta"]["design_sha256"],
             "denominators": manifest["denominators"],
         }, indent=2))
         return
+
+    if args.out is None:
+        args.out = Path("/tmp/smoke_signed_dose.json" if args.smoke_1unit else "/tmp/results_signed_dose.json")
 
     execute_run(args)
 
