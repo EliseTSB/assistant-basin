@@ -91,6 +91,13 @@ NAT_BANK = {'nat_trace_fact': 'd_fact', 'nat_trace_you': 'd_you', 'nat_trace_imp
             # 214.8(a)'s matched comparison: the no-L29 arms must force the SAME donor opening as the natural arm
             # they are compared against, or the comparison is cross-prefix and not matched (design line 305).
             'nat_fact_no_L29': 'd_fact', 'nat_you_no_L29': 'd_you'}
+# Which bank's recorded donor_gen[0..4] token ids an arm's Stage 1 opening carries. This is NOT the set of banks an
+# arm reads activations from (that is `needed_donor_banks`): the two cross-phase arms read prompt activations from one
+# bank and decode activations from the other, and their opening follows the DECODE (gen) bank, because the imported
+# decode activations were recorded on that donor's token history and stay paired with it (Amendment 2, Alden #22).
+# Kept separate from NAT_BANK on purpose: putting the crosses into NAT_BANK would make `needed_donor_banks` return a
+# single bank for them, and the other bank's clamp lookup would then fail.
+OPENING_BANK = dict(NAT_BANK, nat_prompt_fact_gen_you='d_you', nat_prompt_you_gen_fact='d_fact')
 
 
 # ----------------------------------------------------------------------------------------------------------------
@@ -838,7 +845,7 @@ def stage1_opening_tokens(arm: str, bank: dict, donors: dict, qi: int) -> list[i
     if base.startswith('rep_'):
         return opening_ids(bank, 'en_neutral')
     if base.startswith('nat_'):
-        donor_bank = NAT_BANK.get(base)
+        donor_bank = OPENING_BANK.get(base)
         tokens = None
         if donor_bank is not None and qi < len(donors.get(donor_bank) or []):
             tokens = donors[donor_bank][qi].get('token_ids') or None
@@ -861,6 +868,38 @@ def stage1_opening_name(arm: str, bank: dict, donors: dict, qi: int) -> str:
     if base.startswith('nat_'):
         return 'donor_tokens'
     return 'en_maker'
+
+
+def stage1_opening_preflight(planned: list[str], bank: dict, donors: dict, sets: dict,
+                              n_questions: int = 25) -> dict:
+    """Resolve every planned arm's opening and donor activations for every question BEFORE the model loads.
+
+    A Stage 1 arm whose opening or donor lookup cannot be built is a runner defect, and finding it after the 124
+    pre-pass forwards and part of the arm loop (as the 2026-11-20 14:20 attempt did) wastes the run. This walks the
+    exact functions `stage1_call` uses (`stage1_opening_tokens`, `needed_donor_banks`, `donor_arrays_for`) on
+    the Stage 0 bytes and raises on the first failure, naming the arm and question.
+
+    Returns the per-arm opening provenance written into stage1.json: the opening group, the bank whose token ids
+    the opening carries (None for a fixed opening), the activation banks read, and the per-question token ids.
+    """
+    out = {}
+    for arm in planned:
+        base = arm.split(':', 1)[-1]
+        units = arm_units(arm, sets)
+        reads = sorted(needed_donor_banks(base))
+        per_q = []
+        for qi in range(n_questions):
+            try:
+                tokens = stage1_opening_tokens(arm, bank, donors, qi)
+                for b in reads:
+                    donor_arrays_for(b, qi, units, donors)
+            except Exception as exc:
+                raise RuntimeError(f'stage1 preflight: {arm} question {qi}: {exc}') from exc
+            per_q.append([int(t) for t in tokens])
+        out[arm] = {'group': stage1_opening_name(arm, bank, donors, 0),
+                    'opening_bank': OPENING_BANK.get(base) if base.startswith('nat_') else None,
+                    'activation_banks': reads, 'token_ids': per_q}
+    return out
 
 
 def needed_donor_banks(base: str) -> set[str]:
@@ -1237,6 +1276,12 @@ def stage1(args, clock=time.monotonic, rig_loader=None) -> dict:
     pinning = sc.dial_pinning(stage0_obj)
     stage0_design_sha256 = stage0_obj.get('design_sha256')
     calibration = require_registered_calibration(stage0_sha256, pinning, 'stage1', stage0_design_sha256)
+    # Every planned arm's opening and donor lookups are resolved on the Stage 0 bytes before the loader, so a
+    # mapping defect stops the run here instead of minutes into the arm loop.
+    pre_donors = stage0_banks(stage0_obj)
+    s0_pools = {int(k): [int(u) for u in v] for k, v in (stage0_obj.get('write_norm_pools') or {}).items()}
+    opening_provenance = stage1_opening_preflight(stage1_planned_arms(pinning), bank, pre_donors,
+                                                  random_sets(s0_pools) if s0_pools else {})
     started = clock()
     deadline_s = deadline_seconds(args.deadline_min)
     guard = launch_guard(started, deadline_s, clock)
@@ -1353,7 +1398,7 @@ def stage1(args, clock=time.monotonic, rig_loader=None) -> dict:
                         prepass_forwards=prepass_forwards, stage0_sha256=stage0_sha256,
                         admission=admission, kernel=kernel, clock=clock, runtime=runtime,
                         arm_forwards=int(arm_progress['forwards']),
-                        calibration=calibration,
+                        calibration=calibration, opening_provenance=opening_provenance,
                         pins=stage_pins(stage0_sha256, admission, pinning, stage0_design_sha256))
     write_stage_record(obj, args.out, 'stage1.json', 'stage1')
     print(f'stage1: wrote {Path(args.out) / "stage1.json"} ({len(_done)} arm/question forwards)', flush=True)
@@ -1390,7 +1435,7 @@ def short_donors(stage0_obj: dict) -> list[dict]:
 def stage1_object(bank, results, pinning, pools, pre_pools, pool_check, load, args, started, nonfinite,
                   n_calls, planned_arms=None, stopped=None, deadline_reached=False, prepass_forwards=0,
                   stage0_sha256=None, admission=None, kernel=None, clock=time.monotonic, pins=None,
-                  runtime=None, arm_forwards=None, calibration=None) -> dict:
+                  runtime=None, arm_forwards=None, calibration=None, opening_provenance=None) -> dict:
     """stage1.json: per-arm per-question readouts, deltas from unchanged, gate inputs, pools and random sets.
 
     The forward histogram is what was ACTUALLY run: the pre-pass forwards plus every arm-loop forward that COMPLETED
@@ -1429,7 +1474,7 @@ def stage1_object(bank, results, pinning, pools, pre_pools, pool_check, load, ar
         'load': load, 'attn_implementation': load.get('attn_implementation'), 'device': args.device,
         'runtime': runtime,
         'admission': admission or {}, 'kernel_check': kernel or {},
-        'registered_calibration': calibration,
+        'registered_calibration': calibration, 'opening_provenance': opening_provenance,
         'stage0_sha256': stage0_sha256, 'design_sha256': design_sha256(),
         'design_sha256_capture': (pins or {}).get('design_sha256_capture'),
         'design_sha256_publication': sc.DESIGN_SHA256_PUBLICATION,

@@ -137,6 +137,14 @@ def make_stage0(alpha_fact=(0.20, 0.20), alpha_you=(0.30, 0.36), alpha_imp=(0.10
     }
 
 
+def make_pooled_stage0(**kwargs):
+    """make_stage0 plus the write-norm pools a real Stage 0 records, so Stage 1's pre-load preflight can draw the
+    random sets (a Stage 0 with no pools is refused before the loader, as the arm loop would refuse it later)."""
+    stage0 = make_stage0(**kwargs)
+    stage0['write_norm_pools'] = {'6': [1], '7': [2], '11': [3], '29': [4]}
+    return stage0
+
+
 def make_short_gen_stage0(which='you', short=3):
     """A stage0 where one bank's decode alignment is degenerate.
 
@@ -1752,7 +1760,7 @@ def test_stage1_deadline_cuts_the_prepass_before_any_arm(tmp_path, monkeypatch):
     """
     monkeypatch.setattr(rn, 'registration_status', _registered)
     monkeypatch.setattr(sc, 'REGISTRATION_SHA256', REGISTRATION_SECTION)
-    stage0_path = _write_json(tmp_path / 'stage0.json', make_stage0())
+    stage0_path = _write_json(tmp_path / 'stage0.json', make_pooled_stage0())
     _pin_calibration(monkeypatch, stage0_path)
     tok = FakeTokenizer()
     model = FakeModel(tok, answer_for=keyword_answers(tok))
@@ -1781,7 +1789,7 @@ def test_stage1_deadline_cuts_inside_a_questions_gseq_forwards(tmp_path, monkeyp
     """
     monkeypatch.setattr(rn, 'registration_status', _registered)
     monkeypatch.setattr(sc, 'REGISTRATION_SHA256', REGISTRATION_SECTION)
-    stage0_path = _write_json(tmp_path / 'stage0.json', make_stage0())
+    stage0_path = _write_json(tmp_path / 'stage0.json', make_pooled_stage0())
     _pin_calibration(monkeypatch, stage0_path)
     tok = FakeTokenizer()
     model = FakeModel(tok, answer_for=keyword_answers(tok))
@@ -3083,3 +3091,130 @@ def main(argv=None):
 
 if __name__ == '__main__':
     raise SystemExit(main())
+
+
+# ------------------------------------------------------------------------------------------------------------------
+# Amendment 2 (2026-11-20): the two cross-phase nat_* arms. The 14:20 Stage 1 attempt stopped on
+# `nat_prompt_fact_gen_you: no recorded donor token ids (bank None)`: no test sent a cross arm through
+# `stage1_opening_tokens`, and make_stage0 gives every bank the SAME token ids, so a wrong bank was invisible.
+# ------------------------------------------------------------------------------------------------------------------
+
+CROSS = {'nat_prompt_fact_gen_you': ('d_fact', 'd_you'), 'nat_prompt_you_gen_fact': ('d_you', 'd_fact')}
+SENTINEL = {'d_fact': (1.5, 2.5), 'd_you': (3.5, 4.5)}          # (prompt, gen) per bank, all distinct
+
+
+def make_distinct_stage0():
+    """make_stage0 with bank-distinct token ids and constant per-bank prompt/gen sentinels on the target columns."""
+    stage0 = make_stage0()
+    base_id = {'d_fact': 1100, 'd_you': 1300, 'd_imp': 1500}
+    for name, start in base_id.items():
+        for item in stage0['banks'][name]['prompts']:
+            q = item['index']
+            item['token_ids'] = [start + 10 * q + k for k in range(7)]
+            if name in SENTINEL:
+                p, g = SENTINEL[name]
+                item['prompt'] = (np.full_like(np.asarray(item['prompt']), p)).tolist()
+                item['gen'] = (np.full_like(np.asarray(item['gen']), g)).tolist()
+    return stage0
+
+
+@pytest.mark.parametrize('arm', sorted(CROSS))
+def test_cross_arm_opening_follows_the_gen_bank(arm):
+    prompt_bank, gen_bank = CROSS[arm]
+    stage0 = make_distinct_stage0()
+    donors = rn.stage0_banks(stage0)
+    bank = json.loads((HERE / 'prompts214.json').read_text(encoding='utf-8'))
+    for qi in (0, 7, 24):
+        gen_ids = [int(t) for t in stage0['banks'][gen_bank]['prompts'][qi]['token_ids'][:rn.OPENING_TOKENS]]
+        prompt_ids = [int(t) for t in stage0['banks'][prompt_bank]['prompts'][qi]['token_ids'][:rn.OPENING_TOKENS]]
+        assert gen_ids != prompt_ids
+        assert rn.stage1_opening_tokens(arm, bank, donors, qi) == gen_ids, f'{arm} q{qi}: the GEN bank opening'
+    # the activation dependencies stay BOTH banks (Alden #22: do not route the crosses through NAT_BANK)
+    assert rn.needed_donor_banks(arm) == {'d_fact', 'd_you'}
+    assert arm not in rn.NAT_BANK
+
+
+@pytest.mark.parametrize('arm', sorted(CROSS))
+def test_cross_arm_production_call_forces_gen_opening_and_both_banks(arm):
+    """The real stage1_call on the fake model: exact recipient prefix + gen-bank opening, prompt positions clamped to
+    the PROMPT bank's sentinel and opening positions to the GEN bank's."""
+    prompt_bank, gen_bank = CROSS[arm]
+    stage0 = make_distinct_stage0()
+    tok = FakeTokenizer()
+    model, tok, _load = fake_rig(tok)
+    layers = rn.nr.find_text_layers(model)[1]
+    ctx = _stage1_context(arm, stage0=stage0, tok=tok)
+    rn.stage1_call(arm, 0, ctx, model, layers, _args('/tmp/part214-unused'))
+    qids = rn.question_ids(tok, ctx['bank']['items'][0]['en_maker'])
+    T = len(qids)
+    gen_ids = [int(t) for t in stage0['banks'][gen_bank]['prompts'][0]['token_ids'][:rn.OPENING_TOKENS]]
+    assert len(model.forward_calls) == rn.GSEQ_PATHS
+    assert model.forward_calls[0] == qids + gen_ids + [14030], 'recipient en_maker prompt + gen-bank opening'
+    group = model.trace.groups[0]
+    p, g = SENTINEL[prompt_bank][0], SENTINEL[gen_bank][1]
+    for layer, unit in rn.TARGET:
+        col = TRACE_COLUMNS.index(unit)
+        assert torch.allclose(group[layer][0, :T, col], torch.full((T,), p), atol=1e-5), \
+            f'{arm}: prompt positions must carry {prompt_bank} prompt activations'
+        assert torch.allclose(group[layer][0, T:T + rn.OPENING_TOKENS, col],
+                              torch.full((rn.OPENING_TOKENS,), g), atol=1e-5), \
+            f'{arm}: opening positions must carry {gen_bank} decode activations'
+
+
+@pytest.mark.parametrize('arm', sorted(CROSS))
+def test_cross_arm_refuses_missing_or_short_gen_tokens(arm):
+    _prompt_bank, gen_bank = CROSS[arm]
+    bank = json.loads((HERE / 'prompts214.json').read_text(encoding='utf-8'))
+    for broken in ([], [1, 2, 3]):
+        stage0 = make_distinct_stage0()
+        stage0['banks'][gen_bank]['prompts'][0]['token_ids'] = broken
+        donors = rn.stage0_banks(stage0)
+        with pytest.raises(RuntimeError, match='no recorded donor token ids'):
+            rn.stage1_opening_tokens(arm, bank, donors, 0)
+
+
+def test_preflight_resolves_every_planned_arm_and_records_provenance():
+    stage0 = make_distinct_stage0()
+    pinning = sc.dial_pinning(stage0)
+    planned = rn.stage1_planned_arms(pinning)
+    assert set(CROSS) <= set(planned), 'the crosses are planned under this pinning, so the preflight reaches them'
+    donors = rn.stage0_banks(stage0)
+    bank = json.loads((HERE / 'prompts214.json').read_text(encoding='utf-8'))
+    sets = rn.random_sets({6: [1], 7: [2], 11: [3], 29: [4]})
+    prov = rn.stage1_opening_preflight(planned, bank, donors, sets)
+    assert set(prov) == set(planned)
+    for arm, (prompt_bank, gen_bank) in CROSS.items():
+        assert prov[arm]['opening_bank'] == gen_bank
+        assert prov[arm]['activation_banks'] == ['d_fact', 'd_you']
+        assert prov[arm]['token_ids'][3] == \
+            [int(t) for t in stage0['banks'][gen_bank]['prompts'][3]['token_ids'][:rn.OPENING_TOKENS]]
+    assert prov['scale_dial_fact']['opening_bank'] is None
+    assert prov['scale_dial_fact']['token_ids'][0] == rn.opening_ids(bank, 'en_maker')
+
+
+def test_preflight_names_the_arm_when_a_mapping_is_missing(monkeypatch):
+    """The 14:20 defect, replayed before load: drop the crosses from OPENING_BANK and the preflight must stop."""
+    stage0 = make_distinct_stage0()
+    planned = rn.stage1_planned_arms(sc.dial_pinning(stage0))
+    donors = rn.stage0_banks(stage0)
+    bank = json.loads((HERE / 'prompts214.json').read_text(encoding='utf-8'))
+    sets = rn.random_sets({6: [1], 7: [2], 11: [3], 29: [4]})
+    monkeypatch.setattr(rn, 'OPENING_BANK', dict(rn.NAT_BANK))
+    with pytest.raises(RuntimeError, match=r'preflight: nat_prompt_(fact_gen_you|you_gen_fact) question 0'):
+        rn.stage1_opening_preflight(planned, bank, donors, sets)
+
+
+def test_stage1_stops_at_the_preflight_before_the_loader(tmp_path, monkeypatch):
+    """The preflight is wired BEFORE load: with a cross mapping removed, stage1() raises and the rig is never built."""
+    monkeypatch.setattr(rn, 'registration_status', _registered)
+    monkeypatch.setattr(sc, 'REGISTRATION_SHA256', REGISTRATION_SECTION)
+    stage0_path = _write_json(tmp_path / 'stage0.json', make_pooled_stage0())
+    _pin_calibration(monkeypatch, stage0_path)
+    monkeypatch.setattr(rn, 'OPENING_BANK', dict(rn.NAT_BANK))
+
+    def must_not_load(_args):
+        raise AssertionError('the rig was loaded before the opening preflight ran')
+
+    with pytest.raises(RuntimeError, match='stage1 preflight: nat_prompt_'):
+        rn.stage1(_args(tmp_path / 'stage1', stage0=stage0_path), rig_loader=must_not_load)
+    assert not (tmp_path / 'stage1' / 'stage1.json').exists()
