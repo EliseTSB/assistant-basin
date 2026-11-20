@@ -200,7 +200,8 @@ def main(argv=None):
     read = sub.add_parser("read")
     read.add_argument("--results", default=str(ROOT / "results"))
     read.add_argument("--texts", default=str(ROOT / "results" / "part180" / "v5" / "texts.jsonl"))
-    read.add_argument("--out", default=str(ROOT / "results" / "part180" / "v5" / "reader-deepseek.jsonl"))
+    # Default follows --reader: a shared default once interleaved two parallel readers into one file (2026-11-20).
+    read.add_argument("--out", default=None, help="default results/part180/v5/reader-<reader>.jsonl")
     read.add_argument("--reader", choices=READERS, default="deepseek")
     read.add_argument("--model", default=v4.MODEL_ID)
     read.add_argument("--revision", default=v4.MODEL_REVISION)
@@ -208,6 +209,8 @@ def main(argv=None):
     args = parser.parse_args(argv)
     if args.cmd != "read":
         parser.error("only the read command is implemented")
+    if args.out is None:
+        args.out = str(ROOT / "results" / "part180" / "v5" / f"reader-{args.reader}.jsonl")
     cmd_read(args)
 
 

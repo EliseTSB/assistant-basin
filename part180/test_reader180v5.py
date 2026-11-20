@@ -159,3 +159,14 @@ class ExistingFileTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_default_out_follows_the_reader(monkeypatch):
+    """2026-11-20: both readers defaulted to reader-deepseek.jsonl, so a parallel launch interleaved them."""
+    import reader180v5 as r5
+    seen = {}
+    monkeypatch.setattr(r5, "cmd_read", lambda args: seen.setdefault(args.reader, args.out))
+    for reader in ("deepseek", "haiku"):
+        r5.main(["read", "--reader", reader])
+    assert seen["deepseek"].endswith("reader-deepseek.jsonl")
+    assert seen["haiku"].endswith("reader-haiku.jsonl")
