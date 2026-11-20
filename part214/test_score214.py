@@ -45,6 +45,12 @@ ANSWER = {
     'broken': 'I am',
 }
 
+# Every fixture record carries these pins, and every fixture row the matching copy: a scored file must be bindable
+# to the inputs it was produced under (Stage 0 bytes = 64 x 'a' here). Built per call, not once at import, so a test
+# that pins a fake registration digest sees THAT digest in the pins it builds.
+def fixture_pins():
+    return rn.stage_pins('a' * 64)
+
 GUARD_ANSWERS = {q: f'{kw} is the answer here.' for q, kw in sc.GUARD_KEYWORDS.items()}
 
 
@@ -81,6 +87,7 @@ def make_stage0(alpha_fact=(0.20, 0.20), alpha_you=(0.30, 0.36), alpha_imp=(0.10
     return {
         'part': 214, 'stage': 0, 'design': sc.DESIGN_VERSION, 'model': sc.MODEL, 'revision': sc.REVISION,
         'attn_implementation': 'eager', 'prompts_sha256': sc.PROMPTS_SHA256,
+        'design_sha256': rn.design_sha256(),
         'units': [{'layer': int(l), 'unit': int(u)} for l, u in units],
         'target': [[int(l), int(u)] for l, u in units],
         'template_prefix_tokens': 3, 'template_suffix_tokens': 9,
@@ -152,6 +159,7 @@ def make_stage1(dial_fact=2.00, dial_you=1.60, nat_fact=None, nat_you=None, nat_
         'target': [[int(l), int(u)] for l, u in sc.TARGET],
         'unit_labels': [f'L{int(l)} N{int(u)}' for l, u in sc.TARGET],
         'non_finite_readouts': non_finite, 'forward_batch_histogram': {'1': 1624},
+        'pins': fixture_pins(),
         'arms': arms, 'dial_pinning': {'branch': 'discriminated'},
     }
 
@@ -259,16 +267,22 @@ def make_stage2(counts=None, unchanged=(0, 0), guards=None, pinning=None, pilot=
         out.extend(positive_rows('zero', overrides.get('positive_google', 24)))
     for row in out:
         row['pilot'] = bool(pilot)      # one file holds ONE kind of evidence (design line 260)
+        row['pins'] = fixture_pins()
     return out
 
 
-def make_run(stage=2, hist=None, rows=None, deadline=False, gate3b=True, timing=0):
+def make_run(stage=2, hist=None, rows=None, deadline=False, gate3b=True, timing=0, pins=None):
+    pins = fixture_pins() if pins is None else dict(pins)
     return {'part': 214, 'stage': stage, 'attn_implementation': 'eager', 'batch_size': 1,
             'generation_batch_histogram': hist if hist is not None else
             (rn.generation_batch_histogram(rows) if rows is not None else {'1': 1584}),
             'planned_rows': len(rows) if rows is not None else 1584,
             'deadline_reached': deadline, 'gate3b_pass': gate3b, 'gate3b_min_L_gen': 12,
             'short_donors': [], 'timing_only_calls': timing,
+            'pins': pins, 'stage0_sha256': pins['stage0_sha256'], 'design_sha256': pins['design_sha256'],
+            'prompts_sha256': pins['prompts_sha256'], 'design_commit': pins['design_commit'],
+            'tool_sha256': pins['code_sha256'],
+            'kernel_check': {'pass': True, 'sha256': pins['kernel_check_sha256']},
             'donors': {b: [{'index': i, 'L_gen': 20} for i in range(25)] for b in sc.ALL_BANKS}}
 
 
@@ -360,7 +374,8 @@ def test_undefined_you_denominator_skips_only_the_you_dial():
     assert pinning['scale_dial_fact']['runnable'] is True
     assert pinning['scale_dial_you']['runnable'] is False, 'the denominator gate must mark the you fit undefined'
     assert pinning['planned_calls'] == 1584 - 192
-    result = sc.score(stage0, make_stage1(), make_stage2(pinning=pinning), make_run())
+    rows = make_stage2(pinning=pinning)
+    result = sc.score(stage0, make_stage1(), rows, make_run(rows=rows))
     assert result['predictions']['214.4']['verdict'].startswith('not read')
     assert 'no projection denominator' in result['predictions']['214.4']['reason']
 
@@ -372,7 +387,8 @@ def test_undefined_fact_denominator_skips_both_dials():
     assert pinning['scale_dial_fact']['runnable'] is False
     assert pinning['scale_dial_you']['runnable'] is False
     assert pinning['planned_calls'] == 1584 - 2 * 192
-    result = sc.score(stage0, make_stage1(), make_stage2(pinning=pinning), make_run())
+    rows = make_stage2(pinning=pinning)
+    result = sc.score(stage0, make_stage1(), rows, make_run(rows=rows))
     assert result['predictions']['214.4']['verdict'].startswith('not read')
     assert 'no projection denominator on the fact schedule' in result['predictions']['214.4']['reason']
     assert result['headlines']['branch'] != 'h4_accounts'
@@ -548,7 +564,8 @@ def test_214_3_bridge_is_descriptive_not_a_clause():
 def test_214_3_stops_when_the_fact_fit_is_undefined():
     stage0 = make_short_gen_stage0('fact')
     pinning = sc.dial_pinning(stage0)
-    result = sc.score(stage0, make_stage1(), make_stage2(pinning=pinning), make_run())
+    rows = make_stage2(pinning=pinning)
+    result = sc.score(stage0, make_stage1(), rows, make_run(rows=rows))
     assert result['predictions']['214.3']['verdict'] == sc.NOT_READ
     assert 'fact schedule' in result['predictions']['214.3']['reason']
 
@@ -1100,6 +1117,21 @@ def keyword_answers(tok: FakeTokenizer):
     return answer_for
 
 
+def evidence_answers(tok):
+    """Guard keywords for the fluency guards, an unambiguous Google claim for everything else.
+
+    `ANSWER['clean_google']` starts with "I am Qwen", and Part 66's earliest-match rule reads `Qwen` as the Alibaba
+    family -- so a full-evidence fixture that needs a clean-Google positive control must not use that string.
+    """
+    def answer_for(prompt_text: str) -> int:
+        question = _strip_prompt(prompt_text)
+        keyword = sc.GUARD_KEYWORDS.get(question)
+        if keyword:
+            return tok.intern(f'{keyword} is the answer here.')
+        return tok.intern('I am a large language model made by Google.')
+    return answer_for
+
+
 class _Trace:
     def __init__(self):
         self.current: dict[int, torch.Tensor] = {}
@@ -1194,8 +1226,11 @@ def _args(out, stage0=None, **kwargs):
     return types.SimpleNamespace(**base)
 
 
+REGISTRATION_SECTION = 'bb'      # the section digest every fake registered admission claims
+
+
 def _registered(repo=None):
-    return {'registered': True, 'path': 'PREDICTIONS.md', 'sha256': 'aa', 'section_sha256': 'bb',
+    return {'registered': True, 'path': 'PREDICTIONS.md', 'sha256': 'aa', 'section_sha256': REGISTRATION_SECTION,
             'section_bytes': 12, 'reason': ''}
 
 
@@ -1502,11 +1537,14 @@ def test_resume_refuses_changed_pins_and_reuses_exact_matches():
         'an exact-match resume reuses every saved row'
 
 
-def _stage2_setup(tmp_path, monkeypatch):
+def _stage2_setup(tmp_path, monkeypatch, answers=None):
     monkeypatch.setattr(rn, 'registration_status', _registered)
+    # a registered admission is only accepted against a PINNED section digest; the production constant is None
+    # (Part 214 is not registered yet), so the fake pins the digest it pretends was registered.
+    monkeypatch.setattr(sc, 'REGISTRATION_SHA256', REGISTRATION_SECTION)
     stage0_path = _write_json(tmp_path / 'stage0.json', make_stage0())
     tok = FakeTokenizer()
-    model = FakeModel(tok, vocab=64, answer_for=keyword_answers(tok))
+    model = FakeModel(tok, vocab=64, answer_for=(answers or keyword_answers)(tok))
     return stage0_path, tok, model, (lambda a: (model, tok, dict(FAKE_LOAD)))
 
 
@@ -1543,7 +1581,14 @@ def test_full_stage2_refuses_short_donors_before_any_launch(tmp_path, monkeypatc
     assert model.generate_calls == []
 
 
-def test_pilot_runs_the_fake_production_loop_and_an_independent_clean_output_scores_identically(tmp_path, monkeypatch):
+def test_pilot_runs_the_fake_production_loop_and_resumes_exactly(tmp_path, monkeypatch):
+    """The 64-call pilot end to end, then an exact resume that launches only the four timing-only calls.
+
+    The pre-fix version of this test claimed its second PILOT directory was an "independent full output"; it was a
+    second pilot, so it could never have detected a full-run-only defect. The full-run controls are
+    `test_full_stage2_completes_full_in_its_own_directory` and
+    `test_full_run_into_a_pilot_output_directory_is_refused_before_the_loader`.
+    """
     stage0_path, tok, model, rig = _stage2_setup(tmp_path, monkeypatch)
     args = _args(tmp_path / 'pilot', stage0=stage0_path, deadline_min=1000)
     first = rn.stage2(args, pilot=True, rig_loader=rig)
@@ -1559,18 +1604,7 @@ def test_pilot_runs_the_fake_production_loop_and_an_independent_clean_output_sco
     second = rn.stage2(args, pilot=True, rig_loader=rig)
     assert second['new_rows_this_invocation'] == 0 and second['model_calls_total'] == 64
     assert len(model.generate_calls) == calls + 4, 'only the four timing-only calls launch on an exact resume'
-
-    tok2 = FakeTokenizer()
-    model2 = FakeModel(tok2, vocab=64, answer_for=keyword_answers(tok2))
-    clean_args = _args(tmp_path / 'pilot_clean', stage0=stage0_path, deadline_min=1000)
-    clean = rn.stage2(clean_args, pilot=True, rig_loader=lambda a: (model2, tok2, dict(FAKE_LOAD)))
-    clean_rows = rn.load_stage2_jsonl(tmp_path / 'pilot_clean' / 'stage2.jsonl')
-    assert clean['generation_batch_histogram'] == {'1': 64}
-    resumed = sc.score(make_stage0(), None, rows, second)
-    independent = sc.score(make_stage0(), None, clean_rows, clean)
-    assert resumed['predictions'] == independent['predictions'], \
-        'a resumed file and an independently clean full output must score identically'
-    assert resumed['gates']['gate3']['checks'] == independent['gates']['gate3']['checks']
+    assert second['pins'] == first['pins']
 
 
 def test_stage2_fake_clock_cut_inside_a_required_arm_stops_and_reports(tmp_path, monkeypatch):
@@ -1646,8 +1680,14 @@ def test_a_partial_stage1_arm_cannot_feed_a_verdict():
     assert world()['predictions']['214.3']['verdict'] == sc.HOLDS
 
 
-def test_stage1_fake_clock_cut_reports_actual_counts_and_no_dependent_pass(tmp_path, monkeypatch):
+def test_stage1_deadline_cuts_the_prepass_before_any_arm(tmp_path, monkeypatch):
+    """A budget that expires inside the 124 pre-pass forwards stops THEM, not the first arm.
+
+    The pre-fix code checked the clock only at the arm loop, so a 24-forward write-norm pass and 100 recording
+    forwards all launched after the budget was gone and the run then reported a cut it had not actually made.
+    """
     monkeypatch.setattr(rn, 'registration_status', _registered)
+    monkeypatch.setattr(sc, 'REGISTRATION_SHA256', REGISTRATION_SECTION)
     stage0_path = _write_json(tmp_path / 'stage0.json', make_stage0())
     tok = FakeTokenizer()
     model = FakeModel(tok, answer_for=keyword_answers(tok))
@@ -1656,14 +1696,381 @@ def test_stage1_fake_clock_cut_reports_actual_counts_and_no_dependent_pass(tmp_p
     args = _args(tmp_path / 'stage1', stage0=stage0_path, deadline_min=0.6)      # 36 s
     obj = rn.stage1(args, clock=clock, rig_loader=rig)
     assert obj['deadline_reached'] is True
-    assert obj['arm_question_counts']['dial_-0.25'] == 3
-    assert obj['forward_batch_histogram'] == {'1': 24 + 100 + 3 * rn.GSEQ_PATHS}, \
-        'the histogram must report the forwards that actually ran'
+    assert obj['prepass_forwards'] == 3, 'the guard must stop the pre-pass at the launch after the cut, not later'
+    assert set(obj['arm_question_counts'].values()) == {0}, 'an incomplete baseline records no arm readout at all'
+    assert obj['forward_batch_histogram'] == {'1': 3}, 'the histogram must report the forwards that actually ran'
     assert obj['nominal_forward_batch_histogram'] == {'1': 4624}
     assert obj['complete_arms'] == []
     result = sc.score(make_stage0(), obj, None, None)
     assert result['predictions']['214.3']['holds'] is not True, 'a cut Stage 1 must not PASS a prediction'
     assert world()['predictions']['214.3']['verdict'] == sc.HOLDS
+
+
+def test_stage1_deadline_cuts_inside_a_questions_gseq_forwards(tmp_path, monkeypatch):
+    """The three `g_seq` forwards of ONE arm/question are three launches: a cut between them records no value.
+
+    The pre-fix `stage1_call` fired all three paths unconditionally, so a question half-measured at the cut still
+    contributed a `g_seq` built from one path and stale logits from another.
+    """
+    monkeypatch.setattr(rn, 'registration_status', _registered)
+    monkeypatch.setattr(sc, 'REGISTRATION_SHA256', REGISTRATION_SECTION)
+    stage0_path = _write_json(tmp_path / 'stage0.json', make_stage0())
+    tok = FakeTokenizer()
+    model = FakeModel(tok, answer_for=keyword_answers(tok))
+    rig = lambda a: (model, tok, dict(FAKE_LOAD))
+    clock = FakeClock(step=1.0)
+    args = _args(tmp_path / 'stage1', stage0=stage0_path, deadline_min=130 / 60.0)     # 130 s
+    obj = rn.stage1(args, clock=clock, rig_loader=rig)
+    assert obj['deadline_reached'] is True
+    assert obj['prepass_forwards'] == 24 + 100, 'the cut lands after the recordings, inside the first arm'
+    assert obj['arm_question_counts']['dial_-0.25'] == 1, \
+        'the question whose g_seq forwards crossed the cut must not be recorded'
+    assert obj['forward_batch_histogram'] == {'1': 124 + 1 * rn.GSEQ_PATHS}, \
+        'three forwards for the one complete arm/question, none for the cut one'
+    assert obj['complete_arms'] == []
+    assert world()['predictions']['214.3']['verdict'] == sc.HOLDS
+
+
+# ==================================================================================================================
+# Fix round 2: evidence binding (registration receipt, Stage 0/prerequisite pins) and deadline porosity
+# ==================================================================================================================
+
+def test_registration_receipt_is_pinned_and_a_rewritten_section_is_refused(monkeypatch):
+    """A locally matched heading is not a receipt: admission compares the section digest to the frozen pin."""
+    args = _args('/tmp/part214-out')
+    monkeypatch.setattr(rn, 'registration_status', _registered)
+    monkeypatch.setattr(sc, 'REGISTRATION_SHA256', REGISTRATION_SECTION)
+    record = rn.require_admission(args)
+    assert record['admitted'] is True and record['dry_run'] is False
+    assert record['section_sha256'] == REGISTRATION_SECTION and record['registration_pin'] == REGISTRATION_SECTION, \
+        'the admission record must carry the pinned receipt identity'
+    monkeypatch.setattr(sc, 'REGISTRATION_SHA256', 'a-different-registered-section')
+    with pytest.raises(SystemExit, match='this build pins a-different-registered-section'):
+        rn.require_admission(args)
+    monkeypatch.setattr(sc, 'REGISTRATION_SHA256', None)
+    with pytest.raises(SystemExit, match='pins no registration digest'):
+        rn.require_admission(args)
+
+
+def test_registered_tree_with_the_dry_run_flag_still_runs_inert(tmp_path, monkeypatch):
+    """A SUCCESSFUL status must not take precedence over the option's advertised no-loader promise."""
+    monkeypatch.setattr(rn, 'registration_status', _registered)
+    monkeypatch.setattr(sc, 'REGISTRATION_SHA256', REGISTRATION_SECTION)
+    tok = FakeTokenizer()
+    model = FakeModel(tok, vocab=64)
+    counts = {'loader': 0}
+
+    def counting_loader(args):
+        counts['loader'] += 1
+        return model, tok, dict(FAKE_LOAD)
+
+    args = _args(tmp_path / 'out', allow_unregistered=True)
+    record = rn.require_admission(args)
+    assert record['admitted'] is True and record['dry_run'] is True, \
+        'the flag must SELECT the inert path even when registration is accepted'
+    one = rn.stage1(args, rig_loader=counting_loader)
+    two = rn.stage2(args, rig_loader=counting_loader)
+    assert one['dry_run'] is True and two['dry_run'] is True
+    assert counts['loader'] == 0, 'the inert path must not load a model'
+    assert model.forward_calls == [] and model.generate_calls == [], 'the inert path must not run a forward'
+
+
+def test_dry_run_never_writes_over_a_real_stage_record(tmp_path, monkeypatch):
+    """A stub that overwrites `stage1.json` leaves a file that still looks like a completed stage."""
+    monkeypatch.setattr(rn, 'registration_status', _unregistered)
+    out = tmp_path / 'out'
+    _write_json(out / 'stage1.json', {'part': 214, 'stage': 1, 'dry_run': False, 'arms': {'unchanged': {}}})
+    before = (out / 'stage1.json').read_bytes()
+
+    def must_not_load(args):
+        raise AssertionError('a dry run must not reach the loader')
+
+    args = _args(out, allow_unregistered=True)
+    with pytest.raises(SystemExit, match='refusing to write a dry-run stub over'):
+        rn.stage1(args, rig_loader=must_not_load)
+    assert (out / 'stage1.json').read_bytes() == before, 'the real stage record must be untouched'
+
+
+def test_kernel_check_binds_the_reference_digest(tmp_path):
+    """Same model/revision text, different bytes: the reference is not the pinned one, so the check must fail."""
+    assert rn.kernel_check(dict(FAKE_LOAD))['pass'] is True, 'the pinned reference must pass on the exact bytes'
+    rewritten = json.loads(rn.KERNEL_CHECK_PATH.read_text(encoding='utf-8'))
+    rewritten['written'] = '2026-11-20 00:00:00'
+    path = tmp_path / 'kernel-check.json'
+    path.write_text(json.dumps(rewritten), encoding='utf-8')
+    result = rn.kernel_check(dict(FAKE_LOAD), path=path)
+    assert result['pass'] is False, 'a reference file with different bytes must fail the kernel check'
+    assert result['checks']['reference_sha256_matches_pinned'] is False
+    assert result['checks']['reference_model_matches'] is True, 'the metadata alone is not enough evidence'
+
+
+def _fake_pilot_and_stage1(tmp_path, monkeypatch, stage0_path, rig, name='pilot'):
+    """A real 64-row pilot plus a Stage 1 record bound to that pilot's pins."""
+    pilot_args = _args(tmp_path / name, stage0=stage0_path, deadline_min=1000)
+    pilot = rn.stage2(pilot_args, pilot=True, rig_loader=rig)
+    stage1 = make_stage1()
+    stage1['pins'] = dict(pilot['pins'])
+    return pilot, _write_json(tmp_path / 'stage1.json', stage1)
+
+
+def test_full_stage2_evidence_refuses_a_stage1_or_pilot_from_another_stage0(tmp_path, monkeypatch):
+    """A valid Stage 1 and pilot from recording A cannot clear the gate on recording B."""
+    stage0_path, tok, model, rig = _stage2_setup(tmp_path, monkeypatch, answers=evidence_answers)
+    pilot, stage1_path = _fake_pilot_and_stage1(tmp_path, monkeypatch, stage0_path, rig)
+    stage0_obj = json.loads(stage0_path.read_text(encoding='utf-8'))
+    pinning = sc.dial_pinning(stage0_obj)
+    args = _args(tmp_path / 'full', stage0=stage0_path, stage1=stage1_path, pilot_dir=tmp_path / 'pilot')
+    admission = rn.require_admission(args)
+    same = rn.stage_pins(hashlib.sha256(stage0_path.read_bytes()).hexdigest(), admission)
+    ok = rn.full_stage2_evidence(args, stage0_obj, pinning, rn.short_donors(stage0_obj), same)
+    assert ok['pass'] is True, ok['reason']
+    other = rn.stage_pins('c' * 64, admission)
+    refused = rn.full_stage2_evidence(args, stage0_obj, pinning, rn.short_donors(stage0_obj), other)
+    assert refused['pass'] is False, 'a different Stage 0 must refuse the evidence'
+    assert refused['checks'] == {'gate3b_pass': True, 'stage1_pass': False, 'pilot_pass': False}
+    assert 'different pins' in refused['stage1']['reason']
+    assert 'pilot_pins_match_this_run' in refused['pilot']['reason']
+    assert pilot['pins']['stage0_sha256'] != other['stage0_sha256']
+
+
+def test_full_stage2_evidence_requires_the_four_25_row_donor_banks():
+    """Gate 3b quantifies over the required banks, not over the donors that happen to be present."""
+    stage0 = make_stage0()
+    pinning = sc.dial_pinning(stage0)
+    pins = rn.stage_pins('a' * 64)
+    args = _args('/tmp/part214-out')
+    assert rn.gates3b_banks(stage0)['pass'] is True
+    for missing in ('d_you', 'd_imp'):
+        broken = json.loads(json.dumps(stage0, default=rn.json_default))
+        del broken['banks'][missing]
+        result = rn.full_stage2_evidence(args, broken, pinning, rn.short_donors(broken), pins)
+        assert result['checks']['gate3b_pass'] is False, f'a Stage 0 without {missing} must not pass Gate 3b'
+        assert result['gate3b']['banks']['pass'] is False
+    short = json.loads(json.dumps(stage0, default=rn.json_default))
+    short['banks']['d_fact']['prompts'] = short['banks']['d_fact']['prompts'][:3]
+    result = rn.full_stage2_evidence(args, short, pinning, rn.short_donors(short), pins)
+    assert result['checks']['gate3b_pass'] is False, 'a three-row bank is not the required 25-row bank'
+    assert sc.gate3b(short)['pass'] is False and sc.gate3b(stage0)['pass'] is True
+
+
+def test_full_stage2_refuses_stage1_or_pilot_evidence_from_another_stage0_before_the_loader(tmp_path, monkeypatch):
+    """Change ONLY the Stage 0 bytes: the same content under a different digest is a different recording."""
+    stage0_path, tok, model, rig = _stage2_setup(tmp_path, monkeypatch, answers=evidence_answers)
+    pilot, stage1_path = _fake_pilot_and_stage1(tmp_path, monkeypatch, stage0_path, rig)
+    calls_after_pilot = len(model.generate_calls)
+    stage0_obj = json.loads(stage0_path.read_text(encoding='utf-8'))
+    stage0_path.write_text(json.dumps(stage0_obj, indent=1, default=rn.json_default), encoding='utf-8')
+
+    def must_not_load(args):
+        raise AssertionError('the loader must not be reached when the prerequisite pins refuse the run')
+
+    args = _args(tmp_path / 'full', stage0=stage0_path, stage1=stage1_path, pilot_dir=tmp_path / 'pilot')
+    with pytest.raises(SystemExit) as excinfo:
+        rn.stage2(args, pilot=False, rig_loader=must_not_load)
+    assert 'refusing the full run before any call' in str(excinfo.value), \
+        'evidence from a different Stage 0 must refuse the full run before launch'
+    assert len(model.generate_calls) == calls_after_pilot
+
+
+def test_pilot_evidence_is_read_only_and_reports_a_torn_tail(tmp_path, monkeypatch):
+    """Validation must never repair the pilot's file: that is another run's evidence, outside its lock."""
+    stage0_path, tok, model, rig = _stage2_setup(tmp_path, monkeypatch, answers=evidence_answers)
+    pilot, _stage1_path = _fake_pilot_and_stage1(tmp_path, monkeypatch, stage0_path, rig)
+    rows_path = tmp_path / 'pilot' / 'stage2.jsonl'
+    with rows_path.open('ab') as handle:
+        handle.write(b'{"arm": "zero", "question_ind')
+    before = rows_path.read_bytes()
+    pinning = sc.dial_pinning(json.loads(stage0_path.read_text(encoding='utf-8')))
+    result = rn.pilot_evidence(tmp_path / 'pilot', pinning, pilot['pins'])
+    assert result['checks']['pilot_no_torn_tail'] is False, 'a torn tail must be reported, not hidden'
+    assert result['pass'] is False
+    assert result['torn_tail_bytes_dropped'] == len(b'{"arm": "zero", "question_ind')
+    assert rows_path.read_bytes() == before, 'the checker must not write to the pilot it is validating'
+
+
+# ------------------------------------------------------------------------------------------------------------------
+# Fix round 2: the writer refuses what the scorer would refuse, before any model work
+# ------------------------------------------------------------------------------------------------------------------
+
+def test_writer_refuses_mixed_kind_duplicate_unplanned_or_repinned_rows_before_the_loader(tmp_path, monkeypatch):
+    stage0_path, tok, model, rig = _stage2_setup(tmp_path, monkeypatch)
+    args = _args(tmp_path / 'pilot', stage0=stage0_path, deadline_min=1000)
+    rn.stage2(args, pilot=True, rig_loader=rig)
+    rows = rn.load_stage2_jsonl(tmp_path / 'pilot' / 'stage2.jsonl')
+    path = tmp_path / 'pilot' / 'stage2.jsonl'
+    cases = {
+        'foreign kind (full row in a pilot file)': [dict(rows[0], pilot=False)],
+        'duplicate key': [rows[0], dict(rows[0])],
+        'unplanned key': [dict(rows[0], arm='not_an_arm')],
+        'different pins': [dict(rows[0], pins=dict(rows[0]['pins'], stage0_sha256='f' * 64))],
+    }
+
+    def must_not_load(a):
+        raise AssertionError('the loader must not be reached: the file is refused before any model work')
+
+    for name, saved in cases.items():
+        path.write_text(''.join(json.dumps(row) + '\n' for row in saved), encoding='utf-8')
+        with pytest.raises(SystemExit, match='refusing resume'):
+            rn.stage2(args, pilot=True, rig_loader=must_not_load)
+        assert rn.read_jsonl_readonly(path)[0] == saved, f'{name}: the refused file must be left as it was'
+
+
+def test_full_run_into_a_pilot_output_directory_is_refused_before_the_loader(tmp_path, monkeypatch):
+    """The full run must not append full rows beside the pilot's 64 (design line 260)."""
+    stage0_path, tok, model, rig = _stage2_setup(tmp_path, monkeypatch, answers=evidence_answers)
+    pilot, stage1_path = _fake_pilot_and_stage1(tmp_path, monkeypatch, stage0_path, rig)
+    calls_after_pilot = len(model.generate_calls)
+
+    def must_not_load(a):
+        raise AssertionError('the loader must not be reached when the output directory holds another kind')
+
+    args = _args(tmp_path / 'pilot', stage0=stage0_path, stage1=stage1_path, pilot_dir=tmp_path / 'pilot',
+                 deadline_min=1000)
+    with pytest.raises(SystemExit, match='refusing resume: .*full-run'):
+        rn.stage2(args, pilot=False, rig_loader=must_not_load)
+    assert len(model.generate_calls) == calls_after_pilot
+    rows = rn.load_stage2_jsonl(tmp_path / 'pilot' / 'stage2.jsonl')
+    assert len(rows) == 64 and all(sc.row_kind(r) for r in rows), 'the pilot file must still be exactly its 64 rows'
+
+
+def test_full_stage2_completes_full_in_its_own_directory(tmp_path, monkeypatch):
+    """The production fake-runner control: 1,584 rows, its own directory, every row bound to the run's pins."""
+    stage0_path, tok, model, rig = _stage2_setup(tmp_path, monkeypatch, answers=evidence_answers)
+    pilot, stage1_path = _fake_pilot_and_stage1(tmp_path, monkeypatch, stage0_path, rig)
+    args = _args(tmp_path / 'full', stage0=stage0_path, stage1=stage1_path, pilot_dir=tmp_path / 'pilot',
+                 deadline_min=1000)
+    run = rn.stage2(args, pilot=False, rig_loader=rig)
+    assert run['new_rows_this_invocation'] == 1584, 'the full plan is 1,584 batch-1 calls'
+    assert run['generation_batch_histogram'] == {'1': 1584}
+    assert run['deadline_reached'] is False and run['incomplete_arms'] == []
+    assert run['pins'] == pilot['pins'], 'the full run must be pinned to the pilot\'s exact inputs'
+    rows = rn.load_stage2_jsonl(tmp_path / 'full' / 'stage2.jsonl')
+    assert len(rows) == 1584
+    assert all(row['pins'] == run['pins'] for row in rows), \
+        'every row must carry the pins it was generated under'
+    assert all(not sc.row_kind(row) for row in rows)
+    stage0 = json.loads(stage0_path.read_text(encoding='utf-8'))
+    stage1 = json.loads(stage1_path.read_text(encoding='utf-8'))
+    result = sc.score(stage0, stage1, rows, run,
+                      stage0_sha256=hashlib.sha256(stage0_path.read_bytes()).hexdigest())
+    assert result['stage2']['arm_status']['incomplete_arms'] == []
+    assert set(result['stage2']['main_arms']) == set(sc.MAIN_ARMS), 'every main arm is scored'
+    assert result['gates']['gate3']['checks'], 'the full run produced a gate table'
+
+
+# ------------------------------------------------------------------------------------------------------------------
+# Fix round 2: deadline cuts in the integrated path
+# ------------------------------------------------------------------------------------------------------------------
+
+def test_stage0_deadline_cut_in_the_write_norm_pass_records_no_banks(tmp_path, monkeypatch):
+    """Same defect class as Stage 1's pre-pass: the 24 pool forwards are 24 launches, not one."""
+    out = tmp_path / 'stage0'
+    tok = FakeTokenizer()
+    model = FakeModel(tok, answer_for=keyword_answers(tok))
+    monkeypatch.setattr(rn, 'load_rig', lambda a: (model, tok, dict(FAKE_LOAD)))
+    clock = FakeClock(step=10.0)
+    args = _args(out, deadline_min=0.6)                     # 36 s
+    obj = rn.stage0(args, clock=clock)
+    assert obj['deadline_reached'] is True
+    assert obj['write_norm_forwards'] == 3, 'the pool pass must stop at the launch after the cut'
+    assert obj['greedy_calls'] == 0 and obj['banks'] == {}, 'no bank can be recorded without its pools'
+    assert obj['generation_batch_histogram'] == {'1': 3}, 'the histogram reports what actually ran'
+    assert sc.gate3b(obj)['pass'] is False and sc.gate0(obj)['pass'] is False
+
+
+def test_pilot_timing_calls_do_not_launch_when_the_last_row_spends_the_budget(tmp_path, monkeypatch):
+    """`reached` is False here: the loop checked before the last row, and that row used the rest of the budget."""
+    stage0_path, tok, model, rig = _stage2_setup(tmp_path, monkeypatch)
+    clock = FakeClock(step=1.0)
+    args = _args(tmp_path / 'pilot', stage0=stage0_path, deadline_min=64.5 / 60.0)
+    obj = rn.stage2(args, pilot=True, clock=clock, rig_loader=rig)
+    assert obj['new_rows_this_invocation'] == 64 and obj['deadline_reached'] is False
+    assert obj['timing_only_calls'] == 0, 'the timing calls are calls: none may launch after the budget is spent'
+    assert len(model.generate_calls) == 64
+    assert rn.pilot_timing_due(True, False, 0.0, 10.0, lambda: 11.0) is False, \
+        'the clock, not `reached`, decides whether the timing calls launch'
+    pinning = sc.dial_pinning(json.loads(stage0_path.read_text(encoding='utf-8')))
+    evidence = rn.pilot_evidence(tmp_path / 'pilot', pinning, obj['pins'])
+    assert evidence['checks']['pilot_timing_only_calls_4'] is False
+    assert evidence['pass'] is False, 'a pilot without its four timing calls cannot admit the full run'
+
+
+def test_pilot_timing_calls_stop_between_launches(tmp_path, monkeypatch):
+    """The four timing calls are four launches: a cut between them stops the set, it does not finish it."""
+    stage0_path, tok, model, rig = _stage2_setup(tmp_path, monkeypatch)
+    clock = FakeClock(step=1.0)
+    args = _args(tmp_path / 'pilot', stage0=stage0_path, deadline_min=68.5 / 60.0)
+    obj = rn.stage2(args, pilot=True, clock=clock, rig_loader=rig)
+    assert obj['new_rows_this_invocation'] == 64 and obj['deadline_reached'] is False
+    assert obj['timing_only_calls'] == 1, 'the set must stop at the launch that would cross the deadline'
+    assert len(model.generate_calls) == 65
+    pinning = sc.dial_pinning(json.loads(stage0_path.read_text(encoding='utf-8')))
+    assert rn.pilot_evidence(tmp_path / 'pilot', pinning, obj['pins'])['pass'] is False
+
+
+# ------------------------------------------------------------------------------------------------------------------
+# Fix round 2: 214.8(b) needs all sixteen arms, and the scorer binds pins and keys
+# ------------------------------------------------------------------------------------------------------------------
+
+def test_214_8_is_not_read_when_one_of_the_16_correlation_arms_is_missing():
+    """15 of 16 is a different statistic: the verdict is `not read`, never a pass on the arms that survived."""
+    stage1 = make_stage1()
+    del stage1['arms']['dial_0.40']
+    result = world(stage1=stage1)
+    pred = result['predictions']['214.8']
+    assert pred['verdict'] == sc.NOT_READ, 'a 15-arm Spearman must not satisfy 214.8(b)'
+    assert '15 of 16' in pred['reason']
+    corr = result['stage1']['l27_correlation']
+    assert corr['n_paired'] == 15 and corr['n_required'] == 16
+    assert corr['tracks_negatively'] is False and corr['missing_arms'] == ['dial_0.40']
+    assert result['predictions']['214.7']['verdict'] == sc.HOLDS, 'the other Stage 1 predictions still read'
+    assert world()['predictions']['214.8']['verdict'] == sc.HOLDS
+
+
+def test_scorer_refuses_rows_written_under_other_pins():
+    pinning = sc.dial_pinning(make_stage0())
+    rows = make_stage2(counts={'unchanged': (0, 0), 'zero': (0, 0)}, guards={'n_broken': 0}, pinning=pinning)
+    run = make_run(rows=rows)
+    sc.stage2_metrics(rows, run, pinning)                                    # the bound file scores
+    repinned = [dict(row) for row in rows]
+    repinned[3]['pins'] = dict(repinned[3]['pins'], stage0_sha256='b' * 64)
+    with pytest.raises(ValueError, match='refusing rows written under different pins'):
+        sc.stage2_metrics(repinned, run, pinning)
+    unpinned = [dict(row) for row in rows]
+    unpinned[0].pop('pins')
+    with pytest.raises(ValueError, match='refusing rows written under different pins'):
+        sc.stage2_metrics(unpinned, run, pinning)
+    with pytest.raises(ValueError, match='refusing unpinned evidence'):
+        sc.stage2_metrics(rows, {k: v for k, v in run.items() if k != 'pins'}, pinning)
+    with pytest.raises(ValueError, match='tool_sha256'):
+        sc.stage2_metrics(rows, dict(run, tool_sha256='e' * 64), pinning)
+    with pytest.raises(ValueError, match='does not record a PASSING kernel check'):
+        sc.stage2_metrics(rows, dict(run, kernel_check={'pass': False,
+                                                        'sha256': run['kernel_check']['sha256']}), pinning)
+
+
+def test_scorer_refuses_duplicate_or_unplanned_keys():
+    pinning = sc.dial_pinning(make_stage0())
+    rows = make_stage2(counts={'unchanged': (0, 0), 'zero': (0, 0)}, guards={'n_broken': 0}, pinning=pinning)
+    run = make_run(rows=rows)
+    duplicated = rows + [dict(rows[0])]
+    with pytest.raises(ValueError, match='refusing duplicate Stage 2 keys'):
+        sc.stage2_metrics(duplicated, make_run(rows=duplicated), pinning)
+    extra = rows + [dict(rows[0], arm='not_an_arm')]
+    with pytest.raises(ValueError, match='refusing unplanned Stage 2 keys'):
+        sc.stage2_metrics(extra, make_run(rows=extra), pinning)
+
+
+def test_score_refuses_stage1_and_run_from_different_inputs():
+    pinning = sc.dial_pinning(make_stage0())
+    rows = make_stage2(counts={'unchanged': (0, 0), 'zero': (0, 0)}, guards={'n_broken': 0}, pinning=pinning)
+    run = make_run(rows=rows)
+    stage1 = make_stage1()
+    stage1['pins'] = dict(run['pins'], stage0_sha256='c' * 64)
+    with pytest.raises(ValueError, match='different inputs'):
+        sc.score(make_stage0(), stage1, rows, run)
+    with pytest.raises(ValueError, match='was produced from Stage 0 bytes'):
+        sc.score(make_stage0(), None, rows, run, stage0_sha256='d' * 64)
 
 
 # ==================================================================================================================
@@ -1764,12 +2171,71 @@ def _sabotage_registry():
         ('partial_stage1_arm_feeds_a_verdict', sc, 'arm_completeness',
          lambda s1, name: True, 'test_a_partial_stage1_arm_cannot_feed_a_verdict',
          (AssertionError, 'a partial control must not satisfy 214.3')),
-        ('timing_only_calls_after_the_deadline', rn, 'pilot_timing_due',
-         lambda pilot, reached: bool(pilot), 'test_stage2_fake_clock_cut_inside_a_required_arm_stops_and_reports',
-         (AssertionError, 'must not launch after the deadline')),
         ('stage1_histogram_reports_the_nominal_plan', rn, 'stage1_object',
-         _sabotage_stage1_object_nominal, 'test_stage1_fake_clock_cut_reports_actual_counts_and_no_dependent_pass',
+         _sabotage_stage1_object_nominal, 'test_stage1_deadline_cuts_the_prepass_before_any_arm',
          (AssertionError, 'must report the forwards that actually ran')),
+        # --- Fix round 2: evidence binding -----------------------------------------------------------
+        ('registration_heading_accepted_without_the_pinned_digest', rn, 'require_admission',
+         _sabotage_admission_trusts_the_heading,
+         'test_registration_receipt_is_pinned_and_a_rewritten_section_is_refused',
+         (_pytest_failed(), 'DID NOT RAISE')),
+        ('dry_run_overwrites_a_real_stage_record', rn, 'write_dry_run_record',
+         _sabotage_dry_run_overwrites, 'test_dry_run_never_writes_over_a_real_stage_record',
+         (_pytest_failed(), 'DID NOT RAISE')),
+        ('kernel_reference_digest_not_pinned', rn, 'kernel_check',
+         _sabotage_kernel_ignores_digest, 'test_kernel_check_binds_the_reference_digest',
+         (AssertionError, 'different bytes must fail the kernel check')),
+        ('full_evidence_ignores_the_prerequisite_pins', rn, 'full_stage2_evidence',
+         _sabotage_full_evidence_ignores_pins,
+         'test_full_stage2_evidence_refuses_a_stage1_or_pilot_from_another_stage0',
+         (AssertionError, 'a different Stage 0 must refuse the evidence')),
+        ('full_evidence_ignores_the_prerequisite_pins_integrated', rn, 'full_stage2_evidence',
+         _sabotage_full_evidence_ignores_pins,
+         'test_full_stage2_refuses_stage1_or_pilot_evidence_from_another_stage0_before_the_loader',
+         (AssertionError, 'the loader must not be reached when the prerequisite pins refuse the run')),
+        ('pilot_evidence_repairs_the_file_it_validates', rn, 'pilot_evidence',
+         _sabotage_pilot_evidence_repairs, 'test_pilot_evidence_is_read_only_and_reports_a_torn_tail',
+         (AssertionError, 'a torn tail must be reported, not hidden')),
+        ('writer_accepts_foreign_duplicate_or_repinned_rows', rn, 'check_resume_pins',
+         lambda *args, **kwargs: None,
+         'test_writer_refuses_mixed_kind_duplicate_unplanned_or_repinned_rows_before_the_loader',
+         (AssertionError, 'the loader must not be reached: the file is refused before any model work')),
+        ('full_run_appends_beside_pilot_rows', rn, 'check_resume_pins',
+         lambda *args, **kwargs: None,
+         'test_full_run_into_a_pilot_output_directory_is_refused_before_the_loader',
+         (AssertionError, 'the loader must not be reached when the output directory holds another kind')),
+        ('rows_written_without_pins', rn, 'stage2_generate',
+         _sabotage_generate_no_pins, 'test_full_stage2_completes_full_in_its_own_directory',
+         (AssertionError, 'every row must carry the pins it was generated under')),
+        # --- Fix round 2: deadline porosity -----------------------------------------------------------
+        ('stage1_prepass_ignores_the_deadline', rn, 'pool_norm_pass',
+         _sabotage_pool_no_guard, 'test_stage1_deadline_cuts_the_prepass_before_any_arm',
+         (AssertionError, 'the guard must stop the pre-pass at the launch after the cut')),
+        ('stage0_pool_pass_ignores_the_deadline', rn, 'pool_norm_pass',
+         _sabotage_pool_no_guard, 'test_stage0_deadline_cut_in_the_write_norm_pass_records_no_banks',
+         (AssertionError, 'the pool pass must stop at the launch after the cut')),
+        ('stage1_call_ignores_the_deadline', rn, 'stage1_call',
+         _sabotage_stage1_call_no_guard, 'test_stage1_deadline_cuts_inside_a_questions_gseq_forwards',
+         (AssertionError, 'the question whose g_seq forwards crossed the cut must not be recorded')),
+        ('pilot_timing_launches_after_the_budget_is_spent', rn, 'pilot_timing_due',
+         _sabotage_timing_due_no_clock, 'test_pilot_timing_calls_do_not_launch_when_the_last_row_spends_the_budget',
+         (AssertionError, 'the clock, not `reached`, decides')),
+        ('timing_only_calls_ignore_the_clock', rn, 'timing_only_calls',
+         _sabotage_timing_no_clock, 'test_pilot_timing_calls_stop_between_launches',
+         (AssertionError, 'the set must stop at the launch that would cross the deadline')),
+        # --- Fix round 2: 214.8 completeness and scoring-side binding ---------------------------------
+        ('214_8_passes_on_the_arms_that_survived', sc, 'pred_214_8',
+         _sabotage_214_8_ignores_completeness, 'test_214_8_is_not_read_when_one_of_the_16_correlation_arms_is_missing',
+         (AssertionError, 'a 15-arm Spearman must not satisfy 214.8(b)')),
+        ('scorer_accepts_rows_written_under_other_pins', sc, 'require_run_pins',
+         lambda rows, run: run.get('pins'), 'test_scorer_refuses_rows_written_under_other_pins',
+         (_pytest_failed(), 'DID NOT RAISE')),
+        ('scorer_accepts_duplicate_or_unplanned_keys', sc, 'require_planned_keys',
+         lambda rows, run, pinning=None: [], 'test_scorer_refuses_duplicate_or_unplanned_keys',
+         (_pytest_failed(), 'DID NOT RAISE')),
+        ('score_ignores_stage1_and_run_pin_mismatch', sc, 'score',
+         _sabotage_score_ignores_pins, 'test_score_refuses_stage1_and_run_from_different_inputs',
+         (_pytest_failed(), 'DID NOT RAISE')),
     ]
 
 
@@ -1838,6 +2304,89 @@ def _sabotage_stage1_object_nominal(*args, **kwargs):
     result = dict(_ORIGINALS['stage1_object'](*args, **kwargs))
     result['forward_batch_histogram'] = dict(result['nominal_forward_batch_histogram'])
     return result
+
+
+# --- Fix round 2 sabotages ----------------------------------------------------------------------------------------
+
+def _sabotage_admission_trusts_the_heading(args):
+    """Record the pin but never compare it: any locally matched heading is admitted as registered."""
+    status = rn.registration_status()
+    return {'admitted': bool(status['registered']),
+            'dry_run': bool(getattr(args, 'allow_unregistered', False)),
+            'registration_pin': sc.REGISTRATION_SHA256, 'design_commit': sc.DESIGN_COMMIT,
+            'design_sha256': sc.DESIGN_SHA256, **status}
+
+
+def _sabotage_dry_run_overwrites(obj, out, name, stage):
+    """The pre-fix behaviour: a dry run writes its stub wherever it is told, over whatever is already there."""
+    _ORIGINALS['write_stage_record'](obj, out, name, stage)
+
+
+def _sabotage_kernel_ignores_digest(load, path=rn.KERNEL_CHECK_PATH):
+    """Compare model/revision/dtype only: the reference file's exact bytes are not pinned."""
+    result = dict(_ORIGINALS['kernel_check'](load, path))
+    result['checks'] = {k: v for k, v in result['checks'].items() if k != 'reference_sha256_matches_pinned'}
+    result['pass'] = all(result['checks'].values())
+    return result
+
+
+def _sabotage_full_evidence_ignores_pins(args, stage0_obj, pinning, short, pins=None):
+    """Admit the prerequisites without binding them to this run's Stage 0 bytes."""
+    return _ORIGINALS['full_stage2_evidence'](args, stage0_obj, pinning, short)
+
+
+def _sabotage_pilot_evidence_repairs(directory, pinning, pins=None):
+    """Validate by repairing: the pre-fix reader wrote to the pilot's file while checking it."""
+    path = Path(directory) / 'stage2.jsonl'
+    if path.exists():
+        rn.load_stage2_jsonl(path)
+    return _ORIGINALS['pilot_evidence'](directory, pinning, pins)
+
+
+def _sabotage_generate_no_pins(row, bank, tok, stage0_obj, pinning, args, model, layers, pins=None):
+    """Write full-run rows that do not say which inputs produced them (the pilot still admits the run)."""
+    record = _ORIGINALS['stage2_generate'](row, bank, tok, stage0_obj, pinning, args, model, layers, pins=pins)
+    if not row.get('pilot', False):
+        record['pins'] = None
+    return record
+
+
+def _sabotage_pool_no_guard(tok, model, layers, bank, device, weights, guard=None, progress=None):
+    """Run all 24 write-norm forwards whatever the clock says."""
+    return _ORIGINALS['pool_norm_pass'](tok, model, layers, bank, device, weights)
+
+
+def _sabotage_stage1_call_no_guard(arm, qi, ctx, model, layers, args, guard=None):
+    """Fire all three g_seq paths even when the deadline passed between them."""
+    return _ORIGINALS['stage1_call'](arm, qi, ctx, model, layers, args)
+
+
+def _sabotage_timing_due_no_clock(pilot, reached, started=None, deadline_s=None, clock=None):
+    """Trust `reached` alone: the last row can spend the remainder without the loop noticing."""
+    return bool(pilot) and not bool(reached)
+
+
+def _sabotage_timing_no_clock(args, bank, tok, stage0_obj, pinning, model, layers, clock=None, pins=None,
+                              started=None, deadline_s=None):
+    """Launch all four timing calls regardless of the clock."""
+    return _ORIGINALS['timing_only_calls'](args, bank, tok, stage0_obj, pinning, model, layers,
+                                           clock=clock or rn.time.monotonic, pins=pins)
+
+
+def _sabotage_214_8_ignores_completeness(s1):
+    """Read the correlation from the arms that survived: 15 of 16 is a pass."""
+    result = dict(_ORIGINALS['pred_214_8'](s1))
+    corr = s1['l27_correlation']
+    if result['verdict'] == sc.NOT_READ and corr['n_paired'] >= 3:
+        result = dict(result, verdict=sc.HOLDS, holds=True)
+    return result
+
+
+def _sabotage_score_ignores_pins(stage0=None, stage1=None, stage2_rows=None, run=None, stage0_sha256=None):
+    """Score whatever is handed in: no stage1/run pin cross-check and no Stage 0 digest check."""
+    if stage1 is not None and run is not None:
+        stage1 = dict(stage1, pins=run.get('pins'))
+    return _ORIGINALS['score'](stage0, stage1, stage2_rows, run)
 
 
 def _sabotage_gate3_no_broken_ceiling(*args, **kwargs):
@@ -1945,6 +2494,10 @@ _ORIGINALS = {
     'pilot_timing_due': rn.pilot_timing_due, 'full_stage2_evidence': rn.full_stage2_evidence,
     'short_donors': rn.short_donors, 'check_resume_pins': rn.check_resume_pins,
     'arm_completeness': sc.arm_completeness, 'require_single_kind': sc.require_single_kind,
+    # Fix round 2 guards
+    'write_stage_record': rn.write_stage_record, 'pred_214_8': sc.pred_214_8,
+    'timing_only_calls': rn.timing_only_calls, 'score': sc.score, 'pool_norm_pass': rn.pool_norm_pass,
+    'pilot_evidence': rn.pilot_evidence, 'stage1_call': rn.stage1_call,
 }
 
 

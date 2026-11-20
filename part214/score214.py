@@ -2,8 +2,8 @@
 """Part 214 scorer: Stage 0 dial projections, Stage 1 H4 curve & diagnostics, Stage 2 five-state ladder,
 every gate and every verdict of predictions 214.1-214.8, from saved JSON/JSONL only.
 
-PART214-DESIGN.md v5 (commit e637e096) is the contract; design line numbers are cited beside each rule and every
-reading this file had to choose is marked `AMBIGUITY n` and listed in the run report.
+PART214-DESIGN.md v5, as amended at commit cb8cc1e4, is the contract; design line numbers are cited beside each rule
+and every reading this file had to choose is marked `AMBIGUITY n` and listed in the run report.
 
 Windows Python runs `-I`: the script's folder is NOT on sys.path, so the repo root and this folder are inserted the
 way part214/build_prompts214.py does it. Nothing here imports torch: the scorer reads saved files and needs numpy
@@ -28,6 +28,7 @@ Usage (after both stages):
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import re
@@ -46,13 +47,31 @@ for _path in (ROOT, HERE):
 from part66.score66 import FAMILIES  # noqa: E402  (the Part 66 maker lexicon, reused unchanged; no torch)
 
 # ----------------------------------------------------------------------------------------------------------------
-# the design's fixed numbers (PART214-DESIGN.md v5, commit e637e096)
+# the design's fixed numbers (PART214-DESIGN.md v5, AMENDED at commit cb8cc1e4)
+#
+# The pin is the AMENDED design, not the pre-amendment `e637e096` the first two fix rounds still named: Amendment 1
+# (a2c084ff + cb8cc1e4) is the contract the 4,624-forward Stage 1 and the 24-pool Stage 0 are written against. The
+# SHA-256 below is the byte digest of PART214-DESIGN.md at that commit, so an edit to the design file makes every
+# pin computed from it (run214.stage_pins) and every scored record disagree with this module instead of silently
+# agreeing with a locally rewritten contract.
 # ----------------------------------------------------------------------------------------------------------------
 
 PART = 214
 DESIGN_VERSION = 'v5'
-DESIGN_COMMIT = 'e637e096'
+DESIGN_COMMIT = 'cb8cc1e4'
+DESIGN_SHA256 = '6878143ef15ad15786b1a011f9576730edd6784a496bf12b2f057da9ee11cf52'
 PROMPTS_SHA256 = '76005231b171babdeed9318e1912703ce55b9d9d9876c906360535573d3f55d6'
+# The design's kernel check (design line 236) is `results/part183/kernel-check.json`. The runner records the SHA-256
+# of the file it compared against; this frozen digest is what makes that a bind rather than a note. A run against a
+# locally rewritten reference file (same model/revision text, different bytes) must not pass.
+KERNEL_CHECK_SHA256 = '335e843dad34676c7689dad1f49668e02831e56e50c02ba7ebfe6c8a3a33b1b8'
+# The registration receipt. `registration_status()` in run214.py hashes the live `## Part 214 (registered ...)`
+# section of PREDICTIONS.md, but a hash of a locally matched heading is not evidence that THOSE bytes were the ones
+# registered. This constant is the frozen digest of the registered section, pinned in code at registration time the
+# same way PROMPTS_SHA256 pins the prompt bank. It is `None` today because Part 214 is not registered yet, and a
+# registered admission with `None` here REFUSES: a build that does not know the registered bytes cannot bind a run
+# to them.
+REGISTRATION_SHA256 = None
 
 MODEL = 'Qwen/Qwen3.5-4B'
 REVISION = '851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a'
@@ -79,6 +98,7 @@ BROKEN_LIMIT = 0.15             # 214.1, 214.4, 214.5, 214.6, headline precondit
 UNCHANGED_BROKEN_LIMIT = 0.05   # Gate 3: broken(unchanged) <= 9/192   (design line 260)
 UNCHANGED_GOOGLE_LIMIT = 0.06   # Gate 3: clean_google(unchanged) <= 11/192 (design line 259)
 MIN_DONOR_LGEN = 5              # Gate 3b (design line 106)
+BANK_ROWS = 25                  # Gate 3b quantifies over four banks of 25 donors, not over whatever is present
 # Design line 260: "on each of the four main scored arms, broken <= 28/192". Those four are 214.4's arms.
 FOUR_SCORED_ARMS = ('scale_dial_fact', 'trace_resample_fact', 'scale_dial_you', 'trace_resample_you')
 # Pilot gate rows (design lines 281-284): the pilot's unchanged checks use its own 24 fluency-guard rows ONLY.
@@ -729,25 +749,33 @@ def gate0(stage0: dict) -> dict:
 
 
 def gate3b(stage0: dict | None) -> dict:
-    """Gate 3b (design line 107): every donor in all four banks has L_gen >= 5 non-EOS tokens."""
+    """Gate 3b (design lines 106-107): the four banks of 25 donors, each donor with L_gen >= 5 non-EOS tokens.
+
+    "Every donor ... has L_gen >= 5" quantifies over the REQUIRED bank shape, so a recording that simply lacks a bank
+    (or holds three rows of it) cannot pass by scanning only the donors that happen to be present.
+    """
     if not stage0:
         return {'pass': False, 'checks': {'donors_recorded': False}, 'min_L_gen': None, 'short': [],
                 'reason': 'no stage0.json'}
+    banks = stage0.get('banks') or {}
+    per_bank = {b: len((banks.get(b) or {}).get('prompts') or []) for b in ALL_BANKS}
+    shape_ok = all(per_bank[b] == BANK_ROWS for b in ALL_BANKS)
     short, minimum, total = [], None, 0
     for bank in ALL_BANKS:
         try:
             items = bank_arrays(stage0, bank)
         except ValueError as exc:
-            return {'pass': False, 'checks': {'donors_recorded': False}, 'min_L_gen': None, 'short': [],
-                    'reason': str(exc)}
+            return {'pass': False, 'checks': {'donors_recorded': False, 'four_banks_of_25': shape_ok},
+                    'min_L_gen': None, 'short': [], 'prompts_per_bank': per_bank, 'reason': str(exc)}
         for item in items:
             total += 1
             lgen = int(item['L_gen'])
             minimum = lgen if minimum is None else min(minimum, lgen)
             if lgen < MIN_DONOR_LGEN:
                 short.append({'bank': bank, 'index': item['index'], 'L_gen': lgen})
-    checks = {'donors_recorded': total > 0, f'every_donor_L_gen_ge_{MIN_DONOR_LGEN}': not short}
-    return {'pass': all(checks.values()), 'checks': checks, 'min_L_gen': minimum, 'short': short, 'donors': total}
+    checks = {'four_banks_of_25': shape_ok, f'every_donor_L_gen_ge_{MIN_DONOR_LGEN}': not short}
+    return {'pass': all(checks.values()), 'checks': checks, 'min_L_gen': minimum, 'short': short,
+            'donors': total, 'prompts_per_bank': per_bank}
 
 
 # ----------------------------------------------------------------------------------------------------------------
@@ -856,7 +884,7 @@ def dial_curve(s1: dict) -> dict:
                        'mean_l27_shift': _mean_l27_shift(s1, name)})
     have = [p for p in points if p['mean_delta_g_ali'] is not None]
     complete = len(have) == len(ALPHA_RUNGS)
-    rho = spearman([p['alpha'] for p in have], [p['mean_delta_g_ali'] for p in have]) if len(have) >= 3 else None
+    rho = spearman([p['alpha'] for p in have], [p['mean_delta_g_ali'] for p in have]) if complete else None
     return {'points': points, 'missing_arms': [p['arm'] for p in points if p['mean_delta_g_ali'] is None],
             'complete': complete, 'spearman_alpha_vs_delta': rho,
             'monotonic': bool(complete and rho is not None and rho <= DIAL_MONOTONIC_RHO)}
@@ -878,11 +906,6 @@ def stage1_metrics(s1: dict, pinning: dict | None = None) -> dict:
     branch = (pinning or {}).get('branch')
     dial_you_ref_arm = 'scale_dial_fact' if branch == 'collapsed' else 'scale_dial_you'
     # 214.8(b): the 10 dial rungs plus the 6 natural-decode arms, 16 arms in all (design line 305).
-    corr_arms = [RUNG_ARM[a] for a in ALPHA_RUNGS] + list(NAT_ARMS_6)
-    l27 = [_mean_l27_shift(s1, name) for name in corr_arms]
-    dga = [_mean_delta(s1, name) for name in corr_arms]
-    paired = [(a, b) for a, b in zip(l27, dga) if a is not None and b is not None]
-    rho_l27 = spearman([p[0] for p in paired], [p[1] for p in paired]) if len(paired) >= 3 else None
     return {
         'dial_curve': curve,
         'random_zero': random_zero, 'random_scale_dial': random_dial, 'random_nat_trace_fact': random_nat,
@@ -903,8 +926,7 @@ def stage1_metrics(s1: dict, pinning: dict | None = None) -> dict:
             'online_vs_frozen_you': _delta_pair(s1, 'scale_dial_you', 'scale_dial_you_frozen'),
             'note': 'diagnostics (design lines 149-150); no prediction threshold reads them',
         },
-        'l27_correlation': {'arms': corr_arms, 'n_paired': len(paired), 'spearman_l27_shift_vs_delta_g_ali': rho_l27,
-                            'tracks_negatively': (rho_l27 is not None and rho_l27 <= PRED_214_8_RHO)},
+        'l27_correlation': l27_correlation(s1),
         'gates': {'gate1': gate1(s1), 'gate2': gate2(s1, random_zero)},
         'g_seq': g_seq_report(s1),
         'completeness': {
@@ -923,6 +945,24 @@ def stage1_metrics(s1: dict, pinning: dict | None = None) -> dict:
 def _delta_pair(s1: dict, a: str, b: str) -> float | None:
     va, vb = _mean_delta(s1, a), _mean_delta(s1, b)
     return None if va is None or vb is None else va - vb
+
+
+def l27_correlation(s1: dict) -> dict:
+    """214.8(b): Spearman(L27 N3325 shift, delta g_ali) over ALL 16 arms (10 dial rungs + 6 natural-decode arms).
+
+    The design names 16 arms (design line 305). A Spearman over the arms a deadline happened to leave behind is a
+    different statistic over a different sample, so `tracks_negatively` requires every one of the 16 pairs; the
+    pre-fix code computed it from whichever `>= 3` were available and could pass 214.8(b) on 15 arms.
+    """
+    arms = [RUNG_ARM[a] for a in ALPHA_RUNGS] + list(NAT_ARMS_6)
+    triples = [(name, _mean_l27_shift(s1, name), _mean_delta(s1, name)) for name in arms]
+    paired = [(l27, dga) for _name, l27, dga in triples if l27 is not None and dga is not None]
+    complete = len(paired) == len(arms)
+    rho = spearman([p[0] for p in paired], [p[1] for p in paired]) if complete else None
+    return {'arms': arms, 'missing_arms': [name for name, l27, dga in triples if l27 is None or dga is None],
+            'n_paired': len(paired), 'n_required': len(arms),
+            'spearman_l27_shift_vs_delta_g_ali': rho,
+            'tracks_negatively': bool(complete and rho is not None and rho <= PRED_214_8_RHO)}
 
 
 def unit_labels_from_stage1(s1: dict) -> list[str]:
@@ -1124,9 +1164,84 @@ def require_single_kind(rows: list[dict], run: dict) -> str:
     return 'pilot' if kind else 'full'
 
 
+def _pin_mismatches(pins: dict) -> list[str]:
+    """Every frozen code pin a run's `pins` mapping disagrees with (empty means the run is this build's)."""
+    expected = {'model': MODEL, 'revision': REVISION, 'design': DESIGN_VERSION, 'design_commit': DESIGN_COMMIT,
+                'design_sha256': DESIGN_SHA256, 'prompts_sha256': PROMPTS_SHA256,
+                'kernel_check_sha256': KERNEL_CHECK_SHA256, 'registration_pin': REGISTRATION_SHA256}
+    return [f'{k}: run has {pins.get(k)!r}, this build pins {value!r}'
+            for k, value in expected.items() if pins.get(k) != value]
+
+
+def require_run_pins(rows: list[dict], run: dict) -> dict:
+    """The run's pins must exist, be THIS build's pins, and match every row and every run-level identity field.
+
+    `require_single_kind` refuses pilot/full mixing. This refuses the other way a plausible file is still wrong
+    evidence: rows generated under Stage 0 bytes A scored beside a run.json describing recording B, a run produced by
+    another code/kernel, or a run whose design bytes are not the amended ones. Each row carries the exact `pins` it
+    was produced under (run214.stage2_generate), so equality is checkable without re-reading the model.
+    """
+    pins = run.get('pins')
+    if not isinstance(pins, dict) or not pins:
+        raise ValueError('refusing unpinned evidence: run.json carries no pins, so its rows cannot be bound to the '
+                         'Stage 0/design/registration inputs they were produced under')
+    for key in ('stage0_sha256', 'design_sha256', 'prompts_sha256', 'design_commit'):
+        if run.get(key) != pins.get(key):
+            raise ValueError(f'refusing unpinned evidence: run.json {key} is {run.get(key)!r} but its pins say '
+                             f'{pins.get(key)!r}')
+    frozen = _pin_mismatches(pins)
+    if frozen:
+        raise ValueError('refusing evidence produced against other pins: ' + '; '.join(frozen))
+    if run.get('tool_sha256') != pins.get('code_sha256'):
+        raise ValueError('refusing evidence: run.json tool_sha256 is '
+                         f'{run.get("tool_sha256")!r} but its pins name code {pins.get("code_sha256")!r}')
+    kernel = run.get('kernel_check') or {}
+    if kernel.get('pass') is not True or kernel.get('sha256') != pins.get('kernel_check_sha256'):
+        raise ValueError('refusing evidence: the run does not record a PASSING kernel check against the pinned '
+                         f'Part 183 reference (recorded {kernel.get("sha256")!r}, pinned '
+                         f'{pins.get("kernel_check_sha256")!r})')
+    if rows:
+        histogram = stage2_row_batch_size_histogram(rows)
+        if run.get('generation_batch_histogram') != histogram:
+            raise ValueError('refusing evidence: run.json generation_batch_histogram '
+                             f'{run.get("generation_batch_histogram")!r} does not describe the rows handed in '
+                             f'({histogram!r})')
+    bad = [index for index, row in enumerate(rows, start=1) if row.get('pins') != pins]
+    if bad:
+        raise ValueError(f'refusing rows written under different pins: {len(bad)} row(s) disagree with run.json '
+                         f'(first at line {bad[0]})')
+    return pins
+
+
+def require_planned_keys(rows: list[dict], run: dict, pinning: dict | None = None) -> list[tuple]:
+    """Every key present at most once and every key planned: a foreign or duplicated row is refused, not averaged.
+
+    `run214.check_resume_pins` enforces the same rule before the writer touches a file; this is the scoring-side
+    half, so a hand-edited or concatenated stage2.jsonl cannot smuggle an arm into a denominator.
+    """
+    kind = run.get('stage') == 'pilot'
+    plan = {row_key(r) for r in planned_stage2_rows(pilot=kind, pinning=pinning)}
+    try:
+        keys = [row_key(r) for r in rows]
+    except KeyError as exc:
+        raise ValueError(f'refusing a malformed Stage 2 row: it has no {exc.args[0]!r} field') from None
+    counts = Counter(keys)
+    duplicates = sorted(key for key, n in counts.items() if n > 1)
+    if duplicates:
+        raise ValueError(f'refusing duplicate Stage 2 keys: {duplicates[0]} appears {counts[duplicates[0]]} times; '
+                         f'each planned (arm, question, sample) may be scored once')
+    extra = [key for key in keys if key not in plan]
+    if extra:
+        raise ValueError(f'refusing unplanned Stage 2 keys: {extra[0]} is not in the '
+                         f'{"pilot" if kind else "full"} plan of {len(plan)} rows')
+    return keys
+
+
 def stage2_metrics(rows: list[dict], run: dict, pinning: dict | None = None, stage0: dict | None = None) -> dict:
     """Every Stage 2 quantity 214.1, 214.4-214.6 and the headline rules read, from stage2.jsonl + run.json."""
     evidence_kind = require_single_kind(rows, run)
+    require_run_pins(rows, run)
+    require_planned_keys(rows, run, pinning)
     rows = classify_rows(rows)
     groups = by_arm(rows)
     main = {arm: arm_table(heldout(rs), HELDOUT_N) for arm, rs in groups.items() if '/' not in arm}
@@ -1582,6 +1697,10 @@ def pred_214_8(s1: dict) -> dict:
         return status_verdict(UNTESTABLE, observed, rule, 'Gate 1 or Gate 2 failed')
     if fact is None or fact_no is None or you is None or you_no is None:
         return status_verdict(NOT_READ, observed, rule, 'a no_L29 arm is missing from stage1.json')
+    if corr['n_paired'] < corr['n_required']:
+        return status_verdict(NOT_READ, observed, rule,
+                              f'the {corr["n_required"]}-arm L27 correlation is incomplete: {corr["n_paired"]} of '
+                              f'{corr["n_required"]} pairs present, missing {corr["missing_arms"]}')
     clauses = {'fact_no_L29_within_0.25': abs(fact_no - fact) <= PRED_214_8_TOL,
                'you_no_L29_within_0.25': abs(you_no - you) <= PRED_214_8_TOL,
                'l27_tracks_negatively_le_-0.80': corr['tracks_negatively']}
@@ -1740,8 +1859,24 @@ def dumps(obj) -> str:
 
 
 def score(stage0: dict | None = None, stage1: dict | None = None, stage2_rows: list[dict] | None = None,
-          run: dict | None = None) -> dict:
-    """Everything score.json holds, from the saved stage files. Each stage may be absent."""
+          run: dict | None = None, stage0_sha256: str | None = None) -> dict:
+    """Everything score.json holds, from the saved stage files. Each stage may be absent.
+
+    Every artifact handed in is bound to the same pins: Stage 1 and Stage 2 from different Stage 0 bytes, design
+    bytes or code are refused rather than averaged, and when the caller knows the Stage 0 file's digest the pins must
+    name those exact bytes.
+    """
+    if stage1 is not None and run is not None and (stage1.get('pins') or None) != (run.get('pins') or None):
+        raise ValueError('stage1.json and run.json come from different inputs: their pins differ '
+                         f'(stage1 {stage1.get("pins")!r}, run {run.get("pins")!r})')
+    if stage0_sha256 is not None:
+        for name, obj in (('stage1.json', stage1), ('run.json', run)):
+            if obj is None:
+                continue
+            named = (obj.get('pins') or {}).get('stage0_sha256')
+            if named != stage0_sha256:
+                raise ValueError(f'{name} was produced from Stage 0 bytes {named!r}, but the file handed to the '
+                                 f'scorer is {stage0_sha256!r}')
     pinning = dial_pinning(stage0) if stage0 else None
     gate0_obj = gate0(stage0) if stage0 else {'pass': False, 'checks': {}, 'reason': 'no stage0.json'}
     gate3b_obj = gate3b(stage0)
@@ -1800,6 +1935,7 @@ def main(argv=None):
     parser.add_argument('--out', default=None, help='score.json path (default: <stage2-dir>/score.json)')
     args = parser.parse_args(argv)
     stage0 = load_json(args.stage0) if args.stage0 else None
+    stage0_sha256 = hashlib.sha256(Path(args.stage0).read_bytes()).hexdigest() if args.stage0 else None
     stage1 = load_json(args.stage1) if args.stage1 else None
     rows = run = None
     if args.stage2_dir:
@@ -1807,7 +1943,7 @@ def main(argv=None):
         rows = load_jsonl(directory / 'stage2.jsonl')
         run = load_json(directory / 'run.json')
     try:
-        result = score(stage0, stage1, rows, run)
+        result = score(stage0, stage1, rows, run, stage0_sha256=stage0_sha256)
     except ValueError as exc:
         raise SystemExit(f'refusing to score: {exc}') from None
     out = Path(args.out) if args.out else (Path(args.stage2_dir) / 'score.json' if args.stage2_dir else None)

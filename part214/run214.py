@@ -2,9 +2,9 @@
 """Part 214 runner: Stage 0 (donor & unchanged-maker recording), Stage 1 (H4 dial curve, 4-D diagnostics,
 natural-decode bridge), Stage 2 (1,584 uniform batch-1 held-out generations), and the 64-call mini-pilot.
 
-PART214-DESIGN.md v5 (commit e637e096) is the contract. Every place the design is ambiguous is marked `AMBIGUITY n`
-here and listed with its design line in the run report; the readings that turn numbers into verdicts live in
-score214.py.
+PART214-DESIGN.md v5, as amended at commit cb8cc1e4, is the contract. Every place the design is ambiguous is marked
+`AMBIGUITY n` here and listed with its design line in the run report; the readings that turn numbers into verdicts
+live in score214.py.
 
 Run under the XPU Python as
     python -I -B part214/run214.py stage0 --out results/part214/stage0 --device xpu
@@ -31,6 +31,7 @@ import os
 import re
 import sys
 import time
+from collections import Counter
 from contextlib import contextmanager
 from pathlib import Path
 
@@ -132,6 +133,15 @@ def generation_batch_histogram(rows: list[dict]) -> dict[str, int]:
 # deadline (design lines 356-359)
 # ----------------------------------------------------------------------------------------------------------------
 
+class DeadlineReached(Exception):
+    """Raised by a per-launch guard when the wall-clock budget is spent BETWEEN the calls of one unit of work.
+
+    `loop_until_deadline` checks before each item, which is enough for a unit that is one call. Stage 1's pre-pass
+    (24 forwards), its 100 recordings and the three `g_seq` forwards inside one arm/question are several calls each;
+    without this guard the deadline can pass during the first of them and the runner still launches the rest.
+    """
+
+
 def deadline_seconds(minutes) -> float:
     return max(0.0, float(minutes)) * 60.0
 
@@ -141,6 +151,14 @@ def deadline_hit(start: float, limit_s: float, now: float | None = None) -> bool
     if limit_s <= 0:
         return True
     return ((time.monotonic() if now is None else float(now)) - float(start)) >= limit_s
+
+
+def launch_guard(start: float, limit_s: float, clock=time.monotonic):
+    """A per-call guard: raises `DeadlineReached` when the next launch would cross the budget."""
+    def guard():
+        if deadline_hit(start, limit_s, clock()):
+            raise DeadlineReached(f'deadline: {limit_s:.1f}s budget spent before the next launch')
+    return guard
 
 
 def loop_until_deadline(items: list, work, deadline_s: float, clock=time.monotonic, start: float | None = None,
@@ -196,20 +214,37 @@ def registration_status(repo=ROOT) -> dict:
 def require_admission(args) -> dict:
     """Resolve registration BEFORE any loader or forward call; return the admission record the stage binds.
 
-    `--allow-unregistered` is the advertised dry-run override, so it must SELECT AN INERT PATH rather than fall
-    through to the real loader: the record it returns carries `dry_run: True`, and every stage that receives it
-    writes its record with zero loader and zero forward calls. The pre-fix code returned from this check and then
-    called `load_rig` and `model.generate` as usual.
+    Two rules, both of them evidence rules rather than conveniences:
+
+    * `--allow-unregistered` SELECTS AN INERT PATH, unconditionally. It is not a check that can be skipped: a run
+      that passes the flag writes a `dry_run: True` record and makes zero loader and zero forward calls, whether or
+      not a registration happens to exist. The pre-fix code let a successful status take precedence over the
+      option's advertised no-loader promise, so `--allow-unregistered` on a registered tree silently ran the model.
+    * A registered claim is checked against the FROZEN digest of the registered section (`sc.REGISTRATION_SHA256`).
+      A locally matched `## Part 214 (registered ...)` heading is not evidence that those bytes were the ones
+      registered; only a pinned digest is. A build that pins no digest refuses a registered admission rather than
+      trusting whatever the working tree currently says.
     """
     status = registration_status()
-    if status['registered']:
-        return {'admitted': True, 'dry_run': False, **status}
+    pinned = sc.REGISTRATION_SHA256
+    base = {'registration_pin': pinned, 'design_commit': sc.DESIGN_COMMIT, 'design_sha256': sc.DESIGN_SHA256}
     if getattr(args, 'allow_unregistered', False):
-        return {'admitted': False, 'dry_run': True, **status}
-    raise SystemExit(
-        f'refusing patched generation before registration: {status["reason"]}. Stage 0 may run before '
-        f'registration; Stage 1 and Stage 2 may not (PART214-DESIGN.md, Code acceptance). Pass '
-        f'--allow-unregistered only for a dry run that will not be scored.')
+        return {'admitted': bool(status['registered']), 'dry_run': True, **base, **status}
+    if not status['registered']:
+        raise SystemExit(
+            f'refusing patched generation before registration: {status["reason"]}. Stage 0 may run before '
+            f'registration; Stage 1 and Stage 2 may not (PART214-DESIGN.md, Code acceptance). Pass '
+            f'--allow-unregistered only for a dry run that will not be scored.')
+    if pinned is None:
+        raise SystemExit(
+            'refusing patched generation: PREDICTIONS.md has a Part 214 heading, but this build pins no registration '
+            'digest (score214.REGISTRATION_SHA256 is None), so the admitted run cannot be bound to the registered '
+            'bytes. Pin the registered section digest before a scored run.')
+    if status['section_sha256'] != pinned:
+        raise SystemExit(
+            f'refusing patched generation: the live Part 214 section is SHA-256 {status["section_sha256"]}, this '
+            f'build pins {pinned}. The registration bytes changed (or the heading is not the registered one).')
+    return {'admitted': True, 'dry_run': False, **base, **status}
 
 
 def dry_run_record(stage, args, admission, clock=time.monotonic) -> dict:
@@ -220,10 +255,28 @@ def dry_run_record(stage, args, admission, clock=time.monotonic) -> dict:
     """
     return {'part': sc.PART, 'stage': stage, 'design': sc.DESIGN_VERSION, 'dry_run': True,
             'admitted': bool(admission.get('admitted')), 'registration': admission,
-            'reason': 'unregistered dry run: no model load and no forward or generation call was made',
+            'reason': 'dry run: no model load and no forward or generation call was made',
             'loader_calls': 0, 'model_calls': 0, 'forward_calls': 0, 'generation_batch_histogram': {},
             'planned_rows': 0, 'deadline_reached': False, 'wall_time_seconds': 0.0,
             'device': getattr(args, 'device', None), 'out': str(getattr(args, 'out', ''))}
+
+
+def write_dry_run_record(obj, out, name: str, stage: str) -> None:
+    """Write a dry-run stub ONLY where no real evidence exists.
+
+    A dry run must never write over a stage record produced by a model: overwriting `stage1.json` or `run.json` with
+    an inert stub destroys the evidence a scorer reads and leaves a file that still looks like a completed stage.
+    """
+    path = Path(out) / name
+    if path.exists():
+        try:
+            existing = json.loads(path.read_text(encoding='utf-8'))
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+            existing = None
+        if not (isinstance(existing, dict) and existing.get('dry_run') is True):
+            raise SystemExit(f'refusing to write a dry-run stub over {path}: it holds a real stage record, and a '
+                             f'dry run never writes over evidence')
+    write_stage_record(obj, out, name, stage)
 
 
 def load_prompts(path=PROMPTS_PATH) -> dict:
@@ -343,16 +396,20 @@ def accumulate_abs(sums: dict, counts: dict, layer: int, activation) -> None:
     counts[int(layer)] = int(counts.get(int(layer), 0)) + int(np.prod(activation.shape[:-1]))
 
 
-def pool_norm_pass(tok, model, layers, bank: dict, device, weights: np.ndarray) -> dict:
+def pool_norm_pass(tok, model, layers, bank: dict, device, weights: np.ndarray, guard=None,
+                   progress: dict | None = None) -> dict:
     """24 unchanged D_fact forwards accumulating |a| for every unit of the four target layers (design lines 101-102).
 
     The write-norm pools are drawn from D_fact, not EN_MAKER as in Part 212: design line 101 says "plus Stage 1's
-    4x50 write-norm pool units on `D_fact` for Stage 1's 10 matched random sets".
+    4x50 write-norm pool units on `D_fact` for Stage 1's 10 matched random sets". `guard` is checked before EACH of
+    the 24 launches, so a deadline that passes mid-pass stops the pass rather than being noticed only afterwards.
     """
     sums = {int(layer): np.zeros(int(layers[layer].mlp.down_proj.in_features), dtype=np.float64)
             for layer, _ in TARGET}
     counts = {int(layer): 0 for layer, _ in TARGET}
     for qi in range(sc.N_QUESTIONS):
+        if guard is not None:
+            guard()
         ids = question_ids(tok, bank['items'][qi][NORM_POOL_BANK])
         handles = [layers[layer].mlp.down_proj.register_forward_pre_hook(
             lambda _m, args, layer=layer: accumulate_abs(sums, counts, layer, args[0]))
@@ -363,6 +420,8 @@ def pool_norm_pass(tok, model, layers, bank: dict, device, weights: np.ndarray) 
         finally:
             for handle in handles:
                 handle.remove()
+        if progress is not None:
+            progress['forwards'] = qi + 1
         nr.spill_guard(device, 20.0)
     n_units = int(layers[TARGET[0][0]].mlp.down_proj.in_features)
     norm = unit_write_norms(sums, counts, weights)
@@ -483,8 +542,10 @@ def kernel_check(load: dict, path=KERNEL_CHECK_PATH) -> dict:
     ref = json.loads(raw.decode('utf-8'))
     ref_load = ref.get('load') or {}
     actual = load.get('attn_implementation')
+    digest = hashlib.sha256(raw).hexdigest()
     checks = {
         'kernel_check_present': True,
+        'reference_sha256_matches_pinned': digest == sc.KERNEL_CHECK_SHA256,
         'reference_model_matches': ref.get('model') == MODEL,
         'reference_revision_matches': ref.get('revision') == REVISION,
         'reference_attn_implementation_eager': ref.get('attn_implementation') == 'eager',
@@ -493,8 +554,8 @@ def kernel_check(load: dict, path=KERNEL_CHECK_PATH) -> dict:
         'loaded_attn_matches_reference': actual is not None and actual == ref_load.get('attn_implementation'),
         'loaded_dtype_matches_reference': str(load.get('dtype')) == str(ref.get('dtype')),
     }
-    return {'pass': all(checks.values()), 'checks': checks, 'path': str(path),
-            'sha256': hashlib.sha256(raw).hexdigest(),
+    return {'pass': all(checks.values()), 'checks': checks, 'path': str(path), 'sha256': digest,
+            'pinned_sha256': sc.KERNEL_CHECK_SHA256,
             'reference': {'model': ref.get('model'), 'revision': ref.get('revision'),
                           'attn_implementation': ref.get('attn_implementation'), 'dtype': ref.get('dtype'),
                           'torch': ref.get('torch'), 'transformers': ref.get('transformers')},
@@ -511,58 +572,84 @@ def design_sha256(path=None) -> str | None:
     return file_sha256(path) if path.exists() else None
 
 
-def stage_pins(stage0_sha256: str) -> dict:
-    """The exact inputs a Stage 2 row is written under; a resume whose pins changed is refused (design line 333)."""
+def stage_pins(stage0_sha256: str, admission: dict | None = None) -> dict:
+    """The exact inputs a Stage 2 row is written under; a resume whose pins changed is refused (design line 333).
+
+    The pins name every artifact identity a row is a function of, not just the Stage 0 bytes: the amended design and
+    its digest, the prompt bank, the model/revision, the Part 183 kernel reference, the registration receipt and this
+    runner's own code. Stage 1 and the pilot must present these same pins before a full run launches, so evidence
+    from one recording cannot clear the gate on another (and a code or kernel change invalidates both stages).
+    """
+    admission = admission or {}
     return {'stage0_sha256': stage0_sha256, 'design_sha256': design_sha256(),
             'design': sc.DESIGN_VERSION, 'design_commit': sc.DESIGN_COMMIT,
-            'prompts_sha256': PROMPTS_SHA256, 'model': MODEL, 'revision': REVISION}
+            'prompts_sha256': PROMPTS_SHA256, 'model': MODEL, 'revision': REVISION,
+            'kernel_check_sha256': sc.KERNEL_CHECK_SHA256,
+            'registration_pin': sc.REGISTRATION_SHA256,
+            'registration_section_sha256': admission.get('section_sha256'),
+            'code_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
 
 
 # ----------------------------------------------------------------------------------------------------------------
 # Stage 0
 # ----------------------------------------------------------------------------------------------------------------
 
-def stage0(args) -> dict:
-    """Stage 0: 100 greedy recordings (4 banks x 25) + the D_fact write-norm pool (design lines 99-117)."""
+def stage0(args, clock=time.monotonic) -> dict:
+    """Stage 0: 100 greedy recordings (4 banks x 25) + the D_fact write-norm pool (design lines 99-117).
+
+    The write-norm pass is 24 forwards; like Stage 1's pre-pass it is guarded per launch, so the deadline cannot
+    pass during it and still let the remaining forwards (and the 100 recordings that depend on the pools) launch.
+    `write_norm_forwards` and the batch histogram report what actually ran, not the nominal 24.
+    """
     bank = load_prompts()
-    started = time.monotonic()
+    started = clock()
+    deadline_s = deadline_seconds(args.deadline_min)
+    guard = launch_guard(started, deadline_s, clock)
     model, tok, load = load_rig(args)
     kernel = kernel_check(load)
     if not kernel['pass']:
         raise SystemExit(f'stage0: kernel check failed against {kernel["path"]}: {kernel["checks"]}')
     layers = nr.find_text_layers(model)[1]
     weights = down_weights(layers)
-    pool = pool_norm_pass(tok, model, layers, bank, args.device, weights)
+    deadline_reached = False
+    progress: dict = {'forwards': 0}
+    try:
+        pool = pool_norm_pass(tok, model, layers, bank, args.device, weights, guard=guard, progress=progress)
+    except DeadlineReached as exc:
+        deadline_reached = True
+        pool = {'pools': {}, 'maker_norm': {}}
+        print(f'stage0: {exc}; the write-norm pool is incomplete, so no bank is recorded', flush=True)
+    write_norm_forwards = int(progress['forwards'])
     pools = pool['pools']
     pool_units = [(int(layer), int(u)) for layer in sorted(pools) for u in pools[layer]]
     banks = {}
     greedy_calls = 0
-    deadline_reached = False
-    for name in sc.ALL_BANKS:
-        units = TARGET + (pool_units if name == NORM_POOL_BANK else [])
-        items = []
-        for qi in range(25):
-            if deadline_hit(started, deadline_seconds(args.deadline_min)):
-                deadline_reached = True
+    if not deadline_reached:
+        for name in sc.ALL_BANKS:
+            units = TARGET + (pool_units if name == NORM_POOL_BANK else [])
+            items = []
+            for qi in range(25):
+                if deadline_hit(started, deadline_s, clock()):
+                    deadline_reached = True
+                    break
+                record = record_greedy_donor(tok, model, layers, bank['items'][qi][name], args.device, units)
+                greedy_calls += 1
+                item = {'index': qi, 'text': bank['items'][qi][name], 'answer': record['answer'],
+                        'token_ids': record['token_ids'], 'prompt_tokens': record['prompt_tokens'],
+                        'n_non_eos': record['n_non_eos'], 'L_gen': record['L_gen'],
+                        'prompt': np.round(record['prompt'][:, :len(TARGET)], 6).tolist(),
+                        'gen': np.round(record['gen'][:, :len(TARGET)], 6).tolist()}
+                if units != TARGET:
+                    item['pool_units'] = [[int(l), int(u)] for l, u in pool_units]
+                    item['pool_prompt'] = np.round(record['prompt'][:, len(TARGET):], 6).tolist()
+                    item['pool_gen'] = np.round(record['gen'][:, len(TARGET):], 6).tolist()
+                items.append(item)
+                print(f'stage0: {name} {qi + 1}/25 L_gen={record["L_gen"]} n_non_eos={record["n_non_eos"]}', flush=True)
+                nr.spill_guard(args.device, 20.0)
+            banks[name] = {'prompts': items}
+            if deadline_reached:
+                print('stage0: deadline reached; writing what was recorded (design line 357)', flush=True)
                 break
-            record = record_greedy_donor(tok, model, layers, bank['items'][qi][name], args.device, units)
-            greedy_calls += 1
-            item = {'index': qi, 'text': bank['items'][qi][name], 'answer': record['answer'],
-                    'token_ids': record['token_ids'], 'prompt_tokens': record['prompt_tokens'],
-                    'n_non_eos': record['n_non_eos'], 'L_gen': record['L_gen'],
-                    'prompt': np.round(record['prompt'][:, :len(TARGET)], 6).tolist(),
-                    'gen': np.round(record['gen'][:, :len(TARGET)], 6).tolist()}
-            if units != TARGET:
-                item['pool_units'] = [[int(l), int(u)] for l, u in pool_units]
-                item['pool_prompt'] = np.round(record['prompt'][:, len(TARGET):], 6).tolist()
-                item['pool_gen'] = np.round(record['gen'][:, len(TARGET):], 6).tolist()
-            items.append(item)
-            print(f'stage0: {name} {qi + 1}/25 L_gen={record["L_gen"]} n_non_eos={record["n_non_eos"]}', flush=True)
-            nr.spill_guard(args.device, 20.0)
-        banks[name] = {'prompts': items}
-        if deadline_reached:
-            print('stage0: deadline reached; writing what was recorded (design line 357)', flush=True)
-            break
     min_lgen = min((int(p['L_gen']) for b in banks.values() for p in b['prompts']), default=None)
     obj = {
         'part': sc.PART, 'stage': 0, 'design': sc.DESIGN_VERSION,
@@ -578,17 +665,18 @@ def stage0(args) -> dict:
         'banks': banks,
         'write_norm_pools': {str(k): v for k, v in pools.items()},
         'pool_units': [[int(l), int(u)] for l, u in pool_units],
-        'write_norm_summary': pool_summary(pool['maker_norm'], pools),
-        'greedy_calls': greedy_calls, 'write_norm_forwards': sc.N_QUESTIONS,
-        'generation_batch_histogram': {'1': greedy_calls + sc.N_QUESTIONS},
-        'wall_time_seconds': time.monotonic() - started,
+        'write_norm_summary': pool_summary(pool['maker_norm'], pools) if pools else {},
+        'greedy_calls': greedy_calls, 'write_norm_forwards': write_norm_forwards,
+        'generation_batch_histogram': {'1': greedy_calls + write_norm_forwards},
+        'wall_time_seconds': clock() - started,
         'deadline_min': args.deadline_min, 'deadline_reached': deadline_reached,
         'gate3b_min_L_gen': min_lgen,
     }
     out = Path(args.out)
     with output_directory_lock(out, 'stage0'):
         write_json(out / 'stage0.json', obj)
-    print(f'stage0: wrote {out / "stage0.json"} ({greedy_calls} greedy + {sc.N_QUESTIONS} norm forwards)', flush=True)
+    print(f'stage0: wrote {out / "stage0.json"} ({greedy_calls} greedy + {write_norm_forwards} norm forwards)',
+          flush=True)
     return obj
 
 
@@ -831,7 +919,7 @@ def unit_dial_context(pinning: dict, units: list[tuple[int, int]]) -> dict:
     return out
 
 
-def stage1_call(arm: str, qi: int, ctx: dict, model, layers, args) -> dict:
+def stage1_call(arm: str, qi: int, ctx: dict, model, layers, args, guard=None) -> dict:
     """One Stage 1 arm/question readout, from ONE forward per maker-name continuation path.
 
     `g_ali`, `g_al`, the 8-maker mass and the monitors live at the single scoring position `T+4`, whose prefix is the
@@ -839,6 +927,10 @@ def stage1_call(arm: str, qi: int, ctx: dict, model, layers, args) -> dict:
     continuation: Tongyi's `ong`/`yi` must be conditioned on `T` / `T,ong`, not on the shared `Al,T,ong` path, or the
     score is computed under a token history the name never has (design line 138; a name's own first token is still
     conditioned on the shared prefix, which is identical in every path).
+
+    The three forwards are three launches; `guard` is checked before each, and a deadline that passes between them
+    raises `DeadlineReached` with NO value recorded for this arm/question. A g_seq read from one continuation path
+    and a stale logits row from another would be a corrupted measurement, not a partial one.
     """
     base = arm.split(':', 1)[-1]
     if not stage1_arm_runnable(base, ctx.get('pinning')):
@@ -860,6 +952,8 @@ def stage1_call(arm: str, qi: int, ctx: dict, model, layers, args) -> dict:
     mon: dict = {}
     logits_by_name = {}
     for k, name in enumerate(GSEQ_NAMES):
+        if guard is not None:
+            guard()
         seq = list(ids) + opening + continuation_ids(ctx['bank'], name)
         logits_by_name[name] = forward_with_hooks(model, layers, seq, units, clamp, factor, T, args.device,
                                                   mon if k == 0 else {})
@@ -1049,15 +1143,17 @@ def stage1(args, clock=time.monotonic, rig_loader=None) -> dict:
     admission = require_admission(args)
     if admission['dry_run']:
         obj = dry_run_record(1, args, admission, clock)
-        write_stage_record(obj, args.out, 'stage1.json', 'stage1')
+        write_dry_run_record(obj, args.out, 'stage1.json', 'stage1')
         return obj
     bank = load_prompts()
     if not args.stage0:
         raise SystemExit('stage1 needs --stage0 (Stage 0 donor recordings are its frozen sources)')
     stage0_raw = Path(args.stage0).read_bytes()
+    stage0_sha256 = hashlib.sha256(stage0_raw).hexdigest()
     stage0_obj = json.loads(stage0_raw.decode('utf-8'))
     started = clock()
     deadline_s = deadline_seconds(args.deadline_min)
+    guard = launch_guard(started, deadline_s, clock)
     model, tok, load = (rig_loader or load_rig)(args)
     kernel = kernel_check(load)
     if not kernel['pass']:
@@ -1067,9 +1163,11 @@ def stage1(args, clock=time.monotonic, rig_loader=None) -> dict:
     pinning = sc.dial_pinning(stage0_obj)
     donors = stage0_banks(stage0_obj)
     short = short_donors(stage0_obj)
-    if short:
-        raise SystemExit(f'stage1: Gate 3b fails ({len(short)} donor(s) with L_gen < {sc.MIN_DONOR_LGEN}); the '
-                         f'natural-decode arms have no donor_gen[0..4] to place')
+    shape = gates3b_banks(stage0_obj)
+    if short or not shape['pass']:
+        raise SystemExit(f'stage1: Gate 3b fails ({len(short)} donor(s) with L_gen < {sc.MIN_DONOR_LGEN}; '
+                         f'prompts per bank {shape["prompts_per_bank"]}); the natural-decode arms have no '
+                         f'donor_gen[0..4] to place')
     h, s = int(bank['template_prefix_tokens']), int(bank['template_suffix_tokens'])
     means = {b: bank_mean_arrays(donors[b][:sc.N_QUESTIONS], h, s) for b in sc.DONOR_BANKS}
     pools = {int(k): [int(u) for u in v] for k, v in (stage0_obj.get('write_norm_pools') or {}).items()}
@@ -1078,53 +1176,92 @@ def stage1(args, clock=time.monotonic, rig_loader=None) -> dict:
     stopped = stage1_stopped_arms(pinning)
 
     # --- 24 write-norm pre-pass forwards: re-derive the pools and check them against Stage 0's (design line 141) ---
-    pre = pool_norm_pass(tok, model, layers, bank, args.device, weights)
-    pre_pools = {str(k): v for k, v in pre['pools'].items()}
-    pool_check = {k: pre_pools.get(k) == (stage0_obj.get('write_norm_pools') or {}).get(k) for k in pre_pools}
-    prepass_forwards = sc.N_QUESTIONS
+    # The deadline guard is checked before EVERY forward here and before every recording below: these 124 launches
+    # are 124 calls, and a budget that expires during them used to be noticed only at the first arm.
+    prepass_forwards = 0
+    reached = False
+    pre, pre_pools, pool_check = None, {}, {}
+    progress: dict = {'forwards': 0}
+    try:
+        pre = pool_norm_pass(tok, model, layers, bank, args.device, weights, guard=guard, progress=progress)
+        prepass_forwards = sc.N_QUESTIONS
+    except DeadlineReached as exc:
+        reached = True
+        prepass_forwards = int(progress['forwards'])
+        print(f'stage1: {exc}; the write-norm pre-pass is incomplete and no arm readout is possible', flush=True)
+    if pre is not None:
+        pre_pools = {str(k): v for k, v in pre['pools'].items()}
+        pool_check = {k: pre_pools.get(k) == (stage0_obj.get('write_norm_pools') or {}).get(k) for k in pre_pools}
 
     # --- 100 unchanged recordings: 4 banks x 25, each on its own bank prompt + the EN_MAKER opening ---
-    recorded: dict[str, list] = {}
-    for name in sc.ALL_BANKS:
-        recorded[name] = []
-        for qi in range(25):
-            seq = list(question_ids(tok, bank['items'][qi][name])) + opening_ids(bank, 'en_maker')
-            recorded[name].append(record_units(layers, TARGET, lambda seq=seq: one_forward(model, seq, args.device)))
-            nr.spill_guard(args.device, 20.0)
-        print(f'stage1: recorded {name} 25/25', flush=True)
-    prepass_forwards += len(sc.ALL_BANKS) * 25
+    recorded: dict[str, list] = {name: [] for name in sc.ALL_BANKS}
+    if not reached:
+        for name in sc.ALL_BANKS:
+            complete_bank = True
+            for qi in range(25):
+                try:
+                    guard()
+                except DeadlineReached as exc:
+                    reached = True
+                    complete_bank = False
+                    print(f'stage1: {exc}; recorded {prepass_forwards} of 124 pre-pass forwards', flush=True)
+                    break
+                seq = list(question_ids(tok, bank['items'][qi][name])) + opening_ids(bank, 'en_maker')
+                recorded[name].append(record_units(layers, TARGET,
+                                                   lambda seq=seq: one_forward(model, seq, args.device)))
+                prepass_forwards += 1
+                nr.spill_guard(args.device, 20.0)
+            if complete_bank:
+                print(f'stage1: recorded {name} 25/25', flush=True)
+            else:
+                break
 
     # --- the eligible arms x 25 prompts; `unchanged` (alpha = 1.0) IS the baseline row of the curve ---
+    # No arm is read unless all 100 recordings exist: every arm's delta is taken against `unchanged`, so a cut
+    # baseline would mislabel every value that follows it.
+    complete_recordings = not reached
 
     results = {arm: {'g_ali': [], 'g_seq': [], 'g_al': [], 'mass': [], 'l24_n3949': [], 'l27_n3325': [],
                      'pert': []} for arm in planned}
     work = [(arm, qi) for arm in planned for qi in range(25)]
+    _done: list = []
+    if complete_recordings:
+        def run(item):
+            arm, qi = item
+            units = arm_units(arm, sets)
+            clean = None
+            if not arm.startswith('random_') and not arm.endswith('no_L29'):
+                clean = recorded['en_maker'][qi][:len(question_ids(tok, bank['items'][qi]['en_maker'])) + OPENING_TOKENS]
+                clean = clean[:, [TARGET.index(u) for u in units]]
+            ctx = {'tok': tok, 'bank': bank, 'donors': donors, 'means': means, 'pinning': pinning, 'clean': clean,
+                   'donor_tokens': donors, 'units': units, 'unit_weights': unit_columns(weights, units),
+                   'arm_opening': stage1_opening_name(arm, bank, donors, qi)}
+            values = stage1_call(arm, qi, ctx, model, layers, args, guard=guard)
+            for key, value in values.items():
+                results[arm][key].append(value)
+            return arm, qi
 
-    def run(item):
-        arm, qi = item
-        units = arm_units(arm, sets)
-        clean = None
-        if not arm.startswith('random_') and not arm.endswith('no_L29'):
-            clean = recorded['en_maker'][qi][:len(question_ids(tok, bank['items'][qi]['en_maker'])) + OPENING_TOKENS]
-            clean = clean[:, [TARGET.index(u) for u in units]]
-        ctx = {'tok': tok, 'bank': bank, 'donors': donors, 'means': means, 'pinning': pinning, 'clean': clean,
-               'donor_tokens': donors, 'units': units, 'unit_weights': unit_columns(weights, units),
-               'arm_opening': stage1_opening_name(arm, bank, donors, qi)}
-        values = stage1_call(arm, qi, ctx, model, layers, args)
-        for key, value in values.items():
-            results[arm][key].append(value)
-        return arm, qi
-
-    _done, reached = loop_until_deadline(work, run, deadline_s, start=started, clock=clock,
-                                         log=lambda msg: print(f'stage1: {msg}', flush=True))
+        for index, item in enumerate(work):
+            if deadline_hit(started, deadline_s, clock()):
+                reached = True
+                print(f'stage1: deadline: stopping after {index} of {len(work)} calls', flush=True)
+                break
+            try:
+                _done.append(run(item))
+            except DeadlineReached as exc:
+                reached = True
+                print(f'stage1: {exc} (inside the {GSEQ_PATHS} g_seq forwards of {item[0]} q{item[1]}); that '
+                      f'arm/question is not recorded', flush=True)
+                break
     if reached:
         print('stage1: deadline reached; writing what was run (design line 357)', flush=True)
     non_finite = sum(1 for arm in results.values() for key in ('g_ali', 'g_seq', 'g_al')
                      for value in arm[key] if not finite(value))
     obj = stage1_object(bank, results, pinning, pools, pre_pools, pool_check, load, args, started, non_finite,
                         n_calls=len(_done), planned_arms=planned, stopped=stopped, deadline_reached=reached,
-                        prepass_forwards=prepass_forwards, stage0_sha256=hashlib.sha256(stage0_raw).hexdigest(),
-                        admission=admission, kernel=kernel, clock=clock)
+                        prepass_forwards=prepass_forwards, stage0_sha256=stage0_sha256,
+                        admission=admission, kernel=kernel, clock=clock,
+                        pins=stage_pins(stage0_sha256, admission))
     write_stage_record(obj, args.out, 'stage1.json', 'stage1')
     print(f'stage1: wrote {Path(args.out) / "stage1.json"} ({len(_done)} arm/question forwards)', flush=True)
     return obj
@@ -1159,7 +1296,7 @@ def short_donors(stage0_obj: dict) -> list[dict]:
 
 def stage1_object(bank, results, pinning, pools, pre_pools, pool_check, load, args, started, nonfinite,
                   n_calls, planned_arms=None, stopped=None, deadline_reached=False, prepass_forwards=0,
-                  stage0_sha256=None, admission=None, kernel=None, clock=time.monotonic) -> dict:
+                  stage0_sha256=None, admission=None, kernel=None, clock=time.monotonic, pins=None) -> dict:
     """stage1.json: per-arm per-question readouts, deltas from unchanged, gate inputs, pools and random sets.
 
     The forward histogram is what was ACTUALLY run (`prepass_forwards + n_calls * GSEQ_PATHS`), with the nominal
@@ -1191,6 +1328,7 @@ def stage1_object(bank, results, pinning, pools, pre_pools, pool_check, load, ar
         'admission': admission or {}, 'kernel_check': kernel or {},
         'stage0_sha256': stage0_sha256, 'design_sha256': design_sha256(),
         'tool_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), 'prompts_sha256': PROMPTS_SHA256,
+        'pins': dict(pins) if pins is not None else None,
         'target': [[int(l), int(u)] for l, u in TARGET],
         'unit_labels': [f'L{int(l)} N{int(u)}' for l, u in TARGET],
         'non_finite_readouts': nonfinite, 'arm_question_forwards': n_calls,
@@ -1420,8 +1558,13 @@ def stage2_generate(row: dict, bank: dict, tok, stage0_obj: dict, pinning: dict,
                      if 'dial_prompt' in tensors else None)}
 
 
-def stage1_evidence(path, pinning: dict | None) -> dict:
-    """The Stage 1 evidence the design's Stage 2 stopping rule names: Gate 1 and Gate 2 (design line 305)."""
+def stage1_evidence(path, pinning: dict | None, pins: dict | None = None) -> dict:
+    """The Stage 1 evidence the design's Stage 2 stopping rule names: Gate 1 and Gate 2 (design line 305).
+
+    Gates 1 and 2 are properties of a MEASUREMENT, not of a file name: a Stage 1 run recorded against different
+    Stage 0 bytes, design bytes, code or kernel is a valid measurement of something else and must not clear this
+    run's gate. `pins` is the full run's pin set; a Stage 1 record that does not carry it exactly is refused.
+    """
     path = Path(path)
     if not path.exists():
         return {'pass': False, 'checks': {'stage1_present': False}, 'path': str(path),
@@ -1431,18 +1574,29 @@ def stage1_evidence(path, pinning: dict | None) -> dict:
     metrics = sc.stage1_metrics(stage1_obj, pinning)
     gate1 = metrics['gates']['gate1']
     gate2 = metrics['gates']['gate2']
-    checks = {'stage1_present': True, 'gate1_pass': bool(gate1.get('pass')), 'gate2_pass': bool(gate2.get('pass'))}
+    recorded = stage1_obj.get('pins')
+    pin_ok = pins is None or recorded == pins
+    checks = {'stage1_present': True,
+              'stage1_pins_present': isinstance(recorded, dict) and bool(recorded),
+              'stage1_pins_match_this_run': bool(pin_ok),
+              'gate1_pass': bool(gate1.get('pass')), 'gate2_pass': bool(gate2.get('pass'))}
     return {'pass': all(checks.values()), 'checks': checks, 'path': str(path),
-            'sha256': hashlib.sha256(raw).hexdigest(), 'gate1': gate1, 'gate2': gate2,
-            'reason': '' if all(checks.values()) else 'Gate 1 or Gate 2 did not pass'}
+            'sha256': hashlib.sha256(raw).hexdigest(), 'gate1': gate1, 'gate2': gate2, 'pins': recorded,
+            'reason': '' if all(checks.values()) else
+                      (f'Gate 1 or Gate 2 did not pass' if gate1.get('pass') is False or gate2.get('pass') is False
+                       else 'Stage 1 was recorded under different pins than this run (Stage 0/design/code/kernel '
+                            'or registration changed)')}
 
 
-def pilot_evidence(directory, pinning: dict | None) -> dict:
+def pilot_evidence(directory, pinning: dict | None, pins: dict | None = None) -> dict:
     """The pilot evidence the design's stopping rule names before full Stage 2 (design lines 305-309).
 
     Every check is computed from the pilot's OWN 64 rows: pilot rows are never pooled into a full-run number, and a
     missing pilot is a refusal rather than a pass. The latency ceiling is read from the pilot's four timing-only
     calls, which the design places OUTSIDE the 64-row manifest.
+
+    Validation is READ-ONLY. The pre-fix code repaired the pilot's JSONL while *checking* it, which writes to
+    another run's evidence outside that run's lock; a torn tail is reported here and abandoned, never fixed.
     """
     directory = Path(directory)
     run_path = directory / 'run.json'
@@ -1451,10 +1605,13 @@ def pilot_evidence(directory, pinning: dict | None) -> dict:
         return {'pass': False, 'checks': {'pilot_files_present': False}, 'path': str(directory),
                 'reason': f'{run_path} and {rows_path} must both exist'}
     run = json.loads(run_path.read_text(encoding='utf-8'))
-    rows = sc.classify_rows(load_stage2_jsonl(rows_path))
+    raw_rows, dropped = read_jsonl_readonly(rows_path)
+    rows = sc.classify_rows(raw_rows)
     planned = sc.planned_stage2_rows(pilot=True)
     planned_keys = {sc.row_key(r) for r in planned}
-    actual_keys = {sc.row_key(r) for r in rows}
+    keys = [sc.row_key(r) for r in rows]
+    actual_keys = set(keys)
+    run_pins = run.get('pins')
     guards = [r for r in rows if int(r['question_index']) in sc.GUARD_INDICES]
     unchanged_guards = [r for r in guards if r.get('arm') == 'unchanged']
     positive = [r for r in rows if r.get('arm') == 'zero' and int(r['question_index']) == sc.POSITIVE_INDEX]
@@ -1462,16 +1619,32 @@ def pilot_evidence(directory, pinning: dict | None) -> dict:
     correct = sum(1 for r in unchanged_guards if sc.guard_correct(r))
     empty = [r for r in rows if not (r.get('answer') or '').strip()]
     non_finite = [r for r in rows if any(not math.isfinite(float(t)) for t in r.get('token_ids') or [])]
+    foreign_kind = [index for index, row in enumerate(rows, start=1) if not sc.row_kind(row)]
+    foreign_pins = [index for index, row in enumerate(rows, start=1) if row.get('pins') != run_pins]
     timing = run.get('timing_only') or []
     latencies = [float(t.get('wall_seconds')) for t in timing if t.get('wall_seconds') is not None]
+    row_histogram = {}
+    if rows:
+        try:
+            row_histogram = sc.stage2_row_batch_size_histogram(rows)
+        except ValueError:
+            row_histogram = {}          # a row with no valid batch_size fails the check below, not the caller
     checks = {
         'pilot_files_present': True,
+        'pilot_no_torn_tail': dropped == 0,
         'pilot_stage_is_pilot': run.get('stage') == 'pilot',
         'pilot_eager': run.get('attn_implementation') == 'eager',
+        'pilot_pins_present': isinstance(run_pins, dict) and bool(run_pins),
+        'pilot_pins_match_this_run': pins is None or run_pins == pins,
+        'pilot_rows_carry_the_run_pins': bool(rows) and not foreign_pins,
+        'pilot_rows_are_all_pilot_kind': not foreign_kind,
         'pilot_histogram_64': run.get('generation_batch_histogram') == {'1': PILOT_PLANNED_CALLS},
+        'pilot_rows_describe_the_run_histogram': bool(rows)
+                                                 and row_histogram == run.get('generation_batch_histogram'),
         'pilot_no_empty_rows': not empty,
         'pilot_no_non_finite_rows': not non_finite,
-        'pilot_planned_keys_present_once': actual_keys == planned_keys and len(rows) == len(planned),
+        'pilot_planned_keys_present_once': actual_keys == planned_keys and len(rows) == len(planned)
+                                           and len(set(keys)) == len(keys),
         'pilot_unchanged_guard_accuracy_ge_22_of_24': len(unchanged_guards) == sc.PILOT_GUARD_N
                                                         and correct >= sc.PILOT_GUARD_CORRECT_MIN,
         'pilot_unchanged_broken_le_1_of_24': len(unchanged_guards) == sc.PILOT_GUARD_N
@@ -1484,54 +1657,94 @@ def pilot_evidence(directory, pinning: dict | None) -> dict:
         'pilot_latency_le_7.5s': bool(latencies) and max(latencies) <= PILOT_MAX_LATENCY_S,
     }
     return {'pass': all(checks.values()), 'checks': checks, 'path': str(directory),
-            'rows': len(rows), 'guard_correct': correct, 'guard_counts': counts,
-            'max_latency_s': max(latencies) if latencies else None,
+            'rows': len(rows), 'guard_correct': correct, 'guard_counts': counts, 'pins': run_pins,
+            'max_latency_s': max(latencies) if latencies else None, 'torn_tail_bytes_dropped': dropped,
             'reason': '' if all(checks.values()) else
                       f'pilot evidence failed: {sorted(k for k, v in checks.items() if not v)}'}
 
 
-def full_stage2_evidence(args, stage0_obj: dict, pinning: dict | None, short: list[dict]) -> dict:
+def gates3b_banks(stage0_obj: dict) -> dict:
+    """Gate 3b's REQUIRED shape: four banks of exactly 25 donor recordings (design lines 106-107).
+
+    The pre-fix check scanned the donors that were present, so a Stage 0 holding three banks -- or one bank of four
+    rows -- passed while the natural-decode arms had no donor_gen to place. Presence of the four banks is checked
+    here, before the L_gen floor, and both the runner and the scorer read this shape.
+    """
+    banks = stage0_obj.get('banks') or {}
+    per_bank = {b: len((banks.get(b) or {}).get('prompts') or []) for b in sc.ALL_BANKS}
+    return {'pass': all(per_bank[b] == sc.BANK_ROWS for b in sc.ALL_BANKS), 'prompts_per_bank': per_bank,
+            'required': {b: sc.BANK_ROWS for b in sc.ALL_BANKS}}
+
+
+def full_stage2_evidence(args, stage0_obj: dict, pinning: dict | None, short: list[dict],
+                         pins: dict | None = None) -> dict:
     """Everything full Stage 2 must show BEFORE it loads a model or launches a call (design lines 305-309).
 
     The design's stopping rule is owned by the runner: there is no separate Part 214 launcher, and `main()` dispatches
     stage2 straight into this function, so the boundary is exactly here.
+
+    `pins` are the pins of the Stage 0 bytes THIS run is about to use. Both prerequisite artifacts must carry them
+    exactly, so a valid Stage 1 and pilot from recording A cannot clear the gate on recording B.
     """
-    gate3b_ok = not short and bool((stage0_obj.get('banks') or {}))
-    stage1_obj = stage1_evidence(getattr(args, 'stage1', None), pinning) if getattr(args, 'stage1', None) else {
-        'pass': False, 'checks': {'stage1_present': False},
-        'reason': 'full Stage 2 needs --stage1 (Gate 1 and Gate 2 evidence)'}
-    pilot_obj = pilot_evidence(getattr(args, 'pilot_dir', None), pinning) if getattr(args, 'pilot_dir', None) else {
-        'pass': False, 'checks': {'pilot_files_present': False},
-        'reason': 'full Stage 2 needs --pilot-dir (the 64-call pilot evidence)'}
+    shape = gates3b_banks(stage0_obj)
+    stage0_checks = {'stage0_part_214': stage0_obj.get('part') == sc.PART,
+                     'stage0_kind': stage0_obj.get('stage') == 0,
+                     'stage0_prompts_pinned': stage0_obj.get('prompts_sha256') == PROMPTS_SHA256,
+                     'stage0_design_bytes': stage0_obj.get('design_sha256') == design_sha256()}
+    gate3b_ok = not short and shape['pass'] and all(stage0_checks.values())
+    stage1_obj = (stage1_evidence(getattr(args, 'stage1', None), pinning, pins)
+                  if getattr(args, 'stage1', None) else {
+                      'pass': False, 'checks': {'stage1_present': False},
+                      'reason': 'full Stage 2 needs --stage1 (Gate 1 and Gate 2 evidence)'})
+    pilot_obj = (pilot_evidence(getattr(args, 'pilot_dir', None), pinning, pins)
+                 if getattr(args, 'pilot_dir', None) else {
+                     'pass': False, 'checks': {'pilot_files_present': False},
+                     'reason': 'full Stage 2 needs --pilot-dir (the 64-call pilot evidence)'})
     checks = {'gate3b_pass': gate3b_ok, 'stage1_pass': bool(stage1_obj.get('pass')),
               'pilot_pass': bool(pilot_obj.get('pass'))}
-    return {'pass': all(checks.values()), 'checks': checks, 'gate3b': {'pass': gate3b_ok, 'short': short},
-            'stage1': stage1_obj, 'pilot': pilot_obj,
+    return {'pass': all(checks.values()), 'checks': checks,
+            'gate3b': {'pass': gate3b_ok, 'short': short, 'banks': shape, 'stage0': stage0_checks},
+            'pins': pins, 'stage1': stage1_obj, 'pilot': pilot_obj,
             'reason': '' if all(checks.values()) else
                       f'full Stage 2 refused: {sorted(k for k, v in checks.items() if not v)}'}
 
 
-def pilot_timing_due(pilot: bool, reached: bool) -> bool:
+def pilot_timing_due(pilot: bool, reached: bool, started: float | None = None, deadline_s: float | None = None,
+                     clock=time.monotonic) -> bool:
     """Do the pilot's four timing-only calls launch? At the deadline the runner stops launching CALLS -- and the
-    timing calls are calls (design line 357). The pre-fix code launched them after the deadline."""
-    return bool(pilot) and not bool(reached)
+    timing calls are calls (design line 357).
+
+    `reached` alone is not enough: the loop notices the deadline only BEFORE the next row, so if the 64th pilot row
+    spends the remainder the loop returns `reached=False` and the pre-fix code launched all four timing calls after
+    the budget was gone. The clock is therefore consulted here as well.
+    """
+    if not pilot or reached:
+        return False
+    if started is None or deadline_s is None:
+        return True
+    return not deadline_hit(started, deadline_s, clock())
 
 
 def timing_only_calls(args, bank, tok, stage0_obj, pinning, model, layers, clock=time.monotonic,
-                      pins: dict | None = None) -> list[dict]:
+                      pins: dict | None = None, started: float | None = None,
+                      deadline_s: float | None = None) -> list[dict]:
     """Four timing-only calls on the hook paths Stage 2 uses, never counted as evaluation rows (design lines 383-390).
 
     They are deliberately NOT written to stage2.jsonl: Gate 3's `{"1": 64}` describes the scored pilot rows only, and
-    `run.json` enumerates these separately as `timing_only_calls`.
+    `run.json` enumerates these separately as `timing_only_calls`. Each launch is checked against the deadline, so a
+    budget that expires between two of them stops the set (and the pilot then fails its four-call precondition).
     """
     out = []
     for arm in TIMING_ARMS:
+        if started is not None and deadline_s is not None and deadline_hit(started, deadline_s, clock()):
+            print(f'pilot: deadline reached before timing-only {arm}; stopping the set at {len(out)}/4', flush=True)
+            break
         if arm in ('scale_dial_fact', 'scale_dial_you') and not pinning.get(arm, {}).get('runnable', True):
             continue
         row = {'arm': arm, 'question_index': 5, 'sample': TIMING_SAMPLE, 'set': None, 'pilot': False}
-        started = clock()
+        started_call = clock()
         record = stage2_generate(row, bank, tok, stage0_obj, pinning, args, model, layers, pins=pins)
-        elapsed = clock() - started
+        elapsed = clock() - started_call
         out.append({'arm': arm, 'question_index': 5, 'sample': TIMING_SAMPLE, 'wall_seconds': elapsed,
                     'answer_chars': len(record['answer']), 'seed': record['seed'],
                     'note': 'timing only; outside the pilot manifest and never an evaluation row'})
@@ -1544,7 +1757,7 @@ def stage2(args, pilot: bool = False, clock=time.monotonic, rig_loader=None) -> 
     admission = require_admission(args)
     if admission['dry_run']:
         obj = dry_run_record('pilot' if pilot else 2, args, admission, clock)
-        write_stage_record(obj, args.out, 'run.json', 'pilot' if pilot else 'stage2')
+        write_dry_run_record(obj, args.out, 'run.json', 'pilot' if pilot else 'stage2')
         return obj
     bank = load_prompts()
     if not args.stage0:
@@ -1557,41 +1770,63 @@ def stage2(args, pilot: bool = False, clock=time.monotonic, rig_loader=None) -> 
     out.mkdir(parents=True, exist_ok=True)
 
     # --- Gate 3b and the design's stopping rule are PRECONDITIONS: checked before the loader, not after the run ---
+    # The pins are built FIRST: the Stage 1 and pilot evidence are admitted only if they were recorded against these
+    # exact Stage 0 bytes, design, code, kernel and registration (the pre-fix code compared neither).
+    pins = stage_pins(hashlib.sha256(stage0_raw).hexdigest(), admission)
+    shape = gates3b_banks(stage0_obj)
     short = short_donors(stage0_obj)
-    gate3b_ok = not short and bool(stage0_obj.get('banks'))
+    gate3b_ok = not short and shape['pass']
     if not gate3b_ok:
         raise SystemExit(f'stage2: Gate 3b fails before launch ({len(short)} donor(s) with L_gen < '
-                         f'{sc.MIN_DONOR_LGEN}); donor_gen[0..4] would not exist')
+                         f'{sc.MIN_DONOR_LGEN}; prompts per bank {shape["prompts_per_bank"]}); donor_gen[0..4] '
+                         f'would not exist')
     evidence = None
     if not pilot:
-        evidence = full_stage2_evidence(args, stage0_obj, pinning, short)
+        evidence = full_stage2_evidence(args, stage0_obj, pinning, short, pins)
         if not evidence['pass']:
             raise SystemExit(f'stage2: refusing the full run before any call: {evidence["reason"]} '
                              f'{ {k: v for k, v in evidence["checks"].items()} }')
-    pins = stage_pins(hashlib.sha256(stage0_raw).hexdigest())
     with output_directory_lock(out, 'stage2' if not pilot else 'pilot'):
         return _stage2_locked(args, pilot, bank, stage0_obj, pinning, out, started, pins=pins, clock=clock,
                               admission=admission, evidence=evidence, rig_loader=rig_loader,
                               stage0_sha256=pins['stage0_sha256'])
 
 
-def check_resume_pins(saved: list[dict], pins: dict, planned: list[dict]) -> None:
-    """Refuse a resume whose inputs changed (design line 333).
+def check_resume_pins(saved: list[dict], pins: dict, planned: list[dict], pilot: bool = False) -> None:
+    """Refuse to append to a file whose existing rows are not this run's evidence (design line 333).
 
     Rows are keyed by (arm, question, sample), so without a pin a Stage 0 or design change under the same output
-    directory silently relabels old rows under the new pinning. Every saved row must carry the SAME pins this run is
-    about to write, and must belong to an arm the current plan still contains.
+    directory silently relabels old rows under the new pinning. Four things are checked BEFORE any model work and
+    before any repair, so the writer cannot create the mixed-kind file the scorer refuses:
+
+    * every saved row is the SAME KIND as this run (pilot rows never enter a full-run file, or the reverse);
+    * every key appears at most once (a duplicated row would double-count in every denominator);
+    * every key is in the current plan (an arm the plan dropped is not silently reused);
+    * every row carries exactly the pins this run is about to write.
     """
-    changed = [r for r in saved if (r.get('pins') or {}) != pins]
+    foreign = [index for index, row in enumerate(saved, start=1) if bool(row.get('pilot', False)) != bool(pilot)]
+    if foreign:
+        raise SystemExit(
+            f'refusing resume: {len(foreign)} saved row(s) are {"full-run" if pilot else "pilot"} rows in a '
+            f'{"pilot" if pilot else "full-run"} output (first at line {foreign[0]}); pilot and full evidence are '
+            f'never mixed in one file (PART214-DESIGN.md line 260)')
+    keys = [sc.row_key(row) for row in saved]
+    counts: Counter = Counter(keys)
+    duplicates = sorted(key for key, n in counts.items() if n > 1)
+    if duplicates:
+        raise SystemExit(f'refusing resume: saved key {duplicates[0]} appears {counts[duplicates[0]]} times; '
+                         f'each planned (arm, question, sample) may be written once')
+    planned_keys = {sc.row_key(row) for row in planned}
+    extra = [key for key in keys if key not in planned_keys]
+    if extra:
+        raise SystemExit(f'refusing resume: saved row(s) carry key(s) {extra[0]} that the current plan of '
+                         f'{len(planned_keys)} rows does not contain')
+    changed = [row for row in saved if (row.get('pins') or {}) != pins]
     if changed:
         first = changed[0]
         raise SystemExit(
             f'refusing resume: {len(changed)} saved row(s) were written under different pins '
             f'(saved {first.get("pins")!r}, now {pins!r}). Use a fresh --out or restore the Stage 0/design inputs.')
-    planned_arms = {p['arm'] for p in planned}
-    extra = sorted({r['arm'] for r in saved} - planned_arms)
-    if extra:
-        raise SystemExit(f'refusing resume: saved row(s) carry arm(s) {extra} that the current plan does not contain')
 
 
 def _stage2_locked(args, pilot, bank, stage0_obj, pinning, out, started, pins=None, clock=time.monotonic,
@@ -1600,14 +1835,16 @@ def _stage2_locked(args, pilot, bank, stage0_obj, pinning, out, started, pins=No
     planned = sc.planned_stage2_rows(pilot=pilot, pinning=pinning)
     for row in planned:
         row['pilot'] = pilot
-    saved = load_stage2_jsonl(answer_path) if answer_path.exists() else []
-    # Design line 260: pilot outputs are NOT reused in the clean full run. A full run into a pilot's --out (or the
-    # reverse) must not fold the other shape's rows into this run's arms, so rows of the other shape are ignored --
-    # and the ignored count is reported, never silent.
-    done = [r for r in saved if bool(r.get('pilot', False)) == bool(pilot)]
-    foreign_shape_rows = len(saved) - len(done)
+    # Validation is READ-ONLY: a torn tail is dropped in memory and only repaired after every check has passed (and
+    # only under this run's lock). The pre-fix writer repaired the file first and then filtered foreign rows out of
+    # `done` while still appending beside them, which is how one file came to hold both kinds.
+    saved, torn = read_jsonl_readonly(answer_path) if answer_path.exists() else ([], 0)
     if pins is not None:
-        check_resume_pins(done, pins, planned)
+        check_resume_pins(saved, pins, planned, pilot)
+    if answer_path.exists() and torn:
+        repair_partial_jsonl(answer_path)
+    done = saved
+    foreign_shape_rows = 0
     todo = stage2_todo(planned, done, pilot)
     model, tok, load = (rig_loader or load_rig)(args)
     kernel = kernel_check(load)
@@ -1635,18 +1872,22 @@ def _stage2_locked(args, pilot, bank, stage0_obj, pinning, out, started, pins=No
     if reached:
         print('stage2: deadline reached; stopping launches and writing partial results (design line 357)', flush=True)
     # Design line 357: at the deadline the runner STOPS launching calls. The pilot's four timing-only calls are
-    # calls; launching them after the deadline is the defect this guard closes.
-    timing = timing_only_calls(args, bank, tok, stage0_obj, pinning, model, layers, clock=clock, pins=pins) \
-        if pilot_timing_due(pilot, reached) else []
+    # calls; launching them after the deadline is the defect this guard closes. `pilot_timing_due` consults the
+    # clock as well as `reached`, because the last pilot row can spend the remainder without the loop noticing.
+    timing = timing_only_calls(args, bank, tok, stage0_obj, pinning, model, layers, clock=clock, pins=pins,
+                               started=started, deadline_s=deadline_s) \
+        if pilot_timing_due(pilot, reached, started, deadline_s, clock) else []
     status = sc.arm_statuses(planned, rows, {'deadline_reached': reached}, pinning)
     donor_lgen = {b: [int(p['L_gen']) for p in (stage0_obj.get('banks') or {}).get(b, {}).get('prompts', [])]
                   for b in sc.ALL_BANKS}
     short = short_donors(stage0_obj)
+    shape = gates3b_banks(stage0_obj)
     obj = {
         'part': sc.PART, 'stage': 'pilot' if pilot else 2, 'design': sc.DESIGN_VERSION,
         'model': MODEL, 'revision': REVISION, 'load': load,
         'admission': admission or {}, 'kernel_check': kernel,
         'stage0_sha256': stage0_sha256, 'design_sha256': design_sha256(), 'prompts_sha256': PROMPTS_SHA256,
+        'design_commit': sc.DESIGN_COMMIT,
         'pins': pins,
         'attn_implementation': load.get('attn_implementation'), 'device': args.device, 'dtype': 'bfloat16',
         'tool_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
@@ -1664,8 +1905,9 @@ def _stage2_locked(args, pilot, bank, stage0_obj, pinning, out, started, pins=No
         'completed_rows_by_arm': status['done'], 'incomplete_arms': status['incomplete_arms'],
         'not_read_arms': status['not_read_arms'],
         'donors': {b: [{'index': i, 'L_gen': n} for i, n in enumerate(values)] for b, values in donor_lgen.items()},
-        'gate3b_pass': not short and any(donor_lgen.values()),
+        'gate3b_pass': not short and shape['pass'],
         'gate3b_min_L_gen': min((n for values in donor_lgen.values() for n in values), default=None),
+        'gate3b_prompts_per_bank': shape['prompts_per_bank'],
         'short_donors': short,
         'dial_pinning': {k: v for k, v in pinning.items() if k != 'projection_table'},
         'sampling_reproducibility': (
@@ -1760,19 +2002,57 @@ def repair_partial_jsonl(path) -> int:
 
 
 def load_stage2_jsonl(path) -> list[dict]:
-    """Read the append-only JSONL, repairing a torn final line first (Part 212's fix 30db7048)."""
+    """Read the append-only JSONL, repairing a torn final line first (Part 212's fix 30db7048).
+
+    This is the WRITER's reader: it repairs, because the caller holds the output-directory lock. Validation of
+    another run's evidence must use `read_jsonl_readonly` instead.
+    """
     path = Path(path)
     repair_partial_jsonl(path)
-    rows = []
-    with path.open(encoding='utf-8') as handle:
-        for number, line in enumerate(handle, start=1):
-            if not line.strip():
-                continue
-            row = json.loads(line)
-            if not isinstance(row, dict):
-                raise ValueError(f'{path} line {number}: expected a JSON object')
-            rows.append(row)
-    return rows
+    return read_jsonl_readonly(path)[0]
+
+
+def read_jsonl_readonly(path) -> tuple[list[dict], int]:
+    """Parse an append-only JSONL WITHOUT writing anything; return (rows, torn_tail_bytes_dropped).
+
+    A torn FINAL line (a process killed mid-write) is dropped in memory and its byte count reported, which is what
+    the writer's reader needs without touching the file. A corrupt INTERIOR line is refused: that is not a partial
+    write, and silently skipping it would change what the evidence says. The pre-fix precondition check called the
+    repairing reader on the pilot's file, i.e. it wrote to another run's evidence outside that run's lock.
+    """
+    path = Path(path)
+    raw = path.read_bytes()
+    if not raw:
+        return [], 0
+    dropped = 0
+    body, tail = raw, b''
+    if not raw.endswith(b'\n'):
+        cut = raw.rfind(b'\n') + 1
+        body, tail = raw[:cut], raw[cut:]
+    rows: list[dict] = []
+
+    def parse(chunk: bytes, where: str):
+        try:
+            value = json.loads(chunk.decode('utf-8'))
+        except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+            raise ValueError(f'{path} {where} is corrupt ({exc}); an interior line is not a partial write') from None
+        if not isinstance(value, dict):
+            raise ValueError(f'{path} {where}: expected a JSON object')
+        return value
+
+    for number, line in enumerate(body.split(b'\n'), start=1):
+        if not line.strip():
+            continue
+        rows.append(parse(line, f'line {number}'))
+    if tail:
+        try:
+            rows.append(json.loads(tail.decode('utf-8')))
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            dropped = len(tail)
+        else:
+            if not isinstance(rows[-1], dict):
+                raise ValueError(f'{path} final line: expected a JSON object')
+    return rows, dropped
 
 
 # ----------------------------------------------------------------------------------------------------------------
@@ -1794,8 +2074,8 @@ def main(argv=None):
         cmd.add_argument('--deadline-min', type=float, default=DEFAULT_DEADLINE_MIN,
                          help='wall-clock budget; at the deadline the runner stops launching calls (design line 357)')
         cmd.add_argument('--allow-unregistered', action='store_true',
-                         help='inert dry run only: skip the PREDICTIONS.md registration check, load no model and '
-                              'make no forward or generation call (never for a scored run)')
+                         help='inert dry run only: load no model and make no forward or generation call, whatever '
+                              'PREDICTIONS.md says (never for a scored run; it never overwrites real evidence)')
     args = parser.parse_args(argv)
     if args.cmd == 'stage0':
         result = stage0(args)
