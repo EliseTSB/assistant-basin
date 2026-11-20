@@ -3218,3 +3218,63 @@ def test_stage1_stops_at_the_preflight_before_the_loader(tmp_path, monkeypatch):
     with pytest.raises(RuntimeError, match='stage1 preflight: nat_prompt_'):
         rn.stage1(_args(tmp_path / 'stage1', stage0=stage0_path), rig_loader=must_not_load)
     assert not (tmp_path / 'stage1' / 'stage1.json').exists()
+
+
+# ------------------------------------------------------------------------------------------------------------------
+# Alden #27 (2026-11-20): appending Part 180's section after Part 214's added one separator LF, and the whole-section
+# digest refused admission with no prediction changed. Cold admission controls on the REAL registered block.
+# ------------------------------------------------------------------------------------------------------------------
+
+def _real_registered_block():
+    import subprocess
+    out = subprocess.run(['git', 'show', '8d5c2db4:PREDICTIONS.md'], capture_output=True, cwd=HERE.parent)
+    if out.returncode != 0:
+        pytest.skip('registration commit 8d5c2db4 not available in this checkout')
+    text = out.stdout.decode('utf-8')
+    start = text.index('## Part 214 (registered')
+    block = text[start:]
+    assert hashlib.sha256(block.encode('utf-8')).hexdigest() == sc.REGISTRATION_SHA256, 'the real block is the pin'
+    return block
+
+
+def _status_for(tmp_path, text):
+    (tmp_path / 'PREDICTIONS.md').write_text(text, encoding='utf-8')
+    return rn.registration_status(tmp_path)
+
+
+def test_admission_binds_the_real_block_at_eof_and_before_another_heading(tmp_path):
+    block = _real_registered_block()
+    at_eof = _status_for(tmp_path, '## Part 213 (registered x)\n\nbody\n\n' + block)
+    assert at_eof['section_sha256'] == sc.REGISTRATION_SHA256
+    for separator in ('\n', '\n\n', '\n\n\n'):
+        followed = _status_for(tmp_path, block + separator + '## Part 180 (registered y)\n\nother\n')
+        assert followed['section_sha256'] == sc.REGISTRATION_SHA256, repr(separator)
+        assert followed['section_raw_sha256'] != sc.REGISTRATION_SHA256 or separator == ''
+
+
+@pytest.mark.parametrize('mutate', ['clause', 'internal_whitespace', 'heading', 'threshold'])
+def test_admission_refuses_any_change_inside_the_block(tmp_path, monkeypatch, mutate):
+    block = _real_registered_block()
+    if mutate == 'clause':
+        changed = block.replace('| 214.1 |', '| 214.1 | (edited)', 1)
+    elif mutate == 'internal_whitespace':
+        i = block.index('\n', block.index('| 214.1 |'))
+        changed = block[:i] + ' ' + block[i:]
+    elif mutate == 'heading':
+        changed = block.replace('## Part 214 (registered', '## Part 214 (registered again', 1)
+    else:
+        import re as _re
+        changed = _re.sub(r'0\.08', '0.07', block, count=1)
+    assert changed != block
+    status = _status_for(tmp_path, changed + '\n## Part 180 (registered y)\n')
+    assert status['section_sha256'] != sc.REGISTRATION_SHA256
+    monkeypatch.setattr(rn, 'registration_status', lambda *a, **k: status)
+    with pytest.raises(SystemExit):
+        rn.require_admission(_args(tmp_path / 'stage1'))
+
+
+def test_unmocked_production_admission_admits_the_live_tree():
+    """The real require_admission on this checkout's PREDICTIONS.md (which carries Part 180's later section)."""
+    record = rn.require_admission(_args('/tmp/part214-unused'))
+    assert record['dry_run'] is False
+    assert record['section_sha256'] == sc.REGISTRATION_SHA256
