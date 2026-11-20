@@ -165,7 +165,7 @@ temporal spikes lost by mean pooling** ($\mathbf{H3}$), or **polite helper-reque
   - Exact numeric values of $(\hat{\alpha}_{\text{prompt}}, \hat{\alpha}_{\text{gen}})$ from Stage 0 will be pasted
     into this section before `tools/register_public.py` is called, without changing any prediction or threshold.
 
-### Stage 1: Cheap exact-logit H4 curve, natural-decode bridge & mechanism audit (batch 1, `4,624` forwards, ~26 min — see Amendment 1)
+### Stage 1: Cheap exact-logit H4 curve, natural-decode bridge & mechanism audit (batch 1, `4,624` forwards, 25.7 min — see Amendment 1)
 
 - Scored on `EN_MAKER[0..24]` + `'I was developed by **'` (+ 3 appended continuation tokens for `g_seq`, hooks active
   only on `0..T+4`, exact Part 212 readout $g_{\text{ali}} = \text{logit}(\text{Google}) - \text{logsumexp}(\text{logit}(\text{Al}), \text{logit}(\text{T}))$,
@@ -299,12 +299,13 @@ Gates (no gate shares the statistic of any prediction it guards):
   question-clustered bootstrap 95% CIs, seed 214; no iid McNemar power claim asserted). In Stage 1, 24 held-out prompts
   resolve ~0.25-logit shifts (Part 74/212 SE ~0.08–0.12 logits).
 - Total: 1,584 batch-1 sampled generations in Stage 2 (plus 100 Stage 0 greedy donor recordings and 4,624 Stage 1
-  batch-1 forward passes, per Amendment 1), about 2.7 hours on the A770 (Stage 0 ~8 min + Stage 1 ~26 min + Stage 2 ~2.11 h; the 1,536
+  batch-1 forward passes, per Amendment 1), about 2.7 hours on the A770 (Stage 0 ~8 min + Stage 1 ~25.7 min + Stage 2 ~2.11 h; the 1,536
   held-out Stage 2 calls alone take ~2.05 hours at 4.80 s/call).
-- Pilot: Stage 1 (`4,624` forwards, ~26 min per Amendment 1, reusing Stage 0's saved donor recordings) + Stage 2 mini-pilot written to
+- Pilot: Stage 1 (`4,624` forwards, 25.7 min per Amendment 1, reusing Stage 0's saved donor recordings) + Stage 2 mini-pilot written to
   `results/part214/pilot/` (`24` `"Who created you?"` rows on `zero` + `24` fluency guards on `unchanged` + `16`
   held-out rows across prompts `0, 5, 12, 16` × 1 sample × 4 arms [`unchanged`, `zero`, `scale_dial_fact`,
-  `trace_resample_fact`] = **`64`** batch-1 calls, ~5 min; ~14 min total). Stopping rule: do not launch full Stage 2 if
+  `trace_resample_fact`] = **`64`** batch-1 calls, ~5 min; ~31 min total, since Amendment 1 raised the Stage 1 half from
+  9 to 25.7 min). Stopping rule: do not launch full Stage 2 if
   Gate 1, Gate 2, or Gate 3b fails, if any pilot row is empty or non-finite, if `run.json` does not record `eager` and
   `{"1": 64}`, if `unchanged` guard accuracy `< 0.90` or broken rate `> 0.05`, if `zero` gives `< 2/24` clean Google on
   `"Who created you?"`, or if measured batch-1 latency exceeds `7.5 s/call` (full Stage 2 > 3.3 h). Pilot outputs are
@@ -326,7 +327,7 @@ Gates (no gate shares the statistic of any prediction it guards):
     Amendment 1 batch-shape discrepancy and Part 201 bf16 batch-size tie drift across arms, while fitting comfortably in
     ~2.1 hours for 1,584 Stage 2 calls.
   - **Teacher-forced scoring instead of generation:** taken — Stage 1 runs the full 10-rung H4 dial curve, 4-D per-unit
-    dial, frozen-vs-online check, `D_imp` register check, 3-unit `no_L29` check, and 10 matched random sets in ~26 min (Amendment 1)
+    dial, frozen-vs-online check, `D_imp` register check, 3-unit `no_L29` check, and 10 matched random sets in 25.7 min (Amendment 1)
     before Stage 2.
   - **Generate only what is read:** taken — cut Stage 2 from Part 212's 3,888 calls down to 1,584 by omitting redundant
     Stage 2 random sets (already tested in Part 212) and replacing a 2-arm phase cross with a single phase-triangle arm
@@ -418,9 +419,11 @@ Copied verbatim into PREDICTIONS.md under "## Part 214 (registered ...)" at regi
   enumerated in `run.json` as `timing_only_calls: 4` and never counted as evaluation rows**, so the pilot manifest keeps
   its frozen `64` and Gate 3's `{"1": 64}` still describes exactly the scored rows. The earlier 4.80 s/call figure came
   from Part 212's arms and does not cover the mixed-phase hooks.
-- **Arithmetic of the budget, stated honestly.** 1,584 × 4.80 s = 2.11 h for Stage 2; adding 100 donor and 64 pilot
-  generations at the same rate and Stage 1 once gives about 2.48 h before load, I/O and retries; at 7.5 s per call the
-  run is about 3.8 h. Six hours is therefore plausible and not measured. The run consumes that ceiling only at about
+- **Arithmetic of the budget, stated honestly, and re-stated after Amendment 1** (Alden: the old 2.48 h / 3.8 h pair
+  quoted the pre-amendment Stage 1 and is superseded). Counting 100 Stage 0 recordings + 64 pilot + 4 timing-only calls +
+  1,584 full generations at an indicative 4.80 s each, plus Stage 1's 4,624 forwards at 0.333 s, gives roughly
+  **2.76 h**; at 7.5 s per generation it is about **4.08 h**. These are arithmetic on measured Part 212 rates, not Arc
+  measurements of this part. The run consumes that ceiling only at about
   12.8 s per Stage 2 call.
 - **Hard stop.** The runner takes a wall-clock deadline (`--deadline-min`, default 330). At the deadline it stops
   launching calls, writes what it has, and labels every incomplete arm `incomplete (deadline)` in the JSON and the
@@ -487,10 +490,10 @@ probability is a function of the history that precedes it, so a table built that
 preference between the two names at all. Each name is now scored on its own continuation after the shared prefix,
 which costs one forward per maker name instead of one per arm.
 
-**The numbers.** Stage 1 goes from `1,624` to `4,624` batch-1 forwards (1,500 arm forwards plus 3,124 catalogue
-forwards: 25 prompts x 4 banks x the anchors and both names' histories). At Part 212's measured 0.333 s per batch-1
-forward that is about 26 minutes rather than 9, and the run's total moves from about 2.4 to about 2.7 hours. Stage 2 is
-untouched at `1,584` generations.
+**The numbers.** Stage 1 goes from `1,624` to `4,624` batch-1 forwards: **24 pool forwards + 100 greedy recordings +
+60 arms x 25 prompts x 3 histories = 4,624** (Alden corrected my first decomposition, which split it as 1,500 plus a
+3,124 catalogue; the per-arm cost is three histories per prompt, not one). At Part 212's measured 0.333 s per forward
+that is **25.7 minutes** rather than 9.
 
 **What does not change.** No prediction, threshold, margin, arm, or reading rule moves. This corrects how an existing
 measurement is computed, not what is claimed — which is why it is an amendment before any data rather than a redesign.
