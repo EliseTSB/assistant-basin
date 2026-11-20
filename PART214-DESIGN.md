@@ -128,13 +128,29 @@ temporal spikes lost by mean pooling** ($\mathbf{H3}$), or **polite helper-reque
       `scale_dial_fact` and `scale_dial_you` are skipped, 214.4 is `not read (no projection denominator on the fact
       schedule)`, and no arm is scored. Running `you` alone, or landing the eight-arm contract with a missing arm, has no
       valid interpretation (Alden).
-    - **No missing-arm PASS, ever.** The fixed eight-arm contract is satisfied only when every arm is either scored or
-      explicitly `not read`/`incomplete (deadline)`; a `not read` arm can never be counted as a clause passing, and the
-      scorer must refuse to emit a verdict that depends on an arm it did not score.
-    - **Unusable ≠ mismatched.** 214.4 distinguishes three failure states: `not read` (unavailable input — undefined
-      projection, donor denominator `< 0.03`), `not discriminated` (collapsed fit), and a **valid measured mismatch** —
-      the dial was computed on eligible inputs and missed its bar, including when a recode or validity check fails on the
-      arm's answers. Only the third can feed a rival's win (below).
+    - **No missing-arm PASS, ever, and no silently shrunk manifest.** A `not read` arm can never count as a clause
+      passing, and the scorer must refuse to emit a verdict that depends on an arm it did not score. When a fit is
+      undefined the report names what stopped rather than absorbing the loss: **`fact` undefined** stops Stage 1's dial
+      curve and matched-random check, both Stage 2 dial arms, and every Stage 2 prediction that reads them, with a
+      prediction for `fact`; **`you` undefined** stops `scale_dial_you` and the clauses that read it (214.4(b), and the
+      `dial_you_ref` bridge), with everything else running. Either way the affected predictions are reported as an
+      explicit NON-PASS, and the `eight arms / 1,584 calls` contract is measured against the **eligible full run** — every
+      arm scored or explicitly `not read`/`incomplete (deadline)` — never against a manifest that quietly got smaller.
+    - **Unavailable, damaged, or mismatched — ONE decision order** (Alden's second correction: my earlier text let a
+      recode failure count as a magnitude miss, which would credit "missed its bar" to a schedule that matched exactly).
+      214.4 evaluates in this order and stops at the first that applies:
+      1. **Availability.** Undefined projection, collapsed fit, or donor denominator `< 0.03` → `not read` or
+         `not discriminated`; nothing is scored on that branch.
+      2. **Validity and recode.** The numerical clauses pass, but the worst-case recode or a validity check on the arm's
+         answers fails → **`not discriminated from damage`**. The schedule reproduced the measured magnitude and the
+         answers are not trustworthy enough to credit it, so this state feeds NEITHER the "accounts" headline NOR a
+         rival's win. Required fixture, Alden's counterexample: baseline `4/192`, `zero 36/192`, trace `19/13`,
+         dial exactly `19/13`, hybrid `13`, only `scale_dial_you` carrying `6` broken rows → (a), (c) and the phase bar
+         pass, the strict recode fails at `13 + 6 = 19`, and the correct verdict is `not discriminated from damage`, not
+         a magnitude miss.
+      3. **Numerical mismatch.** A valid measured miss on eligible, valid, recode-clean answers. This is the ONLY state
+         that can feed a rival's win, and only for a discriminated reason on (a) or (b) — never a lone (c) miss, which is
+         the point-tolerance screen.
   - If $|\hat{\alpha}_{\text{gen}}(\text{you}) - \hat{\alpha}_{\text{gen}}(\text{fact})| < 0.05$ (both banks collapse
     onto the same decode-phase point), `scale_dial_you` is reassigned **before registration** to the fixed midpoint rung
     `(prompt=0.50, gen=0.50)` (`scale_050`) so the Stage 2 decodes still exist, and **214.4(b) is marked
@@ -165,9 +181,14 @@ temporal spikes lost by mean pooling** ($\mathbf{H3}$), or **polite helper-reque
      — 10 arms).** These arms DO change the prefix: they place the donor's first five tokens, so the model's own opening
      is not used. ⚠ **Binding rule, rewritten at Alden's second hold — two groups, never mixed:**
      - **Same-prefix group (the ONLY donor-vs-dial comparison set):** the eight Stage 2 main arms, `scale_unit_dial_fact`,
-       `scale_unit_dial_you` and the 30 matched random controls. Each decodes from the model's own prompt with an
-       identical opening, identical `"I was developed by **"` recipient tokens, the same `unchanged` baseline and the same
-       logit position; only the ACTIVATIONS assigned to those positions differ.
+       `scale_unit_dial_you` and the 30 matched random controls. Each starts from the SAME INITIAL ENGLISH PROMPT TOKENS
+       and then generates freely, so their sampled continuations — and therefore the opening and the decoded positions —
+       diverge from arm to arm and call to call (Alden; the earlier text wrongly called the opening fixed). Held fixed is
+       the starting prompt, the recipient-token rule, the `unchanged` baseline and the scoring-position function, not the
+       tokens the model happens to emit; only the ACTIVATIONS assigned to those positions differ.
+     - **Stage 1's curve and its matched-random check run teacher-forced at the FIXED maker opening
+       (`"I was developed by **"`)**, so every rung and every control is scored at one identical position and the rung
+       comparisons are exact.
      - **Prefix-change group (diagnostics, never in that comparison):** every `nat_*` arm above, because it forces the
        donor's opening tokens, and every `rep_*` arm in item 4, because it uses Part 212's neutral opening
        `'The main answer is **'`. Each is scored at the position its own opening produces, and is compared only within its
@@ -321,14 +342,14 @@ question-clustered bootstrap (seed 214).
 | --- | --- | --- | --- |
 | 214.1 | Within-run baseline-anchored batch-1 replication (Stage 2): `zero` (`broken_rate <= 0.15`) exceeds THIS run's measured `unchanged` clean Google rate by at least `+0.10` (10 percentage points, with question-clustered 95% CI lower bound strictly `> 0`), AND `trace_resample_fact` (`broken_rate <= 0.15`) exceeds `unchanged` by at least `+0.04` AND exceeds `trace_resample_you` (`broken_rate <= 0.15`) by at least `+0.03`. Fails if any clause misses. | high | Gemini 4 Neon |
 | 214.2 | Stage 0 **calibration observed at registration** (greedy recordings over the 24 held-out prompts; reported as a premise measured before any Stage 2 answer exists, not as a blinded post-registration result): `D_you`'s decode-phase write-norm-weighted projection onto `EN_MAKER` exceeds `D_fact`'s by at least `+0.08` (`hat_alpha_gen(you) - hat_alpha_gen(fact) >= +0.08`), AND `D_fact` stays in the near-zero partial-zero regime (`hat_alpha_gen(fact) <= 0.35`). Fails if either clause misses. | medium | Gemini 4 Neon |
-| 214.3 | Stage 1 H4 1-D single-dial test (exact logits, natural-gen opening): across the 10-point online dial curve $\alpha \in \{-0.25, 0.0, 0.10, 0.20, 0.30, 0.40, 0.50, 0.65, 0.80, 1.0\}$, mean $\Delta g_{\text{ali}}(\alpha)$ decreases monotonically with $\alpha$ (Spearman $\rho \le -0.95$), `scale_dial_fact` exceeds all 10 matched random `scale_dial_fact` sets, AND the 1-D scalar dial matches both natural-gen donor arms within `0.50` logits: `|delta_g_ali(nat_trace_fact) - delta_g_ali(scale_dial_fact)| <= 0.50` AND `|delta_g_ali(nat_trace_you) - delta_g_ali(dial_you_ref)| <= 0.50` (where `dial_you_ref` is `scale_dial_you` when `|hat_alpha_gen(you) - hat_alpha_gen(fact)| >= 0.05`, or `scale_dial_fact` if collapsed). Fails if any clause misses. | medium | Gemini 4 Neon |
-| 214.4 | Stage 2 H4 primary test (two-phase schedule vs. donor resampling; `broken_rate <= 0.15` on all four arms, where the NUMERIC ceiling is authoritative and reads as an integer rule `broken <= 28 of 192`, and the unchanged-arm sanity ceilings read as `clean_google(unchanged) <= 11 of 192` (`0.06`) and `broken(unchanged) <= 9 of 192` (`0.05`), all computed only from the 192 main-arm rows and never from pilot rows): (a) `scale_dial_fact` matches `trace_resample_fact` within `±0.05` (`|rate(scale_dial_fact) - rate(trace_resample_fact)| <= 0.05`) and exceeds `unchanged` by `>= +0.04`; AND (b) with `|hat_alpha_gen(you) - hat_alpha_gen(fact)| >= 0.05` and denominator guard `rate(trace_resample_fact) - rate(trace_resample_you) >= 0.03`, the 1-D dial difference `rate(scale_dial_fact) - rate(scale_dial_you)` captures at least `60%` of `rate(trace_resample_fact) - rate(trace_resample_you)`, `|rate(scale_dial_you) - rate(trace_resample_you)| <= 0.05`, and worst-case broken recode holds (`(clean_google + broken)(scale_dial_you) < clean_google(scale_dial_fact)`). AND (c) **two-sided gap error** (added at Alden's hold): `|dial_gap - donor_gap| <= 0.05`, where `dial_gap = rate(scale_dial_fact) - rate(scale_dial_you)` and `donor_gap = rate(trace_resample_fact) - rate(trace_resample_you)`. Clause (c) is what licenses the word *accounts*: (a) plus (b) can pass while the dial reproduces four times the observed gap. If the Stage 0 decode dial collapsed (`< 0.05`), clause (b) is `not discriminated` and the prediction cannot pass on it. Fails if any clause misses (marked `not read` only if the donor denominator `< 0.03` or the projection denominator is undefined). | medium | Gemini 4 Neon |
+| 214.3 | Stage 1 H4 1-D single-dial test (exact logits, teacher-forced at the fixed maker opening `"I was developed by **"`): across the 10-point online dial curve $\alpha \in \{-0.25, 0.0, 0.10, 0.20, 0.30, 0.40, 0.50, 0.65, 0.80, 1.0\}$, mean $\Delta g_{\text{ali}}(\alpha)$ decreases monotonically with $\alpha$ (Spearman $\rho \le -0.95$), `scale_dial_fact` exceeds all 10 matched random `scale_dial_fact` sets. The cross-prefix bridge against the two natural-decode donor arms (`|delta_g_ali(nat_trace_fact) - delta_g_ali(scale_dial_fact)| <= 0.50` AND `|delta_g_ali(nat_trace_you) - delta_g_ali(dial_you_ref)| <= 0.50`, with `dial_you_ref` as `scale_dial_you` when `|hat_alpha_gen(you) - hat_alpha_gen(fact)| >= 0.05` else `scale_dial_fact`) is a DESCRIPTIVE contrast at that stated tolerance — the two sides differ in opening, so it is not a matched intervention effect and it does NOT enter the pass condition. Donor fit belongs to 214.4, where every arm starts from the same prompt tokens. Fails if the monotone-curve or random-set clause misses. | medium | Gemini 4 Neon |
+| 214.4 | Stage 2 H4 primary test (two-phase schedule vs. donor resampling; `broken_rate <= 0.15` on all four arms, where the NUMERIC ceiling is authoritative and reads as an integer rule `broken <= 28 of 192`, and the unchanged-arm sanity ceilings read as `clean_google(unchanged) <= 11 of 192` (`0.06`) and `broken(unchanged) <= 9 of 192` (`0.05`), all computed only from the 192 main-arm rows and never from pilot rows): (a) `scale_dial_fact` matches `trace_resample_fact` within `±0.05` (`|rate(scale_dial_fact) - rate(trace_resample_fact)| <= 0.05`) and exceeds `unchanged` by `>= +0.04`; AND (b) with `|hat_alpha_gen(you) - hat_alpha_gen(fact)| >= 0.05` and denominator guard `rate(trace_resample_fact) - rate(trace_resample_you) >= 0.03`, the 1-D dial difference `rate(scale_dial_fact) - rate(scale_dial_you)` captures at least `60%` of `rate(trace_resample_fact) - rate(trace_resample_you)`, `|rate(scale_dial_you) - rate(trace_resample_you)| <= 0.05`, and worst-case broken recode holds (`(clean_google + broken)(scale_dial_you) < clean_google(scale_dial_fact)`). AND (c) **two-sided gap error** (added at Alden's hold): `|dial_gap - donor_gap| <= 0.05`, where `dial_gap = rate(scale_dial_fact) - rate(scale_dial_you)` and `donor_gap = rate(trace_resample_fact) - rate(trace_resample_you)`. Clause (c) is what licenses the word *accounts*: (a) plus (b) can pass while the dial reproduces four times the observed gap. If the Stage 0 decode dial collapsed (`< 0.05`), clause (b) is `not discriminated` and the prediction cannot pass on it. Fails if any clause misses, resolved in the single decision order above: `not read` / `not discriminated` on availability, `not discriminated from damage` when the numbers pass but validity or the worst-case recode fails, and a magnitude miss only on eligible, valid, recode-clean answers. | medium | Gemini 4 Neon |
 | 214.5 | H1 vs. H2 phase-decomposition test (Stage 2, `broken_rate <= 0.15` on `prompt_fact_gen_you`, denominator guard `rate(trace_resample_fact) - rate(trace_resample_you) >= 0.03`): swapping ONLY the decode phase from `D_fact` to `D_you` (`prompt_fact_gen_you`) accounts for strictly more than half of the total `fact -> you` drop (`rate(trace_resample_fact) - rate(prompt_fact_gen_you) > 0.50 * (rate(trace_resample_fact) - rate(trace_resample_you))`), lowers clean Google below `trace_resample_fact` by at least `0.03`, AND survives worst-case broken recode (`(clean_google + broken)(prompt_fact_gen_you) < clean_google(trace_resample_fact)`). Fails if any clause misses (`not read` if denominator `< 0.03`). | medium | Gemini 4 Neon |
 | 214.6 | H3 early-token spike vs. flat-mean test on `"you"` (Stage 2, `broken_rate <= 0.15`): pooling `D_you` into flat `mean_resample_you` does NOT reproduce a large spike-loss jump: `rate(mean_resample_you) - rate(trace_resample_you) <= +0.05` AND `rate(zero) - rate(mean_resample_you) >= 0.04`. (A large upward jump `> +0.05` is recorded as an OBSERVED mean-minus-trace difference. It is not evidence that spikes
 are the mechanism: averaging changes prefill values, decode timing, donor identity and covariance at once.) Fails if either clause misses. | low | Gemini 4 Neon |
-| 214.7 | Polite-request register without `"you"` (`D_imp`, Stage 1 natural-gen opening): `nat_trace_imp` shifts away from `nat_trace_fact` toward `nat_trace_you`: `delta_g_ali(nat_trace_fact) - delta_g_ali(nat_trace_imp) >= +0.20` logits AND `|delta_g_ali(nat_trace_imp) - delta_g_ali(nat_trace_you)| <= 0.30` logits. (Failure with `nat_trace_imp` near `nat_trace_fact` is recorded as a register observation. `D_imp` changes register,
+| 214.7 | Polite-request register without `"you"` (`D_imp`, Stage 1 natural-gen opening; every `nat_*` term here is keyed to its own recipient `"I was developed by **"` and to the `nat_trace_fact`/`nat_trace_you` baselines, and because those arms force different donor openings each delta is a CONTRAST ACROSS OPENINGS, not a matched intervention effect): `nat_trace_imp` shifts away from `nat_trace_fact` toward `nat_trace_you`: `delta_g_ali(nat_trace_fact) - delta_g_ali(nat_trace_imp) >= +0.20` logits AND `|delta_g_ali(nat_trace_imp) - delta_g_ali(nat_trace_you)| <= 0.30` logits. (Failure with `nat_trace_imp` near `nat_trace_fact` is recorded as a register observation. `D_imp` changes register,
 words and modifiers at matched length, so no clause here identifies the pronoun.) Fails if either clause misses. | medium | Gemini 4 Neon |
-| 214.8 | 3-unit early engine & downstream `L27 N3325` tracking (Stage 1): (a) omitting `L29 N776` changes neither natural-gen donor arm by more than `0.25` logits (`|nat_fact_no_L29 - nat_trace_fact| <= 0.25` AND `|nat_you_no_L29 - nat_trace_you| <= 0.25`); AND (b) across the 10-point dial curve plus the 6 natural-decode arms (`16` arms total), mean last-position shift in `L27 N3325` correlates negatively with mean $\Delta g_{\text{ali}}$ (Spearman $\rho \le -0.80$). Fails if either clause misses. | high | Gemini 4 Neon |
+| 214.8 | 3-unit early engine & downstream `L27 N3325` tracking (Stage 1; the `nat_*` terms are keyed to their own recipient and baseline, and clause (a) is a MATCHED comparison inside the natural-decode group — both sides force the same donor opening — so it is not a cross-opening contrast): (a) omitting `L29 N776` changes neither natural-gen donor arm by more than `0.25` logits (`|nat_fact_no_L29 - nat_trace_fact| <= 0.25` AND `|nat_you_no_L29 - nat_trace_you| <= 0.25`); AND (b) across the 10-point dial curve plus the 6 natural-decode arms (`16` arms total), mean last-position shift in `L27 N3325` correlates negatively with mean $\Delta g_{\text{ali}}$ (Spearman $\rho \le -0.80$). Fails if either clause misses. | high | Gemini 4 Neon |
 
 Copied verbatim into PREDICTIONS.md under "## Part 214 (registered ...)" at registration time.
 
@@ -359,7 +380,7 @@ Copied verbatim into PREDICTIONS.md under "## Part 214 (registered ...)" at regi
   - **"The tested schedule missed its magnitude bar"** — NOT "H4 beaten by phase, spike, or directional content", which
     the controls cannot identify — ONLY if Gates 1–3 pass,
     `214.1` holds, `214.4` fails on **(a) or (b)** for a DISCRIMINATED reason (not `not read`, not `not discriminated`,
-    and not a lone (c) magnitude miss, which is the screen above), AND at least one
+    not `not discriminated from damage`, and not a lone (c) magnitude miss, which is the screen above), AND at least one
     explicit rival clears its positive bar (`broken_rate <= 0.15` + worst-case recode):
     - **H3 (early-token temporal spikes):** `rate(mean_resample_you) - rate(trace_resample_you) > +0.05` with
       question-clustered 95% CI lower bound `> 0`. ⚠ Trace-to-bank-mean averaging changes prefill values, decode timing,
@@ -415,8 +436,14 @@ so the second can be answered without re-litigating the first.
      that must classify as the point-tolerance screen.
   2. **Unavailable versus mismatched:** collapsed fit, undefined `fact` projection, undefined `you` projection, donor gap
      below `0.03`, and a genuine eligible mismatch — with no mechanism win readable from any unavailable input.
-  3. **Binding and indexing:** recipient-token identity and score position; prefill versus decode trace indexing including
-     a capped donor (`L_gen`) and a masked sequence continuation — against a fake hook and a fake model, never the A770.
+  3. **Binding and indexing — fake hook plus fake model is SUFFICIENT (Alden, 11-19 22:52).** The test must drive the
+     PRODUCTION runner and hook path (not a table of expected values), and assert: exact recipient and prefix token IDs;
+     exact score positions; the actual tensor slots changed and the ones left untouched; prefill, first cached step and
+     capped-donor (`L_gen`) indexing; and masked continuation positions. A wrong-prefix sabotage and an off-by-one
+     sabotage must each go RED for the intended reason, with an intact positive path beside them. Table-only doubles that
+     never execute the hook do not satisfy this case. **No real-model call is added to the pre-acceptance hand-off**; after
+     code acceptance and registration, a separately approved pilot confirms the assumptions on the real model and kernel,
+     and that is host evidence, not part of the code gate.
   4. **Runner behaviour:** patched generation refused before registration, pilot and full manifests kept separate
      (`timing_only_calls: 4` outside the `64`), deadline/partial/resume refusal, and the positive complete path.
 - **What is fixture-only.** Anything exercised against a fake hook or model is labelled as such in the report; fixture
