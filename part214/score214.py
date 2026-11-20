@@ -758,10 +758,37 @@ def _arm(s1: dict, name: str) -> dict | None:
     return (s1.get('arms') or {}).get(name)
 
 
+def stage1_expected_questions(s1: dict) -> int:
+    """Questions per Stage 1 arm the run planned (25: 24 held-out + `"Who created you?"`)."""
+    return int(s1.get('planned_questions_per_arm') or N_QUESTIONS + 1)
+
+
+def arm_completeness(s1: dict, name: str) -> bool:
+    """Is this Stage 1 arm complete enough for a mean to be read from it?
+
+    The runner writes `arm_question_counts` and `planned_questions_per_arm`; a deadline-truncated arm has a SHORTER
+    count and must not feed any mean a prediction reads. The pre-fix scorer took any non-empty `delta_g_ali` array,
+    so a matched random control with only its first question could feed 214.3. An archive with no counts map falls
+    back to the per-question arrays' length, and a hand-built summary-only fixture is complete by construction.
+    """
+    if _arm(s1, name) is None:
+        return False
+    expected = stage1_expected_questions(s1)
+    counts = s1.get('arm_question_counts')
+    if isinstance(counts, dict):
+        return int(counts.get(name, 0)) >= expected
+    arm = _arm(s1, name) or {}
+    for key in ('delta_g_ali', 'g_ali'):
+        raw = arm.get(key)
+        if isinstance(raw, list) and raw:
+            return len(raw) >= expected
+    return arm.get('mean_delta_g_ali') is not None
+
+
 def _mean_delta(s1: dict, name: str) -> float | None:
-    """Mean delta g_ali of an arm, computed from its raw per-question array when the runner saved one."""
+    """Mean delta g_ali of a COMPLETE arm, computed from its raw per-question array when the runner saved one."""
     arm = _arm(s1, name)
-    if arm is None:
+    if arm is None or not arm_completeness(s1, name):
         return None
     raw = arm.get('delta_g_ali')
     if isinstance(raw, list) and raw:
@@ -772,7 +799,7 @@ def _mean_delta(s1: dict, name: str) -> float | None:
 
 def _mean_l27_shift(s1: dict, name: str) -> float | None:
     arm = _arm(s1, name)
-    if arm is None:
+    if arm is None or not arm_completeness(s1, name):
         return None
     raw = arm.get('l27_shift')
     if isinstance(raw, list) and raw:
@@ -817,16 +844,22 @@ def _ranks(values: list[float]) -> np.ndarray:
 
 
 def dial_curve(s1: dict) -> dict:
-    """The 10-rung online dial curve: mean delta g_ali at each alpha (design lines 145-148, 300)."""
+    """The 10-rung online dial curve: mean delta g_ali at each alpha (design lines 145-148, 300).
+
+    `monotonic` requires ALL TEN rungs to be complete: a Spearman over however many rungs a deadline let through is
+    not the design's curve, and a partial curve must not be able to satisfy 214.3.
+    """
     points = []
     for alpha in ALPHA_RUNGS:
         name = RUNG_ARM[alpha]
         points.append({'alpha': alpha, 'arm': name, 'mean_delta_g_ali': _mean_delta(s1, name),
                        'mean_l27_shift': _mean_l27_shift(s1, name)})
     have = [p for p in points if p['mean_delta_g_ali'] is not None]
+    complete = len(have) == len(ALPHA_RUNGS)
     rho = spearman([p['alpha'] for p in have], [p['mean_delta_g_ali'] for p in have]) if len(have) >= 3 else None
     return {'points': points, 'missing_arms': [p['arm'] for p in points if p['mean_delta_g_ali'] is None],
-            'spearman_alpha_vs_delta': rho, 'monotonic': (rho is not None and rho <= DIAL_MONOTONIC_RHO)}
+            'complete': complete, 'spearman_alpha_vs_delta': rho,
+            'monotonic': bool(complete and rho is not None and rho <= DIAL_MONOTONIC_RHO)}
 
 
 def stage1_metrics(s1: dict, pinning: dict | None = None) -> dict:
@@ -874,6 +907,14 @@ def stage1_metrics(s1: dict, pinning: dict | None = None) -> dict:
                             'tracks_negatively': (rho_l27 is not None and rho_l27 <= PRED_214_8_RHO)},
         'gates': {'gate1': gate1(s1), 'gate2': gate2(s1, random_zero)},
         'g_seq': g_seq_report(s1),
+        'completeness': {
+            'planned_questions_per_arm': stage1_expected_questions(s1),
+            'arm_question_counts': s1.get('arm_question_counts'),
+            'complete_arms': [arm for arm in (s1.get('arms') or {}) if arm_completeness(s1, arm)],
+            'incomplete_arms': sorted(arm for arm in (s1.get('arms') or {}) if not arm_completeness(s1, arm)),
+            'rule': 'a mean is read only from an arm with every planned question (design line 357: no partial arm '
+                    'is scored as if it were full)',
+        },
         'forward_batch_histogram': s1.get('forward_batch_histogram'),
         'non_finite_readouts': int(s1.get('non_finite_readouts', 0)),
     }
@@ -897,6 +938,12 @@ def gate1(s1: dict) -> dict:
     self_patch, unchanged = _arm(s1, 'self_patch'), _arm(s1, 'unchanged')
     if self_patch is None or unchanged is None:
         return {'pass': False, 'checks': {'arms_present': False}, 'reason': 'self_patch or unchanged missing'}
+    if not arm_completeness(s1, 'self_patch') or not arm_completeness(s1, 'unchanged'):
+        return {'pass': False, 'checks': {'arms_complete': False},
+                'reason': 'self_patch or unchanged is deadline-truncated; a partial arm cannot clear Gate 1'}
+    if self_patch.get('mean_g_ali') is None or unchanged.get('mean_g_ali') is None:
+        return {'pass': False, 'checks': {'arms_have_means': False},
+                'reason': 'self_patch or unchanged has no mean g_ali to compare'}
     diff = abs(float(self_patch['mean_g_ali']) - float(unchanged['mean_g_ali']))
     nonfinite = int(s1.get('non_finite_readouts', 0))
     mass_u = float(unchanged['mean_mass']) if unchanged.get('mean_mass') is not None else None
@@ -1055,8 +1102,31 @@ def stage2_row_batch_size_histogram(rows: list[dict]) -> dict[str, int]:
     return dict(sorted(counts.items(), key=lambda item: int(item[0])))
 
 
+def row_kind(row: dict) -> bool:
+    """True for a pilot row, False for a full-run row (design line 260: the two are never pooled)."""
+    return bool(row.get('pilot', False))
+
+
+def require_single_kind(rows: list[dict], run: dict) -> str:
+    """Refuse a file that mixes pilot and full-run rows, or whose rows disagree with run.json's stage.
+
+    The pre-fix CLI loaded a shared `stage2.jsonl` whole, so foreign-kind rows silently entered the tables the
+    predictions read (they would show up as unplanned keys at best, and as duplicated arms at worst). Evidence of
+    one kind per file is a precondition of scoring, not a warning: returning the kind keeps the check testable.
+    """
+    kind = run.get('stage') == 'pilot'
+    foreign = [index for index, row in enumerate(rows, start=1) if row_kind(row) != kind]
+    if foreign:
+        raise ValueError(
+            f'refusing mixed-kind evidence: run.json says {"pilot" if kind else "full"} but {len(foreign)} row(s) '
+            f'carry the other kind (first at line {foreign[0]}); pilot and full rows are never pooled '
+            f'(PART214-DESIGN.md line 260)')
+    return 'pilot' if kind else 'full'
+
+
 def stage2_metrics(rows: list[dict], run: dict, pinning: dict | None = None, stage0: dict | None = None) -> dict:
     """Every Stage 2 quantity 214.1, 214.4-214.6 and the headline rules read, from stage2.jsonl + run.json."""
+    evidence_kind = require_single_kind(rows, run)
     rows = classify_rows(rows)
     groups = by_arm(rows)
     main = {arm: arm_table(heldout(rs), HELDOUT_N) for arm, rs in groups.items() if '/' not in arm}
@@ -1083,7 +1153,8 @@ def stage2_metrics(rows: list[dict], run: dict, pinning: dict | None = None, sta
     planned = planned_stage2_rows(pilot=run.get('stage') == 'pilot', pinning=pinning)
     status = arm_statuses(planned, rows, run, pinning)
     return {
-        'n_rows': len(rows), 'batch_size_histogram': stage2_row_batch_size_histogram(rows),
+        'n_rows': len(rows), 'evidence_kind': evidence_kind,
+        'batch_size_histogram': stage2_row_batch_size_histogram(rows),
         'main_arms': main, 'guards': guards, 'guard_accuracy': guard_acc, 'positive_control': positives,
         'openings': openings, 'bootstrap': boot,
         'stage': run.get('stage'), 'arm_status': status,
@@ -1735,7 +1806,10 @@ def main(argv=None):
         directory = Path(args.stage2_dir)
         rows = load_jsonl(directory / 'stage2.jsonl')
         run = load_json(directory / 'run.json')
-    result = score(stage0, stage1, rows, run)
+    try:
+        result = score(stage0, stage1, rows, run)
+    except ValueError as exc:
+        raise SystemExit(f'refusing to score: {exc}') from None
     out = Path(args.out) if args.out else (Path(args.stage2_dir) / 'score.json' if args.stage2_dir else None)
     if out:
         out.parent.mkdir(parents=True, exist_ok=True)

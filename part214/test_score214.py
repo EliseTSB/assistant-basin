@@ -257,6 +257,8 @@ def make_stage2(counts=None, unchanged=(0, 0), guards=None, pinning=None, pilot=
         out.extend(guard_rows('unchanged', **guards))
     if any(r['arm'] == 'zero' for r in out):
         out.extend(positive_rows('zero', overrides.get('positive_google', 24)))
+    for row in out:
+        row['pilot'] = bool(pilot)      # one file holds ONE kind of evidence (design line 260)
     return out
 
 
@@ -289,13 +291,14 @@ def world(**kwargs):
 # ==================================================================================================================
 
 def test_is_broken_rules():
-    assert sc.is_broken('')
-    assert sc.is_broken('   ')
-    assert sc.is_broken('three words only')          # under 4 words
-    assert sc.is_broken('this has a � replacement')
-    assert sc.is_broken('wow !!!! really now')
-    assert sc.is_broken('a b c ' * 6)                # a 3-gram repeated >= 4 times
-    assert not sc.is_broken('I am Qwen, a large language model.')
+    # the n-gram rule is checked first so its own sabotage is bound to it, not to an earlier clause
+    assert sc.is_broken('a b c ' * 6), 'a 3-gram repeated four times must be broken'
+    assert sc.is_broken(''), 'an empty answer is broken'
+    assert sc.is_broken('   '), 'a whitespace answer is broken'
+    assert sc.is_broken('three words only'), 'under 4 words is broken'
+    assert sc.is_broken('this has a � replacement'), 'a replacement character makes the answer broken'
+    assert sc.is_broken('wow !!!! really now'), 'a punctuation flood is broken'
+    assert not sc.is_broken('I am Qwen, a large language model.'), 'a clean maker claim is not broken'
 
 
 def test_classify_exclusive_order_and_earliest_match():
@@ -353,9 +356,9 @@ def test_projection_clips_and_logs_the_raw_value():
 def test_undefined_you_denominator_skips_only_the_you_dial():
     stage0 = make_short_gen_stage0('you')
     pinning = sc.dial_pinning(stage0)
-    assert pinning['branch'] == 'undefined_you'
+    assert pinning['branch'] == 'undefined_you', 'the denominator gate must make the you fit undefined'
     assert pinning['scale_dial_fact']['runnable'] is True
-    assert pinning['scale_dial_you']['runnable'] is False
+    assert pinning['scale_dial_you']['runnable'] is False, 'the denominator gate must mark the you fit undefined'
     assert pinning['planned_calls'] == 1584 - 192
     result = sc.score(stage0, make_stage1(), make_stage2(pinning=pinning), make_run())
     assert result['predictions']['214.4']['verdict'].startswith('not read')
@@ -378,9 +381,10 @@ def test_undefined_fact_denominator_skips_both_dials():
 def test_collapse_branch_reassigns_you_to_scale_050():
     stage0 = make_stage0(alpha_fact=(0.20, 0.40), alpha_you=(0.30, 0.44))
     pinning = sc.dial_pinning(stage0)
-    assert pinning['branch'] == 'collapsed'
+    assert pinning['branch'] == 'collapsed', '|alpha_gen(you) - alpha_gen(fact)| = 0.04 must collapse'
     assert pinning['delta_gen'] == pytest.approx(0.04, abs=1e-6)
-    assert (pinning['scale_dial_you']['prompt'], pinning['scale_dial_you']['gen']) == (0.50, 0.50)
+    assert (pinning['scale_dial_you']['prompt'], pinning['scale_dial_you']['gen']) == (0.50, 0.50), \
+        'a collapsed fit must be reassigned to the fixed scale_050 rung'
     assert pinning['planned_calls'] == 1584, 'a collapsed fit still runs the reassigned arm'
 
 
@@ -419,7 +423,7 @@ def test_214_4_hybrid_fixture_is_the_point_tolerance_screen():
     assert (clauses['a'], clauses['b'], clauses['c'], clauses['broken_ok']) == (True, True, False, True)
     assert clauses['b_numeric'] is True and clauses['strict_recode'] is True
     assert pred['verdict'] == sc.FAILS
-    assert result['headlines']['branch'] == 'point_tolerance_screen'
+    assert result['headlines']['branch'] == 'point_tolerance_screen', 'a lone (c) miss is the point-tolerance screen'
     assert result['predictions']['214.5']['holds'] is True
     assert result['headlines']['checks']['any_rival_clears'] is False, 'a lone (c) miss is not a mechanism win'
 
@@ -462,7 +466,7 @@ def test_214_4_collapsed_fit_is_not_discriminated_not_failed():
     rows = make_stage2(counts=counts, guards={'n_broken': 0}, pinning=pinning)
     result = sc.score(stage0, make_stage1(), rows, make_run(rows=rows))
     pred = result['predictions']['214.4']
-    assert pred['verdict'] == sc.NOT_DISCRIMINATED
+    assert pred['verdict'] == sc.NOT_DISCRIMINATED, 'a collapsed fit is not discriminated, never failed'
     assert pred['holds'] is None
     assert result['headlines']['branch'] != 'missed_magnitude', 'no rival may be credited from a collapsed fit'
 
@@ -496,7 +500,7 @@ def test_214_4_damage_fixture_is_not_discriminated_from_damage():
     assert (clauses['a'], clauses['b_numeric'], clauses['c']) == (True, True, True)
     assert pred['observed']['strict_recode'] is False
     assert pred['observed']['recode_lhs'] == 19 and pred['observed']['recode_rhs'] == 19
-    assert pred['verdict'] == sc.DAMAGE and pred['holds'] is None
+    assert pred['verdict'] == sc.DAMAGE and pred['holds'] is None, 'damaged answers are not discriminated from damage'
     assert pred['observed']['decision'] == 'validity_and_recode'
     assert result['predictions']['214.5']['holds'] is True, 'the phase bar passes in this fixture'
     assert result['headlines']['branch'] not in ('missed_magnitude', 'h4_accounts', 'point_tolerance_screen')
@@ -534,7 +538,7 @@ def test_214_3_bridge_is_descriptive_not_a_clause():
     stage1 = make_stage1(nat_fact=9.0, nat_you=9.0)
     result = world(stage1=stage1)
     pred = result['predictions']['214.3']
-    assert pred['verdict'] == sc.HOLDS, pred['observed']
+    assert pred['verdict'] == sc.HOLDS, f"the bridge is descriptive, not a clause: {pred['observed']}"
     assert pred['observed']['clauses'] == {'spearman_le_-0.95': True,
                                            'scale_dial_fact_beats_all_10_random': True}
     assert pred['observed']['bridges']['evaluated_as_clause'] is False
@@ -624,7 +628,7 @@ def test_gate3_main_arm_broken_boundary_28_vs_29():
     assert _gate3_for(counts)['checks']['four_scored_arms_broken_le_28_of_192'] is True
     counts = dict(BASE_COUNTS, trace_resample_fact=(19, 29))
     gate = _gate3_for(counts)
-    assert gate['checks']['four_scored_arms_broken_le_28_of_192'] is False
+    assert gate['checks']['four_scored_arms_broken_le_28_of_192'] is False, '29/192 is over the 28/192 ceiling'
     assert gate['pass'] is False
     assert gate['arms_over_broken_ceiling'] == {'trace_resample_fact': 29}
 
@@ -669,12 +673,12 @@ def test_deadline_truncated_run_labels_every_incomplete_arm():
     run = make_run(rows=cut, deadline=True)
     result = sc.score(make_stage0(), make_stage1(), cut, run)
     status = result['stage2']['arm_status']
-    assert status['arms']['scale_dial_you'] == sc.INCOMPLETE
+    assert status['arms']['scale_dial_you'] == sc.INCOMPLETE, 'a truncated arm must be labelled incomplete (deadline)'
     assert 'scale_dial_you' in status['incomplete_arms']
     assert status['arms']['unchanged'] == 'complete'
     for key in ('214.1', '214.4', '214.5', '214.6'):
-        assert result['predictions'][key]['verdict'] == sc.INCOMPLETE
-        assert result['predictions'][key]['holds'] is None
+        assert result['predictions'][key]['verdict'] == sc.INCOMPLETE, f'{key} must be incomplete (deadline)'
+        assert result['predictions'][key]['holds'] is None, f'{key} must not PASS on a cut run'
     assert result['headlines']['branch'] != 'h4_accounts'
     assert result['stage2']['gate3']['pass'] is False
 
@@ -763,7 +767,7 @@ def test_row_seed_is_part66_sha256():
 
 def test_stage2_source_prefill_and_decode_indexing():
     assert rn.stage2_source('trace_fact', 0, 5) == ('prompt_fact', 0)
-    assert rn.stage2_source('trace_fact', 1, 5) == ('gen_fact', 0)
+    assert rn.stage2_source('trace_fact', 1, 5) == ('gen_fact', 0), 'decode call 1 reads donor step 0'
     assert rn.stage2_source('trace_fact', 6, 5) == ('gen_fact', 0), 'a capped donor cycles'
     assert rn.stage2_source('trace_you', 3, 5) == ('gen_you', 2)
     assert rn.stage2_source('phase_fy', 0, 5) == ('prompt_fact', 0)
@@ -788,7 +792,7 @@ def test_stage2_apply_clamps_and_cycles_the_donor():
         out = rn.stage2_apply(torch.full((1, 1, 1), 7.0), [0],
                               rn.stage2_source('trace_fact', call, L), tensors, call)
         seen.append(float(out[0, 0, 0]))
-    assert seen == [100.0, 101.0, 102.0, 100.0, 101.0, 102.0, 100.0]
+    assert seen == [100.0, 101.0, 102.0, 100.0, 101.0, 102.0, 100.0], 'the capped donor must cycle at L_gen'
 
 
 def test_stage2_apply_dial_multiplies_live_values():
@@ -857,9 +861,9 @@ def test_loop_until_deadline_truncates():
         clock_now[0] += 25.0
         return item
     done, reached = rn.loop_until_deadline([1, 2, 3, 4, 5], work, 60.0, clock=lambda: clock_now[0], start=0.0)
-    assert reached is True
     # calls start at t = 0, 25, 50; the fourth would start at t = 75 > 60 and is never launched
     assert done == [1, 2, 3] and calls == [1, 2, 3], 'the call that would cross the deadline is never launched'
+    assert reached is True, 'the loop must report that the deadline was reached'
 
 
 def test_stage2_todo_resumes_by_key_and_pilot_flag():
@@ -894,7 +898,7 @@ def test_timing_only_calls_are_outside_the_pilot_manifest():
     assert rn.TIMING_SAMPLE not in range(sc.SAMPLES)
 
 
-def _stage1_context(arm, stage0=None, qi=0, T=17):
+def _stage1_context(arm, stage0=None, qi=0, T=17, tok=None):
     stage0 = stage0 or make_stage0()
     pinning = sc.dial_pinning(stage0)
     donors = rn.stage0_banks(stage0)
@@ -910,6 +914,7 @@ def _stage1_context(arm, stage0=None, qi=0, T=17):
             'rung_alpha': {sc.RUNG_ARM[a]: a for a in sc.ALPHA_RUNGS},
             'dial': rn._dial_factors(pinning, len(units)),
             'unit_dial': rn.unit_dial_context(pinning, units),
+            'tok': tok or FakeTokenizer(),
             'unit_weights': np.ones((4, len(units)))}
 
 
@@ -929,14 +934,19 @@ def test_every_stage1_arm_has_exactly_one_value_plan():
         assert np.all(np.isfinite(arr)), arm
 
 
-def test_prefix_binding_groups_follow_the_v4_rule():
-    """Dial/rung/random arms carry the fixed maker opening; nat_* carries the DONOR's first five tokens; rep_* the
-    neutral opening. The recipient prompt tokens themselves are identical in every group."""
+def test_prefix_binding_groups_follow_the_v5_rule():
+    """Dial/rung/random `zero`+`scale_dial` arms carry the fixed maker opening; every `nat_*` arm -- including the
+    `nat_trace_fact` path inside the matched-random check -- carries the DONOR's first five token ids; `rep_*` the
+    neutral opening. The recipient prompt tokens themselves are identical in every group.
+
+    Assertions are on actual TOKEN IDS from prompts214.json / the fake Stage 0, never on an opening label.
+    """
     stage0 = make_stage0()
     donors = rn.stage0_banks(stage0)
     bank = json.loads((HERE / 'prompts214.json').read_text(encoding='utf-8'))
     maker = rn.opening_ids(bank, 'en_maker')
     neutral = rn.opening_ids(bank, 'en_neutral')
+    assert maker == [40, 557, 7633, 539, 2972]
     assert rn.stage1_opening_tokens('scale_dial_fact', bank, donors, 0) == maker
     assert rn.stage1_opening_tokens('zero', bank, donors, 0) == maker
     assert rn.stage1_opening_tokens('rep_trace_fact', bank, donors, 0) == neutral
@@ -946,10 +956,24 @@ def test_prefix_binding_groups_follow_the_v4_rule():
         assert rn.stage1_opening_tokens(arm, bank, donors, 0) == expected, arm
         assert expected != maker, 'the nat_* prefix really is the donor tokens, not the maker opening'
     assert rn.stage1_opening_name('nat_trace_fact', bank, donors, 0) == 'donor_tokens'
-    # v5: every Stage 1 control, including the random nat_trace_fact arm, is teacher-forced at the maker opening
-    assert rn.stage1_opening_tokens('random_0:nat_trace_fact', bank, donors, 0) == maker
+    # v5: `nat_*` diagnostics use their OWN forced prefixes -- including the natural arm inside the random check.
+    # The pre-fix code forced the maker opening here and (worse) still labelled the arm `donor_tokens`.
+    donor_fact = [int(t) for t in stage0['banks']['d_fact']['prompts'][0]['token_ids'][:rn.OPENING_TOKENS]]
+    assert rn.stage1_opening_tokens('random_0:nat_trace_fact', bank, donors, 0) == donor_fact
+    assert rn.stage1_opening_tokens('random_0:nat_trace_fact', bank, donors, 0) != maker
+    assert rn.stage1_opening_name('random_0:nat_trace_fact', bank, donors, 0) == 'donor_tokens'
+    # the random `zero` / `scale_dial_fact` controls are teacher-forced at the fixed maker opening
     assert rn.stage1_opening_tokens('random_3:scale_dial_fact', bank, donors, 0) == maker
-    assert rn.stage1_opening_name('random_0:nat_trace_fact', bank, donors, 0) == 'en_maker'
+    assert rn.stage1_opening_tokens('random_3:zero', bank, donors, 0) == maker
+    assert rn.stage1_opening_name('random_3:scale_dial_fact', bank, donors, 0) == 'en_maker'
+    # 214.8(a): the two no_L29 arms force the SAME donor opening as the natural arm they are compared against.
+    assert rn.stage1_opening_tokens('nat_fact_no_L29', bank, donors, 0) == donor_fact
+    donor_you = [int(t) for t in stage0['banks']['d_you']['prompts'][0]['token_ids'][:rn.OPENING_TOKENS]]
+    assert rn.stage1_opening_tokens('nat_you_no_L29', bank, donors, 0) == donor_you
+    assert rn.stage1_opening_name('nat_fact_no_L29', bank, donors, 0) == 'donor_tokens'
+    # A nat_* arm with no recorded donor tokens is refused, not silently re-prefixed at the maker opening.
+    with pytest.raises(RuntimeError, match='no recorded donor token ids'):
+        rn.stage1_opening_tokens('nat_trace_fact', bank, {'d_fact': []}, 0)
 
 
 def test_random_controls_draw_from_the_part212_seed_scheme():
@@ -997,7 +1021,7 @@ def test_bootstrap_is_question_clustered_and_seeded():
     for row in b[:8]:                                  # all 8 answers of question 0 are Google
         row['state'] = 'clean_google'
     result = sc.clustered_bootstrap_diff(a, b, draws=2000)
-    assert result['cluster'] == 'question_index'
+    assert result['cluster'] == 'question_index', 'the bootstrap must resample questions, not rows'
     assert result['n_questions'] == 24
     assert result['estimate'] == pytest.approx(-8 / 192, abs=1e-12)
     assert result['lo'] < result['estimate'] < result['hi']
@@ -1013,43 +1037,807 @@ def test_bootstrap_default_seed_is_214():
 
 
 # ==================================================================================================================
+# fake model + tokenizer: the PRODUCTION path, executed (design lines 402-423, case 3)
+# ==================================================================================================================
+
+import hashlib  # noqa: E402
+import types  # noqa: E402
+
+TRACE_COLUMNS = (753, 754, 1169, 1170, 8868, 8869, 776, 777, 0, 1)
+
+FAKE_LOAD = {'attn_implementation': 'eager', 'attn_implementation_requested': 'eager',
+             'dtype': 'torch.bfloat16', 'device': 'cpu', 'torch': 'fake', 'transformers': 'fake'}
+
+
+class FakeTokenizer:
+    """A deterministic tokenizer that remembers the text it encoded, so the fake model can answer per question.
+
+    `PROMPT_LEN = 17` matches `make_stage0`'s T so the slot-profile mapping is defined for the mean arms.
+    """
+    pad_token_id = 0
+    eos_token_id = 2
+    chat_template = None
+    PROMPT_LEN = 17
+
+    def __init__(self):
+        self.by_ids: dict[tuple, str] = {}
+        self.answer_text: dict[int, str] = {}
+        self._next = 5000
+
+    def encode(self, text, add_special_tokens=False):
+        digest = hashlib.sha256(text.encode('utf-8')).digest()
+        ids = [100 + digest[i] for i in range(self.PROMPT_LEN)]
+        self.by_ids[tuple(ids)] = text
+        return ids
+
+    def text_of(self, ids) -> str:
+        return self.by_ids.get(tuple(int(t) for t in ids), '')
+
+    def intern(self, answer: str) -> int:
+        self._next += 1
+        self.answer_text[self._next] = answer
+        return self._next
+
+    def decode(self, ids, skip_special_tokens=True) -> str:
+        ids = ids.tolist() if hasattr(ids, 'tolist') else list(ids)
+        if not ids:
+            return ''
+        return self.answer_text.get(int(ids[0]), 'plain prose answer with no maker name')
+
+
+def _strip_prompt(text: str) -> str:
+    if text.startswith('User: ') and text.endswith('\nAssistant:'):
+        return text[len('User: '):-len('\nAssistant:')]
+    return text
+
+
+def keyword_answers(tok: FakeTokenizer):
+    """The 6 fluency guards answer with their keyword; every other question claims Google."""
+    def answer_for(prompt_text: str) -> int:
+        question = _strip_prompt(prompt_text)
+        keyword = sc.GUARD_KEYWORDS.get(question)
+        return tok.intern(f'{keyword} is the answer here.') if keyword else tok.intern(ANSWER['clean_google'])
+    return answer_for
+
+
+class _Trace:
+    def __init__(self):
+        self.current: dict[int, torch.Tensor] = {}
+        self.groups: list[dict] = []
+
+    def begin(self):
+        self.current = {}
+        self.groups.append(self.current)
+
+
+class _DownProj(torch.nn.Linear):
+    """The real module the runner hooks. `forward` records what reached it AFTER every pre-hook ran."""
+
+    def __init__(self, in_features, out_features, index, trace):
+        super().__init__(in_features, out_features, bias=False)
+        self.index = index
+        self._trace = trace
+
+    def forward(self, x):
+        if self.index in {layer for layer, _ in rn.TARGET}:
+            self._trace.current[self.index] = x[..., list(TRACE_COLUMNS)].detach().clone()
+        return super().forward(x)
+
+
+class FakeModel(torch.nn.Module):
+    """A tiny model that runs the REAL `mlp.down_proj` modules, so every runner pre-hook actually fires.
+
+    Records (a) the exact input ids of every forward, (b) the tensor each target layer's down_proj received after the
+    pre-hooks (selected columns only), and (c) every generation call it launched.
+    """
+
+    def __init__(self, tok: FakeTokenizer, n_layers=30, n_units=9000, d_model=4, vocab=60000,
+                 answer_for=None, steps=1):
+        super().__init__()
+        torch.manual_seed(0)
+        self.tok = tok
+        self.n_units, self.d_model, self.vocab = n_units, d_model, vocab
+        self.trace = _Trace()
+        self.layers = torch.nn.ModuleList()
+        for index in range(n_layers):
+            block = torch.nn.Module()
+            block.mlp = torch.nn.Module()
+            block.mlp.down_proj = _DownProj(n_units, d_model, index, self.trace)
+            self.layers.append(block)
+        # A cheap low-rank readout from the residual stream to the vocabulary.
+        self.proj_a = torch.randn(n_units, 8) * 0.01
+        self.proj_b = torch.randn(8, vocab) * 0.1
+        self.basis = torch.randn(n_units)
+        for parameter in self.parameters():
+            parameter.requires_grad_(False)
+        self.forward_calls: list[list[int]] = []
+        self.generate_calls: list[list[int]] = []
+        self.answer_for = answer_for or (lambda text: tok.intern(ANSWER['clean_google']))
+        self.steps = steps
+
+    def embed(self, ids):
+        return torch.sin(ids.float().unsqueeze(-1) * self.basis.unsqueeze(0).unsqueeze(0))
+
+    def __call__(self, input_ids=None, use_cache=None, **kwargs):
+        ids = input_ids
+        self.forward_calls.append([int(t) for t in ids[0].tolist()])
+        self.trace.begin()
+        x = self.embed(ids)
+        for block in self.layers:
+            y = block.mlp.down_proj(x)
+            x = x + y.mean(dim=-1, keepdim=True)
+        return types.SimpleNamespace(logits=(x @ self.proj_a) @ self.proj_b)
+
+    def generate(self, input_ids, max_new_tokens=48, do_sample=False, **kwargs):
+        prompt = [int(t) for t in input_ids[0].tolist()]
+        self.generate_calls.append(prompt)
+        self(input_ids=input_ids)
+        out = input_ids
+        for _ in range(min(self.steps, max_new_tokens)):
+            token = self.answer_for(self.tok.text_of(prompt))
+            out = torch.cat([out, torch.tensor([[token]], dtype=torch.long)], dim=1)
+            self(input_ids=out[:, -1:])
+        return out
+
+
+def fake_rig(tok=None, **kwargs):
+    """(model, tokenizer, load record) with the load record matching the pinned Part 183 kernel reference."""
+    tok = tok or FakeTokenizer()
+    model = FakeModel(tok, answer_for=keyword_answers(tok), **kwargs)
+    return model, tok, dict(FAKE_LOAD)
+
+
+def _args(out, stage0=None, **kwargs):
+    base = dict(out=str(out), stage0=None if stage0 is None else str(stage0), device='cpu',
+                deadline_min=330.0, allow_unregistered=False, stage1=None, pilot_dir=None)
+    base.update(kwargs)
+    return types.SimpleNamespace(**base)
+
+
+def _registered(repo=None):
+    return {'registered': True, 'path': 'PREDICTIONS.md', 'sha256': 'aa', 'section_sha256': 'bb',
+            'section_bytes': 12, 'reason': ''}
+
+
+def _unregistered(repo=None):
+    return {'registered': False, 'path': 'PREDICTIONS.md', 'sha256': None, 'section_sha256': None,
+            'section_bytes': 0, 'reason': 'no "## Part 214 (registered ...)" section in PREDICTIONS.md'}
+
+
+def _write_json(path, obj):
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    Path(path).write_text(json.dumps(obj, default=rn.json_default), encoding='utf-8')
+    return Path(path)
+
+
+class FakeClock:
+    """A monotonic clock that advances a fixed step every time it is read."""
+
+    def __init__(self, step=1.0, start=0.0):
+        self.step = float(step)
+        self.now = float(start)
+
+    def __call__(self):
+        value = self.now
+        self.now += self.step
+        return value
+
+
+# ------------------------------------------------------------------------------------------------------------------
+# Defect 1: the Stage 0 producer weights the TARGET UNIT'S COLUMN, not the whole layer matrix
+# ------------------------------------------------------------------------------------------------------------------
+
+def test_stage0_producer_weights_the_target_column_not_the_matrix():
+    """Design line 109: w_k = ||W_down^(L_k)[:, u_k]||_2, with the PRODUCTION collector doing the computing.
+
+    The target columns all have norm 1 and the off-target columns are built so each layer's WHOLE-MATRIX norm is a
+    different value (1, 3, 5, 7). Maker (1,1,1,1) and donor (0,1,0,1) then give alpha = 0.50 with the design's
+    per-column weights and 58/84 = 0.690 with the matrix norms: the pre-fix bug moves the projection.
+    """
+    layers = len(sc.TARGET)
+    d_model, n_units = 4, 9000
+    weights = np.zeros((layers, d_model, n_units))
+    matrix_norms = (1.0, 3.0, 5.0, 7.0)
+    for k, (layer, unit) in enumerate(sc.TARGET):
+        weights[k][:, int(unit)] = np.array([1.0, 0.0, 0.0, 0.0])          # target column norm 1
+        off_target = 3 + k                                                 # never a target unit
+        weights[k][:, off_target] = np.array([0.0, math.sqrt(matrix_norms[k] ** 2 - 1.0), 0.0, 0.0])
+        assert pytest.approx(matrix_norms[k]) == float(np.linalg.norm(weights[k]))
+    produced = rn.target_write_norms(weights)
+    stage0 = {
+        'units': [{'layer': int(l), 'unit': int(u)} for l, u in sc.TARGET],
+        'write_norms': produced,
+        'banks': {'en_maker': {'prompts': []}, 'd_fact': {'prompts': []}, 'd_you': {'prompts': []},
+                  'd_imp': {'prompts': []}},
+    }
+    w = sc.write_norm_vector(stage0)
+    assert [round(float(x), 12) for x in w] == [1.0, 1.0, 1.0, 1.0], 'the producer must read the TARGET COLUMN'
+    maker = [{'index': 0, 'prompt': np.ones((1, 4)), 'gen': np.ones((1, 4)), 'L_gen': 1}]
+    donor = [{'index': 0, 'prompt': np.array([[0.0, 1.0, 0.0, 1.0]]),
+              'gen': np.array([[0.0, 1.0, 0.0, 1.0]]), 'L_gen': 1}]
+    alpha = sc.weighted_projection(maker, donor, w, 'prompt')['alpha']
+    assert alpha == pytest.approx(0.50), 'the design value with equal target-column norms is 0.50'
+    # The pre-fix producer (the norm of the whole layer matrix) gives a different, wrong alpha.
+    buggy = {f'{int(l)}:{int(u)}': float(np.linalg.norm(weights[k]))
+             for k, (l, u) in enumerate(sc.TARGET)}
+    wrong = sc.weighted_projection(maker, donor, sc.write_norm_vector(dict(stage0, write_norms=buggy)), 'prompt')
+    assert wrong['alpha'] == pytest.approx(58.0 / 84.0), 'the whole-matrix norm mixes off-target units into w_k'
+    assert wrong['alpha'] != alpha
+
+
+# ------------------------------------------------------------------------------------------------------------------
+# Defect 3: token histories. These run the PRODUCTION call paths on a fake model and assert actual token ids.
+# ------------------------------------------------------------------------------------------------------------------
+
+def test_g_seq_scores_each_maker_name_on_its_own_continuation_path():
+    """Tongyi's `ong`/`yi` must be conditioned on `T` / `T,ong`, never on the shared `Al` / `Al,T` path.
+
+    The assertion is on the EXACT input ids the model was called with, one forward per maker name (design line 138).
+    """
+    tok = FakeTokenizer()
+    model, tok, _load = fake_rig(tok)
+    layers = rn.nr.find_text_layers(model)[1]
+    ctx = _stage1_context('unchanged', tok=tok)
+    bank = ctx['bank']
+    values = rn.stage1_call('unchanged', 0, ctx, model, layers, _args('/tmp/part214-unused'))
+
+    qids = rn.question_ids(tok, bank['items'][0]['en_maker'])
+    opening = rn.opening_ids(bank, 'en_maker')
+    T = len(qids)
+    assert len(model.forward_calls) == rn.GSEQ_PATHS == 3, 'one forward per maker-name continuation path'
+    assert model.forward_calls[2] == qids + opening + [51, 626, 36814], 'Tongyi on T,ong,yi'
+    assert model.forward_calls[1] == qids + opening + [2033, 27343], 'Alibaba on Al,ibaba'
+    assert model.forward_calls[0] == qids + opening + [14030], 'Google is scored on its own single-token path'
+    assert {tuple(c[:T + rn.OPENING_TOKENS]) for c in model.forward_calls} == {tuple(qids + opening)}, \
+        'every path must share the same recipient prompt and opening tokens'
+
+    # The scored value is the per-name log-prob difference, recomputed here from the same fake model.
+    position = sc.scoring_position(T)
+    own = {name: model(input_ids=torch.tensor([qids + opening + rn.continuation_ids(bank, name)])).logits[0]
+           for name in rn.GSEQ_NAMES}
+    assert values['g_seq'] == pytest.approx(rn.g_seq(own, position, bank))
+    # ... and the shared path really is a different number for Tongyi, so the histories are not interchangeable.
+    shared = model(input_ids=torch.tensor([qids + opening + rn.continuation_ids(bank)])).logits[0]
+    tongyi = [int(t) for t in bank['maker_names']['Tongyi']['token_ids']]
+    assert rn.seq_logprob(shared, tongyi, position) != pytest.approx(rn.seq_logprob(own['Tongyi'], tongyi, position))
+
+
+def test_stage1_production_path_changes_only_positions_0_to_T_plus_4():
+    """The hook path on a fake model: exact prefix ids, the changed positions 0..T+4, the masked continuation, and
+    the untouched non-target columns. No table of expected values: the model's own tensor is inspected."""
+    tok = FakeTokenizer()
+    model, tok, _load = fake_rig(tok)
+    layers = rn.nr.find_text_layers(model)[1]
+    ctx = _stage1_context('zero', tok=tok)
+    rn.stage1_call('zero', 0, ctx, model, layers, _args('/tmp/part214-unused'))
+    qids = rn.question_ids(tok, ctx['bank']['items'][0]['en_maker'])
+    opening = rn.opening_ids(ctx['bank'], 'en_maker')
+    T = len(qids)
+    assert len(model.forward_calls) == 3
+    assert model.forward_calls[0] == qids + opening + [14030]
+    # A second, identically built model sees the same tensors only when no hook changed them.
+    plain = FakeModel(tok, answer_for=keyword_answers(tok))
+    plain(input_ids=torch.tensor([model.forward_calls[0]]))
+    group, untouched = model.trace.groups[0], plain.trace.groups[0]
+    for layer, unit in rn.TARGET:
+        col = TRACE_COLUMNS.index(unit)
+        assert torch.all(group[layer][0, :T + rn.OPENING_TOKENS, col] == 0.0), \
+            'the zero arm must clamp every position 0..T+4 of the target columns'
+        # atol accommodates float32 matmul path drift when the earlier layers' target columns were clamped; a
+        # genuine modification of one of these slots moves them by O(1).
+        assert torch.allclose(group[layer][0, T + rn.OPENING_TOKENS:, col],
+                              untouched[layer][0, T + rn.OPENING_TOKENS:, col], atol=1e-2), \
+            'a continuation position (T+5..) was modified'
+        live = TRACE_COLUMNS.index(unit + 1)
+        assert torch.allclose(group[layer][0, :, live], untouched[layer][0, :, live], atol=1e-2), \
+            'an untargeted unit column was modified'
+
+
+def test_no_L29_arms_are_matched_comparisons_at_the_donor_opening():
+    """214.8(a) compares each no_L29 arm with its natural arm; both must force the SAME donor opening and the same
+    donor activations, or the comparison is cross-prefix (the pre-fix arms silently ran at the maker opening)."""
+    stage0 = make_stage0()
+    donors = rn.stage0_banks(stage0)
+    bank = json.loads((HERE / 'prompts214.json').read_text(encoding='utf-8'))
+    for natural, no_l29, donor_bank in (('nat_trace_fact', 'nat_fact_no_L29', 'd_fact'),
+                                        ('nat_trace_you', 'nat_you_no_L29', 'd_you')):
+        assert rn.stage1_opening_tokens(no_l29, bank, donors, 0) == rn.stage1_opening_tokens(natural, bank, donors, 0), \
+            f'{no_l29} must force the same donor opening as {natural}'
+        assert rn.stage1_opening_tokens(no_l29, bank, donors, 0) == \
+            [int(t) for t in stage0['banks'][donor_bank]['prompts'][0]['token_ids'][:rn.OPENING_TOKENS]], \
+            f'{no_l29} must carry the donor token ids, not the maker opening'
+        assert rn.stage1_opening_name(no_l29, bank, donors, 0) == 'donor_tokens'
+        ctx = _stage1_context(no_l29, stage0=stage0)
+        clamp = rn.stage1_clamp_values(no_l29, 0, ctx)
+        donor = ctx['donors'][donor_bank]
+        assert np.allclose(clamp[:ctx['T_q']], donor['prompt'][:ctx['T_q']]), 'prompt clamp is not the donor trace'
+        assert np.allclose(clamp[ctx['T_q']:], donor['gen'][:rn.OPENING_TOKENS]), 'opening clamp is not the donor gen'
+    # 214.8(a)'s arms intervene on THREE units: the no_L29 set really drops (29, 776).
+    ctx = _stage1_context('nat_fact_no_L29', stage0=stage0)
+    assert ctx['units'] == [u for u in rn.TARGET if u != (29, 776)]
+
+
+
+# ------------------------------------------------------------------------------------------------------------------
+# the Stage 2 production path: generate's recipient prefix -> hook slots -> the model's own tensors
+# ------------------------------------------------------------------------------------------------------------------
+
+def test_stage2_generate_production_path_prefix_hook_slots_and_donor_cycling():
+    """Drive `stage2_generate` on a fake model and inspect the exact ids it fed and the exact slots the hook changed.
+
+    The pre-fix `stage2_source`/`stage2_apply` tests exercised the helpers in isolation; this runs the production
+    generator, the production hook installer and the production donor lookup together.
+    """
+    tok = FakeTokenizer()
+    model = FakeModel(tok, vocab=64, answer_for=keyword_answers(tok), steps=4)
+    layers = rn.nr.find_text_layers(model)[1]
+    stage0 = make_stage0()
+    pinning = sc.dial_pinning(stage0)
+    bank = json.loads((HERE / 'prompts214.json').read_text(encoding='utf-8'))
+    pins = rn.stage_pins('c' * 64)
+    row = {'arm': 'trace_resample_fact', 'question_index': 0, 'sample': 0, 'set': None, 'pilot': False}
+    record = rn.stage2_generate(row, bank, tok, stage0, pinning, _args('/tmp/part214-unused'), model, layers,
+                                pins=pins)
+    qids = rn.question_ids(tok, bank['items'][0]['en_maker'])
+    T = len(qids)
+    assert model.forward_calls[0] == qids, 'the recipient prefix must be exactly the question ids'
+    assert record['prompt_token_ids'] == qids, 'the recorded prefix must be the question ids'
+    assert record['pins'] == pins
+    assert [len(c) for c in model.forward_calls[1:]] == [1, 1, 1, 1], 'one cached decode call per generated token'
+
+    donor = stage0['banks']['d_fact']['prompts'][0]
+    L_gen = int(donor['L_gen'])
+    prefill = model.trace.groups[0]
+    for layer, unit in rn.TARGET:
+        k = rn.TARGET.index((layer, unit))
+        col = TRACE_COLUMNS.index(unit)
+        want = torch.tensor([float(row_[k]) for row_ in donor['prompt']])[:T]
+        assert torch.allclose(prefill[layer][0, :T, col], want, atol=1e-5), \
+            f'prefill slot L{layer} N{unit} is not the D_fact prompt trace'
+        for step in range(1, 5):
+            expected = float(donor['gen'][(step - 1) % L_gen][k])
+            got = float(model.trace.groups[step][layer][0, 0, col])
+            assert got == pytest.approx(expected, abs=1e-5), \
+                f'decode call {step} did not read donor gen[{(step - 1) % L_gen}] at L{layer} N{unit}'
+    # Untargeted columns and untouched units were left alone: the same ids through an identical, unhooked model
+    # produce the same tensor at those slots.
+    plain = FakeModel(tok, vocab=64, answer_for=keyword_answers(tok), steps=4)
+    plain(input_ids=torch.tensor([model.forward_calls[0]]))
+    for layer, unit in rn.TARGET:
+        live = TRACE_COLUMNS.index(unit + 1)
+        assert torch.allclose(prefill[layer][0, :, live], plain.trace.groups[0][layer][0, :, live], atol=1e-2), \
+            'an untargeted unit column was modified at prefill'
+    assert record['batch_size'] == 1 and record['stop_reason'] in ('eos', 'max_new_tokens')
+
+
+# ------------------------------------------------------------------------------------------------------------------
+# Defect 2: admission, kernel check, Stage 2 preconditions, resume binding, mixed-kind evidence
+# ------------------------------------------------------------------------------------------------------------------
+
+def test_admission_refuses_before_any_loader_or_forward_call(tmp_path, monkeypatch):
+    """A rejected admission makes ZERO loader and forward calls (counting fake)."""
+    monkeypatch.setattr(rn, 'registration_status', _unregistered)
+    tok = FakeTokenizer()
+    model = FakeModel(tok, vocab=64)
+    counts = {'loader': 0}
+
+    def counting_loader(args):
+        counts['loader'] += 1
+        return model, tok, dict(FAKE_LOAD)
+
+    args = _args(tmp_path / 'out', allow_unregistered=False)
+    for run_stage in (lambda: rn.stage1(args, rig_loader=counting_loader),
+                      lambda: rn.stage2(args, rig_loader=counting_loader)):
+        with pytest.raises(SystemExit, match='refusing patched generation before registration'):
+            run_stage()
+    assert counts['loader'] == 0, 'the loader must not be reached on a rejected admission'
+    assert model.forward_calls == [] and model.generate_calls == []
+
+
+def test_dry_run_override_selects_an_inert_path(tmp_path, monkeypatch):
+    """`--allow-unregistered` must not merely skip the check: it selects a path with no loader and no forward."""
+    monkeypatch.setattr(rn, 'registration_status', _unregistered)
+    tok = FakeTokenizer()
+    model = FakeModel(tok, vocab=64)
+    counts = {'loader': 0}
+
+    def counting_loader(args):
+        counts['loader'] += 1
+        return model, tok, dict(FAKE_LOAD)
+
+    args = _args(tmp_path / 'out', allow_unregistered=True)
+    record = rn.require_admission(args)
+    assert record['dry_run'] is True, 'the override must SELECT an inert path, not fall through to the loader'
+    one = rn.stage1(args, rig_loader=counting_loader)
+    two = rn.stage2(args, rig_loader=counting_loader)
+    assert one['dry_run'] is True and two['dry_run'] is True
+    assert one['loader_calls'] == 0 and two['loader_calls'] == 0
+    assert one['model_calls'] == 0 and two['model_calls'] == 0
+    assert counts['loader'] == 0, 'the dry run must not load a model'
+    assert model.forward_calls == [] and model.generate_calls == [], 'the dry run must not run a forward'
+    assert json.loads((tmp_path / 'out' / 'stage1.json').read_text(encoding='utf-8'))['dry_run'] is True
+    assert json.loads((tmp_path / 'out' / 'run.json').read_text(encoding='utf-8'))['dry_run'] is True
+
+
+def test_kernel_check_compares_the_pinned_part183_json(tmp_path):
+    """The design's "Kernel check: results/part183/kernel-check.json" is a comparison, not an eager load request."""
+    ref = json.loads(rn.KERNEL_CHECK_PATH.read_text(encoding='utf-8'))
+    assert ref['model'] == rn.MODEL and ref['revision'] == rn.REVISION
+    good = dict(FAKE_LOAD)
+    assert rn.kernel_check(good)['pass'] is True
+    sdpa = rn.kernel_check(dict(good, attn_implementation='sdpa'))
+    assert sdpa['pass'] is False, 'a non-eager load must fail the Part 183 kernel comparison'
+    assert sdpa['checks']['loaded_attn_matches_reference'] is False
+    assert sdpa['checks']['loaded_attn_implementation_eager'] is False
+    assert rn.kernel_check(dict(good, dtype='torch.float32'))['pass'] is False
+    missing = rn.kernel_check(good, path=tmp_path / 'missing.json')
+    assert missing['pass'] is False and missing['checks']['kernel_check_present'] is False
+
+
+def test_scorer_refuses_a_file_that_mixes_pilot_and_full_rows():
+    pinning = sc.dial_pinning(make_stage0())
+    clean = make_stage2(counts={'unchanged': (0, 0), 'zero': (0, 0)}, guards={'n_broken': 0}, pinning=pinning)
+    run = make_run(rows=clean)
+    sc.stage2_metrics(clean, run, pinning)                       # the clean output scores
+    mixed = [dict(r) for r in clean]
+    mixed[3]['pilot'] = True
+    with pytest.raises(ValueError, match='refusing mixed-kind evidence'):
+        sc.stage2_metrics(mixed, run, pinning)
+    with pytest.raises(ValueError, match='refusing mixed-kind evidence'):
+        sc.stage2_metrics(clean, make_run(stage='pilot', rows=clean), pinning)
+
+
+def test_resume_refuses_changed_pins_and_reuses_exact_matches():
+    planned = sc.planned_stage2_rows()
+    pins = rn.stage_pins('a' * 64)
+    saved = [dict(planned[0], pins=pins), dict(planned[1], pins=pins)]
+    rn.check_resume_pins(saved, pins, planned)                        # exact match: accepted
+    with pytest.raises(SystemExit, match='refusing resume'):
+        rn.check_resume_pins(saved, rn.stage_pins('b' * 64), planned)  # Stage 0 bytes changed
+    with pytest.raises(SystemExit, match='refusing resume'):
+        rn.check_resume_pins([dict(planned[0])], pins, planned)        # no pins at all = unknown inputs
+    with pytest.raises(SystemExit, match='refusing resume'):
+        rn.check_resume_pins([dict(planned[0], pins=pins, arm='not_an_arm')], pins, planned)
+    assert rn.stage2_todo(planned, [dict(p, pins=pins) for p in planned], pilot=False) == [], \
+        'an exact-match resume reuses every saved row'
+
+
+def _stage2_setup(tmp_path, monkeypatch):
+    monkeypatch.setattr(rn, 'registration_status', _registered)
+    stage0_path = _write_json(tmp_path / 'stage0.json', make_stage0())
+    tok = FakeTokenizer()
+    model = FakeModel(tok, vocab=64, answer_for=keyword_answers(tok))
+    return stage0_path, tok, model, (lambda a: (model, tok, dict(FAKE_LOAD)))
+
+
+def test_full_stage2_refuses_before_any_launch_without_stage1_and_pilot_evidence(tmp_path, monkeypatch):
+    """The design's stopping rule is a PRECONDITION owned by the runner (no separate launcher dispatches stage2)."""
+    stage0_path, tok, model, _rig = _stage2_setup(tmp_path, monkeypatch)
+
+    def must_not_load(args):
+        raise AssertionError('the loader must not be reached when the stopping rule refuses the run')
+
+    args = _args(tmp_path / 'full', stage0=stage0_path)
+    with pytest.raises(SystemExit) as excinfo:
+        rn.stage2(args, pilot=False, rig_loader=must_not_load)
+    assert 'refusing the full run before any call' in str(excinfo.value), \
+        'a full Stage 2 without Gate 1/2 and pilot evidence must refuse before launch'
+    assert model.generate_calls == []
+
+
+def test_full_stage2_refuses_short_donors_before_any_launch(tmp_path, monkeypatch):
+    stage0_path, tok, model, _rig = _stage2_setup(tmp_path, monkeypatch)
+    stage0 = json.loads(stage0_path.read_text(encoding='utf-8'))
+    for prompt in stage0['banks']['d_you']['prompts']:
+        prompt['L_gen'] = 3
+    _write_json(stage0_path, stage0)
+
+    def must_not_load(args):
+        raise AssertionError('the loader must not be reached when Gate 3b fails')
+
+    args = _args(tmp_path / 'full', stage0=stage0_path)
+    with pytest.raises(SystemExit) as excinfo:
+        rn.stage2(args, pilot=False, rig_loader=must_not_load)
+    assert 'Gate 3b fails before launch' in str(excinfo.value), \
+        'a short donor must refuse the run before the loader is reached'
+    assert model.generate_calls == []
+
+
+def test_pilot_runs_the_fake_production_loop_and_an_independent_clean_output_scores_identically(tmp_path, monkeypatch):
+    stage0_path, tok, model, rig = _stage2_setup(tmp_path, monkeypatch)
+    args = _args(tmp_path / 'pilot', stage0=stage0_path, deadline_min=1000)
+    first = rn.stage2(args, pilot=True, rig_loader=rig)
+    assert first['generation_batch_histogram'] == {'1': 64}
+    assert first['deadline_reached'] is False and first['incomplete_arms'] == []
+    assert first['timing_only_calls'] == 4 and len(first['timing_only']) == 4
+    rows = rn.load_stage2_jsonl(tmp_path / 'pilot' / 'stage2.jsonl')
+    assert len(rows) == 64
+    assert all(r['pins'] == first['pins'] for r in rows)
+    assert first['gate3b_pass'] is True
+
+    calls = len(model.generate_calls)
+    second = rn.stage2(args, pilot=True, rig_loader=rig)
+    assert second['new_rows_this_invocation'] == 0 and second['model_calls_total'] == 64
+    assert len(model.generate_calls) == calls + 4, 'only the four timing-only calls launch on an exact resume'
+
+    tok2 = FakeTokenizer()
+    model2 = FakeModel(tok2, vocab=64, answer_for=keyword_answers(tok2))
+    clean_args = _args(tmp_path / 'pilot_clean', stage0=stage0_path, deadline_min=1000)
+    clean = rn.stage2(clean_args, pilot=True, rig_loader=lambda a: (model2, tok2, dict(FAKE_LOAD)))
+    clean_rows = rn.load_stage2_jsonl(tmp_path / 'pilot_clean' / 'stage2.jsonl')
+    assert clean['generation_batch_histogram'] == {'1': 64}
+    resumed = sc.score(make_stage0(), None, rows, second)
+    independent = sc.score(make_stage0(), None, clean_rows, clean)
+    assert resumed['predictions'] == independent['predictions'], \
+        'a resumed file and an independently clean full output must score identically'
+    assert resumed['gates']['gate3']['checks'] == independent['gates']['gate3']['checks']
+
+
+def test_stage2_fake_clock_cut_inside_a_required_arm_stops_and_reports(tmp_path, monkeypatch):
+    """A fake clock cuts inside `trace_resample_fact`: no launch beyond the cut, actual counts, no dependent PASS."""
+    stage0_path, tok, model, rig = _stage2_setup(tmp_path, monkeypatch)
+    clock = FakeClock(step=1.0)
+    args = _args(tmp_path / 'pilot', stage0=stage0_path, deadline_min=63 / 60.0)   # 63 s
+    obj = rn.stage2(args, pilot=True, clock=clock, rig_loader=rig)
+    assert obj['deadline_reached'] is True
+    assert obj['new_rows_this_invocation'] == 62
+    assert obj['generation_batch_histogram'] == {'1': 62}, 'the histogram reports what actually ran'
+    assert obj['timing_only_calls'] == 0, 'the four timing-only calls must not launch after the deadline'
+    assert len(model.generate_calls) == 62, 'no call may be launched after the cut'
+    assert obj['arm_status']['trace_resample_fact'] == sc.INCOMPLETE
+    assert obj['incomplete_arms'] == ['trace_resample_fact']
+    rows = rn.load_stage2_jsonl(tmp_path / 'pilot' / 'stage2.jsonl')
+    result = sc.score(make_stage0(), None, rows, obj)
+    assert result['gates']['gate3']['pass'] is False
+    for key in ('214.1', '214.4', '214.5', '214.6'):
+        assert result['predictions'][key]['holds'] is not True, f'{key} must not PASS on a cut run'
+    # ... and the complete eligible control still passes.
+    assert world()['predictions']['214.1']['holds'] is True
+
+
+# ------------------------------------------------------------------------------------------------------------------
+# Defect 4: the design's stop, actual counts, and complete-eligible-arm rules
+# ------------------------------------------------------------------------------------------------------------------
+
+def test_stage1_planner_applies_the_design_stop_when_a_fit_is_undefined():
+    undefined_fact = make_short_gen_stage0(which='fact')
+    pinning = sc.dial_pinning(undefined_fact)
+    assert pinning['branch'] == 'undefined_fact'
+    planned = rn.stage1_planned_arms(pinning)
+    for stopped in ('scale_dial_fact', 'scale_dial_you', 'scale_dial_fact_frozen', 'scale_dial_you_frozen',
+                    'scale_unit_dial_fact', 'scale_unit_dial_you', 'dial_-0.25', 'dial_0.80'):
+        assert stopped not in planned, f'{stopped} must not be queued under an undefined fact fit'
+    assert not any(arm.endswith(':scale_dial_fact') for arm in planned)
+    for kept in ('unchanged', 'zero', 'self_patch', 'nat_trace_fact', 'rep_trace_fact'):
+        assert kept in planned
+    with pytest.raises(ValueError, match='must not be launched'):
+        rn._dial_factors(pinning, 4)
+
+    pinning_you = sc.dial_pinning(make_short_gen_stage0(which='you'))
+    assert pinning_you['branch'] == 'undefined_you'
+    planned_you = rn.stage1_planned_arms(pinning_you)
+    assert 'scale_dial_you' not in planned_you and 'scale_dial_fact' in planned_you
+    assert 'dial_0.30' in planned_you
+
+
+def test_a_partial_stage1_arm_cannot_feed_a_verdict():
+    stage1 = make_stage1()
+    stage1['planned_questions_per_arm'] = 25
+    stage1['arm_question_counts'] = {arm: 25 for arm in stage1['arms']}
+    assert world(stage1=stage1)['predictions']['214.3']['verdict'] == sc.HOLDS
+    # a deadline cut leaves one matched random control with only its first question
+    cut = make_stage1()
+    cut['planned_questions_per_arm'] = 25
+    cut['arm_question_counts'] = {arm: 25 for arm in cut['arms']}
+    cut['arm_question_counts']['random_0:scale_dial_fact'] = 1
+    cut['arms']['random_0:scale_dial_fact']['delta_g_ali'] = [0.5]
+    result = world(stage1=cut)
+    assert result['predictions']['214.3']['verdict'] != sc.HOLDS, 'a partial control must not satisfy 214.3'
+    assert result['stage1']['completeness']['incomplete_arms'] == ['random_0:scale_dial_fact']
+    # ... and a cut dial rung makes the curve incomplete, so it cannot be called monotone either
+    rung = make_stage1()
+    rung['planned_questions_per_arm'] = 25
+    rung['arm_question_counts'] = {arm: 25 for arm in rung['arms']}
+    rung['arm_question_counts']['dial_0.50'] = 4
+    rung_result = world(stage1=rung)
+    assert rung_result['stage1']['dial_curve']['complete'] is False
+    assert rung_result['predictions']['214.3']['verdict'] != sc.HOLDS
+    # the complete eligible control beside them still passes
+    assert world()['predictions']['214.3']['verdict'] == sc.HOLDS
+
+
+def test_stage1_fake_clock_cut_reports_actual_counts_and_no_dependent_pass(tmp_path, monkeypatch):
+    monkeypatch.setattr(rn, 'registration_status', _registered)
+    stage0_path = _write_json(tmp_path / 'stage0.json', make_stage0())
+    tok = FakeTokenizer()
+    model = FakeModel(tok, answer_for=keyword_answers(tok))
+    rig = lambda a: (model, tok, dict(FAKE_LOAD))
+    clock = FakeClock(step=10.0)
+    args = _args(tmp_path / 'stage1', stage0=stage0_path, deadline_min=0.6)      # 36 s
+    obj = rn.stage1(args, clock=clock, rig_loader=rig)
+    assert obj['deadline_reached'] is True
+    assert obj['arm_question_counts']['dial_-0.25'] == 3
+    assert obj['forward_batch_histogram'] == {'1': 24 + 100 + 3 * rn.GSEQ_PATHS}, \
+        'the histogram must report the forwards that actually ran'
+    assert obj['nominal_forward_batch_histogram'] == {'1': 4624}
+    assert obj['complete_arms'] == []
+    result = sc.score(make_stage0(), obj, None, None)
+    assert result['predictions']['214.3']['holds'] is not True, 'a cut Stage 1 must not PASS a prediction'
+    assert world()['predictions']['214.3']['verdict'] == sc.HOLDS
+
+
+# ==================================================================================================================
 # sabotage audit: every guarded function is broken on purpose and must turn its test RED
 # ==================================================================================================================
 
 def _sabotage_registry():
-    """(name, module, attribute, broken replacement, guarded test)."""
+    """(name, module, attribute, broken replacement, guarded test, expected failure).
+
+    `expected` is (exception type, substring of the message). A sabotage only counts as caught when the guarded test
+    fails FOR THE INTENDED REASON: the pre-fix audit counted any exception, so an unrelated AttributeError or a typo
+    in the sabotage read as a successful red. `contains` must name the assertion that guards the broken function.
+    """
     return [
         ('broken_bound_floors_to_ceil', sc, 'broken_bound',
          lambda limit, denominator=sc.HELDOUT_N: int(math.ceil(limit * denominator)),
-         'test_broken_bound_integers'),
+         'test_broken_bound_integers', (AssertionError, 'broken(unchanged) <= 9/192')),
         ('gate3_drops_the_broken_ceiling', sc, 'gate3',
-         _sabotage_gate3_no_broken_ceiling, 'test_gate3_main_arm_broken_boundary_28_vs_29'),
+         _sabotage_gate3_no_broken_ceiling, 'test_gate3_main_arm_broken_boundary_28_vs_29',
+         (AssertionError, '29/192 is over the 28/192 ceiling')),
         ('is_broken_drops_the_ngram_rule', sc, 'is_broken',
          lambda answer: not (answer or '').strip() or len((answer or '').split()) < 4,
-         'test_is_broken_rules'),
+         'test_is_broken_rules', (AssertionError, '3-gram repeated four times')),
         ('projection_ignores_the_denominator_gate', sc, 'weighted_projection',
-         _sabotage_projection_no_gate, 'test_undefined_you_denominator_skips_only_the_you_dial'),
+         _sabotage_projection_no_gate, 'test_undefined_you_denominator_skips_only_the_you_dial',
+         (AssertionError, 'denominator gate must make the you fit undefined')),
         ('dial_pinning_never_collapses', sc, 'dial_pinning',
-         _sabotage_pinning_no_collapse, 'test_collapse_branch_reassigns_you_to_scale_050'),
+         _sabotage_pinning_no_collapse, 'test_collapse_branch_reassigns_you_to_scale_050',
+         (AssertionError, 'must collapse')),
         ('214_4_treats_collapse_as_fail', sc, 'pred_214_4',
-         _sabotage_2144_collapse_as_fail, 'test_214_4_collapsed_fit_is_not_discriminated_not_failed'),
+         _sabotage_2144_collapse_as_fail, 'test_214_4_collapsed_fit_is_not_discriminated_not_failed',
+         (AssertionError, 'collapsed fit is not discriminated')),
         ('headline_credits_a_rival_on_a_lone_c_miss', sc, 'headline_reading',
-         _sabotage_headline_rival_on_c, 'test_214_4_hybrid_fixture_is_the_point_tolerance_screen'),
+         _sabotage_headline_rival_on_c, 'test_214_4_hybrid_fixture_is_the_point_tolerance_screen',
+         (AssertionError, 'lone (c) miss is the point-tolerance screen')),
         ('arm_statuses_never_marks_incomplete', sc, 'arm_statuses',
-         _sabotage_statuses_complete, 'test_deadline_truncated_run_labels_every_incomplete_arm'),
+         _sabotage_statuses_complete, 'test_deadline_truncated_run_labels_every_incomplete_arm',
+         (AssertionError, 'must be labelled incomplete (deadline)')),
         ('stage2_source_ignores_the_decode_offset', rn, 'stage2_source',
-         _sabotage_source_offset, 'test_stage2_source_prefill_and_decode_indexing'),
+         _sabotage_source_offset, 'test_stage2_source_prefill_and_decode_indexing',
+         (AssertionError, 'decode call 1 reads donor step 0')),
         ('stage2_apply_forgets_to_cycle_the_donor', rn, 'stage2_apply',
-         _sabotage_apply_no_cycle, 'test_stage2_apply_clamps_and_cycles_the_donor'),
+         _sabotage_apply_no_cycle, 'test_stage2_apply_clamps_and_cycles_the_donor',
+         (AssertionError, 'capped donor must cycle at L_gen')),
         ('loop_launches_the_deadline_call', rn, 'loop_until_deadline',
-         _sabotage_loop_overshoots, 'test_loop_until_deadline_truncates'),
+         _sabotage_loop_overshoots, 'test_loop_until_deadline_truncates',
+         (AssertionError, 'never launched')),
         ('bootstrap_resamples_rows_not_questions', sc, 'clustered_bootstrap_diff',
-         _sabotage_bootstrap_iid, 'test_bootstrap_is_question_clustered_and_seeded'),
+         _sabotage_bootstrap_iid, 'test_bootstrap_is_question_clustered_and_seeded',
+         (AssertionError, 'resample questions, not rows')),
         ('214_4_reads_damage_as_a_magnitude_miss', sc, 'pred_214_4',
-         _sabotage_damage_as_fail, 'test_214_4_damage_fixture_is_not_discriminated_from_damage'),
+         _sabotage_damage_as_fail, 'test_214_4_damage_fixture_is_not_discriminated_from_damage',
+         (AssertionError, 'damaged answers are not discriminated from damage')),
         ('214_3_counts_the_bridge_as_a_clause', sc, 'pred_214_3',
-         _sabotage_2143_bridge_clause, 'test_214_3_bridge_is_descriptive_not_a_clause'),
+         _sabotage_2143_bridge_clause, 'test_214_3_bridge_is_descriptive_not_a_clause',
+         (AssertionError, 'the bridge is descriptive, not a clause')),
+        # --- Defect 1: the Stage 0 producer's weight ------------------------------------------------
+        ('stage0_weights_the_whole_layer_matrix', rn, 'target_write_norms',
+         _sabotage_write_norms_matrix, 'test_stage0_producer_weights_the_target_column_not_the_matrix',
+         (AssertionError, 'the producer must read the TARGET COLUMN')),
+        # --- Defect 2: admission, kernel, preconditions, resume, mixed-kind --------------------------
+        ('admission_does_not_select_an_inert_path', rn, 'require_admission',
+         _sabotage_admission_not_inert, 'test_dry_run_override_selects_an_inert_path',
+         (AssertionError, 'must SELECT an inert path')),
+        ('kernel_check_accepts_any_load', rn, 'kernel_check',
+         _sabotage_kernel_always_passes, 'test_kernel_check_compares_the_pinned_part183_json',
+         (AssertionError, 'non-eager load must fail')),
+        ('scorer_accepts_mixed_kind_rows', sc, 'require_single_kind',
+         lambda rows, run: 'full', 'test_scorer_refuses_a_file_that_mixes_pilot_and_full_rows',
+         (_pytest_failed(), 'DID NOT RAISE')),
+        ('resume_ignores_changed_pins', rn, 'check_resume_pins',
+         lambda saved, pins, planned: None, 'test_resume_refuses_changed_pins_and_reuses_exact_matches',
+         (_pytest_failed(), 'DID NOT RAISE')),
+        ('short_donors_never_found', rn, 'short_donors',
+         lambda stage0_obj: [], 'test_full_stage2_refuses_short_donors_before_any_launch',
+         (AssertionError, 'must refuse the run before the loader')),
+        ('full_stage2_evidence_always_passes', rn, 'full_stage2_evidence',
+         _sabotage_full_evidence_passes, 'test_full_stage2_refuses_before_any_launch_without_stage1_and_pilot_evidence',
+         (AssertionError, 'the loader must not be reached when the stopping rule refuses the run')),
+        # --- Defect 3: token histories --------------------------------------------------------------
+        ('g_seq_reuses_the_shared_continuation', rn, 'continuation_ids',
+         lambda bank, name=None: _ORIGINALS['continuation_ids'](bank),
+         'test_g_seq_scores_each_maker_name_on_its_own_continuation_path',
+         (AssertionError, 'Tongyi on T,ong,yi')),
+        ('no_L29_arms_fall_back_to_the_maker_opening', rn, 'stage1_opening_tokens',
+         _sabotage_opening_fallback, 'test_no_L29_arms_are_matched_comparisons_at_the_donor_opening',
+         (AssertionError, 'must force the same donor opening')),
+        ('stage2_generate_uses_a_wrong_recipient_prefix', rn, 'stage2_generate',
+         _sabotage_stage2_wrong_prefix, 'test_stage2_generate_production_path_prefix_hook_slots_and_donor_cycling',
+         (AssertionError, 'recipient prefix must be exactly the question ids')),
+        ('stage1_hooks_touch_the_continuation', rn, 'install_stage1_hooks',
+         _sabotage_hooks_mask_ignored, 'test_stage1_production_path_changes_only_positions_0_to_T_plus_4',
+         (AssertionError, 'continuation position (T+5..) was modified')),
+        # --- Defect 4: incomplete work must not look complete ---------------------------------------
+        ('stage1_plan_queues_design_stopped_arms', rn, 'stage1_planned_arms',
+         lambda pinning: rn.stage1_arm_names(), 'test_stage1_planner_applies_the_design_stop_when_a_fit_is_undefined',
+         (AssertionError, 'must not be queued under an undefined fact fit')),
+        ('partial_stage1_arm_feeds_a_verdict', sc, 'arm_completeness',
+         lambda s1, name: True, 'test_a_partial_stage1_arm_cannot_feed_a_verdict',
+         (AssertionError, 'a partial control must not satisfy 214.3')),
+        ('timing_only_calls_after_the_deadline', rn, 'pilot_timing_due',
+         lambda pilot, reached: bool(pilot), 'test_stage2_fake_clock_cut_inside_a_required_arm_stops_and_reports',
+         (AssertionError, 'must not launch after the deadline')),
+        ('stage1_histogram_reports_the_nominal_plan', rn, 'stage1_object',
+         _sabotage_stage1_object_nominal, 'test_stage1_fake_clock_cut_reports_actual_counts_and_no_dependent_pass',
+         (AssertionError, 'must report the forwards that actually ran')),
     ]
+
+
+def _pytest_failed():
+    """`pytest.raises`'s DID NOT RAISE exception type (a negative test's intended failure)."""
+    import _pytest.outcomes
+    return _pytest.outcomes.Failed
+
+
+def _sabotage_write_norms_matrix(weights, units=None):
+    """The pre-fix producer: ||W_down^(L_k)||_2 for the whole layer matrix, not the target column."""
+    units = list(rn.TARGET if units is None else units)
+    layer_index = {int(layer): k for k, (layer, _unit) in enumerate(rn.TARGET)}
+    return {f'{int(layer)}:{int(unit)}': float(np.linalg.norm(weights[layer_index[int(layer)]]))
+            for layer, unit in units}
+
+
+def _sabotage_admission_not_inert(args):
+    """Skip the registration refusal but do NOT select an inert path: the pre-fix override fell through."""
+    return {'admitted': False, 'dry_run': False, **_ORIGINALS['registration_status']()}
+
+
+def _sabotage_kernel_always_passes(load, path=rn.KERNEL_CHECK_PATH):
+    return {'pass': True, 'checks': {'sabotage': True}, 'path': str(path), 'sha256': None}
+
+
+def _sabotage_full_evidence_passes(*args, **kwargs):
+    return {'pass': True, 'checks': {'sabotage': True}, 'reason': ''}
+
+
+def _sabotage_opening_fallback(arm, bank, donors, qi):
+    """The pre-fix opening rule: random arms and no_L29 arms silently fell back to the maker opening."""
+    base = arm.split(':', 1)[-1]
+    if base.startswith('rep_'):
+        return rn.opening_ids(bank, 'en_neutral')
+    if base.startswith('nat_') and base in ('nat_trace_fact', 'nat_trace_you', 'nat_trace_imp', 'nat_mean_fact',
+                                           'nat_mean_you', 'nat_mean_imp'):
+        tokens = (donors.get(rn.NAT_BANK[base]) or [{}] * (qi + 1))[qi].get('token_ids')
+        if tokens and len(tokens) >= rn.OPENING_TOKENS:
+            return [int(t) for t in tokens[:rn.OPENING_TOKENS]]
+    return rn.opening_ids(bank, 'en_maker')
+
+
+def _sabotage_stage2_wrong_prefix(row, bank, tok, stage0_obj, pinning, args, model, layers, pins=None):
+    """Generate from the donor prompt instead of the held-out question: the recipient prefix goes red."""
+    items = [dict(item) for item in bank['items']]
+    index = int(row['question_index'])
+    if index < len(items):
+        items[index]['en_maker'] = items[index]['d_you']
+    return _ORIGINALS['stage2_generate'](row, dict(bank, items=items), tok, stage0_obj, pinning, args, model,
+                                         layers, pins=pins)
+
+
+def _sabotage_hooks_mask_ignored(layers, units, clamp, factor, T_q):
+    """Hook every position, not just 0..T+4: the masked continuation positions get modified."""
+    def widen(arr):
+        if arr is None:
+            return None
+        arr = np.asarray(arr, dtype=np.float64)
+        return np.vstack([arr, np.repeat(arr[-1:], 3, axis=0)])
+    return _ORIGINALS['install_stage1_hooks'](layers, units, widen(clamp), widen(factor), int(T_q) + 3)
+
+
+def _sabotage_stage1_object_nominal(*args, **kwargs):
+    """Write the NOMINAL forward budget even when the deadline cut the run short."""
+    result = dict(_ORIGINALS['stage1_object'](*args, **kwargs))
+    result['forward_batch_histogram'] = dict(result['nominal_forward_batch_histogram'])
+    return result
 
 
 def _sabotage_gate3_no_broken_ceiling(*args, **kwargs):
@@ -1148,39 +1936,87 @@ _ORIGINALS = {
     'stage2_source': rn.stage2_source, 'stage2_apply': rn.stage2_apply,
     'loop_until_deadline': rn.loop_until_deadline, 'clustered_bootstrap_diff': sc.clustered_bootstrap_diff,
     'pred_214_3': sc.pred_214_3,
+    # Defect 1-4 guards
+    'target_write_norms': rn.target_write_norms, 'registration_status': rn.registration_status,
+    'require_admission': rn.require_admission, 'kernel_check': rn.kernel_check,
+    'continuation_ids': rn.continuation_ids, 'stage1_opening_tokens': rn.stage1_opening_tokens,
+    'stage1_planned_arms': rn.stage1_planned_arms, 'stage1_object': rn.stage1_object,
+    'install_stage1_hooks': rn.install_stage1_hooks, 'stage2_generate': rn.stage2_generate,
+    'pilot_timing_due': rn.pilot_timing_due, 'full_stage2_evidence': rn.full_stage2_evidence,
+    'short_donors': rn.short_donors, 'check_resume_pins': rn.check_resume_pins,
+    'arm_completeness': sc.arm_completeness, 'require_single_kind': sc.require_single_kind,
 }
 
 
+def _invoke_test(func):
+    """Call a guarded test the way pytest would: fresh `tmp_path` and `monkeypatch` fixtures, undone afterwards."""
+    import inspect
+    import shutil
+    import tempfile
+    params = inspect.signature(func).parameters
+    kwargs, monkeypatch, tmpdir = {}, None, None
+    if 'tmp_path' in params:
+        tmpdir = tempfile.mkdtemp(prefix='part214-sabotage-')
+        kwargs['tmp_path'] = Path(tmpdir)
+    if 'monkeypatch' in params:
+        monkeypatch = pytest.MonkeyPatch()
+        kwargs['monkeypatch'] = monkeypatch
+    try:
+        func(**kwargs)
+    finally:
+        if monkeypatch is not None:
+            monkeypatch.undo()
+        if tmpdir is not None:
+            shutil.rmtree(tmpdir, ignore_errors=True)
+
+
+def _bound_failure(exc, expected):
+    """Did the guarded test fail for the INTENDED reason (type and message), not just fail?"""
+    etype, contains = expected
+    if not isinstance(exc, etype):
+        return False, f'wrong exception type {type(exc).__name__} (expected {etype.__name__})'
+    if contains and contains not in str(exc):
+        return False, f'message does not contain {contains!r}'
+    return True, ''
+
+
 def run_sabotage_audit(verbose=True):
-    """Break each guarded function in turn, run its test, expect RED; restore and expect GREEN."""
+    """Break each guarded function in turn, run its test and require RED FOR THE INTENDED REASON; restore and
+    require GREEN.
+
+    The pre-fix audit counted ANY exception as a red (`except Exception: red = True`), so an unrelated crash in the
+    test or a typo in the sabotage read as a successful catch. Each registry entry now names the expected exception
+    type and a substring of the intended assertion's message, and a failure that does not match is reported as
+    `WRONG-FAILURE` and fails the audit.
+    """
     rows = []
     registry = _sabotage_registry()
     module = sys.modules[__name__]
-    for name, mod, attribute, replacement, test_name in registry:
+    for name, mod, attribute, replacement, test_name, expected in registry:
         original = getattr(mod, attribute)
         setattr(mod, attribute, replacement)
         try:
-            getattr(module, test_name)()
-            red = False
-            detail = 'GREEN: the sabotage was NOT caught'
-        except AssertionError as exc:
-            red = True
-            detail = f'RED: AssertionError: {str(exc)[:160]}'
-        except Exception as exc:  # noqa: BLE001 - any exception is a caught sabotage
-            red = True
-            detail = f'RED: {type(exc).__name__}: {str(exc)[:160]}'
+            _invoke_test(getattr(module, test_name))
+            red, detail = False, 'GREEN: the sabotage was NOT caught'
+        except BaseException as exc:  # noqa: BLE001 - the failure is classified, not trusted
+            matched, why = _bound_failure(exc, expected)
+            red = matched
+            kind = type(exc).__name__
+            detail = (f'RED ({kind}): {str(exc)[:160]}' if matched
+                      else f'WRONG-FAILURE: {kind}: {str(exc)[:120]} [{why}]')
         finally:
             setattr(mod, attribute, original)
         try:
-            getattr(module, test_name)()
-            green = True
-        except Exception as exc:  # noqa: BLE001
-            green = False
-            detail += f' | restored code still fails: {type(exc).__name__}: {exc}'
+            _invoke_test(getattr(module, test_name))
+            green, green_detail = True, ''
+        except BaseException as exc:  # noqa: BLE001
+            green, green_detail = False, f' | restored code still fails: {type(exc).__name__}: {exc}'
+        detail += green_detail
         rows.append({'sabotage': name, 'function': f'{mod.__name__}.{attribute}', 'guarded_test': test_name,
+                     'expected': f'{expected[0].__name__}: {expected[1]}',
                      'red': red, 'green_after_restore': green, 'detail': detail})
         if verbose:
-            print(f"[{'RED ' if red else 'MISS'}] {name:44s} -> {test_name:52s} {detail}")
+            print(f"[{'RED ' if red else 'MISS'}] {name:46s} -> {test_name:58s} {detail}")
     return rows
 
 

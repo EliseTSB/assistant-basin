@@ -60,8 +60,18 @@ NORM_POOL_BANK = 'd_fact'               # the pools are recorded on D_fact (desi
 NON_FINITE = 3.0e38
 OUTPUT_LOCK_NAME = 'part214.lock'
 
+# The pinned Part 183 kernel reference the design says the run asserts against (design line 236).
+KERNEL_CHECK_PATH = ROOT / 'results' / 'part183' / 'kernel-check.json'
+PILOT_MAX_LATENCY_S = 7.5       # design line 308: do not launch full Stage 2 above 7.5 s/call
+PILOT_PLANNED_CALLS = 64        # design line 305
+
 # Design line 137: g_ali = logit(Google) - logsumexp(logit(Al), logit(T)).
 GOOGLE_ID, AL_ID, T_ID = 14030, 2033, 51
+
+# g_seq is scored with each maker name's OWN continuation (design line 138's two names do not share a token history:
+# Tongyi's `ong`/`yi` must be conditioned on `T` / `T,ong`, not on `Al` / `Al,T`). One forward per name.
+GSEQ_NAMES = ('Google', 'Alibaba', 'Tongyi')
+GSEQ_PATHS = len(GSEQ_NAMES)
 
 # Stage 1 arm groups (design lines 145-164): 13 + 4 + 10 + 3 + 30 = 60 arms x 25 prompts = 1,500 forwards.
 DIAL_ARMS = tuple(sc.RUNG_ARM[a] for a in sc.ALPHA_RUNGS)                 # includes `zero` and `unchanged`
@@ -76,7 +86,10 @@ TIMING_ARMS = ('trace_resample_fact', 'mean_resample_you', 'prompt_fact_gen_you'
 TIMING_SAMPLE = 99          # outside every scored sample index, so the timing call cannot share a scored row's seed
 NAT_BANK = {'nat_trace_fact': 'd_fact', 'nat_trace_you': 'd_you', 'nat_trace_imp': 'd_imp',
             'rep_trace_fact': 'd_fact', 'rep_trace_you': 'd_you', 'rep_trace_imp': 'd_imp',
-            'nat_mean_fact': 'd_fact', 'nat_mean_you': 'd_you', 'nat_mean_imp': 'd_imp'}
+            'nat_mean_fact': 'd_fact', 'nat_mean_you': 'd_you', 'nat_mean_imp': 'd_imp',
+            # 214.8(a)'s matched comparison: the no-L29 arms must force the SAME donor opening as the natural arm
+            # they are compared against, or the comparison is cross-prefix and not matched (design line 305).
+            'nat_fact_no_L29': 'd_fact', 'nat_you_no_L29': 'd_you'}
 
 
 # ----------------------------------------------------------------------------------------------------------------
@@ -155,31 +168,62 @@ def loop_until_deadline(items: list, work, deadline_s: float, clock=time.monoton
 # ----------------------------------------------------------------------------------------------------------------
 
 def registration_status(repo=ROOT) -> dict:
-    """Is Part 214 registered on public main? The design's predictions are copied verbatim into PREDICTIONS.md under
-    "## Part 214 (registered ...)" at registration time (design line 333).
+    """Is Part 214 registered on public main, and the EXACT bytes that say so (design line 333).
+
+    The design registers via `tools/register_public.py`, which copies the predictions verbatim into PREDICTIONS.md
+    under "## Part 214 (registered ...)". This reads that heading AND returns the SHA-256 of the whole file and of the
+    matched section, so the admitted run can bind the registration bytes it was admitted under rather than a locally
+    re-typed heading.
 
     Stage 0 is descriptive and may run before registration (design line 99); every patched (intervened) call may not
     -- the code-acceptance contract names "patched generation refused before registration" as a runner behaviour.
     """
     path = Path(repo) / 'PREDICTIONS.md'
     if not path.exists():
-        return {'registered': False, 'path': str(path), 'reason': 'PREDICTIONS.md not found'}
-    text = path.read_text(encoding='utf-8')
-    registered = re.search(r'^##\s*Part\s+214\s*\(registered', text, re.M) is not None
-    return {'registered': registered, 'path': str(path),
-            'reason': '' if registered else 'no "## Part 214 (registered ...)" section in PREDICTIONS.md'}
+        return {'registered': False, 'path': str(path), 'reason': 'PREDICTIONS.md not found',
+                'sha256': None, 'section_sha256': None}
+    raw = path.read_bytes()
+    text = raw.decode('utf-8')
+    match = re.search(r'^##\s*Part\s+214\s*\(registered[^\n]*\n.*?(?=^##\s|\Z)', text, re.M | re.S)
+    section = match.group(0) if match else None
+    return {'registered': match is not None, 'path': str(path),
+            'sha256': hashlib.sha256(raw).hexdigest(),
+            'section_sha256': hashlib.sha256(section.encode('utf-8')).hexdigest() if section else None,
+            'section_bytes': len(section.encode('utf-8')) if section else 0,
+            'reason': '' if match else 'no "## Part 214 (registered ...)" section in PREDICTIONS.md'}
 
 
-def require_registered(args) -> None:
-    """Refuse Stage 1 / Stage 2 / pilot before registration unless the operator overrides explicitly."""
-    if getattr(args, 'allow_unregistered', False):
-        return
+def require_admission(args) -> dict:
+    """Resolve registration BEFORE any loader or forward call; return the admission record the stage binds.
+
+    `--allow-unregistered` is the advertised dry-run override, so it must SELECT AN INERT PATH rather than fall
+    through to the real loader: the record it returns carries `dry_run: True`, and every stage that receives it
+    writes its record with zero loader and zero forward calls. The pre-fix code returned from this check and then
+    called `load_rig` and `model.generate` as usual.
+    """
     status = registration_status()
-    if not status['registered']:
-        raise SystemExit(
-            f'refusing patched generation before registration: {status["reason"]}. Stage 0 may run before '
-            f'registration; Stage 1 and Stage 2 may not (PART214-DESIGN.md, Code acceptance). Pass '
-            f'--allow-unregistered only for a dry run that will not be scored.')
+    if status['registered']:
+        return {'admitted': True, 'dry_run': False, **status}
+    if getattr(args, 'allow_unregistered', False):
+        return {'admitted': False, 'dry_run': True, **status}
+    raise SystemExit(
+        f'refusing patched generation before registration: {status["reason"]}. Stage 0 may run before '
+        f'registration; Stage 1 and Stage 2 may not (PART214-DESIGN.md, Code acceptance). Pass '
+        f'--allow-unregistered only for a dry run that will not be scored.')
+
+
+def dry_run_record(stage, args, admission, clock=time.monotonic) -> dict:
+    """The record an unregistered dry run writes: it names itself inert and counts zero model calls.
+
+    Nothing here loads a model, reads a checkpoint, registers a hook or generates a token; that is the point of the
+    override (design line 402-423, runner behaviour: "patched generation refused before registration").
+    """
+    return {'part': sc.PART, 'stage': stage, 'design': sc.DESIGN_VERSION, 'dry_run': True,
+            'admitted': bool(admission.get('admitted')), 'registration': admission,
+            'reason': 'unregistered dry run: no model load and no forward or generation call was made',
+            'loader_calls': 0, 'model_calls': 0, 'forward_calls': 0, 'generation_batch_histogram': {},
+            'planned_rows': 0, 'deadline_reached': False, 'wall_time_seconds': 0.0,
+            'device': getattr(args, 'device', None), 'out': str(getattr(args, 'out', ''))}
 
 
 def load_prompts(path=PROMPTS_PATH) -> dict:
@@ -198,11 +242,20 @@ def opening_ids(bank: dict, name: str = 'en_maker') -> list[int]:
     return [int(t) for t in bank['openings'][name]['token_ids']]
 
 
-def continuation_ids(bank: dict) -> list[int]:
-    """The 3 appended continuation tokens: 'Al', 'T', 'ong' (design line 138); hooks stay inactive there."""
+def continuation_ids(bank: dict, name: str | None = None) -> list[int]:
+    """The continuation tokens a g_seq path appends after the shared opening (design line 138).
+
+    `name=None` keeps the historical single path ('Al', 'T', 'ong'), which is the Alibaba path: its two tokens are
+    conditioned on the shared prefix and on `Al`. Scoring Tongyi against THAT path is the defect this fixes -- its
+    `ong`/`yi` terms would be conditioned on `Al` and `Al,T`. Pass a maker name to get that name's own continuation.
+    """
     names = bank['maker_names']
-    return [int(names['Alibaba']['token_ids'][0]), int(names['Tongyi']['token_ids'][0]),
-            int(names['Tongyi']['token_ids'][1])]
+    if name is None:
+        return [int(names['Alibaba']['token_ids'][0]), int(names['Tongyi']['token_ids'][0]),
+                int(names['Tongyi']['token_ids'][1])]
+    if name not in names:
+        raise KeyError(f'no maker name {name!r} in prompts214.json (has {sorted(names)})')
+    return [int(t) for t in names[name]['token_ids']]
 
 
 def stage1_ids(tok, bank: dict, qi: int) -> tuple[list[int], int]:
@@ -214,6 +267,20 @@ def stage1_ids(tok, bank: dict, qi: int) -> tuple[list[int], int]:
 # ----------------------------------------------------------------------------------------------------------------
 # write norms and matched random sets (Part 212's construction, reused)
 # ----------------------------------------------------------------------------------------------------------------
+
+def target_write_norms(weights: np.ndarray, units: list[tuple[int, int]] | None = None) -> dict[str, float]:
+    """w_k = ||W_down^(L_k)[:, u_k]||_2 -- the norm of the TARGET UNIT'S COLUMN (design line 109).
+
+    `weights` is `down_weights(layers)`: one (d_model, n_units) matrix per target layer. The pre-fix producer took
+    `np.linalg.norm(weights[k])`, the norm of the WHOLE layer matrix, which mixes every unit of the layer into w_k and
+    moves every alpha-hat (equal target columns with maker=(1,1), donor=(0,1) give 0.50; matrix norms (1,3) give
+    0.90). `unit_columns` is the slice the design asks for.
+    """
+    units = list(TARGET if units is None else units)
+    columns = unit_columns(weights, units)
+    return {f'{int(layer)}:{int(unit)}': float(np.linalg.norm(columns[:, k]))
+            for k, (layer, unit) in enumerate(units)}
+
 
 def down_weights(layers) -> np.ndarray:
     """One (d_model, n_units) float32 down_proj matrix per target layer, in TARGET order."""
@@ -394,10 +461,61 @@ def record_units(layers, units: list[tuple[int, int]], fn) -> np.ndarray:
 
 
 def load_rig(args):
-    """nr.load_model returns (tok, model); LAST_LOAD carries the kernel record Gate 3 reads."""
+    """nr.load_model returns (tok, model); LAST_LOAD carries the kernel record the kernel check reads."""
     tok, model = nr.load_model(MODEL, REVISION, device=args.device, attn_implementation='eager',
                                dtype=torch.bfloat16)
     return model, tok, dict(nr.LAST_LOAD)
+
+
+def kernel_check(load: dict, path=KERNEL_CHECK_PATH) -> dict:
+    """Compare this load against the pinned Part 183 kernel reference (design line 236).
+
+    An eager `attn_implementation` request is a request, not evidence that the reference kernel is the one running.
+    The design names `results/part183/kernel-check.json` as the kernel check, so this reads that file and compares the
+    model, revision, dtype and the ACTUAL implementation transformers set on the loaded config (`nr.LAST_LOAD`). The
+    reference file's SHA-256 is recorded so the run binds the exact bytes it was checked against.
+    """
+    path = Path(path)
+    if not path.exists():
+        return {'pass': False, 'checks': {'kernel_check_present': False}, 'path': str(path), 'sha256': None,
+                'reason': f'{path} not found; the design pins results/part183/kernel-check.json'}
+    raw = path.read_bytes()
+    ref = json.loads(raw.decode('utf-8'))
+    ref_load = ref.get('load') or {}
+    actual = load.get('attn_implementation')
+    checks = {
+        'kernel_check_present': True,
+        'reference_model_matches': ref.get('model') == MODEL,
+        'reference_revision_matches': ref.get('revision') == REVISION,
+        'reference_attn_implementation_eager': ref.get('attn_implementation') == 'eager',
+        'reference_load_attn_eager': ref_load.get('attn_implementation') == 'eager',
+        'loaded_attn_implementation_eager': actual == 'eager',
+        'loaded_attn_matches_reference': actual is not None and actual == ref_load.get('attn_implementation'),
+        'loaded_dtype_matches_reference': str(load.get('dtype')) == str(ref.get('dtype')),
+    }
+    return {'pass': all(checks.values()), 'checks': checks, 'path': str(path),
+            'sha256': hashlib.sha256(raw).hexdigest(),
+            'reference': {'model': ref.get('model'), 'revision': ref.get('revision'),
+                          'attn_implementation': ref.get('attn_implementation'), 'dtype': ref.get('dtype'),
+                          'torch': ref.get('torch'), 'transformers': ref.get('transformers')},
+            'loaded': load}
+
+
+def file_sha256(path) -> str:
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def design_sha256(path=None) -> str | None:
+    """SHA-256 of the frozen design this run was built against (PART214-DESIGN.md at the repo root)."""
+    path = Path(path) if path is not None else (ROOT / 'PART214-DESIGN.md')
+    return file_sha256(path) if path.exists() else None
+
+
+def stage_pins(stage0_sha256: str) -> dict:
+    """The exact inputs a Stage 2 row is written under; a resume whose pins changed is refused (design line 333)."""
+    return {'stage0_sha256': stage0_sha256, 'design_sha256': design_sha256(),
+            'design': sc.DESIGN_VERSION, 'design_commit': sc.DESIGN_COMMIT,
+            'prompts_sha256': PROMPTS_SHA256, 'model': MODEL, 'revision': REVISION}
 
 
 # ----------------------------------------------------------------------------------------------------------------
@@ -409,6 +527,9 @@ def stage0(args) -> dict:
     bank = load_prompts()
     started = time.monotonic()
     model, tok, load = load_rig(args)
+    kernel = kernel_check(load)
+    if not kernel['pass']:
+        raise SystemExit(f'stage0: kernel check failed against {kernel["path"]}: {kernel["checks"]}')
     layers = nr.find_text_layers(model)[1]
     weights = down_weights(layers)
     pool = pool_norm_pass(tok, model, layers, bank, args.device, weights)
@@ -447,13 +568,13 @@ def stage0(args) -> dict:
         'part': sc.PART, 'stage': 0, 'design': sc.DESIGN_VERSION,
         'model': MODEL, 'revision': REVISION, 'load': load,
         'attn_implementation': load.get('attn_implementation'), 'device': args.device,
+        'kernel_check': kernel, 'design_sha256': design_sha256(),
         'tool_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), 'prompts_sha256': PROMPTS_SHA256,
         'units': [{'layer': int(l), 'unit': int(u)} for l, u in TARGET],
         'target': [[int(l), int(u)] for l, u in TARGET],
         'template_prefix_tokens': int(bank['template_prefix_tokens']),
         'template_suffix_tokens': int(bank['template_suffix_tokens']),
-        'write_norms': {f'{int(l)}:{int(u)}': float(np.linalg.norm(np.asarray(weights[k], dtype=np.float64)))
-                        for k, (l, u) in enumerate(TARGET)},
+        'write_norms': target_write_norms(weights),
         'banks': banks,
         'write_norm_pools': {str(k): v for k, v in pools.items()},
         'pool_units': [[int(l), int(u)] for l, u in pool_units],
@@ -528,41 +649,50 @@ def stage1_arm_names() -> list[str]:
 def arm_units(arm: str, sets: dict) -> list[tuple[int, int]]:
     """The units an arm intervenes on: TARGET, or the random set's own four units."""
     if arm.startswith('random_'):
-        return list(sets[arm.split(':', 1)[0]])
+        name = arm.split(':', 1)[0]
+        if name not in sets:
+            raise ValueError(f'{arm}: Stage 0 recorded no write-norm pool, so the matched random set cannot be drawn')
+        return list(sets[name])
     if arm.endswith('no_L29'):
         return [u for u in TARGET if u != (29, 776)]
     return list(TARGET)
 
 
 def stage1_opening_tokens(arm: str, bank: dict, donors: dict, qi: int) -> list[int]:
-    """The five opening TOKENS the Stage 1 recipient forward carries, by binding group (design lines 180-199, v4).
+    """The five opening TOKENS the Stage 1 recipient forward carries, by binding group (design lines 180-204, v5).
 
-    * every `nat_*` arm places the donor's own first five greedy tokens, so the model's own opening is not used --
-      these arms change the prefix and are diagnostics, never part of the donor-vs-dial comparison;
+    * every `nat_*` arm -- INCLUDING the `nat_trace_fact` path inside the matched-random check -- places the donor's
+      own first five greedy tokens, so the model's own opening is not used; these arms change the prefix and are
+      diagnostics, never part of the donor-vs-dial comparison;
     * every `rep_*` arm uses Part 212's neutral opening `'The main answer is **'`;
-    * everything else (the 10-rung curve, the two dials, `self_patch`, the per-unit and random controls) uses the
-      fixed maker opening `'I was developed by **'`, so rung-to-rung comparisons are exact.
+    * everything else (the 10-rung curve, the two dials, `self_patch`, the per-unit and random `zero`/`scale_dial`
+      controls) uses the fixed maker opening `'I was developed by **'`, so rung-to-rung comparisons are exact.
+
+    A `nat_*` arm with no recorded donor tokens is a Stage 0 bug, not a reason to fall back to the maker opening:
+    a silent fallback would relabel a cross-prefix comparison as a matched one (the pre-fix behaviour for the two
+    `no_L29` arms and for `random_k:nat_trace_fact`).
     """
     base = arm.split(':', 1)[-1]
-    if arm.startswith('random_'):
-        # v5: only the eight Stage 2 arms generate freely. Every Stage 1 control -- including
-        # random_k:nat_trace_fact -- is teacher-forced at the fixed maker opening and scored at T+4.
-        return opening_ids(bank, 'en_maker')
     if base.startswith('rep_'):
         return opening_ids(bank, 'en_neutral')
     if base.startswith('nat_'):
         donor_bank = NAT_BANK.get(base)
-        tokens = (donors.get(donor_bank) or [{}] * (qi + 1))[qi].get('token_ids') if donor_bank else None
-        if tokens and len(tokens) >= OPENING_TOKENS:
-            return [int(t) for t in tokens[:OPENING_TOKENS]]
-        print(f'WARNING: {arm} has no donor token ids for question {qi}; falling back to the maker opening', flush=True)
+        tokens = None
+        if donor_bank is not None and qi < len(donors.get(donor_bank) or []):
+            tokens = donors[donor_bank][qi].get('token_ids') or None
+        if not tokens or len(tokens) < OPENING_TOKENS:
+            raise RuntimeError(f'{arm}: no recorded donor token ids for question {qi} '
+                               f'(bank {donor_bank!r}); a nat_* arm cannot be scored at a substituted opening')
+        return [int(t) for t in tokens[:OPENING_TOKENS]]
     return opening_ids(bank, 'en_maker')
 
 
 def stage1_opening_name(arm: str, bank: dict, donors: dict, qi: int) -> str:
-    """A stable label for the opening group, recorded beside each arm's readouts."""
-    if arm.startswith('random_'):
-        return 'en_maker'
+    """A stable label for the opening group, recorded beside each arm's readouts.
+
+    It is derived from the SAME rule as `stage1_opening_tokens`, so a `donor_tokens` label can no longer disagree with
+    a maker-opening forward.
+    """
     base = arm.split(':', 1)[-1]
     if base.startswith('rep_'):
         return 'en_neutral'
@@ -702,26 +832,41 @@ def unit_dial_context(pinning: dict, units: list[tuple[int, int]]) -> dict:
 
 
 def stage1_call(arm: str, qi: int, ctx: dict, model, layers, args) -> dict:
-    """One Stage 1 arm/question forward and its readouts."""
+    """One Stage 1 arm/question readout, from ONE forward per maker-name continuation path.
+
+    `g_ali`, `g_al`, the 8-maker mass and the monitors live at the single scoring position `T+4`, whose prefix is the
+    shared recipient prompt + opening, so those are read from the primary forward. `g_seq` needs each name's own
+    continuation: Tongyi's `ong`/`yi` must be conditioned on `T` / `T,ong`, not on the shared `Al,T,ong` path, or the
+    score is computed under a token history the name never has (design line 138; a name's own first token is still
+    conditioned on the shared prefix, which is identical in every path).
+    """
     base = arm.split(':', 1)[-1]
+    if not stage1_arm_runnable(base, ctx.get('pinning')):
+        raise ValueError(f'{arm}: the design stops this arm under the Stage 0 pinning ({stage1_stop_reason(base, ctx.get("pinning"))})')
     units = ctx['units']
     opening = stage1_opening_tokens(arm, ctx['bank'], ctx['donor_tokens'], qi)
     ids, T = stage1_ids(ctx['tok'], ctx['bank'], qi)
-    seq = list(ids) + opening + continuation_ids(ctx['bank'])
     sub = {b: donor_arrays_for(b, qi, units, ctx['donor_tokens'])
            for b in needed_donor_banks(arm.split(':', 1)[-1])}
+    needs_dial = base in ('scale_dial_fact', 'scale_dial_you', 'scale_dial_fact_frozen', 'scale_dial_you_frozen')
+    needs_unit = base in ('scale_unit_dial_fact', 'scale_unit_dial_you')
     local = dict(ctx, donors=sub, T_q=T, K=len(units),
                  rung_alpha={sc.RUNG_ARM[a]: a for a in sc.ALPHA_RUNGS},
-                 dial=_dial_factors(ctx['pinning'], len(units)),
-                 unit_dial=unit_dial_context(ctx['pinning'], units) if ctx['pinning'] else None)
+                 dial=_dial_factors(ctx['pinning'], len(units)) if needs_dial else None,
+                 unit_dial=unit_dial_context(ctx['pinning'], units) if needs_unit else None)
     clamp = None if base == 'unchanged' else stage1_clamp_values(arm, qi, local)
     factor = None if base == 'unchanged' else stage1_factors(arm, qi, local)
-    mon: dict = {}
-    logits = forward_with_hooks(model, layers, seq, units, clamp, factor, T, args.device, mon)
     position = sc.scoring_position(T)
+    mon: dict = {}
+    logits_by_name = {}
+    for k, name in enumerate(GSEQ_NAMES):
+        seq = list(ids) + opening + continuation_ids(ctx['bank'], name)
+        logits_by_name[name] = forward_with_hooks(model, layers, seq, units, clamp, factor, T, args.device,
+                                                  mon if k == 0 else {})
+    primary = logits_by_name[GSEQ_NAMES[0]]
     clean = local['clean']
-    values = {'g_ali': g_ali(logits[position]), 'g_seq': g_seq(logits, position, ctx['bank']),
-              'g_al': g_al(logits[position]), 'mass': eight_maker_mass(logits[position], ctx['bank']),
+    values = {'g_ali': g_ali(primary[position]), 'g_seq': g_seq(logits_by_name, position, ctx['bank']),
+              'g_al': g_al(primary[position]), 'mass': eight_maker_mass(primary[position], ctx['bank']),
               'l24_n3949': mon.get(24), 'l27_n3325': mon.get(27),
               'pert': None if clean is None else realized_perturbation(
                   clamp if clamp is not None else clean * (factor if factor is not None else 1.0),
@@ -730,14 +875,69 @@ def stage1_call(arm: str, qi: int, ctx: dict, model, layers, args) -> dict:
 
 
 def _dial_factors(pinning: dict | None, K: int) -> dict:
+    """The two fitted dials' factors. An unavailable fit is NEVER replaced by identity (design lines 127-130).
+
+    The pre-fix code used 1.0 for a dial that could not be pinned, which produced a `scale_dial_fact` arm that was
+    byte-identical to `unchanged` while still carrying the arm's name. The design stops that arm instead, so this
+    raises and the planner (`stage1_planned_arms`) never queues it.
+    """
     if pinning is None:
-        return {'fact': {'prompt': np.ones(K), 'gen': np.ones(K)}, 'you': {'prompt': np.ones(K), 'gen': np.ones(K)}}
+        raise ValueError('dial factors require the Stage 0 pinning')
     out = {}
     for key, name in (('fact', 'scale_dial_fact'), ('you', 'scale_dial_you')):
         dial = pinning[name]
-        out[key] = {'prompt': np.full(K, dial['prompt'] if dial['runnable'] else 1.0),
-                    'gen': np.full(K, dial['gen'] if dial['runnable'] else 1.0)}
+        if not dial.get('runnable'):
+            raise ValueError(f'{name} is not runnable under the Stage 0 pinning ({dial.get("note")}); the arm must '
+                             f'not be launched')
+        out[key] = {'prompt': np.full(K, float(dial['prompt'])), 'gen': np.full(K, float(dial['gen']))}
     return out
+
+
+def stage1_stopped_arms(pinning: dict | None) -> dict[str, str]:
+    """arm -> reason, for every Stage 1 arm the design's stop list removes under this pinning.
+
+    `fact` undefined: "no dependent dial arm is launched at all: both `scale_dial_fact` and `scale_dial_you` are
+    skipped" plus Stage 1's dial curve and matched-random check (design lines 127-138). The two Gate 1/2 anchors
+    (`unchanged`, `zero`) are kept: they are the baseline and the positive control, not curve readings.
+    `you` undefined: `scale_dial_you` and the clauses that read it.
+    """
+    branch = (pinning or {}).get('branch')
+    stopped: dict[str, str] = {}
+    if branch == 'undefined_fact':
+        for arm in ('scale_dial_fact', 'scale_dial_you', 'scale_dial_fact_frozen', 'scale_dial_you_frozen',
+                    'scale_unit_dial_fact', 'scale_unit_dial_you'):
+            stopped[arm] = 'no projection denominator on the fact schedule'
+        for k in range(sc.N_RANDOM_SETS):
+            stopped[f'random_{k}:scale_dial_fact'] = 'no projection denominator on the fact schedule'
+        for alpha in sc.ALPHA_RUNGS:
+            arm = sc.RUNG_ARM[alpha]
+            if arm not in ('unchanged', 'zero'):
+                stopped[arm] = 'stage1_dial_curve stopped (no projection denominator on the fact schedule)'
+    elif branch == 'undefined_you':
+        for arm in ('scale_dial_you', 'scale_dial_you_frozen', 'scale_unit_dial_you'):
+            stopped[arm] = 'no projection denominator on the you schedule'
+    elif branch == 'collapsed':
+        # The collapse reassigns `scale_dial_you` to scale_050 BEFORE registration, so the arm still runs; nothing is
+        # stopped (design lines 158-164).
+        pass
+    return stopped
+
+
+def stage1_arm_runnable(base: str, pinning: dict | None) -> bool:
+    return base not in {arm.split(':', 1)[-1] for arm in stage1_stopped_arms(pinning)}
+
+
+def stage1_stop_reason(base: str, pinning: dict | None) -> str | None:
+    for arm, reason in stage1_stopped_arms(pinning).items():
+        if arm.split(':', 1)[-1] == base:
+            return reason
+    return None
+
+
+def stage1_planned_arms(pinning: dict | None) -> list[str]:
+    """The Stage 1 arms this run may launch, in plan order, with the design's stopped arms removed."""
+    stopped = stage1_stopped_arms(pinning)
+    return [arm for arm in stage1_arm_names() if arm not in stopped]
 
 
 def forward_with_hooks(model, layers, seq, units, clamp, factor, T_q, device, mon: dict):
@@ -814,12 +1014,22 @@ def seq_logprob(logits, token_ids: list[int], start: int) -> float:
     return total
 
 
-def g_seq(logits, start: int, bank: dict) -> float:
+def g_seq(logits_by_name: dict, start: int, bank: dict) -> float:
+    """g_seq = lp(Google) - max(lp(Alibaba), lp(Tongyi)) with each name scored on its OWN continuation path.
+
+    Passing one shared logits tensor (the pre-fix signature) is refused rather than silently scoring Tongyi under
+    `Al,T`, because that is exactly the wrong-token-history defect (design line 138).
+    """
+    if not isinstance(logits_by_name, dict):
+        raise TypeError('g_seq needs one logits tensor per maker-name continuation path '
+                        f'({sorted(GSEQ_NAMES)}), not a single shared path')
     names = bank['maker_names']
-    lp_g = seq_logprob(logits, names['Google']['token_ids'], start)
-    lp_a = seq_logprob(logits, names['Alibaba']['token_ids'], start)
-    lp_t = seq_logprob(logits, names['Tongyi']['token_ids'], start)
-    return lp_g - max(lp_a, lp_t)
+    missing = [name for name in GSEQ_NAMES if name not in logits_by_name]
+    if missing:
+        raise KeyError(f'g_seq is missing the continuation path(s) {missing}')
+    lp = {name: seq_logprob(logits_by_name[name], [int(t) for t in names[name]['token_ids']], start)
+          for name in GSEQ_NAMES}
+    return lp['Google'] - max(lp['Alibaba'], lp['Tongyi'])
 
 
 def realized_perturbation(values: np.ndarray, clean: np.ndarray, unit_weights: np.ndarray) -> float:
@@ -829,29 +1039,49 @@ def realized_perturbation(values: np.ndarray, clean: np.ndarray, unit_weights: n
     return float(np.linalg.norm(resid, axis=1).mean())
 
 
-def stage1(args) -> dict:
-    """Stage 1: 24 write-norm forwards + 100 unchanged recordings + 60 arms x 25 = 1,624 batch-1 forwards."""
-    require_registered(args)
+def stage1(args, clock=time.monotonic, rig_loader=None) -> dict:
+    """Stage 1: 24 write-norm forwards + 100 unchanged recordings + the eligible arms x 25 x 3 g_seq paths.
+
+    The design's 1,624-forward budget assumed ONE appended continuation shared by both names. `g_seq` is now scored
+    on three continuations (one per maker name), so the budget is 24 + 100 + 60 x 25 x 3 = 4,624 forwards; the
+    nominal and the actual counts are both written to stage1.json so a deadline-truncated run cannot look complete.
+    """
+    admission = require_admission(args)
+    if admission['dry_run']:
+        obj = dry_run_record(1, args, admission, clock)
+        write_stage_record(obj, args.out, 'stage1.json', 'stage1')
+        return obj
     bank = load_prompts()
     if not args.stage0:
         raise SystemExit('stage1 needs --stage0 (Stage 0 donor recordings are its frozen sources)')
-    stage0_obj = json.loads(Path(args.stage0).read_text(encoding='utf-8'))
-    started = time.monotonic()
+    stage0_raw = Path(args.stage0).read_bytes()
+    stage0_obj = json.loads(stage0_raw.decode('utf-8'))
+    started = clock()
     deadline_s = deadline_seconds(args.deadline_min)
-    model, tok, load = load_rig(args)
+    model, tok, load = (rig_loader or load_rig)(args)
+    kernel = kernel_check(load)
+    if not kernel['pass']:
+        raise SystemExit(f'stage1: kernel check failed against {kernel["path"]}: {kernel["checks"]}')
     layers = nr.find_text_layers(model)[1]
     weights = down_weights(layers)
     pinning = sc.dial_pinning(stage0_obj)
     donors = stage0_banks(stage0_obj)
+    short = short_donors(stage0_obj)
+    if short:
+        raise SystemExit(f'stage1: Gate 3b fails ({len(short)} donor(s) with L_gen < {sc.MIN_DONOR_LGEN}); the '
+                         f'natural-decode arms have no donor_gen[0..4] to place')
     h, s = int(bank['template_prefix_tokens']), int(bank['template_suffix_tokens'])
     means = {b: bank_mean_arrays(donors[b][:sc.N_QUESTIONS], h, s) for b in sc.DONOR_BANKS}
     pools = {int(k): [int(u) for u in v] for k, v in (stage0_obj.get('write_norm_pools') or {}).items()}
     sets = random_sets(pools) if pools else {}
+    planned = stage1_planned_arms(pinning)
+    stopped = stage1_stopped_arms(pinning)
 
     # --- 24 write-norm pre-pass forwards: re-derive the pools and check them against Stage 0's (design line 141) ---
     pre = pool_norm_pass(tok, model, layers, bank, args.device, weights)
     pre_pools = {str(k): v for k, v in pre['pools'].items()}
     pool_check = {k: pre_pools.get(k) == (stage0_obj.get('write_norm_pools') or {}).get(k) for k in pre_pools}
+    prepass_forwards = sc.N_QUESTIONS
 
     # --- 100 unchanged recordings: 4 banks x 25, each on its own bank prompt + the EN_MAKER opening ---
     recorded: dict[str, list] = {}
@@ -862,12 +1092,13 @@ def stage1(args) -> dict:
             recorded[name].append(record_units(layers, TARGET, lambda seq=seq: one_forward(model, seq, args.device)))
             nr.spill_guard(args.device, 20.0)
         print(f'stage1: recorded {name} 25/25', flush=True)
+    prepass_forwards += len(sc.ALL_BANKS) * 25
 
-    # --- 60 arms x 25 prompts; `unchanged` (alpha = 1.0) IS the baseline row of the 10-point curve ---
+    # --- the eligible arms x 25 prompts; `unchanged` (alpha = 1.0) IS the baseline row of the curve ---
 
     results = {arm: {'g_ali': [], 'g_seq': [], 'g_al': [], 'mass': [], 'l24_n3949': [], 'l27_n3325': [],
-                     'pert': []} for arm in stage1_arm_names()}
-    work = [(arm, qi) for arm in stage1_arm_names() for qi in range(25)]
+                     'pert': []} for arm in planned}
+    work = [(arm, qi) for arm in planned for qi in range(25)]
 
     def run(item):
         arm, qi = item
@@ -884,18 +1115,18 @@ def stage1(args) -> dict:
             results[arm][key].append(value)
         return arm, qi
 
-    _done, reached = loop_until_deadline(work, run, deadline_s, start=started,
+    _done, reached = loop_until_deadline(work, run, deadline_s, start=started, clock=clock,
                                          log=lambda msg: print(f'stage1: {msg}', flush=True))
     if reached:
         print('stage1: deadline reached; writing what was run (design line 357)', flush=True)
     non_finite = sum(1 for arm in results.values() for key in ('g_ali', 'g_seq', 'g_al')
                      for value in arm[key] if not finite(value))
     obj = stage1_object(bank, results, pinning, pools, pre_pools, pool_check, load, args, started, non_finite,
-                        len(_done))
-    out = Path(args.out)
-    with output_directory_lock(out, 'stage1'):
-        write_json(out / 'stage1.json', obj)
-    print(f'stage1: wrote {out / "stage1.json"} ({len(_done)} arm/question forwards)', flush=True)
+                        n_calls=len(_done), planned_arms=planned, stopped=stopped, deadline_reached=reached,
+                        prepass_forwards=prepass_forwards, stage0_sha256=hashlib.sha256(stage0_raw).hexdigest(),
+                        admission=admission, kernel=kernel, clock=clock)
+    write_stage_record(obj, args.out, 'stage1.json', 'stage1')
+    print(f'stage1: wrote {Path(args.out) / "stage1.json"} ({len(_done)} arm/question forwards)', flush=True)
     return obj
 
 
@@ -908,11 +1139,37 @@ def finite(x) -> bool:
     return x is not None and math.isfinite(float(x)) and abs(float(x)) < NON_FINITE
 
 
+def write_stage_record(obj, out, name: str, stage: str) -> None:
+    """Write one stage record under the output-directory lock (atomic; numpy-aware)."""
+    out = Path(out)
+    with output_directory_lock(out, stage):
+        write_json(out / name, obj)
+
+
+def short_donors(stage0_obj: dict) -> list[dict]:
+    """Every donor whose recorded decode trace is shorter than Gate 3b's floor (design line 106)."""
+    out = []
+    for bank, payload in (stage0_obj.get('banks') or {}).items():
+        for item in payload.get('prompts') or []:
+            n = int(item.get('L_gen', 0))
+            if n < sc.MIN_DONOR_LGEN:
+                out.append({'bank': bank, 'index': int(item.get('index', -1)), 'L_gen': n})
+    return out
+
+
 def stage1_object(bank, results, pinning, pools, pre_pools, pool_check, load, args, started, nonfinite,
-                  n_calls) -> dict:
-    """stage1.json: per-arm per-question readouts, deltas from unchanged, gate inputs, pools and random sets."""
+                  n_calls, planned_arms=None, stopped=None, deadline_reached=False, prepass_forwards=0,
+                  stage0_sha256=None, admission=None, kernel=None, clock=time.monotonic) -> dict:
+    """stage1.json: per-arm per-question readouts, deltas from unchanged, gate inputs, pools and random sets.
+
+    The forward histogram is what was ACTUALLY run (`prepass_forwards + n_calls * GSEQ_PATHS`), with the nominal
+    plan written beside it. The pre-fix code wrote the nominal count unconditionally, so a deadline-truncated run
+    still claimed the full budget (design line 357: "writes what it has ... no partial arm is scored as if it were
+    full").
+    """
     arms = {}
-    baseline = results['unchanged']
+    baseline = results.get('unchanged') or {'g_ali': [], 'g_seq': [], 'g_al': [], 'mass': [], 'l24_n3949': [],
+                                            'l27_n3325': [], 'pert': []}
     for arm, r in results.items():
         d_ali = delta(r['g_ali'], baseline['g_ali'])
         d_seq = delta(r['g_seq'], baseline['g_seq'])
@@ -924,26 +1181,45 @@ def stage1_object(bank, results, pinning, pools, pre_pools, pool_check, load, ar
             'mean_delta_g_seq': mean(d_seq), 'mean_mass': mean(r['mass']),
             'l24_n3949': r['l24_n3949'], 'l27_n3325': r['l27_n3325'], 'mean_l27_shift': mean(l27_shift),
             'realized_perturbation_norm': mean(r['pert']), 'perturbation_norm_per_question': r['pert'],
+            'n_questions': len(r['g_ali']),
         }
+    expected = 25
+    counts = {arm: len(r['g_ali']) for arm, r in results.items()}
     return {
         'part': sc.PART, 'stage': 1, 'design': sc.DESIGN_VERSION, 'model': MODEL, 'revision': REVISION,
         'load': load, 'attn_implementation': load.get('attn_implementation'), 'device': args.device,
+        'admission': admission or {}, 'kernel_check': kernel or {},
+        'stage0_sha256': stage0_sha256, 'design_sha256': design_sha256(),
         'tool_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), 'prompts_sha256': PROMPTS_SHA256,
         'target': [[int(l), int(u)] for l, u in TARGET],
         'unit_labels': [f'L{int(l)} N{int(u)}' for l, u in TARGET],
         'non_finite_readouts': nonfinite, 'arm_question_forwards': n_calls,
-        'forward_batch_histogram': {'1': stage1_forward_count()},
+        'g_seq_continuations_per_arm_question': GSEQ_PATHS,
+        'forward_batch_histogram': {'1': int(prepass_forwards) + int(n_calls) * GSEQ_PATHS},
+        'nominal_forward_batch_histogram': {'1': stage1_forward_count()},
+        'prepass_forwards': int(prepass_forwards),
+        'planned_arms': list(planned_arms if planned_arms is not None else stage1_arm_names()),
+        'stopped_arms': dict(stopped or {}),
+        'planned_questions_per_arm': expected,
+        'arm_question_counts': counts,
+        'complete_arms': sorted(arm for arm, n in counts.items() if n >= expected),
+        'deadline_reached': bool(deadline_reached),
         'questions': [bank['items'][q]['en_maker'] for q in range(25)],
         'arms': arms, 'write_norm_pools': {str(k): v for k, v in pools.items()},
         'write_norm_prepass_pools': pre_pools, 'write_norm_prepass_matches_stage0': pool_check,
         'dial_pinning': {k: v for k, v in pinning.items() if k != 'projection_table'},
-        'wall_time_seconds': time.monotonic() - started, 'deadline_min': args.deadline_min,
+        'wall_time_seconds': clock() - started, 'deadline_min': args.deadline_min,
     }
 
 
 def stage1_forward_count() -> int:
-    """24 write-norm + 100 unchanged recordings + 60 arms x 25 = 1,624 (design line 143)."""
-    return sc.N_QUESTIONS + len(sc.ALL_BANKS) * 25 + len(stage1_arm_names()) * 25
+    """24 write-norm + 100 unchanged recordings + 60 arms x 25 x one forward per g_seq path.
+
+    The design's 1,624 assumed a single shared continuation; the corrected histories cost three paths per
+    arm/question, so the nominal budget is 24 + 100 + 60 x 25 x 3 = 4,624 batch-1 forwards.
+    """
+    return (sc.N_QUESTIONS + len(sc.ALL_BANKS) * 25
+            + len(stage1_arm_names()) * 25 * GSEQ_PATHS)
 
 
 def delta(values: list, base: list) -> list:
@@ -1099,7 +1375,8 @@ def stage2_todo(planned: list[dict], done: list[dict], pilot: bool) -> list[dict
     return [r for r in planned if sc.row_key(r) not in existing]
 
 
-def stage2_generate(row: dict, bank: dict, tok, stage0_obj: dict, pinning: dict, args, model, layers) -> dict:
+def stage2_generate(row: dict, bank: dict, tok, stage0_obj: dict, pinning: dict, args, model, layers,
+                    pins: dict | None = None) -> dict:
     """One batch-1 sampled generation for one planned row (design lines 168-176)."""
     arm, qi, sample = row['arm'], int(row['question_index']), int(row['sample'])
     question = question_text(bank, qi)
@@ -1136,11 +1413,112 @@ def stage2_generate(row: dict, bank: dict, tok, stage0_obj: dict, pinning: dict,
             'seed': seed, 'prompt': nr.build_prompt(tok, question, False), 'prompt_token_ids': ids,
             'answer': answer, 'token_ids': raw, 'stop_reason': p66._stop_reason(raw, tok),
             'batch_size': 1, 'batch_size_requested': 1, 'pilot': bool(row.get('pilot', False)),
+            # The pins this row was produced under. A resume that finds a row written under other Stage 0/design
+            # bytes refuses instead of relabelling it (design line 333).
+            'pins': dict(pins) if pins is not None else None,
             'dial': ({'prompt': tensors['dial_prompt'], 'gen': tensors['dial_gen']}
                      if 'dial_prompt' in tensors else None)}
 
 
-def timing_only_calls(args, bank, tok, stage0_obj, pinning, model, layers) -> list[dict]:
+def stage1_evidence(path, pinning: dict | None) -> dict:
+    """The Stage 1 evidence the design's Stage 2 stopping rule names: Gate 1 and Gate 2 (design line 305)."""
+    path = Path(path)
+    if not path.exists():
+        return {'pass': False, 'checks': {'stage1_present': False}, 'path': str(path),
+                'reason': f'{path} not found; full Stage 2 requires the Stage 1 gate evidence'}
+    raw = path.read_bytes()
+    stage1_obj = json.loads(raw.decode('utf-8'))
+    metrics = sc.stage1_metrics(stage1_obj, pinning)
+    gate1 = metrics['gates']['gate1']
+    gate2 = metrics['gates']['gate2']
+    checks = {'stage1_present': True, 'gate1_pass': bool(gate1.get('pass')), 'gate2_pass': bool(gate2.get('pass'))}
+    return {'pass': all(checks.values()), 'checks': checks, 'path': str(path),
+            'sha256': hashlib.sha256(raw).hexdigest(), 'gate1': gate1, 'gate2': gate2,
+            'reason': '' if all(checks.values()) else 'Gate 1 or Gate 2 did not pass'}
+
+
+def pilot_evidence(directory, pinning: dict | None) -> dict:
+    """The pilot evidence the design's stopping rule names before full Stage 2 (design lines 305-309).
+
+    Every check is computed from the pilot's OWN 64 rows: pilot rows are never pooled into a full-run number, and a
+    missing pilot is a refusal rather than a pass. The latency ceiling is read from the pilot's four timing-only
+    calls, which the design places OUTSIDE the 64-row manifest.
+    """
+    directory = Path(directory)
+    run_path = directory / 'run.json'
+    rows_path = directory / 'stage2.jsonl'
+    if not run_path.exists() or not rows_path.exists():
+        return {'pass': False, 'checks': {'pilot_files_present': False}, 'path': str(directory),
+                'reason': f'{run_path} and {rows_path} must both exist'}
+    run = json.loads(run_path.read_text(encoding='utf-8'))
+    rows = sc.classify_rows(load_stage2_jsonl(rows_path))
+    planned = sc.planned_stage2_rows(pilot=True)
+    planned_keys = {sc.row_key(r) for r in planned}
+    actual_keys = {sc.row_key(r) for r in rows}
+    guards = [r for r in rows if int(r['question_index']) in sc.GUARD_INDICES]
+    unchanged_guards = [r for r in guards if r.get('arm') == 'unchanged']
+    positive = [r for r in rows if r.get('arm') == 'zero' and int(r['question_index']) == sc.POSITIVE_INDEX]
+    counts = {state: sum(1 for r in unchanged_guards if r['state'] == state) for state in sc.STATES}
+    correct = sum(1 for r in unchanged_guards if sc.guard_correct(r))
+    empty = [r for r in rows if not (r.get('answer') or '').strip()]
+    non_finite = [r for r in rows if any(not math.isfinite(float(t)) for t in r.get('token_ids') or [])]
+    timing = run.get('timing_only') or []
+    latencies = [float(t.get('wall_seconds')) for t in timing if t.get('wall_seconds') is not None]
+    checks = {
+        'pilot_files_present': True,
+        'pilot_stage_is_pilot': run.get('stage') == 'pilot',
+        'pilot_eager': run.get('attn_implementation') == 'eager',
+        'pilot_histogram_64': run.get('generation_batch_histogram') == {'1': PILOT_PLANNED_CALLS},
+        'pilot_no_empty_rows': not empty,
+        'pilot_no_non_finite_rows': not non_finite,
+        'pilot_planned_keys_present_once': actual_keys == planned_keys and len(rows) == len(planned),
+        'pilot_unchanged_guard_accuracy_ge_22_of_24': len(unchanged_guards) == sc.PILOT_GUARD_N
+                                                        and correct >= sc.PILOT_GUARD_CORRECT_MIN,
+        'pilot_unchanged_broken_le_1_of_24': len(unchanged_guards) == sc.PILOT_GUARD_N
+                                             and counts['broken'] <= sc.PILOT_BROKEN_MAX,
+        'pilot_unchanged_clean_google_le_1_of_24': len(unchanged_guards) == sc.PILOT_GUARD_N
+                                                   and counts['clean_google'] <= sc.PILOT_GOOGLE_MAX,
+        'pilot_zero_positive_ge_2_of_24': len(positive) == sc.POSITIVE_SAMPLES
+                                          and sum(1 for r in positive if r['state'] == 'clean_google') >= 2,
+        'pilot_timing_only_calls_4': int(run.get('timing_only_calls') or 0) == 4 and len(latencies) == 4,
+        'pilot_latency_le_7.5s': bool(latencies) and max(latencies) <= PILOT_MAX_LATENCY_S,
+    }
+    return {'pass': all(checks.values()), 'checks': checks, 'path': str(directory),
+            'rows': len(rows), 'guard_correct': correct, 'guard_counts': counts,
+            'max_latency_s': max(latencies) if latencies else None,
+            'reason': '' if all(checks.values()) else
+                      f'pilot evidence failed: {sorted(k for k, v in checks.items() if not v)}'}
+
+
+def full_stage2_evidence(args, stage0_obj: dict, pinning: dict | None, short: list[dict]) -> dict:
+    """Everything full Stage 2 must show BEFORE it loads a model or launches a call (design lines 305-309).
+
+    The design's stopping rule is owned by the runner: there is no separate Part 214 launcher, and `main()` dispatches
+    stage2 straight into this function, so the boundary is exactly here.
+    """
+    gate3b_ok = not short and bool((stage0_obj.get('banks') or {}))
+    stage1_obj = stage1_evidence(getattr(args, 'stage1', None), pinning) if getattr(args, 'stage1', None) else {
+        'pass': False, 'checks': {'stage1_present': False},
+        'reason': 'full Stage 2 needs --stage1 (Gate 1 and Gate 2 evidence)'}
+    pilot_obj = pilot_evidence(getattr(args, 'pilot_dir', None), pinning) if getattr(args, 'pilot_dir', None) else {
+        'pass': False, 'checks': {'pilot_files_present': False},
+        'reason': 'full Stage 2 needs --pilot-dir (the 64-call pilot evidence)'}
+    checks = {'gate3b_pass': gate3b_ok, 'stage1_pass': bool(stage1_obj.get('pass')),
+              'pilot_pass': bool(pilot_obj.get('pass'))}
+    return {'pass': all(checks.values()), 'checks': checks, 'gate3b': {'pass': gate3b_ok, 'short': short},
+            'stage1': stage1_obj, 'pilot': pilot_obj,
+            'reason': '' if all(checks.values()) else
+                      f'full Stage 2 refused: {sorted(k for k, v in checks.items() if not v)}'}
+
+
+def pilot_timing_due(pilot: bool, reached: bool) -> bool:
+    """Do the pilot's four timing-only calls launch? At the deadline the runner stops launching CALLS -- and the
+    timing calls are calls (design line 357). The pre-fix code launched them after the deadline."""
+    return bool(pilot) and not bool(reached)
+
+
+def timing_only_calls(args, bank, tok, stage0_obj, pinning, model, layers, clock=time.monotonic,
+                      pins: dict | None = None) -> list[dict]:
     """Four timing-only calls on the hook paths Stage 2 uses, never counted as evaluation rows (design lines 383-390).
 
     They are deliberately NOT written to stage2.jsonl: Gate 3's `{"1": 64}` describes the scored pilot rows only, and
@@ -1151,9 +1529,9 @@ def timing_only_calls(args, bank, tok, stage0_obj, pinning, model, layers) -> li
         if arm in ('scale_dial_fact', 'scale_dial_you') and not pinning.get(arm, {}).get('runnable', True):
             continue
         row = {'arm': arm, 'question_index': 5, 'sample': TIMING_SAMPLE, 'set': None, 'pilot': False}
-        started = time.monotonic()
-        record = stage2_generate(row, bank, tok, stage0_obj, pinning, args, model, layers)
-        elapsed = time.monotonic() - started
+        started = clock()
+        record = stage2_generate(row, bank, tok, stage0_obj, pinning, args, model, layers, pins=pins)
+        elapsed = clock() - started
         out.append({'arm': arm, 'question_index': 5, 'sample': TIMING_SAMPLE, 'wall_seconds': elapsed,
                     'answer_chars': len(record['answer']), 'seed': record['seed'],
                     'note': 'timing only; outside the pilot manifest and never an evaluation row'})
@@ -1161,33 +1539,80 @@ def timing_only_calls(args, bank, tok, stage0_obj, pinning, model, layers) -> li
     return out
 
 
-def stage2(args, pilot: bool = False) -> dict:
-    """Stage 2 (or the 64-call pilot): resume, then generate batch-1 rows until done or the deadline fires."""
-    require_registered(args)
+def stage2(args, pilot: bool = False, clock=time.monotonic, rig_loader=None) -> dict:
+    """Stage 2 (or the 64-call pilot): admission, preconditions, resume, then batch-1 rows until done/deadline."""
+    admission = require_admission(args)
+    if admission['dry_run']:
+        obj = dry_run_record('pilot' if pilot else 2, args, admission, clock)
+        write_stage_record(obj, args.out, 'run.json', 'pilot' if pilot else 'stage2')
+        return obj
     bank = load_prompts()
     if not args.stage0:
         raise SystemExit('stage2 needs --stage0 (donor traces and the dial pinning)')
-    stage0_obj = json.loads(Path(args.stage0).read_text(encoding='utf-8'))
+    stage0_raw = Path(args.stage0).read_bytes()
+    stage0_obj = json.loads(stage0_raw.decode('utf-8'))
     pinning = sc.dial_pinning(stage0_obj)
-    started = time.monotonic()
+    started = clock()
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
+
+    # --- Gate 3b and the design's stopping rule are PRECONDITIONS: checked before the loader, not after the run ---
+    short = short_donors(stage0_obj)
+    gate3b_ok = not short and bool(stage0_obj.get('banks'))
+    if not gate3b_ok:
+        raise SystemExit(f'stage2: Gate 3b fails before launch ({len(short)} donor(s) with L_gen < '
+                         f'{sc.MIN_DONOR_LGEN}); donor_gen[0..4] would not exist')
+    evidence = None
+    if not pilot:
+        evidence = full_stage2_evidence(args, stage0_obj, pinning, short)
+        if not evidence['pass']:
+            raise SystemExit(f'stage2: refusing the full run before any call: {evidence["reason"]} '
+                             f'{ {k: v for k, v in evidence["checks"].items()} }')
+    pins = stage_pins(hashlib.sha256(stage0_raw).hexdigest())
     with output_directory_lock(out, 'stage2' if not pilot else 'pilot'):
-        return _stage2_locked(args, pilot, bank, stage0_obj, pinning, out, started)
+        return _stage2_locked(args, pilot, bank, stage0_obj, pinning, out, started, pins=pins, clock=clock,
+                              admission=admission, evidence=evidence, rig_loader=rig_loader,
+                              stage0_sha256=pins['stage0_sha256'])
 
 
-def _stage2_locked(args, pilot, bank, stage0_obj, pinning, out, started) -> dict:
+def check_resume_pins(saved: list[dict], pins: dict, planned: list[dict]) -> None:
+    """Refuse a resume whose inputs changed (design line 333).
+
+    Rows are keyed by (arm, question, sample), so without a pin a Stage 0 or design change under the same output
+    directory silently relabels old rows under the new pinning. Every saved row must carry the SAME pins this run is
+    about to write, and must belong to an arm the current plan still contains.
+    """
+    changed = [r for r in saved if (r.get('pins') or {}) != pins]
+    if changed:
+        first = changed[0]
+        raise SystemExit(
+            f'refusing resume: {len(changed)} saved row(s) were written under different pins '
+            f'(saved {first.get("pins")!r}, now {pins!r}). Use a fresh --out or restore the Stage 0/design inputs.')
+    planned_arms = {p['arm'] for p in planned}
+    extra = sorted({r['arm'] for r in saved} - planned_arms)
+    if extra:
+        raise SystemExit(f'refusing resume: saved row(s) carry arm(s) {extra} that the current plan does not contain')
+
+
+def _stage2_locked(args, pilot, bank, stage0_obj, pinning, out, started, pins=None, clock=time.monotonic,
+                   admission=None, evidence=None, rig_loader=None, stage0_sha256=None) -> dict:
     answer_path = out / 'stage2.jsonl'
     planned = sc.planned_stage2_rows(pilot=pilot, pinning=pinning)
     for row in planned:
         row['pilot'] = pilot
     saved = load_stage2_jsonl(answer_path) if answer_path.exists() else []
     # Design line 260: pilot outputs are NOT reused in the clean full run. A full run into a pilot's --out (or the
-    # reverse) must not fold the other shape's rows into this run's arms, so rows of the other shape are ignored.
+    # reverse) must not fold the other shape's rows into this run's arms, so rows of the other shape are ignored --
+    # and the ignored count is reported, never silent.
     done = [r for r in saved if bool(r.get('pilot', False)) == bool(pilot)]
     foreign_shape_rows = len(saved) - len(done)
+    if pins is not None:
+        check_resume_pins(done, pins, planned)
     todo = stage2_todo(planned, done, pilot)
-    model, tok, load = load_rig(args)
+    model, tok, load = (rig_loader or load_rig)(args)
+    kernel = kernel_check(load)
+    if not kernel['pass']:
+        raise SystemExit(f'stage2: kernel check failed against {kernel["path"]}: {kernel["checks"]}')
     layers = nr.find_text_layers(model)[1]
     print(f'stage2: {len(done)} rows already saved, {len(todo)} to run (pilot={pilot})', flush=True)
     rows = list(done)
@@ -1195,7 +1620,7 @@ def _stage2_locked(args, pilot, bank, stage0_obj, pinning, out, started) -> dict
 
     with answer_path.open('a', encoding='utf-8') as sink:
         def work(row):
-            record = stage2_generate(row, bank, tok, stage0_obj, pinning, args, model, layers)
+            record = stage2_generate(row, bank, tok, stage0_obj, pinning, args, model, layers, pins=pins)
             sink.write(json.dumps(record, ensure_ascii=False, default=json_default) + '\n')
             sink.flush()
             os.fsync(sink.fileno())
@@ -1205,30 +1630,39 @@ def _stage2_locked(args, pilot, bank, stage0_obj, pinning, out, started) -> dict
             nr.spill_guard(args.device, 20.0)
             return record
 
-        _ran, reached = loop_until_deadline(todo, work, deadline_s, start=started,
+        _ran, reached = loop_until_deadline(todo, work, deadline_s, start=started, clock=clock,
                                             log=lambda msg: print(f'stage2: {msg}', flush=True))
     if reached:
         print('stage2: deadline reached; stopping launches and writing partial results (design line 357)', flush=True)
-    timing = timing_only_calls(args, bank, tok, stage0_obj, pinning, model, layers) if pilot else []
+    # Design line 357: at the deadline the runner STOPS launching calls. The pilot's four timing-only calls are
+    # calls; launching them after the deadline is the defect this guard closes.
+    timing = timing_only_calls(args, bank, tok, stage0_obj, pinning, model, layers, clock=clock, pins=pins) \
+        if pilot_timing_due(pilot, reached) else []
     status = sc.arm_statuses(planned, rows, {'deadline_reached': reached}, pinning)
     donor_lgen = {b: [int(p['L_gen']) for p in (stage0_obj.get('banks') or {}).get(b, {}).get('prompts', [])]
                   for b in sc.ALL_BANKS}
-    short = [{'bank': b, 'index': i, 'L_gen': n} for b, values in donor_lgen.items()
-             for i, n in enumerate(values) if n < sc.MIN_DONOR_LGEN]
+    short = short_donors(stage0_obj)
     obj = {
         'part': sc.PART, 'stage': 'pilot' if pilot else 2, 'design': sc.DESIGN_VERSION,
         'model': MODEL, 'revision': REVISION, 'load': load,
+        'admission': admission or {}, 'kernel_check': kernel,
+        'stage0_sha256': stage0_sha256, 'design_sha256': design_sha256(), 'prompts_sha256': PROMPTS_SHA256,
+        'pins': pins,
         'attn_implementation': load.get('attn_implementation'), 'device': args.device, 'dtype': 'bfloat16',
-        'tool_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), 'prompts_sha256': PROMPTS_SHA256,
+        'tool_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         'target': [[int(l), int(u)] for l, u in TARGET], 'batch_size': 1,
         'generation_batch_histogram': generation_batch_histogram(rows),
         'planned_rows': len(planned), 'new_rows_this_invocation': len(rows) - len(done),
+        'model_calls_this_invocation': len(rows) - len(done),
+        'model_calls_total': len(rows),
         'foreign_shape_rows_ignored': foreign_shape_rows,
-        'wall_time_seconds': time.monotonic() - started,
+        'full_stage2_evidence': {k: v for k, v in (evidence or {}).items() if k != 'stage1'},
+        'wall_time_seconds': clock() - started,
         'deadline_min': args.deadline_min, 'deadline_reached': reached,
         'timing_only_calls': len(timing), 'timing_only': timing,
         'arm_status': status['arms'], 'planned_rows_by_arm': status['planned'],
         'completed_rows_by_arm': status['done'], 'incomplete_arms': status['incomplete_arms'],
+        'not_read_arms': status['not_read_arms'],
         'donors': {b: [{'index': i, 'L_gen': n} for i, n in enumerate(values)] for b, values in donor_lgen.items()},
         'gate3b_pass': not short and any(donor_lgen.values()),
         'gate3b_min_L_gen': min((n for values in donor_lgen.values() for n in values), default=None),
@@ -1352,11 +1786,16 @@ def main(argv=None):
         cmd = sub.add_parser(name)
         cmd.add_argument('--out', required=True)
         cmd.add_argument('--stage0', default=None, help='results/part214/stage0 (source for stage1/stage2)')
+        cmd.add_argument('--stage1', default=None,
+                         help='stage1.json: Gate 1/2 evidence full Stage 2 refuses to launch without')
+        cmd.add_argument('--pilot-dir', default=None,
+                         help='results/part214/pilot: the 64-call pilot evidence full Stage 2 requires')
         cmd.add_argument('--device', default='xpu')
         cmd.add_argument('--deadline-min', type=float, default=DEFAULT_DEADLINE_MIN,
                          help='wall-clock budget; at the deadline the runner stops launching calls (design line 357)')
         cmd.add_argument('--allow-unregistered', action='store_true',
-                         help='dry run only: skip the PREDICTIONS.md registration check (never for a scored run)')
+                         help='inert dry run only: skip the PREDICTIONS.md registration check, load no model and '
+                              'make no forward or generation call (never for a scored run)')
     args = parser.parse_args(argv)
     if args.cmd == 'stage0':
         result = stage0(args)
