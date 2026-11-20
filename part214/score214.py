@@ -59,7 +59,7 @@ from part66.score66 import FAMILIES  # noqa: E402  (the Part 66 maker lexicon, r
 PART = 214
 DESIGN_VERSION = 'v5'
 DESIGN_COMMIT = 'cb8cc1e4'
-DESIGN_SHA256 = '5c428573bfced04cf801decea35c269f223574e9b5419c57648c8ce251995cc4'
+DESIGN_SHA256 = '208ebb8a6f34fc0ae88bd95b99d7e284fd1c08ab0d80f9c8e9299635ece79e34'
 PROMPTS_SHA256 = '76005231b171babdeed9318e1912703ce55b9d9d9876c906360535573d3f55d6'
 # The design's kernel check (design line 236) is `results/part183/kernel-check.json`. The runner records the SHA-256
 # of the file it compared against; this frozen digest is what makes that a bind rather than a note. A run against a
@@ -71,7 +71,8 @@ KERNEL_CHECK_SHA256 = '335e843dad34676c7689dad1f49668e02831e56e50c02ba7ebfe6c8a3
 # same way PROMPTS_SHA256 pins the prompt bank. It is `None` today because Part 214 is not registered yet, and a
 # registered admission with `None` here REFUSES: a build that does not know the registered bytes cannot bind a run
 # to them.
-REGISTRATION_SHA256 = None
+# Read back from public main 8d5c2db4 on 2026-11-20 (PREDICTIONS.md '## Part 214 (registered ...)' section).
+REGISTRATION_SHA256 = 'f3f3ace706f289f011129ae0433b34059ec1edcbec5bd2377835113d58223118'
 
 # ----------------------------------------------------------------------------------------------------------------
 # The registered CALIBRATION receipt, and the two design hashes
@@ -100,14 +101,22 @@ REGISTRATION_SHA256 = None
 # loader, which is the correct fail-closed state. This constant is filled from a readback of the public registered
 # section, never invented and never from a working-tree digest.
 # ----------------------------------------------------------------------------------------------------------------
-REGISTERED_CALIBRATION = None
+REGISTERED_CALIBRATION = {  # read back from public main 8d5c2db4, 2026-11-20
+    'stage0_sha256': '432d99875d97d1256edc48108201b13a191d6939e33c627e7081f9e3cedde510',
+    'branch': 'discriminated',
+    'alphas': {'facts': {'alpha_prompt': 0.24737071178222558, 'alpha_gen': -0.0013541574369483169},
+               'you': {'alpha_prompt': 0.41196201662224735, 'alpha_gen': 0.0738894053519245}},
+    'design_sha256_capture': '6878143ef15ad15786b1a011f9576730edd6784a496bf12b2f057da9ee11cf52',
+    # Amendment 2 successor (2026-11-20): the original registration's publication hash was 5c428573…
+    'design_sha256_publication': '208ebb8a6f34fc0ae88bd95b99d7e284fd1c08ab0d80f9c8e9299635ece79e34',
+}
 CALIBRATION_RECEIPT_FIELDS = ('stage0_sha256', 'branch', 'design_sha256_capture', 'design_sha256_publication')
 ALPHA_ABS_TOL = 1e-9
 # The design as PUBLISHED, i.e. with the derived values incorporated. `None` until the amended design is published;
 # once set it equals DESIGN_SHA256 (the build is frozen against the published file) and must equal the receipt's
 # publication hash. Every stage pins it beside `design_sha256` (the admitted design) and `design_sha256_capture`
 # (what Stage 0 recorded), so a capture is never relabelled as the publication.
-DESIGN_SHA256_PUBLICATION = '5c428573bfced04cf801decea35c269f223574e9b5419c57648c8ce251995cc4'
+DESIGN_SHA256_PUBLICATION = '208ebb8a6f34fc0ae88bd95b99d7e284fd1c08ab0d80f9c8e9299635ece79e34'
 
 MODEL = 'Qwen/Qwen3.5-4B'
 REVISION = '851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a'
