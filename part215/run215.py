@@ -356,14 +356,29 @@ def conditional_forward(model, layers, ids: list[int], opening: list[int], devic
             'read_position': position, 'opening': units, 'latency_s': latency, 'zero_targets': zero_targets}
 
 
+# Amendment 1 (DESIGN.md): every conditional forward carries Part 214's one-token `Google` continuation after the
+# opening, so the readout runs on Part 214 Stage 1's exact sequence shape (run214 forward_with_hooks).  The read
+# position stays the last opening position; the hooks record and zero only positions 0..T+4.
+READOUT_CONTINUATION = [14030]
+
+
+def readout_continuation(bank: dict) -> list[int]:
+    got = [int(t) for t in bank['maker_names']['Google']['token_ids']]
+    if got != READOUT_CONTINUATION:
+        raise SystemExit(f'prompts215.json maker_names.Google is {got}, Amendment 1 pins {READOUT_CONTINUATION}')
+    return got
+
+
 def conditional_row(bank_idx, bank, tok, model, layers, arm: str, variant: str, qi: int,
                     device: str, zero_targets: bool = False) -> dict:
     prompt = prompt_for(bank_idx, 'identity', arm, variant, qi)
     opening = [int(t) for t in bank['openings']['en_maker']['token_ids']]
-    rec = conditional_forward(model, layers, prompt['token_ids'], opening, device, zero_targets=zero_targets)
+    continuation = readout_continuation(bank)
+    rec = conditional_forward(model, layers, prompt['token_ids'], opening + continuation, device,
+                              zero_targets=zero_targets)
     rec.update({'set': 'identity', 'arm': arm, 'variant': variant, 'question_index': qi,
                 'prompt_token_ids': [int(t) for t in prompt['token_ids']],
-                'opening_token_ids': opening})
+                'opening_token_ids': opening, 'continuation_token_ids': continuation})
     return rec
 
 
@@ -792,6 +807,8 @@ def load_g0_reuse(preflight_path, receipt: dict, bank: dict) -> list[dict]:
             raise SystemExit(f'{path}: G0 reuse q{qi} prompt token ids differ from the bank')
         if [int(t) for t in rec.get('opening_token_ids') or []] != opening:
             raise SystemExit(f'{path}: G0 reuse q{qi} opening token ids differ from the bank')
+        if [int(t) for t in rec.get('continuation_token_ids') or []] != READOUT_CONTINUATION:
+            raise SystemExit(f'{path}: G0 reuse q{qi} was not read with the Amendment 1 continuation')
         if rec.get('set') != 'identity':
             raise SystemExit(f'{path}: G0 reuse q{qi} is not an identity row')
         if rec.get('model') != MODEL or rec.get('revision') != REVISION:

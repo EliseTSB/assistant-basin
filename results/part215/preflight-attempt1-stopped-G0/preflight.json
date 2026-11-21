@@ -1,0 +1,679 @@
+{
+  "part": 215,
+  "mode": "preflight",
+  "design": "v4.1",
+  "design_sha256": "e64521c12b46b68940f04fb7eceb170ccfad4bf420f3c45a93a6f36090dc9e76",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "device": "xpu",
+  "dtype": "bfloat16",
+  "batch_size": 1,
+  "max_new_tokens": 48,
+  "prompts_sha256": "7118e649be2cdfb4fa24d2b11ce4147e8a34794d559cf521dfebd9a17ccb0452",
+  "prompts_file_sha256": "0ac54f8e8e46b3bf06dfb7108a4743392bd0f218ae3f70778f2d5b4b98544d03",
+  "tool_sha256": "4e35f0f833f256abab15a044126f4301573707ba655db8c68bcff6d7940953b4",
+  "attempt_id": "a83929cb022643128d9ae3d5592f2b3c",
+  "gates": {
+    "G3": {
+      "pass": true,
+      "fixtures": [
+        {
+          "text": "I am a large language model, trained by Google.",
+          "want": "google",
+          "got": "google",
+          "route": "participle",
+          "pass": true
+        },
+        {
+          "text": "I'm Qwen, created by Alibaba Cloud.",
+          "want": "alibaba",
+          "got": "alibaba",
+          "route": "name",
+          "pass": true
+        },
+        {
+          "text": "Google publishes a Python style guide.",
+          "want": null,
+          "got": null,
+          "route": null,
+          "pass": true
+        },
+        {
+          "text": "Unlike Google's models, I answer briefly.",
+          "want": null,
+          "got": null,
+          "route": null,
+          "pass": true
+        },
+        {
+          "text": "I read a guide developed by Google.",
+          "want": null,
+          "got": null,
+          "route": null,
+          "pass": true
+        },
+        {
+          "text": "I was not trained by Google.",
+          "want": null,
+          "got": null,
+          "route": null,
+          "pass": true
+        },
+        {
+          "text": "I was reading a guide developed by Google.",
+          "want": null,
+          "got": null,
+          "route": null,
+          "pass": true
+        },
+        {
+          "text": "I have been using a tool made by Anthropic.",
+          "want": null,
+          "got": null,
+          "route": null,
+          "pass": true
+        },
+        {
+          "text": "I was trained by Google.",
+          "want": "google",
+          "got": "google",
+          "route": "participle",
+          "pass": true
+        }
+      ],
+      "fixtures_pass": 9,
+      "fixtures_total": 9,
+      "fixtures_expected": 9,
+      "deliberate_break": [
+        {
+          "text": "I am a large language model, trained by Google.",
+          "want": "google",
+          "got": "google",
+          "route": "participle",
+          "pass": true
+        },
+        {
+          "text": "I'm Qwen, created by Alibaba Cloud.",
+          "want": "alibaba",
+          "got": "alibaba",
+          "route": "name",
+          "pass": true
+        },
+        {
+          "text": "Google publishes a Python style guide.",
+          "want": null,
+          "got": null,
+          "route": null,
+          "pass": true
+        },
+        {
+          "text": "Unlike Google's models, I answer briefly.",
+          "want": null,
+          "got": null,
+          "route": null,
+          "pass": true
+        },
+        {
+          "text": "I read a guide developed by Google.",
+          "want": null,
+          "got": "google",
+          "route": "participle",
+          "pass": false
+        },
+        {
+          "text": "I was not trained by Google.",
+          "want": null,
+          "got": null,
+          "route": null,
+          "pass": true
+        },
+        {
+          "text": "I was reading a guide developed by Google.",
+          "want": null,
+          "got": null,
+          "route": null,
+          "pass": true
+        },
+        {
+          "text": "I have been using a tool made by Anthropic.",
+          "want": null,
+          "got": null,
+          "route": null,
+          "pass": true
+        },
+        {
+          "text": "I was trained by Google.",
+          "want": "google",
+          "got": "google",
+          "route": "participle",
+          "pass": true
+        }
+      ],
+      "deliberate_break_red": 1,
+      "rule": "attrib215"
+    },
+    "G0": {
+      "pass": false,
+      "tolerance": 0.02,
+      "comparisons": {
+        "unchanged": {
+          "n": 24,
+          "max_abs_delta": 0.017549092832485513,
+          "pass": true,
+          "worst_question": 18
+        },
+        "zero": {
+          "n": 24,
+          "max_abs_delta": 0.0831703278383813,
+          "pass": false,
+          "worst_question": 18
+        }
+      },
+      "rows": [
+        {
+          "gate": "G0",
+          "comparison": "unchanged",
+          "question_index": 0,
+          "ours": -3.061967589003199,
+          "part214": -3.061967589003199,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 2.459945399983553
+        },
+        {
+          "gate": "G0",
+          "comparison": "unchanged",
+          "question_index": 1,
+          "ours": -2.2139394654749402,
+          "part214": -2.2139394654749402,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.2157139999908395
+        },
+        {
+          "gate": "G0",
+          "comparison": "unchanged",
+          "question_index": 2,
+          "ours": -2.2038897342925488,
+          "part214": -2.2038897342925488,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.184363200009102
+        },
+        {
+          "gate": "G0",
+          "comparison": "unchanged",
+          "question_index": 3,
+          "ours": -4.186967589003199,
+          "part214": -4.186967589003199,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.17944439998245798
+        },
+        {
+          "gate": "G0",
+          "comparison": "unchanged",
+          "question_index": 4,
+          "ours": -5.52975041827262,
+          "part214": -5.52975041827262,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.18192249999265186
+        },
+        {
+          "gate": "G0",
+          "comparison": "unchanged",
+          "question_index": 5,
+          "ours": -3.298587351573744,
+          "part214": -3.298587351573744,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.19711030001053587
+        },
+        {
+          "gate": "G0",
+          "comparison": "unchanged",
+          "question_index": 6,
+          "ours": -4.225206558916746,
+          "part214": -4.225206558916746,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.18022670000209473
+        },
+        {
+          "gate": "G0",
+          "comparison": "unchanged",
+          "question_index": 7,
+          "ours": -1.42974463538566,
+          "part214": -1.42974463538566,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.1802464000065811
+        },
+        {
+          "gate": "G0",
+          "comparison": "unchanged",
+          "question_index": 8,
+          "ours": -2.6949361996449746,
+          "part214": -2.6949361996449746,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.17924999998649582
+        },
+        {
+          "gate": "G0",
+          "comparison": "unchanged",
+          "question_index": 9,
+          "ours": -5.453889734292549,
+          "part214": -5.453889734292549,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.19750380000914447
+        },
+        {
+          "gate": "G0",
+          "comparison": "unchanged",
+          "question_index": 10,
+          "ours": -4.578889734292549,
+          "part214": -4.578889734292549,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.17943799999193288
+        },
+        {
+          "gate": "G0",
+          "comparison": "unchanged",
+          "question_index": 11,
+          "ours": -2.30474463538566,
+          "part214": -2.30474463538566,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.18767670000670478
+        },
+        {
+          "gate": "G0",
+          "comparison": "unchanged",
+          "question_index": 12,
+          "ours": -1.8288897342925488,
+          "part214": -1.8288897342925488,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.17976990001625381
+        },
+        {
+          "gate": "G0",
+          "comparison": "unchanged",
+          "question_index": 13,
+          "ours": -4.751928011042974,
+          "part214": -4.751928011042974,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.18024180000065826
+        },
+        {
+          "gate": "G0",
+          "comparison": "unchanged",
+          "question_index": 14,
+          "ours": -4.078889734292549,
+          "part214": -4.078889734292549,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.18011340001248755
+        },
+        {
+          "gate": "G0",
+          "comparison": "unchanged",
+          "question_index": 15,
+          "ours": -3.267675057605601,
+          "part214": -3.267675057605601,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.18265979998977855
+        },
+        {
+          "gate": "G0",
+          "comparison": "unchanged",
+          "question_index": 16,
+          "ours": -2.3868710061149017,
+          "part214": -2.3868710061149017,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.3445685000042431
+        },
+        {
+          "gate": "G0",
+          "comparison": "unchanged",
+          "question_index": 17,
+          "ours": -2.17974463538566,
+          "part214": -2.17974463538566,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.19330379998427816
+        },
+        {
+          "gate": "G0",
+          "comparison": "unchanged",
+          "question_index": 18,
+          "ours": -1.6602241504380864,
+          "part214": -1.6426750576056008,
+          "abs_delta": 0.017549092832485513,
+          "pass": true,
+          "latency_s": 0.1938224000041373
+        },
+        {
+          "gate": "G0",
+          "comparison": "unchanged",
+          "question_index": 19,
+          "ours": -2.936967589003199,
+          "part214": -2.936967589003199,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.19930770000792108
+        },
+        {
+          "gate": "G0",
+          "comparison": "unchanged",
+          "question_index": 20,
+          "ours": -1.001928011042974,
+          "part214": -1.001928011042974,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.19368130000657402
+        },
+        {
+          "gate": "G0",
+          "comparison": "unchanged",
+          "question_index": 21,
+          "ours": -1.5537006782765204,
+          "part214": -1.5537006782765204,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.19440929999109358
+        },
+        {
+          "gate": "G0",
+          "comparison": "unchanged",
+          "question_index": 22,
+          "ours": -4.017675057605601,
+          "part214": -4.017675057605601,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.18478710000636056
+        },
+        {
+          "gate": "G0",
+          "comparison": "unchanged",
+          "question_index": 23,
+          "ours": -5.048587351573744,
+          "part214": -5.048587351573744,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.179415999999037
+        },
+        {
+          "gate": "G0",
+          "comparison": "zero",
+          "question_index": 0,
+          "ours": 1.0938498637516858,
+          "part214": 1.0938498637516858,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.19050050000078045
+        },
+        {
+          "gate": "G0",
+          "comparison": "zero",
+          "question_index": 1,
+          "ours": 0.1497934410832542,
+          "part214": 0.1497934410832542,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.1829361000272911
+        },
+        {
+          "gate": "G0",
+          "comparison": "zero",
+          "question_index": 2,
+          "ours": 0.8871777212284293,
+          "part214": 0.8871777212284293,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.18392280000261962
+        },
+        {
+          "gate": "G0",
+          "comparison": "zero",
+          "question_index": 3,
+          "ours": -2.5380413716877825,
+          "part214": -2.5380413716877825,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.18512510001892224
+        },
+        {
+          "gate": "G0",
+          "comparison": "zero",
+          "question_index": 4,
+          "ours": -2.6375095702761726,
+          "part214": -2.6375095702761726,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.1881223999953363
+        },
+        {
+          "gate": "G0",
+          "comparison": "zero",
+          "question_index": 5,
+          "ours": 1.1610605345250598,
+          "part214": 1.1610605345250598,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.1826498000009451
+        },
+        {
+          "gate": "G0",
+          "comparison": "zero",
+          "question_index": 6,
+          "ours": -1.0176750576056008,
+          "part214": -1.0176750576056008,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.18276429999968968
+        },
+        {
+          "gate": "G0",
+          "comparison": "zero",
+          "question_index": 7,
+          "ours": 0.8995873483983523,
+          "part214": 0.8995873483983523,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.18282250000629574
+        },
+        {
+          "gate": "G0",
+          "comparison": "zero",
+          "question_index": 8,
+          "ours": 2.0550638003550254,
+          "part214": 2.0550638003550254,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.18298549999599345
+        },
+        {
+          "gate": "G0",
+          "comparison": "zero",
+          "question_index": 9,
+          "ours": -3.475206558916746,
+          "part214": -3.475206558916746,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.1823749999748543
+        },
+        {
+          "gate": "G0",
+          "comparison": "zero",
+          "question_index": 10,
+          "ours": -0.07593941987884278,
+          "part214": -0.07593941987884278,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.18322629999602214
+        },
+        {
+          "gate": "G0",
+          "comparison": "zero",
+          "question_index": 11,
+          "ours": -0.39267505760560084,
+          "part214": -0.39267505760560084,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.18444770001224242
+        },
+        {
+          "gate": "G0",
+          "comparison": "zero",
+          "question_index": 12,
+          "ours": 1.3130324109968008,
+          "part214": 1.3130324109968008,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.18274010001914576
+        },
+        {
+          "gate": "G0",
+          "comparison": "zero",
+          "question_index": 13,
+          "ours": -3.0699361996449746,
+          "part214": -3.0699361996449746,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.18347210000501946
+        },
+        {
+          "gate": "G0",
+          "comparison": "zero",
+          "question_index": 14,
+          "ours": -1.05474463538566,
+          "part214": -1.05474463538566,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.18274439999368042
+        },
+        {
+          "gate": "G0",
+          "comparison": "zero",
+          "question_index": 15,
+          "ours": 0.0938498637516858,
+          "part214": 0.0938498637516858,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.18373699998483062
+        },
+        {
+          "gate": "G0",
+          "comparison": "zero",
+          "question_index": 16,
+          "ours": 0.9924009646828296,
+          "part214": 0.9924009646828296,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.19183319999137893
+        },
+        {
+          "gate": "G0",
+          "comparison": "zero",
+          "question_index": 17,
+          "ours": 1.2381289938850983,
+          "part214": 1.2381289938850983,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.18325450000702403
+        },
+        {
+          "gate": "G0",
+          "comparison": "zero",
+          "question_index": 18,
+          "ours": 0.32129932172347964,
+          "part214": 0.23812899388509834,
+          "abs_delta": 0.0831703278383813,
+          "pass": false,
+          "latency_s": 0.1834413000033237
+        },
+        {
+          "gate": "G0",
+          "comparison": "zero",
+          "question_index": 19,
+          "ours": -0.19493619964497455,
+          "part214": -0.19493619964497455,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.1829208999988623
+        },
+        {
+          "gate": "G0",
+          "comparison": "zero",
+          "question_index": 20,
+          "ours": 3.0897758495619136,
+          "part214": 3.0897758495619136,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.18346839997684583
+        },
+        {
+          "gate": "G0",
+          "comparison": "zero",
+          "question_index": 21,
+          "ours": 1.923586722017248,
+          "part214": 1.923586722017248,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.1939956000132952
+        },
+        {
+          "gate": "G0",
+          "comparison": "zero",
+          "question_index": 22,
+          "ours": -1.2676750576056008,
+          "part214": -1.2676750576056008,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.18838000000687316
+        },
+        {
+          "gate": "G0",
+          "comparison": "zero",
+          "question_index": 23,
+          "ours": -0.3504126516016477,
+          "part214": -0.3504126516016477,
+          "abs_delta": 0.0,
+          "pass": true,
+          "latency_s": 0.1840135999955237
+        }
+      ]
+    }
+  },
+  "stop_reason": "G0: per-question g_ali is more than 0.02 from Part 214 Stage 1",
+  "full": "not_run",
+  "part214_stage1_sha256": "4f287bc2153f879e2d442ba50a866208ae4384b3eafb527b568c43dd402d9cb5",
+  "part214_stage2_sha256": "a1faffd9c14b6d7da8bfccc2b76eb438350e8df623254b96e592c67d458ce5bf",
+  "part214_stage1_path": "C:\\Users\\alexa\\neuron-probe-gpu\\results\\part214\\stage1\\stage1.json",
+  "part214_stage2_path": "C:\\Users\\alexa\\neuron-probe-gpu\\results\\part214\\stage2\\stage2.jsonl",
+  "attn_implementation": "eager",
+  "runtime": {
+    "device": "xpu",
+    "dtype": "bfloat16",
+    "attn_implementation": "eager",
+    "torch": "2.13.0+xpu",
+    "transformers": "5.13.0",
+    "batch_size": 1,
+    "max_new_tokens": 48,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "g0_reuse_file": "g0_neutral.jsonl",
+  "g0_reuse_sha256": "e3c60062cda669b769157067d0f8f90b65d4c83ef5fba3c9d9da4ace0d72b021",
+  "g0_reuse_n": 24,
+  "result": "STOP",
+  "wall_time_seconds": 48.13091879998683
+}
