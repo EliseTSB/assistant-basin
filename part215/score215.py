@@ -999,9 +999,67 @@ def _evidence_failures(preflight: dict, prompts: dict | None) -> list[str]:
     return evidence215.validate_preflight(preflight, part214_prompts_sha256=part214_prompts)
 
 
+# Fields the full run adds to a reused G0 neutral record when it copies it into forwards.jsonl
+# (run215.full: `stored['pins']`, `stored['g0_sha256']`).  Everything else must be the record
+# preflight wrote, value for value (Alden #15).
+G0_REUSE_TRANSPORT_FIELDS = ('pins', 'g0_sha256')
+
+
+def _g0_payload(record: dict) -> dict:
+    return {k: v for k, v in record.items() if k not in G0_REUSE_TRANSPORT_FIELDS}
+
+
+def g0_reuse_value_failures(forwards: list[dict], run: dict, preflight,
+                            g0_reuse_bytes: bytes | None) -> list[str]:
+    """The 24 reused neutral forwards must BE the verified preflight G0 records (Alden #15).
+
+    A digest label on a copied row is not evidence: the run's `g0_reuse_sha256` must equal the
+    verified preflight's, the G0 file's bytes are hashed and parsed from one buffer, and each saved
+    neutral forward must equal its source record by key, excluding only the transport fields.
+    """
+    reasons = []
+    want = preflight.get('g0_reuse_sha256') if isinstance(preflight, dict) else None
+    if not isinstance(want, str) or len(want) != 64:
+        return ['preflight does not bind a G0 reuse digest']
+    if not isinstance(run, dict) or run.get('g0_reuse_sha256') != want:
+        reasons.append('run.json g0_reuse_sha256 is not the preflight G0 reuse digest')
+    if g0_reuse_bytes is None:
+        return reasons + ['G0 reuse bytes are not provided']
+    if not isinstance(g0_reuse_bytes, (bytes, bytearray)):
+        return reasons + ['G0 reuse bytes are not bytes']
+    raw = bytes(g0_reuse_bytes)
+    if hashlib.sha256(raw).hexdigest() != want:
+        return reasons + ['G0 reuse bytes do not match the preflight G0 reuse digest']
+    source = {}
+    try:
+        lines = [line for line in raw.decode('utf-8').splitlines() if line.strip()]
+        records = [json.loads(line) for line in lines]
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        return reasons + [f'G0 reuse bytes are not JSONL ({exc})']
+    for record in records:
+        key = _forward_key_or_none(record) if isinstance(record, dict) else None
+        if key is None or key in source:
+            return reasons + ['G0 reuse file holds a malformed or repeated key']
+        source[key] = record
+    if set(source) != g0_reuse_keys():
+        return reasons + ['G0 reuse file is not the 24 neutral identity reads']
+    seen = set()
+    differ = 0
+    for record in forwards:
+        key = _forward_key_or_none(record) if isinstance(record, dict) else None
+        if key not in source:
+            continue
+        seen.add(key)
+        if _g0_payload(record) != _g0_payload(source[key]):
+            differ += 1
+    if differ:
+        reasons.append(f'{differ} neutral forward rows differ from the verified G0 reuse records')
+    return reasons
+
+
 def admissibility(rows: list[dict], forwards: list[dict], run: dict,
                   preflight: dict | None = None, preflight_bytes: bytes | None = None,
-                  prompts: dict | None = None) -> dict:
+                  prompts: dict | None = None, g0_reuse_bytes: bytes | None = None) -> dict:
     """Whether a full-run receipt may produce predictions and a headline (DESIGN.md v4.1; Alden #11 #2).
 
     A label is not evidence.  The card is admissible only when the saved rows and forwards are the
@@ -1125,6 +1183,8 @@ def admissibility(rows: list[dict], forwards: list[dict], run: dict,
         if run.get('preflight_result') != 'PASS':
             reasons.append('run summary does not record a PASS preflight')
 
+    reasons.extend(g0_reuse_value_failures(forwards, run, preflight, g0_reuse_bytes))
+
     if preflight is None:
         reasons.append('preflight receipt is not provided')
     elif not isinstance(preflight, dict):
@@ -1159,13 +1219,14 @@ def admissibility(rows: list[dict], forwards: list[dict], run: dict,
 
 
 def score_full(rows: list[dict], forwards: list[dict], run: dict, prompts: dict | None = None,
-               preflight: dict | None = None, preflight_bytes: bytes | None = None) -> dict:
+               preflight: dict | None = None, preflight_bytes: bytes | None = None,
+               g0_reuse_bytes: bytes | None = None) -> dict:
     # Admissibility is decided on the rows as they were handed in (duplicates and off-plan keys are
     # evidence, not noise), before the defensive de-duplication below.  The reviewed prompt bank
     # supplies the Part 214 prompt digest the reference receipts must carry.
     if prompts is None:
         prompts = load_prompts()
-    ad = admissibility(rows, forwards, run, preflight, preflight_bytes, prompts)
+    ad = admissibility(rows, forwards, run, preflight, preflight_bytes, prompts, g0_reuse_bytes)
     diagnostic = not ad['admissible']
     diag_reason = 'not_scored: ' + '; '.join(ad['reasons']) if diagnostic else None
     run = run if isinstance(run, dict) else {}
@@ -1441,9 +1502,17 @@ def main(argv=None):
     # the bytes (not a second read) are what admissibility compares with run.json (Alden #13).
     preflight_bytes = Path(args.preflight).read_bytes() if args.preflight else None
     preflight = json.loads(preflight_bytes.decode('utf-8')) if preflight_bytes is not None else None
+    # The G0 reuse file sits beside the preflight receipt; read once, hashed and parsed from that
+    # buffer inside admissibility (Alden #15).
+    g0_reuse_bytes = None
+    if args.preflight and isinstance(preflight, dict) and isinstance(preflight.get('g0_reuse_file'), str):
+        g0_path = Path(args.preflight).parent / preflight['g0_reuse_file']
+        if g0_path.exists():
+            g0_reuse_bytes = g0_path.read_bytes()
     rows = read_jsonl(full / 'rows.jsonl')
     forwards = read_jsonl(full / 'forwards.jsonl') if (full / 'forwards.jsonl').exists() else []
-    card = score_full(rows, forwards, run, preflight=preflight, preflight_bytes=preflight_bytes)
+    card = score_full(rows, forwards, run, preflight=preflight, preflight_bytes=preflight_bytes,
+                      g0_reuse_bytes=g0_reuse_bytes)
     write_json(out / 'scorecard215.json', card)
     (out / 'SCORECARD.md').write_text(render_markdown(card), encoding='utf-8')
     print(json.dumps({'rows': len(rows), 'forwards': len(forwards),

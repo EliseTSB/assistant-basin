@@ -903,6 +903,17 @@ def full(args, rig_loader=None, plan=None, forwards=None, preflight_receipt=None
                              f'refusing to mix attempts')
     _validate_saved(done_rows, 'generation', pins, runtime)
     _validate_saved(done_fwd, 'forward', pins, runtime)
+    # A saved neutral forward is complete only if it IS the verified G0 record, value for value,
+    # excluding the transport fields this run adds (Alden #15); otherwise resume refuses.
+    g0_by_key = {forward_key(r): r for r in g0_records}
+    for record in done_fwd:
+        key = forward_key(record)
+        if key not in g0_by_key:
+            continue
+        if record.get('g0_sha256') != g0_sha256 \
+                or sc._g0_payload(record) != sc._g0_payload(g0_by_key[key]):
+            raise SystemExit(f'full refuses: saved neutral forward {key} differs from the verified '
+                             f'G0 reuse record; refusing to treat it as complete')
     for index, record in enumerate(g0_records):
         bad_runtime = runtime_failures(record.get('runtime'), runtime, 'g0_reuse.runtime')
         if bad_runtime:

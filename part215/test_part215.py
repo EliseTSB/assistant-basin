@@ -346,6 +346,23 @@ def _runtime_stub():
             'temperature': 0.7, 'top_p': 0.95, 'torch': 'test-torch', 'transformers': 'test-transformers'}
 
 
+def _g0_fixture_records():
+    """The 24 synthetic G0 neutral records the default `_forwards()` neutral rows were copied from.
+
+    Neutral values do not depend on `rude_boost`, so one G0 file serves every synthetic fixture.
+    """
+    return [dict(r, source=sc.G0_REUSE_SOURCE) for r in _forwards()
+            if (r['arm'], r['variant'], int(r['question_index'])) in sc.g0_reuse_keys()]
+
+
+def _g0_fixture_bytes():
+    return ''.join(json.dumps(r, ensure_ascii=False) + '\n' for r in _g0_fixture_records()).encode('utf-8')
+
+
+def _sha256_bytes(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+
 def _admissible_run(**over):
     """A complete full-run summary with every pin an admissible card must see."""
     run = {
@@ -353,7 +370,7 @@ def _admissible_run(**over):
         'prompts_sha256': sc.PROMPTS_CANONICAL_SHA256,
         'prompts_file_sha256': sc.PROMPTS_FILE_SHA256,
         'preflight_sha256': 'a' * 64, 'model': sc.MODEL, 'revision': sc.REVISION,
-        'preflight_result': 'PASS', 'g0_reuse_sha256': 'b' * 64,
+        'preflight_result': 'PASS', 'g0_reuse_sha256': _sha256_bytes(_g0_fixture_bytes()),
         'preflight_attempt_id': 'attempt-fixture',
         'deadline_reached': False, 'incomplete_arms': [],
         'planned_rows': 2304, 'planned_forwards': 624, 'runtime': _runtime_stub(),
@@ -459,6 +476,8 @@ def _admissible_preflight(run=None):
                                      'prompts_file_sha256', 'model', 'revision')}
     obj.update({
         'result': 'PASS', 'full': 'allowed', 'attempt_id': 'attempt-fixture',
+        'g0_reuse_file': run215.G0_REUSE_FILE, 'g0_reuse_sha256': run['g0_reuse_sha256'],
+        'g0_reuse_n': run215.G0_REUSE_N,
         'part214_stage1_sha256': ref['stage1_sha'],
         'part214_stage2_sha256': ref['stage2_sha'],
         'part214_stage1_path': str(ref['stage1']),
@@ -547,7 +566,7 @@ def _score_fixture(rows, forwards=None, run=None, preflight=None):
     run = dict(run, preflight_sha256=hashlib.sha256(raw).hexdigest())
     rows, forwards = _attach(rows, forwards, run)
     with _fixture_reference_pins():
-        return sc.score_full(rows, forwards, run, preflight=preflight, preflight_bytes=raw)
+        return sc.score_full(rows, forwards, run, preflight=preflight, preflight_bytes=raw, g0_reuse_bytes=_g0_fixture_bytes())
 
 
 def test_g2_failed_arm_is_not_scored_not_two_false_flags():
@@ -663,7 +682,7 @@ def test_215_2_215_3_215_4_read_google_not_any(tmp_path):
                              'score215_any_endpoint')
     rows, fwd, run, pf, raw = _admissible_inputs(rows=_endpoint_rows())
     with _fixture_reference_pins():
-        card_any = broken.score_full(rows, fwd, run, preflight=pf, preflight_bytes=raw)
+        card_any = broken.score_full(rows, fwd, run, preflight=pf, preflight_bytes=raw, g0_reuse_bytes=_g0_fixture_bytes())
     assert card_any['predictions']['215.2']['verdict'] == 'fails'
     assert card_any['predictions']['215.3']['verdict'] == 'fails'
     assert card_any['predictions']['215.4']['verdict'] == 'fails'
@@ -687,29 +706,29 @@ def _admissible_inputs(rows=None, **run_over):
 def test_admissibility_requires_exact_keys_and_completion():
     rows, fwd, run, pf, raw = _admissible_inputs()
     with _fixture_reference_pins():
-        assert sc.admissibility(rows, fwd, run, pf, preflight_bytes=raw)['admissible'] is True
+        assert sc.admissibility(rows, fwd, run, pf, preflight_bytes=raw, g0_reuse_bytes=_g0_fixture_bytes())['admissible'] is True
         # Without the receipt bytes there is no byte binding, so the card cannot score.
         no_bytes = sc.admissibility(rows, fwd, run, pf)
         assert no_bytes['admissible'] is False
         assert 'preflight bytes are not provided' in no_bytes['reasons']
         # A duplicate key, even with the same count of records, is inadmissible.
         dup = rows + [dict(rows[0])]
-        report = sc.admissibility(dup, fwd, run, pf, preflight_bytes=raw)
+        report = sc.admissibility(dup, fwd, run, pf, preflight_bytes=raw, g0_reuse_bytes=_g0_fixture_bytes())
         assert report['admissible'] is False
         assert report['duplicate_generation_rows'] == 1
         # A completed-looking run summary that says the deadline hit is inadmissible.
         late_rows, late_fwd, late_run, late_pf, late_raw = _admissible_inputs(deadline_reached=True)
         assert sc.admissibility(late_rows, late_fwd, late_run, late_pf,
-                                preflight_bytes=late_raw)['admissible'] is False
+                                preflight_bytes=late_raw, g0_reuse_bytes=_g0_fixture_bytes())['admissible'] is False
         # A forward set missing one key is inadmissible.
         short = [r for r in fwd if not (r['arm'] == 'rude_v' and r['question_index'] == 23)]
-        assert sc.admissibility(rows, short, run, pf, preflight_bytes=raw)['admissible'] is False
+        assert sc.admissibility(rows, short, run, pf, preflight_bytes=raw, g0_reuse_bytes=_g0_fixture_bytes())['admissible'] is False
         assert sc.admissibility(rows, short, run, pf,
-                                preflight_bytes=raw)['missing_forward_rows'] == 4
+                                preflight_bytes=raw, g0_reuse_bytes=_g0_fixture_bytes())['missing_forward_rows'] == 4
         # A neutral forward that is not bound to the G0 reuse is inadmissible.
         unbound = [dict(r) for r in fwd]
         unbound[0]['source'] = 'full'
-        assert sc.admissibility(rows, unbound, run, pf, preflight_bytes=raw)['admissible'] is False
+        assert sc.admissibility(rows, unbound, run, pf, preflight_bytes=raw, g0_reuse_bytes=_g0_fixture_bytes())['admissible'] is False
 
 
 def test_alden_witness_identity_only_384_rows_is_diagnostic(tmp_path):
@@ -1254,24 +1273,30 @@ def test_scorer_preflight_byte_binding(pass_preflight, tmp_path):
     run = _admissible_run(preflight_sha256=hashlib.sha256(raw).hexdigest(),
                           g0_reuse_sha256=preflight['g0_reuse_sha256'],
                           preflight_attempt_id=preflight['attempt_id'])
-    rows, fwd = _attach(_synthetic_rows(), _forwards(), run)
+    g0_raw = (info['dir'] / run215.G0_REUSE_FILE).read_bytes()
+    g0_by_key = {(r['arm'], r['variant'], int(r['question_index'])): r
+                 for r in (json.loads(line) for line in g0_raw.decode('utf-8').splitlines() if line)}
+    real_fwd = [dict(g0_by_key[(r['arm'], r['variant'], int(r['question_index']))])
+                if (r['arm'], r['variant'], int(r['question_index'])) in g0_by_key else r
+                for r in _forwards()]
+    rows, fwd = _attach(_synthetic_rows(), real_fwd, run)
     saved = (evidence215.PART214_STAGE1_SHA256, evidence215.PART214_STAGE2_SHA256)
     evidence215.PART214_STAGE1_SHA256 = info['stage1_sha']
     evidence215.PART214_STAGE2_SHA256 = info['stage2_sha']
     try:
-        report = sc.admissibility(rows, fwd, run, preflight, preflight_bytes=raw)
+        report = sc.admissibility(rows, fwd, run, preflight, preflight_bytes=raw, g0_reuse_bytes=g0_raw)
         assert report['admissible'] is True, report['reasons']
-        card = sc.score_full(rows, fwd, run, preflight=preflight, preflight_bytes=raw)
+        card = sc.score_full(rows, fwd, run, preflight=preflight, preflight_bytes=raw, g0_reuse_bytes=g0_raw)
         assert card['diagnostic_only'] is False
 
         altered = dict(preflight, wall_time_seconds=float(preflight.get('wall_time_seconds') or 0.0) + 1.0)
         altered_raw = json.dumps(altered).encode('utf-8')
         assert hashlib.sha256(altered_raw).hexdigest() != run['preflight_sha256']
-        altered_report = sc.admissibility(rows, fwd, run, altered, preflight_bytes=altered_raw)
+        altered_report = sc.admissibility(rows, fwd, run, altered, preflight_bytes=altered_raw, g0_reuse_bytes=g0_raw)
         assert altered_report['admissible'] is False
         assert any('preflight' in reason and ('bytes' in reason or 'sha' in reason.lower())
                    for reason in altered_report['reasons']), altered_report['reasons']
-        altered_card = sc.score_full(rows, fwd, run, preflight=altered, preflight_bytes=altered_raw)
+        altered_card = sc.score_full(rows, fwd, run, preflight=altered, preflight_bytes=altered_raw, g0_reuse_bytes=g0_raw)
         assert altered_card['diagnostic_only'] is True
         assert all(pred['verdict'] == 'not_scored'
                    for pred in altered_card['predictions'].values())
@@ -1282,7 +1307,7 @@ def test_scorer_preflight_byte_binding(pass_preflight, tmp_path):
         broken = _load_sabotaged(tmp_path, [(
             "        digest = hashlib.sha256(bytes(preflight_bytes)).hexdigest()",
             "        digest = run.get('preflight_sha256')")], 'score215_no_byte_binding')
-        old = broken.score_full(rows, fwd, run, preflight=altered, preflight_bytes=altered_raw)
+        old = broken.score_full(rows, fwd, run, preflight=altered, preflight_bytes=altered_raw, g0_reuse_bytes=g0_raw)
         assert old['diagnostic_only'] is False
     finally:
         evidence215.PART214_STAGE1_SHA256, evidence215.PART214_STAGE2_SHA256 = saved
@@ -1348,6 +1373,100 @@ def test_full_reuses_g0_neutral_and_counts_648_forwards(pass_preflight, tmp_path
     assert all(r['g0_sha256'] == receipt['g0_reuse_sha256'] for r in neutral)
     assert all(r['pins']['preflight_sha256'] == run['preflight_sha256'] for r in fwd)
     assert len([r for r in fwd if r['source'] == 'full']) == 600
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# Alden #15: the reused neutral forwards must BE the verified G0 records, not carry their digest label
+# ----------------------------------------------------------------------------------------------------------------
+
+def _write_cli_fixture(root, bump=None):
+    """preflight.json + g0_neutral.jsonl beside it, and full/{rows,forwards}.jsonl + run.json."""
+    run = _admissible_run()
+    pf = _admissible_preflight(run)
+    raw = json.dumps(pf, indent=2, ensure_ascii=False).encode('utf-8')
+    run = dict(run, preflight_sha256=hashlib.sha256(raw).hexdigest(), rows_total=2304, forwards_total=624)
+    rows, fwd = _attach(_synthetic_rows(), _forwards(), run)
+    if bump:
+        for rec in fwd:
+            if rec['arm'] == 'neutral':
+                rec['g_ali'] = rec['g_ali'] + bump
+    root.mkdir(parents=True, exist_ok=True)
+    (root / 'preflight.json').write_bytes(raw)
+    (root / run215.G0_REUSE_FILE).write_bytes(_g0_fixture_bytes())
+    full = root / 'full'
+    full.mkdir()
+    for name, recs in (('rows.jsonl', rows), ('forwards.jsonl', fwd)):
+        (full / name).write_text(''.join(json.dumps(r, ensure_ascii=False) + '\n' for r in recs),
+                                 encoding='utf-8')
+    (full / 'run.json').write_text(json.dumps(run), encoding='utf-8')
+    return root
+
+
+def _cli_card(module, root, out_name):
+    with _fixture_reference_pins():
+        return module.main(['--full', str(root / 'full'), '--out', str(root / out_name),
+                            '--preflight', str(root / 'preflight.json')])
+
+
+def test_scorer_cli_binds_neutral_forward_values_to_g0_file(tmp_path):
+    """Unchanged copies score; +1.0 on the copied neutral g_ali (digest labels intact) does not."""
+    same = _cli_card(sc, _write_cli_fixture(tmp_path / 'same'), 'card')
+    assert same['diagnostic_only'] is False, same['admissibility']['reasons']
+    assert same['predictions']['215.5']['verdict'] == 'holds'
+
+    changed_root = _write_cli_fixture(tmp_path / 'changed', bump=1.0)
+    changed = _cli_card(sc, changed_root, 'card')
+    assert changed['diagnostic_only'] is True
+    assert any('differ from the verified G0 reuse records' in r
+               for r in changed['admissibility']['reasons']), changed['admissibility']['reasons']
+    assert changed['predictions']['215.5']['verdict'] == 'not_scored'
+
+    # RED on the pre-change behaviour (label-only binding): the changed copy is admitted and
+    # 215.5 flips to fails, Alden's reproduction.
+    broken = _load_sabotaged(tmp_path, [(
+        "    want = preflight.get('g0_reuse_sha256') if isinstance(preflight, dict) else None",
+        "    return []\n    want = None")], 'score215_g0_label_only')
+    old = _cli_card(broken, changed_root, 'card_old')
+    assert old['diagnostic_only'] is False
+    assert old['predictions']['215.5']['verdict'] == 'fails'
+
+
+def test_scorer_refuses_run_g0_digest_not_the_preflights(tmp_path):
+    rows, fwd, run, pf, raw = _admissible_inputs()
+    other = dict(run, g0_reuse_sha256='c' * 64)
+    with _fixture_reference_pins():
+        report = sc.admissibility(rows, fwd, other, pf, preflight_bytes=raw,
+                                  g0_reuse_bytes=_g0_fixture_bytes())
+        missing = sc.admissibility(rows, fwd, run, pf, preflight_bytes=raw)
+    assert report['admissible'] is False
+    assert 'run.json g0_reuse_sha256 is not the preflight G0 reuse digest' in report['reasons']
+    assert missing['admissible'] is False
+    assert 'G0 reuse bytes are not provided' in missing['reasons']
+
+
+def test_full_resume_refuses_a_changed_saved_neutral_forward(pass_preflight, tmp_path, monkeypatch):
+    info = pass_preflight
+
+    def stub_conditional_forward(model, layers, ids, opening, device, zero_targets=False):
+        return {'g_ali': 0.0, 'g_al': 0.0, 'read_position': len(ids) + len(opening) - 1,
+                'opening': [{'position': len(ids) + k, 'units': [0.0] * 4, 'monitors': [0.0] * 2}
+                            for k in range(run215.OPENING_TOKENS)],
+                'latency_s': 0.0, 'zero_targets': zero_targets}
+
+    monkeypatch.setattr(run215, 'conditional_forward', stub_conditional_forward)
+    loader = lambda _a: (info['model'], info['tok'], info['load'])  # noqa: E731
+    args = _args(tmp_path, 'full_resume_g0', preflight=str(info['dir'] / 'preflight.json'))
+    run215.full(args, rig_loader=loader, plan=[])
+    # Control: an unchanged resume continues.
+    run215.full(args, rig_loader=loader, plan=[])
+    fwd_path = tmp_path / 'full_resume_g0' / 'forwards.jsonl'
+    recs = sc.read_jsonl(fwd_path)
+    for rec in recs:
+        if rec['arm'] == 'neutral' and rec['question_index'] == 3:
+            rec['g_ali'] = rec['g_ali'] + 1.0
+    fwd_path.write_text(''.join(json.dumps(r, ensure_ascii=False) + '\n' for r in recs), encoding='utf-8')
+    with pytest.raises(SystemExit, match='differs from the verified G0 reuse record'):
+        run215.full(args, rig_loader=loader, plan=[])
 
 
 # ----------------------------------------------------------------------------------------------------------------
