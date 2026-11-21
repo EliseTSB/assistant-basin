@@ -20,3 +20,13 @@ a design that leaves one out says why.
    tell us a lot more." When a push makes answers loop or collapse onto one idea, rerun it at several strengths in
    both directions (for example 1, 2, 4 and 8 times the natural maximum, and the same negative) before reading what
    the unit means; the strongest push reports saturation, not content.
+9. **Format robustness.** A claimed neuron or head effect is rerun on the same prompts in a few literal forms (the
+   original, uppercase, the prompt as a JSON string, one word per line). An effect that holds only in the original
+   form is reported as format-specific. Borrowed from Pliny's OBLITERATUS Neuron Lab "Prompt Prism" (Elise's link,
+   2026-11-21); forms can change meaning and tokenization, so this measures sensitivity, not invariance.
+10. **A reset receipt.** After an intervention's hooks are removed, the same stored inputs are replayed and must give
+    the plain model's exact token ids and first-step logits; the receipt goes in the run's evidence. This extends
+    item 3 from the start of a run to its end (borrowed from the same tool's "verify reset").
+11. **Persistence over turns.** A persona or identity push that changes a one-turn answer is also read over a short
+    paired conversation (baseline and edited, each with its own history), since a one-turn effect can wash out or grow
+    once the model's own earlier answers are in its context. Not yet run on any part; first use is a design choice.
