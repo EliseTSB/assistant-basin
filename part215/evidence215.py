@@ -458,6 +458,23 @@ def _recompute_latency(gates) -> dict:
     }
 
 
+
+WARMUP_SEED = 215_000_001   # Amendment 2: the untimed warm-up generation's own seed (enters no gate)
+
+
+def _warmup_failures(warmup) -> list[str]:
+    """Amendment 2: the preflight made one untimed warm-up generation before G1, used in no gate."""
+    if not isinstance(warmup, dict):
+        return ['warmup_missing']
+    fails = []
+    if not _number(warmup.get('latency_s')) or float(warmup['latency_s']) < 0:
+        fails.append('warmup_latency')
+    if warmup.get('seed') != WARMUP_SEED:
+        fails.append('warmup_seed')
+    if warmup.get('used_in_gates') is not False:
+        fails.append('warmup_used_in_gates')
+    return fails
+
 def _latency_failures(latency, gates) -> list[str]:
     """The summary must equal the recomputation over all 192 measured rows."""
     if not isinstance(latency, dict):
@@ -476,10 +493,15 @@ def _latency_failures(latency, gates) -> list[str]:
     if not _number(limit) or float(limit) != MAX_LATENCY_S:
         fails.append('latency_limit')
     max_s = recomputed['max_s']
-    if max_s is None or not (0 < max_s <= MAX_LATENCY_S):
-        fails.append('latency_max_recomputed')
+    # Amendment 2: the gate reads the MEAN per call (generation and forward separately); the max is
+    # recomputed and must agree with the summary, but no longer decides the gate.
+    gen_mean, fwd_mean = recomputed['generation_mean_s'], recomputed['forward_mean_s']
+    means_ok = (gen_mean is not None and fwd_mean is not None
+                and 0 < gen_mean <= MAX_LATENCY_S and 0 < fwd_mean <= MAX_LATENCY_S)
+    if not means_ok:
+        fails.append('latency_mean_recomputed')
     expected_pass = (recomputed['n_measured'] == MEASURED_CALLS and recomputed['all_numbers']
-                     and max_s is not None and 0 < max_s <= MAX_LATENCY_S)
+                     and recomputed['nonnegative'] and means_ok)
     if latency.get('pass') is not expected_pass:
         fails.append('latency_summary_pass')
     for key, value in (('max_s', max_s),
@@ -545,4 +567,5 @@ def validate_preflight(receipt, *, stage1_path=None, stage2_path=None,
     fails.extend(_g1_failures(gates.get('G1'), stage2))
     fails.extend(_g2_failures(gates.get('G2_pilot')))
     fails.extend(_latency_failures(receipt.get('latency'), gates))
+    fails.extend(_warmup_failures(receipt.get('warmup') if isinstance(receipt, dict) else None))
     return fails
