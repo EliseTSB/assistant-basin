@@ -358,7 +358,11 @@ def _verify_exact_row_keys(
     expected_keys: set[tuple],
     key_fn,
     label: str,
+    stage: str,
+    prompt_meta: dict[str, dict[str, Any]],
+    head_meta: dict[str, dict[str, Any]] | None = None,
 ) -> dict[tuple, dict[str, Any]]:
+    """Verify exact manifest key join AND bind every row-identity field to canonical metadata (Alden #70)."""
     seen: dict[tuple, dict[str, Any]] = {}
     for idx, r in enumerate(rows):
         _check_finite_recursive(r, f"{label}[{idx}]")
@@ -367,6 +371,31 @@ def _verify_exact_row_keys(
             raise ValueError(f"Duplicate row in {label}: {k}")
         if k not in expected_keys:
             raise ValueError(f"Unexpected/extra row in {label}: {k}")
+
+        # Bind every row-identity field strictly to canonical manifest / unit / head metadata
+        pid = r["prompt_id"]
+        uid = r["unit"]
+        pm = prompt_meta[pid]
+        um = rss.SLOT_BY_ID[uid]
+        if r.get("stage") != stage:
+            raise ValueError(f"Mislabeled stage in {label} {k}: got {r.get('stage')!r}, expected {stage!r}")
+        if r.get("unit_layer") != um["layer"]:
+            raise ValueError(f"Mislabeled unit_layer in {label} {k}: got {r.get('unit_layer')!r}, expected {um['layer']!r}")
+        for field in ("bank", "cell", "story", "serialization"):
+            if r.get(field) != pm[field]:
+                raise ValueError(
+                    f"Mislabeled {field} in {label} {k}: got {r.get(field)!r}, expected canonical {pm[field]!r}"
+                )
+        if head_meta is not None:
+            hn = r["head_name"]
+            hm = head_meta[hn]
+            if r.get("head_layer") != hm["layer"] or r.get("head_idx") != hm["head"] or r.get("head_kind") != hm["kind"]:
+                raise ValueError(
+                    f"Mislabeled head metadata in {label} {k}: got ({r.get('head_layer')}, {r.get('head_idx')}, {r.get('head_kind')}) "
+                    f"!= canonical ({hm['layer']}, {hm['head']}, {hm['kind']})"
+                )
+            rss.assert_strictly_downstream(r["unit_layer"], r["head_layer"])
+
         seen[k] = r
     missing = expected_keys - set(seen.keys())
     if missing:
@@ -607,7 +636,9 @@ def score_stage_sweep(
     if not manifest.get("meta", {}).get("four_tokenizer_parity_verified"):
         raise ValueError("Manifest missing four_tokenizer_parity_verified=true")
 
-    # Expected manifest join sets
+    # Expected manifest join sets & canonical row-identity lookup maps
+    prompt_meta = {p["prompt_id"]: p for p in manifest["prompts"]}
+    head_meta = {hs["name"]: hs for hs in rss.HEAD_SPECS}
     cal_prompts = [p for p in manifest["prompts"] if p["bank"] == "CAL"]
     cal_third_prompts = [p for p in cal_prompts if p["cell"] == "CAL_THIRD"]
     eval_prompts = [p for p in manifest["prompts"] if p["bank"] == "EVAL"]
@@ -657,16 +688,16 @@ def score_stage_sweep(
             if meta.get(k) != exp or pins.get(k) != exp:
                 raise ValueError(f"Receipt {st} pin mismatch on {k}: meta={meta.get(k)!r}, pins={pins.get(k)!r}, expected={exp!r}")
 
-        # Exact row joins + causal + peer/algebraic assertions
+        # Exact row joins + canonical manifest-bound identity validation BEFORE calibration/gating/grouping!
         u_key = lambda r: (r["unit"], r["prompt_id"], round(float(r["dose_mag"]), 4))
         h_key = lambda r: (r["unit"], r["prompt_id"], r["head_name"], round(float(r["dose_mag"]), 4))
 
-        _verify_exact_row_keys(rec["cal_unpatched_rows"], exp_cal_unp_keys, u_key, f"{st}.cal_unpatched")
-        _verify_exact_row_keys(rec["cal_head_rows"], exp_cal_head_keys, h_key, f"{st}.cal_head")
-        _verify_exact_row_keys(rec["eval_arm_a_unpatched_rows"], exp_eval_unp_keys_fn(rss.COMMON_DOSE), u_key, f"{st}.eval_a_unp")
-        _verify_exact_row_keys(rec["eval_arm_a_head_rows"], exp_eval_head_keys_fn(rss.COMMON_DOSE), h_key, f"{st}.eval_a_head")
-        _verify_exact_row_keys(rec["sens_plain_unpatched_rows"], exp_sens_unp_keys, u_key, f"{st}.sens_unp")
-        _verify_exact_row_keys(rec["sens_plain_head_rows"], exp_sens_head_keys, h_key, f"{st}.sens_head")
+        _verify_exact_row_keys(rec["cal_unpatched_rows"], exp_cal_unp_keys, u_key, f"{st}.cal_unpatched", st, prompt_meta, None)
+        _verify_exact_row_keys(rec["cal_head_rows"], exp_cal_head_keys, h_key, f"{st}.cal_head", st, prompt_meta, head_meta)
+        _verify_exact_row_keys(rec["eval_arm_a_unpatched_rows"], exp_eval_unp_keys_fn(rss.COMMON_DOSE), u_key, f"{st}.eval_a_unp", st, prompt_meta, None)
+        _verify_exact_row_keys(rec["eval_arm_a_head_rows"], exp_eval_head_keys_fn(rss.COMMON_DOSE), h_key, f"{st}.eval_a_head", st, prompt_meta, head_meta)
+        _verify_exact_row_keys(rec["sens_plain_unpatched_rows"], exp_sens_unp_keys, u_key, f"{st}.sens_unp", st, prompt_meta, None)
+        _verify_exact_row_keys(rec["sens_plain_head_rows"], exp_sens_head_keys, h_key, f"{st}.sens_head", st, prompt_meta, head_meta)
 
         # Independently recompute Arm B calibration from raw CAL rows
         recomp_cal = rss.select_calibrated_dose(rec["cal_unpatched_rows"], rec["cal_head_rows"], dose_grid=rss.CAL_DOSE_GRID)
@@ -683,8 +714,8 @@ def score_stage_sweep(
                     raise ValueError(f"Stage {st}: unexpected duplicate Arm B rows when d_cal==0.8")
                 arm_b_head_rows = rec["eval_arm_a_head_rows"]
             else:
-                _verify_exact_row_keys(rec["eval_arm_b_unpatched_rows"], exp_eval_unp_keys_fn(d_cal), u_key, f"{st}.eval_b_unp")
-                _verify_exact_row_keys(rec["eval_arm_b_head_rows"], exp_eval_head_keys_fn(d_cal), h_key, f"{st}.eval_b_head")
+                _verify_exact_row_keys(rec["eval_arm_b_unpatched_rows"], exp_eval_unp_keys_fn(d_cal), u_key, f"{st}.eval_b_unp", st, prompt_meta, None)
+                _verify_exact_row_keys(rec["eval_arm_b_head_rows"], exp_eval_head_keys_fn(d_cal), h_key, f"{st}.eval_b_head", st, prompt_meta, head_meta)
                 arm_b_head_rows = rec["eval_arm_b_head_rows"]
         else:
             if rec["eval_arm_b_head_rows"] or rec["eval_arm_b_unpatched_rows"]:
@@ -1199,7 +1230,43 @@ def run_self_tests() -> None:
         except ValueError:
             pass
 
-    print("[self-test] ALL score_stage_sweep.py tests PASSED (incl. #58 & #62 witnesses + 4-pin refusals)!")
+        # Alden #70 exact regression witness: swap ROLE_BARE <-> NAME_BARE cell labels on Instruct Arm A
+        swap_rec = json.loads(stage_paths["instruct"].read_text())
+        for grp in ("eval_arm_a_unpatched_rows", "eval_arm_a_head_rows"):
+            for r in swap_rec[grp]:
+                if r["cell"] == "ROLE_BARE":
+                    r["cell"] = "NAME_BARE"
+                elif r["cell"] == "NAME_BARE":
+                    r["cell"] = "ROLE_BARE"
+        swap_p = tdp / "swap_cell_inst.json"
+        swap_p.write_text(json.dumps(swap_rec), encoding="utf-8")
+        try:
+            score_stage_sweep(m_path, design_p, {**stage_paths, "instruct": swap_p}, m_sha, d_sha, r_sha, s_sha)
+            raise AssertionError("Should have refused swapped ROLE_BARE/NAME_BARE cell labels (Alden #70)")
+        except ValueError as exc:
+            assert "Mislabeled cell" in str(exc), str(exc)
+
+        # Additional canonical metadata binding refusals across CAL, Arm B, SENS_PLAIN, story & head_layer
+        for lbl, st_target, mutate_fn in (
+            ("cal_unp_cell", "instruct", lambda d: d["cal_unpatched_rows"][0].__setitem__("cell", "CAL_THIRD" if d["cal_unpatched_rows"][0]["cell"] == "CAL_SELF" else "CAL_SELF")),
+            ("cal_head_story", "instruct", lambda d: d["cal_head_rows"][0].__setitem__("story", "C2" if d["cal_head_rows"][0]["story"] == "C1" else "C1")),
+            ("arm_b_cell", "sft", lambda d: d["eval_arm_b_head_rows"][0].__setitem__("cell", "SELF" if d["eval_arm_b_head_rows"][0]["cell"] != "SELF" else "ROLE_BARE")),
+            ("sens_plain_ser", "instruct", lambda d: d["sens_plain_head_rows"][0].__setitem__("serialization", "chat")),
+            ("head_layer_tamper", "instruct", lambda d: d["eval_arm_a_head_rows"][0].__setitem__("head_layer", 9)),
+            ("unit_layer_tamper", "instruct", lambda d: d["eval_arm_a_unpatched_rows"][0].__setitem__("unit_layer", 1)),
+            ("stage_field_tamper", "instruct", lambda d: d["eval_arm_a_head_rows"][0].__setitem__("stage", "sft")),
+        ):
+            m_rec = json.loads(stage_paths[st_target].read_text())
+            mutate_fn(m_rec)
+            mp = tdp / f"mut_{lbl}.json"
+            mp.write_text(json.dumps(m_rec), encoding="utf-8")
+            try:
+                score_stage_sweep(m_path, design_p, {**stage_paths, st_target: mp}, m_sha, d_sha, r_sha, s_sha)
+                raise AssertionError(f"Should have refused canonical metadata tamper: {lbl}")
+            except ValueError as exc:
+                assert "Mislabeled" in str(exc), f"{lbl}: {exc}"
+
+    print("[self-test] ALL score_stage_sweep.py tests PASSED (incl. #58, #62, #70 witnesses + 4-pin refusals)!")
 
 
 def main(argv: list[str] | None = None) -> None:

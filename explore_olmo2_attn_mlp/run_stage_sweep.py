@@ -541,35 +541,53 @@ def build_manifest(
     return manifest
 
 
+def _require_hex64(label: str, val: str | None) -> str:
+    if not isinstance(val, str) or not HEX64_RE.match(val):
+        raise ValueError(f"Missing or invalid 64-hex SHA-256 pin for {label}: {val!r}")
+    return val
+
+
 def admit_frozen_package(
     manifest_path: Path,
     design_path: Path,
     expected_manifest_sha256: str | None = None,
     expected_design_sha256: str | None = None,
+    expected_runner_sha256: str | None = None,
+    expected_scorer_sha256: str | None = None,
+    scorer_path: Path | None = None,
     tokenizer_loader: Callable[[str, str], Any] = default_tokenizer_loader,
 ) -> tuple[dict[str, Any], dict[str, str]]:
-    if not manifest_path.is_file():
-        raise FileNotFoundError(f"Missing committed manifest: {manifest_path}")
-    if not design_path.is_file():
-        raise FileNotFoundError(f"Missing committed design: {design_path}")
+    """Enforce all 4 external SHA-256 pins + 4-tokenizer manifest parity BEFORE any model load."""
+    exp_m = _require_hex64("expected_manifest_sha256", expected_manifest_sha256)
+    exp_d = _require_hex64("expected_design_sha256", expected_design_sha256)
+    exp_r = _require_hex64("expected_runner_sha256", expected_runner_sha256)
+    exp_s = _require_hex64("expected_scorer_sha256", expected_scorer_sha256)
+
+    runner_path = Path(__file__).resolve()
+    resolved_scorer = runner_path.with_name("score_stage_sweep.py") if scorer_path is None else Path(scorer_path)
+
+    for lbl, fpath in (
+        ("manifest", manifest_path),
+        ("design", design_path),
+        ("runner", runner_path),
+        ("scorer", resolved_scorer),
+    ):
+        if not fpath.is_file():
+            raise FileNotFoundError(f"Missing required frozen package file ({lbl}): {fpath}")
 
     actual_manifest_sha = sha256_file(manifest_path)
     actual_design_sha = sha256_file(design_path)
+    actual_runner_sha = sha256_file(runner_path)
+    actual_scorer_sha = sha256_file(resolved_scorer)
 
-    if expected_manifest_sha256 is not None:
-        if not HEX64_RE.match(expected_manifest_sha256):
-            raise ValueError(f"Invalid expected_manifest_sha256: {expected_manifest_sha256!r}")
-        if actual_manifest_sha != expected_manifest_sha256:
-            raise ValueError(
-                f"Manifest SHA-256 mismatch: disk={actual_manifest_sha} != expected={expected_manifest_sha256}"
-            )
-    if expected_design_sha256 is not None:
-        if not HEX64_RE.match(expected_design_sha256):
-            raise ValueError(f"Invalid expected_design_sha256: {expected_design_sha256!r}")
-        if actual_design_sha != expected_design_sha256:
-            raise ValueError(
-                f"Design SHA-256 mismatch: disk={actual_design_sha} != expected={expected_design_sha256}"
-            )
+    for lbl, got, exp in (
+        ("manifest", actual_manifest_sha, exp_m),
+        ("design", actual_design_sha, exp_d),
+        ("runner", actual_runner_sha, exp_r),
+        ("scorer", actual_scorer_sha, exp_s),
+    ):
+        if got != exp:
+            raise ValueError(f"{lbl.capitalize()} SHA-256 mismatch: disk={got} != expected={exp}")
 
     committed = json.loads(manifest_path.read_text(encoding="utf-8"))
     if committed.get("meta", {}).get("schema_version") != SCHEMA_VERSION:
@@ -583,16 +601,15 @@ def admit_frozen_package(
     if committed != regenerated:
         raise ValueError("Committed manifest does not match regenerated 4-tokenizer bindings/parity!")
 
-    scorer_path = Path(__file__).resolve().with_name("score_stage_sweep.py")
     pins = {
         "manifest_file": str(manifest_path),
         "manifest_sha256": actual_manifest_sha,
         "design_file": str(design_path),
         "design_sha256": actual_design_sha,
-        "runner_file": Path(__file__).name,
-        "runner_sha256": sha256_file(Path(__file__).resolve()),
-        "scorer_file": scorer_path.name,
-        "scorer_sha256": sha256_file(scorer_path) if scorer_path.is_file() else "",
+        "runner_file": runner_path.name,
+        "runner_sha256": actual_runner_sha,
+        "scorer_file": resolved_scorer.name,
+        "scorer_sha256": actual_scorer_sha,
     }
     return committed, pins
 
@@ -1166,6 +1183,9 @@ def execute_stage_run(
     smoke_1unit: bool = False,
     expected_manifest_sha256: str | None = None,
     expected_design_sha256: str | None = None,
+    expected_runner_sha256: str | None = None,
+    expected_scorer_sha256: str | None = None,
+    scorer_path: Path | None = None,
     tokenizer_loader: Callable[[str, str], Any] = default_tokenizer_loader,
     model_loader: Callable[[str, str, str], Any] = default_model_loader,
 ) -> dict[str, Any]:
@@ -1174,17 +1194,21 @@ def execute_stage_run(
     spec = STAGE_SPECS[stage]
     validate_commit_sha(spec["commit"])
 
-    # Mandatory pre-load admission enforcement (ZERO model weights loaded if this raises!)
+    # Mandatory pre-load 4-pin admission enforcement (ZERO model weights loaded if this raises!)
     manifest, pins = admit_frozen_package(
         manifest_path=manifest_path,
         design_path=design_path,
         expected_manifest_sha256=expected_manifest_sha256,
         expected_design_sha256=expected_design_sha256,
+        expected_runner_sha256=expected_runner_sha256,
+        expected_scorer_sha256=expected_scorer_sha256,
+        scorer_path=scorer_path,
         tokenizer_loader=tokenizer_loader,
     )
     print(
-        f"[ss] Admitted frozen package (manifest={pins['manifest_sha256'][:12]}, "
-        f"design={pins['design_sha256'][:12]}). Loading {spec['repo']}@{spec['commit'][:12]} on {device}...",
+        f"[ss] Admitted frozen 4-pin package (manifest={pins['manifest_sha256'][:12]}, "
+        f"design={pins['design_sha256'][:12]}, runner={pins['runner_sha256'][:12]}, "
+        f"scorer={pins['scorer_sha256'][:12]}). Loading {spec['repo']}@{spec['commit'][:12]} on {device}...",
         flush=True,
     )
 
@@ -1532,26 +1556,41 @@ def run_self_tests() -> None:
     res_p = select_calibrated_dose(u_p, h_p)
     assert res_p["cal_status"] == "uninformative_gate_failed" and res_p["d_cal"] is None, res_p
 
-    # 5. Pre-load admission & fake-loader suite (zero loader calls on any mismatch!)
+    # 5. Pre-load 4-pin admission & fake-loader suite (zero loader calls on any refusal!)
     with tempfile.TemporaryDirectory() as td:
         tdp = Path(td)
         design_p = Path("explore_olmo2_attn_mlp/STAGE-SWEEP-DESIGN.md")
-        assert design_p.is_file()
+        runner_p = Path(__file__).resolve()
+        scorer_p = runner_p.with_name("score_stage_sweep.py")
+        assert design_p.is_file() and scorer_p.is_file()
         shared_tok = _FakeTokenizer()
-        tok_loader_ok = lambda repo, commit: shared_tok
+        tok_calls = {"n": 0}
+        def tok_loader_ok(repo, commit):
+            tok_calls["n"] += 1
+            return shared_tok
+
         manifest = build_manifest(design_path=design_p, tokenizer_loader=tok_loader_ok)
         assert manifest["meta"]["n_prompts"] == 28 and manifest["meta"]["n_bindings"] == 140
         m_path = tdp / "manifest.json"
         m_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
         m_sha = sha256_file(m_path)
         d_sha = sha256_file(design_p)
+        r_sha = sha256_file(runner_p)
+        s_sha = sha256_file(scorer_p)
 
         loader_calls = {"n": 0}
         def counting_loader(repo, commit, device):
             loader_calls["n"] += 1
             return _DummyModel()
 
-        # 5a. Valid package reaches loader once and produces valid stage_smoke_receipt with max_abs_sham == 0.0
+        valid_pins = dict(
+            expected_manifest_sha256=m_sha,
+            expected_design_sha256=d_sha,
+            expected_runner_sha256=r_sha,
+            expected_scorer_sha256=s_sha,
+        )
+
+        # 5a. Complete 4-pin positive reaches loader once and produces valid stage_smoke_receipt with sham==0
         out_smoke = tdp / "smoke.json"
         rec = execute_stage_run(
             stage="instruct",
@@ -1560,10 +1599,9 @@ def run_self_tests() -> None:
             out_path=out_smoke,
             device="cpu",
             smoke_1unit=True,
-            expected_manifest_sha256=m_sha,
-            expected_design_sha256=d_sha,
             tokenizer_loader=tok_loader_ok,
             model_loader=counting_loader,
+            **valid_pins,
         )
         assert loader_calls["n"] == 1
         assert rec["meta"]["artifact_type"] == "stage_smoke_receipt"
@@ -1572,8 +1610,9 @@ def run_self_tests() -> None:
         assert max_sh <= 1e-6, f"Expected exact sham zero on dummy model, got {max_sh}"
 
         # 5b. Pre-load refusals: ALL must raise with loader_calls == 0!
-        def assert_refused(label: str, **kwargs):
+        def assert_refused(label: str, expect_zero_tok: bool = False, **kwargs):
             loader_calls["n"] = 0
+            tok_calls["n"] = 0
             try:
                 execute_stage_run(
                     stage="instruct",
@@ -1586,29 +1625,41 @@ def run_self_tests() -> None:
                 raise AssertionError(f"Expected pre-load refusal for {label}")
             except (ValueError, FileNotFoundError):
                 assert loader_calls["n"] == 0, f"Loader was called on refused case {label}!"
+                if expect_zero_tok:
+                    assert tok_calls["n"] == 0, f"Tokenizer loader was called on pin/file refusal {label}!"
 
-        # Missing manifest
-        assert_refused("missing_manifest", manifest_path=tdp / "nope.json", design_path=design_p, tokenizer_loader=tok_loader_ok)
-        # Wrong expected manifest pin
-        assert_refused("bad_manifest_pin", manifest_path=m_path, design_path=design_p, expected_manifest_sha256="0" * 64, tokenizer_loader=tok_loader_ok)
-        # Wrong expected design pin
-        assert_refused("bad_design_pin", manifest_path=m_path, design_path=design_p, expected_design_sha256="1" * 64, tokenizer_loader=tok_loader_ok)
-        # Tampered design file
+        # Zero pins (Alden #69 witness 1)
+        assert_refused("zero_pins", expect_zero_tok=True, manifest_path=m_path, design_path=design_p, tokenizer_loader=tok_loader_ok)
+        # Missing each individual pin
+        for pin_k in ("expected_manifest_sha256", "expected_design_sha256", "expected_runner_sha256", "expected_scorer_sha256"):
+            kw = dict(valid_pins)
+            kw[pin_k] = None
+            assert_refused(f"missing_{pin_k}", expect_zero_tok=True, manifest_path=m_path, design_path=design_p, tokenizer_loader=tok_loader_ok, **kw)
+        # Wrong each individual pin
+        for idx_p, pin_k in enumerate(("expected_manifest_sha256", "expected_design_sha256", "expected_runner_sha256", "expected_scorer_sha256")):
+            kw = dict(valid_pins)
+            kw[pin_k] = str(idx_p) * 64
+            assert_refused(f"wrong_{pin_k}", expect_zero_tok=True, manifest_path=m_path, design_path=design_p, tokenizer_loader=tok_loader_ok, **kw)
+        # Missing manifest, missing design, and missing scorer (Alden #69 witness 2)
+        assert_refused("missing_manifest", expect_zero_tok=True, manifest_path=tdp / "nope.json", design_path=design_p, tokenizer_loader=tok_loader_ok, **valid_pins)
+        assert_refused("missing_design", expect_zero_tok=True, manifest_path=m_path, design_path=tdp / "nope.md", tokenizer_loader=tok_loader_ok, **valid_pins)
+        assert_refused("missing_scorer", expect_zero_tok=True, manifest_path=m_path, design_path=design_p, scorer_path=tdp / "nope_scorer.py", tokenizer_loader=tok_loader_ok, **valid_pins)
+        # Tampered design bytes (with matching external design pin so internal manifest check catches it)
         bad_design = tdp / "bad_design.md"
         bad_design.write_text(design_p.read_text(encoding="utf-8") + "\ntamper\n", encoding="utf-8")
-        assert_refused("tampered_design", manifest_path=m_path, design_path=bad_design, tokenizer_loader=tok_loader_ok)
-        # Tampered 1 own token ID inside manifest
+        assert_refused("tampered_design", manifest_path=m_path, design_path=bad_design, tokenizer_loader=tok_loader_ok, **{**valid_pins, "expected_design_sha256": sha256_file(bad_design)})
+        # Tampered 1 own token ID inside manifest (with matching external manifest pin so regeneration catches it)
         tampered_m = copy.deepcopy(manifest)
         tampered_m["bindings"]["eval_self_E1"]["p92-02"]["t_own"] += 1
         tm_path = tdp / "tampered_manifest.json"
         tm_path.write_text(json.dumps(tampered_m, indent=2), encoding="utf-8")
-        assert_refused("tampered_t_own", manifest_path=tm_path, design_path=design_p, tokenizer_loader=tok_loader_ok)
+        assert_refused("tampered_t_own", manifest_path=tm_path, design_path=design_p, tokenizer_loader=tok_loader_ok, **{**valid_pins, "expected_manifest_sha256": sha256_file(tm_path)})
         # 4-tokenizer parity failure (sft vocab mismatch)
         bad_tok_sft = _FakeTokenizer(vocab_extra=1)
         tok_loader_mismatch = lambda repo, commit: bad_tok_sft if "SFT" in repo else shared_tok
-        assert_refused("tokenizer_parity_mismatch", manifest_path=m_path, design_path=design_p, tokenizer_loader=tok_loader_mismatch)
+        assert_refused("tokenizer_parity_mismatch", manifest_path=m_path, design_path=design_p, tokenizer_loader=tok_loader_mismatch, **valid_pins)
 
-    print("[self-test] ALL run_stage_sweep.py tests PASSED (zero real weights loaded)!")
+    print("[self-test] ALL run_stage_sweep.py tests PASSED (incl. 4-pin pre-load refusals, zero real weights loaded)!")
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -1619,6 +1670,8 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--manifest", type=Path, default=Path("explore_olmo2_attn_mlp/stage_sweep_manifest.json"))
     p.add_argument("--expected-manifest-sha256", type=str, default=None)
     p.add_argument("--expected-design-sha256", type=str, default=None)
+    p.add_argument("--expected-runner-sha256", type=str, default=None)
+    p.add_argument("--expected-scorer-sha256", type=str, default=None)
     p.add_argument("--stage", type=str, choices=STAGE_ORDER, default=None)
     p.add_argument("--device", type=str, default="cuda")
     p.add_argument("--smoke-1unit", action="store_true")
@@ -1642,8 +1695,19 @@ def main(argv: list[str] | None = None) -> None:
         )
         return
 
-    if args.stage is None or args.out is None:
-        raise SystemExit("Must pass --stage <stage> and --out <path> (or --self-test-only / --emit-manifest)")
+    missing = [
+        name for name, val in (
+            ("--stage", args.stage),
+            ("--out", args.out),
+            ("--expected-manifest-sha256", args.expected_manifest_sha256),
+            ("--expected-design-sha256", args.expected_design_sha256),
+            ("--expected-runner-sha256", args.expected_runner_sha256),
+            ("--expected-scorer-sha256", args.expected_scorer_sha256),
+        )
+        if val is None
+    ]
+    if missing:
+        raise SystemExit(f"Refused unchecked run invocation; missing required flags: {', '.join(missing)}")
 
     execute_stage_run(
         stage=args.stage,
@@ -1654,6 +1718,8 @@ def main(argv: list[str] | None = None) -> None:
         smoke_1unit=args.smoke_1unit,
         expected_manifest_sha256=args.expected_manifest_sha256,
         expected_design_sha256=args.expected_design_sha256,
+        expected_runner_sha256=args.expected_runner_sha256,
+        expected_scorer_sha256=args.expected_scorer_sha256,
     )
 
 
