@@ -49,8 +49,8 @@ import score214 as sc214  # noqa: E402  (Part 212's is_broken/classify, reused; 
 # ----------------------------------------------------------------------------------------------------------------
 
 PART = 215
-DESIGN_VERSION = 'v4.1'
-DESIGN_SHA256 = 'e64521c12b46b68940f04fb7eceb170ccfad4bf420f3c45a93a6f36090dc9e76'
+DESIGN_VERSION = 'v4.1-a1'
+DESIGN_SHA256 = '04d91193346aaa0aeb82886b0315cb0a006034b9e54cc924089452be57385a50'
 MODEL = 'Qwen/Qwen3.5-4B'
 REVISION = '851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a'
 PROMPTS_NAME = 'prompts215.json'

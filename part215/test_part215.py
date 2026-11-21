@@ -214,7 +214,7 @@ def test_prompts_hash_refusal(tmp_path):
 
 
 def test_design_and_prompt_bank_pins_are_the_reviewed_bytes():
-    assert sc.DESIGN_VERSION == 'v4.1'
+    assert sc.DESIGN_VERSION == 'v4.1-a1'
     assert sc.DESIGN_SHA256 == _sha256(HERE / 'DESIGN.md')
     bank = sc.load_prompts()
     assert bank['canonical_sha256'] == sc.PROMPTS_CANONICAL_SHA256
@@ -1602,3 +1602,42 @@ def test_runner_refuses_a_stop_receipt(tiny, tmp_path, short_generations):
         run215.full(_args(tmp_path, 'full', preflight=str(stop)),
                     rig_loader=lambda _a: (model, tok, load))
     assert 'result_is_PASS' in str(excinfo.value)
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# Amendment 1: the readout carries Part 214's one-token Google continuation after the opening
+# ----------------------------------------------------------------------------------------------------------------
+
+def test_conditional_row_appends_the_amendment_continuation(monkeypatch):
+    bank = sc.load_prompts()
+    idx = run215.prompt_index(bank)
+    seen = {}
+
+    def fake_forward(model, layers, ids, opening, device, zero_targets=False):
+        seen['ids'], seen['opening'] = list(ids), list(opening)
+        return {'g_ali': 0.0, 'g_al': 0.0, 'read_position': len(ids) + run215.OPENING_TOKENS - 1,
+                'opening': [], 'latency_s': 0.0, 'zero_targets': zero_targets}
+
+    monkeypatch.setattr(run215, 'conditional_forward', fake_forward)
+    rec = run215.conditional_row(idx, bank, None, None, None, 'neutral', 'v0', 18, 'cpu')
+    opening = [int(t) for t in bank['openings']['en_maker']['token_ids']]
+    assert seen['opening'] == opening + [14030]
+    assert rec['opening_token_ids'] == opening
+    assert rec['continuation_token_ids'] == [14030]
+    assert rec['read_position'] == len(seen['ids']) + 4
+
+
+def test_g0_reuse_refuses_a_record_read_without_the_continuation(pass_preflight, tmp_path):
+    info = pass_preflight
+    receipt = dict(info['receipt'])
+    src = (info['dir'] / run215.G0_REUSE_FILE).read_bytes().decode('utf-8').splitlines()
+    recs = [json.loads(line) for line in src if line]
+    assert all(r['continuation_token_ids'] == [14030] for r in recs)
+    recs[5].pop('continuation_token_ids')
+    raw = ''.join(json.dumps(r) + '\n' for r in recs).encode('utf-8')
+    d = tmp_path / 'g0_no_cont'
+    d.mkdir()
+    (d / run215.G0_REUSE_FILE).write_bytes(raw)
+    receipt['g0_reuse_sha256'] = hashlib.sha256(raw).hexdigest()
+    with pytest.raises(SystemExit, match='Amendment 1 continuation'):
+        run215.load_g0_reuse(d / 'preflight.json', receipt, sc.load_prompts())

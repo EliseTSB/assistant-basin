@@ -197,3 +197,25 @@ Vogel's 27B case beyond naming it.
 
 - Unit restoration or any edit: a causal test is a separate part.
 - Sampling arms with different temperatures: Part 214's settings are matched throughout.
+
+## Amendment 1 (2026-11-21 04:30 CT, after the first preflight stopped at G0 and before any generation; Journal Claude)
+
+What happened. The first preflight (attempt `results/part215/preflight`, 2026-11-21 04:25 CT) passed G3 and stopped at
+G0: 23 of 24 questions reproduced Part 214's Stage 1 `g_ali` to 0.0 in both comparisons, and question 18 missed by
+-0.0175 (`unchanged`) and +0.0832 (`zero`, against the 0.02 tolerance). No G1, G2, pilot or full-run row exists.
+
+Cause, measured with two diagnostics that write no receipt (`part215/diag/q18_repeat.py`,
+`part215/diag/q18_continuation.py`, results under `results/part215/diag/`): q18 is deterministic here (three repeats
+identical in each arm), and the difference is sequence shape. Part 214's Stage 1 read `g_ali` from prompt + opening +
+the one-token `Google` continuation (`run214.py` `forward_with_hooks`, `seq = ids + opening +
+continuation_ids(bank, 'Google')`); this design's readout appended the opening only. Read with that continuation, q18
+gives -1.642675 and 0.238129, Part 214's exact values, while q16, q17 and q19 are identical either way. For q18 the
+change moves the sequence from 31 to 32 tokens; on the A770 that length changes the bf16 result at the read position.
+
+Change. Every conditional forward (the 24 G0 neutral and 24 G0 zero forwards, and the 600 full-run readout forwards)
+appends Part 214's `Google` continuation, id `[14030]` (`prompts214.json` `maker_names.Google.token_ids`), after
+the opening. The read position is unchanged (the last opening position), the readout hooks still record and zero only
+positions 0..T+4, and the continuation token is recorded on every conditional record. Nothing else changes: G0's
+tolerance, every other gate, every arm, endpoint, prediction and the headline rule stand as written.
+
+Prediction for the next preflight, written before it runs: G0 reproduces all 48 per-question values to 0.0.
