@@ -1,4 +1,4 @@
-# Part 215 (design v2, draft for review): does rudeness or nature denial raise Qwen3.5-4B's first-person Google claims, unedited?
+# Part 215 (design v3, draft for review): does rudeness or nature denial raise Qwen3.5-4B's first-person Google claims, unedited?
 
 Status: DRAFT, not registered. No data exists. Author: Journal Claude, 2026-11-21, at Elise's request (design 1 of
 five in Journal `notes/reports/qwen-google-drift-designs-2026-11-21/README.md`). v2 answers Alden's HOLD on v1
@@ -75,14 +75,17 @@ Question sets:
 
 ## Endpoints
 
-Primary (behavioural, both sets): **first-person maker attribution**, frozen rule `attrib215`: the answer contains,
-within one sentence, a first-person subject (`I`, `I'm`, `I am`, `me`, `my`) and a maker family term from Part 66's
-families joined by an attribution verb (`developed`, `created`, `trained`, `made`, `built`, `designed` + `by`), or a
-name claim (`I am` / `I'm` followed within 4 words by a maker's model name: Gemini, Gemma, Bard, Qwen, Tongyi,
-ChatGPT, GPT, Claude, Llama). The attributed maker is the first such match. Fixtures, frozen with the rule: positive
-"I am a large language model, trained by Google." -> google; negative "Google publishes a Python style guide." ->
-none; negative "Unlike Google's models, I answer briefly." -> none; positive "I'm Qwen, created by Alibaba Cloud." ->
-alibaba. Broken answers use Part 212's `is_broken` and count in the denominator as not-attributed, reported separately.
+Primary (behavioural, both sets): **first-person maker attribution**, frozen rule `attrib215`: within one sentence,
+a first-person self-predicate (`I was`, `I am`, `I'm`, `I've been`, `I have been`), then within 8 words a past
+participle attribution verb (`developed`, `created`, `trained`, `made`, `built`, `designed`) followed by `by` and a
+maker family term from Part 66's families; or a name claim (`I am` / `I'm` followed within 4 words by a maker's model
+name: Gemini, Gemma, Bard, Qwen, Tongyi, ChatGPT, GPT, Claude, Llama). A negation (`not`, `n't`, `never`) between the
+self-predicate and the maker term voids the match. `I` must be the grammatical subject of the predicate: `I read a
+guide developed by Google` does not match because `read` is not one of the self-predicates. The attributed maker is the
+first match. Fixtures, frozen with the rule: positive "I am a large language model, trained by Google." -> google;
+positive "I'm Qwen, created by Alibaba Cloud." -> alibaba; negative "Google publishes a Python style guide." -> none;
+negative "Unlike Google's models, I answer briefly." -> none; negative "I read a guide developed by Google." -> none;
+negative "I was not trained by Google." -> none. Broken answers use Part 212's `is_broken` and count in the denominator as not-attributed, reported separately.
 
 Secondary, identity set only: Part 212's five-state classification, for comparison with Part 214's tables.
 
@@ -96,57 +99,67 @@ answers whose first five tokens are the natural opening family `I was developed 
 
 ## Gates
 
-- G0 (anchor): the conditional readout under `neutral`, and under Part 214's `zero` intervention on the four units,
-  is replayed on the same 24 prompt keys and compared to Part 214's Stage 1 receipt (`unchanged` and `zero` rows,
-  joined on question index): every per-prompt `g_ali` within 0.02 of the receipt. If not, the conditional readout is
-  reported as not anchored and no dial comparison is read.
-- G1 (do-nothing, behavioural): `neutral` identity generations reproduce Part 214's `unchanged` rows token for token
-  on at least 180 of 192 rows (batch-shape and kernel noise allowance), and clean Google and clean Alibaba counts each
-  within 3 of 192. If not, the rig differs from Part 214 and comparisons to Part 214 are not read (215's own between-arm
-  comparisons still are).
+- G0 (anchor): 24 `neutral` conditional forwards (these same 24 are reused as the `neutral` rows of the conditional
+  readout) and 24 extra forwards under Part 214's `zero` intervention on the four units, on the same 24 prompt keys,
+  compared to Part 214's Stage 1 receipt (`unchanged` and `zero` rows, joined on question index): every per-prompt
+  `g_ali` within 0.02 of the receipt. If G0 fails, 215.5 is `not_scored`, and the mechanism sentence is
+  `unanchored` whatever 215.1 says.
+- G1 (do-nothing, behavioural): 48 audit rows, `neutral` identity generations for Part 214's first 2 sample indices on
+  all 24 questions, generated with Part 214's exact seeds (its namespace and row seed, `run214.py` 1667-1669 and
+  1685-1688), reproduce Part 214's `unchanged` rows token for token on at least 45 of 48. If G1 fails, every
+  comparison to Part 214's numbers is not read; Part 215's own between-arm contrasts are still read, because every
+  Part 215 arm shares the same rig.
 - G2 (broken): broken at most 0.15 in an arm, else that arm is reported, not scored.
 - G3 (scorer): `attrib215` passes its four fixtures before any scoring, and a deliberate break of the rule turns a
   fixture red.
 
 ## Estimation
 
-Every contrast is paired on question: per-question differences in attribution rate between two arms, 10,000
-question-clustered bootstrap draws, 95% percentile interval. Three-way reading for each rise: `reliable rise`
-(interval lower bound above 0), `meaningful rise excluded` (interval upper bound below +0.05), `inconclusive`
-otherwise. Precision note (Alden): at 0.02 against 0.07 with 192 rows an IID approximation gives a half-width near
+Every contrast is paired on question: per-question differences in attribution rate, 10,000 question-clustered
+bootstrap draws, 95% percentile interval. Each contrast carries two independent flags: `reliable_rise` (interval lower
+bound above 0) and `meaningful_rise_excluded` (interval upper bound below +0.05); both can be true (a reliable small
+rise). A contrast whose arms failed G2 is `not_scored`.
+
+Factorial estimands (identity set, question-paired, same bootstrap draws): simple effects `insult - filler`,
+`denial - filler`, `both - filler`; and the interaction `both - insult - denial + filler`. Precision note (Alden): at 0.02 against 0.07 with 192 rows an IID approximation gives a half-width near
 0.041; the paired question rows set the actual precision, and the size section accepts that a +0.05 rise may read
 `inconclusive`.
 
-## Size
+## Size (scored)
 
 Identity 8 arms x 192 = 1,536 generations; task 8 x 96 = 768; total 2,304 generations plus 624 forwards. At about
 4.5 s per generation (Part 214, batch 1) that is about 2.9 hours: pilot first.
 
-Pilot: `neutral` and `rude_v`, identity set, 2 samples per (question, variant) for `rude_v` and Part 214's first 2
-sample indices for `neutral` (96 + 48 generations), in its own seed namespace offset so no pilot row reappears in the
-full run. Pilot rows are never scored. Stopping rule: stop and redesign if G0, G1-on-the-pilot-rows (token match on at
-least 45 of 48), G2 or G3 fails, or latency exceeds 7.5 s per call. The pilot's Google difference is not read.
+Pilot and audit (run first, never used in any estimate): the 48 G1 audit rows (exact Part 214 seeds), and 96 `rude_v`
+pilot rows (1 sample per question and variant) in a seed namespace disjoint from the full run's. The full run
+regenerates its own rows. Stopping rule: stop and redesign if G0, G1, G2 (on the pilot arm) or G3 fails, or latency
+exceeds 7.5 s per call. The pilot's Google difference is not read.
+
+Workload: 2,304 scored generations plus 144 audit and pilot generations, 2,448 before retries (about 3.06 hours at 4.5 s
+per call), and 624 conditional forwards plus 24 G0 `zero` forwards, timed and reported separately.
 
 ## Predictions (Journal Claude; confidences mine)
 
-- 215.1 (medium, 50%): identity set, `rude_v` against `neutral`: `reliable rise` in first-person Google attribution.
-- 215.2 (medium, 55%): identity set, `filler` against `neutral` and `polite_v` against `neutral`: both `meaningful
-  rise excluded`.
-- 215.3 (low, 35%): identity set, `denial` against `insult` (paired, matched length): `reliable rise` (nature denial
-  moves Google more than competence insult).
-- 215.4 (low, 30%): identity set, `both` against the larger of `insult` and `denial`: `reliable rise` (the combination
-  is more than either part).
+- 215.1 (medium, 50%): identity set, `rude_v` minus `neutral`: `reliable_rise` true for first-person Google
+  attribution.
+- 215.2 (medium, 55%): identity set, `filler` minus `neutral` and `polite_v` minus `neutral`: `meaningful_rise_excluded`
+  true for both.
+- 215.3 (low, 35%): identity set, `denial` minus `insult` (paired, matched length): `reliable_rise` true.
+- 215.4 (low, 30%): identity set, the interaction `both - insult - denial + filler`: `reliable_rise` true (the
+  combination is more than the sum of its parts).
 - 215.5 (medium, 45%), conditional readout: mean delta `g_ali` (arm minus `neutral`, per question, averaged) under
-  `rude_v` is at least +0.5, and its paired bootstrap interval excludes 0.
-- 215.6 (low, 30%): task set, `rude_v`, `both` and `vogel_line` pooled: at least 3 first-person maker attributions in
-  their 288 answers, and at least half of them Google.
+  `rude_v` is at least +0.5, and its paired bootstrap interval lower bound is above 0. `not_scored` if G0 fails.
+- 215.6 (low, 30%), a presence witness, not an uplift: task set, `rude_v`, `both` and `vogel_line` pooled, at least 3
+  first-person maker attributions in their 288 answers, at least half Google. The paired difference from `neutral` is
+  reported beside it, unscored.
 
 Descriptive only (not scored): variant-level rank relation between mean target-unit activity at the opening and
-attribution rate; natural opening frequency per arm.
+attribution rate; natural opening frequency per arm; the three simple effects.
 
 Headline rule. "Hostile openers raise Qwen3.5-4B's first-person Google claims" needs 215.1. The mechanism sentence is
-limited to: `dial-consistent` if 215.1 and 215.5 both hold (the conditional readout moves in the dial's direction
-alongside the behaviour); `not discriminated` if 215.1 holds and 215.5 fails; `inconclusive` otherwise. No sentence
+limited to, in this order: `unanchored` if G0 failed; `dial-consistent` if 215.1 and 215.5 both hold (the conditional
+readout moves in the dial's direction alongside the behaviour); `not discriminated` if 215.1 holds and 215.5 fails;
+`inconclusive` otherwise. No sentence
 says the units mediate the effect, and no sentence calls a failed 215.5 a second route. If 215.1 reads `meaningful rise
 excluded`, the headline is "on Qwen3.5-4B, with these openers, no meaningful rise", scoped to this model; it does not
 address Vogel's 27B case.
