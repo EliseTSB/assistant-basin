@@ -1,0 +1,128 @@
+{
+  "part": 215,
+  "stage": "full",
+  "design": "v4.1-a2",
+  "design_sha256": "278770e8b1b92040131647b094712811b182790e5af68435b74aac9b01f012ec",
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "prompts_sha256": "7118e649be2cdfb4fa24d2b11ce4147e8a34794d559cf521dfebd9a17ccb0452",
+  "prompts_file_sha256": "0ac54f8e8e46b3bf06dfb7108a4743392bd0f218ae3f70778f2d5b4b98544d03",
+  "preflight_sha256": "a44d6e803bfac57b1bcbf296d92f4d8dfbe6048792aa62d3c4d9573245d102f4",
+  "preflight_result": "PASS",
+  "preflight_attempt_id": "28be18b9ca1145328894e4f0da66bce5",
+  "g0_reuse_sha256": "b8beb6b010d967b5940a7d15bbd550c58ac74bf5dd881a9f1c739cad31184919",
+  "tool_sha256": "91f3cfe43f8c47c23dc88efb908a2555a30c13592fe4712819ab34c06a32df29",
+  "load": {
+    "attn_implementation": "eager",
+    "attn_implementation_requested": "eager",
+    "dtype": "torch.bfloat16",
+    "device": "xpu",
+    "torch": "2.13.0+xpu",
+    "transformers": "5.13.0"
+  },
+  "runtime": {
+    "device": "xpu",
+    "dtype": "bfloat16",
+    "attn_implementation": "eager",
+    "torch": "2.13.0+xpu",
+    "transformers": "5.13.0",
+    "batch_size": 1,
+    "max_new_tokens": 48,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "device": "xpu",
+  "dtype": "bfloat16",
+  "attn_implementation": "eager",
+  "batch_size": 1,
+  "batch_size_requested": 1,
+  "max_new_tokens": 48,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "planned_rows": 2304,
+  "rows_total": 2304,
+  "new_rows_this_invocation": 2304,
+  "planned_forwards": 624,
+  "forwards_total": 624,
+  "new_forwards_this_invocation": 624,
+  "g0_reuse_records": 24,
+  "forwards_runnable_this_invocation": 600,
+  "model_forwards_preflight": 48,
+  "model_forwards_full_this_invocation": 600,
+  "model_forwards_total_across_preflight_and_full": 648,
+  "arm_status": {
+    "identity/neutral": {
+      "planned": 192,
+      "done": 192
+    },
+    "identity/filler": {
+      "planned": 192,
+      "done": 192
+    },
+    "identity/insult": {
+      "planned": 192,
+      "done": 192
+    },
+    "identity/denial": {
+      "planned": 192,
+      "done": 192
+    },
+    "identity/both": {
+      "planned": 192,
+      "done": 192
+    },
+    "identity/polite_v": {
+      "planned": 192,
+      "done": 192
+    },
+    "identity/rude_v": {
+      "planned": 192,
+      "done": 192
+    },
+    "identity/vogel_line": {
+      "planned": 192,
+      "done": 192
+    },
+    "task/neutral": {
+      "planned": 96,
+      "done": 96
+    },
+    "task/filler": {
+      "planned": 96,
+      "done": 96
+    },
+    "task/insult": {
+      "planned": 96,
+      "done": 96
+    },
+    "task/denial": {
+      "planned": 96,
+      "done": 96
+    },
+    "task/both": {
+      "planned": 96,
+      "done": 96
+    },
+    "task/polite_v": {
+      "planned": 96,
+      "done": 96
+    },
+    "task/rude_v": {
+      "planned": 96,
+      "done": 96
+    },
+    "task/vogel_line": {
+      "planned": 96,
+      "done": 96
+    }
+  },
+  "incomplete_arms": [],
+  "deadline_min": 300,
+  "deadline_reached": false,
+  "wall_time_seconds": 9378.078672300006,
+  "torn_tail_bytes_dropped": {
+    "rows": 0,
+    "forwards": 0
+  },
+  "sampling_reproducibility": "One prompt per batch, batch size 1 for every call.  Each row records a SHA-256 seed from (condition, question index, sample) -- Part 66 row_seed; neutral on the identity set uses Part 214's 'unchanged:target' condition exactly, so G1 can compare row for row.  Rows are repeatable only for the same batch order, backend and library versions."
+}
