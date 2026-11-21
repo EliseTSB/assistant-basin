@@ -1,7 +1,8 @@
 # Part 216 design: at Qwen3.5-4B's maker position, is a Google lead visible in the middle layers before the Alibaba answer wins, or does no early lead appear?
 
-Status: DRAFT v2 (Journal Claude, 2026-11-21). Not registered. v1 (c87300b3) held by Alden (council
-`part216-override-or-replacement-2026-11-21` #3); every change below answers that hold.
+Status: DRAFT v2.1 (Journal Claude, 2026-11-21). Not registered. v1 (c87300b3) held by Alden (council
+`part216-override-or-replacement-2026-11-21` #3); v2 (72e7512b) held narrowly (#5). The list below answers #3; the
+v2.1 section after it answers #5.
 
 ## What changed from v1, and why
 
@@ -27,6 +28,16 @@ Status: DRAFT v2 (Journal Claude, 2026-11-21). Not registered. v1 (c87300b3) hel
 9. Anchor details: G0 on question indices 0–23 only (the receipt's q24 is a separate positive control); exact receipt
    keys; read and hooks stop at `T+4`; residual indexing stated; G1 split into an FP32 telescoping check and a
    reported bf16 rounding difference.
+
+## What changed from v2 (v2.1, Alden #5)
+
+1. **G2 requires adjacent qualified layers.** v2 let a qualified window of every other layer pass while making an early
+   lead (two consecutive layers) impossible. Qualification now counts adjacent pairs, and too few pairs is `not read`.
+2. **G1 telescopes realized increments.** Upcasting captured module outputs does not undo the rounding of the bf16
+   residual adds, so the decomposition now uses the FP32 difference across each residual add, with raw module outputs
+   and a labelled rounding residual kept beside it, and offline fixtures for both.
+3. **The unit thresholds are descriptive extremeness thresholds**, not an exact Bonferroni test; ties, zero write
+   sizes and 216.6's tail are defined; per-block shares are for the three token logits only.
 
 ## Question
 
@@ -86,9 +97,13 @@ Total: 384 + 48 + 24 = 456 forwards.
 
 1. **Lens.** For each `h_l`, l = 0…32: apply the final RMSNorm with `h_l`'s own RMS and the tied unembedding. Record
    `m_l = z_G − max(z_Al, z_T)`, `z_G`, `z_Al`, `z_T` (ids 14030, 2033, 51) and their ranks. `g_ali_l` recorded for G0.
-2. **Exact DLA.** With the final RMS frozen at its value for `h_32`, the logits of the three tokens decompose
-   exactly into the embedding term plus each block's attention and MLP outputs; computed in FP32 from captured
-   component outputs.
+2. **Exact DLA on realized increments.** Each block has two residual adds (after the mixer and after the MLP; the
+   residual dtype at each add is verified on the pinned runtime and recorded). The residual is captured before and
+   after each add, and the **realized increment** is the FP32 difference of those two bf16 tensors. With the final
+   RMS frozen at its value for `h_32`, the logits of the three tokens decompose exactly into the embedding term plus
+   the 64 realized increments. The **raw module output** at each add is kept beside it, with a labelled **rounding
+   residual** = realized increment minus raw output. Per-block attention and MLP shares are reported for the three
+   token logits, never for the family log-sum.
 3. **Unit DLA.** For the four target units and monitors `L24 N3949`, `L27 N3325`: activation times down-projection
    column, through the frozen final norm, onto each token: `c_G`, `c_Al`, `c_T`. Also the unit's write size at this
    slot, `|a| · ||W_down[:, u]||`, and its normalized Google projection `c_G / write size`. The Alibaba-family
@@ -100,17 +115,22 @@ Total: 384 + 48 + 24 = 456 forwards.
 - **G0 (anchor).** Final `g_ali` (= `g_ali_32`) for `unchanged`, `zero`, `scale_dial_fact` and `random_0:zero` …
   `random_9:zero`, questions 0–23, equals Part 214's Stage 1 receipt within 0.02 on all 312 values (exact agreement
   reported beside it). Fail: STOP.
-- **G1 (telescoping).** In FP32, the embedding term plus all component terms equals the FP32 logit computed from `h_32`
-  with the frozen RMS, within 1e-3 absolute, for every token and forward. Fail: STOP. The difference between that
-  FP32 logit and the model's native bf16 logit is reported, not gated.
+- **G1 (telescoping).** In FP32, the embedding term plus the 64 realized-increment terms equals the FP32 logit
+  computed from `h_32` with the frozen RMS, within 1e-3 absolute, for every token and forward. Fail: STOP. Two offline
+  fixtures run before any model load: an analytic bf16 case (residual 1, write 1/256: the add rounds to 1, the raw
+  write is 1/256, and the realized increment must be 0 with a rounding residual of −1/256), and a missing-component
+  control (one increment dropped) that G1 must fail. The difference between the FP32 logit and the model's native bf16
+  logit is reported, not gated.
 - **G2 (qualified window).** For each layer l, the share of Google-side controls with `m_l > 0` and the share of
   Alibaba-side controls with `m_l < 0`, counting only controls whose FINAL contrast is on their expected side. The
-  qualified window W is the set of layers l ≤ 29 where both shares are at least 0.8. If fewer than 18 of 24 controls
-  on either side end on their expected side, or W has fewer than 4 layers, every lead outcome is `not read`.
+  qualified window W is the set of layers l ≤ 29 where both shares are at least 0.8. A **usable pair** is two
+  consecutive layers (l, l+1) both in W. If fewer than 18 of 24 controls on either side end on their expected side, or
+  W has fewer than 2 usable pairs, every lead outcome is `not read` (sparse qualification is never evidence for `no
+  early lead detected`).
 
 ## Outcomes (per question, then counted)
 
-For `unchanged`, a question has an **early Google lead** if `m_l > 0` on at least two consecutive layers in W and its
+For `unchanged`, a question has an **early Google lead** if `m_l > 0` on both layers of at least one usable pair and its
 final `m_32 < 0`. It has **no early lead** if `m_l ≤ 0` on every layer in W.
 
 - `early Google lead visible`: at least 12 of 24 questions have an early Google lead.
@@ -123,16 +143,20 @@ For each edited or opener arm, per question: **ends in Google** iff `m_32 > 0`. 
 
 ## Predictions (Journal Claude; confidences mine)
 
-- 216.1 (medium, 55%): G2 passes with W of at least 8 layers.
+- 216.1 (medium, 55%): G2 passes with at least 6 usable pairs.
 - 216.2 (low, 30%): `early Google lead visible`.
 - 216.3 (medium, 45%): `no early lead detected in the qualified window`.
 - 216.4 (high, 80%): `zero`'s divergence index is `h_7` or later (no change before the first edit) and exists.
 - 216.5 (low, 25%): at least one target unit has a negative median `c_G` in `unchanged` and its median normalized
-  Google projection is below all 200 of its same-layer null units (the 200 units of that layer nearest it in median
-  write size at this slot, matched without reference to any token direction), Bonferroni-adjusted for four units at
-  a one-sided 0.0125 with an exact tail on 201 values.
-- 216.6 (medium, 55%): at least one target unit has a positive median `d_A` in `unchanged` above the same null's
-  values at the same adjusted tail.
+  Google projection (`c_G` / write size) is strictly below every one of its 200 same-layer null units. The null is the
+  200 units of that layer, other than the target units, nearest it in median write size at this slot (matched without
+  reference to any token direction; units whose median write size is 0 are excluded, and a target with median write
+  size 0 is reported as `no write` and cannot satisfy the threshold). A tie with any null unit does not count. This is
+  a prespecified descriptive extremeness threshold, not an exact test: the targets were selected earlier and no
+  exchangeable sampling scheme is claimed.
+- 216.6 (medium, 55%): at least one target unit has a positive median `d_A` in `unchanged` and its median normalized
+  `d_A` (`d_A` / write size) is strictly above every one of the same 200 null units' values, with the same exclusions
+  and tie rule; also a descriptive extremeness threshold.
 
 ## Descriptive, not scored
 
