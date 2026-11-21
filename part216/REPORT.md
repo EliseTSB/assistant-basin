@@ -739,3 +739,146 @@ None for the two code items. Honest limits on what Fold 2 demonstrates:
 5. **`partial` changed meaning.** `score['partial']` is now `not admissible` (so a RUNNING or
    STOPped directory with 456 rows is partial); `run_completeness` remains descriptive and its own
    flag is reported beside `admission_inadmissible`. `run_status` is unchanged.
+
+## Fold 3 (Alden #14)
+
+### SUMMARY
+
+- Scorer-side admission only, on `50f5ca3d`. Nothing committed, no GPU, no 4B load; `DESIGN.md` and
+  `prompts216.json` are untouched, so their pins are unchanged (`9dfbf216…`, `ec29c594…`).
+- **G0 grades against the PINNED Part 214 Stage 1 receipt.** `STAGE1_RECEIPT_PATH` is
+  `results/part214/stage1/stage1.json` (verified now: sha256
+  `4f287bc2153f879e2d442ba50a866208ae4384b3eafb527b568c43dd402d9cb5`) and
+  `PART214_STAGE1_SHA256` is that digest. `load_pinned_receipt()` hashes the BYTES before parsing
+  and refuses anything else with reason `pin:stage1_receipt_digest`; `run.json`'s own receipt path
+  and digest are recorded as a claim (`admission.run_recorded_receipt`) and are never evidence.
+- **Every row is bound to its pinned `(arm, q)` inputs.** For all 456 design keys,
+  `input_binding()` rebuilds `sequence_token_ids`, `prompt_token_ids`, `T`, `read_position` and
+  `input_sha256` from `prompts216.json` and compares them to the row; a mismatch is
+  `diagnostics only` with reason `input:<key>`. Resolution rules are factored into a new
+  torch-free `resolve216.py` imported by both `run216.py` and `score216.py`.
+- **Arrays must be finite and scaled.** Every required array must be finite; every `scale:<key>`
+  must be a finite POSITIVE scalar and, where the row records `dla.frozen_scale`, equal to it.
+  Reasons are `array:<name>`.
+- **A failed G2 no longer produces read/FAIL lens predictions.** On an admissible run with G2 false,
+  216.2, 216.3 and 216.4 are `not read`; 216.1 is read as FAIL (its subject is G2); 216.5/216.6
+  stay read (unit results do not depend on the window).
+- **92/92 tests pass** (80 → 92; `92 passed in 59.50s`, and `92 passed in 67.69s` on the final
+  re-run of the finished tree). All **13** new/changed tests fail on
+  `50f5ca3d`: in the exact archive they error at the import of the new shared resolver, and with
+  that resolver copied in (so the module imports and each guard is exercised) **13/13 failed for
+  their own reason**. **6/6** sabotage mutations RED, each turning exactly its intended test red.
+
+### FINDINGS
+
+1. **Receipt binding (`score216.py`).** New constants `STAGE1_RECEIPT_PATH` and
+   `PART214_STAGE1_SHA256`; `load_pinned_receipt(path=None)` returns `(receipt, reference_info)`,
+   hashing the bytes first and refusing a missing/unreadable/non-matching file. The call site is
+   `score_run`, not the run record: `_load_receipt(run)` is deleted. `admission_check` emits
+   `pin:stage1_receipt_digest` and carries `admission.reference` (path, sha256, `pinned`,
+   `injected`) plus `admission.run_recorded_receipt`. `SCORECARD.md` prints the reference it used.
+2. **Test-only reference seam.** `score_run(out_dir, reference_receipt=None)`; the CLI (`main`) never
+   passes it, and there is no flag, environment variable or `run.json` field that reaches it. An
+   injected reference is labelled `injected: true` in the scorecard. Tests use it only to score the
+   synthetic constant-1 fixture that the production path must refuse.
+3. **Input binding (`score216.py` + new `resolve216.py`).** `resolve216.py` holds `plan_rows`,
+   `row_key`, `opener_index`, `resolve_row`, `input_sha256` and `expected_inputs` -- no torch, no
+   numpy. `run216.py` imports them (a one-argument `plan_rows` wrapper keeps the runner's call and
+   its monkeypatched test seam byte-identical; `forward_row` now hashes via the shared function).
+   `score216.py` imports `resolve216` after adding its own directory to `sys.path` (the tests run
+   the CLI with `python -I`, which does not add the script directory). `input_binding()` compares
+   the five recorded fields for every key present and names the mismatch `input:<key>`; keys absent
+   from the file stay the `keys` check's business (no double report).
+4. **Finite arrays and frozen scales (`arrays_admission`).** `unit_proj`, `unit_colnorm`, every
+   `h0:`/`h32:`/`units:` array must be finite (`array:<name>`); every `scale:<key>` must be a
+   finite positive scalar and must equal the row's `dla.frozen_scale` (`array:<name>`), with the
+   value and the recorded value both quoted in the reason.
+5. **Per-prediction `not read` (`score_run`).** `lens_unqualified = admissible and not g2['pass']`
+   and `LENS_WINDOW_PREDICTIONS = ('216.2', '216.3', '216.4')`. Admission still forces every
+   verdict to `not read`; the new branch sits between that and `read`. 216.1's own `pass` already
+   keyed off `g2['n_usable_pairs']`, so it is read as FAIL; 216.5/216.6 are untouched.
+6. **Fixture change (`test_part216.py`).** `_write_synthetic_run(tmp_path, receipt=None)` now
+   defaults to the PINNED receipt and writes each anchor row's `native_g_ali` from it, so the
+   positive fixture is admissible through the CLI. Passing `synthetic_receipt()` builds the bad
+   fixture: a self-consistent constant-1 reference the CLI must refuse. Every row also records its
+   `(arm, q)` inputs from the bank via an INDEPENDENT test-side resolver (`_bank_inputs`), not via
+   `resolve216.expected_inputs`, so the fixture does not derive the expected values from the code
+   under test.
+7. **In-domain cleanup, listed as required.** The old admission block that compared a run's receipt
+   to its own digest is gone (not left beside the new one); `_load_receipt` is deleted; the
+   duplicated opener/plan resolution is merged into one module used by both programs.
+
+### TESTS
+
+`92 passed, 0 failed, 0 skipped` (`59.50s`, and `67.69s` on the final re-run) with
+`/home/elisepc/neuron-probe/.venv/bin/python -I -m pytest part216/test_part216.py -q -p no:cacheprovider`
+from `/home/elisepc/assistant-basin` (Fold 2 was 80). Twelve new cases plus one modified:
+
+| test | asserts |
+|---|---|
+| `test_positive_fixture_is_bound_to_the_pinned_receipt` | admission's reference is `pinned`, sha256 = `PART214_STAGE1_SHA256`, path = `STAGE1_RECEIPT_PATH`; G0's 312 receipt values are the real receipt's (and not all 1.0); the run's recorded copy is a different file |
+| `test_cli_refuses_a_run_whose_fixture_used_a_synthetic_receipt` | the constant-1 fixture gets CLI exit 3 / diagnostics-only / G0 FAIL; the same directory is admissible only through `score_run(..., reference_receipt=...)` |
+| `test_pinned_receipt_digest_is_checked_before_use` | a tampered copy (different bytes, valid JSON) at the pinned path is refused with `pin:stage1_receipt_digest`; a missing path likewise; the run's recorded digest is untouched and unused |
+| `test_input_binding_rejects_a_self_consistent_wrong_sequence` | `op_denial:0` recording `unchanged:0`'s sequence/prompt/T/read slot with a matching recomputed hash is refused as `input:op_denial:0` while G0 still passes |
+| `test_input_binding_rejects_a_wrong_read_position` | right tokens, wrong read slot -> `input:unchanged:3` (`field == read_position`) |
+| `test_input_binding_rejects_a_hash_that_does_not_match_its_sequence` | the recorded `input_sha256` is checked against the bank, not recomputed from itself |
+| `test_expected_inputs_match_the_runner_and_the_bank` | `resolve216.expected_inputs` equals `run216.resolve_row` on five row kinds, equals the test-side bank resolver, and `sc.input_binding` accepts/rejects at unit level |
+| `test_admission_rejects_a_nonfinite_array` | a NaN in `h0:zero:5` -> `array:h0:zero:5` |
+| `test_admission_rejects_a_nan_frozen_scale` | `scale:unchanged:0 = NaN` -> `array:scale:unchanged:0` |
+| `test_admission_rejects_a_nonpositive_frozen_scale` | self-consistent `-1.0` array and row -> only the positivity rule can refuse it, and does |
+| `test_admission_rejects_a_scale_that_disagrees_with_its_row` | finite positive `2.0` array vs the row's `1.0` -> `array:scale:zero:0` quoting both |
+| `test_g2_failure_leaves_lens_predictions_not_read` | admissible, G0/G1 pass, G2 fail: 216.2/.3/.4 `not read`, 216.1 read+FAIL, 216.5/.6 read, headline `not read`, scorecard shows `| 216.2 | not read |` |
+| `test_admission_constants_are_bound_to_the_frozen_files` (modified) | adds `STAGE1_RECEIPT_PATH == results/part214/stage1/stage1.json`, `PART214_STAGE1_SHA256 == sha256(file)`, and `load_pinned_receipt()` returns the receipt with no error |
+
+**Old-tree proof.** `oldtree/` is `git archive 50f5ca3d part216` with symlinks to `part214/`,
+`part215/`, `part66/`, `neuron_report.py` and `results/` (same tree as Fold 2's worker-01). Two runs
+of the selection above:
+
+- exact head (`oldtree/part216` with no `resolve216.py`): **collection error** --
+  `ModuleNotFoundError: No module named 'resolve216'`; every new test is an error
+  (`oldtree-exact-newtests.log`).
+- head plus the new torch-free `resolve216.py` (so the test module imports and each guard is tested
+  on its own): **13 failed, 79 deselected, 0 passed** (`oldtree-newtests.log`). The failures name
+  the guards: `AttributeError: module 'score216' has no attribute 'STAGE1_RECEIPT_PATH'`, the CLI
+  returning 0 with `G0: True` for the synthetic receipt, `216.2` verdict `read` where `not read` is
+  required, and `_assert_diagnostics_only` seeing exit 0 for every bad row/array.
+
+### SABOTAGE
+
+Scratch tree `sabotage/tree/` -- a copy of the current `part216/` with the same symlinks. Driver
+`sabotage/run_sabotage.py`, merged results in `sabotage/sabotage.json`. The domain was never
+touched. Baseline 92 passed, restored 92 passed.
+
+| mutation | what was broken | suite | went red | failing tests |
+|---|---|---|---|---|
+| receipt digest | `if digest != expected_sha256` disabled in `load_pinned_receipt` | 1 failed, 91 passed | **YES** | `test_pinned_receipt_digest_is_checked_before_use` |
+| input binding | `input_binding(rows, bank)` no longer called from `admission_check` | 3 failed, 89 passed | **YES** | `test_input_binding_rejects_a_self_consistent_wrong_sequence`, `_a_wrong_read_position`, `_a_hash_that_does_not_match_its_sequence` |
+| finite arrays | the non-finite scan in `arrays_admission` removed | 1 failed, 91 passed | **YES** | `test_admission_rejects_a_nonfinite_array` |
+| positive scale | `if value <= 0.0` disabled | 1 failed, 91 passed | **YES** | `test_admission_rejects_a_nonpositive_frozen_scale` |
+| scale matches row | the `float(recorded) == value` refusal disabled | 1 failed, 91 passed | **YES** | `test_admission_rejects_a_scale_that_disagrees_with_its_row` |
+| per-prediction not read | `lens_unqualified` forced False | 1 failed, 91 passed | **YES** | `test_g2_failure_leaves_lens_predictions_not_read` |
+
+Each mutation turned exactly the intended case(s) red; nothing else in the 92 moved.
+
+### BLOCKERS
+
+None. Honest limits on what this fold demonstrates:
+
+1. **The evidence is what the runner recorded.** Input binding proves the row's five fields equal
+   the pinned bank entry; it cannot prove the model actually saw those tokens. The runner writes
+   the same `seq` it feeds to `model(input_ids=...)`, so within a run directory the record is the
+   only evidence a scorer can have, but a forged directory that writes the right fields and wrong
+   logits would still pass G0 only if it also reproduced the receipt's 312 g_ali values; G1 and G2
+   would still have to be satisfied by those forged logits. This is not cryptographic attestation.
+2. **The digest is a single frozen constant.** Rebuilding Part 214's receipt makes every directory
+   unscoreable until `PART214_STAGE1_SHA256` is updated deliberately. That is the intended pin
+   behaviour, not an accident.
+3. **`tool_sha256` now pins a changed runner.** This fold edits `run216.py` (the `resolve216`
+   extraction and the shared hash), so any directory written with the previous runner bytes becomes
+   diagnostics-only. No real Part 216 run exists yet, so nothing is lost; it matters before the
+   first real run.
+4. **The admissible fixture is synthetic and now borrows G0's values.** Its anchor rows carry the
+   real receipt's `g_ali` and its other rows are telescoping zeros; it proves the admission and
+   scoring paths, not the model.
+5. **The 4B/A770 path is still unmeasured.** No model was loaded; the tiny-model tests exercise the
+   runner only on a 30-block random model.

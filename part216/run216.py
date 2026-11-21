@@ -50,8 +50,10 @@ for _p in (ROOT, HERE, ROOT / 'part214'):
         sys.path.insert(0, str(_p))
 
 import neuron_report as nr  # noqa: E402
+import resolve216 as res  # noqa: E402  (torch-free: the 456-row plan and the prompts-bank lookup)
 import run214  # noqa: E402  (MODEL, REVISION, TARGET, load_rig, kernel_check, install_stage1_hooks, ...)
 import score216 as sc  # noqa: E402  (numpy only: bf16 emulation, the gates, the outcome rules)
+from resolve216 import opener_index, resolve_row, row_key  # noqa: E402,F401  (run216's surface)
 
 MODEL = run214.MODEL
 REVISION = run214.REVISION
@@ -426,8 +428,8 @@ def forward_row(model, layers, norm, out_emb, tables, seq: list[int], read_posit
         'sequence_token_ids': [int(t) for t in seq],
         'prompt_token_ids': [int(t) for t in prompt_ids],
         'T': len(prompt_ids),
-        'input_sha256': hashlib.sha256(
-            json.dumps([int(t) for t in seq]).encode('utf-8')).hexdigest(),
+        # One definition of the hash, shared with the scorer's binding (resolve216.input_sha256).
+        'input_sha256': res.input_sha256(seq),
     }
     if capture_units:
         unit_np = {int(l): store['units'][int(l)].float().cpu().numpy().astype(np.float32)
@@ -533,80 +535,13 @@ def selftest() -> dict:
 # plan and run
 # ----------------------------------------------------------------------------------------------------------------
 
-def plan_rows(bank: dict) -> list[dict]:
-    """456 rows: the 13 G0 anchor arms first, then the rest, then the controls, then the factuals."""
-    rows = []
-    g0_arms = [a for a in sc.G0_ARMS if a in bank['arms']]
-    other_arms = [a for a in bank['arms'] if a not in g0_arms]
-    for group in (g0_arms, other_arms):
-        for arm in group:
-            for qi in range(N_QUESTIONS):
-                rows.append({'kind': 'stage1', 'arm': arm, 'question_index': qi})
-    for arm in bank['control_arms']:
-        for qi in range(N_QUESTIONS):
-            rows.append({'kind': 'control', 'arm': arm, 'question_index': qi})
-    for qi in range(N_QUESTIONS):
-        rows.append({'kind': 'factual', 'arm': 'factual', 'question_index': qi})
-    return rows
+def plan_rows(bank: dict, g0_arms=None) -> list[dict]:
+    """456 rows: the 13 G0 anchor arms first, then the rest, then the controls, then the factuals.
 
-
-def row_key(row: dict) -> str:
-    return f'{row["arm"]}:{row["question_index"]}'
-
-
-def opener_index(bank: dict) -> dict:
-    """`(arm, question_index) -> opener entry` over the 72 opener rows, strictly one per key.
-
-    The opener arms (`op_filler`, `op_denial`, `op_vogel`) are stage1-kind rows but their sequences
-    are NOT `bank['items'][q]`: Part 215's opener sentence is prepended to the user text, so the
-    token ids, `T` and the read position all differ.  Resolving them through `items` silently
-    forwards the plain prompt (Alden #10, bullet 1), so the index is built once and every lookup is
-    checked against the exact `(arm, q)` key.
+    The resolution rules themselves live in `resolve216.py` so the scorer can rebuild the same
+    lookup without importing torch (Alden #14); this wrapper keeps the runner's one-argument call.
     """
-    op_arms = bank.get('opener_arms') or {}
-    if not op_arms:
-        return {}
-    idx: dict[tuple[str, int], dict] = {}
-    for entry in bank.get('openers') or []:
-        key = (str(entry['arm']), int(entry['question_index']))
-        if key in idx:
-            raise SystemExit(f'prompts bank has duplicate opener key {key}')
-        if key[0] not in op_arms:
-            raise SystemExit(f'prompts bank opener row has unknown arm {key[0]!r}')
-        idx[key] = entry
-    expected = {(arm, qi) for arm in op_arms for qi in range(N_QUESTIONS)}
-    if set(idx) != expected:
-        missing = sorted(expected - set(idx))[:5]
-        extra = sorted(set(idx) - expected)[:5]
-        raise SystemExit(f'prompts bank opener keys do not match the 3x24 grid; '
-                         f'missing={missing} extra={extra}')
-    return idx
-
-
-def resolve_row(bank: dict, row: dict) -> dict:
-    """The bank entry for one plan row, on its exact `(arm, q)` key.
-
-    Opener arms resolve through `bank['openers']`, never through `bank['items']` (Alden #10 #1).
-    """
-    if row['kind'] == 'stage1':
-        arm = str(row['arm'])
-        if arm in (bank.get('opener_arms') or {}):
-            key = (arm, int(row['question_index']))
-            entry = opener_index(bank)[key]
-            if (str(entry['arm']), int(entry['question_index'])) != key:
-                raise SystemExit(f'opener lookup for {key} returned {entry.get("arm")}:'
-                                 f'{entry.get("question_index")}')
-            return entry
-        return bank['items'][row['question_index']]
-    if row['kind'] == 'control':
-        k = bank['control_arms'].index(row['arm']) * N_QUESTIONS + row['question_index']
-        entry = bank['controls'][k]
-        if str(entry['arm']) != str(row['arm']) or \
-                int(entry['question_index']) != int(row['question_index']):
-            raise SystemExit(f'control lookup for {row["arm"]}:{row["question_index"]} returned '
-                             f'{entry.get("arm")}:{entry.get("question_index")}')
-        return entry
-    return bank['factuals'][row['question_index']]
+    return res.plan_rows(bank, sc.G0_ARMS if g0_arms is None else g0_arms)
 
 
 def load_receipt(path=STAGE1_PATH) -> dict:

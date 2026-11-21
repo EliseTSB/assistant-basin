@@ -30,6 +30,7 @@ for _p in (ROOT, HERE, ROOT / 'part214'):
         sys.path.insert(0, str(_p))
 
 import score216 as sc  # noqa: E402  (numpy only)
+import resolve216 as res  # noqa: E402  (torch-free: the plan and the prompts-bank lookup)
 import run216  # noqa: E402  (imports torch; the numeric tests below do not need it)
 
 PROMPTS = HERE / 'prompts216.json'
@@ -1242,26 +1243,76 @@ def _sha(path) -> str:
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def _write_synthetic_run(tmp_path: Path) -> Path:
+def synthetic_receipt() -> dict:
+    """The self-consistent constant-1 reference Alden #14 describes.
+
+    It is NOT the Part 214 Stage 1 receipt, so the production CLI must refuse a run whose rows were
+    built from it; only `score_run(..., reference_receipt=...)` may inject it (tests only).
+    """
+    return {'arms': {arm: {'g_ali': [1.0] * 25} for arm in DESIGN_ARMS[:13]}}
+
+
+def _g0_value(receipt: dict, arm: str, qi: int) -> float:
+    """The anchor value a fixture row records: the reference's own g_ali where it has one."""
+    ref = ((receipt.get('arms') or {}).get(arm) or {}).get('g_ali')
+    return float(ref[qi]) if ref is not None and qi < len(ref) else 1.0
+
+
+def _bank_inputs(bank: dict, arm: str, qi: int) -> dict:
+    """The input fields `(arm, q)` must record, read straight out of the frozen bank.
+
+    Deliberately an INDEPENDENT implementation rather than `resolve216.expected_inputs`: the fixture
+    must not derive the expected values from the code the tests check.  Same rules as the runner:
+    openers through `bank['openers']`, controls through `bank['controls']`, factuals with
+    `prompt_ids == seq`.
+    """
+    if arm == 'factual':
+        entry = bank['factuals'][qi]
+        seq = [int(t) for t in entry['prompt_token_ids']]
+        prompt = list(seq)
+    elif arm in bank['control_arms']:
+        entry = bank['controls'][bank['control_arms'].index(arm) * 24 + qi]
+        seq = [int(t) for t in entry['sequence_token_ids']]
+        prompt = [int(t) for t in entry['prompt_token_ids']]
+    elif arm in bank['opener_arms']:
+        entry = next(e for e in bank['openers']
+                     if str(e['arm']) == arm and int(e['question_index']) == qi)
+        seq = [int(t) for t in entry['sequence_token_ids']]
+        prompt = [int(t) for t in entry['prompt_token_ids']]
+    else:
+        entry = bank['items'][qi]
+        seq = [int(t) for t in entry['sequence_token_ids']]
+        prompt = [int(t) for t in entry['prompt_token_ids']]
+    return {'sequence_token_ids': seq, 'prompt_token_ids': prompt, 'T': len(prompt),
+            'read_position': int(entry['read_position']),
+            'input_sha256': hashlib.sha256(json.dumps(seq).encode('utf-8')).hexdigest()}
+
+
+def _write_synthetic_run(tmp_path: Path, receipt: dict | None = None) -> Path:
     """A complete run directory the scorer reads as a FULL score: every arm, both control sides, the
     factuals, the frozen pins, and every array the runner writes at its pinned shape.
 
-    The pins are the real files': `prompts216.json`, `DESIGN.md`, `run216.py` and the Part 214 receipt
-    this directory names. An admission refusal in a test is therefore caused by the mutation that
-    test makes, not by a fixture that was never admissible.
+    The pins are the real files': `prompts216.json`, `DESIGN.md`, `run216.py` and the pinned Part 214
+    receipt.  `receipt=None` (the default) uses that PINNED receipt and records its own g_ali on the
+    anchor rows, so the directory is admissible through the production CLI; passing a dict (see
+    `synthetic_receipt()`) is the bad fixture Alden #14 describes.  An admission refusal in a test
+    is therefore caused by the mutation that test makes, not by a fixture that was never admissible.
     """
     out = tmp_path / 'synth'
     out.mkdir(parents=True, exist_ok=True)
-    receipt = {'arms': {arm: {'g_ali': [1.0] * 25} for arm in sc.G0_ARMS}}
+    if receipt is None:
+        receipt = json.loads(STAGE1.read_text(encoding='utf-8'))
     receipt_path = out / 'receipt.json'
     receipt_path.write_text(json.dumps(receipt), encoding='utf-8')
+    bank = json.loads(PROMPTS.read_text(encoding='utf-8'))
 
     rows = []
     for arm in DESIGN_ARMS:
         for qi in range(sc.N_QUESTIONS):
             ms = [0.0] * sc.N_LAYERS
             ms[-1] = -1.0 if qi % 2 == 0 else 1.0
-            rows.append(make_row(f'{arm}:{qi}', ms, native_g_ali=1.0))
+            rows.append(make_row(f'{arm}:{qi}', ms,
+                                 native_g_ali=_g0_value(receipt, arm, qi)))
     # `unchanged` gets a clean shape: 12 early leads at layers 10/11, ends negative.
     for qi in range(sc.N_QUESTIONS):
         ms = [-1.0] * sc.N_LAYERS
@@ -1269,18 +1320,22 @@ def _write_synthetic_run(tmp_path: Path) -> Path:
             ms[10] = ms[11] = 1.0
         ms[-1] = -1.0
         rows = [r for r in rows if r['key'] != f'unchanged:{qi}']
-        rows.append(make_row(f'unchanged:{qi}', ms, native_g_ali=1.0))
+        rows.append(make_row(f'unchanged:{qi}', ms,
+                             native_g_ali=_g0_value(receipt, 'unchanged', qi)))
     rows = [r for r in rows if r['key'] != 'zero:0']
     zero_ms = [0.0] * sc.N_LAYERS
     for l in range(10, sc.N_LAYERS):
         zero_ms[l] = 1.0
-    rows.append(make_row('zero:0', zero_ms, native_g_ali=1.0))
+    rows.append(make_row('zero:0', zero_ms, native_g_ali=_g0_value(receipt, 'zero', 0)))
     controls = control_side('control_google', [10, 11, 12])
     controls.update(control_side('control_alibaba', [10, 11, 12]))
     rows += list(controls.values())
     for qi in range(sc.N_QUESTIONS):
         rows.append(make_row(f'factual:{qi}', [0.0] * sc.N_LAYERS, kind='factual', argmax=7,
                              input_token_id=11))
+    # Every row records the exact sequence/prompt/T/read slot/input hash of its pinned (arm, q).
+    for row in rows:
+        row.update(_bank_inputs(bank, row['arm'], row['question_index']))
     with (out / 'forwards.jsonl').open('w', encoding='utf-8') as fh:
         for row in rows:
             fh.write(json.dumps(row) + '\n')
@@ -1352,6 +1407,18 @@ def _rewrite_arrays(out, mutate):
         arrays = {name: z[name] for name in z.files}
     mutate(arrays)
     np.savez_compressed(Path(out) / 'arrays.npz', **arrays)
+
+
+def _rewrite_row(out, key, mutate):
+    """Mutate exactly one forwards.jsonl row (by key) and write the file back."""
+    rows = _read_jsonl(Path(out) / 'forwards.jsonl')
+    for row in rows:
+        if row['key'] == key:
+            mutate(row)
+            break
+    else:
+        raise AssertionError(f'{key} is not in forwards.jsonl')
+    _write_jsonl(Path(out) / 'forwards.jsonl', rows)
 
 
 def _drop_keys(out, keys):
@@ -1581,6 +1648,215 @@ def test_admission_rejects_a_failed_g1_row(synth):
     assert any(r['check'] == 'G1' for r in score['admission']['reasons'])
 
 
+# ----------------------------------------------------------------------------------------------------------------
+# Alden #14: G0 binds to the PINNED Part 214 receipt, rows bind to their (arm, q) inputs, arrays are
+# finite and positively scaled, and a failed G2 leaves the lens predictions `not read`
+# ----------------------------------------------------------------------------------------------------------------
+
+def test_positive_fixture_is_bound_to_the_pinned_receipt(synth):
+    """The positive fixture grades against the trusted receipt's BYTES, not a constant or its own file."""
+    score = sc.score_run(synth)
+    assert score['admission']['admissible'] is True
+    reference = score['admission']['reference']
+    assert reference['pinned'] is True and reference['injected'] is False
+    assert reference['sha256'] == sc.PART214_STAGE1_SHA256
+    assert Path(reference['path']) == STAGE1
+    # The run's own copy is a claim, reported but never the reference.
+    assert Path(score['admission']['run_recorded_receipt']['path']) != STAGE1
+    receipt = json.loads(STAGE1.read_text(encoding='utf-8'))
+    values = score['gates']['G0']['values']
+    assert len(values) == 312
+    for arm in DESIGN_ARMS[:13]:
+        assert values[f'{arm}:0']['receipt'] == float(receipt['arms'][arm]['g_ali'][0])
+    assert any(v['receipt'] != 1.0 for v in values.values()), 'G0 graded against a constant'
+
+
+def test_cli_refuses_a_run_whose_fixture_used_a_synthetic_receipt(tmp_path):
+    """Alden #14: the supplied constant-1 fixture got CLI 0 / G0 PASS; the production CLI must refuse.
+
+    `score_run(..., reference_receipt=...)` is the only way to score such a directory, and it is a
+    test-only keyword: no CLI flag and no run.json field reaches it.
+    """
+    receipt = synthetic_receipt()
+    out = _write_synthetic_run(tmp_path, receipt=receipt)
+    proc, score = _run_score(out)
+    assert proc.returncode == 3, (proc.stdout, proc.stderr)
+    admission = score['admission']
+    assert admission['admissible'] is False
+    assert admission['reference']['pinned'] is True and admission['reference']['injected'] is False
+    assert admission['reference']['sha256'] == sc.PART214_STAGE1_SHA256
+    assert any(r['check'] == 'G0' for r in admission['reasons'])
+    assert score['gates']['G0']['pass'] is False
+    assert score['score_status'] == 'diagnostics only'
+    for key in ('216.1', '216.2', '216.3', '216.4', '216.5', '216.6'):
+        assert score['predictions'][key]['verdict'] == sc.OUTCOME_NOT_READ, key
+    # The explicit test-only injection is the one path that may use the synthetic reference.
+    injected = sc.score_run(out, reference_receipt=receipt)
+    assert injected['admission']['reference']['injected'] is True
+    assert injected['admission']['admissible'] is True
+    assert injected['gates']['G0']['pass'] is True
+
+
+def test_pinned_receipt_digest_is_checked_before_use(tmp_path, synth, monkeypatch):
+    """Bytes that do not hash to the frozen digest are refused, whatever the run's own copy says."""
+    tampered = tmp_path / 'stage1.json'
+    tampered.write_bytes(STAGE1.read_bytes() + b'\n')     # still valid JSON, different bytes
+    monkeypatch.setattr(sc, 'STAGE1_RECEIPT_PATH', tampered)
+    score = sc.score_run(synth)
+    checks = [r['check'] for r in score['admission']['reasons']]
+    assert 'pin:stage1_receipt_digest' in checks
+    assert score['admission']['admissible'] is False
+    assert score['admission']['reference']['sha256'] != sc.PART214_STAGE1_SHA256
+    # The run's recorded receipt is untouched and still self-consistent -- it is simply not evidence.
+    assert score['admission']['run_recorded_receipt']['sha256'] == _sha(synth / 'receipt.json')
+    assert score['gates']['G0']['pass'] is False        # an empty reference cannot pass an anchor
+
+    monkeypatch.setattr(sc, 'STAGE1_RECEIPT_PATH', tmp_path / 'missing.json')
+    missing = sc.score_run(synth)
+    assert any(r['check'] == 'pin:stage1_receipt_digest'
+               for r in missing['admission']['reasons'])
+
+
+def test_input_binding_rejects_a_self_consistent_wrong_sequence(synth):
+    """Alden #14: `op_denial:0` recording the plain `unchanged:0` inputs used to score exit 0.
+
+    Every recorded field is made self-consistent -- the input hash matches the substituted sequence
+    -- which is exactly the attack the old self-digest comparison could not see.
+    """
+    plain = next(r for r in _read_jsonl(synth / 'forwards.jsonl') if r['key'] == 'unchanged:0')
+
+    def mutate(row):
+        row['sequence_token_ids'] = list(plain['sequence_token_ids'])
+        row['prompt_token_ids'] = list(plain['prompt_token_ids'])
+        row['T'] = plain['T']
+        row['read_position'] = plain['read_position']
+        row['input_sha256'] = hashlib.sha256(
+            json.dumps(row['sequence_token_ids']).encode('utf-8')).hexdigest()
+
+    _rewrite_row(synth, 'op_denial:0', mutate)
+    score = _assert_diagnostics_only(synth)
+    reason = next(r for r in score['admission']['reasons'] if r['check'] == 'input:op_denial:0')
+    assert reason['field'] in ('sequence_token_ids', 'read_position')
+    assert score['gates']['G0']['pass'] is True         # the anchor is untouched: this is the binding
+
+
+def test_input_binding_rejects_a_wrong_read_position(synth):
+    """A row with the right tokens but the wrong read slot measured a different position."""
+    _rewrite_row(synth, 'unchanged:3', lambda r: r.update(read_position=r['read_position'] + 1))
+    score = _assert_diagnostics_only(synth)
+    reason = next(r for r in score['admission']['reasons'] if r['check'] == 'input:unchanged:3')
+    assert reason['field'] == 'read_position'
+    assert score['gates']['G0']['pass'] is True
+
+
+def test_input_binding_rejects_a_hash_that_does_not_match_its_sequence(synth):
+    """The recorded input hash is checked against the bank, not merely recomputed from itself."""
+    _rewrite_row(synth, 'zero:0', lambda r: r.update(input_sha256='0' * 64))
+    score = _assert_diagnostics_only(synth)
+    reason = next(r for r in score['admission']['reasons'] if r['check'] == 'input:zero:0')
+    assert reason['field'] == 'input_sha256'
+
+
+def test_expected_inputs_match_the_runner_and_the_bank(bank):
+    """The scorer's rebuilt inputs are the runner's own resolution on the five row kinds."""
+    for arm, qi in (('unchanged', 0), ('op_denial', 0), ('control_google', 0),
+                    ('control_alibaba', 5), ('factual', 0)):
+        want = res.expected_inputs(bank, arm, qi)
+        entry = run216.resolve_row(bank, {'kind': want['kind'], 'arm': arm, 'question_index': qi})
+        seq = entry['prompt_token_ids'] if arm == 'factual' else entry['sequence_token_ids']
+        assert want['sequence_token_ids'] == [int(t) for t in seq]
+        assert want['prompt_token_ids'] == [int(t) for t in entry['prompt_token_ids']]
+        assert want['T'] == len(entry['prompt_token_ids'])
+        assert want['read_position'] == int(entry['read_position'])
+        assert want['input_sha256'] == _bank_inputs(bank, arm, qi)['input_sha256']
+    # The scorer's binding accepts exactly those fields, and names the row when one differs.
+    row = dict(_bank_inputs(bank, 'op_denial', 0))
+    row.update({'key': 'op_denial:0', 'arm': 'op_denial', 'question_index': 0})
+    assert sc.input_binding({'op_denial:0': row}, bank) == []
+    row['read_position'] += 1
+    assert [p['check'] for p in sc.input_binding({'op_denial:0': row}, bank)] == \
+        ['input:op_denial:0']
+
+
+def test_admission_rejects_a_nonfinite_array(synth):
+    """A NaN anywhere in a required array is not a measurement (Alden #14)."""
+    def mutate(arrays):
+        h = arrays['h0:zero:5'].copy()
+        h[0] = np.nan
+        arrays['h0:zero:5'] = h
+    _rewrite_arrays(synth, mutate)
+    score = _assert_diagnostics_only(synth)
+    assert 'array:h0:zero:5' in [r['check'] for r in score['admission']['reasons']]
+
+
+def test_admission_rejects_a_nan_frozen_scale(synth):
+    """Alden #14: a scalar NaN for `scale:unchanged:0` used to be accepted."""
+    def mutate(arrays):
+        arrays['scale:unchanged:0'] = np.float64(np.nan)
+    _rewrite_arrays(synth, mutate)
+    score = _assert_diagnostics_only(synth)
+    reason = next(r for r in score['admission']['reasons'] if r['check'] == 'array:scale:unchanged:0')
+    assert 'finite' in reason['reason']
+
+
+def test_admission_rejects_a_nonpositive_frozen_scale(synth):
+    """A finite but negative scale is still not a frozen RMS scale (the row agrees, so only the
+    positivity rule can refuse it)."""
+    def mutate(arrays):
+        arrays['scale:unchanged:0'] = np.float64(-1.0)
+    _rewrite_arrays(synth, mutate)
+    _rewrite_row(synth, 'unchanged:0', lambda r: r['dla'].update(frozen_scale=-1.0))
+    score = _assert_diagnostics_only(synth)
+    assert 'array:scale:unchanged:0' in [r['check'] for r in score['admission']['reasons']]
+
+
+def test_admission_rejects_a_scale_that_disagrees_with_its_row(synth):
+    """The frozen scale the row records and the array beside it are the same measurement."""
+    def mutate(arrays):
+        arrays['scale:zero:0'] = np.float64(2.0)      # finite, positive, not the row's 1.0
+    _rewrite_arrays(synth, mutate)
+    score = _assert_diagnostics_only(synth)
+    reason = next(r for r in score['admission']['reasons'] if r['check'] == 'array:scale:zero:0')
+    assert reason['recorded'] == 1.0 and reason['array'] == 2.0
+
+
+def test_g2_failure_leaves_lens_predictions_not_read(synth):
+    """Alden #14: with G0/G1 valid and G2 false, 216.2/.3/.4 are `not read`, not read/FAIL.
+
+    216.1's subject IS G2 so it is read (as FAIL); 216.5/216.6 are unit results that do not depend
+    on the lens window, so they stay read.
+    """
+    rows = _read_jsonl(synth / 'forwards.jsonl')
+    for row in rows:
+        if row['key'].startswith('control_google'):
+            row['lens'][-1]['z_G'], row['lens'][-1]['m'] = -1.0, -1.0
+        elif row['key'].startswith('control_alibaba'):
+            row['lens'][-1]['z_G'], row['lens'][-1]['m'] = 1.0, 1.0
+    _write_jsonl(synth / 'forwards.jsonl', rows)
+    proc, score = _run_score(synth)
+    assert proc.returncode == 0, (proc.stdout, proc.stderr)
+    assert score['admission']['admissible'] is True
+    assert score['gates']['G0']['pass'] is True
+    assert score['gates']['G1']['pass'] is True
+    assert score['gates']['G2']['pass'] is False
+    assert score['unchanged_outcome']['outcome'] == sc.OUTCOME_NOT_READ
+    predictions = score['predictions']
+    assert predictions['216.1']['verdict'] == 'read'
+    assert predictions['216.1']['pass'] is False
+    for key in ('216.2', '216.3', '216.4'):
+        assert predictions[key]['verdict'] == sc.OUTCOME_NOT_READ, key
+        assert predictions[key]['pass'] is False, key
+        assert 'G2 fails' in predictions[key]['reason'], key
+    for key in ('216.5', '216.6'):
+        assert predictions[key]['verdict'] == 'read', key
+    card = (synth / 'SCORECARD.md').read_text(encoding='utf-8')
+    assert '| 216.2 | not read |' in card
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# Alden #12 #1: admission constants
+# ----------------------------------------------------------------------------------------------------------------
+
 def test_admission_constants_are_bound_to_the_frozen_files(tmp_path):
     """The design's 456 keys and the pins are the committed artefacts, not a run's own manifest."""
     assert sc.EXPECTED_ARMS == DESIGN_ARMS
@@ -1590,6 +1866,13 @@ def test_admission_constants_are_bound_to_the_frozen_files(tmp_path):
     assert sum(1 for k in sc.expected_keys() if k.startswith('control_')) == 48
     assert sc.DESIGN_SHA256 == _sha(HERE / 'DESIGN.md')
     assert sc.PROMPTS_SHA256 == _sha(HERE / 'prompts216.json')
+    # The G0 reference is the pinned Part 214 receipt, bound by digest, not by a run's claim.
+    assert sc.STAGE1_RECEIPT_PATH == STAGE1
+    assert sc.PART214_STAGE1_SHA256 == _sha(STAGE1)
+    receipt, reference = sc.load_pinned_receipt()
+    assert reference['error'] is None and reference['pinned'] is True
+    assert reference['sha256'] == sc.PART214_STAGE1_SHA256
+    assert set(sc.G0_ARMS) <= set(receipt['arms'])
     assert sc.bank_binding() == []
     bank = json.loads((HERE / 'prompts216.json').read_text(encoding='utf-8'))
     bank['arms'] = [a for a in bank['arms'] if a != 'op_vogel']

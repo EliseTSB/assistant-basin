@@ -24,6 +24,15 @@ from pathlib import Path
 
 import numpy as np
 
+HERE = Path(__file__).resolve().parent
+# `python -I part216/score216.py` (the way the tests and the wrapper invoke it) does not put the
+# script's directory on sys.path, so the shared torch-free resolver is added explicitly, exactly as
+# run216.py adds ROOT/HERE for its own imports.
+if str(HERE) not in sys.path:
+    sys.path.insert(0, str(HERE))
+
+import resolve216 as res  # noqa: E402  (torch-free: the 456-row plan and the prompts-bank lookup)
+
 # ----------------------------------------------------------------------------------------------------------------
 # the design's fixed numbers (DESIGN.md "Model", "Arms", "Controls", "Gates", "Outcomes", "Predictions")
 # ----------------------------------------------------------------------------------------------------------------
@@ -84,10 +93,22 @@ HIDDEN_SIZE = 2560                                                    # DESIGN.m
 UNIT_LAYERS_PINNED = (6, 7, 11, 24, 27, 29)                           # target layers + monitor layers
 UNITS_PINNED = ('6:753', '7:1169', '11:8868', '24:3949', '27:3325', '29:776')
 
-HERE = Path(__file__).resolve().parent
 PROMPTS_FILE = HERE / 'prompts216.json'
 DESIGN_FILE = HERE / 'DESIGN.md'
 TOOL_FILE = HERE / 'run216.py'
+
+# The Part 214 Stage 1 receipt G0 grades against.  This is TRUSTED evidence, so its bytes are bound
+# to a digest frozen at the design build, not to whatever a run records (Alden #14).  A run that
+# supplies its own self-consistent "receipt" can therefore never turn G0 green: the reference is
+# read from this path and its sha256 is checked before any value is used.
+STAGE1_RECEIPT_PATH = HERE.parent / 'results' / 'part214' / 'stage1' / 'stage1.json'
+PART214_STAGE1_SHA256 = '4f287bc2153f879e2d442ba50a866208ae4384b3eafb527b568c43dd402d9cb5'
+
+# The predictions whose subject is the lens window: 216.2/216.3 are the lead outcomes and 216.4's
+# divergence index is defined from min(W).  When G2 fails on an admissible run they are `not read`
+# (nothing to read them against); 216.1's subject IS G2, and 216.5/216.6 are unit results that do
+# not depend on the window, so all three stay `read` (Alden #14).
+LENS_WINDOW_PREDICTIONS = ('216.2', '216.3', '216.4')
 
 ADMITTED = 'scored'
 DIAGNOSTICS_ONLY = 'diagnostics only'
@@ -1019,6 +1040,59 @@ def bank_binding(path=PROMPTS_FILE) -> list[dict]:
     return problems
 
 
+def load_bank(path=PROMPTS_FILE) -> dict:
+    """The frozen prompts bank, parsed.  Raises OSError/ValueError; the caller decides."""
+    return json.loads(Path(path).read_text(encoding='utf-8'))
+
+
+def _short(value, limit: int = 10):
+    """A recorded value small enough for a scorecard: a long token list keeps only its head."""
+    if isinstance(value, list) and len(value) > limit:
+        return value[:limit] + [f'...({len(value)} total)']
+    return value
+
+
+def input_binding(rows: dict, bank: dict) -> list[dict]:
+    """Every committed row's recorded inputs must equal the pinned `(arm, q)` entry (Alden #14).
+
+    The key grid and the prompt bank are checked separately, but neither says what a row MEASURED:
+    `op_denial:0` could record the plain `unchanged:0` sequence -- with a matching input hash --
+    and still score.  For each design key present, rebuild the sequence, prompt, `T`, read position
+    and input sha256 from `prompts216.json` with the runner's own resolution rules (shared through
+    `resolve216`) and refuse a mismatch as `input:<key>`.
+    """
+    problems: list[dict] = []
+    fields = ('sequence_token_ids', 'prompt_token_ids', 'T', 'read_position', 'input_sha256')
+    for key in expected_keys():
+        row = rows.get(key)
+        if row is None:
+            continue      # a missing key is the `keys` check's business, not a second report here
+        arm, qi = key.rsplit(':', 1)
+        try:
+            want = res.expected_inputs(bank, arm, int(qi))
+        except (KeyError, IndexError, TypeError, ValueError, SystemExit) as exc:
+            # A bank that cannot resolve a design key is a bank problem, not a crash out of score_run.
+            problems.append({'check': f'input:{key}',
+                             'reason': f'the pinned prompts bank cannot resolve {key}: {exc!r}'})
+            continue
+        for field in fields:
+            got = row.get(field)
+            if got != want[field]:
+                problems.append({
+                    'check': f'input:{key}',
+                    'reason': f'{key} records a {field} that is not the pinned prompts bank entry',
+                    'field': field, 'recorded': _short(got), 'expected': _short(want[field])})
+        if row.get('arm') not in (None, arm):
+            problems.append({'check': f'input:{key}', 'field': 'arm',
+                             'reason': f'{key} records arm={row.get("arm")!r}',
+                             'recorded': row.get('arm'), 'expected': arm})
+        if row.get('question_index') not in (None, int(qi)):
+            problems.append({'check': f'input:{key}', 'field': 'question_index',
+                             'reason': f'{key} records question_index={row.get("question_index")!r}',
+                             'recorded': row.get('question_index'), 'expected': int(qi)})
+    return problems
+
+
 def _array_shape(arrays: dict, name: str):
     try:
         return tuple(np.asarray(arrays[name]).shape)
@@ -1026,16 +1100,23 @@ def _array_shape(arrays: dict, name: str):
         return None
 
 
-def arrays_admission(arrays: dict, keys: set[str], stage1: set[str]) -> list[dict]:
-    """Every required array present, at the pinned shape, and keyed to a row that exists.
+def arrays_admission(arrays: dict, keys: set[str], stage1: set[str],
+                     rows: dict | None = None) -> list[dict]:
+    """Every required array present, at the pinned shape, keyed to a row, finite and scaled.
 
     The scorer's unit analysis and the frozen-scale handoff used to raise (or silently skip) a missing
-    or misplaced array; a full score now refuses instead (Alden #12 #1).
+    or misplaced array; a full score now refuses instead (Alden #12 #1).  Alden #14 adds: every
+    required array must be FINITE, every `scale:<key>` must be a finite POSITIVE scalar, and where
+    the row records its own `dla.frozen_scale` it must equal the array -- a NaN scale, a negative
+    scale, or a scale that disagrees with its row cannot be read as a measurement.
     """
     problems: list[dict] = []
 
     def bad(reason: str, **extra):
         problems.append({'check': 'arrays', 'reason': reason, **extra})
+
+    def bad_array(name: str, reason: str, **extra):
+        problems.append({'check': f'array:{name}', 'reason': reason, 'name': name, **extra})
 
     if not arrays:
         bad('arrays.npz is missing or empty: every row needs h0/h32/scale and every stage1 row units')
@@ -1091,20 +1172,80 @@ def arrays_admission(arrays: dict, keys: set[str], stage1: set[str]) -> list[dic
     if orphan:
         bad(f'{len(orphan)} array(s) are keyed to a row outside the design', sample=orphan[:10],
             n_orphan=len(orphan))
+
+    # finite values: a NaN in an h0/h32/units array is not a measurement (Alden #14).  `scale:` has
+    # its own, stricter check below.
+    finite_names = [name for name in required + ['unit_proj', 'unit_colnorm']
+                    if name in arrays and not name.startswith('scale:')]
+    nonfinite: list[str] = []
+    for name in finite_names:
+        try:
+            arr = np.asarray(arrays[name])
+            ok = bool(np.all(np.isfinite(arr)))
+        except (TypeError, ValueError):
+            ok = False        # an object/ragged array is not a usable numeric array either
+        if not ok:
+            nonfinite.append(name)
+    for name in nonfinite[:40]:
+        bad_array(name, f'{name} contains non-finite values; a non-finite array is not a measurement',
+                  n_nonfinite=len(nonfinite))
+    if len(nonfinite) > 40:
+        bad_array('*', f'{len(nonfinite)} arrays contain non-finite values',
+                  sample=nonfinite[:10], n_nonfinite=len(nonfinite))
+
+    # the frozen scale: a finite POSITIVE scalar, equal to the row's own `dla.frozen_scale`
+    bad_scales: list[str] = []
+    for key in sorted(keys):
+        name = f'scale:{key}'
+        if name not in arrays:
+            continue
+        arr = np.asarray(arrays[name])
+        if arr.shape != ():
+            continue          # wrong shape is already reported above
+        try:
+            value = float(arr.item())
+        except (TypeError, ValueError):
+            bad_scales.append(name)
+            bad_array(name, f'{name} is not a readable scalar')
+            continue
+        if not math.isfinite(value):
+            bad_scales.append(name)
+            bad_array(name, f'{name} is {value!r}; the frozen scale must be finite and positive')
+            continue
+        if value <= 0.0:
+            bad_scales.append(name)
+            bad_array(name, f'{name} is {value!r}; a frozen RMS scale is never <= 0')
+            continue
+        row = (rows or {}).get(key)
+        recorded = ((row or {}).get('dla') or {}).get('frozen_scale')
+        if recorded is not None:
+            try:
+                same = float(recorded) == value
+            except (TypeError, ValueError):
+                same = False
+            if not same:
+                bad_scales.append(name)
+                bad_array(name, f'{name} is {value!r} but the row records '
+                                f'dla.frozen_scale={recorded!r}', recorded=recorded, array=value)
+    if len(bad_scales) > 40:
+        bad_array('*', f'{len(bad_scales)} frozen scales are not finite positive scalars matching '
+                       'their rows', sample=bad_scales[:10], n_bad_scales=len(bad_scales))
     return problems
 
 
 def admission_check(rows: dict, duplicates: list[str], arrays: dict, run: dict,
-                    g0: dict, g1: dict, receipt_error: str | None = None,
+                    g0: dict, g1: dict, reference: dict | None = None,
                     prompts_path=PROMPTS_FILE, design_path=DESIGN_FILE,
                     tool_path=TOOL_FILE) -> dict:
-    """Whether this directory may be read as a full 456-forward score (Alden #12 #1).
+    """Whether this directory may be read as a full 456-forward score (Alden #12 #1, #14).
 
-    All of: a FINALIZED (`stage: DONE`) receipt; the design's pins; the fixed 456-key grid with no
-    missing, duplicate or extra record; every required array at its pinned shape and keyed to a row
-    in that grid; G0 PASS; G1 PASS.  Anything else is `diagnostics only`: descriptive tables may be
-    printed, every prediction verdict is `not read` and no headline is written.  G2 is NOT part of
-    admission -- it decides readout eligibility after a run is admissible.
+    All of: a FINALIZED (`stage: DONE`) receipt; the design's pins; a reference receipt whose BYTES
+    hash to the frozen Part 214 digest; the frozen prompts bank; the fixed 456-key grid with no
+    missing, duplicate or extra record; every record bound back to its pinned `(arm, q)` inputs;
+    every required array at its pinned shape, finite, with a finite POSITIVE frozen scale that
+    matches its row; G0 PASS; G1 PASS.  Anything else is `diagnostics only`: descriptive tables may
+    be printed, every prediction verdict is `not read` and no headline is written.  G2 is NOT part
+    of admission -- it decides readout eligibility after a run is admissible.
     """
     reasons: list[dict] = []
 
@@ -1156,16 +1297,25 @@ def admission_check(rows: dict, duplicates: list[str], arrays: dict, run: dict,
         bad('pin:tool_sha256', 'the recorded runner sha256 does not match run216.py on disk',
             recorded=recorded_tool, on_disk=tool_on_disk)
 
-    receipt_path = run.get('stage1_receipt_path')
-    if receipt_error is not None:
-        bad('pin:stage1_receipt', f'the Part 214 Stage 1 receipt is unreadable: {receipt_error}')
-    elif not receipt_path or not Path(receipt_path).exists():
-        bad('pin:stage1_receipt', 'run.json records no readable Part 214 Stage 1 receipt')
-    elif run.get('stage1_receipt_sha256') != file_sha256(receipt_path):
-        bad('pin:stage1_receipt', 'the recorded receipt sha256 does not match the receipt file')
+    # 2b. the reference G0 grades against: the PINNED receipt's bytes, never the file the run
+    # itself names.  A run that writes its own self-consistent "receipt" and hashes it into run.json
+    # used to turn G0 green (Alden #14); the run's copy is now only a claim, recorded and unused.
+    reference = reference or {'error': 'no reference receipt was loaded', 'pinned': True,
+                              'path': None, 'sha256': None, 'injected': False}
+    if reference.get('error'):
+        bad('pin:stage1_receipt_digest',
+            f'the pinned Part 214 Stage 1 receipt cannot be used as the G0 reference: '
+            f'{reference["error"]}', path=reference.get('path'), sha256=reference.get('sha256'),
+            expected=PART214_STAGE1_SHA256)
 
-    # 3. the frozen prompts bank this run claims to have used
+    # 3. the frozen prompts bank this run claims to have used, and every row bound back to it
     reasons += bank_binding(prompts_path)
+    try:
+        bank = load_bank(prompts_path)
+    except (OSError, ValueError):
+        bank = None
+    if bank is not None:
+        reasons += input_binding(rows, bank)
 
     # 4. exactly the design's keys
     expected = set(expected_keys())
@@ -1183,7 +1333,7 @@ def admission_check(rows: dict, duplicates: list[str], arrays: dict, run: dict,
             sample=extra[:10], n_extra=len(extra))
 
     # 5. the arrays the scorer needs
-    reasons += arrays_admission(arrays, expected, stage1_keys())
+    reasons += arrays_admission(arrays, expected, stage1_keys(), rows)
 
     # 6. the gates that gate the whole reading
     if not g0.get('pass'):
@@ -1202,6 +1352,11 @@ def admission_check(rows: dict, duplicates: list[str], arrays: dict, run: dict,
         'n_extra': len(extra), 'extra': extra[:40],
         'n_reasons': len(reasons), 'reasons': reasons[:40],
         'design_sha256': DESIGN_SHA256, 'prompts_sha256': PROMPTS_SHA256,
+        # Which bytes G0 was graded against, and what the run itself claimed.  The claim is NOT
+        # evidence (Alden #14); it is reported so a reader can see the two are different files.
+        'reference': reference,
+        'run_recorded_receipt': {'path': run.get('stage1_receipt_path'),
+                                 'sha256': run.get('stage1_receipt_sha256')},
     }
 
 
@@ -1240,32 +1395,70 @@ def run_completeness(rows: dict, run: dict) -> dict:
             'missing_sample': missing[:40], 'reason': reason}
 
 
-def _load_receipt(run: dict) -> tuple[dict, str | None]:
-    """The Part 214 Stage 1 receipt the run names, or `({}, error)` -- never a crash out of score_run."""
-    path = run.get('stage1_receipt_path')
-    if not path:
-        return {}, 'run.json records no stage1_receipt_path'
+def load_pinned_receipt(path=None, expected_sha256=PART214_STAGE1_SHA256):
+    """The trusted Part 214 Stage 1 receipt: `(receipt, reference_info)`.
+
+    The BYTES are hashed before the file is parsed.  A file that does not hash to the frozen digest
+    is not a reference at all -- it is refused, whatever the run records about its own copy (Alden
+    #14).  `path` defaults to `STAGE1_RECEIPT_PATH` read at CALL time, so a test can point the
+    module constant at a tampered copy; the production CLI never passes a path.
+
+    `reference_info` is `{'path', 'sha256', 'pinned', 'injected', 'error'}` and is carried into the
+    scorecard so a reader can see which bytes G0 was graded against.
+    """
+    where = Path(STAGE1_RECEIPT_PATH if path is None else path)
+    info = {'path': str(where), 'sha256': None, 'pinned': True, 'injected': False,
+            'expected_sha256': expected_sha256, 'error': None}
+    if not where.exists():
+        info['error'] = (f'{where} is missing; the pinned Part 214 Stage 1 receipt cannot be read, '
+                         'so G0 has no trusted reference')
+        return {}, info
     try:
-        return json.loads(Path(path).read_text(encoding='utf-8')), None
-    except (OSError, ValueError) as exc:
-        return {}, repr(exc)
+        raw = where.read_bytes()
+    except OSError as exc:
+        info['error'] = f'{where} is unreadable: {exc!r}'
+        return {}, info
+    digest = hashlib.sha256(raw).hexdigest()
+    info['sha256'] = digest
+    if digest != expected_sha256:
+        info['error'] = (f'pin:stage1_receipt_digest: {where} hashes to {digest}, not the pinned '
+                         f'{expected_sha256}; its values are not the Part 214 receipt and G0 will '
+                         'not grade against them')
+        return {}, info
+    try:
+        return json.loads(raw.decode('utf-8')), info
+    except (UnicodeDecodeError, ValueError) as exc:
+        info['error'] = f'the pinned receipt {where} is not readable JSON: {exc!r}'
+        return {}, info
 
 
-def score_run(out_dir) -> dict:
+def score_run(out_dir, reference_receipt: dict | None = None) -> dict:
     """Everything DESIGN.md asks the scorer to report, from one run directory.
 
     Admission comes first (Alden #12 #1).  An inadmissible directory is still described -- gates,
     per-arm counts and the descriptive tables are printed -- but every prediction verdict is
     `not read`, the `unchanged` headline is not written, and `score_status` says
     `diagnostics only`.  Only an admissible directory is a full score.
+
+    `reference_receipt` is a TEST-ONLY seam (Alden #14): when it is `None` the reference is the
+    pinned Part 214 receipt read from `STAGE1_RECEIPT_PATH` and checked against
+    `PART214_STAGE1_SHA256`, which is the only path the CLI (`main`) can take.  A test may inject a
+    synthetic reference to exercise G0 arithmetic against a known constant; the CLI has no flag, no
+    environment variable and no run.json field that reaches this argument.
     """
     rows, duplicates, arrays, run = load_run_state(out_dir)
     n_blocks = int(run.get('n_blocks', N_BLOCKS))
     n_layers = n_blocks + 1
-    receipt, receipt_error = _load_receipt(run)
+    if reference_receipt is None:
+        receipt, reference = load_pinned_receipt()
+    else:
+        receipt = reference_receipt
+        reference = {'path': None, 'sha256': None, 'pinned': False, 'injected': True,
+                     'expected_sha256': PART214_STAGE1_SHA256, 'error': None,
+                     'source': 'test-injected reference (score_run keyword); the CLI cannot set it'}
     g0 = gate0(rows, receipt)
     g1 = gate1(rows, n_blocks=n_blocks)
-    admission = admission_check(rows, duplicates, arrays, run, g0, g1, receipt_error)
+    admission = admission_check(rows, duplicates, arrays, run, g0, g1, reference)
     admissible = admission['admissible']
     completeness = run_completeness(rows, run)
     partial = not admissible
@@ -1321,16 +1514,26 @@ def score_run(out_dir) -> dict:
     predictions['216.6'] = dict(units['216.6'])
     predictions['216.6']['partial'] = partial
     predictions['216.6']['pass'] = bool(not partial and units['216.6'].get('pass'))
-    # Every prediction carries an explicit verdict. `not read` is the only verdict an inadmissible
-    # directory can produce, whatever a gate happens to say (Alden #12 #1).
+    # Every prediction carries an explicit verdict.  `not read` is the only verdict an inadmissible
+    # directory can produce, whatever a gate happens to say (Alden #12 #1).  On an ADMISSIBLE run
+    # whose G2 fails, the lens window is unqualified: 216.2/216.3 (lead outcomes) and 216.4 (its
+    # divergence index is defined from min(W)) have no subject and stay `not read`, while 216.1 (the
+    # subject IS G2, so it is read as FAIL) and the unit results 216.5/216.6 (which do not depend on
+    # the window) stay `read` (Alden #14).
+    lens_unqualified = bool(admissible and not g2['pass'])
     for key, entry in predictions.items():
-        if admissible:
-            entry['verdict'] = 'read'
-        else:
+        if not admissible:
             entry['verdict'] = OUTCOME_NOT_READ
             entry['pass'] = False
             entry['reason'] = ('diagnostics only: the run is not admissible for a full score; '
                                'see admission.reasons')
+        elif lens_unqualified and key in LENS_WINDOW_PREDICTIONS:
+            entry['verdict'] = OUTCOME_NOT_READ
+            entry['pass'] = False
+            entry['reason'] = ('G2 fails: the lens window is unqualified, so this prediction has '
+                               'no defined subject; the unit results 216.5/216.6 are read separately')
+        else:
+            entry['verdict'] = 'read'
 
     descriptive = {
         'per_layer_z': {arm: share_tables(rows, arm, n_layers=n_layers)
@@ -1378,7 +1581,12 @@ def scorecard_markdown(score: dict) -> str:
               f"- model: `{pins.get('model')}@{pins.get('revision')}`",
               f"- design sha256: `{pins.get('design_sha256')}`",
               f"- prompts sha256: `{pins.get('prompts_sha256')}`",
-              f"- tool sha256: `{pins.get('tool_sha256')}`", '']
+              f"- tool sha256: `{pins.get('tool_sha256')}`"]
+    reference = admission.get('reference') or {}
+    if reference:
+        origin = 'test-injected' if reference.get('injected') else 'pinned'
+        lines.append(f"- G0 reference: `{reference.get('sha256')}` ({origin}: {reference.get('path')})")
+    lines.append('')
     gates = score['gates']
     lines += ['## Gates', '', '| gate | pass | detail |', '|---|---|---|']
     g0, g1, g2 = gates['G0'], gates['G1'], gates['G2']
