@@ -47,7 +47,7 @@ arm, no empty answers, every row `batch_size == 1`, `pilot == false`.
    "shifts away from nat_trace_fact toward nat_trace_you" requires imp > fact, but the clause requires
    fact − imp ≥ +0.20. The data do what the wording says (imp 1.200 above fact, 0.330 above you). On
    `delta_g_seq` the ordering reverses (fact 5.897 > imp 4.937 ≈ you 4.971, |imp − you| 0.034), so the clause
-   reads as drafted against g_seq while naming g_ali. FAILS as registered either way (clause 2 misses by 0.031).
+   reads as drafted against g_seq while naming g_ali. FAILS as registered either way (clause 2 misses by 0.030, 0.0305 unrounded).
 2. **214.8(b) fails structurally.** Dial arms alone: ρ = −1.000. The six natural-decode arms' L27 N3325 shift is
    nearly constant (3.449 … 3.512) while their Δg_ali spans 0.958 … 2.173 (ρ = +0.886 within them). Pooling the two
    blocks gives −0.271. L27 tracks the dial, not the natural donors.
