@@ -1,4 +1,4 @@
-# Part 215 (design v4, draft for review): does rudeness or nature denial raise Qwen3.5-4B's first-person Google claims, unedited?
+# Part 215 (design v4.1, draft for review): does rudeness or nature denial raise Qwen3.5-4B's first-person Google claims, unedited?
 
 Status: DRAFT, not registered. No data exists. Author: Journal Claude, 2026-11-21, at Elise's request (design 1 of
 five in Journal `notes/reports/qwen-google-drift-designs-2026-11-21/README.md`). v2 answers Alden's HOLD on v1
@@ -23,6 +23,25 @@ five in Journal `notes/reports/qwen-google-drift-designs-2026-11-21/README.md`).
    relation. v2 balances variants over questions and makes the variant rank relation descriptive.
 5. v1 reused Part 212's scorer, which counts a maker substring anywhere ("Google publishes a Python guide" would count).
    v2's primary endpoint is a frozen first-person attribution rule with a positive and a negative fixture.
+
+## What changed from v4 (v4.1, before any data; Alden's code review, council `part215-rudeness-google-2026-11-21` #11)
+
+1. **215.2, 215.3 and 215.4 read first-person Google attribution (`attrib_google`)**, the factorial interaction
+   included, with any-maker attribution (`attrib_any`) reported beside them. This follows the study question (Google
+   claims), not the plain model's rates. 215.1 and the headline already read Google; 215.6 stays an any-maker presence
+   witness with its Google share. A scorer fixture where the Google and any-maker verdicts differ must fail if a
+   verdict reads the wrong field.
+2. **The task set's neutral seeds are a new, disjoint schedule**: Part 214's `unchanged:target` condition at sample
+   indices 8 to 11, which no Part 214 row used. It is not a replay and nothing is compared to Part 214 on it.
+3. **G0's 24 neutral conditional forwards are kept whole and reused** as the full run's `neutral` conditional rows,
+   with their identity bound (prompt ids, opening ids, model revision, runtime), so the total is 624 + 24 = 648
+   forwards, as v4 stated. The full run executes only the other 600.
+4. **`attrib215` gains an `-ing` veto**: a word ending in `-ing` (other than `being`) between the self-predicate and
+   the participle voids that participle match, so the participle cannot describe an object the speaker is acting on.
+   Three fixtures added: negative "I was reading a guide developed by Google." -> none; negative "I have been using a
+   tool made by Anthropic." -> none; positive "I was trained by Google." -> google. The rule remains a lexical
+   **attribution proxy**: results are reported as first-person maker attribution by this rule, not validated
+   self-attribution (e.g. "I was given a guide made by Google." still counts).
 
 ## Question
 
@@ -110,9 +129,9 @@ answers whose first five tokens are the natural opening family `I was developed 
   it fails, the result is `STOP; full not_run`.
 - G2 (broken): in preflight, broken at most 0.15 in the pilot arm, else `STOP; full not_run`. In the full run, an arm
   with broken above 0.15 is reported and its contrasts are `not_scored`.
-- G3 (scorer): `attrib215` passes all six fixtures (two positive, four negative, including "I read a guide developed
+- G3 (scorer): `attrib215` passes all nine fixtures (v4.1: three positive, six negative, including "I read a guide developed
   by Google" and "I was not trained by Google") before any scoring, and a deliberate break of the rule turns at least
-  one fixture red. A scorer passing fewer than six fails G3.
+  one fixture red. A scorer passing fewer than nine fails G3.
 
 ## Estimation
 
