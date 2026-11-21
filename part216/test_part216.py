@@ -10,9 +10,12 @@ to end on CPU. Nothing here loads the 4B checkpoint.
 from __future__ import annotations
 
 import argparse
+import hashlib
+import inspect
 import json
 import math
 import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -173,6 +176,25 @@ def test_g0_fails_when_a_row_is_missing():
     gate = sc.gate0(rows, receipt)
     assert gate['pass'] is False
     assert gate['n_values'] == 311
+
+
+def test_g0_rejects_nonfinite_values():
+    """A NaN row must FAIL G0 explicitly: NaN > tolerance is False, so it used to pass (Alden #10 #3)."""
+    receipt = _receipt_for(sc.G0_ARMS, {arm: [1.0] * 25 for arm in sc.G0_ARMS})
+    rows = {f'{arm}:{qi}': make_row(f'{arm}:{qi}', [0.0] * sc.N_LAYERS, native_g_ali=1.0)
+            for arm in sc.G0_ARMS for qi in range(sc.N_QUESTIONS)}
+    rows['zero:3'] = make_row('zero:3', [0.0] * sc.N_LAYERS, native_g_ali=float('nan'))
+    gate = sc.gate0(rows, receipt)
+    assert gate['pass'] is False
+    assert any(f.get('reason') == 'nonfinite g_ali value' for f in gate['failures'])
+    rows['zero:3'] = make_row('zero:3', [0.0] * sc.N_LAYERS, native_g_ali=float('inf'))
+    gate = sc.gate0(rows, receipt)
+    assert gate['pass'] is False
+    # And the generic checker the runner calls before appending a row names the NaN.
+    bad = make_row('zero:4', [0.0] * sc.N_LAYERS)
+    bad['lens'][3]['z_G'] = float('nan')
+    assert sc.row_finite(bad)['pass'] is False
+    assert sc.row_finite(bad)['bad'] == ['lens[3].z_G']
 
 
 # ----------------------------------------------------------------------------------------------------------------
@@ -535,6 +557,47 @@ def test_d_A_is_zero_for_a_zero_write():
     assert np.allclose(sc.d_alibaba(c, c, 0.5, -0.5), 0.0)
 
 
+def _nulls_216_5(n: int) -> list[dict]:
+    return [_series(6, 100 + i, [1.0 + i] * 24, [1.0] * 24) for i in range(n)]
+
+
+def _nulls_216_6(n: int) -> list[dict]:
+    return [_series(11, 100 + i, [-10.0 - i] * 24, [1.0] * 24, d_a=[1.0] * 24)
+            for i in range(n)]
+
+
+def test_216_5_requires_exactly_two_hundred_valid_null_comparisons():
+    """1 or 199 surviving neighbours is `not read`, never a pass (Alden #10 #2)."""
+    target = _series(6, 753, [-3.0] * 24, [1.0] * 24)
+    for n in (0, 1, 2, 199):
+        got = sc.prediction_216_5_unit(target, _nulls_216_5(n))
+        assert got['status'] == 'not read', n
+        assert got['pass'] is False, n
+        assert got['n_null_compared'] == n
+    ok = sc.prediction_216_5_unit(target, _nulls_216_5(200))
+    assert ok['status'] == 'read'
+    assert ok['pass'] is True
+    assert ok['n_null_compared'] == 200
+    # One unreadable null among 200 leaves 199 comparisons, which is still `not read`.
+    partial = _nulls_216_5(200)
+    partial[0]['median_c_G_per_write'] = None
+    got = sc.prediction_216_5_unit(target, partial)
+    assert got['status'] == 'not read'
+    assert got['n_null_compared'] == 199
+
+
+def test_216_6_requires_exactly_two_hundred_valid_null_comparisons():
+    target = _series(11, 8868, [3.0] * 24, [1.0] * 24, d_a=[1.0] * 24)
+    for n in (1, 199):
+        got = sc.prediction_216_6_unit(target, _nulls_216_6(n))
+        assert got['status'] == 'not read', n
+        assert got['pass'] is False, n
+        assert got['n_null_compared'] == n
+    ok = sc.prediction_216_6_unit(target, _nulls_216_6(200))
+    assert ok['status'] == 'read' and ok['pass'] is True
+    assert ok['n_null_compared'] == 200
+
+
 def test_null_units_exclude_targets_and_zero_writes_and_take_200():
     n_units = 9010
     mw = np.full(n_units, 5.0)
@@ -563,12 +626,8 @@ def test_null_units_are_the_nearest_by_median_write_size():
 # the tiny model: the real runner path, end to end
 # ----------------------------------------------------------------------------------------------------------------
 
-@pytest.fixture(scope='session')
-def tiny():
-    torch = pytest.importorskip('torch')
-    transformers = pytest.importorskip('transformers')
-    if not hasattr(transformers, 'Qwen3_5ForCausalLM'):
-        pytest.skip('transformers without Qwen3.5')
+def _build_tiny(torch, dtype):
+    """The random Qwen3.5-architecture tiny model, in `dtype` (the fixture uses bf16)."""
     from transformers import Qwen3_5ForCausalLM, Qwen3_5TextConfig
     torch.manual_seed(0)
     cfg = Qwen3_5TextConfig(
@@ -576,10 +635,21 @@ def tiny():
         num_attention_heads=4, num_key_value_heads=2, head_dim=8,
         linear_num_value_heads=2, linear_num_key_heads=2, linear_key_head_dim=8,
         linear_value_head_dim=8, full_attention_interval=4, max_position_embeddings=512)
-    model = Qwen3_5ForCausalLM(cfg).eval()
+    model = Qwen3_5ForCausalLM(cfg).to(dtype).eval()
     model.config._attn_implementation = 'eager'
     torch.set_grad_enabled(False)
-    return model, torch
+    return model
+
+
+@pytest.fixture(scope='session')
+def tiny():
+    torch = pytest.importorskip('torch')
+    transformers = pytest.importorskip('transformers')
+    if not hasattr(transformers, 'Qwen3_5ForCausalLM'):
+        pytest.skip('transformers without Qwen3.5')
+    # bf16, so the tiny fixture exercises the REAL capture dtype path (Alden #10 #4). A float32
+    # tiny model is built separately by the dtype-refusal test, which is the only test that needs it.
+    return _build_tiny(torch, torch.bfloat16), torch
 
 
 @pytest.fixture(scope='session')
@@ -596,6 +666,38 @@ def tiny_rig(tiny):
 @pytest.fixture(scope='session')
 def bank():
     return run216.load_bank(PROMPTS)
+
+
+def _stub_loader(monkeypatch, model, dtype='torch.bfloat16'):
+    monkeypatch.setattr(run216.run214, 'load_rig',
+                        lambda args: (model, None, {'attn_implementation': 'eager',
+                                                    'dtype': dtype}))
+    monkeypatch.setattr(run216.run214, 'kernel_check',
+                        lambda load: {'pass': True, 'checks': {'test_seam': True}})
+
+
+def _patch_plan(monkeypatch, wanted):
+    """Restrict the plan to the given `(arm, question_index)` rows (the run path is unchanged)."""
+    real = run216.plan_rows
+    wanted = {(str(a), int(q)) for a, q in wanted}
+
+    def plan(bank_):
+        return [r for r in real(bank_) if (r['arm'], int(r['question_index'])) in wanted]
+
+    monkeypatch.setattr(run216, 'plan_rows', plan)
+
+
+def _args(out, **overrides):
+    base = dict(out=str(out), device='cpu', prompts=str(PROMPTS), stage1=str(STAGE1),
+                limit=0, limit_questions=0, no_resume=True, require_pinned_shape=False)
+    base.update(overrides)
+    return argparse.Namespace(**base)
+
+
+def _forwards_text(out) -> str:
+    """`forwards.jsonl` or '' -- the runner does not create the file until a row is committed."""
+    path = Path(out) / 'forwards.jsonl'
+    return path.read_text(encoding='utf-8') if path.exists() else ''
 
 
 def test_tiny_forward_records_every_boundary_and_telescopes(tiny_rig, bank):
@@ -665,6 +767,335 @@ def test_tiny_control_and_factual_rows_run(tiny_rig, bank):
     assert record['read_position'] == len(factual['prompt_token_ids']) - 1
 
 
+# ----------------------------------------------------------------------------------------------------------------
+# Alden #10 #1: the opener arms must forward the opener sequences, not the plain items
+# ----------------------------------------------------------------------------------------------------------------
+
+def test_opener_arms_resolve_to_their_own_bank_entries(bank):
+    """All 72 opener keys resolve to their own opener row; none resolves to a plain item."""
+    idx = {(o['arm'], int(o['question_index'])): o for o in bank['openers']}
+    assert len(idx) == 72
+    for arm in ('op_filler', 'op_denial', 'op_vogel'):
+        for qi in range(sc.N_QUESTIONS):
+            row = {'kind': 'stage1', 'arm': arm, 'question_index': qi}
+            got = run216.resolve_row(bank, row)
+            assert got is idx[(arm, qi)]
+            assert got['sequence_token_ids'] == idx[(arm, qi)]['sequence_token_ids']
+            assert got['sequence_token_ids'] != bank['items'][qi]['sequence_token_ids']
+            assert got['read_position'] == len(got['prompt_token_ids']) + run216.OPENING_TOKENS - 1
+    # The plain arm still resolves to the plain item.
+    assert run216.resolve_row(bank, {'kind': 'stage1', 'arm': 'unchanged',
+                                     'question_index': 0}) is bank['items'][0]
+
+
+def test_run_forwards_plain_and_all_three_opener_variants(tmp_path, tiny, bank, monkeypatch):
+    """The run path passes each opener's tokens and read position into `forward_row`.
+
+    Plain `unchanged` and all three opener arms run in the same fixture, so a resolution that
+    silently maps every op_* arm onto `bank['items'][q]` is caught by the row it wrote.
+    """
+    model, torch = tiny
+    _stub_loader(monkeypatch, model)
+    wanted = [('unchanged', 0), ('op_filler', 0), ('op_denial', 0), ('op_vogel', 0)]
+    _patch_plan(monkeypatch, wanted)
+    out = tmp_path / 'run'
+    result = run216.run(_args(out, limit=4))
+    assert result['stage'] == 'DONE'
+    assert result['n_rows'] == 4
+    rows, arrays, run = sc.load_run(out)
+    plain = rows['unchanged:0']['sequence_token_ids']
+    openers = {(o['arm'], int(o['question_index'])): o for o in bank['openers']}
+    for arm, qi in wanted:
+        # Read the expectation out of the bank directly, not through the resolver under test.
+        entry = bank['items'][qi] if arm == 'unchanged' else openers[(arm, qi)]
+        rec = rows[f'{arm}:{qi}']
+        assert rec['sequence_token_ids'] == entry['sequence_token_ids']
+        assert rec['prompt_token_ids'] == entry['prompt_token_ids']
+        assert rec['read_position'] == entry['read_position']
+    for arm, qi in wanted:
+        entry = bank['items'][qi] if arm == 'unchanged' else openers[(arm, qi)]
+        assert rows[f'{arm}:{qi}']['input_sha256'] == hashlib.sha256(
+            json.dumps(entry['sequence_token_ids']).encode('utf-8')).hexdigest()
+    for arm in ('op_filler', 'op_denial', 'op_vogel'):
+        assert rows[f'{arm}:0']['sequence_token_ids'] != plain
+        assert rows[f'{arm}:0']['read_position'] != rows['unchanged:0']['read_position']
+
+
+def test_control_rows_are_forwarded_without_an_edit(tmp_path, tiny, bank, monkeypatch):
+    """A control row is an unedited forward whose sentence lives in the prompt.
+
+    This was a separate production-path crash: `run` sent `control_google` through
+    `edit_for_arm`, which raised `ValueError: unknown arm` before the factuals could run.
+    """
+    model, torch = tiny
+    _stub_loader(monkeypatch, model)
+    wanted = [('control_google', 0), ('control_alibaba', 0)]
+    _patch_plan(monkeypatch, wanted)
+    out = tmp_path / 'run'
+    result = run216.run(_args(out, limit=2))
+    assert result['stage'] == 'DONE'
+    assert result['n_rows'] == 2
+    rows, arrays, run = sc.load_run(out)
+    for arm, qi in wanted:
+        entry = bank['controls'][bank['control_arms'].index(arm) * sc.N_QUESTIONS + qi]
+        rec = rows[f'{arm}:{qi}']
+        assert rec['sequence_token_ids'] == entry['sequence_token_ids']
+        assert rec['read_position'] == entry['read_position']
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# Alden #10 #4: the dtype record and the bf16 capture contract
+# ----------------------------------------------------------------------------------------------------------------
+
+def test_tiny_capture_records_every_boundary_dtype(tiny_rig, bank):
+    rig = tiny_rig
+    entry = bank['items'][0]
+    record, _ = run216.forward_row(
+        rig['model'], rig['layers'], rig['norm'], rig['out_emb'], rig['tables'],
+        entry['sequence_token_ids'], entry['read_position'], entry['prompt_token_ids'])
+    n = len(rig['layers'])
+    required = ['h0'] + [f'L{li}:{kind}' for li in range(n) for kind in ('in', 'add1', 'add2')]
+    for name in required:
+        assert record['dtypes'][name] == 'torch.bfloat16'
+    assert record['dtypes'][f'raw:L0:mixer'] == 'torch.bfloat16'
+    assert record['dtypes'][f'raw:L0:mlp'] == 'torch.bfloat16'
+    accepted = run216.dtype_contract(record, {'dtype': 'torch.bfloat16'})
+    assert accepted['pass'] is True
+    assert accepted['observed'] == ['torch.bfloat16']
+    # A load that does not claim bf16 does not enforce a capture dtype (the float32 tiny case).
+    assert run216.dtype_contract(record, {'dtype': 'float32'})['pass'] is True
+
+
+def test_bf16_run_refuses_float32_captures(tmp_path, tiny, monkeypatch):
+    """A run whose load says bf16 must STOP before appending a float32 capture (Alden #10 #4)."""
+    model_bf16, torch = tiny
+    model_f32 = _build_tiny(torch, torch.float32)
+    _stub_loader(monkeypatch, model_f32, dtype='torch.bfloat16')
+    _patch_plan(monkeypatch, [('unchanged', 0)])
+    out = tmp_path / 'run'
+    result = run216.run(_args(out, limit=1))
+    assert result['stage'] == 'STOP'
+    assert result['stops'][0]['reason'] == 'dtype contract'
+    assert result['stops'][0]['detail']['expected'] == 'torch.bfloat16'
+    assert result['n_rows'] == 0
+    assert result['stops'][0]['row']['dtypes']['L0:in'] == 'torch.float32'
+    assert _forwards_text(out).strip() == ''
+
+
+def test_no_float64_on_the_device_in_the_lens():
+    """The lens must not create a float64 tensor on the target device (Arc A-series has no FP64)."""
+    src = inspect.getsource(run216.lens_rows)
+    assert 'torch.float64' not in src
+    assert 'torch.double' not in src
+
+
+def test_lens_rank_of_the_argmax_token_is_zero(tiny_rig, bank):
+    """A token compares equal to itself, so the argmax token's rank is 0 at every layer."""
+    rig = tiny_rig
+    entry = bank['items'][0]
+    record, _ = run216.forward_row(
+        rig['model'], rig['layers'], rig['norm'], rig['out_emb'], rig['tables'],
+        entry['sequence_token_ids'], entry['read_position'], entry['prompt_token_ids'])
+    ids = {'rank_G': run216.GOOGLE_ID, 'rank_Al': run216.AL_ID, 'rank_T': run216.T_ID}
+    for lens in record['lens']:
+        assert lens['rank_G'] >= 0 and lens['rank_Al'] >= 0 and lens['rank_T'] >= 0
+        for field, token_id in ids.items():
+            if lens['argmax'] == token_id:
+                assert lens[field] == 0
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# Alden #10 #2: the runner -> scorer handoff
+# ----------------------------------------------------------------------------------------------------------------
+
+def test_runner_persists_unit_tables_and_q_keyed_scales(tmp_path, tiny_rig, monkeypatch):
+    rig = tiny_rig
+    _stub_loader(monkeypatch, rig['model'])
+    _patch_plan(monkeypatch, [('unchanged', 0)])
+    out = tmp_path / 'run'
+    result = run216.run(_args(out, limit=1))
+    assert result['stage'] == 'DONE'
+    rows, arrays, run = sc.load_run(out)
+    assert 'unit_layers' in arrays
+    assert [int(l) for l in arrays['unit_layers']] == run216.UNIT_LAYERS
+    n_units = int(rig['model'].config.intermediate_size)
+    assert arrays['unit_proj'].shape == (len(run216.UNIT_LAYERS), n_units, 3)
+    assert arrays['unit_colnorm'].shape == (len(run216.UNIT_LAYERS), n_units)
+    assert 'scale:unchanged:0' in arrays
+    assert float(arrays['scale:unchanged:0']) > 0.0
+    pack = sc.unit_arrays(rows, arrays)
+    assert pack['scales'][0] == pytest.approx(float(arrays['scale:unchanged:0']))
+    assert pack['units']['0'].shape[0] == len(run216.UNIT_LAYERS)
+    # The scorer runs on that directory without a hand-written tables file.
+    score = sc.score_run(out)
+    assert 'unit analysis unavailable' not in str(score['units'].get('error'))
+    assert score['units']['n_questions'] == 1
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# Alden #10 #3: STOP is terminal; gates are checked before append; resume revalidates
+# ----------------------------------------------------------------------------------------------------------------
+
+def test_stop_record_is_terminal_for_the_output_directory(tmp_path, tiny, monkeypatch):
+    model, torch = tiny
+    _stub_loader(monkeypatch, model)
+    _patch_plan(monkeypatch, [('unchanged', 0), ('unchanged', 1)])
+    out = tmp_path / 'run'
+    real = run216.dla_block
+
+    def broken(*a, **k):
+        data = real(*a, **k)
+        data['fp32_logits'] = [x + 1.0 for x in data['fp32_logits']]
+        return data
+
+    monkeypatch.setattr(run216, 'dla_block', broken)
+    first = run216.run(_args(out, limit=2))
+    assert first['stage'] == 'STOP'
+    monkeypatch.setattr(run216, 'dla_block', real)
+    before = _forwards_text(out)
+    second = run216.run(_args(out, limit=2, no_resume=False))
+    assert second['stage'] == 'STOP'
+    assert second.get('resume_refused') is True
+    assert 'new --out' in second['resume_refusal_reason']
+    assert _forwards_text(out) == before
+
+
+def test_resume_revalidates_committed_rows_before_any_new_forward(tmp_path, tiny, monkeypatch):
+    model, torch = tiny
+    _stub_loader(monkeypatch, model)
+    _patch_plan(monkeypatch, [('op_filler', 0), ('op_filler', 1), ('op_filler', 2)])
+    out = tmp_path / 'run'
+    first = run216.run(_args(out, limit=2))
+    assert first['stage'] == 'DONE'
+    assert first['n_rows'] == 2
+    lines = (out / 'forwards.jsonl').read_text(encoding='utf-8').splitlines()
+    records = [json.loads(line) for line in lines]
+    records[0]['dla']['fp32_logits'][0] += 1.0            # break G1 on a committed row
+    (out / 'forwards.jsonl').write_text(
+        '\n'.join(json.dumps(r) for r in records) + '\n', encoding='utf-8')
+    second = run216.run(_args(out, limit=3, no_resume=False))
+    assert second['stage'] == 'STOP'
+    assert second['stops'][0]['reason'] == 'resume revalidation'
+    assert second['n_new_rows'] == 0
+    assert second['n_rows'] == 2
+    reasons = {p['reason'] for p in second['stops'][0]['problems']}
+    assert 'G1 telescoping' in reasons
+    assert len((out / 'forwards.jsonl').read_text(encoding='utf-8').splitlines()) == 2
+
+
+def test_anchor_row_outside_the_receipt_is_not_appended(tmp_path, tiny_rig, bank, monkeypatch):
+    """An anchor row outside the receipt is refused BEFORE it is appended, not only at the 312th."""
+    rig = tiny_rig
+    _stub_loader(monkeypatch, rig['model'])
+    _patch_plan(monkeypatch, [('unchanged', 0), ('unchanged', 1)])
+    values = []
+    for qi in (0, 1):
+        entry = bank['items'][qi]
+        record, _ = run216.forward_row(
+            rig['model'], rig['layers'], rig['norm'], rig['out_emb'], rig['tables'],
+            entry['sequence_token_ids'], entry['read_position'], entry['prompt_token_ids'])
+        values.append(float(record['native_g_ali']))
+    receipt = {'arms': {arm: {'g_ali': [values[0], values[1] + 1.0] + [0.0] * 23}
+                        for arm in sc.G0_ARMS}}
+    receipt_path = tmp_path / 'receipt.json'
+    receipt_path.write_text(json.dumps(receipt), encoding='utf-8')
+    out = tmp_path / 'run'
+    result = run216.run(_args(out, stage1=str(receipt_path)))
+    assert result['stage'] == 'STOP'
+    assert result['stops'][0]['reason'] == 'G0'
+    assert result['stops'][0]['key'] == 'unchanged:1'
+    assert result['n_rows'] == 1
+    assert result['stops'][0]['row']['key'] == 'unchanged:1'
+    keys = [json.loads(line)['key'] for line in _forwards_text(out).splitlines()]
+    assert keys == ['unchanged:0']
+
+
+def test_resume_rejects_a_committed_g0_row_outside_the_receipt(tmp_path, tiny_rig, bank,
+                                                               monkeypatch):
+    """A committed G0 row is re-checked against the receipt on resume (the trigger row can be skipped)."""
+    rig = tiny_rig
+    _stub_loader(monkeypatch, rig['model'])
+    _patch_plan(monkeypatch, [('unchanged', 0), ('unchanged', 1), ('unchanged', 2)])
+    values = []
+    for qi in (0, 1):
+        entry = bank['items'][qi]
+        record, _ = run216.forward_row(
+            rig['model'], rig['layers'], rig['norm'], rig['out_emb'], rig['tables'],
+            entry['sequence_token_ids'], entry['read_position'], entry['prompt_token_ids'])
+        values.append(float(record['native_g_ali']))
+    receipt = {'arms': {arm: {'g_ali': [values[0], values[1]] + [0.0] * 23}
+                        for arm in sc.G0_ARMS}}
+    receipt_path = tmp_path / 'receipt.json'
+    receipt_path.write_text(json.dumps(receipt), encoding='utf-8')
+    out = tmp_path / 'run'
+    first = run216.run(_args(out, stage1=str(receipt_path), limit=2))
+    assert first['stage'] == 'DONE'
+    assert first['n_rows'] == 2
+    records = [json.loads(line) for line in
+               (out / 'forwards.jsonl').read_text(encoding='utf-8').splitlines()]
+    records[1]['native_g_ali'] = float(records[1]['native_g_ali']) + 1.0
+    (out / 'forwards.jsonl').write_text(
+        '\n'.join(json.dumps(r) for r in records) + '\n', encoding='utf-8')
+    second = run216.run(_args(out, stage1=str(receipt_path), limit=3, no_resume=False))
+    assert second['stage'] == 'STOP'
+    assert second['stops'][0]['reason'] == 'resume revalidation'
+    assert any(p['reason'] == 'committed G0 row is outside the receipt'
+               for p in second['stops'][0]['problems'])
+    assert second['n_new_rows'] == 0
+
+
+def test_valid_resume_continues_without_duplicating_rows(tmp_path, tiny, monkeypatch):
+    model, torch = tiny
+    _stub_loader(monkeypatch, model)
+    _patch_plan(monkeypatch, [('op_filler', 0), ('op_filler', 1), ('op_filler', 2)])
+    out = tmp_path / 'run'
+    first = run216.run(_args(out, limit=2))
+    assert first['stage'] == 'DONE'
+    second = run216.run(_args(out, limit=3, no_resume=False))
+    assert second['stage'] == 'DONE'
+    assert second['n_new_rows'] == 1
+    assert second['n_rows'] == 3
+    lines = (out / 'forwards.jsonl').read_text(encoding='utf-8').splitlines()
+    keys = [json.loads(line)['key'] for line in lines]
+    assert keys == ['op_filler:0', 'op_filler:1', 'op_filler:2']
+
+
+def test_end_to_end_tiny_bf16_run_then_scorer_marks_partial(tmp_path, tiny, monkeypatch):
+    """`run216.py run` on the tiny bf16 model, then `score216.py` on that directory.
+
+    The random-zero arms are dropped from this tinier plan: Part 214's recorded random unit pools
+    index units up to ~9.3k, and the tiny model's intermediate width is 9000. That is a fixture
+    limit, not a runner rule; the real run keeps all 16 arms.
+    """
+    model, torch = tiny
+    _stub_loader(monkeypatch, model)
+    real_plan = run216.plan_rows
+    monkeypatch.setattr(run216, 'plan_rows',
+                        lambda bank_: [r for r in real_plan(bank_)
+                                       if not r['arm'].startswith('random_')])
+    out = tmp_path / 'e2e'
+    result = run216.run(_args(out, limit_questions=1, limit=9))
+    assert result['stage'] == 'DONE'
+    assert result['limit_questions'] == 1
+    assert result['partial'] is True
+    assert result['run_status'] == 'partial'
+    assert result['n_rows'] == 9
+    rows, arrays, run = sc.load_run(out)
+    assert run['limit_questions'] == 1 and run['partial'] is True
+    assert 'unit_layers' in arrays and 'unit_proj' in arrays and 'unit_colnorm' in arrays
+    assert any(name.startswith('scale:unchanged:') for name in arrays)
+    proc = subprocess.run([sys.executable, '-I', str(HERE / 'score216.py'), str(out)],
+                          capture_output=True, text=True)
+    assert proc.returncode == 0, proc.stderr
+    score = json.loads((out / 'score216.json').read_text(encoding='utf-8'))
+    assert score['partial'] is True
+    assert score['run_status'] == 'partial'
+    assert score['unchanged_outcome']['outcome'] == sc.OUTCOME_NOT_READ
+    assert score['units'].get('error') is None
+    card = (out / 'SCORECARD.md').read_text(encoding='utf-8')
+    assert 'PARTIAL RUN — not a full score' in card
+
+
 def test_tiny_run_mode_writes_the_run_files(tmp_path, tiny, monkeypatch):
     """`run` with --limit through the REAL code path, with only the loader stubbed."""
     model, torch = tiny
@@ -690,7 +1121,11 @@ def test_tiny_run_mode_writes_the_run_files(tmp_path, tiny, monkeypatch):
 
 
 def test_tiny_run_stops_when_a_row_does_not_telescope(tmp_path, tiny, monkeypatch):
-    """A G1 failure must stop the run: no further forwards, `STOP` in run.json."""
+    """A G1 failure must stop the run BEFORE the failing row is appended (Alden #10 #3).
+
+    The row is embedded in the STOP record instead, so the failed attempt is preserved but no
+    inadmissible row ever reaches `forwards.jsonl`.
+    """
     model, torch = tiny
     monkeypatch.setattr(run216.run214, 'load_rig',
                         lambda args: (model, None, {'attn_implementation': 'eager',
@@ -710,8 +1145,35 @@ def test_tiny_run_stops_when_a_row_does_not_telescope(tmp_path, tiny, monkeypatc
                               require_pinned_shape=False)
     result = run216.run(args)
     assert result['stage'] == 'STOP'
-    assert result['n_rows'] == 1
+    assert result['n_rows'] == 0                       # checked before append, so nothing committed
     assert result['stops'][0]['reason'] == 'G1 telescoping'
+    assert result['stops'][0]['key'] == 'unchanged:0'
+    assert result['stops'][0]['row']['key'] == 'unchanged:0'   # the attempt is preserved
+    assert _forwards_text(tmp_path / 'run').strip() == ''
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# descriptive block shares: Al and T stay separate (Alden #10 #2)
+# ----------------------------------------------------------------------------------------------------------------
+
+def test_block_share_table_keeps_al_and_t_separate():
+    """The three token logits have three separate additive shares; Al and T are never summed."""
+    row = make_row('unchanged:0', [0.0] * sc.N_LAYERS)
+    terms = [[0.0, 0.0, 0.0] for _ in range(2 * sc.N_BLOCKS)]
+    terms[0] = [0.5, 1.0, 2.0]          # block 0 attention
+    terms[1] = [0.25, -1.0, -2.0]       # block 0 MLP
+    row['dla']['terms'] = terms
+    table = sc.block_share_table({'unchanged:0': row}, 'unchanged')
+    assert table['tokens'] == ['z_G', 'z_Al', 'z_T']
+    b0 = table['blocks'][0]
+    assert b0['median_attn_z_G'] == pytest.approx(0.5)
+    assert b0['median_attn_z_Al'] == pytest.approx(1.0)
+    assert b0['median_attn_z_T'] == pytest.approx(2.0)
+    assert b0['median_mlp_z_G'] == pytest.approx(0.25)
+    assert b0['median_mlp_z_Al'] == pytest.approx(-1.0)
+    assert b0['median_mlp_z_T'] == pytest.approx(-2.0)
+    assert 'median_attn_alibaba_family' not in b0
+    assert 'median_mlp_alibaba_family' not in b0
 
 
 # ----------------------------------------------------------------------------------------------------------------
@@ -802,6 +1264,22 @@ def test_scorer_reads_a_whole_synthetic_run(tmp_path):
     (out / 'SCORECARD.md').write_text(sc.scorecard_markdown(score), encoding='utf-8')
     assert (out / 'score216.json').stat().st_size > 1000
     assert 'Part 216 scorecard' in (out / 'SCORECARD.md').read_text(encoding='utf-8')
+
+
+def test_scorer_marks_a_stopped_run_partial(tmp_path):
+    """A STOPped run is never a full score, even if every expected row happens to be present."""
+    out = _write_synthetic_run(tmp_path)
+    run = json.loads((out / 'run.json').read_text(encoding='utf-8'))
+    run['stage'] = 'STOP'
+    run['stops'] = [{'key': 'unchanged:0', 'reason': 'G1 telescoping'}]
+    (out / 'run.json').write_text(json.dumps(run), encoding='utf-8')
+    score = sc.score_run(out)
+    assert score['partial'] is True
+    assert score['run_status'] == 'partial'
+    assert score['completeness']['stopped'] is True
+    assert score['completeness']['n_missing'] == 0
+    assert score['unchanged_outcome']['outcome'] == sc.OUTCOME_NOT_READ
+    assert 'PARTIAL RUN — not a full score' in sc.scorecard_markdown(score)
 
 
 def test_scorecard_marks_a_failed_gate():

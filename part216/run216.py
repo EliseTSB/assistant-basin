@@ -271,23 +271,37 @@ def lens_rows(rows: list[torch.Tensor], norm, out_emb, tables: dict) -> tuple[li
     scale = torch.rsqrt(mean_sq + tables['eps'])
     normed = stacked * scale * (1.0 + w)[None, :]
     weight = out_emb.weight.detach()
-    tok_idx = torch.as_tensor(TOKEN_IDS, dtype=torch.long, device=device)
-    w_tok = weight.index_select(0, tok_idx).float()                             # (3, hidden)
-    z = (normed @ w_tok.T).cpu().numpy().astype(np.float64)                     # (L, 3)
     rank = torch.zeros((stacked.shape[0], 3), dtype=torch.long, device=device)
     argmax = torch.zeros(stacked.shape[0], dtype=torch.long, device=device)
     best = torch.full((stacked.shape[0],), float('-inf'), dtype=torch.float32, device=device)
     vocab = weight.shape[0]
-    z_ref = torch.as_tensor(z, dtype=torch.float64, device=device)              # (L, 3)
-    for start in range(0, vocab, UNEMBED_CHUNK):
+    # Each token's z comes out of the SAME chunk projection that produces the comparison values,
+    # so a token compares equal to itself and can never outrank itself. A separate 3-column GEMM
+    # could round differently (Alden #10 #4). The token chunk(s) are scanned once and cached; the
+    # rank pass reuses those exact tensors.
+    token_chunks = sorted({int(t) - int(t) % UNEMBED_CHUNK for t in TOKEN_IDS})
+    cached: dict[int, torch.Tensor] = {}
+    z_cols: list[torch.Tensor | None] = [None] * len(TOKEN_IDS)
+    for start in token_chunks:
         stop = min(start + UNEMBED_CHUNK, vocab)
         logits = normed @ weight[start:stop].float().T                          # (L, c)
+        cached[start] = logits
+        for k, tid in enumerate(TOKEN_IDS):
+            if start <= int(tid) < stop:
+                z_cols[k] = logits[:, int(tid) - start]
+    if any(col is None for col in z_cols):                                      # pragma: no cover
+        raise RuntimeError(f'token ids {TOKEN_IDS} are outside the vocabulary of {vocab}')
+    z_chunk = torch.stack(z_cols, dim=1)                                        # (L, 3) float32
+    for start in range(0, vocab, UNEMBED_CHUNK):
+        stop = min(start + UNEMBED_CHUNK, vocab)
+        logits = cached[start] if start in cached else normed @ weight[start:stop].float().T
         # 0-based descending rank: how many vocabulary entries outrank each token at this layer.
-        rank += (logits[:, None, :] > z_ref[:, :, None]).sum(dim=2)
+        rank += (logits[:, None, :] > z_chunk[:, :, None]).sum(dim=2)
         local_best, local_idx = logits.max(dim=1)
         better = local_best > best
         best = torch.where(better, local_best, best)
         argmax = torch.where(better, local_idx + start, argmax)
+    z = z_chunk.cpu().numpy().astype(np.float64)                                # (L, 3), CPU only
     rank_np = rank.cpu().numpy()
     argmax_np = argmax.cpu().numpy()
     out = []
@@ -388,15 +402,31 @@ def forward_row(model, layers, norm, out_emb, tables, seq: list[int], read_posit
     native_g_ali = native_tokens[0] - float(np.logaddexp(native_tokens[1], native_tokens[2]))
     native_g_al = native_tokens[0] - native_tokens[1]
 
+    # Every capture boundary, not just h0/add2 (Alden #10 #4): the block input and both residual
+    # adds have to be observed, and the raw module outputs are recorded beside them so a rounding
+    # change in either half is attributable.
+    boundary_names = ['h0']
+    for li in range(n_blocks):
+        boundary_names += [f'L{li}:in', f'L{li}:add1', f'L{li}:add2']
+    dtypes = {name: str(store['residual'][name].dtype) for name in boundary_names}
+    for li in range(n_blocks):
+        dtypes[f'raw:L{li}:mixer'] = str(store['raw'][f'L{li}:mixer'].dtype)
+        dtypes[f'raw:L{li}:mlp'] = str(store['raw'][f'L{li}:mlp'].dtype)
     record = {
         'read_position': int(read_position),
         'native_logits': native_tokens, 'native_g_ali': native_g_ali, 'native_g_al': native_g_al,
         'lens': lens, 'dla': dla,
         'boundary_counts': dict(store['count']),
         'boundary_report': boundary,
-        'dtypes': {name: str(store['residual'][name].dtype)
-                   for name in ['h0'] + [f'L{li}:add2' for li in range(n_blocks)]},
+        'dtypes': dtypes,
         'n_blocks': n_blocks,
+        # The exact tokens and read position this forward used. Written into the row so a plan row
+        # can be checked against what the model actually saw (Alden #10 #1, #3).
+        'sequence_token_ids': [int(t) for t in seq],
+        'prompt_token_ids': [int(t) for t in prompt_ids],
+        'T': len(prompt_ids),
+        'input_sha256': hashlib.sha256(
+            json.dumps([int(t) for t in seq]).encode('utf-8')).hexdigest(),
     }
     if capture_units:
         unit_np = {int(l): store['units'][int(l)].float().cpu().numpy().astype(np.float32)
@@ -406,6 +436,40 @@ def forward_row(model, layers, norm, out_emb, tables, seq: list[int], read_posit
     if capture_units:
         arrays['units'] = np.stack([unit_np[int(l)] for l in tables['unit_layers']])
     return record, arrays
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# the dtype contract (DESIGN.md "Model": bf16; Alden #10 #4)
+# ----------------------------------------------------------------------------------------------------------------
+
+def expected_capture_dtype(load: dict) -> str | None:
+    """The dtype every capture boundary must show, from the load record, or None if not bf16.
+
+    `nr.load_record` writes `'torch.bfloat16'`; a test stub may write `'bfloat16'`.  Both mean the
+    run claims bf16, and on such a run a float32 capture is a broken fixture, not a result.
+    """
+    if not isinstance(load, dict):
+        return None
+    dtype = str(load.get('dtype', ''))
+    if dtype.endswith('bfloat16') or dtype == 'bf16':
+        return 'torch.bfloat16'
+    return None
+
+
+def dtype_contract(record: dict, load: dict) -> dict:
+    """Every recorded capture boundary against the dtype the load claims (STOP on a mismatch)."""
+    want = expected_capture_dtype(load)
+    observed = sorted(set((record.get('dtypes') or {}).values()))
+    if want is None:
+        return {'pass': True, 'expected': None, 'observed': observed,
+                'note': 'the load does not claim bf16, so no capture dtype is enforced'}
+    dtypes = record.get('dtypes') or {}
+    required = ['h0'] + [f'L{li}:{kind}' for li in range(int(record.get('n_blocks', 0)))
+                         for kind in ('in', 'add1', 'add2')]
+    missing = [name for name in required if name not in dtypes]
+    bad = sorted(name for name, dt in dtypes.items() if dt != want)
+    return {'pass': not missing and not bad, 'expected': want, 'observed': observed,
+            'missing': missing[:20], 'bad': bad[:20], 'n_bad': len(bad)}
 
 
 # ----------------------------------------------------------------------------------------------------------------
@@ -489,13 +553,58 @@ def row_key(row: dict) -> str:
     return f'{row["arm"]}:{row["question_index"]}'
 
 
+def opener_index(bank: dict) -> dict:
+    """`(arm, question_index) -> opener entry` over the 72 opener rows, strictly one per key.
+
+    The opener arms (`op_filler`, `op_denial`, `op_vogel`) are stage1-kind rows but their sequences
+    are NOT `bank['items'][q]`: Part 215's opener sentence is prepended to the user text, so the
+    token ids, `T` and the read position all differ.  Resolving them through `items` silently
+    forwards the plain prompt (Alden #10, bullet 1), so the index is built once and every lookup is
+    checked against the exact `(arm, q)` key.
+    """
+    op_arms = bank.get('opener_arms') or {}
+    if not op_arms:
+        return {}
+    idx: dict[tuple[str, int], dict] = {}
+    for entry in bank.get('openers') or []:
+        key = (str(entry['arm']), int(entry['question_index']))
+        if key in idx:
+            raise SystemExit(f'prompts bank has duplicate opener key {key}')
+        if key[0] not in op_arms:
+            raise SystemExit(f'prompts bank opener row has unknown arm {key[0]!r}')
+        idx[key] = entry
+    expected = {(arm, qi) for arm in op_arms for qi in range(N_QUESTIONS)}
+    if set(idx) != expected:
+        missing = sorted(expected - set(idx))[:5]
+        extra = sorted(set(idx) - expected)[:5]
+        raise SystemExit(f'prompts bank opener keys do not match the 3x24 grid; '
+                         f'missing={missing} extra={extra}')
+    return idx
+
+
 def resolve_row(bank: dict, row: dict) -> dict:
-    """The bank entry for one plan row."""
+    """The bank entry for one plan row, on its exact `(arm, q)` key.
+
+    Opener arms resolve through `bank['openers']`, never through `bank['items']` (Alden #10 #1).
+    """
     if row['kind'] == 'stage1':
+        arm = str(row['arm'])
+        if arm in (bank.get('opener_arms') or {}):
+            key = (arm, int(row['question_index']))
+            entry = opener_index(bank)[key]
+            if (str(entry['arm']), int(entry['question_index'])) != key:
+                raise SystemExit(f'opener lookup for {key} returned {entry.get("arm")}:'
+                                 f'{entry.get("question_index")}')
+            return entry
         return bank['items'][row['question_index']]
     if row['kind'] == 'control':
         k = bank['control_arms'].index(row['arm']) * N_QUESTIONS + row['question_index']
-        return bank['controls'][k]
+        entry = bank['controls'][k]
+        if str(entry['arm']) != str(row['arm']) or \
+                int(entry['question_index']) != int(row['question_index']):
+            raise SystemExit(f'control lookup for {row["arm"]}:{row["question_index"]} returned '
+                             f'{entry.get("arm")}:{entry.get("question_index")}')
+        return entry
     return bank['factuals'][row['question_index']]
 
 
@@ -531,10 +640,153 @@ def edit_for_arm(receipt: dict, arm: str, prompt_len: int):
     raise ValueError(f'unknown arm {arm!r}')
 
 
+# Keys a resumed run must match exactly. `tool_sha256` is included on purpose: a resume after the
+# runner itself changed is a different instrument and must not be mixed into the same directory.
+PIN_KEYS = ('model', 'revision', 'design_sha256', 'prompts_sha256', 'tool_sha256',
+            'score_tool_sha256', 'stage1_receipt_sha256', 'n_blocks', 'hidden_size',
+            'unit_layers', 'units', 'arms', 'control_arms')
+
+
+def filter_plan_questions(plan: list[dict], limit_questions) -> list[dict]:
+    """The `--limit-questions` test-only reduction: keep question indices `< limit`."""
+    n = int(limit_questions or 0)
+    if n <= 0:
+        return list(plan)
+    return [r for r in plan if int(r['question_index']) < n]
+
+
+def pins_mismatch(recorded: dict, current: dict) -> list[dict]:
+    """Pin mismatches between the run.json already in the directory and this invocation."""
+    if not recorded:
+        return [{'reason': 'no run.json pin record to verify the committed rows against'}]
+    out = []
+    for key in PIN_KEYS:
+        if key not in recorded:
+            out.append({'pin': key, 'reason': 'missing from the committed run.json'})
+        elif recorded.get(key) != current.get(key):
+            out.append({'pin': key, 'recorded': recorded.get(key), 'current': current.get(key)})
+    return out
+
+
+def plan_kind(bank: dict, arm: str) -> str:
+    if arm == 'factual':
+        return 'factual'
+    if arm in (bank.get('control_arms') or []):
+        return 'control'
+    if arm in (bank.get('arms') or []):
+        return 'stage1'
+    raise KeyError(f'unknown arm {arm!r}')
+
+
+def validate_committed_rows(bank: dict, receipt: dict, rows: dict, arrays: dict,
+                            n_blocks: int) -> list[dict]:
+    """Re-check every committed row before a resume is allowed to make a new forward.
+
+    What is re-proved for each row: the pinned inputs (sequence, prompt and read position are the
+    bank's for its `(arm, q)` key), the boundary ledger, G1 telescoping, finite values, and the
+    arrays the scorer needs. G0 rows are additionally checked against the Part 214 receipt; when
+    all 312 are committed the full G0 gate is recomputed. Any problem is a STOP (Alden #10 #3).
+    """
+    problems: list[dict] = []
+    if not rows:
+        return problems
+    arms = set(bank.get('arms') or []) | set(bank.get('control_arms') or []) | {'factual'}
+    for key, row in rows.items():
+        try:
+            arm, qs = key.rsplit(':', 1)
+            qi = int(qs)
+        except (ValueError, AttributeError):
+            problems.append({'key': key, 'reason': 'row key is not <arm>:<question_index>'})
+            continue
+        if arm not in arms or not 0 <= qi < N_QUESTIONS:
+            problems.append({'key': key, 'reason': 'row key is not on the 24-question grid'})
+            continue
+        kind = plan_kind(bank, arm)
+        entry = resolve_row(bank, {'kind': kind, 'arm': arm, 'question_index': qi})
+        want_seq = list(entry['prompt_token_ids'] if kind == 'factual'
+                        else entry['sequence_token_ids'])
+        want_prompt = list(entry['prompt_token_ids'])
+        if [int(t) for t in row.get('sequence_token_ids') or []] != [int(t) for t in want_seq]:
+            problems.append({'key': key, 'reason': 'committed sequence does not match the bank'})
+        if [int(t) for t in row.get('prompt_token_ids') or []] != [int(t) for t in want_prompt]:
+            problems.append({'key': key, 'reason': 'committed prompt does not match the bank'})
+        if int(row.get('read_position', -1)) != int(entry['read_position']):
+            problems.append({'key': key, 'reason': 'committed read position does not match the bank'})
+        if int(row.get('n_blocks', -1)) != int(n_blocks):
+            problems.append({'key': key, 'reason': 'committed row has a different block count'})
+        bcheck = sc.boundary_check(row, n_blocks)
+        if not bcheck['pass']:
+            problems.append({'key': key, 'reason': 'boundary ledger', 'detail': bcheck})
+        try:
+            gcheck = sc.gate1_check(row['dla']['emb_term'], row['dla']['terms'],
+                                    row['dla']['fp32_logits'])
+        except (KeyError, TypeError, ValueError) as exc:
+            problems.append({'key': key, 'reason': f'G1 row is unreadable: {exc!r}'})
+        else:
+            if not gcheck['pass']:
+                problems.append({'key': key, 'reason': 'G1 telescoping', 'detail': gcheck})
+        finite = sc.row_finite(row)
+        if not finite['pass']:
+            problems.append({'key': key, 'reason': 'nonfinite values', 'detail': finite})
+        for name in ('h0', 'h32'):
+            if f'{name}:{key}' not in arrays:
+                problems.append({'key': key, 'reason': f'arrays.npz is missing {name}:{key}'})
+        if f'scale:{key}' not in arrays:
+            problems.append({'key': key, 'reason': f'arrays.npz is missing scale:{key}'})
+        if kind == 'stage1' and f'units:{key}' not in arrays:
+            problems.append({'key': key, 'reason': f'arrays.npz is missing units:{key}'})
+        if arm in sc.G0_ARMS:
+            want = ((receipt.get('arms') or {}).get(arm) or {}).get('g_ali')
+            got = row.get('native_g_ali')
+            if want is None or qi >= len(want):
+                problems.append({'key': key, 'reason': 'G0 arm has no receipt value'})
+            elif got is None or not np.isfinite(float(got)) or \
+                    abs(float(got) - float(want[qi])) > sc.G0_TOLERANCE:
+                problems.append({'key': key, 'reason': 'committed G0 row is outside the receipt',
+                                 'got': got, 'receipt': None if want is None else float(want[qi])})
+    g0_committed = sum(1 for k in rows if k.rsplit(':', 1)[0] in sc.G0_ARMS)
+    if g0_committed == len(sc.G0_ARMS) * N_QUESTIONS:
+        g0 = sc.gate0(rows, receipt)
+        if not g0['pass']:
+            problems.append({'reason': 'G0 recomputed over the committed rows fails',
+                             'detail': {'n_failures': g0['n_failures'],
+                                        'max_abs_delta': g0['max_abs_delta'],
+                                        'failures': g0['failures'][:5]}})
+    return problems
+
+
 def run(args) -> dict:
     started = time.time()
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
+    forwards_path = out_dir / 'forwards.jsonl'
+    arrays_path = out_dir / 'arrays.npz'
+    run_json_path = out_dir / 'run.json'
+    resumed = not bool(getattr(args, 'no_resume', False))
+
+    # A STOP record is TERMINAL for this output directory (guidance for Alden #10 #3). A new
+    # attempt needs a new --out; re-running here could append rows the STOP was meant to forbid.
+    existing = None
+    if run_json_path.exists():
+        try:
+            existing = json.loads(run_json_path.read_text(encoding='utf-8'))
+        except json.JSONDecodeError:
+            existing = {'stage': 'STOP', 'reason': 'run.json is not readable JSON'}
+    if isinstance(existing, dict) and existing.get('stage') == 'STOP':
+        existing['resume_refused'] = True
+        existing['resume_refused_at'] = time.strftime('%Y-%m-%dT%H:%M:%S')
+        existing['resume_refusal_reason'] = ('this output directory holds a STOP record; '
+                                             'a new attempt needs a new --out')
+        write_json(run_json_path, existing)
+        return existing
+    if not resumed and forwards_path.exists() and forwards_path.stat().st_size > 0:
+        refusal = {'mode': 'run', 'stage': 'STOP',
+                   'reason': 'output directory already contains forwards and --no-resume was '
+                             'given; a new attempt needs a new --out',
+                   'n_rows': len(_read_rows(forwards_path))}
+        write_json(out_dir / 'refused.json', refusal)
+        return refusal
+
     bank = load_bank(args.prompts)
     receipt = load_receipt(args.stage1)
     design_sha = file_sha256(DESIGN_PATH) if DESIGN_PATH.exists() else None
@@ -545,7 +797,7 @@ def run(args) -> dict:
     if not fixtures['pass']:
         record = {'mode': 'run', 'stage': 'STOP', 'reason': 'G1 offline fixtures failed',
                   'selftest': fixtures}
-        write_json(out_dir / 'run.json', record)
+        write_json(run_json_path, record)
         return record
 
     model, tok, load = run214.load_rig(args)
@@ -558,6 +810,12 @@ def run(args) -> dict:
     if args.require_pinned_shape and n_blocks != N_BLOCKS_PINNED:
         raise SystemExit(f'model has {n_blocks} blocks, the design pins {N_BLOCKS_PINNED}')
     tables = prepare_tables(model, layers, norm)
+
+    full_plan = plan_rows(bank)
+    plan = filter_plan_questions(full_plan, getattr(args, 'limit_questions', 0))
+    if getattr(args, 'limit', 0):
+        plan = plan[:int(args.limit)]
+    partial = bool(int(getattr(args, 'limit_questions', 0) or 0) or int(getattr(args, 'limit', 0) or 0))
 
     run_info = {
         'mode': 'run', 'part': 216, 'design_version': 'v2.2',
@@ -576,35 +834,52 @@ def run(args) -> dict:
         'torch': getattr(torch, '__version__', None),
         'transformers': _transformers_version(),
         'started': time.strftime('%Y-%m-%dT%H:%M:%S'),
+        'n_planned_full': len(full_plan), 'n_planned': len(plan),
+        'limit': int(getattr(args, 'limit', 0) or 0),
+        'limit_questions': int(getattr(args, 'limit_questions', 0) or 0),
+        'partial': partial,
     }
     if not run_info['kernel_check'].get('pass'):
         run_info['stage'] = 'STOP'
         run_info['stop_reason'] = 'kernel check failed'
-        write_json(out_dir / 'run.json', run_info)
+        write_json(run_json_path, run_info)
         return run_info
 
-    plan = plan_rows(bank)
-    if args.limit:
-        plan = plan[:int(args.limit)]
-    forwards_path = out_dir / 'forwards.jsonl'
-    done = set()
-    if forwards_path.exists() and not args.no_resume:
-        with forwards_path.open(encoding='utf-8') as fh:
-            for line in fh:
-                line = line.strip()
-                if line:
-                    done.add(json.loads(line)['key'])
-    arrays_path = out_dir / 'arrays.npz'
-    arrays = {}
-    if arrays_path.exists() and not args.no_resume:
+    committed = _read_rows(forwards_path) if resumed else {}
+    arrays: dict = {}
+    if resumed and arrays_path.exists():
         with np.load(arrays_path, allow_pickle=True) as z:
             arrays = {name: z[name] for name in z.files}
 
+    # Resume: revalidate EVERY committed row (pins, inputs, boundaries, G1, finiteness, arrays,
+    # G0) before making any new forward (Alden #10 #3). The checks below run before the loop.
+    if committed:
+        problems = pins_mismatch(existing or {}, run_info)
+        problems += validate_committed_rows(bank, receipt, committed, arrays, n_blocks)
+        if problems:
+            stop = {'key': next((p.get('key') for p in problems if p.get('key')),
+                                '<directory>'),
+                    'reason': 'resume revalidation',
+                    'n_problems': len(problems), 'problems': problems[:20]}
+            offending = stop.get('key')
+            if offending in committed:
+                stop['row'] = committed[offending]
+            run_info.update({'stage': 'STOP', 'stops': [stop], 'n_rows': len(committed),
+                             'n_new_rows': 0,
+                             'wall_time_seconds': time.time() - started,
+                             'finished': time.strftime('%Y-%m-%dT%H:%M:%S')})
+            write_json(run_json_path, run_info)
+            return run_info
+
+    # Pins are on disk before the first new forward, so an interrupted run can be revalidated.
+    write_json(run_json_path, {**run_info, 'stage': 'RUNNING', 'n_rows': len(committed)})
+
+    rows = dict(committed)
     n_done = 0
-    stops = []
+    stops: list[dict] = []
     for row in plan:
         key = row_key(row)
-        if key in done:
+        if key in rows:
             continue
         entry = resolve_row(bank, row)
         if row['kind'] == 'factual':
@@ -619,56 +894,98 @@ def run(args) -> dict:
             seq = list(entry['sequence_token_ids'])
             prompt_ids = list(entry['prompt_token_ids'])
             read_position = int(entry['read_position'])
-            units, factor = edit_for_arm(receipt, row['arm'], len(prompt_ids))
+            # Controls are unedited forwards (the sentence lives in the prompt); only stage1 arms
+            # go through `edit_for_arm`. Before this, every control row raised
+            # `ValueError: unknown arm 'control_google'` and the run never reached the factuals.
+            if row['kind'] == 'control':
+                units, factor = None, None
+            else:
+                units, factor = edit_for_arm(receipt, row['arm'], len(prompt_ids))
             record, row_arrays = forward_row(model, layers, norm, out_emb, tables, seq,
                                              read_position, prompt_ids, edit_units=units,
                                              edit_factor=factor,
                                              capture_units=(row['kind'] == 'stage1'))
         record.update({'key': key, 'kind': row['kind'], 'arm': row['arm'],
-                       'question_index': row['question_index'], 'T': len(prompt_ids),
-                       'prompt_token_ids': prompt_ids, 'sequence_token_ids': seq})
+                       'question_index': row['question_index']})
+
+        # ----- every gate runs BEFORE the row is appended (Alden #10 #3) -----------------------
+        failures: list[tuple[str, dict]] = []
+        bcheck = sc.boundary_check(record, n_blocks)
+        if not bcheck['pass']:
+            failures.append(('boundary count', bcheck))
+        gcheck = sc.gate1_check(record['dla']['emb_term'], record['dla']['terms'],
+                                record['dla']['fp32_logits'])
+        if not gcheck['pass']:
+            failures.append(('G1 telescoping', gcheck))
+        finite = sc.row_finite(record)
+        if not finite['pass']:
+            failures.append(('nonfinite row', finite))
+        dcheck = dtype_contract(record, load)
+        if not dcheck['pass']:
+            failures.append(('dtype contract', dcheck))
+        # Every anchor row is checked against the Part 214 receipt before it is appended. This is
+        # skipped on a declared-partial smoke run (`--limit`/`--limit-questions`), where the tiny
+        # fixture cannot match the 4B receipt and no design-level claim is made anyway; a full run
+        # always checks it. The 312-value G0 gate below is the second, complete check.
+        if not failures and not partial and row['kind'] == 'stage1' and \
+                row['arm'] in sc.G0_ARMS:
+            ref = ((receipt.get('arms') or {}).get(row['arm']) or {}).get('g_ali')
+            got = record.get('native_g_ali')
+            if ref is None or row['question_index'] >= len(ref):
+                failures.append(('G0', {'key': key, 'reason': 'anchor arm has no receipt value'}))
+            elif got is None or not np.isfinite(float(got)) or \
+                    abs(float(got) - float(ref[row['question_index']])) > sc.G0_TOLERANCE:
+                failures.append(('G0', {'key': key, 'got': got,
+                                        'receipt': float(ref[row['question_index']]),
+                                        'tolerance': sc.G0_TOLERANCE}))
+        # G0 is evaluated as soon as the last anchor row lands, before any non-anchor forward.
+        if not failures and row['kind'] == 'stage1' and row['arm'] == sc.G0_ARMS[-1] and \
+                row['question_index'] == N_QUESTIONS - 1:
+            candidate = dict(rows)
+            candidate[key] = record
+            g0 = sc.gate0(candidate, receipt)
+            if not g0['pass']:
+                failures.append(('G0', {'max_abs_delta': g0['max_abs_delta'],
+                                        'n_failures': g0['n_failures'],
+                                        'n_values': g0['n_values'],
+                                        'failures': g0['failures'][:5]}))
+        if failures:
+            reason, detail = failures[0]
+            stops.append({'key': key, 'reason': reason, 'detail': detail, 'row': record})
+            break
+
+        # ----- committed only now: the row passed every check --------------------------------
         for name, value in row_arrays.items():
             arrays[f'{name}:{key}'] = value
+        arrays[f'scale:{key}'] = np.float64(record['dla']['frozen_scale'])
         with forwards_path.open('a', encoding='utf-8') as fh:
             fh.write(json.dumps(record, ensure_ascii=False, default=json_default) + '\n')
+        rows[key] = record
         n_done += 1
-        if not record['boundary_report']['missing'] and \
-                not record['boundary_report']['duplicated']:
-            pass
-        else:
-            stops.append({'key': key, 'reason': 'boundary count'})
-            break
-        check = sc.gate1_check(record['dla']['emb_term'], record['dla']['terms'],
-                               record['dla']['fp32_logits'])
-        if not check['pass']:
-            stops.append({'key': key, 'reason': 'G1 telescoping',
-                          'max_abs_error': check['max_abs_error']})
-            break
-        # G0 is evaluated as soon as the last anchor row lands, before any non-anchor forward.
-        if row['kind'] == 'stage1' and row['arm'] == sc.G0_ARMS[-1] and \
-                row['question_index'] == N_QUESTIONS - 1:
-            rows_so_far = _read_rows(forwards_path)
-            g0 = sc.gate0(rows_so_far, receipt)
-            if not g0['pass']:
-                stops.append({'key': key, 'reason': 'G0', 'detail': {
-                    'max_abs_delta': g0['max_abs_delta'], 'n_failures': g0['n_failures']}})
-                break
 
+    # The scorer's unit tables, once per run, and a q-keyed frozen scale per row (Alden #10 #2).
+    arrays['unit_layers'] = np.asarray(UNIT_LAYERS, dtype=np.int64)
+    arrays['unit_proj'] = np.asarray(tables['unit_proj'], dtype=np.float32)
+    arrays['unit_colnorm'] = np.asarray(tables['unit_colnorm'], dtype=np.float32)
     np.savez_compressed(arrays_path, **arrays)
-    rows = _read_rows(forwards_path)
+    stage = 'STOP' if stops else 'DONE'
+    complete = (not partial) and len(rows) >= len(full_plan) and not stops
     run_info.update({
         'n_rows': len(rows), 'n_new_rows': n_done, 'n_planned': len(plan),
-        'stage': 'STOP' if stops else 'DONE',
-        'stops': stops,
+        'n_planned_full': len(full_plan),
+        'stage': stage, 'stops': stops,
+        'partial': bool(partial or not complete),
+        'run_status': 'full' if complete else 'partial',
         'wall_time_seconds': time.time() - started,
         'finished': time.strftime('%Y-%m-%dT%H:%M:%S'),
     })
     if rows:
         sample = next(iter(rows.values()))
         run_info['boundary_dtypes'] = sample.get('dtypes')
+        run_info['dtype_contract'] = dtype_contract(sample, load)
         run_info['boundary_count_example'] = {k: v for k, v in sample['boundary_counts'].items()
                                               if ':add' in k}
-    write_json(out_dir / 'run.json', run_info)
+    write_json(run_json_path, run_info)
     return run_info
 
 
@@ -704,6 +1021,9 @@ def main(argv=None) -> int:
     ap.add_argument('--prompts', default=str(PROMPTS_PATH))
     ap.add_argument('--stage1', default=str(STAGE1_PATH))
     ap.add_argument('--limit', type=int, default=0, help='stop after N rows (smoke tests)')
+    ap.add_argument('--limit-questions', type=int, default=0,
+                    help='test-only: keep question indices below N; the run is marked partial '
+                         'in run.json and can never produce a full score')
     ap.add_argument('--no-resume', action='store_true')
     ap.add_argument('--require-pinned-shape', action='store_true')
     args = ap.parse_args(argv)

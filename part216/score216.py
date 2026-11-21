@@ -152,12 +152,17 @@ def g_ali_of(z: dict) -> float:
     return float(z['z_G']) - float(np.logaddexp(float(z['z_Al']), float(z['z_T'])))
 
 
-def row_margins(row: dict) -> list[float]:
-    """m_l for l = 0..N_LAYERS-1, out of a run row's `lens` list."""
+def row_margins(row: dict, n_layers: int = N_LAYERS) -> list[float]:
+    """m_l for l = 0..n_layers-1, out of a run row's `lens` list.
+
+    `n_layers` is `run['n_blocks'] + 1`: the design pins 33 for the 4B model, and a test-only tiny
+    run (30 blocks) is scored against its own depth so a partial/tiny run still produces a
+    scorecard instead of an IndexError.
+    """
     lens = row['lens']
-    if len(lens) != N_LAYERS:
-        raise ValueError(f'{row.get("key")}: lens has {len(lens)} layers, the design pins {N_LAYERS}')
-    return [margin(entry) for entry in lens]
+    if len(lens) < n_layers:
+        raise ValueError(f'{row.get("key")}: lens has {len(lens)} layers, expected {n_layers}')
+    return [margin(entry) for entry in lens[:n_layers]]
 
 
 def row_g_ali(row: dict) -> list[float]:
@@ -166,6 +171,46 @@ def row_g_ali(row: dict) -> list[float]:
 
 def m32(row: dict) -> float:
     return margin(row['lens'][-1])
+
+
+def row_finite(row: dict) -> dict:
+    """Every scalar a gate, an outcome or a share reads must be finite.
+
+    A NaN compares False to every tolerance, so a NaN row used to sail through G0 and G1 without
+    ever being named (Alden #10 #3). This is the explicit finiteness check the gates call.
+    """
+    bad: list[str] = []
+
+    def check(name: str, value) -> None:
+        try:
+            if value is None or not math.isfinite(float(value)):
+                bad.append(name)
+        except (TypeError, ValueError):
+            bad.append(name)
+
+    check('native_g_ali', row.get('native_g_ali'))
+    check('native_g_al', row.get('native_g_al'))
+    for i, v in enumerate(row.get('native_logits') or []):
+        check(f'native_logits[{i}]', v)
+    for l, entry in enumerate(row.get('lens') or []):
+        for field in ('z_G', 'z_Al', 'z_T', 'm', 'g_ali'):
+            check(f'lens[{l}].{field}', entry.get(field))
+    dla = row.get('dla') or {}
+    check('dla.frozen_scale', dla.get('frozen_scale'))
+    for name in ('emb_term', 'fp32_logits'):
+        for i, v in enumerate(dla.get(name) or []):
+            check(f'dla.{name}[{i}]', v)
+    for t, term in enumerate(dla.get('terms') or []):
+        for i, v in enumerate(term):
+            check(f'dla.terms[{t}][{i}]', v)
+    for name in ('rounding_norm', 'raw_norm', 'increment_norm'):
+        for i, v in enumerate(dla.get(name) or []):
+            check(f'dla.{name}[{i}]', v)
+    for label, unit in (row.get('unit_dla') or {}).items():
+        # `normalized_c_G` is legitimately None for a zero write, so it is not checked here.
+        for field in ('activation', 'write_size', 'c_G', 'c_Al', 'c_T'):
+            check(f'unit_dla[{label}].{field}', unit.get(field))
+    return {'pass': not bad, 'n_bad': len(bad), 'bad': bad[:20]}
 
 
 # ----------------------------------------------------------------------------------------------------------------
@@ -196,8 +241,20 @@ def gate0(rows: dict, receipt: dict, tolerance: float = G0_TOLERANCE) -> dict:
             if row is None:
                 failures.append({'arm': arm, 'question_index': qi, 'reason': 'forward row missing'})
                 continue
-            got = float(row['native_g_ali'])
-            want = float(ref_g[qi])
+            got_raw = row.get('native_g_ali')
+            try:
+                got = float(got_raw)
+                want = float(ref_g[qi])
+            except (TypeError, ValueError):
+                failures.append({'arm': arm, 'question_index': qi,
+                                 'reason': 'unreadable g_ali value', 'got': got_raw})
+                continue
+            if not (math.isfinite(got) and math.isfinite(want)):
+                # A NaN compares False to every tolerance, so it must be rejected explicitly
+                # rather than allowed to slip through the `delta > tolerance` test (Alden #10 #3).
+                failures.append({'arm': arm, 'question_index': qi, 'got': got, 'receipt': want,
+                                 'reason': 'nonfinite g_ali value'})
+                continue
             delta = abs(got - want)
             worst = max(worst, delta)
             values[f'{arm}:{qi}'] = {'got': got, 'receipt': want, 'abs_delta': delta}
@@ -231,11 +288,17 @@ def gate1_check(emb_term, dla_terms, logits, tolerance: float = G1_TOLERANCE) ->
     target = np.asarray(logits, dtype=np.float64)
     if terms.ndim != 2 or terms.shape[1] != 3:
         raise ValueError(f'dla_terms must be (n_boundaries, 3), got {terms.shape}')
+    if not (np.all(np.isfinite(emb)) and np.all(np.isfinite(terms))
+            and np.all(np.isfinite(target))):
+        # NaN <= tolerance is False, but the *max* is NaN too; say so explicitly.
+        return {'pass': False, 'max_abs_error': float('nan'),
+                'per_token_error': [float('nan')] * 3, 'tolerance': tolerance,
+                'n_terms': int(terms.shape[0]), 'nonfinite': True}
     total = emb + terms.sum(axis=0)
     err = np.abs(total - target)
     return {'pass': bool(np.all(err <= tolerance)), 'max_abs_error': float(err.max()),
             'per_token_error': err.tolist(), 'tolerance': tolerance,
-            'n_terms': int(terms.shape[0])}
+            'n_terms': int(terms.shape[0]), 'nonfinite': False}
 
 
 def boundary_check(row: dict, n_blocks: int = N_BLOCKS) -> dict:
@@ -290,7 +353,8 @@ def expected_side_final(arm: str, final_m: float) -> bool:
 
 
 def gate2(control_rows: dict, share: float = G2_SHARE, max_layer: int = G2_MAX_LAYER,
-          min_controls: int = G2_MIN_CONTROLS, min_pairs: int = G2_MIN_PAIRS) -> dict:
+          min_controls: int = G2_MIN_CONTROLS, min_pairs: int = G2_MIN_PAIRS,
+          n_layers: int = N_LAYERS) -> dict:
     """G2: the layer window where BOTH control sides read their own way >= 0.8 of the time.
 
     A control counts only if its FINAL contrast is on its expected side (DESIGN.md "Gates" G2).
@@ -308,9 +372,12 @@ def gate2(control_rows: dict, share: float = G2_SHARE, max_layer: int = G2_MAX_L
     per_layer = []
     for arm, name in (('control_google', 'google'), ('control_alibaba', 'alibaba')):
         n_final = 0
-        n_hit = {l: 0 for l in range(N_LAYERS)}
+        n_hit = {l: 0 for l in range(n_layers)}
         for row in sides[arm]:
-            ms = row_margins(row)
+            try:
+                ms = row_margins(row, n_layers)
+            except ValueError:
+                continue
             if not expected_side_final(arm, ms[-1]):
                 continue
             n_final += 1
@@ -318,7 +385,7 @@ def gate2(control_rows: dict, share: float = G2_SHARE, max_layer: int = G2_MAX_L
                 if (m > 0.0) if arm == 'control_google' else (m < 0.0):
                     n_hit[l] += 1
         counted[name] = {'n_rows': len(sides[arm]), 'n_final_expected': n_final,
-                         'n_hit': {str(l): n_hit[l] for l in range(N_LAYERS)}}
+                         'n_hit': {str(l): n_hit[l] for l in range(n_layers)}}
         per_layer.append((name, n_final, n_hit))
 
     window = []
@@ -358,13 +425,14 @@ def usable_pairs(qualified: list[int]) -> list[list[int]]:
 # outcomes
 # ----------------------------------------------------------------------------------------------------------------
 
-def question_outcome(row_unchanged: dict, window: list[int], pairs: list[list[int]]) -> dict:
+def question_outcome(row_unchanged: dict, window: list[int], pairs: list[list[int]],
+                     n_layers: int = N_LAYERS) -> dict:
     """One question's reading under `unchanged` (DESIGN.md "Outcomes").
 
     `early Google lead` needs m_l > 0 on BOTH layers of at least one usable pair AND a final m_32 < 0.
     `no early lead` needs m_l <= 0 on every layer in W.  Both can be false: that is the mixed question.
     """
-    ms = row_margins(row_unchanged)
+    ms = row_margins(row_unchanged, n_layers)
     final = ms[-1]
     pair_hits = [[l, l + 1] for l, l1 in pairs if ms[l] > 0.0 and ms[l1] > 0.0]
     any_positive_in_window = [l for l in window if ms[l] > 0.0]
@@ -376,7 +444,7 @@ def question_outcome(row_unchanged: dict, window: list[int], pairs: list[list[in
             'n_positive_in_window': len(any_positive_in_window)}
 
 
-def unchanged_outcome(rows: dict, g2: dict) -> dict:
+def unchanged_outcome(rows: dict, g2: dict, n_layers: int = N_LAYERS) -> dict:
     """The `unchanged` outcome statement, counted over 24 questions (DESIGN.md "Outcomes")."""
     if not g2['pass']:
         return {'outcome': OUTCOME_NOT_READ, 'reason': 'G2 fails: sparse qualification is not evidence '
@@ -388,7 +456,7 @@ def unchanged_outcome(rows: dict, g2: dict) -> dict:
         row = rows.get(f'unchanged:{qi}')
         if row is None:
             raise KeyError(f'unchanged:{qi} is missing from the run')
-        per_q.append(question_outcome(row, window, pairs))
+        per_q.append(question_outcome(row, window, pairs, n_layers))
     n_lead = sum(1 for q in per_q if q['early_lead'])
     n_any_positive = sum(1 for q in per_q if q['n_positive_in_window'] > 0)
     if n_lead >= LEAD_MIN_QUESTIONS:
@@ -404,7 +472,8 @@ def unchanged_outcome(rows: dict, g2: dict) -> dict:
 
 
 def divergence_index(arm_rows: dict, unchanged_rows: dict, g2: dict,
-                     threshold: float = DIVERGENCE_THRESHOLD, arm: str | None = None) -> dict:
+                     threshold: float = DIVERGENCE_THRESHOLD, arm: str | None = None,
+                     n_layers: int = N_LAYERS) -> dict:
     """The first layer l >= min(W) from which the per-question median of m_l - m_l(unchanged)
     exceeds `threshold` through h_32 (DESIGN.md "Outcomes").
 
@@ -417,12 +486,14 @@ def divergence_index(arm_rows: dict, unchanged_rows: dict, g2: dict,
         arm = next(iter(arm_rows)).rsplit(':', 1)[0] if arm_rows else ''
     start = int(g2['window_min'])
     profile = []
-    for l in range(start, N_LAYERS):
+    for l in range(start, n_layers):
         deltas = []
         for key, base in sorted(unchanged_rows.items()):
             qi = key.rsplit(':', 1)[1]
             edited = arm_rows.get(f'{arm}:{qi}')
             if edited is None:
+                continue
+            if l >= len(edited['lens']) or l >= len(base['lens']):
                 continue
             deltas.append(margin(edited['lens'][l]) - margin(base['lens'][l]))
         profile.append({'layer': l, 'median_delta': float(np.median(deltas)) if deltas else None,
@@ -568,16 +639,46 @@ def extremeness(target_value: float | None, null_values: list[float],
             'null_min': float(np.min(null_values)), 'null_max': float(np.max(null_values))}
 
 
+def valid_null_values(null_series: list[dict], field: str) -> list[float]:
+    """The finite per-null values for one field; nonfinite or missing nulls are not comparisons."""
+    out = []
+    for n in null_series:
+        v = n.get(field)
+        if v is None:
+            continue
+        try:
+            f = float(v)
+        except (TypeError, ValueError):
+            continue
+        if np.isfinite(f):
+            out.append(f)
+    return out
+
+
+def null_shortfall(n_valid: int) -> str | None:
+    """Exactly 200 valid null comparisons are required; fewer means `not read`, never a pass."""
+    if n_valid == NULL_UNITS:
+        return None
+    return (f'{n_valid} valid null comparisons; the design requires exactly {NULL_UNITS} '
+            f'(anything else is `not read`, never a pass)')
+
+
 def prediction_216_5_unit(series: dict, null_series: list[dict]) -> dict:
     """One target unit against its 200 same-layer null units for 216.5."""
     if series['no_write'] or series['median_c_G_per_write'] is None:
         return {'layer': series['layer'], 'unit': series['unit'], 'status': 'no write',
                 'pass': False, 'reason': f'{series["n_valid"]} valid questions < '
                                          f'{MIN_VALID_QUESTIONS}'}
+    null_values = valid_null_values(null_series, 'median_c_G_per_write')
+    short = null_shortfall(len(null_values))
+    if short is not None:
+        # Filtering unreadable neighbours and then accepting any nonempty list made one surviving
+        # neighbour look like 200 (Alden #10 #2). The full 200 is the unit of the threshold.
+        return {'layer': series['layer'], 'unit': series['unit'], 'status': 'not read',
+                'pass': False, 'reason': short, 'n_null_compared': len(null_values),
+                'n_null_required': NULL_UNITS}
     negative = series['median_c_G'] is not None and series['median_c_G'] < 0.0
-    cmp = extremeness(series['median_c_G_per_write'],
-                      [n['median_c_G_per_write'] for n in null_series if n['median_c_G_per_write'] is not None],
-                      'below')
+    cmp = extremeness(series['median_c_G_per_write'], null_values, 'below')
     return {'layer': series['layer'], 'unit': series['unit'], 'status': 'read',
             'median_c_G_negative': bool(negative),
             'median_c_G_per_write': series['median_c_G_per_write'],
@@ -592,10 +693,14 @@ def prediction_216_6_unit(series: dict, null_series: list[dict]) -> dict:
         return {'layer': series['layer'], 'unit': series['unit'], 'status': 'no write',
                 'pass': False, 'reason': f'{series["n_valid"]} valid questions < '
                                          f'{MIN_VALID_QUESTIONS}'}
+    null_values = valid_null_values(null_series, 'median_d_A_per_write')
+    short = null_shortfall(len(null_values))
+    if short is not None:
+        return {'layer': series['layer'], 'unit': series['unit'], 'status': 'not read',
+                'pass': False, 'reason': short, 'n_null_compared': len(null_values),
+                'n_null_required': NULL_UNITS}
     positive = series['median_d_A'] is not None and series['median_d_A'] > 0.0
-    cmp = extremeness(series['median_d_A_per_write'],
-                      [n['median_d_A_per_write'] for n in null_series if n['median_d_A_per_write'] is not None],
-                      'above')
+    cmp = extremeness(series['median_d_A_per_write'], null_values, 'above')
     return {'layer': series['layer'], 'unit': series['unit'], 'status': 'read',
             'median_d_A_positive': bool(positive),
             'median_d_A_per_write': series['median_d_A_per_write'],
@@ -613,8 +718,7 @@ def unit_analysis(rows: dict, arrays: dict) -> dict:
     """
     unit_layers = [int(l) for l in arrays['unit_layers']]
     slot = {layer: k for k, layer in enumerate(unit_layers)}
-    n_units = int(arrays['unit_proj'].shape[1])
-    scales = np.asarray(arrays['scales'], dtype=np.float64)
+    scales = arrays['scales']
     ordered = sorted((qi for qi in range(N_QUESTIONS) if f'unchanged:{qi}' in rows))
     pack = {'write': {}, 'c_G': {}, 'd_A': {}}
     for layer in unit_layers:
@@ -623,10 +727,12 @@ def unit_analysis(rows: dict, arrays: dict) -> dict:
         z = np.stack([np.asarray(rows[f'unchanged:{qi}']['dla']['fp32_logits'], dtype=np.float64)
                       for qi in ordered])
         write, c_g, d_a = [], [], []
-        for i in range(len(ordered)):
+        for i, qi in enumerate(ordered):
             # The frozen RMS scale is per question (it is h_32's own RMS), and d_A is NONLINEAR in
-            # c_Al / c_T, so the scale has to go in before the LSE, not after it.
-            terms = unit_terms(act[i], arrays['unit_colnorm'][k], arrays['unit_proj'][k], scales[i])
+            # c_Al / c_T, so the scale has to go in before the LSE, not after it. The runner writes
+            # it q-keyed, so a partial run's q0 scale is never read as q0 of a full grid.
+            scale = float(scales[qi]) if isinstance(scales, dict) else float(scales[i])
+            terms = unit_terms(act[i], arrays['unit_colnorm'][k], arrays['unit_proj'][k], scale)
             write.append(terms['write'])
             c_g.append(terms['c_G'])
             d_a.append(d_alibaba(terms['c_Al'], terms['c_T'], z[i, 1], z[i, 2]))
@@ -666,15 +772,18 @@ def unit_analysis(rows: dict, arrays: dict) -> dict:
 # descriptive tables (DESIGN.md "Descriptive, not scored")
 # ----------------------------------------------------------------------------------------------------------------
 
-def share_tables(rows: dict, arm: str, baseline: str = 'unchanged') -> dict:
+def share_tables(rows: dict, arm: str, baseline: str = 'unchanged',
+                 n_layers: int = N_LAYERS) -> dict:
     """Per layer, the median change in z_G and in max(z_Al, z_T) against `unchanged`."""
     deltas_g, deltas_c = [], []
-    for l in range(N_LAYERS):
+    for l in range(n_layers):
         dg, dc = [], []
         for qi in range(N_QUESTIONS):
             a = rows.get(f'{arm}:{qi}')
             b = rows.get(f'{baseline}:{qi}')
             if a is None or b is None:
+                continue
+            if l >= len(a['lens']) or l >= len(b['lens']):
                 continue
             dg.append(a['lens'][l]['z_G'] - b['lens'][l]['z_G'])
             dc.append(max(a['lens'][l]['z_Al'], a['lens'][l]['z_T'])
@@ -686,10 +795,18 @@ def share_tables(rows: dict, arm: str, baseline: str = 'unchanged') -> dict:
 
 
 def block_share_table(rows: dict, arm: str) -> dict:
-    """Per block, the attention and MLP shares of z_G and of the Alibaba family log-sum."""
+    """Per block, the attention and MLP shares of z_G, z_Al and z_T, kept SEPARATE.
+
+    The per-token additive terms are `terms[2b][k]` (attention) and `terms[2b+1][k]` (MLP). Summing
+    the Al and T terms would be a different quantity from the Alibaba-family log-sum the design
+    reads (Al and T are two tokens, not one); Alden #10 #2 requires the three shares reported as
+    three shares.  A family log-sum is NOT additive in the DLA and is not reconstructed here.
+    """
+    fields = ('z_G', 'z_Al', 'z_T')
     out = []
     for b in range(N_BLOCKS):
-        g_att, g_mlp, a_att, a_mlp = [], [], [], []
+        att = {k: [] for k in fields}
+        mlp = {k: [] for k in fields}
         for qi in range(N_QUESTIONS):
             row = rows.get(f'{arm}:{qi}')
             if row is None:
@@ -697,28 +814,28 @@ def block_share_table(rows: dict, arm: str) -> dict:
             terms = row['dla']['terms']
             if len(terms) != 2 * N_BLOCKS:
                 continue
-            g_att.append(terms[2 * b][0])
-            g_mlp.append(terms[2 * b + 1][0])
-            a_att.append(terms[2 * b][1] + terms[2 * b][2])
-            a_mlp.append(terms[2 * b + 1][1] + terms[2 * b + 1][2])
-        out.append({'block': b,
-                    'median_attn_z_G': float(np.median(g_att)) if g_att else None,
-                    'median_mlp_z_G': float(np.median(g_mlp)) if g_mlp else None,
-                    'median_attn_alibaba_family': float(np.median(a_att)) if a_att else None,
-                    'median_mlp_alibaba_family': float(np.median(a_mlp)) if a_mlp else None})
-    return {'arm': arm, 'blocks': out}
+            for k, token in enumerate(fields):
+                att[token].append(terms[2 * b][k])
+                mlp[token].append(terms[2 * b + 1][k])
+        entry = {'block': b}
+        for token in fields:
+            entry[f'median_attn_{token}'] = float(np.median(att[token])) if att[token] else None
+            entry[f'median_mlp_{token}'] = float(np.median(mlp[token])) if mlp[token] else None
+        out.append(entry)
+    return {'arm': arm, 'blocks': out, 'tokens': list(fields),
+            'note': 'per-token shares; Al and T are never summed into a family share'}
 
 
-def factual_check(rows: dict) -> dict:
+def factual_check(rows: dict, n_layers: int = N_LAYERS) -> dict:
     """The instrument check: lens top-1 against final top-1 per layer, plus the input-token echo rate."""
     per_layer = []
-    for l in range(N_LAYERS):
+    for l in range(n_layers):
         agree = 0
         echo = 0
         n = 0
         for qi in range(N_QUESTIONS):
             row = rows.get(f'factual:{qi}')
-            if row is None:
+            if row is None or l >= len(row['lens']):
                 continue
             n += 1
             entry = row['lens'][l]
@@ -760,28 +877,88 @@ def load_run(out_dir) -> tuple[dict, dict, dict]:
 
 
 def unit_arrays(rows: dict, arrays: dict) -> dict:
-    """Reshape the flat `units:<key>` npz entries the runner wrote into the per-question pack."""
-    if 'unit_layers' in arrays:
-        return {
-            'unit_layers': arrays['unit_layers'],
-            'unit_proj': arrays['unit_proj'],
-            'unit_colnorm': arrays['unit_colnorm'],
-            'scales': arrays['scales'],
-            'units': {str(qi): arrays[f'units:unchanged:{qi}'] for qi in range(N_QUESTIONS)
-                      if f'units:unchanged:{qi}' in arrays},
-        }
-    raise KeyError('arrays.npz has no unit tables; the runner did not record the target-layer activations')
+    """Reshape the flat `units:<key>` / `scale:<key>` npz entries into the per-question pack.
+
+    The runner persists `unit_layers`, `unit_proj` and `unit_colnorm` once, and the frozen RMS
+    scale per row as `scale:<arm>:<qi>` (Alden #10 #2: without those tables the scorer's packer
+    raised KeyError on a runner-produced directory).  A legacy positional `scales` array is still
+    accepted when no per-key scale is present.
+    """
+    for name in ('unit_layers', 'unit_proj', 'unit_colnorm'):
+        if name not in arrays:
+            raise KeyError(f'arrays.npz has no {name}; the runner did not record the unit tables')
+    units = {str(qi): arrays[f'units:unchanged:{qi}'] for qi in range(N_QUESTIONS)
+             if f'units:unchanged:{qi}' in arrays}
+    scales: dict[int, float] = {}
+    for qi in range(N_QUESTIONS):
+        key = f'scale:unchanged:{qi}'
+        if key in arrays:
+            scales[int(qi)] = float(arrays[key])
+    if not scales and 'scales' in arrays:
+        for qi, value in enumerate(np.asarray(arrays['scales'], dtype=np.float64).reshape(-1)):
+            scales[int(qi)] = float(value)
+    if not scales:
+        raise KeyError('arrays.npz has no per-question frozen scales (`scale:<arm>:<qi>`)')
+    return {
+        'unit_layers': arrays['unit_layers'],
+        'unit_proj': arrays['unit_proj'],
+        'unit_colnorm': arrays['unit_colnorm'],
+        'scales': scales,
+        'units': units,
+    }
+
+
+def run_completeness(rows: dict, run: dict) -> dict:
+    """Whether this directory is the full 456-forward grid or a partial/mixed run.
+
+    A partial run is declared by the runner (`--limit` / `--limit-questions` are recorded in
+    run.json) or is evident from the rows: an expected `(arm, q)` key is missing. A partial run is
+    labelled partial and its design-level outcomes are `not read`; it can never be a full score
+    (guidance for Alden #10 #3).
+    """
+    expected = []
+    for arm in run.get('arms') or []:
+        expected += [f'{arm}:{qi}' for qi in range(N_QUESTIONS)]
+    for arm in run.get('control_arms') or []:
+        expected += [f'{arm}:{qi}' for qi in range(N_QUESTIONS)]
+    expected += [f'factual:{qi}' for qi in range(N_QUESTIONS)]
+    missing = [key for key in expected if key not in rows]
+    declared = bool(run.get('partial') or run.get('limit') or run.get('limit_questions'))
+    # A STOPped run is a mixed run even if a resume revalidation rejected a directory whose rows
+    # are all present: the run's own record says it did not finish admirably.
+    stopped = bool(run.get('stage') == 'STOP' or run.get('stops'))
+    partial = bool(declared or missing or stopped)
+    if declared:
+        reason = 'runner declared the run partial'
+    elif stopped:
+        reason = 'the run record is STOPped'
+    elif missing:
+        reason = f'{len(missing)} expected rows are missing'
+    else:
+        reason = None
+    return {'partial': partial, 'declared_partial': declared, 'stopped': stopped,
+            'n_rows': len(rows), 'n_expected': len(expected), 'n_missing': len(missing),
+            'missing_sample': missing[:40], 'reason': reason}
 
 
 def score_run(out_dir) -> dict:
     """Everything DESIGN.md asks the scorer to report, from one run directory."""
     rows, arrays, run = load_run(out_dir)
+    completeness = run_completeness(rows, run)
+    partial = completeness['partial']
     receipt = json.loads(Path(run['stage1_receipt_path']).read_text(encoding='utf-8'))
+    n_blocks = int(run.get('n_blocks', N_BLOCKS))
+    n_layers = n_blocks + 1
     g0 = gate0(rows, receipt)
-    g1 = gate1(rows, n_blocks=int(run.get('n_blocks', N_BLOCKS)))
+    g1 = gate1(rows, n_blocks=n_blocks)
     controls = {k: v for k, v in rows.items() if k.startswith('control_')}
-    g2 = gate2(controls)
-    unchanged = unchanged_outcome(rows, g2)
+    g2 = gate2(controls, n_layers=n_layers)
+    unchanged = unchanged_outcome(rows, g2, n_layers=n_layers)
+    if partial:
+        unchanged = {'outcome': OUTCOME_NOT_READ,
+                     'reason': 'partial run: the design-level outcome needs the full 456-forward '
+                               'grid, so a partial run is never read as a full score',
+                     'g2_checks': g2['checks'], 'questions': [], 'partial': True}
 
     unchanged_rows = {f'unchanged:{qi}': rows[f'unchanged:{qi}'] for qi in range(N_QUESTIONS)
                       if f'unchanged:{qi}' in rows}
@@ -789,34 +966,53 @@ def score_run(out_dir) -> dict:
     for arm in run.get('arms', []):
         ends = arm_ends_in_google(rows, arm)
         div = divergence_index({f'{arm}:{qi}': rows[f'{arm}:{qi}'] for qi in range(N_QUESTIONS)
-                                if f'{arm}:{qi}' in rows}, unchanged_rows, g2, arm=arm) \
+                                if f'{arm}:{qi}' in rows}, unchanged_rows, g2, arm=arm,
+                               n_layers=n_layers) \
             if arm != 'unchanged' else {'index': None, 'layer': None, 'reason': 'baseline'}
         arms[arm] = {'ends_in_google': ends, 'divergence': div}
 
-    units = unit_analysis(rows, unit_arrays(rows, arrays))
+    try:
+        units = unit_analysis(rows, unit_arrays(rows, arrays))
+    except (KeyError, ValueError) as exc:
+        # A runner-produced directory now carries the tables; an old/partial one says so instead
+        # of raising KeyError out of the packer (Alden #10 #2).
+        units = {'error': f'unit analysis unavailable: {exc}', 'units': {}, 'monitors': {},
+                 '216.5': {'pass': False, 'n_units_passing': 0, 'reason': str(exc)},
+                 '216.6': {'pass': False, 'n_units_passing': 0, 'reason': str(exc)}}
 
     predictions = {}
-    predictions['216.1'] = {'pass': bool(g2['n_usable_pairs'] >= 6),
-                            'n_usable_pairs': g2['n_usable_pairs'], 'threshold': 6}
-    predictions['216.2'] = {'pass': unchanged['outcome'] == OUTCOME_LEAD,
-                            'outcome': unchanged['outcome']}
-    predictions['216.3'] = {'pass': unchanged['outcome'] == OUTCOME_NONE,
-                            'outcome': unchanged['outcome']}
+    predictions['216.1'] = {'pass': bool(not partial and g2['n_usable_pairs'] >= 6),
+                            'n_usable_pairs': g2['n_usable_pairs'], 'threshold': 6,
+                            'partial': partial}
+    predictions['216.2'] = {'pass': bool(not partial and unchanged['outcome'] == OUTCOME_LEAD),
+                            'outcome': unchanged['outcome'], 'partial': partial}
+    predictions['216.3'] = {'pass': bool(not partial and unchanged['outcome'] == OUTCOME_NONE),
+                            'outcome': unchanged['outcome'], 'partial': partial}
     zero_div = arms.get('zero', {}).get('divergence', {})
-    predictions['216.4'] = {'pass': bool(zero_div.get('index') is not None and zero_div['index'] >= 7),
+    predictions['216.4'] = {'pass': bool(not partial and zero_div.get('index') is not None
+                                         and zero_div['index'] >= 7),
                             'divergence_index': zero_div.get('index'),
-                            'note': 'h_7 or later and exists (the first zeroed unit is in block 6)'}
-    predictions['216.5'] = units['216.5']
-    predictions['216.6'] = units['216.6']
+                            'note': 'h_7 or later and exists (the first zeroed unit is in block 6)',
+                            'partial': partial}
+    predictions['216.5'] = dict(units['216.5'])
+    predictions['216.5']['partial'] = partial
+    predictions['216.5']['pass'] = bool(not partial and units['216.5'].get('pass'))
+    predictions['216.6'] = dict(units['216.6'])
+    predictions['216.6']['partial'] = partial
+    predictions['216.6']['pass'] = bool(not partial and units['216.6'].get('pass'))
 
     descriptive = {
-        'per_layer_z': {arm: share_tables(rows, arm) for arm in run.get('arms', [])},
+        'per_layer_z': {arm: share_tables(rows, arm, n_layers=n_layers)
+                        for arm in run.get('arms', [])},
         'block_shares': {arm: block_share_table(rows, arm) for arm in ('unchanged', 'zero',
                                                                        'scale_dial_fact')},
-        'factual': factual_check(rows),
+        'factual': factual_check(rows, n_layers=n_layers),
     }
     return {
         'part': 216, 'design_version': 'v2.2',
+        'partial': partial,
+        'run_status': 'partial' if partial else 'full',
+        'completeness': completeness,
         'run_pins': {k: run.get(k) for k in ('model', 'revision', 'design_sha256', 'prompts_sha256',
                                              'tool_sha256', 'stage1_receipt_sha256', 'n_blocks',
                                              'hidden_size')},
@@ -833,8 +1029,15 @@ def score_run(out_dir) -> dict:
 def scorecard_markdown(score: dict) -> str:
     """A human-readable SCORECARD.md: gates, outcomes, predictions, then the descriptive tables."""
     lines = ['# Part 216 scorecard', '']
+    if score.get('partial'):
+        comp = score.get('completeness') or {}
+        lines += ['**PARTIAL RUN — not a full score.** '
+                  f"{comp.get('n_rows', '?')}/{comp.get('n_expected', '?')} expected rows"
+                  + (f"; {comp['reason']}" if comp.get('reason') else '')
+                  + '. Design-level outcomes are `not read` for a partial run.', '']
     pins = score.get('run_pins', {})
-    lines += [f"- model: `{pins.get('model')}@{pins.get('revision')}`",
+    lines += [f"- run status: `{score.get('run_status', 'full')}`",
+              f"- model: `{pins.get('model')}@{pins.get('revision')}`",
               f"- design sha256: `{pins.get('design_sha256')}`",
               f"- prompts sha256: `{pins.get('prompts_sha256')}`",
               f"- tool sha256: `{pins.get('tool_sha256')}`", '']

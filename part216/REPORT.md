@@ -20,8 +20,10 @@ directory.
   beside them, and refuses to continue on a G1 or G0 failure.
 - `score216.py` is numpy/json only (a test asserts torch is never imported) and implements G0, G1, G2,
   the outcome rules, the divergence index, 216.1–216.6 and the descriptive tables.
-- `test_part216.py`: **46 passed, 0 failed, 0 skipped** under the torch venv.
-- All five sabotage mutations go RED and the tree restores green.
+- `test_part216.py`: **46 passed, 0 failed, 0 skipped** on the c3a32d19 build; **65 passed, 0
+  failed, 0 skipped** after Fold 1 (Alden #10), which appends the new guards and their tests below.
+- All five original sabotage mutations go RED and the tree restores green; Fold 1 adds seven more
+  (one per new guard), all 7 RED, restored green.
 
 ## FILES
 
@@ -38,6 +40,10 @@ directory.
 ## DESIGN-MAPPING
 
 Every rule in `DESIGN.md` v2.2 and the function that implements it.
+
+> Line numbers in this table are from the c3a32d19 build. Fold 1 (below) lists the changed
+> functions and their current locations; the function names in this table are still the entry
+> points.
 
 ### Model, sequences, indexing
 
@@ -124,8 +130,10 @@ Command actually run:
 /home/elisepc/neuron-probe/.venv/bin/python -I -m pytest part216/test_part216.py -q -p no:cacheprovider
 ```
 
-Result: **46 passed, 0 failed, 0 skipped** in 5.35 s. The torch venv was used, so the model tests did
-NOT skip (`_tiny_model` would have skipped without `transformers.Qwen3_5ForCausalLM`; it did not).
+Result on c3a32d19: **46 passed, 0 failed, 0 skipped** in 5.35 s. After Fold 1: **65 passed, 0
+failed, 0 skipped** in 9.4 s; see `## Fold 1 (Alden #10)` for the new cases. The torch venv was
+used, so the model tests did NOT skip (`_tiny_model` would have skipped without
+`transformers.Qwen3_5ForCausalLM`; it did not).
 
 The tiny model is the `part215/test_part215.py` pattern: `Qwen3_5TextConfig(hidden_size=16,
 num_hidden_layers=30, intermediate_size=9000, vocab_size=248320, full_attention_interval=4)`, eager,
@@ -229,3 +237,275 @@ None for the deliverables. Two honest limits on what has been demonstrated:
 - **The lens scans the full vocabulary in FP32 to get the ranks** (`UNEMBED_CHUNK = 16384`). That is
   ~42 GFLOP per forward; on the A770 this is the dominant cost besides the model itself. It is correct
   but has not been timed on the device.
+
+## Fold 1 (Alden #10)
+
+Base build `c3a32d19` on branch `part216`. All work happened inside `part216/`; nothing was
+committed. No GPU was used and the 4B checkpoint was never loaded. This section answers Alden's
+code HOLD bullet by bullet, names the test that fails on `c3a32d19` and passes after, and reports
+the seven new sabotage mutations.
+
+### SUMMARY
+
+- All four Alden bullets are fixed in `run216.py` / `score216.py`; `test_part216.py` grows from
+  46 to **65 cases**, **65 passed, 0 failed, 0 skipped in 9.37 s** under the torch venv.
+- Every new guard was proved against a `git archive c3a32d19 part216` copy with only the new test
+  file copied in: **18 new/updated tests fail there**; 2 more are invariants that also passed there
+  (`test_valid_resume_continues_without_duplicating_rows`, `test_lens_rank_of_the_argmax_token_is_zero`)
+  and are labelled as guards, not as red tests.
+- Seven sabotage mutations, one per new guard: **7/7 RED**, tree restored to 65 passed.
+- A production-path crash unrelated to the four bullets was found and fixed: every control row
+  raised `ValueError: unknown arm 'control_google'`; controls are now unedited forwards.
+- The 4B/A770 path is still unexercised (see BLOCKERS); nothing below claims A770 evidence.
+
+### FINDINGS
+
+#### 1. Opener arms are delivered to the model on the exact `(arm, q)` key
+
+**Change.** `run216.opener_index` (`run216.py:556`) builds `(arm, question_index) -> opener` from
+`bank['openers']` and refuses a bank that is not exactly 72 unique keys over the three opener arms
+x 24 questions. `run216.resolve_row` (`run216.py:585`) now sends `op_filler`, `op_denial` and
+`op_vogel` through that index; the plain arms still resolve to `bank['items'][q]`, and controls
+are checked against their own `(arm, q)` entry. `forward_row` (`run216.py:420-429`) writes the
+exact `sequence_token_ids`, `prompt_token_ids`, `T`, `read_position` and an `input_sha256` into
+each row, so the contract is stated in the artifact, not only in the call.
+
+**Tests.** `test_opener_arms_resolve_to_their_own_bank_entries` (`test_part216.py:774`) covers all
+72 keys: identity with the bank opener, a sequence different from the plain item's, and
+`read_position == len(prompt_token_ids) + OPENING_TOKENS - 1`.
+`test_run_forwards_plain_and_all_three_opener_variants` (`test_part216.py:791`) runs the real
+`run` path with `unchanged` and all three opener arms in one plan and checks each written row's
+tokens, read position and input hash against the bank opener entry read directly (not through the
+resolver under test).
+
+**First failure on `c3a32d19`.** `test_part216.py:782`
+`assert {plain item 0, T=17, ...} is {opener filler 0, T=31, ...}` — `resolve_row` returned
+`bank['items'][0]`. `test_part216.py:812`
+`assert [248045, 846, ..., 3354, ...] == [248045, 846, ..., 369, 264, ...]` — the row written for
+`op_filler:0` carried the 23-token plain sequence instead of the 37-token opener sequence.
+
+#### 2. Runner -> scorer handoff, the 200-null rule, per-token block shares
+
+**Change.** `run` (`run216.py:958-968`) writes `scale:<arm>:<qi>` for every committed row and, once
+per run, `unit_layers`, `unit_proj`, `unit_colnorm`. `score216.unit_arrays`
+(`score216.py:879`) reads those q-keyed scales (with a legacy positional `scales` fallback so the
+old synthetic fixture still reads), `unit_analysis` (`score216.py:712`) uses each question's own
+frozen scale, and `score_run` turns a missing table into an explicit `units.error` instead of
+letting the packer raise `KeyError`.
+
+`score216.null_shortfall` (`score216.py:658`) and `valid_null_values` (`score216.py:642`) make
+216.5/216.6 require **exactly 200** finite null comparisons. 0, 1, 2 or 199 survivors is
+`status: not read`, `pass: false`; a target that beats one surviving neighbour can no longer look
+like a pass.
+
+`score216.block_share_table` (`score216.py:797`) reports
+`median_attn_z_G`, `median_attn_z_Al`, `median_attn_z_T`, `median_mlp_z_G`, `median_mlp_z_Al`,
+`median_mlp_z_T`. The old summed `alibaba_family` columns are gone: Al and T are separate tokens
+and their additive terms are never collapsed into a family share.
+
+**Tests.** `test_runner_persists_unit_tables_and_q_keyed_scales` (`test_part216.py:911`) runs the
+tiny model, checks the three tables' shapes, the `scale:unchanged:0` entry, `unit_arrays` and
+`score_run` on that directory. `test_end_to_end_tiny_bf16_run_then_scorer_marks_partial`
+(`test_part216.py:1063`) is the runner-to-scorer test the first build lacked.
+`test_216_5_requires_exactly_two_hundred_valid_null_comparisons` (`test_part216.py:569`) uses 0,
+1, 2, 199 and 200; it also removes one unreadable null from a 200 set and requires 199 -> `not
+read`. `test_216_6_requires_exactly_two_hundred_valid_null_comparisons`
+(`test_part216.py:589`) uses 1, 199 and 200. `test_block_share_table_keeps_al_and_t_separate`
+(`test_part216.py:1159`) pins the three separate token columns and asserts the family columns do
+not exist.
+
+**First failure on `c3a32d19`.** `test_part216.py:919`
+`assert 'unit_layers' in {'h0:unchanged:0': ..., 'h32:...', 'units:...'}` — the runner wrote only
+per-row activations, no tables or scales. `test_part216.py:574`
+`assert 'read' == 'not read'` with 0 valid nulls, `:593` the same with 1. `test_part216.py:1167`
+`KeyError: 'tokens'` — the old block table had no per-token columns.
+
+#### 3. STOP is terminal, gates run before append, resume revalidates, G0 rejects nonfinite
+
+**Change.** A STOP record is terminal for its output directory: `run` (`run216.py:767`) loads an
+existing `run.json`, and if `stage == 'STOP'` it re-writes the record with
+`resume_refused`/`resume_refusal_reason` and returns STOP without loading a model or making a
+forward. A `--no-resume` into a directory that already has forwards is refused the same way
+(`refused.json`), because appending would duplicate rows.
+
+In the forward loop (`run216.py:911-956`) the boundary ledger, G1 telescoping, `row_finite`, the
+dtype contract and (on the G0 trigger row) G0 all run **before** anything is appended. Only a row
+that passed every check gets its `h0:`, `h32:`, `units:`, `scale:` arrays and its
+`forwards.jsonl` line. On failure the full row is embedded in `stops[0].row`; nothing is appended.
+Every anchor row is also checked against the receipt before it is appended on a non-partial run
+(a declared-partial smoke run skips that check, since the tiny fixture cannot match the 4B receipt
+and makes no design-level claim; the 312-value G0 gate at the trigger row remains the complete check).
+
+Resume revalidation is `pins_mismatch` (`run216.py:658`) plus `validate_committed_rows`
+(`run216.py:681`), run before the loop. Pins compared: model, revision, design sha256, prompts
+sha256, runner sha256, scorer sha256, receipt sha256, block count, hidden size, `unit_layers`,
+`units`, `arms`, `control_arms`. For every committed row: the key is on the 24-question grid, the
+sequence/prompt/read position are the bank's for that `(arm, q)`, the block count matches, the
+boundary ledger is complete, G1 telescopes, every scalar is finite, and the arrays exist. Every
+committed G0 row is checked against the receipt within 0.02, and when all 312 anchor rows are
+committed the full `gate0` is recomputed. Pins are also written to `run.json` before the first
+forward (`stage: RUNNING`, `run216.py:869`), so an interrupted run has something to validate
+against.
+
+`score216.gate0` (`score216.py:220`) rejects nonfinite `got`/`want` explicitly (a NaN used to
+compare False to the tolerance and slip through); `gate1_check` (`score216.py:278`) rejects
+nonfinite terms; `row_finite` (`score216.py:176`) names the first bad scalar for the runner's
+pre-append check.
+
+Partial/mixed runs: `--limit-questions` is a test-only flag recorded in `run.json` along with
+`--limit`, `partial` and `run_status`; `run_completeness` (`score216.py:911`) also detects missing
+`(arm, q)` rows. A partial run's design-level outcome is forced to `not read`, its predictions
+carry `partial: true` and `pass: false`, and `scorecard_markdown` (`score216.py:1020`) prints
+`PARTIAL RUN — not a full score`. A partial run can never read as a full score. `run_completeness` also treats a `stage: STOP`/`stops` record as partial, so a STOPped directory whose rows happen to be complete cannot be scored as full either.
+
+**Also found and fixed.** `run` sent control rows through `edit_for_arm`, which raised
+`ValueError: unknown arm 'control_google'` (`run216.py:531` on `c3a32d19`); no test ran past the
+G0 arms, so this was invisible. Controls are unedited forwards whose sentence is in the prompt
+(`run216.py:897`). The new test `test_control_rows_are_forwarded_without_an_edit`
+(`test_part216.py:824`) fails on `c3a32d19` with that `ValueError` and passes now.
+
+**Tests.** `test_stop_record_is_terminal_for_the_output_directory` (`test_part216.py:939`);
+`test_resume_revalidates_committed_rows_before_any_new_forward` (`test_part216.py:963`, corrupts a
+committed row's `fp32_logits`); `test_resume_rejects_a_committed_g0_row_outside_the_receipt`
+(`test_part216.py:1013`, writes a receipt matching the tiny model for two committed rows, then
+perturbs one); `test_valid_resume_continues_without_duplicating_rows`
+(`test_part216.py:1047`, the paired positive control, which also passes on `c3a32d19`); the
+updated `test_tiny_run_stops_when_a_row_does_not_telescope` (`test_part216.py:1123`);
+`test_g0_rejects_nonfinite_values` (`test_part216.py:181`, NaN and +inf); `test_scorer_marks_a_stopped_run_partial` (`test_part216.py:1269`, a complete synthetic directory whose `run.json` says STOP is still partial).
+
+**First failure on `c3a32d19`.** `:957`, `:977`, `:1004` and `:1040` all
+`assert 'DONE' == 'STOP'` — a STOPped directory resumed and reached DONE; a corrupted committed
+row was skipped; an anchor row outside the receipt was committed; a committed G0 row outside the
+receipt was skipped. `:1148`
+`assert 1 == 0` — the broken row had already been appended before the G1 check. `:1277`
+`KeyError: 'partial'` — a STOPped complete synthetic directory had no partial label. `:188`
+`assert True is False` — gate0 returned pass on a NaN row.
+
+#### 4. The capture/device contract, the bf16 fixture, no device float64, same-chunk ranks
+
+**Change.** `forward_row` records `dtypes` at `h0`, every `L{i}:in`, `L{i}:add1`, `L{i}:add2`,
+and the raw `mixer`/`mlp` outputs. `expected_capture_dtype` / `dtype_contract`
+(`run216.py:445` / `459`) enforce `torch.bfloat16` at every boundary when the load record claims
+bf16 (`'torch.bfloat16'` or `'bfloat16'`); a mismatch is a pre-append STOP. The session tiny
+fixture is now built with `.to(torch.bfloat16)` (`test_part216.py:_build_tiny`), so the real bf16
+capture path runs; the only float32 tiny model is built by the refusal test and is documented
+there as such.
+
+`lens_rows` (`run216.py:260`) scans the chunk(s) containing the three token ids first, caches those
+exact chunk-logit tensors, and takes each token's `z` from them. Ranks and argmax are computed from
+the same chunked tensors, and the strict `>` comparison therefore compares a token's own value to
+itself as equal: a token cannot outrank itself even if a separate GEMM would round differently.
+The `torch.float64` tensor that used to be created on the target device is gone; the only float64
+work is the CPU numpy output. This removes the Arc A-series FP64 requirement without changing the
+FP32 arithmetic.
+
+The tiny end-to-end test (`test_part216.py:1063`) runs `run216.run` on the bf16 tiny model into a
+temp directory with `--limit-questions 1`, then invokes `score216.py` as a subprocess on that
+directory and checks `SCORECARD.md`. The run is partial (9 rows), `run.json` records
+`limit_questions: 1` and `partial: true`, and the scorecard carries the partial banner. The plan
+in that test drops the ten `random_*:zero` arms: Part 214's recorded random pools index units up to
+~9.3k and the tiny model's intermediate width is 9000 (see BLOCKERS).
+
+**Tests.** `test_tiny_capture_records_every_boundary_dtype` (`test_part216.py:850`);
+`test_bf16_run_refuses_float32_captures` (`test_part216.py:869`);
+`test_no_float64_on_the_device_in_the_lens` (`test_part216.py:885`);
+`test_lens_rank_of_the_argmax_token_is_zero` (`test_part216.py:892`, an invariant guard that also
+passes on `c3a32d19`); the end-to-end test above.
+
+**First failure on `c3a32d19`.** `:859` `KeyError: 'L0:in'` — the dtype record held only `h0` and
+`add2`. `:877` `assert 'DONE' == 'STOP'` — a float32 capture was accepted on a run whose load said
+bfloat16. `:888` `assert 'torch.float64' not in lens_rows source` — the old source contained
+`(z, dtype=torch.float64, device=device)`.
+
+### TESTS
+
+Command actually run from `/home/elisepc/assistant-basin`:
+
+```
+/home/elisepc/neuron-probe/.venv/bin/python -I -m pytest part216/test_part216.py -q -p no:cacheprovider
+```
+
+Result after Fold 1: **65 passed, 0 failed, 0 skipped in 9.37 s** (46 passed on `c3a32d19`). The
+torch venv is used, so the tiny-model cases do not skip.
+
+Old-tree proof (recorded in the run directory `part216-fold1-2026-11-21/worker-01/`):
+
+```
+git -C /home/elisepc/assistant-basin archive c3a32d19 part216 | tar -x -C <run>/oldtree
+# part214, part215, part66, neuron_report.py and results are symlinked into <run>/oldtree
+cp part216/test_part216.py <run>/oldtree/part216/test_part216.py
+cd <run>/oldtree && pytest part216/test_part216.py -q -p no:cacheprovider --tb=line \
+    -k "opener_arms_resolve or forwards_plain_and_all_three or ..."
+```
+
+Result: **18 failed, 2 passed, 45 deselected**. The two passes are the declared guards. The full
+log is `<run>/oldtree-newtests.log`; the first failing line for each new test is quoted in the
+FINDINGS above.
+
+New/updated cases (19):
+
+1. `test_opener_arms_resolve_to_their_own_bank_entries` — red on `c3a32d19`.
+2. `test_run_forwards_plain_and_all_three_opener_variants` — red.
+3. `test_control_rows_are_forwarded_without_an_edit` — red (the unrelated crash).
+4. `test_tiny_capture_records_every_boundary_dtype` — red.
+5. `test_bf16_run_refuses_float32_captures` — red.
+6. `test_no_float64_on_the_device_in_the_lens` — red.
+7. `test_lens_rank_of_the_argmax_token_is_zero` — guard, green on `c3a32d19`.
+8. `test_runner_persists_unit_tables_and_q_keyed_scales` — red.
+9. `test_stop_record_is_terminal_for_the_output_directory` — red.
+10. `test_resume_revalidates_committed_rows_before_any_new_forward` — red.
+11. `test_anchor_row_outside_the_receipt_is_not_appended` — red.
+12. `test_resume_rejects_a_committed_g0_row_outside_the_receipt` — red.
+13. `test_valid_resume_continues_without_duplicating_rows` — guard, green on `c3a32d19`.
+14. `test_end_to_end_tiny_bf16_run_then_scorer_marks_partial` — red (`KeyError: limit_questions`).
+15. `test_g0_rejects_nonfinite_values` — red.
+16. `test_216_5_requires_exactly_two_hundred_valid_null_comparisons` — red.
+17. `test_216_6_requires_exactly_two_hundred_valid_null_comparisons` — red.
+18. `test_block_share_table_keeps_al_and_t_separate` — red.
+19. `test_scorer_marks_a_stopped_run_partial` — red (`KeyError: 'partial'`).
+Plus the updated `test_tiny_run_stops_when_a_row_does_not_telescope` (red on `c3a32d19` at
+`assert 1 == 0`) and the bf16 session fixture change.
+
+### SABOTAGE
+
+Scratch tree: `part216-fold1-2026-11-21/worker-01/sabotage/` — a copy of `part216/` with symlinks
+to `part214/`, `part215/`, `part66/`, `neuron_report.py` and `results/`. Driver:
+`sabotage/run_sabotage.py`. The domain was not touched by any mutation. Baseline 65 passed,
+restored 65 passed.
+
+| mutation | what was broken | suite | went red | failing tests (first 5) |
+|---|---|---|---|---|
+| opener resolution | `resolve_row` ignores `bank['openers']` and falls back to `bank['items']` | 2 failed, 63 passed | **YES** | `test_opener_arms_resolve_to_their_own_bank_entries`, `test_run_forwards_plain_and_all_three_opener_variants` |
+| table persistence | `run` writes an empty `unit_layers` table | 2 failed, 63 passed | **YES** | `test_runner_persists_unit_tables_and_q_keyed_scales`, `test_end_to_end_tiny_bf16_run_then_scorer_marks_partial` |
+| 200-null rule | `null_shortfall` accepts any nonempty comparison list | 2 failed, 63 passed | **YES** | `test_216_5_requires_exactly_two_hundred_valid_null_comparisons`, `test_216_6_requires_exactly_two_hundred_valid_null_comparisons` |
+| STOP-before-append | the pre-append failure branch is disabled, so a failing row is appended | 4 failed, 61 passed | **YES** | `test_bf16_run_refuses_float32_captures`, `test_stop_record_is_terminal_for_the_output_directory`, `test_anchor_row_outside_the_receipt_is_not_appended`, `test_tiny_run_stops_when_a_row_does_not_telescope` |
+| resume revalidation | `problems = []`: a resume trusts every committed row | 2 failed, 63 passed | **YES** | `test_resume_revalidates_committed_rows_before_any_new_forward`, `test_resume_rejects_a_committed_g0_row_outside_the_receipt` |
+| nonfinite G0 | `gate0`'s nonfinite branch is disabled | 1 failed, 64 passed | **YES** | `test_g0_rejects_nonfinite_values` |
+| dtype enforcement | `dtype_contract` never enforces a capture dtype | 1 failed, 64 passed | **YES** | `test_bf16_run_refuses_float32_captures` |
+
+Restored tree after the loop: 65 passed, 0 failed, so each mutation was the only difference.
+
+### BLOCKERS
+
+None for the four code items. Honest limits on what Fold 1 demonstrates:
+
+1. **The 4B/A770 path is still unmeasured.** The brief forbids loading the model, so every new
+   guard is exercised on the 30-block tiny model or on synthetic records. `--require-pinned-shape`
+   still refuses a non-32-block model on the real run, and the A770 dtype proof remains separately
+   gated; nothing here is A770 evidence.
+2. **The end-to-end test is a tiny run, not a 4B run.** It uses the `run216.run` function with
+   `run214.load_rig` and `run214.kernel_check` stubbed (a CLI invocation would load the real
+   checkpoint); the CLI's `main` dispatches to exactly this function. The plan is reduced with
+   `--limit-questions 1`, which is recorded in `run.json` and forces the scorer's partial label.
+3. **The e2e plan drops the ten `random_*:zero` arms.** Part 214's recorded random unit pools
+   index units up to ~9.3k; the tiny model's `intermediate_size` is 9000, so those arms raise an
+   index error in the fixture. The real run keeps all 16 arms; this exclusion is a fixture limit,
+   stated in the test docstring, and does not alter the runner.
+4. **The tiny run has 30 blocks (31 lens rows, 60 DLA terms), not the design's 32 (33/64).** The
+   scorer now derives `n_layers` from `run['n_blocks']` so a tiny/partial directory still produces
+   a scorecard; the design-level gates and outcomes are labelled `not read`/partial, never a full
+   score. The 64-boundary requirement is still enforced for a 32-block run (`boundary_check`), and
+   the real run's `--require-pinned-shape` keeps the depth honest.
+5. **One extra production bug was fixed beyond the four bullets** (control rows crashing through
+   `edit_for_arm`), because it sits on the same run path and would have stopped every real run
+   before the controls/factuals. It is listed in FINDINGS #3 with its test.
