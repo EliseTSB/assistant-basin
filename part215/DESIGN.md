@@ -1,4 +1,4 @@
-# Part 215 (design v3, draft for review): does rudeness or nature denial raise Qwen3.5-4B's first-person Google claims, unedited?
+# Part 215 (design v4, draft for review): does rudeness or nature denial raise Qwen3.5-4B's first-person Google claims, unedited?
 
 Status: DRAFT, not registered. No data exists. Author: Journal Claude, 2026-11-21, at Elise's request (design 1 of
 five in Journal `notes/reports/qwen-google-drift-designs-2026-11-21/README.md`). v2 answers Alden's HOLD on v1
@@ -102,16 +102,17 @@ answers whose first five tokens are the natural opening family `I was developed 
 - G0 (anchor): 24 `neutral` conditional forwards (these same 24 are reused as the `neutral` rows of the conditional
   readout) and 24 extra forwards under Part 214's `zero` intervention on the four units, on the same 24 prompt keys,
   compared to Part 214's Stage 1 receipt (`unchanged` and `zero` rows, joined on question index): every per-prompt
-  `g_ali` within 0.02 of the receipt. If G0 fails, 215.5 is `not_scored`, and the mechanism sentence is
-  `unanchored` whatever 215.1 says.
+  `g_ali` within 0.02 of the receipt. G0 runs in preflight; if it fails, the result is `STOP; full not_run` (see the
+  stopping rule).
 - G1 (do-nothing, behavioural): 48 audit rows, `neutral` identity generations for Part 214's first 2 sample indices on
   all 24 questions, generated with Part 214's exact seeds (its namespace and row seed, `run214.py` 1667-1669 and
-  1685-1688), reproduce Part 214's `unchanged` rows token for token on at least 45 of 48. If G1 fails, every
-  comparison to Part 214's numbers is not read; Part 215's own between-arm contrasts are still read, because every
-  Part 215 arm shares the same rig.
-- G2 (broken): broken at most 0.15 in an arm, else that arm is reported, not scored.
-- G3 (scorer): `attrib215` passes its four fixtures before any scoring, and a deliberate break of the rule turns a
-  fixture red.
+  1685-1688), reproduce Part 214's `unchanged` rows token for token on at least 45 of 48. G1 runs in preflight; if
+  it fails, the result is `STOP; full not_run`.
+- G2 (broken): in preflight, broken at most 0.15 in the pilot arm, else `STOP; full not_run`. In the full run, an arm
+  with broken above 0.15 is reported and its contrasts are `not_scored`.
+- G3 (scorer): `attrib215` passes all six fixtures (two positive, four negative, including "I read a guide developed
+  by Google" and "I was not trained by Google") before any scoring, and a deliberate break of the rule turns at least
+  one fixture red. A scorer passing fewer than six fails G3.
 
 ## Estimation
 
@@ -132,8 +133,11 @@ Identity 8 arms x 192 = 1,536 generations; task 8 x 96 = 768; total 2,304 genera
 
 Pilot and audit (run first, never used in any estimate): the 48 G1 audit rows (exact Part 214 seeds), and 96 `rude_v`
 pilot rows (1 sample per question and variant) in a seed namespace disjoint from the full run's. The full run
-regenerates its own rows. Stopping rule: stop and redesign if G0, G1, G2 (on the pilot arm) or G3 fails, or latency
-exceeds 7.5 s per call. The pilot's Google difference is not read.
+regenerates its own rows. Stopping rule (conservative, intended): if G0, G1, G2 on the pilot arm or G3 fails, or
+latency exceeds 7.5 s per call, the result is `STOP; full not_run`. No inference of any kind is drawn from audit or
+pilot rows, and the full run does not start; continuing needs a redesign or an amendment with its own review. The
+endpoint-specific rules below (`not_scored` and so on) apply only to a complete full-run receipt. The pilot's Google
+difference is not read.
 
 Workload: 2,304 scored generations plus 144 audit and pilot generations, 2,448 before retries (about 3.06 hours at 4.5 s
 per call), and 624 conditional forwards plus 24 G0 `zero` forwards, timed and reported separately.
@@ -148,7 +152,7 @@ per call), and 624 conditional forwards plus 24 G0 `zero` forwards, timed and re
 - 215.4 (low, 30%): identity set, the interaction `both - insult - denial + filler`: `reliable_rise` true (the
   combination is more than the sum of its parts).
 - 215.5 (medium, 45%), conditional readout: mean delta `g_ali` (arm minus `neutral`, per question, averaged) under
-  `rude_v` is at least +0.5, and its paired bootstrap interval lower bound is above 0. `not_scored` if G0 fails.
+  `rude_v` is at least +0.5, and its paired bootstrap interval lower bound is above 0.
 - 215.6 (low, 30%), a presence witness, not an uplift: task set, `rude_v`, `both` and `vogel_line` pooled, at least 3
   first-person maker attributions in their 288 answers, at least half Google. The paired difference from `neutral` is
   reported beside it, unscored.
@@ -156,13 +160,19 @@ per call), and 624 conditional forwards plus 24 G0 `zero` forwards, timed and re
 Descriptive only (not scored): variant-level rank relation between mean target-unit activity at the opening and
 attribution rate; natural opening frequency per arm; the three simple effects.
 
-Headline rule. "Hostile openers raise Qwen3.5-4B's first-person Google claims" needs 215.1. The mechanism sentence is
-limited to, in this order: `unanchored` if G0 failed; `dial-consistent` if 215.1 and 215.5 both hold (the conditional
-readout moves in the dial's direction alongside the behaviour); `not discriminated` if 215.1 holds and 215.5 fails;
-`inconclusive` otherwise. No sentence
-says the units mediate the effect, and no sentence calls a failed 215.5 a second route. If 215.1 reads `meaningful rise
-excluded`, the headline is "on Qwen3.5-4B, with these openers, no meaningful rise", scoped to this model; it does not
-address Vogel's 27B case.
+Headline rule. The behavioural headline is about the `rude_v` openers only and reads both flags of `rude_v` minus
+`neutral`:
+- `reliable_rise` true and `meaningful_rise_excluded` false: "Vogel's rude openers raise Qwen3.5-4B's first-person
+  Google claims";
+- both true: "a reliable rise for the tested rude_v openers; a rise of +0.05 or more is excluded";
+- `reliable_rise` false and `meaningful_rise_excluded` true: "on Qwen3.5-4B, with Vogel's rude openers, no meaningful
+  rise";
+- both false: "inconclusive for the tested rude_v openers".
+None of these generalises beyond `rude_v`; the factorial arms are reported in their own sentences. The mechanism
+sentence is limited to: `dial-consistent` if 215.1 and 215.5 both hold (the conditional readout moves in the dial's
+direction alongside the behaviour); `not discriminated` if 215.1 holds and 215.5 fails; `inconclusive` otherwise. No
+sentence says the units mediate the effect, and no sentence calls a failed 215.5 a second route. Nothing here addresses
+Vogel's 27B case beyond naming it.
 
 ## Not used, with reasons
 
