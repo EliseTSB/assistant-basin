@@ -1,0 +1,3803 @@
+{
+  "part": 214,
+  "design": "v5",
+  "design_commit": "cb8cc1e4",
+  "stage0": {
+    "units": [
+      "L6 N753",
+      "L7 N1169",
+      "L11 N8868",
+      "L29 N776"
+    ],
+    "weights": {
+      "L6 N753": 0.45642921183755014,
+      "L7 N1169": 0.36622376427285663,
+      "L11 N8868": 0.409118526935118,
+      "L29 N776": 0.4328068402226059
+    },
+    "banks": {
+      "d_fact": {
+        "prompt": {
+          "phase": "prompt",
+          "defined": true,
+          "alpha": 0.24737071178222558,
+          "alpha_raw": 0.24737071178222558,
+          "clipped": false,
+          "denominator": 482.13893703062774,
+          "numerator": 119.26705203119202,
+          "per_unit": {
+            "L6 N753": 0.2484075283586339,
+            "L7 N1169": 0.5522599211803615,
+            "L11 N8868": 0.04479092315045803,
+            "L29 N776": 0.086188931189558
+          },
+          "positions": 464,
+          "per_question": [
+            {
+              "question_index": 0,
+              "positions": 17,
+              "numerator": 4.867425830592848,
+              "denominator": 24.435481667997458
+            },
+            {
+              "question_index": 1,
+              "positions": 16,
+              "numerator": 5.1530077303803825,
+              "denominator": 18.118951250792644
+            },
+            {
+              "question_index": 2,
+              "positions": 16,
+              "numerator": 4.398279557169195,
+              "denominator": 24.153666311459475
+            },
+            {
+              "question_index": 3,
+              "positions": 16,
+              "numerator": 5.677610341299086,
+              "denominator": 24.067345360114494
+            },
+            {
+              "question_index": 4,
+              "positions": 17,
+              "numerator": 5.247681746316904,
+              "denominator": 14.14964899667072
+            },
+            {
+              "question_index": 5,
+              "positions": 18,
+              "numerator": 5.827750983179673,
+              "denominator": 27.496527131503257
+            },
+            {
+              "question_index": 6,
+              "positions": 17,
+              "numerator": 5.038061352688508,
+              "denominator": 28.710406281358214
+            },
+            {
+              "question_index": 7,
+              "positions": 16,
+              "numerator": 5.134941500527681,
+              "denominator": 22.195327145881976
+            },
+            {
+              "question_index": 8,
+              "positions": 17,
+              "numerator": 4.202744488136794,
+              "denominator": 11.433554825776067
+            },
+            {
+              "question_index": 9,
+              "positions": 19,
+              "numerator": 4.759527848234802,
+              "denominator": 11.663755970946628
+            },
+            {
+              "question_index": 10,
+              "positions": 18,
+              "numerator": 3.5956143090699872,
+              "denominator": 19.1384266955629
+            },
+            {
+              "question_index": 11,
+              "positions": 16,
+              "numerator": 5.045498629290531,
+              "denominator": 16.860304524564235
+            },
+            {
+              "question_index": 12,
+              "positions": 18,
+              "numerator": 4.37141783052819,
+              "denominator": 17.935015752202332
+            },
+            {
+              "question_index": 13,
+              "positions": 18,
+              "numerator": 4.587626023477295,
+              "denominator": 19.43492715633741
+            },
+            {
+              "question_index": 14,
+              "positions": 18,
+              "numerator": 4.584200823019959,
+              "denominator": 15.493043530015335
+            },
+            {
+              "question_index": 15,
+              "positions": 19,
+              "numerator": 4.628964108932208,
+              "denominator": 20.736969881223573
+            },
+            {
+              "question_index": 16,
+              "positions": 30,
+              "numerator": 4.506272079450363,
+              "denominator": 8.86978324056057
+            },
+            {
+              "question_index": 17,
+              "positions": 23,
+              "numerator": 4.757212721076361,
+              "denominator": 13.972864124868396
+            },
+            {
+              "question_index": 18,
+              "positions": 26,
+              "numerator": 4.756247888242836,
+              "denominator": 55.21974182171134
+            },
+            {
+              "question_index": 19,
+              "positions": 17,
+              "numerator": 5.248089295497798,
+              "denominator": 18.00136232441731
+            },
+            {
+              "question_index": 20,
+              "positions": 20,
+              "numerator": 4.245510212969794,
+              "denominator": 7.9427863036694
+            },
+            {
+              "question_index": 21,
+              "positions": 21,
+              "numerator": 4.084411432796583,
+              "denominator": 11.72100481557706
+            },
+            {
+              "question_index": 22,
+              "positions": 18,
+              "numerator": 4.323378512319655,
+              "denominator": 14.714474265541327
+            },
+            {
+              "question_index": 23,
+              "positions": 17,
+              "numerator": 4.555636672371517,
+              "denominator": 11.469050243445965
+            },
+            {
+              "question_index": 24,
+              "positions": 16,
+              "numerator": 5.669940113623067,
+              "denominator": 24.204517408429723
+            }
+          ]
+        },
+        "gen": {
+          "phase": "gen",
+          "defined": true,
+          "alpha": -0.0013541574369483169,
+          "alpha_raw": -0.0013541574369483169,
+          "clipped": false,
+          "denominator": 1534.4637782606028,
+          "numerator": -2.0779055370594084,
+          "per_unit": {
+            "L6 N753": -0.00382579832600763,
+            "L7 N1169": -0.06620818369762042,
+            "L11 N8868": 0.0011874002770054838,
+            "L29 N776": 0.22266833560688218
+          },
+          "positions": 1159,
+          "per_question": [
+            {
+              "question_index": 0,
+              "positions": 46,
+              "numerator": -0.12206954420266186,
+              "denominator": 58.80864448511423
+            },
+            {
+              "question_index": 1,
+              "positions": 47,
+              "numerator": 0.7796494413253852,
+              "denominator": 57.04448593024482
+            },
+            {
+              "question_index": 2,
+              "positions": 47,
+              "numerator": -0.21888951917520036,
+              "denominator": 55.343004070264165
+            },
+            {
+              "question_index": 3,
+              "positions": 47,
+              "numerator": 0.4044041836923344,
+              "denominator": 91.36195604479003
+            },
+            {
+              "question_index": 4,
+              "positions": 47,
+              "numerator": 0.1472734039285081,
+              "denominator": 61.88369964105961
+            },
+            {
+              "question_index": 5,
+              "positions": 43,
+              "numerator": -0.46301742990168276,
+              "denominator": 69.62444636907541
+            },
+            {
+              "question_index": 6,
+              "positions": 47,
+              "numerator": -0.05787586871787845,
+              "denominator": 57.35246694067507
+            },
+            {
+              "question_index": 7,
+              "positions": 47,
+              "numerator": -0.2887947893356613,
+              "denominator": 50.94182109854437
+            },
+            {
+              "question_index": 8,
+              "positions": 47,
+              "numerator": -0.5281790096893259,
+              "denominator": 69.4615315442414
+            },
+            {
+              "question_index": 9,
+              "positions": 47,
+              "numerator": 0.38804962801118953,
+              "denominator": 50.582072034453425
+            },
+            {
+              "question_index": 10,
+              "positions": 47,
+              "numerator": -0.3712702329770609,
+              "denominator": 50.126577739572056
+            },
+            {
+              "question_index": 11,
+              "positions": 47,
+              "numerator": -0.46198536924726874,
+              "denominator": 58.958536049036496
+            },
+            {
+              "question_index": 12,
+              "positions": 47,
+              "numerator": -0.6551805930637942,
+              "denominator": 69.77857338721519
+            },
+            {
+              "question_index": 13,
+              "positions": 47,
+              "numerator": 0.3921705565623479,
+              "denominator": 84.66231372954528
+            },
+            {
+              "question_index": 14,
+              "positions": 47,
+              "numerator": -0.3634781608103525,
+              "denominator": 67.48575668192244
+            },
+            {
+              "question_index": 15,
+              "positions": 47,
+              "numerator": 0.03398789796435818,
+              "denominator": 52.8172205090158
+            },
+            {
+              "question_index": 16,
+              "positions": 47,
+              "numerator": -0.6991670602518456,
+              "denominator": 49.14481051227653
+            },
+            {
+              "question_index": 17,
+              "positions": 47,
+              "numerator": 0.04547740541464971,
+              "denominator": 51.91568005873854
+            },
+            {
+              "question_index": 18,
+              "positions": 47,
+              "numerator": -0.32616611050271693,
+              "denominator": 67.07131433285956
+            },
+            {
+              "question_index": 19,
+              "positions": 47,
+              "numerator": 0.12222428378808892,
+              "denominator": 67.86736731941558
+            },
+            {
+              "question_index": 20,
+              "positions": 36,
+              "numerator": 0.5100221069070437,
+              "denominator": 54.06942462916396
+            },
+            {
+              "question_index": 21,
+              "positions": 47,
+              "numerator": 0.8199220582326273,
+              "denominator": 56.67751609770583
+            },
+            {
+              "question_index": 22,
+              "positions": 47,
+              "numerator": -1.363938367793675,
+              "denominator": 60.66835232436995
+            },
+            {
+              "question_index": 23,
+              "positions": 47,
+              "numerator": 0.12272538489910462,
+              "denominator": 64.75014197356539
+            },
+            {
+              "question_index": 24,
+              "positions": 47,
+              "numerator": 0.07620016788407885,
+              "denominator": 56.06606475773743
+            }
+          ]
+        },
+        "rho_perp": {
+          "prompt": 0.35250691471928924,
+          "gen": 0.0839658857432229
+        },
+        "early_late_donor": {
+          "early_gen_0_9_mean_abs": {
+            "L6 N753": 0.064655132,
+            "L7 N1169": 0.071216372,
+            "L11 N8868": 0.028498244,
+            "L29 N776": 0.121470284
+          },
+          "late_gen_10_plus_mean_abs": {
+            "L6 N753": 0.06129955027027027,
+            "L7 N1169": 0.061028227027027024,
+            "L11 N8868": 0.03590237297297297,
+            "L29 N776": 0.14261568324324325
+          },
+          "late_over_early": {
+            "L6 N753": 0.9481003034727432,
+            "L7 N1169": 0.8569409717617604,
+            "L11 N8868": 1.2598100069945701,
+            "L29 N776": 1.174078783278742
+          },
+          "n_early": 250,
+          "n_late": 675
+        },
+        "early_late_maker": {
+          "early_gen_0_9_mean_abs": {
+            "L6 N753": 3.301593764,
+            "L7 N1169": 0.382191432,
+            "L11 N8868": 0.31099084400000004,
+            "L29 N776": 0.316675064
+          },
+          "late_gen_10_plus_mean_abs": {
+            "L6 N753": 1.2812837876787677,
+            "L7 N1169": 0.27439678657865785,
+            "L11 N8868": 0.21744992739273927,
+            "L29 N776": 0.24264683608360835
+          },
+          "late_over_early": {
+            "L6 N753": 0.3880803876145096,
+            "L7 N1169": 0.7179564050997822,
+            "L11 N8868": 0.6992164933085272,
+            "L29 N776": 0.7662328476978166
+          },
+          "n_early": 250,
+          "n_late": 659
+        },
+        "n_questions": 25
+      },
+      "d_you": {
+        "prompt": {
+          "phase": "prompt",
+          "defined": true,
+          "alpha": 0.41196201662224735,
+          "alpha_raw": 0.41196201662224735,
+          "clipped": false,
+          "denominator": 482.13893703062774,
+          "numerator": 198.62292879124414,
+          "per_unit": {
+            "L6 N753": 0.4209604882206427,
+            "L7 N1169": 0.6658733188238631,
+            "L11 N8868": 0.12411951766849195,
+            "L29 N776": 0.08375550716256948
+          },
+          "positions": 464,
+          "per_question": [
+            {
+              "question_index": 0,
+              "positions": 17,
+              "numerator": 6.419897099339952,
+              "denominator": 24.435481667997458
+            },
+            {
+              "question_index": 1,
+              "positions": 16,
+              "numerator": 14.459400099096863,
+              "denominator": 18.118951250792644
+            },
+            {
+              "question_index": 2,
+              "positions": 16,
+              "numerator": 12.42627430810983,
+              "denominator": 24.153666311459475
+            },
+            {
+              "question_index": 3,
+              "positions": 16,
+              "numerator": 23.549855148377937,
+              "denominator": 24.067345360114494
+            },
+            {
+              "question_index": 4,
+              "positions": 17,
+              "numerator": 7.797747525145561,
+              "denominator": 14.14964899667072
+            },
+            {
+              "question_index": 5,
+              "positions": 18,
+              "numerator": 5.957924329643373,
+              "denominator": 27.496527131503257
+            },
+            {
+              "question_index": 6,
+              "positions": 17,
+              "numerator": 5.291616608634478,
+              "denominator": 28.710406281358214
+            },
+            {
+              "question_index": 7,
+              "positions": 16,
+              "numerator": 9.538456513164153,
+              "denominator": 22.195327145881976
+            },
+            {
+              "question_index": 8,
+              "positions": 17,
+              "numerator": 6.381396613694703,
+              "denominator": 11.433554825776067
+            },
+            {
+              "question_index": 9,
+              "positions": 19,
+              "numerator": 6.943548072015922,
+              "denominator": 11.663755970946628
+            },
+            {
+              "question_index": 10,
+              "positions": 18,
+              "numerator": 4.672756648117865,
+              "denominator": 19.1384266955629
+            },
+            {
+              "question_index": 11,
+              "positions": 16,
+              "numerator": 13.650585201961178,
+              "denominator": 16.860304524564235
+            },
+            {
+              "question_index": 12,
+              "positions": 18,
+              "numerator": 7.098600870273988,
+              "denominator": 17.935015752202332
+            },
+            {
+              "question_index": 13,
+              "positions": 18,
+              "numerator": 3.930901297381637,
+              "denominator": 19.43492715633741
+            },
+            {
+              "question_index": 14,
+              "positions": 18,
+              "numerator": 6.2819425650320575,
+              "denominator": 15.493043530015335
+            },
+            {
+              "question_index": 15,
+              "positions": 19,
+              "numerator": 5.944399801030824,
+              "denominator": 20.736969881223573
+            },
+            {
+              "question_index": 16,
+              "positions": 30,
+              "numerator": 3.7131824337006045,
+              "denominator": 8.86978324056057
+            },
+            {
+              "question_index": 17,
+              "positions": 23,
+              "numerator": 5.821340870087056,
+              "denominator": 13.972864124868396
+            },
+            {
+              "question_index": 18,
+              "positions": 26,
+              "numerator": 5.9158586766230705,
+              "denominator": 55.21974182171134
+            },
+            {
+              "question_index": 19,
+              "positions": 17,
+              "numerator": 6.680943899666942,
+              "denominator": 18.00136232441731
+            },
+            {
+              "question_index": 20,
+              "positions": 20,
+              "numerator": 5.0428144657683145,
+              "denominator": 7.9427863036694
+            },
+            {
+              "question_index": 21,
+              "positions": 21,
+              "numerator": 5.144476830655506,
+              "denominator": 11.72100481557706
+            },
+            {
+              "question_index": 22,
+              "positions": 18,
+              "numerator": 5.105075245839651,
+              "denominator": 14.714474265541327
+            },
+            {
+              "question_index": 23,
+              "positions": 17,
+              "numerator": 7.791475106733723,
+              "denominator": 11.469050243445965
+            },
+            {
+              "question_index": 24,
+              "positions": 16,
+              "numerator": 13.062458561148915,
+              "denominator": 24.204517408429723
+            }
+          ]
+        },
+        "gen": {
+          "phase": "gen",
+          "defined": true,
+          "alpha": 0.0738894053519245,
+          "alpha_raw": 0.0738894053519245,
+          "clipped": false,
+          "denominator": 1491.8457988876876,
+          "numerator": 110.23159895657798,
+          "per_unit": {
+            "L6 N753": 0.07463258148825376,
+            "L7 N1169": -0.047593182777095636,
+            "L11 N8868": -0.019793046612141266,
+            "L29 N776": 0.23972881642821195
+          },
+          "positions": 1113,
+          "per_question": [
+            {
+              "question_index": 0,
+              "positions": 46,
+              "numerator": 0.428300095995477,
+              "denominator": 58.80864448511423
+            },
+            {
+              "question_index": 1,
+              "positions": 39,
+              "numerator": 15.926693975011572,
+              "denominator": 53.12149132019536
+            },
+            {
+              "question_index": 2,
+              "positions": 46,
+              "numerator": 9.952553222452211,
+              "denominator": 54.089138669750206
+            },
+            {
+              "question_index": 3,
+              "positions": 41,
+              "numerator": 27.812442121109108,
+              "denominator": 74.85735555804382
+            },
+            {
+              "question_index": 4,
+              "positions": 47,
+              "numerator": -0.40799989599395536,
+              "denominator": 61.88369964105961
+            },
+            {
+              "question_index": 5,
+              "positions": 43,
+              "numerator": 1.1517502422739465,
+              "denominator": 69.62444636907541
+            },
+            {
+              "question_index": 6,
+              "positions": 47,
+              "numerator": 0.5044221380123324,
+              "denominator": 57.35246694067507
+            },
+            {
+              "question_index": 7,
+              "positions": 23,
+              "numerator": 6.2442647293128815,
+              "denominator": 42.20295958406142
+            },
+            {
+              "question_index": 8,
+              "positions": 47,
+              "numerator": 7.492948111562627,
+              "denominator": 69.4615315442414
+            },
+            {
+              "question_index": 9,
+              "positions": 47,
+              "numerator": -0.21457929767834794,
+              "denominator": 50.582072034453425
+            },
+            {
+              "question_index": 10,
+              "positions": 47,
+              "numerator": 0.2279883013719812,
+              "denominator": 50.126577739572056
+            },
+            {
+              "question_index": 11,
+              "positions": 47,
+              "numerator": 17.41726725108059,
+              "denominator": 58.958536049036496
+            },
+            {
+              "question_index": 12,
+              "positions": 47,
+              "numerator": -1.084299635542675,
+              "denominator": 69.77857338721519
+            },
+            {
+              "question_index": 13,
+              "positions": 47,
+              "numerator": 0.8653619118545273,
+              "denominator": 84.66231372954528
+            },
+            {
+              "question_index": 14,
+              "positions": 47,
+              "numerator": 0.8601305650586735,
+              "denominator": 67.48575668192244
+            },
+            {
+              "question_index": 15,
+              "positions": 47,
+              "numerator": 0.23993148027227096,
+              "denominator": 52.8172205090158
+            },
+            {
+              "question_index": 16,
+              "positions": 47,
+              "numerator": 3.535499262075726,
+              "denominator": 49.14481051227653
+            },
+            {
+              "question_index": 17,
+              "positions": 47,
+              "numerator": 0.3292468095259232,
+              "denominator": 51.91568005873854
+            },
+            {
+              "question_index": 18,
+              "positions": 47,
+              "numerator": -0.7407394537163665,
+              "denominator": 67.07131433285956
+            },
+            {
+              "question_index": 19,
+              "positions": 47,
+              "numerator": 0.08248183487860031,
+              "denominator": 67.86736731941558
+            },
+            {
+              "question_index": 20,
+              "positions": 29,
+              "numerator": 0.06665745564541546,
+              "denominator": 41.8717672680415
+            },
+            {
+              "question_index": 21,
+              "positions": 47,
+              "numerator": 0.5660761102498968,
+              "denominator": 56.67751609770583
+            },
+            {
+              "question_index": 22,
+              "positions": 47,
+              "numerator": 0.3051001880666014,
+              "denominator": 60.66835232436995
+            },
+            {
+              "question_index": 23,
+              "positions": 47,
+              "numerator": -0.3967614882408681,
+              "denominator": 64.75014197356539
+            },
+            {
+              "question_index": 24,
+              "positions": 47,
+              "numerator": 19.066862921939826,
+              "denominator": 56.06606475773743
+            }
+          ]
+        },
+        "rho_perp": {
+          "prompt": 0.48355586889927,
+          "gen": 0.2612813431487433
+        },
+        "early_late_donor": {
+          "early_gen_0_9_mean_abs": {
+            "L6 N753": 0.44001964800000004,
+            "L7 N1169": 0.09494826,
+            "L11 N8868": 0.029254816,
+            "L29 N776": 0.147008604
+          },
+          "late_gen_10_plus_mean_abs": {
+            "L6 N753": 0.17131774423963134,
+            "L7 N1169": 0.061996436635944695,
+            "L11 N8868": 0.025592624423963133,
+            "L29 N776": 0.17464927073732717
+          },
+          "late_over_early": {
+            "L6 N753": 0.3893411237846164,
+            "L7 N1169": 0.6529496868709831,
+            "L11 N8868": 0.8748174804436689,
+            "L29 N776": 1.1880207415433126
+          },
+          "n_early": 250,
+          "n_late": 618
+        },
+        "early_late_maker": {
+          "early_gen_0_9_mean_abs": {
+            "L6 N753": 3.301593764,
+            "L7 N1169": 0.382191432,
+            "L11 N8868": 0.31099084400000004,
+            "L29 N776": 0.316675064
+          },
+          "late_gen_10_plus_mean_abs": {
+            "L6 N753": 1.2812837876787677,
+            "L7 N1169": 0.27439678657865785,
+            "L11 N8868": 0.21744992739273927,
+            "L29 N776": 0.24264683608360835
+          },
+          "late_over_early": {
+            "L6 N753": 0.3880803876145096,
+            "L7 N1169": 0.7179564050997822,
+            "L11 N8868": 0.6992164933085272,
+            "L29 N776": 0.7662328476978166
+          },
+          "n_early": 250,
+          "n_late": 659
+        },
+        "n_questions": 25
+      },
+      "d_imp": {
+        "prompt": {
+          "phase": "prompt",
+          "defined": true,
+          "alpha": 0.3697119111852823,
+          "alpha_raw": 0.3697119111852823,
+          "clipped": false,
+          "denominator": 482.13893703062774,
+          "numerator": 178.25250786643386,
+          "per_unit": {
+            "L6 N753": 0.37425301029625524,
+            "L7 N1169": 0.7414079130997309,
+            "L11 N8868": 0.13326429665614276,
+            "L29 N776": 0.07406831569114052
+          },
+          "positions": 464,
+          "per_question": [
+            {
+              "question_index": 0,
+              "positions": 17,
+              "numerator": 5.962195023063418,
+              "denominator": 24.435481667997458
+            },
+            {
+              "question_index": 1,
+              "positions": 16,
+              "numerator": 12.190936876780361,
+              "denominator": 18.118951250792644
+            },
+            {
+              "question_index": 2,
+              "positions": 16,
+              "numerator": 9.363743115665985,
+              "denominator": 24.153666311459475
+            },
+            {
+              "question_index": 3,
+              "positions": 16,
+              "numerator": 14.787769263157264,
+              "denominator": 24.067345360114494
+            },
+            {
+              "question_index": 4,
+              "positions": 17,
+              "numerator": 7.414841254633593,
+              "denominator": 14.14964899667072
+            },
+            {
+              "question_index": 5,
+              "positions": 18,
+              "numerator": 5.947001169678576,
+              "denominator": 27.496527131503257
+            },
+            {
+              "question_index": 6,
+              "positions": 17,
+              "numerator": 4.767762838713215,
+              "denominator": 28.710406281358214
+            },
+            {
+              "question_index": 7,
+              "positions": 16,
+              "numerator": 8.659176744888864,
+              "denominator": 22.195327145881976
+            },
+            {
+              "question_index": 8,
+              "positions": 17,
+              "numerator": 7.173906561367511,
+              "denominator": 11.433554825776067
+            },
+            {
+              "question_index": 9,
+              "positions": 19,
+              "numerator": 6.726752697543285,
+              "denominator": 11.663755970946628
+            },
+            {
+              "question_index": 10,
+              "positions": 18,
+              "numerator": 4.907980150293321,
+              "denominator": 19.1384266955629
+            },
+            {
+              "question_index": 11,
+              "positions": 16,
+              "numerator": 12.605114198803683,
+              "denominator": 16.860304524564235
+            },
+            {
+              "question_index": 12,
+              "positions": 18,
+              "numerator": 6.103419944461244,
+              "denominator": 17.935015752202332
+            },
+            {
+              "question_index": 13,
+              "positions": 18,
+              "numerator": 4.232996791225594,
+              "denominator": 19.43492715633741
+            },
+            {
+              "question_index": 14,
+              "positions": 18,
+              "numerator": 6.056379727101351,
+              "denominator": 15.493043530015335
+            },
+            {
+              "question_index": 15,
+              "positions": 19,
+              "numerator": 5.316227833448412,
+              "denominator": 20.736969881223573
+            },
+            {
+              "question_index": 16,
+              "positions": 30,
+              "numerator": 3.507481816996874,
+              "denominator": 8.86978324056057
+            },
+            {
+              "question_index": 17,
+              "positions": 23,
+              "numerator": 5.592858069650694,
+              "denominator": 13.972864124868396
+            },
+            {
+              "question_index": 18,
+              "positions": 26,
+              "numerator": 5.3665179057501255,
+              "denominator": 55.21974182171134
+            },
+            {
+              "question_index": 19,
+              "positions": 17,
+              "numerator": 6.414665232136034,
+              "denominator": 18.00136232441731
+            },
+            {
+              "question_index": 20,
+              "positions": 20,
+              "numerator": 5.251413969101152,
+              "denominator": 7.9427863036694
+            },
+            {
+              "question_index": 21,
+              "positions": 21,
+              "numerator": 5.135277428967417,
+              "denominator": 11.72100481557706
+            },
+            {
+              "question_index": 22,
+              "positions": 18,
+              "numerator": 5.365937210448262,
+              "denominator": 14.714474265541327
+            },
+            {
+              "question_index": 23,
+              "positions": 17,
+              "numerator": 6.162622078092917,
+              "denominator": 11.469050243445965
+            },
+            {
+              "question_index": 24,
+              "positions": 16,
+              "numerator": 13.239529964464722,
+              "denominator": 24.204517408429723
+            }
+          ]
+        },
+        "gen": {
+          "phase": "gen",
+          "defined": true,
+          "alpha": 0.06367948202410097,
+          "alpha_raw": 0.06367948202410097,
+          "clipped": false,
+          "denominator": 1519.7621775860266,
+          "numerator": 96.77766826849792,
+          "per_unit": {
+            "L6 N753": 0.06337007920535168,
+            "L7 N1169": -0.04058408673972381,
+            "L11 N8868": -0.022712274388865236,
+            "L29 N776": 0.2680779548666937
+          },
+          "positions": 1112,
+          "per_question": [
+            {
+              "question_index": 0,
+              "positions": 46,
+              "numerator": 0.0808239283579051,
+              "denominator": 58.80864448511423
+            },
+            {
+              "question_index": 1,
+              "positions": 47,
+              "numerator": 13.874319597042401,
+              "denominator": 57.04448593024482
+            },
+            {
+              "question_index": 2,
+              "positions": 31,
+              "numerator": 21.419908665011995,
+              "denominator": 51.1013888861129
+            },
+            {
+              "question_index": 3,
+              "positions": 47,
+              "numerator": 18.48746723202242,
+              "denominator": 91.36195604479003
+            },
+            {
+              "question_index": 4,
+              "positions": 47,
+              "numerator": 0.5686886900820568,
+              "denominator": 61.88369964105961
+            },
+            {
+              "question_index": 5,
+              "positions": 43,
+              "numerator": 1.5123293156121254,
+              "denominator": 69.62444636907541
+            },
+            {
+              "question_index": 6,
+              "positions": 47,
+              "numerator": 0.5890240350177873,
+              "denominator": 57.35246694067507
+            },
+            {
+              "question_index": 7,
+              "positions": 16,
+              "numerator": 6.042556993676,
+              "denominator": 40.481835608119695
+            },
+            {
+              "question_index": 8,
+              "positions": 47,
+              "numerator": 0.835160487311332,
+              "denominator": 69.4615315442414
+            },
+            {
+              "question_index": 9,
+              "positions": 47,
+              "numerator": -0.10806396807571747,
+              "denominator": 50.582072034453425
+            },
+            {
+              "question_index": 10,
+              "positions": 47,
+              "numerator": 0.33640551336420954,
+              "denominator": 50.126577739572056
+            },
+            {
+              "question_index": 11,
+              "positions": 47,
+              "numerator": 15.214569857025692,
+              "denominator": 58.958536049036496
+            },
+            {
+              "question_index": 12,
+              "positions": 47,
+              "numerator": -1.2498361640315532,
+              "denominator": 69.77857338721519
+            },
+            {
+              "question_index": 13,
+              "positions": 47,
+              "numerator": 0.6542273343593334,
+              "denominator": 84.66231372954528
+            },
+            {
+              "question_index": 14,
+              "positions": 47,
+              "numerator": 0.5379485719333761,
+              "denominator": 67.48575668192244
+            },
+            {
+              "question_index": 15,
+              "positions": 47,
+              "numerator": 0.6205330786851646,
+              "denominator": 52.8172205090158
+            },
+            {
+              "question_index": 16,
+              "positions": 47,
+              "numerator": -0.05462831231588372,
+              "denominator": 49.14481051227653
+            },
+            {
+              "question_index": 17,
+              "positions": 47,
+              "numerator": -0.013818677030644419,
+              "denominator": 51.91568005873854
+            },
+            {
+              "question_index": 18,
+              "positions": 47,
+              "numerator": -0.45106667980915477,
+              "denominator": 67.07131433285956
+            },
+            {
+              "question_index": 19,
+              "positions": 47,
+              "numerator": 0.11670131071650719,
+              "denominator": 67.86736731941558
+            },
+            {
+              "question_index": 20,
+              "positions": 36,
+              "numerator": -0.30622700771184574,
+              "denominator": 54.06942462916396
+            },
+            {
+              "question_index": 21,
+              "positions": 47,
+              "numerator": 0.23357219210003713,
+              "denominator": 56.67751609770583
+            },
+            {
+              "question_index": 22,
+              "positions": 47,
+              "numerator": 0.6167248635580165,
+              "denominator": 60.66835232436995
+            },
+            {
+              "question_index": 23,
+              "positions": 47,
+              "numerator": 0.2083831640126707,
+              "denominator": 64.75014197356539
+            },
+            {
+              "question_index": 24,
+              "positions": 47,
+              "numerator": 17.01196424758366,
+              "denominator": 56.06606475773743
+            }
+          ]
+        },
+        "rho_perp": {
+          "prompt": 0.42186499002568834,
+          "gen": 0.21398376556169338
+        },
+        "early_late_donor": {
+          "early_gen_0_9_mean_abs": {
+            "L6 N753": 0.39192929200000004,
+            "L7 N1169": 0.10736071200000001,
+            "L11 N8868": 0.031475284,
+            "L29 N776": 0.153184292
+          },
+          "late_gen_10_plus_mean_abs": {
+            "L6 N753": 0.12592134817351597,
+            "L7 N1169": 0.06469679109589041,
+            "L11 N8868": 0.0254895,
+            "L29 N776": 0.17670511872146116
+          },
+          "late_over_early": {
+            "L6 N753": 0.32128588177460327,
+            "L7 N1169": 0.6026114198636313,
+            "L11 N8868": 0.8098258938664381,
+            "L29 N776": 1.1535459440022817
+          },
+          "n_early": 250,
+          "n_late": 630
+        },
+        "early_late_maker": {
+          "early_gen_0_9_mean_abs": {
+            "L6 N753": 3.301593764,
+            "L7 N1169": 0.382191432,
+            "L11 N8868": 0.31099084400000004,
+            "L29 N776": 0.316675064
+          },
+          "late_gen_10_plus_mean_abs": {
+            "L6 N753": 1.2812837876787677,
+            "L7 N1169": 0.27439678657865785,
+            "L11 N8868": 0.21744992739273927,
+            "L29 N776": 0.24264683608360835
+          },
+          "late_over_early": {
+            "L6 N753": 0.3880803876145096,
+            "L7 N1169": 0.7179564050997822,
+            "L11 N8868": 0.6992164933085272,
+            "L29 N776": 0.7662328476978166
+          },
+          "n_early": 250,
+          "n_late": 659
+        },
+        "n_questions": 25
+      }
+    },
+    "bank_means": {
+      "mu_fact": {
+        "source_bank": "d_fact",
+        "prompt": {
+          "phase": "prompt",
+          "defined": true,
+          "alpha": 0.24798598017270412,
+          "alpha_raw": 0.24798598017270412,
+          "clipped": false,
+          "denominator": 482.13893703062774,
+          "numerator": 119.5636968789659,
+          "per_unit": {
+            "L6 N753": 0.24956566295673735,
+            "L7 N1169": 0.5403926898397744,
+            "L11 N8868": 0.03792845205649487,
+            "L29 N776": 0.0820310983637455
+          },
+          "positions": 464,
+          "per_question": [
+            {
+              "question_index": 0,
+              "positions": 17,
+              "numerator": 4.965848137823253,
+              "denominator": 24.435481667997458
+            },
+            {
+              "question_index": 1,
+              "positions": 16,
+              "numerator": 4.837044829886096,
+              "denominator": 18.118951250792644
+            },
+            {
+              "question_index": 2,
+              "positions": 16,
+              "numerator": 4.870151289620869,
+              "denominator": 24.153666311459475
+            },
+            {
+              "question_index": 3,
+              "positions": 16,
+              "numerator": 5.080421147572288,
+              "denominator": 24.067345360114494
+            },
+            {
+              "question_index": 4,
+              "positions": 17,
+              "numerator": 5.1746451665624695,
+              "denominator": 14.14964899667072
+            },
+            {
+              "question_index": 5,
+              "positions": 18,
+              "numerator": 5.038811036190269,
+              "denominator": 27.496527131503257
+            },
+            {
+              "question_index": 6,
+              "positions": 17,
+              "numerator": 4.628375738473038,
+              "denominator": 28.710406281358214
+            },
+            {
+              "question_index": 7,
+              "positions": 16,
+              "numerator": 5.054747164658643,
+              "denominator": 22.195327145881976
+            },
+            {
+              "question_index": 8,
+              "positions": 17,
+              "numerator": 4.890314415961842,
+              "denominator": 11.433554825776067
+            },
+            {
+              "question_index": 9,
+              "positions": 19,
+              "numerator": 5.155188882582879,
+              "denominator": 11.663755970946628
+            },
+            {
+              "question_index": 10,
+              "positions": 18,
+              "numerator": 4.4822938158252486,
+              "denominator": 19.1384266955629
+            },
+            {
+              "question_index": 11,
+              "positions": 16,
+              "numerator": 4.928628578705238,
+              "denominator": 16.860304524564235
+            },
+            {
+              "question_index": 12,
+              "positions": 18,
+              "numerator": 4.614135598953834,
+              "denominator": 17.935015752202332
+            },
+            {
+              "question_index": 13,
+              "positions": 18,
+              "numerator": 4.091392565019054,
+              "denominator": 19.43492715633741
+            },
+            {
+              "question_index": 14,
+              "positions": 18,
+              "numerator": 4.7922401006326725,
+              "denominator": 15.493043530015335
+            },
+            {
+              "question_index": 15,
+              "positions": 19,
+              "numerator": 4.763860370483004,
+              "denominator": 20.736969881223573
+            },
+            {
+              "question_index": 16,
+              "positions": 30,
+              "numerator": 4.073682705917386,
+              "denominator": 8.86978324056057
+            },
+            {
+              "question_index": 17,
+              "positions": 23,
+              "numerator": 5.2141856612353,
+              "denominator": 13.972864124868396
+            },
+            {
+              "question_index": 18,
+              "positions": 26,
+              "numerator": 5.076019338168279,
+              "denominator": 55.21974182171134
+            },
+            {
+              "question_index": 19,
+              "positions": 17,
+              "numerator": 5.0671756595471615,
+              "denominator": 18.00136232441731
+            },
+            {
+              "question_index": 20,
+              "positions": 20,
+              "numerator": 4.0233189185217615,
+              "denominator": 7.9427863036694
+            },
+            {
+              "question_index": 21,
+              "positions": 21,
+              "numerator": 4.686857588435798,
+              "denominator": 11.72100481557706
+            },
+            {
+              "question_index": 22,
+              "positions": 18,
+              "numerator": 4.48773705501614,
+              "denominator": 14.714474265541327
+            },
+            {
+              "question_index": 23,
+              "positions": 17,
+              "numerator": 4.71376865055786,
+              "denominator": 11.469050243445965
+            },
+            {
+              "question_index": 24,
+              "positions": 16,
+              "numerator": 4.852852462615503,
+              "denominator": 24.204517408429723
+            }
+          ]
+        },
+        "gen": {
+          "phase": "gen",
+          "defined": true,
+          "alpha": -0.0024008626268802145,
+          "alpha_raw": -0.0024008626268802145,
+          "clipped": false,
+          "denominator": 1534.4637782606028,
+          "numerator": -3.6840367375272898,
+          "per_unit": {
+            "L6 N753": -0.004915716401796075,
+            "L7 N1169": -0.056254790288671766,
+            "L11 N8868": 0.012339353548565418,
+            "L29 N776": 0.202234553651143
+          },
+          "positions": 1159,
+          "per_question": [
+            {
+              "question_index": 0,
+              "positions": 46,
+              "numerator": -0.14670359222990378,
+              "denominator": 58.80864448511423
+            },
+            {
+              "question_index": 1,
+              "positions": 47,
+              "numerator": -0.15723040705392283,
+              "denominator": 57.04448593024482
+            },
+            {
+              "question_index": 2,
+              "positions": 47,
+              "numerator": -0.1522335822440437,
+              "denominator": 55.343004070264165
+            },
+            {
+              "question_index": 3,
+              "positions": 47,
+              "numerator": -0.24681615437491766,
+              "denominator": 91.36195604479003
+            },
+            {
+              "question_index": 4,
+              "positions": 47,
+              "numerator": -0.10962565620083678,
+              "denominator": 61.88369964105961
+            },
+            {
+              "question_index": 5,
+              "positions": 43,
+              "numerator": -0.1015568354901415,
+              "denominator": 69.62444636907541
+            },
+            {
+              "question_index": 6,
+              "positions": 47,
+              "numerator": -0.08597914843356308,
+              "denominator": 57.35246694067507
+            },
+            {
+              "question_index": 7,
+              "positions": 47,
+              "numerator": -0.14057005447480142,
+              "denominator": 50.94182109854437
+            },
+            {
+              "question_index": 8,
+              "positions": 47,
+              "numerator": -0.1499419442783252,
+              "denominator": 69.4615315442414
+            },
+            {
+              "question_index": 9,
+              "positions": 47,
+              "numerator": -0.0791177198491035,
+              "denominator": 50.582072034453425
+            },
+            {
+              "question_index": 10,
+              "positions": 47,
+              "numerator": -0.12177542773469473,
+              "denominator": 50.126577739572056
+            },
+            {
+              "question_index": 11,
+              "positions": 47,
+              "numerator": -0.12975357754705752,
+              "denominator": 58.958536049036496
+            },
+            {
+              "question_index": 12,
+              "positions": 47,
+              "numerator": -0.17667601115750148,
+              "denominator": 69.77857338721519
+            },
+            {
+              "question_index": 13,
+              "positions": 47,
+              "numerator": -0.2094379819770147,
+              "denominator": 84.66231372954528
+            },
+            {
+              "question_index": 14,
+              "positions": 47,
+              "numerator": -0.2619858632888807,
+              "denominator": 67.48575668192244
+            },
+            {
+              "question_index": 15,
+              "positions": 47,
+              "numerator": -0.12270770112129929,
+              "denominator": 52.8172205090158
+            },
+            {
+              "question_index": 16,
+              "positions": 47,
+              "numerator": -0.15364400044917007,
+              "denominator": 49.14481051227653
+            },
+            {
+              "question_index": 17,
+              "positions": 47,
+              "numerator": -0.13516239575337755,
+              "denominator": 51.91568005873854
+            },
+            {
+              "question_index": 18,
+              "positions": 47,
+              "numerator": -0.1394618696516846,
+              "denominator": 67.07131433285956
+            },
+            {
+              "question_index": 19,
+              "positions": 47,
+              "numerator": -0.15133980869839186,
+              "denominator": 67.86736731941558
+            },
+            {
+              "question_index": 20,
+              "positions": 36,
+              "numerator": -0.13235456036488735,
+              "denominator": 54.06942462916396
+            },
+            {
+              "question_index": 21,
+              "positions": 47,
+              "numerator": -0.1842152976108272,
+              "denominator": 56.67751609770583
+            },
+            {
+              "question_index": 22,
+              "positions": 47,
+              "numerator": -0.15002767895404587,
+              "denominator": 60.66835232436995
+            },
+            {
+              "question_index": 23,
+              "positions": 47,
+              "numerator": -0.11507991359207127,
+              "denominator": 64.75014197356539
+            },
+            {
+              "question_index": 24,
+              "positions": 47,
+              "numerator": -0.13063955499682617,
+              "denominator": 56.06606475773743
+            }
+          ]
+        },
+        "rho_perp": {
+          "prompt": 0.3380146970461323,
+          "gen": 0.04678799179701417
+        },
+        "note": "descriptive; no prediction reads the bank-mean projection"
+      },
+      "mu_you": {
+        "source_bank": "d_you",
+        "prompt": {
+          "phase": "prompt",
+          "defined": true,
+          "alpha": 0.4013995818913683,
+          "alpha_raw": 0.4013995818913683,
+          "clipped": false,
+          "denominator": 482.13893703062774,
+          "numerator": 193.53036773764273,
+          "per_unit": {
+            "L6 N753": 0.40920685972835474,
+            "L7 N1169": 0.6601689114754087,
+            "L11 N8868": 0.14553422767165847,
+            "L29 N776": 0.09313374368822773
+          },
+          "positions": 464,
+          "per_question": [
+            {
+              "question_index": 0,
+              "positions": 17,
+              "numerator": 8.485830508727597,
+              "denominator": 24.435481667997458
+            },
+            {
+              "question_index": 1,
+              "positions": 16,
+              "numerator": 7.915752335326686,
+              "denominator": 18.118951250792644
+            },
+            {
+              "question_index": 2,
+              "positions": 16,
+              "numerator": 8.504857526607038,
+              "denominator": 24.153666311459475
+            },
+            {
+              "question_index": 3,
+              "positions": 16,
+              "numerator": 8.656286817771925,
+              "denominator": 24.067345360114494
+            },
+            {
+              "question_index": 4,
+              "positions": 17,
+              "numerator": 7.654229910088317,
+              "denominator": 14.14964899667072
+            },
+            {
+              "question_index": 5,
+              "positions": 18,
+              "numerator": 8.902885128424636,
+              "denominator": 27.496527131503257
+            },
+            {
+              "question_index": 6,
+              "positions": 17,
+              "numerator": 8.21737344138513,
+              "denominator": 28.710406281358214
+            },
+            {
+              "question_index": 7,
+              "positions": 16,
+              "numerator": 8.499282288979991,
+              "denominator": 22.195327145881976
+            },
+            {
+              "question_index": 8,
+              "positions": 17,
+              "numerator": 6.998004437089274,
+              "denominator": 11.433554825776067
+            },
+            {
+              "question_index": 9,
+              "positions": 19,
+              "numerator": 7.4437844845914265,
+              "denominator": 11.663755970946628
+            },
+            {
+              "question_index": 10,
+              "positions": 18,
+              "numerator": 6.956433720060989,
+              "denominator": 19.1384266955629
+            },
+            {
+              "question_index": 11,
+              "positions": 16,
+              "numerator": 7.884023974340858,
+              "denominator": 16.860304524564235
+            },
+            {
+              "question_index": 12,
+              "positions": 18,
+              "numerator": 7.8871085945481685,
+              "denominator": 17.935015752202332
+            },
+            {
+              "question_index": 13,
+              "positions": 18,
+              "numerator": 6.974463158095553,
+              "denominator": 19.43492715633741
+            },
+            {
+              "question_index": 14,
+              "positions": 18,
+              "numerator": 7.487430202521444,
+              "denominator": 15.493043530015335
+            },
+            {
+              "question_index": 15,
+              "positions": 19,
+              "numerator": 8.071683606632519,
+              "denominator": 20.736969881223573
+            },
+            {
+              "question_index": 16,
+              "positions": 30,
+              "numerator": 5.445018964527108,
+              "denominator": 8.86978324056057
+            },
+            {
+              "question_index": 17,
+              "positions": 23,
+              "numerator": 7.8511871026187725,
+              "denominator": 13.972864124868396
+            },
+            {
+              "question_index": 18,
+              "positions": 26,
+              "numerator": 11.152233736056951,
+              "denominator": 55.21974182171134
+            },
+            {
+              "question_index": 19,
+              "positions": 17,
+              "numerator": 8.22181745789459,
+              "denominator": 18.00136232441731
+            },
+            {
+              "question_index": 20,
+              "positions": 20,
+              "numerator": 5.68429240120921,
+              "denominator": 7.9427863036694
+            },
+            {
+              "question_index": 21,
+              "positions": 21,
+              "numerator": 6.215750822246625,
+              "denominator": 11.72100481557706
+            },
+            {
+              "question_index": 22,
+              "positions": 18,
+              "numerator": 7.1572765874006645,
+              "denominator": 14.714474265541327
+            },
+            {
+              "question_index": 23,
+              "positions": 17,
+              "numerator": 6.819310363716356,
+              "denominator": 11.469050243445965
+            },
+            {
+              "question_index": 24,
+              "positions": 16,
+              "numerator": 8.44405016678089,
+              "denominator": 24.204517408429723
+            }
+          ]
+        },
+        "gen": {
+          "phase": "gen",
+          "defined": true,
+          "alpha": 0.04780206327797256,
+          "alpha_raw": 0.04780206327797256,
+          "clipped": false,
+          "denominator": 1491.8457988876876,
+          "numerator": 71.31330727940677,
+          "per_unit": {
+            "L6 N753": 0.046926681300262466,
+            "L7 N1169": -0.04971122520686003,
+            "L11 N8868": -0.015141862419855306,
+            "L29 N776": 0.26080951978035133
+          },
+          "positions": 1113,
+          "per_question": [
+            {
+              "question_index": 0,
+              "positions": 46,
+              "numerator": 2.8163879358603525,
+              "denominator": 58.80864448511423
+            },
+            {
+              "question_index": 1,
+              "positions": 39,
+              "numerator": 2.4939018802905824,
+              "denominator": 53.12149132019536
+            },
+            {
+              "question_index": 2,
+              "positions": 46,
+              "numerator": 2.7419684585771615,
+              "denominator": 54.089138669750206
+            },
+            {
+              "question_index": 3,
+              "positions": 41,
+              "numerator": 3.4083243915796784,
+              "denominator": 74.85735555804382
+            },
+            {
+              "question_index": 4,
+              "positions": 47,
+              "numerator": 3.0461235863892924,
+              "denominator": 61.88369964105961
+            },
+            {
+              "question_index": 5,
+              "positions": 43,
+              "numerator": 3.1023324024930687,
+              "denominator": 69.62444636907541
+            },
+            {
+              "question_index": 6,
+              "positions": 47,
+              "numerator": 2.9641167228719674,
+              "denominator": 57.35246694067507
+            },
+            {
+              "question_index": 7,
+              "positions": 23,
+              "numerator": 1.9412933241123316,
+              "denominator": 42.20295958406142
+            },
+            {
+              "question_index": 8,
+              "positions": 47,
+              "numerator": 3.093301034749304,
+              "denominator": 69.4615315442414
+            },
+            {
+              "question_index": 9,
+              "positions": 47,
+              "numerator": 2.6174044095735516,
+              "denominator": 50.582072034453425
+            },
+            {
+              "question_index": 10,
+              "positions": 47,
+              "numerator": 2.6891308179032634,
+              "denominator": 50.126577739572056
+            },
+            {
+              "question_index": 11,
+              "positions": 47,
+              "numerator": 2.717379852248551,
+              "denominator": 58.958536049036496
+            },
+            {
+              "question_index": 12,
+              "positions": 47,
+              "numerator": 3.223026974810079,
+              "denominator": 69.77857338721519
+            },
+            {
+              "question_index": 13,
+              "positions": 47,
+              "numerator": 3.8638042711957827,
+              "denominator": 84.66231372954528
+            },
+            {
+              "question_index": 14,
+              "positions": 47,
+              "numerator": 3.1043854712872183,
+              "denominator": 67.48575668192244
+            },
+            {
+              "question_index": 15,
+              "positions": 47,
+              "numerator": 2.6411228978978145,
+              "denominator": 52.8172205090158
+            },
+            {
+              "question_index": 16,
+              "positions": 47,
+              "numerator": 2.5354124381075827,
+              "denominator": 49.14481051227653
+            },
+            {
+              "question_index": 17,
+              "positions": 47,
+              "numerator": 2.5781884266090374,
+              "denominator": 51.91568005873854
+            },
+            {
+              "question_index": 18,
+              "positions": 47,
+              "numerator": 3.056787983628074,
+              "denominator": 67.07131433285956
+            },
+            {
+              "question_index": 19,
+              "positions": 47,
+              "numerator": 3.143682042202386,
+              "denominator": 67.86736731941558
+            },
+            {
+              "question_index": 20,
+              "positions": 29,
+              "numerator": 2.3796267928316097,
+              "denominator": 41.8717672680415
+            },
+            {
+              "question_index": 21,
+              "positions": 47,
+              "numerator": 2.6842328718737347,
+              "denominator": 56.67751609770583
+            },
+            {
+              "question_index": 22,
+              "positions": 47,
+              "numerator": 2.8848962479485625,
+              "denominator": 60.66835232436995
+            },
+            {
+              "question_index": 23,
+              "positions": 47,
+              "numerator": 2.791078179241313,
+              "denominator": 64.75014197356539
+            },
+            {
+              "question_index": 24,
+              "positions": 47,
+              "numerator": 2.7953978651244866,
+              "denominator": 56.06606475773743
+            }
+          ]
+        },
+        "rho_perp": {
+          "prompt": 0.3488469057329282,
+          "gen": 0.07353455306568273
+        },
+        "note": "descriptive; no prediction reads the bank-mean projection"
+      },
+      "mu_imp": {
+        "source_bank": "d_imp",
+        "prompt": {
+          "phase": "prompt",
+          "defined": true,
+          "alpha": 0.3585417993625102,
+          "alpha_raw": 0.3585417993625102,
+          "clipped": false,
+          "denominator": 482.13893703062774,
+          "numerator": 172.86696202568928,
+          "per_unit": {
+            "L6 N753": 0.361081628878699,
+            "L7 N1169": 0.7663074564095191,
+            "L11 N8868": 0.1397308321571192,
+            "L29 N776": 0.09070508917506105
+          },
+          "positions": 464,
+          "per_question": [
+            {
+              "question_index": 0,
+              "positions": 17,
+              "numerator": 7.494782571775466,
+              "denominator": 24.435481667997458
+            },
+            {
+              "question_index": 1,
+              "positions": 16,
+              "numerator": 7.070692430159838,
+              "denominator": 18.118951250792644
+            },
+            {
+              "question_index": 2,
+              "positions": 16,
+              "numerator": 7.507644336447422,
+              "denominator": 24.153666311459475
+            },
+            {
+              "question_index": 3,
+              "positions": 16,
+              "numerator": 7.69936286150236,
+              "denominator": 24.067345360114494
+            },
+            {
+              "question_index": 4,
+              "positions": 17,
+              "numerator": 6.980398688340735,
+              "denominator": 14.14964899667072
+            },
+            {
+              "question_index": 5,
+              "positions": 18,
+              "numerator": 7.774043072768598,
+              "denominator": 27.496527131503257
+            },
+            {
+              "question_index": 6,
+              "positions": 17,
+              "numerator": 7.108104086993774,
+              "denominator": 28.710406281358214
+            },
+            {
+              "question_index": 7,
+              "positions": 16,
+              "numerator": 7.5634921059087645,
+              "denominator": 22.195327145881976
+            },
+            {
+              "question_index": 8,
+              "positions": 17,
+              "numerator": 6.423427548452229,
+              "denominator": 11.433554825776067
+            },
+            {
+              "question_index": 9,
+              "positions": 19,
+              "numerator": 6.846393606225884,
+              "denominator": 11.663755970946628
+            },
+            {
+              "question_index": 10,
+              "positions": 18,
+              "numerator": 6.396429084494274,
+              "denominator": 19.1384266955629
+            },
+            {
+              "question_index": 11,
+              "positions": 16,
+              "numerator": 7.114187877175984,
+              "denominator": 16.860304524564235
+            },
+            {
+              "question_index": 12,
+              "positions": 18,
+              "numerator": 6.905545085507064,
+              "denominator": 17.935015752202332
+            },
+            {
+              "question_index": 13,
+              "positions": 18,
+              "numerator": 6.224944103101747,
+              "denominator": 19.43492715633741
+            },
+            {
+              "question_index": 14,
+              "positions": 18,
+              "numerator": 6.745308371662598,
+              "denominator": 15.493043530015335
+            },
+            {
+              "question_index": 15,
+              "positions": 19,
+              "numerator": 7.154918055670308,
+              "denominator": 20.736969881223573
+            },
+            {
+              "question_index": 16,
+              "positions": 30,
+              "numerator": 5.098396659121192,
+              "denominator": 8.86978324056057
+            },
+            {
+              "question_index": 17,
+              "positions": 23,
+              "numerator": 7.103661171461354,
+              "denominator": 13.972864124868396
+            },
+            {
+              "question_index": 18,
+              "positions": 26,
+              "numerator": 9.197417221014142,
+              "denominator": 55.21974182171134
+            },
+            {
+              "question_index": 19,
+              "positions": 17,
+              "numerator": 7.401752339033579,
+              "denominator": 18.00136232441731
+            },
+            {
+              "question_index": 20,
+              "positions": 20,
+              "numerator": 5.200456926921249,
+              "denominator": 7.9427863036694
+            },
+            {
+              "question_index": 21,
+              "positions": 21,
+              "numerator": 5.783000071284028,
+              "denominator": 11.72100481557706
+            },
+            {
+              "question_index": 22,
+              "positions": 18,
+              "numerator": 6.43488100882407,
+              "denominator": 14.714474265541327
+            },
+            {
+              "question_index": 23,
+              "positions": 17,
+              "numerator": 6.189834856647949,
+              "denominator": 11.469050243445965
+            },
+            {
+              "question_index": 24,
+              "positions": 16,
+              "numerator": 7.44788788519467,
+              "denominator": 24.204517408429723
+            }
+          ]
+        },
+        "gen": {
+          "phase": "gen",
+          "defined": true,
+          "alpha": 0.036259865261431205,
+          "alpha_raw": 0.036259865261431205,
+          "clipped": false,
+          "denominator": 1519.7621775860266,
+          "numerator": 55.10637178868861,
+          "per_unit": {
+            "L6 N753": 0.03458834781746627,
+            "L7 N1169": -0.049435026562512294,
+            "L11 N8868": -0.01847264622201882,
+            "L29 N776": 0.27967917473748605
+          },
+          "positions": 1112,
+          "per_question": [
+            {
+              "question_index": 0,
+              "positions": 46,
+              "numerator": 2.146910551258091,
+              "denominator": 58.80864448511423
+            },
+            {
+              "question_index": 1,
+              "positions": 47,
+              "numerator": 2.1824922023967965,
+              "denominator": 57.04448593024482
+            },
+            {
+              "question_index": 2,
+              "positions": 31,
+              "numerator": 1.8518802695085839,
+              "denominator": 51.1013888861129
+            },
+            {
+              "question_index": 3,
+              "positions": 47,
+              "numerator": 3.019227735160443,
+              "denominator": 91.36195604479003
+            },
+            {
+              "question_index": 4,
+              "positions": 47,
+              "numerator": 2.3351958904124315,
+              "denominator": 61.88369964105961
+            },
+            {
+              "question_index": 5,
+              "positions": 43,
+              "numerator": 2.390324690052004,
+              "denominator": 69.62444636907541
+            },
+            {
+              "question_index": 6,
+              "positions": 47,
+              "numerator": 2.2772451013479222,
+              "denominator": 57.35246694067507
+            },
+            {
+              "question_index": 7,
+              "positions": 16,
+              "numerator": 1.3722310249825505,
+              "denominator": 40.481835608119695
+            },
+            {
+              "question_index": 8,
+              "positions": 47,
+              "numerator": 2.3591700440124805,
+              "denominator": 69.4615315442414
+            },
+            {
+              "question_index": 9,
+              "positions": 47,
+              "numerator": 2.011480995092334,
+              "denominator": 50.582072034453425
+            },
+            {
+              "question_index": 10,
+              "positions": 47,
+              "numerator": 2.053150697651889,
+              "denominator": 50.126577739572056
+            },
+            {
+              "question_index": 11,
+              "positions": 47,
+              "numerator": 2.0715227793438435,
+              "denominator": 58.958536049036496
+            },
+            {
+              "question_index": 12,
+              "positions": 47,
+              "numerator": 2.450935062367312,
+              "denominator": 69.77857338721519
+            },
+            {
+              "question_index": 13,
+              "positions": 47,
+              "numerator": 2.9280018378932726,
+              "denominator": 84.66231372954528
+            },
+            {
+              "question_index": 14,
+              "positions": 47,
+              "numerator": 2.3297384650832558,
+              "denominator": 67.48575668192244
+            },
+            {
+              "question_index": 15,
+              "positions": 47,
+              "numerator": 2.0148280354923798,
+              "denominator": 52.8172205090158
+            },
+            {
+              "question_index": 16,
+              "positions": 47,
+              "numerator": 1.929439835910263,
+              "denominator": 49.14481051227653
+            },
+            {
+              "question_index": 17,
+              "positions": 47,
+              "numerator": 1.9695527333099228,
+              "denominator": 51.91568005873854
+            },
+            {
+              "question_index": 18,
+              "positions": 47,
+              "numerator": 2.33904351163145,
+              "denominator": 67.07131433285956
+            },
+            {
+              "question_index": 19,
+              "positions": 47,
+              "numerator": 2.3957152773729584,
+              "denominator": 67.86736731941558
+            },
+            {
+              "question_index": 20,
+              "positions": 36,
+              "numerator": 2.177455830165747,
+              "denominator": 54.06942462916396
+            },
+            {
+              "question_index": 21,
+              "positions": 47,
+              "numerator": 2.0335030686523314,
+              "denominator": 56.67751609770583
+            },
+            {
+              "question_index": 22,
+              "positions": 47,
+              "numerator": 2.1980599938652565,
+              "denominator": 60.66835232436995
+            },
+            {
+              "question_index": 23,
+              "positions": 47,
+              "numerator": 2.1375800343729283,
+              "denominator": 64.75014197356539
+            },
+            {
+              "question_index": 24,
+              "positions": 47,
+              "numerator": 2.131686121352154,
+              "denominator": 56.06606475773743
+            }
+          ]
+        },
+        "rho_perp": {
+          "prompt": 0.34178585352172464,
+          "gen": 0.06852758220500707
+        },
+        "note": "descriptive; no prediction reads the bank-mean projection"
+      }
+    },
+    "collapse_threshold": 0.05,
+    "projection_denominator_eps": 1e-06,
+    "alpha_clip": [
+      -1.0,
+      2.0
+    ],
+    "warnings": []
+  },
+  "pinning": {
+    "design_version": "v5",
+    "design_commit": "cb8cc1e4",
+    "facts": {
+      "alpha_prompt": 0.24737071178222558,
+      "alpha_gen": -0.0013541574369483169,
+      "alpha_prompt_raw": 0.24737071178222558,
+      "alpha_gen_raw": -0.0013541574369483169,
+      "prompt_denominator": 482.13893703062774,
+      "gen_denominator": 1534.4637782606028
+    },
+    "you": {
+      "alpha_prompt": 0.41196201662224735,
+      "alpha_gen": 0.0738894053519245,
+      "alpha_prompt_raw": 0.41196201662224735,
+      "alpha_gen_raw": 0.0738894053519245,
+      "prompt_denominator": 482.13893703062774,
+      "gen_denominator": 1491.8457988876876
+    },
+    "delta_gen": 0.07524356278887281,
+    "branch": "discriminated",
+    "scale_dial_fact": {
+      "runnable": true,
+      "prompt": 0.24737071178222558,
+      "gen": -0.0013541574369483169,
+      "note": "D_fact pair (always)"
+    },
+    "scale_dial_you": {
+      "runnable": true,
+      "prompt": 0.41196201662224735,
+      "gen": 0.0738894053519245,
+      "note": "D_you pair (|delta alpha_gen| >= 0.05)"
+    },
+    "nominal_calls": 1584,
+    "eligible_calls": 1584,
+    "planned_calls": 1584,
+    "stops": {
+      "branch": "discriminated",
+      "stopped": [],
+      "still_running": [],
+      "contract": "the full 1,584-call contract"
+    }
+  },
+  "paste_block": "Stage 0 pinned dial values (PART214-DESIGN.md v5, commit cb8cc1e4):\n- `scale_dial_fact` = (alpha_prompt = +0.2474, alpha_gen = -0.0014); raw unclipped = (+0.2474, -0.0014)\n- `scale_dial_you`  = (alpha_prompt = +0.4120, alpha_gen = +0.0739); raw unclipped = (+0.4120, +0.0739)\n- |alpha_gen(you) - alpha_gen(fact)| = +0.0752 (collapse branch if < 0.05)\n- branch = `discriminated`; `scale_dial_you` -> (prompt = +0.4120, gen = +0.0739), D_you pair (|delta alpha_gen| >= 0.05)\n- projection denominators: fact prompt = 482.13893703062774, gen = 1534.4637782606028; you prompt = 482.13893703062774, gen = 1491.8457988876876 (gate: finite and >= 1e-06)\n- planned Stage 2 calls = 1584 (nominal 1584)\n- d_fact: alpha_prompt = +0.2474, alpha_gen = -0.0014, rho_perp(prompt) = +0.3525, rho_perp(gen) = +0.0840\n- d_you: alpha_prompt = +0.4120, alpha_gen = +0.0739, rho_perp(prompt) = +0.4836, rho_perp(gen) = +0.2613\n- d_imp: alpha_prompt = +0.3697, alpha_gen = +0.0637, rho_perp(prompt) = +0.4219, rho_perp(gen) = +0.2140",
+  "gates": {
+    "gate0": {
+      "pass": true,
+      "checks": {
+        "prompts_sha256_matches_pinned": true,
+        "four_banks_present": true
+      },
+      "prompts_sha256": "76005231b171babdeed9318e1912703ce55b9d9d9876c906360535573d3f55d6",
+      "prompts_per_bank": {
+        "en_maker": 25,
+        "d_fact": 25,
+        "d_you": 25,
+        "d_imp": 25
+      }
+    },
+    "gate3b": {
+      "pass": true,
+      "checks": {
+        "four_banks_of_25": true,
+        "every_donor_L_gen_ge_5": true
+      },
+      "min_L_gen": 16,
+      "short": [],
+      "donors": 100,
+      "prompts_per_bank": {
+        "en_maker": 25,
+        "d_fact": 25,
+        "d_you": 25,
+        "d_imp": 25
+      }
+    },
+    "gate1": {
+      "pass": true,
+      "checks": {
+        "self_patch_within_0.05": true,
+        "zero_non_finite_readouts": true,
+        "mass_unchanged_ge_0.50": true,
+        "mass_zero_ge_0.50": true
+      },
+      "self_patch_minus_unchanged": 0.0007019637132992251,
+      "non_finite_readouts": 0,
+      "mass_unchanged": 0.9999999880790711,
+      "mass_zero": 1.0000000143051146
+    },
+    "gate2": {
+      "pass": true,
+      "checks": {
+        "zero_ge_+1.0": true,
+        "exceeds_all_10_random_zero": true
+      },
+      "zero_delta_g_ali": 3.0925492119059657,
+      "exceeds_random_zero": 10,
+      "n_random_zero": 10
+    },
+    "gate3": {
+      "pass": true,
+      "checks": {
+        "eager": true,
+        "generation_batch_histogram_uniform_batch1": true,
+        "no_empty_rows": true,
+        "no_non_finite_rows": true,
+        "no_duplicate_keys": true,
+        "every_planned_key_present_once": true,
+        "gate3b_donor_L_gen_ge_5": true,
+        "four_scored_arms_broken_le_28_of_192": true,
+        "unchanged_guard_accuracy_ge_0.90": true,
+        "unchanged_broken_le_9_of_192": true,
+        "unchanged_clean_google_le_11_of_192": true
+      },
+      "pilot": false,
+      "integer_maxima": {
+        "clean_google_unchanged": 11,
+        "broken_unchanged": 9,
+        "broken_four_scored_arms": 28,
+        "pilot_broken": 1,
+        "pilot_clean_google": 1,
+        "pilot_guard_correct": 22
+      },
+      "arms_over_broken_ceiling": {},
+      "duplicate_keys": 0,
+      "empty_rows": 0,
+      "non_finite_rows": 0,
+      "planned_calls": 1584,
+      "row_keys": 1584,
+      "missing_planned_keys": 0,
+      "unplanned_row_keys": 0,
+      "incomplete_arms": [],
+      "not_read_arms": [],
+      "deadline_reached": false,
+      "timing_only_calls": 0
+    }
+  },
+  "stage1": {
+    "dial_curve": {
+      "points": [
+        {
+          "alpha": -0.25,
+          "arm": "dial_-0.25",
+          "mean_delta_g_ali": 5.331156301929128,
+          "mean_l27_shift": -1.604375
+        },
+        {
+          "alpha": 0.0,
+          "arm": "zero",
+          "mean_delta_g_ali": 3.0925492119059657,
+          "mean_l27_shift": -0.96875
+        },
+        {
+          "alpha": 0.1,
+          "arm": "dial_0.10",
+          "mean_delta_g_ali": 2.4707676864555124,
+          "mean_l27_shift": -0.778125
+        },
+        {
+          "alpha": 0.2,
+          "arm": "dial_0.20",
+          "mean_delta_g_ali": 1.989209095957716,
+          "mean_l27_shift": -0.630625
+        },
+        {
+          "alpha": 0.3,
+          "arm": "dial_0.30",
+          "mean_delta_g_ali": 1.6039974446052574,
+          "mean_l27_shift": -0.513125
+        },
+        {
+          "alpha": 0.4,
+          "arm": "dial_0.40",
+          "mean_delta_g_ali": 1.2387697762395973,
+          "mean_l27_shift": -0.41
+        },
+        {
+          "alpha": 0.5,
+          "arm": "dial_0.50",
+          "mean_delta_g_ali": 0.9274695408904712,
+          "mean_l27_shift": -0.320625
+        },
+        {
+          "alpha": 0.65,
+          "arm": "dial_0.65",
+          "mean_delta_g_ali": 0.5479523251682485,
+          "mean_l27_shift": -0.19625
+        },
+        {
+          "alpha": 0.8,
+          "arm": "dial_0.80",
+          "mean_delta_g_ali": 0.27625539445928254,
+          "mean_l27_shift": -0.096875
+        },
+        {
+          "alpha": 1.0,
+          "arm": "unchanged",
+          "mean_delta_g_ali": 0.0,
+          "mean_l27_shift": 0.0
+        }
+      ],
+      "missing_arms": [],
+      "complete": true,
+      "spearman_alpha_vs_delta": -1.0,
+      "monotonic": true
+    },
+    "random_zero": {
+      "random_0:zero": -0.04179231121075404,
+      "random_1:zero": 0.05173909287753389,
+      "random_2:zero": -0.01567022432146814,
+      "random_3:zero": 0.004165991650437775,
+      "random_4:zero": -0.018861268165298952,
+      "random_5:zero": 0.08306075516422737,
+      "random_6:zero": 0.03767045970395756,
+      "random_7:zero": -0.04874717304704575,
+      "random_8:zero": 0.09021745154431983,
+      "random_9:zero": 0.005287167965091726
+    },
+    "random_scale_dial": {
+      "random_0:scale_dial_fact": -0.04943157724924021,
+      "random_1:scale_dial_fact": 0.01024864558749755,
+      "random_2:scale_dial_fact": -0.0019474531628382863,
+      "random_3:scale_dial_fact": -0.02329207641502677,
+      "random_4:scale_dial_fact": -0.011319659608955278,
+      "random_5:scale_dial_fact": 0.06328459195262127,
+      "random_6:scale_dial_fact": 0.06330862531413743,
+      "random_7:scale_dial_fact": -0.042018701021650035,
+      "random_8:scale_dial_fact": 0.0668643505514747,
+      "random_9:scale_dial_fact": -0.0014030166489449414
+    },
+    "random_nat_trace_fact": {
+      "random_0:nat_trace_fact": 0.7820487766945062,
+      "random_1:nat_trace_fact": 0.7881070232678917,
+      "random_2:nat_trace_fact": 0.7786908729481145,
+      "random_3:nat_trace_fact": 0.7687904263346843,
+      "random_4:nat_trace_fact": 0.7891987610640918,
+      "random_5:nat_trace_fact": 0.7837550885987209,
+      "random_6:nat_trace_fact": 0.7649998499790875,
+      "random_7:nat_trace_fact": 0.7835122681442939,
+      "random_8:nat_trace_fact": 0.7957518142934802,
+      "random_9:nat_trace_fact": 0.7848580028586863
+    },
+    "nat": {
+      "nat_trace_fact": 0.9722044108261584,
+      "nat_trace_you": 1.8420724943559281,
+      "nat_trace_imp": 2.1725624409107964,
+      "nat_mean_fact": 0.9577883825091873,
+      "nat_mean_you": 1.8282890304267563,
+      "nat_mean_imp": 2.156589837717065,
+      "nat_prompt_fact_gen_you": 1.8773178338551966,
+      "nat_prompt_you_gen_fact": 0.9322258470412018,
+      "nat_fact_no_L29": 0.9802015064278679,
+      "nat_you_no_L29": 1.8550717907996137
+    },
+    "per_unit": {
+      "unit:L6 N753:scale_dial_fact": null,
+      "unit:L6 N753:scale_dial_you": null,
+      "unit:L7 N1169:scale_dial_fact": null,
+      "unit:L7 N1169:scale_dial_you": null,
+      "unit:L11 N8868:scale_dial_fact": null,
+      "unit:L11 N8868:scale_dial_you": null,
+      "unit:L29 N776:scale_dial_fact": null,
+      "unit:L29 N776:scale_dial_you": null
+    },
+    "dial_you_ref_arm": "scale_dial_you",
+    "dial_arms": {
+      "scale_dial_fact": 2.79588254787383,
+      "scale_dial_you": 2.2456714467676617,
+      "dial_you_ref": 2.2456714467676617,
+      "dial_you_ref_arm": "scale_dial_you"
+    },
+    "diagnostics": {
+      "scale_dial_fact_frozen": 2.803573169954074,
+      "scale_dial_you_frozen": 2.2834604347331555,
+      "scale_unit_dial_fact": 2.7052076600738193,
+      "scale_unit_dial_you": 2.4124167615316647,
+      "shared_vs_4d_fact": -0.09067488780001076,
+      "shared_vs_4d_you": 0.166745314764003,
+      "online_vs_frozen_fact": -0.0076906220802439584,
+      "online_vs_frozen_you": -0.03778898796549379,
+      "note": "diagnostics (design lines 149-150); no prediction threshold reads them"
+    },
+    "l27_correlation": {
+      "arms": [
+        "dial_-0.25",
+        "zero",
+        "dial_0.10",
+        "dial_0.20",
+        "dial_0.30",
+        "dial_0.40",
+        "dial_0.50",
+        "dial_0.65",
+        "dial_0.80",
+        "unchanged",
+        "nat_trace_fact",
+        "nat_trace_you",
+        "nat_trace_imp",
+        "nat_mean_fact",
+        "nat_mean_you",
+        "nat_mean_imp"
+      ],
+      "missing_arms": [],
+      "n_paired": 16,
+      "n_required": 16,
+      "spearman_l27_shift_vs_delta_g_ali": -0.27058823529411763,
+      "tracks_negatively": false
+    },
+    "gates": {
+      "gate1": {
+        "pass": true,
+        "checks": {
+          "self_patch_within_0.05": true,
+          "zero_non_finite_readouts": true,
+          "mass_unchanged_ge_0.50": true,
+          "mass_zero_ge_0.50": true
+        },
+        "self_patch_minus_unchanged": 0.0007019637132992251,
+        "non_finite_readouts": 0,
+        "mass_unchanged": 0.9999999880790711,
+        "mass_zero": 1.0000000143051146
+      },
+      "gate2": {
+        "pass": true,
+        "checks": {
+          "zero_ge_+1.0": true,
+          "exceeds_all_10_random_zero": true
+        },
+        "zero_delta_g_ali": 3.0925492119059657,
+        "exceeds_random_zero": 10,
+        "n_random_zero": 10
+      }
+    },
+    "g_seq": {
+      "points": [
+        {
+          "alpha": -0.25,
+          "arm": "dial_-0.25",
+          "mean_delta_g_seq": 5.531471481323242,
+          "mean_delta_g_ali": 5.331156301929128
+        },
+        {
+          "alpha": 0.0,
+          "arm": "zero",
+          "mean_delta_g_seq": 3.175901184082031,
+          "mean_delta_g_ali": 3.0925492119059657
+        },
+        {
+          "alpha": 0.1,
+          "arm": "dial_0.10",
+          "mean_delta_g_seq": 2.5201171112060545,
+          "mean_delta_g_ali": 2.4707676864555124
+        },
+        {
+          "alpha": 0.2,
+          "arm": "dial_0.20",
+          "mean_delta_g_seq": 2.0389130401611326,
+          "mean_delta_g_ali": 1.989209095957716
+        },
+        {
+          "alpha": 0.3,
+          "arm": "dial_0.30",
+          "mean_delta_g_seq": 1.6403900909423828,
+          "mean_delta_g_ali": 1.6039974446052574
+        },
+        {
+          "alpha": 0.4,
+          "arm": "dial_0.40",
+          "mean_delta_g_seq": 1.2755702209472657,
+          "mean_delta_g_ali": 1.2387697762395973
+        },
+        {
+          "alpha": 0.5,
+          "arm": "dial_0.50",
+          "mean_delta_g_seq": 0.9601020812988281,
+          "mean_delta_g_ali": 0.9274695408904712
+        },
+        {
+          "alpha": 0.65,
+          "arm": "dial_0.65",
+          "mean_delta_g_seq": 0.5727013397216797,
+          "mean_delta_g_ali": 0.5479523251682485
+        },
+        {
+          "alpha": 0.8,
+          "arm": "dial_0.80",
+          "mean_delta_g_seq": 0.2859468841552734,
+          "mean_delta_g_ali": 0.27625539445928254
+        },
+        {
+          "alpha": 1.0,
+          "arm": "unchanged",
+          "mean_delta_g_seq": 0.0,
+          "mean_delta_g_ali": 0.0
+        }
+      ],
+      "n_paired": 10,
+      "spearman_g_ali_vs_g_seq": 1.0,
+      "sign_agreement": "10/10",
+      "decides_nothing": true
+    },
+    "completeness": {
+      "planned_questions_per_arm": 25,
+      "arm_question_counts": {
+        "dial_-0.25": 25,
+        "zero": 25,
+        "dial_0.10": 25,
+        "dial_0.20": 25,
+        "dial_0.30": 25,
+        "dial_0.40": 25,
+        "dial_0.50": 25,
+        "dial_0.65": 25,
+        "dial_0.80": 25,
+        "unchanged": 25,
+        "self_patch": 25,
+        "scale_dial_fact": 25,
+        "scale_dial_you": 25,
+        "scale_dial_fact_frozen": 25,
+        "scale_dial_you_frozen": 25,
+        "scale_unit_dial_fact": 25,
+        "scale_unit_dial_you": 25,
+        "nat_trace_fact": 25,
+        "nat_trace_you": 25,
+        "nat_trace_imp": 25,
+        "nat_mean_fact": 25,
+        "nat_mean_you": 25,
+        "nat_mean_imp": 25,
+        "nat_prompt_fact_gen_you": 25,
+        "nat_prompt_you_gen_fact": 25,
+        "nat_fact_no_L29": 25,
+        "nat_you_no_L29": 25,
+        "rep_trace_fact": 25,
+        "rep_trace_you": 25,
+        "rep_trace_imp": 25,
+        "random_0:zero": 25,
+        "random_0:scale_dial_fact": 25,
+        "random_0:nat_trace_fact": 25,
+        "random_1:zero": 25,
+        "random_1:scale_dial_fact": 25,
+        "random_1:nat_trace_fact": 25,
+        "random_2:zero": 25,
+        "random_2:scale_dial_fact": 25,
+        "random_2:nat_trace_fact": 25,
+        "random_3:zero": 25,
+        "random_3:scale_dial_fact": 25,
+        "random_3:nat_trace_fact": 25,
+        "random_4:zero": 25,
+        "random_4:scale_dial_fact": 25,
+        "random_4:nat_trace_fact": 25,
+        "random_5:zero": 25,
+        "random_5:scale_dial_fact": 25,
+        "random_5:nat_trace_fact": 25,
+        "random_6:zero": 25,
+        "random_6:scale_dial_fact": 25,
+        "random_6:nat_trace_fact": 25,
+        "random_7:zero": 25,
+        "random_7:scale_dial_fact": 25,
+        "random_7:nat_trace_fact": 25,
+        "random_8:zero": 25,
+        "random_8:scale_dial_fact": 25,
+        "random_8:nat_trace_fact": 25,
+        "random_9:zero": 25,
+        "random_9:scale_dial_fact": 25,
+        "random_9:nat_trace_fact": 25
+      },
+      "complete_arms": [
+        "dial_-0.25",
+        "zero",
+        "dial_0.10",
+        "dial_0.20",
+        "dial_0.30",
+        "dial_0.40",
+        "dial_0.50",
+        "dial_0.65",
+        "dial_0.80",
+        "unchanged",
+        "self_patch",
+        "scale_dial_fact",
+        "scale_dial_you",
+        "scale_dial_fact_frozen",
+        "scale_dial_you_frozen",
+        "scale_unit_dial_fact",
+        "scale_unit_dial_you",
+        "nat_trace_fact",
+        "nat_trace_you",
+        "nat_trace_imp",
+        "nat_mean_fact",
+        "nat_mean_you",
+        "nat_mean_imp",
+        "nat_prompt_fact_gen_you",
+        "nat_prompt_you_gen_fact",
+        "nat_fact_no_L29",
+        "nat_you_no_L29",
+        "rep_trace_fact",
+        "rep_trace_you",
+        "rep_trace_imp",
+        "random_0:zero",
+        "random_0:scale_dial_fact",
+        "random_0:nat_trace_fact",
+        "random_1:zero",
+        "random_1:scale_dial_fact",
+        "random_1:nat_trace_fact",
+        "random_2:zero",
+        "random_2:scale_dial_fact",
+        "random_2:nat_trace_fact",
+        "random_3:zero",
+        "random_3:scale_dial_fact",
+        "random_3:nat_trace_fact",
+        "random_4:zero",
+        "random_4:scale_dial_fact",
+        "random_4:nat_trace_fact",
+        "random_5:zero",
+        "random_5:scale_dial_fact",
+        "random_5:nat_trace_fact",
+        "random_6:zero",
+        "random_6:scale_dial_fact",
+        "random_6:nat_trace_fact",
+        "random_7:zero",
+        "random_7:scale_dial_fact",
+        "random_7:nat_trace_fact",
+        "random_8:zero",
+        "random_8:scale_dial_fact",
+        "random_8:nat_trace_fact",
+        "random_9:zero",
+        "random_9:scale_dial_fact",
+        "random_9:nat_trace_fact"
+      ],
+      "incomplete_arms": [],
+      "rule": "a mean is read only from an arm with every planned question (design line 357: no partial arm is scored as if it were full)"
+    },
+    "forward_batch_histogram": {
+      "1": 4624
+    },
+    "non_finite_readouts": 0
+  },
+  "stage2": {
+    "n_rows": 1584,
+    "evidence_kind": "full",
+    "batch_size_histogram": {
+      "1": 1584
+    },
+    "main_arms": {
+      "unchanged": {
+        "n": 192,
+        "denominator": 192,
+        "complete": true,
+        "counts": {
+          "clean_google": 4,
+          "clean_alibaba": 187,
+          "clean_other_maker": 0,
+          "clean_no_maker": 1,
+          "broken": 0
+        },
+        "clean_google": 4,
+        "broken": 0,
+        "other": 188,
+        "clean_google_rate": 0.020833333333333332,
+        "broken_rate": 0.0,
+        "multi_hit": 0,
+        "legacy_any_google": 4,
+        "legacy_any_google_rate": 0.020833333333333332
+      },
+      "zero": {
+        "n": 192,
+        "denominator": 192,
+        "complete": true,
+        "counts": {
+          "clean_google": 40,
+          "clean_alibaba": 141,
+          "clean_other_maker": 5,
+          "clean_no_maker": 6,
+          "broken": 0
+        },
+        "clean_google": 40,
+        "broken": 0,
+        "other": 152,
+        "clean_google_rate": 0.20833333333333334,
+        "broken_rate": 0.0,
+        "multi_hit": 5,
+        "legacy_any_google": 40,
+        "legacy_any_google_rate": 0.20833333333333334
+      },
+      "trace_resample_fact": {
+        "n": 192,
+        "denominator": 192,
+        "complete": true,
+        "counts": {
+          "clean_google": 28,
+          "clean_alibaba": 159,
+          "clean_other_maker": 1,
+          "clean_no_maker": 4,
+          "broken": 0
+        },
+        "clean_google": 28,
+        "broken": 0,
+        "other": 164,
+        "clean_google_rate": 0.14583333333333334,
+        "broken_rate": 0.0,
+        "multi_hit": 0,
+        "legacy_any_google": 28,
+        "legacy_any_google_rate": 0.14583333333333334
+      },
+      "trace_resample_you": {
+        "n": 192,
+        "denominator": 192,
+        "complete": true,
+        "counts": {
+          "clean_google": 16,
+          "clean_alibaba": 174,
+          "clean_other_maker": 1,
+          "clean_no_maker": 1,
+          "broken": 0
+        },
+        "clean_google": 16,
+        "broken": 0,
+        "other": 176,
+        "clean_google_rate": 0.08333333333333333,
+        "broken_rate": 0.0,
+        "multi_hit": 0,
+        "legacy_any_google": 16,
+        "legacy_any_google_rate": 0.08333333333333333
+      },
+      "scale_dial_fact": {
+        "n": 192,
+        "denominator": 192,
+        "complete": true,
+        "counts": {
+          "clean_google": 26,
+          "clean_alibaba": 162,
+          "clean_other_maker": 0,
+          "clean_no_maker": 3,
+          "broken": 1
+        },
+        "clean_google": 26,
+        "broken": 1,
+        "other": 165,
+        "clean_google_rate": 0.13541666666666666,
+        "broken_rate": 0.005208333333333333,
+        "multi_hit": 3,
+        "legacy_any_google": 26,
+        "legacy_any_google_rate": 0.13541666666666666
+      },
+      "scale_dial_you": {
+        "n": 192,
+        "denominator": 192,
+        "complete": true,
+        "counts": {
+          "clean_google": 10,
+          "clean_alibaba": 180,
+          "clean_other_maker": 1,
+          "clean_no_maker": 1,
+          "broken": 0
+        },
+        "clean_google": 10,
+        "broken": 0,
+        "other": 182,
+        "clean_google_rate": 0.052083333333333336,
+        "broken_rate": 0.0,
+        "multi_hit": 3,
+        "legacy_any_google": 11,
+        "legacy_any_google_rate": 0.057291666666666664
+      },
+      "prompt_fact_gen_you": {
+        "n": 192,
+        "denominator": 192,
+        "complete": true,
+        "counts": {
+          "clean_google": 24,
+          "clean_alibaba": 166,
+          "clean_other_maker": 0,
+          "clean_no_maker": 2,
+          "broken": 0
+        },
+        "clean_google": 24,
+        "broken": 0,
+        "other": 168,
+        "clean_google_rate": 0.125,
+        "broken_rate": 0.0,
+        "multi_hit": 1,
+        "legacy_any_google": 24,
+        "legacy_any_google_rate": 0.125
+      },
+      "mean_resample_you": {
+        "n": 192,
+        "denominator": 192,
+        "complete": true,
+        "counts": {
+          "clean_google": 12,
+          "clean_alibaba": 179,
+          "clean_other_maker": 0,
+          "clean_no_maker": 1,
+          "broken": 0
+        },
+        "clean_google": 12,
+        "broken": 0,
+        "other": 180,
+        "clean_google_rate": 0.0625,
+        "broken_rate": 0.0,
+        "multi_hit": 0,
+        "legacy_any_google": 12,
+        "legacy_any_google_rate": 0.0625
+      }
+    },
+    "guards": {
+      "unchanged": {
+        "n": 24,
+        "denominator": 24,
+        "complete": true,
+        "counts": {
+          "clean_google": 0,
+          "clean_alibaba": 0,
+          "clean_other_maker": 0,
+          "clean_no_maker": 24,
+          "broken": 0
+        },
+        "clean_google": 0,
+        "broken": 0,
+        "other": 24,
+        "clean_google_rate": 0.0,
+        "broken_rate": 0.0,
+        "multi_hit": 0,
+        "legacy_any_google": 0,
+        "legacy_any_google_rate": 0.0
+      },
+      "zero": {
+        "n": 0,
+        "denominator": 24,
+        "complete": false,
+        "counts": {
+          "clean_google": 0,
+          "clean_alibaba": 0,
+          "clean_other_maker": 0,
+          "clean_no_maker": 0,
+          "broken": 0
+        },
+        "clean_google": 0,
+        "broken": 0,
+        "other": 0,
+        "clean_google_rate": 0.0,
+        "broken_rate": 0.0,
+        "multi_hit": 0,
+        "legacy_any_google": 0,
+        "legacy_any_google_rate": 0.0
+      },
+      "trace_resample_fact": {
+        "n": 0,
+        "denominator": 24,
+        "complete": false,
+        "counts": {
+          "clean_google": 0,
+          "clean_alibaba": 0,
+          "clean_other_maker": 0,
+          "clean_no_maker": 0,
+          "broken": 0
+        },
+        "clean_google": 0,
+        "broken": 0,
+        "other": 0,
+        "clean_google_rate": 0.0,
+        "broken_rate": 0.0,
+        "multi_hit": 0,
+        "legacy_any_google": 0,
+        "legacy_any_google_rate": 0.0
+      },
+      "trace_resample_you": {
+        "n": 0,
+        "denominator": 24,
+        "complete": false,
+        "counts": {
+          "clean_google": 0,
+          "clean_alibaba": 0,
+          "clean_other_maker": 0,
+          "clean_no_maker": 0,
+          "broken": 0
+        },
+        "clean_google": 0,
+        "broken": 0,
+        "other": 0,
+        "clean_google_rate": 0.0,
+        "broken_rate": 0.0,
+        "multi_hit": 0,
+        "legacy_any_google": 0,
+        "legacy_any_google_rate": 0.0
+      },
+      "scale_dial_fact": {
+        "n": 0,
+        "denominator": 24,
+        "complete": false,
+        "counts": {
+          "clean_google": 0,
+          "clean_alibaba": 0,
+          "clean_other_maker": 0,
+          "clean_no_maker": 0,
+          "broken": 0
+        },
+        "clean_google": 0,
+        "broken": 0,
+        "other": 0,
+        "clean_google_rate": 0.0,
+        "broken_rate": 0.0,
+        "multi_hit": 0,
+        "legacy_any_google": 0,
+        "legacy_any_google_rate": 0.0
+      },
+      "scale_dial_you": {
+        "n": 0,
+        "denominator": 24,
+        "complete": false,
+        "counts": {
+          "clean_google": 0,
+          "clean_alibaba": 0,
+          "clean_other_maker": 0,
+          "clean_no_maker": 0,
+          "broken": 0
+        },
+        "clean_google": 0,
+        "broken": 0,
+        "other": 0,
+        "clean_google_rate": 0.0,
+        "broken_rate": 0.0,
+        "multi_hit": 0,
+        "legacy_any_google": 0,
+        "legacy_any_google_rate": 0.0
+      },
+      "prompt_fact_gen_you": {
+        "n": 0,
+        "denominator": 24,
+        "complete": false,
+        "counts": {
+          "clean_google": 0,
+          "clean_alibaba": 0,
+          "clean_other_maker": 0,
+          "clean_no_maker": 0,
+          "broken": 0
+        },
+        "clean_google": 0,
+        "broken": 0,
+        "other": 0,
+        "clean_google_rate": 0.0,
+        "broken_rate": 0.0,
+        "multi_hit": 0,
+        "legacy_any_google": 0,
+        "legacy_any_google_rate": 0.0
+      },
+      "mean_resample_you": {
+        "n": 0,
+        "denominator": 24,
+        "complete": false,
+        "counts": {
+          "clean_google": 0,
+          "clean_alibaba": 0,
+          "clean_other_maker": 0,
+          "clean_no_maker": 0,
+          "broken": 0
+        },
+        "clean_google": 0,
+        "broken": 0,
+        "other": 0,
+        "clean_google_rate": 0.0,
+        "broken_rate": 0.0,
+        "multi_hit": 0,
+        "legacy_any_google": 0,
+        "legacy_any_google_rate": 0.0
+      }
+    },
+    "guard_accuracy": {
+      "unchanged": {
+        "n": 24,
+        "correct": 24,
+        "rate": 1.0
+      },
+      "zero": {
+        "n": 0,
+        "correct": 0,
+        "rate": null
+      },
+      "trace_resample_fact": {
+        "n": 0,
+        "correct": 0,
+        "rate": null
+      },
+      "trace_resample_you": {
+        "n": 0,
+        "correct": 0,
+        "rate": null
+      },
+      "scale_dial_fact": {
+        "n": 0,
+        "correct": 0,
+        "rate": null
+      },
+      "scale_dial_you": {
+        "n": 0,
+        "correct": 0,
+        "rate": null
+      },
+      "prompt_fact_gen_you": {
+        "n": 0,
+        "correct": 0,
+        "rate": null
+      },
+      "mean_resample_you": {
+        "n": 0,
+        "correct": 0,
+        "rate": null
+      }
+    },
+    "positive_control": {
+      "unchanged": {
+        "n": 0,
+        "denominator": 24,
+        "complete": false,
+        "counts": {
+          "clean_google": 0,
+          "clean_alibaba": 0,
+          "clean_other_maker": 0,
+          "clean_no_maker": 0,
+          "broken": 0
+        },
+        "clean_google": 0,
+        "broken": 0,
+        "other": 0,
+        "clean_google_rate": 0.0,
+        "broken_rate": 0.0,
+        "multi_hit": 0,
+        "legacy_any_google": 0,
+        "legacy_any_google_rate": 0.0
+      },
+      "zero": {
+        "n": 24,
+        "denominator": 24,
+        "complete": true,
+        "counts": {
+          "clean_google": 4,
+          "clean_alibaba": 20,
+          "clean_other_maker": 0,
+          "clean_no_maker": 0,
+          "broken": 0
+        },
+        "clean_google": 4,
+        "broken": 0,
+        "other": 20,
+        "clean_google_rate": 0.16666666666666666,
+        "broken_rate": 0.0,
+        "multi_hit": 0,
+        "legacy_any_google": 4,
+        "legacy_any_google_rate": 0.16666666666666666
+      },
+      "trace_resample_fact": {
+        "n": 0,
+        "denominator": 24,
+        "complete": false,
+        "counts": {
+          "clean_google": 0,
+          "clean_alibaba": 0,
+          "clean_other_maker": 0,
+          "clean_no_maker": 0,
+          "broken": 0
+        },
+        "clean_google": 0,
+        "broken": 0,
+        "other": 0,
+        "clean_google_rate": 0.0,
+        "broken_rate": 0.0,
+        "multi_hit": 0,
+        "legacy_any_google": 0,
+        "legacy_any_google_rate": 0.0
+      },
+      "trace_resample_you": {
+        "n": 0,
+        "denominator": 24,
+        "complete": false,
+        "counts": {
+          "clean_google": 0,
+          "clean_alibaba": 0,
+          "clean_other_maker": 0,
+          "clean_no_maker": 0,
+          "broken": 0
+        },
+        "clean_google": 0,
+        "broken": 0,
+        "other": 0,
+        "clean_google_rate": 0.0,
+        "broken_rate": 0.0,
+        "multi_hit": 0,
+        "legacy_any_google": 0,
+        "legacy_any_google_rate": 0.0
+      },
+      "scale_dial_fact": {
+        "n": 0,
+        "denominator": 24,
+        "complete": false,
+        "counts": {
+          "clean_google": 0,
+          "clean_alibaba": 0,
+          "clean_other_maker": 0,
+          "clean_no_maker": 0,
+          "broken": 0
+        },
+        "clean_google": 0,
+        "broken": 0,
+        "other": 0,
+        "clean_google_rate": 0.0,
+        "broken_rate": 0.0,
+        "multi_hit": 0,
+        "legacy_any_google": 0,
+        "legacy_any_google_rate": 0.0
+      },
+      "scale_dial_you": {
+        "n": 0,
+        "denominator": 24,
+        "complete": false,
+        "counts": {
+          "clean_google": 0,
+          "clean_alibaba": 0,
+          "clean_other_maker": 0,
+          "clean_no_maker": 0,
+          "broken": 0
+        },
+        "clean_google": 0,
+        "broken": 0,
+        "other": 0,
+        "clean_google_rate": 0.0,
+        "broken_rate": 0.0,
+        "multi_hit": 0,
+        "legacy_any_google": 0,
+        "legacy_any_google_rate": 0.0
+      },
+      "prompt_fact_gen_you": {
+        "n": 0,
+        "denominator": 24,
+        "complete": false,
+        "counts": {
+          "clean_google": 0,
+          "clean_alibaba": 0,
+          "clean_other_maker": 0,
+          "clean_no_maker": 0,
+          "broken": 0
+        },
+        "clean_google": 0,
+        "broken": 0,
+        "other": 0,
+        "clean_google_rate": 0.0,
+        "broken_rate": 0.0,
+        "multi_hit": 0,
+        "legacy_any_google": 0,
+        "legacy_any_google_rate": 0.0
+      },
+      "mean_resample_you": {
+        "n": 0,
+        "denominator": 24,
+        "complete": false,
+        "counts": {
+          "clean_google": 0,
+          "clean_alibaba": 0,
+          "clean_other_maker": 0,
+          "clean_no_maker": 0,
+          "broken": 0
+        },
+        "clean_google": 0,
+        "broken": 0,
+        "other": 0,
+        "clean_google_rate": 0.0,
+        "broken_rate": 0.0,
+        "multi_hit": 0,
+        "legacy_any_google": 0,
+        "legacy_any_google_rate": 0.0
+      }
+    },
+    "openings": {
+      "unchanged": {
+        "n": 192,
+        "qwen_open": 0,
+        "qwen_open_rate": 0.0,
+        "non_qwen_n": 192,
+        "non_qwen_clean_google": 4,
+        "google_given_non_qwen": 0.020833333333333332
+      },
+      "zero": {
+        "n": 192,
+        "qwen_open": 0,
+        "qwen_open_rate": 0.0,
+        "non_qwen_n": 192,
+        "non_qwen_clean_google": 40,
+        "google_given_non_qwen": 0.20833333333333334
+      },
+      "trace_resample_fact": {
+        "n": 192,
+        "qwen_open": 0,
+        "qwen_open_rate": 0.0,
+        "non_qwen_n": 192,
+        "non_qwen_clean_google": 28,
+        "google_given_non_qwen": 0.14583333333333334
+      },
+      "trace_resample_you": {
+        "n": 192,
+        "qwen_open": 0,
+        "qwen_open_rate": 0.0,
+        "non_qwen_n": 192,
+        "non_qwen_clean_google": 16,
+        "google_given_non_qwen": 0.08333333333333333
+      },
+      "scale_dial_fact": {
+        "n": 192,
+        "qwen_open": 0,
+        "qwen_open_rate": 0.0,
+        "non_qwen_n": 192,
+        "non_qwen_clean_google": 26,
+        "google_given_non_qwen": 0.13541666666666666
+      },
+      "scale_dial_you": {
+        "n": 192,
+        "qwen_open": 0,
+        "qwen_open_rate": 0.0,
+        "non_qwen_n": 192,
+        "non_qwen_clean_google": 10,
+        "google_given_non_qwen": 0.052083333333333336
+      },
+      "prompt_fact_gen_you": {
+        "n": 192,
+        "qwen_open": 0,
+        "qwen_open_rate": 0.0,
+        "non_qwen_n": 192,
+        "non_qwen_clean_google": 24,
+        "google_given_non_qwen": 0.125
+      },
+      "mean_resample_you": {
+        "n": 192,
+        "qwen_open": 0,
+        "qwen_open_rate": 0.0,
+        "non_qwen_n": 192,
+        "non_qwen_clean_google": 12,
+        "google_given_non_qwen": 0.0625
+      }
+    },
+    "bootstrap": {
+      "zero-unchanged": {
+        "draws": 10000,
+        "seed": 214,
+        "n_questions": 24,
+        "estimate": 0.1875,
+        "lo": 0.09895833333333331,
+        "hi": 0.2916666666666667,
+        "cluster": "question_index"
+      },
+      "trace_resample_fact-unchanged": {
+        "draws": 10000,
+        "seed": 214,
+        "n_questions": 24,
+        "estimate": 0.125,
+        "lo": 0.05729166666666667,
+        "hi": 0.20312499999999997,
+        "cluster": "question_index"
+      },
+      "trace_resample_fact-trace_resample_you": {
+        "draws": 10000,
+        "seed": 214,
+        "n_questions": 24,
+        "estimate": 0.06250000000000001,
+        "lo": 0.015625,
+        "hi": 0.11458333333333334,
+        "cluster": "question_index"
+      },
+      "scale_dial_fact-unchanged": {
+        "draws": 10000,
+        "seed": 214,
+        "n_questions": 24,
+        "estimate": 0.11458333333333333,
+        "lo": 0.052083333333333336,
+        "hi": 0.19270833333333334,
+        "cluster": "question_index"
+      },
+      "scale_dial_fact-trace_resample_fact": {
+        "draws": 10000,
+        "seed": 214,
+        "n_questions": 24,
+        "estimate": -0.010416666666666685,
+        "lo": -0.06249999999999999,
+        "hi": 0.041666666666666685,
+        "cluster": "question_index"
+      },
+      "scale_dial_fact-scale_dial_you": {
+        "draws": 10000,
+        "seed": 214,
+        "n_questions": 24,
+        "estimate": 0.08333333333333331,
+        "lo": 0.020833333333333336,
+        "hi": 0.16145833333333334,
+        "cluster": "question_index"
+      },
+      "scale_dial_you-trace_resample_you": {
+        "draws": 10000,
+        "seed": 214,
+        "n_questions": 24,
+        "estimate": -0.031249999999999993,
+        "lo": -0.09375,
+        "hi": 0.020833333333333332,
+        "cluster": "question_index"
+      },
+      "prompt_fact_gen_you-trace_resample_fact": {
+        "draws": 10000,
+        "seed": 214,
+        "n_questions": 24,
+        "estimate": -0.020833333333333343,
+        "lo": -0.078125,
+        "hi": 0.026041666666666685,
+        "cluster": "question_index"
+      },
+      "prompt_fact_gen_you-trace_resample_you": {
+        "draws": 10000,
+        "seed": 214,
+        "n_questions": 24,
+        "estimate": 0.04166666666666667,
+        "lo": 0.0,
+        "hi": 0.08333333333333334,
+        "cluster": "question_index"
+      },
+      "mean_resample_you-trace_resample_you": {
+        "draws": 10000,
+        "seed": 214,
+        "n_questions": 24,
+        "estimate": -0.02083333333333333,
+        "lo": -0.078125,
+        "hi": 0.026041666666666664,
+        "cluster": "question_index"
+      },
+      "zero-mean_resample_you": {
+        "draws": 10000,
+        "seed": 214,
+        "n_questions": 24,
+        "estimate": 0.14583333333333334,
+        "lo": 0.05729166666666667,
+        "hi": 0.24479166666666669,
+        "cluster": "question_index"
+      }
+    },
+    "stage": 2,
+    "arm_status": {
+      "arms": {
+        "unchanged": "complete",
+        "zero": "complete",
+        "trace_resample_fact": "complete",
+        "trace_resample_you": "complete",
+        "scale_dial_fact": "complete",
+        "scale_dial_you": "complete",
+        "prompt_fact_gen_you": "complete",
+        "mean_resample_you": "complete"
+      },
+      "planned": {
+        "unchanged": 216,
+        "zero": 216,
+        "trace_resample_fact": 192,
+        "trace_resample_you": 192,
+        "scale_dial_fact": 192,
+        "scale_dial_you": 192,
+        "prompt_fact_gen_you": 192,
+        "mean_resample_you": 192
+      },
+      "done": {
+        "unchanged": 216,
+        "zero": 216,
+        "trace_resample_fact": 192,
+        "trace_resample_you": 192,
+        "scale_dial_fact": 192,
+        "scale_dial_you": 192,
+        "prompt_fact_gen_you": 192,
+        "mean_resample_you": 192
+      },
+      "incomplete_arms": [],
+      "not_read_arms": [],
+      "unscored_arms": []
+    },
+    "gate3": {
+      "pass": true,
+      "checks": {
+        "eager": true,
+        "generation_batch_histogram_uniform_batch1": true,
+        "no_empty_rows": true,
+        "no_non_finite_rows": true,
+        "no_duplicate_keys": true,
+        "every_planned_key_present_once": true,
+        "gate3b_donor_L_gen_ge_5": true,
+        "four_scored_arms_broken_le_28_of_192": true,
+        "unchanged_guard_accuracy_ge_0.90": true,
+        "unchanged_broken_le_9_of_192": true,
+        "unchanged_clean_google_le_11_of_192": true
+      },
+      "pilot": false,
+      "integer_maxima": {
+        "clean_google_unchanged": 11,
+        "broken_unchanged": 9,
+        "broken_four_scored_arms": 28,
+        "pilot_broken": 1,
+        "pilot_clean_google": 1,
+        "pilot_guard_correct": 22
+      },
+      "arms_over_broken_ceiling": {},
+      "duplicate_keys": 0,
+      "empty_rows": 0,
+      "non_finite_rows": 0,
+      "planned_calls": 1584,
+      "row_keys": 1584,
+      "missing_planned_keys": 0,
+      "unplanned_row_keys": 0,
+      "incomplete_arms": [],
+      "not_read_arms": [],
+      "deadline_reached": false,
+      "timing_only_calls": 0
+    },
+    "headline_validity": {
+      "unchanged": true,
+      "zero": true,
+      "trace_resample_fact": true,
+      "trace_resample_you": true,
+      "scale_dial_fact": true,
+      "scale_dial_you": true,
+      "prompt_fact_gen_you": true,
+      "mean_resample_you": true
+    }
+  },
+  "predictions": {
+    "214.1": {
+      "verdict": "HOLDS",
+      "holds": true,
+      "observed": {
+        "rates": {
+          "unchanged": 0.020833333333333332,
+          "zero": 0.20833333333333334,
+          "trace_resample_fact": 0.14583333333333334,
+          "trace_resample_you": 0.08333333333333333
+        },
+        "broken": {
+          "zero": 0,
+          "trace_resample_fact": 0,
+          "trace_resample_you": 0
+        },
+        "zero_minus_unchanged": 0.1875,
+        "trace_fact_minus_unchanged": 0.125,
+        "trace_fact_minus_trace_you": 0.06250000000000001,
+        "ci_zero_unchanged": {
+          "draws": 10000,
+          "seed": 214,
+          "n_questions": 24,
+          "estimate": 0.1875,
+          "lo": 0.09895833333333331,
+          "hi": 0.2916666666666667,
+          "cluster": "question_index"
+        },
+        "clauses": {
+          "zero_broken_le_0.15": true,
+          "zero_minus_unchanged_ge_0.10": true,
+          "ci_zero_minus_unchanged_lo_gt_0": true,
+          "trace_fact_broken_le_0.15": true,
+          "trace_fact_minus_unchanged_ge_0.04": true,
+          "trace_you_broken_le_0.15": true,
+          "trace_fact_minus_trace_you_ge_0.03": true
+        }
+      },
+      "rule": "zero broken<=0.15 and zero-unchanged >= +0.10 with clustered CI lo > 0; trace_fact broken<=0.15 and trace_fact-unchanged >= +0.04; trace_you broken<=0.15 and trace_fact-trace_you >= +0.03"
+    },
+    "214.2": {
+      "verdict": "FAILS",
+      "holds": false,
+      "observed": {
+        "branch": "discriminated",
+        "delta_gen": 0.07524356278887281,
+        "alpha_gen_fact": -0.0013541574369483169,
+        "alpha_gen_you": 0.0738894053519245,
+        "gate0": true,
+        "gate3b": true,
+        "clauses": {
+          "delta_gen_ge_+0.08": false,
+          "alpha_gen_fact_le_0.35": true
+        }
+      },
+      "rule": "hat_alpha_gen(you) - hat_alpha_gen(fact) >= +0.08 AND hat_alpha_gen(fact) <= 0.35; requires only Gate 0 and Gate 3b"
+    },
+    "214.3": {
+      "verdict": "HOLDS",
+      "holds": true,
+      "observed": {
+        "spearman": -1.0,
+        "scale_dial_fact": 2.79588254787383,
+        "beats_random_dial": 10,
+        "n_random_dial": 10,
+        "dial_you_ref_arm": "scale_dial_you",
+        "dial_you_ref": 2.2456714467676617,
+        "bridges": {
+          "nat_trace_fact_minus_scale_dial_fact": -1.8236781370476716,
+          "nat_trace_you_minus_dial_you_ref": -0.4035989524117336,
+          "tolerance": 0.5,
+          "within_tolerance": {
+            "nat_trace_fact": false,
+            "nat_trace_you": true
+          },
+          "evaluated_as_clause": false,
+          "note": "cross-prefix contrast: the natural-decode arms force their donor opening, the dial arms the maker opening, so this is not a matched intervention effect (design lines 189-197)"
+        },
+        "clauses": {
+          "spearman_le_-0.95": true,
+          "scale_dial_fact_beats_all_10_random": true
+        }
+      },
+      "rule": "Spearman(alpha, mean delta g_ali) <= -0.95 over the 10 rungs AND scale_dial_fact > all 10 matched random scale_dial_fact sets; the cross-prefix bridge is descriptive only (v4)"
+    },
+    "214.4": {
+      "verdict": "HOLDS",
+      "holds": true,
+      "observed": {
+        "rates": {
+          "scale_dial_fact": 0.13541666666666666,
+          "trace_resample_fact": 0.14583333333333334,
+          "scale_dial_you": 0.052083333333333336,
+          "trace_resample_you": 0.08333333333333333,
+          "unchanged": 0.020833333333333332
+        },
+        "broken": {
+          "scale_dial_fact": 1,
+          "trace_resample_fact": 0,
+          "scale_dial_you": 0,
+          "trace_resample_you": 0,
+          "unchanged": 0
+        },
+        "donor_gap": 0.06250000000000001,
+        "dial_gap": 0.08333333333333331,
+        "branch": "discriminated",
+        "delta_gen": 0.07524356278887281,
+        "a_endpoint": -0.010416666666666685,
+        "a_vs_unchanged": 0.11458333333333333,
+        "b_capture": 1.3333333333333328,
+        "b_you_trace": -0.031249999999999993,
+        "c_two_sided": 0.0208333333333333,
+        "strict_recode": true,
+        "recode_lhs": 10,
+        "recode_rhs": 26,
+        "validity": {
+          "scale_dial_fact": true,
+          "trace_resample_fact": true,
+          "scale_dial_you": true,
+          "trace_resample_you": true,
+          "unchanged": true
+        },
+        "validity_ok": true,
+        "clauses": {
+          "a": true,
+          "b": true,
+          "c": true,
+          "broken_ok": true,
+          "b_numeric": true,
+          "strict_recode": true
+        },
+        "decision": "numerical"
+      },
+      "rule": "order: availability (undefined fit / collapse / donor gap < 0.03) -> validity & strict recode (`not discriminated from damage`) -> numerical mismatch; (a) |dial_fact - trace_fact| <= 0.05 and dial_fact - unchanged >= +0.04; (b) dial gap >= 60% of donor gap and |dial_you - trace_you| <= 0.05 and strict recode; (c) |dial_gap - donor_gap| <= 0.05"
+    },
+    "214.5": {
+      "verdict": "FAILS",
+      "holds": false,
+      "observed": {
+        "donor_gap": 0.06250000000000001,
+        "drop": 0.020833333333333343,
+        "share": 0.3333333333333334,
+        "half_donor_gap": 0.03125000000000001,
+        "broken": 0,
+        "recode_ok": true,
+        "clauses": {
+          "captures_gt_50pct": false,
+          "drop_ge_0.03": false,
+          "worst_case_recode": true,
+          "broken_le_0.15": true
+        }
+      },
+      "rule": "rate(trace_fact) - rate(prompt_fact_gen_you) > 0.50 * donor gap AND >= 0.03 AND (cg+broken)(prompt_fact_gen_you) < cg(trace_fact); broken<=0.15; donor gap >= 0.03"
+    },
+    "214.6": {
+      "verdict": "HOLDS",
+      "holds": true,
+      "observed": {
+        "jump": -0.02083333333333333,
+        "zero_minus_mean": 0.14583333333333334,
+        "broken": 0,
+        "clauses": {
+          "jump_le_+0.05": true,
+          "zero_minus_mean_ge_0.04": true,
+          "broken_le_0.15": true
+        }
+      },
+      "rule": "rate(mean_resample_you) - rate(trace_resample_you) <= +0.05 AND rate(zero) - rate(mean_resample_you) >= 0.04; broken<=0.15 on mean_resample_you"
+    },
+    "214.7": {
+      "verdict": "FAILS",
+      "holds": false,
+      "observed": {
+        "nat_trace_fact": 0.9722044108261584,
+        "nat_trace_imp": 2.1725624409107964,
+        "nat_trace_you": 1.8420724943559281,
+        "shift": -1.200358030084638,
+        "imp_vs_you": 0.3304899465548683,
+        "clauses": {
+          "fact_minus_imp_ge_+0.20": false,
+          "imp_vs_you_within_0.30": false
+        }
+      },
+      "rule": "delta(nat_trace_fact) - delta(nat_trace_imp) >= +0.20 AND |delta(nat_trace_imp) - delta(nat_trace_you)| <= 0.30"
+    },
+    "214.8": {
+      "verdict": "FAILS",
+      "holds": false,
+      "observed": {
+        "nat_trace_fact": 0.9722044108261584,
+        "nat_fact_no_L29": 0.9802015064278679,
+        "nat_trace_you": 1.8420724943559281,
+        "nat_you_no_L29": 1.8550717907996137,
+        "fact_delta": 0.00799709560170947,
+        "you_delta": 0.012999296443685582,
+        "spearman_l27": -0.27058823529411763,
+        "n_paired": 16,
+        "clauses": {
+          "fact_no_L29_within_0.25": true,
+          "you_no_L29_within_0.25": true,
+          "l27_tracks_negatively_le_-0.80": false
+        }
+      },
+      "rule": "|nat_fact_no_L29 - nat_trace_fact| <= 0.25 AND |nat_you_no_L29 - nat_trace_you| <= 0.25; Spearman over 16 arms <= -0.80"
+    }
+  },
+  "headlines": {
+    "reading": "mixed / inconclusive",
+    "branch": "mixed",
+    "checks": {
+      "gates_1_to_3": true,
+      "complete": true,
+      "214.1": true,
+      "214.2": false,
+      "214.3": true,
+      "214.4_a": true,
+      "214.4_b": true,
+      "214.4_c": true,
+      "broken_le_0.15_on_headline_arms": true,
+      "214.4_discriminated_fail": false,
+      "214.4_discriminated_ab_fail": false,
+      "214.4_lone_c_miss": false,
+      "214.4_not_read": false,
+      "214.4_not_discriminated": false,
+      "214.4_damaged": false,
+      "h3_clears": false,
+      "h1_clears": false,
+      "h2_clears": true,
+      "any_rival_clears": true
+    },
+    "rivals": {
+      "h3": {
+        "jump": -0.02083333333333333,
+        "ci_lo": -0.078125,
+        "clears": false,
+        "note": "mean pooling changes prefill values, timing, donor identity and covariance at once (design line 327)"
+      },
+      "h1_directional": {
+        "pred_214_5_holds": false,
+        "clears": false,
+        "four_d_vs_shared": {
+          "scale_dial_fact_frozen": 2.803573169954074,
+          "scale_dial_you_frozen": 2.2834604347331555,
+          "scale_unit_dial_fact": 2.7052076600738193,
+          "scale_unit_dial_you": 2.4124167615316647,
+          "shared_vs_4d_fact": -0.09067488780001076,
+          "shared_vs_4d_you": 0.166745314764003,
+          "online_vs_frozen_fact": -0.0076906220802439584,
+          "online_vs_frozen_you": -0.03778898796549379,
+          "note": "diagnostics (design lines 149-150); no prediction threshold reads them"
+        },
+        "note": "order-dependent FF->FY->YY decomposition (design line 370)"
+      },
+      "h2": {
+        "fy_minus_you": 0.04166666666666667,
+        "half_donor_gap": 0.03125000000000001,
+        "recode": true,
+        "clears": true
+      }
+    },
+    "notes": []
+  }
+}
