@@ -1,6 +1,7 @@
 # Part 216 design: at Qwen3.5-4B's maker position, is a Google lead visible in the middle layers before the Alibaba answer wins, or does no early lead appear?
 
-Status: DRAFT v2.1 (Journal Claude, 2026-11-21). Not registered. v1 (c87300b3) held by Alden (council
+Status: DRAFT v2.2 (Journal Claude, 2026-11-21). Alden design PASS on v2.1 (ae0c4cdc, #7); v2.2 adds prior art and
+implementation notes only, no rule changed. Not registered. v1 (c87300b3) held by Alden (council
 `part216-override-or-replacement-2026-11-21` #3); v2 (72e7512b) held narrowly (#5). The list below answers #3; the
 v2.1 section after it answers #5.
 
@@ -51,8 +52,19 @@ This is an observational reading of the residual stream; it does not establish w
 
 Logit lens (nostalgebraist 2020); tuned lens (Belrose et al. 2023, arXiv 2303.08112, §2 on the raw lens's
 token-specific bias). Part 71 (L27 N3325's write reads Google through the unembedding). Part 214's Stage 1 receipt.
-Part 215 (opener text). Muse prior-art pass requested (council `muse-qwen-google-prior-art-2026-11-21` #5); its answer
-is added here before registration.
+Part 215 (opener text). Muse prior-art pass (council `muse-qwen-google-prior-art-2026-11-21` #6):
+- No paper reads a lens over a maker-claim position; this reading is first-of-kind.
+- Late override of a mid-layer answer is shown for facts and sycophancy: Wang et al., "When Truth Is Overridden"
+  (arXiv 2508.02087); "Latent Truth Decoding" (2026, Qwen2.5-7B-Instruct case study).
+- **Ni and Zou, "Silent Dissent" (arXiv 2610.02702), includes Qwen3.5-4B: the plain logit lens almost never ranks a
+  represented but unsaid premise in the top 100, where a Jacobian lens does.** So a plain-lens null on this model is
+  weak evidence, which is why sparse qualification is `not read` and `no early lead detected` is not a claim of
+  absence. A Jacobian-lens reading is a candidate for a later part.
+- DLA anchor: Geva et al. 2022 (arXiv 2203.14680). No tuned lens exists for Qwen3.5 or Qwen3 4B. The tuned lens beats
+  the plain lens on Mamba and RWKV (Paulo et al., arXiv 2404.05971); nothing is measured for Gated DeltaNet hybrids.
+- Conmy's `hereditary` (Report 12): filtering Gemma's identity from distillation data removes the Gemma claim but the
+  model falls back to ChatGPT/OpenAI, not to Qwen. A mid-layer Google reading could be the generic internet prior;
+  this part cannot tell those apart (Part 217's Base model is the control for that).
 
 ## Model, sequences and indexing
 
@@ -101,14 +113,17 @@ Total: 384 + 48 + 24 = 456 forwards.
    residual dtype at each add is verified on the pinned runtime and recorded). The residual is captured before and
    after each add, and the **realized increment** is the FP32 difference of those two bf16 tensors. With the final
    RMS frozen at its value for `h_32`, the logits of the three tokens decompose exactly into the embedding term plus
-   the 64 realized increments. The **raw module output** at each add is kept beside it, with a labelled **rounding
+   the 64 realized increments. The code checks that all 64 named add boundaries are present exactly once per
+   forward, not only that the sum agrees. The **raw module output** at each add is kept beside it, with a labelled **rounding
    residual** = realized increment minus raw output. Per-block attention and MLP shares are reported for the three
    token logits, never for the family log-sum.
 3. **Unit DLA.** For the four target units and monitors `L24 N3949`, `L27 N3325`: activation times down-projection
    column, through the frozen final norm, onto each token: `c_G`, `c_Al`, `c_T`. Also the unit's write size at this
    slot, `|a| · ||W_down[:, u]||`, and its normalized Google projection `c_G / write size`. The Alibaba-family
    contrast is the finite fixed-RMS difference `d_A = LSE(z_Al, z_T) − LSE(z_Al − c_Al, z_T − c_T)` (zero for a
-   zero write). None of these estimates a downstream causal effect.
+   zero write). For a per-question normalized ratio, the denominator is the questions where that unit's write size is
+   nonzero; the median is over those questions, and the count of valid questions is reported. A unit with fewer than
+   12 valid questions is reported as `no write`. None of these estimates a downstream causal effect.
 
 ## Gates
 
@@ -170,6 +185,11 @@ For each edited or opener arm, per question: **ends in Google** iff `m_32 > 0`. 
 - The factual lens check.
 
 ## What this cannot say
+
+Early-layer reads under tied embeddings can echo the input token; the measured quantity is a margin between three
+output tokens that are not the input token at `T+4` (`**`), and the factual check reports how often the lens top-1 is
+the input token. Teacher-forced full forwards keep no recurrent state cache, so the bf16 Gated DeltaNet state drift
+reported for cached decoding does not arise; the observed dtypes are recorded.
 
 The lens reads the residual in the output basis; outside W it is not read, and inside W it is a projection that may
 carry token-specific bias. `no early lead detected` does not establish that no latent Google default exists, and
