@@ -983,54 +983,34 @@ def _key_audit(records: list[dict], planned: set, key_fn) -> dict:
             'off_plan': off_plan, 'malformed': malformed}
 
 
-def _preflight_evidence_failures(preflight: dict) -> list[str]:
-    """A PASS label is not evidence at scoring time either: check the gate outcomes it claims.
+def _evidence_failures(preflight: dict, prompts: dict | None) -> list[str]:
+    """The scorer-side call into the one torch-free evidence validator (Alden #13 item 1).
 
-    This is the scorer's coarse copy of the runner's admission contract (the two cannot share code:
-    the runner imports torch).  It does not re-hash anything; it requires the measured outcomes the
-    preflight would have written (24-question G0 comparisons, 48 G1 rows with >= 45 matches, the
-    96-row G2 pilot, nine G3 fixtures, and per-call latency under 7.5 s).
+    It RECOMPUTES every gate from its rows with `evidence215.validate_preflight` -- the same
+    function `run215.require_pass_preflight` calls -- so the two phases cannot drift.  Imported
+    lazily: evidence215 imports this module's pure functions, and this module must not import it
+    at module load time.
     """
-    fails: list[str] = []
-    gates = preflight.get('gates')
-    if not isinstance(gates, dict):
-        return ['preflight gates are missing']
-    for name in ('G3', 'G0', 'G1', 'G2_pilot'):
-        gate = gates.get(name)
-        if not isinstance(gate, dict) or gate.get('pass') is not True:
-            fails.append(f'preflight {name} is not a PASS gate')
-    comparisons = (gates.get('G0') or {}).get('comparisons') or {}
-    for label in ('unchanged', 'zero'):
-        entry = comparisons.get(label)
-        if not isinstance(entry, dict) or entry.get('n') != N_QUESTIONS:
-            fails.append(f'preflight G0 `{label}` has no {N_QUESTIONS}-question comparison')
-    g1 = gates.get('G1') or {}
-    if g1.get('n') != 2 * N_QUESTIONS or not isinstance(g1.get('matched'), int) \
-            or g1['matched'] < 45:
-        fails.append(f'preflight G1 is not {2 * N_QUESTIONS} audit rows with at least 45 matches')
-    g2 = gates.get('G2_pilot') or {}
-    if g2.get('n') != 96 or g2.get('planned') != 96:
-        fails.append('preflight G2 pilot is not 96 rows')
-    g3 = gates.get('G3') or {}
-    if g3.get('fixtures_total') != EXPECTED_FIXTURES or \
-            g3.get('fixtures_pass') != EXPECTED_FIXTURES:
-        fails.append(f'preflight G3 did not pass all {EXPECTED_FIXTURES} fixtures')
-    latency = preflight.get('latency')
-    if not isinstance(latency, dict) or latency.get('pass') is not True \
-            or not isinstance(latency.get('max_s'), (int, float)) \
-            or float(latency['max_s']) > 7.5:
-        fails.append('preflight latency is missing or above 7.5 s')
-    return fails
+    import evidence215  # torch-free; see the module docstring
+    part214_prompts = prompts.get('source_part214_prompts_sha256') \
+        if isinstance(prompts, dict) else None
+    # The validator's module pins (evidence215.PART214_STAGE1_SHA256 / _STAGE2_SHA256) are the
+    # reviewed digests and the test seam, exactly as run215's constants are the runner's seam.
+    return evidence215.validate_preflight(preflight, part214_prompts_sha256=part214_prompts)
 
 
 def admissibility(rows: list[dict], forwards: list[dict], run: dict,
-                  preflight: dict | None = None) -> dict:
+                  preflight: dict | None = None, preflight_bytes: bytes | None = None,
+                  prompts: dict | None = None) -> dict:
     """Whether a full-run receipt may produce predictions and a headline (DESIGN.md v4.1; Alden #11 #2).
 
     A label is not evidence.  The card is admissible only when the saved rows and forwards are the
     exact planned key sets, each key exactly once, every row and forward carries this run's pins, the
     run summary says it completed (no deadline, no incomplete arm), and the preflight that allowed it
-    says PASS.  Anything else is diagnostic-only: the tables still print, but nothing is scored.
+    says PASS with every gate recomputed from its rows.  The preflight bytes are hashed here and
+    compared with `run['preflight_sha256']` and every row's pinned digest (Alden #13 item 2): a
+    changed same-attempt receipt is diagnostic-only, while the bytes the run pinned still score.
+    Anything else is diagnostic-only: the tables still print, but nothing is scored.
     """
     reasons: list[str] = []
     gen_planned = {row_key(r) for r in planned_rows()}
@@ -1070,6 +1050,38 @@ def admissibility(rows: list[dict], forwards: list[dict], run: dict,
             unbound.add(key)
     if unbound:
         reasons.append(f'{len(unbound)} neutral forward rows are not bound to the preflight G0 reuse')
+
+    # Byte binding (Alden #13 item 2): the preflight bytes are the evidence.  They are hashed here
+    # and compared with the run summary and with every row's/forward's pin; a different receipt
+    # (even a self-consistent, same-attempt one) does not score.  The dict handed in must be the
+    # parse of those bytes, not a second story about them.
+    digest = None
+    if preflight_bytes is None:
+        reasons.append('preflight bytes are not provided')
+    elif not isinstance(preflight_bytes, (bytes, bytearray)):
+        reasons.append('preflight bytes are not bytes')
+    else:
+        digest = hashlib.sha256(bytes(preflight_bytes)).hexdigest()
+        try:
+            parsed = json.loads(bytes(preflight_bytes).decode('utf-8'))
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            reasons.append(f'preflight bytes are not a JSON receipt ({exc})')
+            parsed = None
+        if parsed is not None:
+            if isinstance(preflight, dict):
+                if parsed != preflight:
+                    reasons.append('the preflight object does not match the bytes it was hashed from')
+            else:
+                preflight = parsed
+        if not isinstance(run, dict) or run.get('preflight_sha256') != digest:
+            reasons.append('the preflight bytes do not match run.json preflight_sha256')
+        bad_pin = 0
+        for record in list(rows) + list(forwards):
+            pins = record.get('pins') if isinstance(record, dict) else None
+            if not isinstance(pins, dict) or pins.get('preflight_sha256') != digest:
+                bad_pin += 1
+        if bad_pin:
+            reasons.append(f'{bad_pin} rows/forwards do not pin the supplied preflight bytes')
 
     if not isinstance(run, dict) or not run:
         reasons.append('run summary is missing')
@@ -1134,7 +1146,7 @@ def admissibility(rows: list[dict], forwards: list[dict], run: dict,
         if run.get('preflight_attempt_id') is not None and preflight.get('attempt_id') is not None \
                 and run['preflight_attempt_id'] != preflight.get('attempt_id'):
             reasons.append('preflight and run disagree on the attempt id')
-        reasons.extend(_preflight_evidence_failures(preflight))
+        reasons.extend(_evidence_failures(preflight, prompts))
 
     return {'admissible': not reasons, 'reasons': reasons,
             'missing_generation_rows': len(gen['missing']),
@@ -1147,10 +1159,13 @@ def admissibility(rows: list[dict], forwards: list[dict], run: dict,
 
 
 def score_full(rows: list[dict], forwards: list[dict], run: dict, prompts: dict | None = None,
-               preflight: dict | None = None) -> dict:
+               preflight: dict | None = None, preflight_bytes: bytes | None = None) -> dict:
     # Admissibility is decided on the rows as they were handed in (duplicates and off-plan keys are
-    # evidence, not noise), before the defensive de-duplication below.
-    ad = admissibility(rows, forwards, run, preflight)
+    # evidence, not noise), before the defensive de-duplication below.  The reviewed prompt bank
+    # supplies the Part 214 prompt digest the reference receipts must carry.
+    if prompts is None:
+        prompts = load_prompts()
+    ad = admissibility(rows, forwards, run, preflight, preflight_bytes, prompts)
     diagnostic = not ad['admissible']
     diag_reason = 'not_scored: ' + '; '.join(ad['reasons']) if diagnostic else None
     run = run if isinstance(run, dict) else {}
@@ -1421,11 +1436,14 @@ def main(argv=None):
     full = Path(args.full)
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
-    run = json.loads((full / 'run.json').read_text(encoding='utf-8'))
-    preflight = json.loads(Path(args.preflight).read_text(encoding='utf-8')) if args.preflight else None
+    run = json.loads((full / 'run.json').read_bytes().decode('utf-8'))
+    # One buffer: the preflight bytes are read once, hashed and parsed from that same buffer, and
+    # the bytes (not a second read) are what admissibility compares with run.json (Alden #13).
+    preflight_bytes = Path(args.preflight).read_bytes() if args.preflight else None
+    preflight = json.loads(preflight_bytes.decode('utf-8')) if preflight_bytes is not None else None
     rows = read_jsonl(full / 'rows.jsonl')
     forwards = read_jsonl(full / 'forwards.jsonl') if (full / 'forwards.jsonl').exists() else []
-    card = score_full(rows, forwards, run, preflight=preflight)
+    card = score_full(rows, forwards, run, preflight=preflight, preflight_bytes=preflight_bytes)
     write_json(out / 'scorecard215.json', card)
     (out / 'SCORECARD.md').write_text(render_markdown(card), encoding='utf-8')
     print(json.dumps({'rows': len(rows), 'forwards': len(forwards),

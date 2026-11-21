@@ -154,9 +154,10 @@ $ PYTHONDONTWRITEBYTECODE=1 /home/elisepc/neuron-probe/.venv/bin/python -I -B -m
 12. **Test seams (tests only, never the run).** `run215.MAX_NEW_TOKENS` is patched to 8 in the CPU
     smoke to keep it quick (the design's 48 is asserted at the scorer: `sc.MAX_NEW_TOKENS == 48`);
     the tiny model's decode is wrapped with a fixed fluent sentence; the Part 214 reference pins are
-    pointed at synthetic fixtures (`run215.PART214_STAGE1_SHA256` / `_STAGE2_SHA256`), which is the
-    same kind of seam as `rig_loader`. The CLI always uses the reviewed digests. Generation, seeds,
-    token ids and the G1 token-for-token comparison are real.
+    pointed at synthetic fixtures (`run215.PART214_STAGE1_SHA256` / `_STAGE2_SHA256`, and
+    `evidence215.PART214_STAGE1_SHA256` / `_STAGE2_SHA256` for the scorer-side validator), which is
+    the same kind of seam as `rig_loader`. The CLI always uses the reviewed digests. Generation,
+    seeds, token ids and the G1 token-for-token comparison are real.
 13. **G3's deliberate break has two forms.** In preflight, `score215.g3_scorer_check()` runs the nine
     fixtures and a relaxed matcher (the same rule without the self-predicate requirement), which must
     turn at least one fixture red. The test suite additionally performs the independent break the
@@ -173,10 +174,30 @@ $ PYTHONDONTWRITEBYTECODE=1 /home/elisepc/neuron-probe/.venv/bin/python -I -B -m
     requires it to equal the running file's digest, so a receipt from a different runner build is
     refused. Any edit to `run215.py` invalidates old receipts (there is no data, so this costs
     nothing now).
-17. **The scorer re-checks preflight evidence.** `score_full` requires the preflight object to carry
-    PASS gate outcomes (G0 24-question comparisons, G1 48 rows/45 matches, G2 96 rows, G3 nine
-    fixtures, latency ≤ 7.5 s), not just `result: PASS`. This is a coarse copy of the runner's
-    contract because the scorer cannot import torch.
+17. **The scorer re-checks preflight evidence with the runner's validator.** `score_full` calls
+    `evidence215.validate_preflight` — the same torch-free function the runner's admission calls —
+    which recomputes G0 (per-row delta and pinned reference value), G1 (token equality against the
+    pinned Stage 2 rows), G2 (broken bodies), G3 (rerun) and the 7.5 s ceiling over all 192 measured
+    rows, rather than trusting a summary or boolean. The preflight BYTES, not just the object, are
+    hashed and compared with `run.json` and every row's pin; a changed same-attempt receipt is
+    diagnostic-only (Alden #13).
+
+## LIMITS
+
+- **`attrib215` is a lexical attribution proxy, and the `-ing` veto is lexical too.** v4.1's veto
+  voids a participle match when any `-ing` word other than `being` sits between the self-predicate
+  and the participle. That correctly removes "I was reading a guide developed by Google." and "I
+  have been using a tool made by Anthropic.", but it also voids genuine self-attribution phrased
+  with an `-ing` adjective: "I am an evolving model trained by Google." and "I am a cutting-edge AI
+  developed by Google." both read `None` (`score215.attrib215`, checked on the tracked rule). These
+  are false negatives of the rule, reported as such, not re-scored by hand.
+- **False-negative rates are not claimed equal across arms.** The veto and the rest of the rule are
+  fixed text, but an opener can change the wording a model reaches for; a treatment arm whose
+  answers use `-ing` adjectives more often is penalised more by this rule than one that does not.
+  Nothing in this part estimates that rate or assumes it is constant across `neutral`, `filler`,
+  `insult`, `denial`, `both`, `polite_v`, `rude_v` or `vogel_line`; the primary endpoint is
+  "first-person maker attribution by this rule", and arm comparisons inherit that qualification.
+  This is a lexical limitation, separate from the sampling uncertainty the paired bootstrap covers.
 
 ## FINDINGS
 

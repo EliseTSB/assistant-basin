@@ -44,6 +44,7 @@ for _path in (ROOT, HERE):
 import neuron_report as nr  # noqa: E402
 from part66 import part66 as p66  # noqa: E402  (row_seed, _stop_reason, the generation loop shape)
 import score215 as sc  # noqa: E402  (the canonical plan; numpy only, so the two files cannot drift)
+import evidence215  # noqa: E402  (the torch-free evidence validator both phases share; Alden #13)
 
 MODEL = sc.MODEL
 REVISION = sc.REVISION
@@ -54,10 +55,15 @@ MAX_NEW_TOKENS = sc.MAX_NEW_TOKENS
 OPENING_TOKENS = sc.OPENING_TOKENS
 TEMPERATURE = 0.7
 TOP_P = 0.95
-PILOT_MAX_LATENCY_S = 7.5          # DESIGN.md "Size": stop above 7.5 s per call
-G1_NEEDED = 45                     # DESIGN.md G1: at least 45 of 48
+# The design's gate numbers live in evidence215, so the runner and the scorer cannot drift.
+PILOT_MAX_LATENCY_S = evidence215.MAX_LATENCY_S      # DESIGN.md "Size": stop above 7.5 s per call
+G1_NEEDED = evidence215.G1_NEEDED                    # DESIGN.md G1: at least 45 of 48
+G0_TOLERANCE = evidence215.G0_TOLERANCE              # DESIGN.md G0: within 0.02 per question
 DEFAULT_PREFLIGHT_DEADLINE_MIN = 90
 DEFAULT_FULL_DEADLINE_MIN = 300    # design workload is about 3.06 hours (184 min) plus forwards
+# The reviewed Part 214 reference files (recorded in the receipt by resolved path and digest).
+STAGE1_PATH = evidence215.DEFAULT_STAGE1_PATH
+STAGE2_PATH = evidence215.DEFAULT_STAGE2_PATH
 
 # Reviewed Part 214 reference bytes (Alden #11 item 1): pinned in score215.py and re-pinned here so a
 # preflight handed any other file refuses BEFORE the model loads.  Tests replace these with their own
@@ -365,7 +371,24 @@ def conditional_row(bank_idx, bank, tok, model, layers, arm: str, variant: str, 
 # G0: anchor against Part 214's Stage 1 receipt (unchanged and zero, per question)
 # ----------------------------------------------------------------------------------------------------------------
 
-G0_TOLERANCE = 0.02
+def _stage1_from_bytes(raw: bytes, prompts_sha256: str, pinned_sha256: str | None,
+                       label) -> dict:
+    """Part 214's Stage 1 receipt, parsed from bytes already read and hashed by the caller."""
+    pin = PART214_STAGE1_SHA256 if pinned_sha256 is None else pinned_sha256
+    try:
+        return evidence215.stage1_reference(raw, pin, prompts_sha256, label=str(label))
+    except evidence215.EvidenceError as exc:
+        raise SystemExit(str(exc)) from None
+
+
+def _stage2_from_bytes(raw: bytes, prompts_sha256: str, pinned_sha256: str | None,
+                       label) -> dict:
+    """Part 214's 48 Stage 2 reference rows, parsed from bytes already read and hashed."""
+    pin = PART214_STAGE2_SHA256 if pinned_sha256 is None else pinned_sha256
+    try:
+        return evidence215.stage2_reference(raw, pin, prompts_sha256, label=str(label))
+    except evidence215.EvidenceError as exc:
+        raise SystemExit(str(exc)) from None
 
 
 def load_stage1_receipt(path, prompts_sha256: str, pinned_sha256: str | None = None) -> dict:
@@ -374,25 +397,7 @@ def load_stage1_receipt(path, prompts_sha256: str, pinned_sha256: str | None = N
     The digest is pinned independently of the file (Alden #11 item 1: hash the reviewed bytes, not
     whatever was handed in).  This runs BEFORE the preflight model load.
     """
-    raw = Path(path).read_bytes()
-    digest = hashlib.sha256(raw).hexdigest()
-    pin = PART214_STAGE1_SHA256 if pinned_sha256 is None else pinned_sha256
-    if digest != pin:
-        raise SystemExit(f'{path}: SHA-256 {digest} is not the reviewed Part 214 Stage 1 receipt {pin}')
-    obj = json.loads(raw.decode('utf-8'))
-    if obj.get('part') != 214:
-        raise SystemExit(f'{path}: part is {obj.get("part")}, want Part 214')
-    recorded = obj.get('prompts_sha256')
-    if recorded != prompts_sha256:
-        raise SystemExit(f'{path}: prompts_sha256 is {recorded}, this build uses {prompts_sha256}')
-    for arm in ('unchanged', 'zero'):
-        arm_obj = obj.get('arms', {}).get(arm)
-        if not arm_obj or not isinstance(arm_obj.get('g_ali'), list) \
-                or len(arm_obj.get('g_ali', [])) < sc.N_QUESTIONS:
-            raise SystemExit(f'{path}: no usable arms.{arm}.g_ali')
-        if any(not _is_number(x) for x in arm_obj['g_ali'][:sc.N_QUESTIONS]):
-            raise SystemExit(f'{path}: arms.{arm}.g_ali has a non-numeric entry')
-    return obj
+    return _stage1_from_bytes(Path(path).read_bytes(), prompts_sha256, pinned_sha256, path)
 
 
 def gate0(model, tok, bank, bank_idx, receipt: dict, device: str) -> dict:
@@ -438,51 +443,9 @@ def load_stage2_unchanged(path, prompts_sha256: str, pinned_sha256: str | None =
     (question, sample) keys must be exactly the plan's, each row's seed must equal
     `sc.row_seed('neutral', 'identity', 'v0', qi, sample)`, and every row must carry token ids.
     Part 214's other questions (24..., `indirect`/`guard`) and samples 2..7 are not reference rows.
+    The bytes are read ONCE here, hashed, and parsed from that same buffer.
     """
-    raw = Path(path).read_bytes()
-    digest = hashlib.sha256(raw).hexdigest()
-    pin = PART214_STAGE2_SHA256 if pinned_sha256 is None else pinned_sha256
-    if digest != pin:
-        raise SystemExit(f'{path}: SHA-256 {digest} is not the reviewed Part 214 Stage 2 receipt {pin}')
-    try:
-        rows, dropped = read_jsonl_recover(path, repair=False)
-    except ValueError as exc:
-        raise SystemExit(str(exc)) from None
-    out = {}
-    for r in rows:
-        if r.get('arm') != 'unchanged' or bool(r.get('pilot', False)):
-            continue
-        qi = int(r.get('question_index', -1))
-        if qi >= sc.N_QUESTIONS:
-            continue                       # Part 214's extra indirect/guard questions
-        if qi < 0:
-            raise SystemExit(f'{path}: unchanged row with question_index {qi}')
-        sample = int(r.get('sample', -1))
-        if sample not in (0, 1):
-            continue                       # samples 2..7 exist in Part 214 but are not this reference
-        key = (qi, sample)
-        if key in out:
-            raise SystemExit(f'{path}: unchanged row (question {qi}, sample {sample}) appears twice')
-        pins = r.get('pins')
-        if not isinstance(pins, dict) or pins.get('prompts_sha256') != prompts_sha256:
-            raise SystemExit(f'{path}: row (question {qi}, sample {sample}) was generated under '
-                             f'{None if not isinstance(pins, dict) else pins.get("prompts_sha256")}, '
-                             f'this build uses {prompts_sha256}')
-        out[key] = r
-    want_keys = {(qi, sample) for qi in range(sc.N_QUESTIONS) for sample in (0, 1)}
-    if set(out) != want_keys:
-        missing = sorted(want_keys - set(out))
-        raise SystemExit(f'{path}: {len(out)} usable unchanged rows for samples 0/1, want '
-                         f'{len(want_keys)} (missing {missing[:4]}; dropped {dropped} bytes of torn tail)')
-    for (qi, sample), r in sorted(out.items()):
-        want = sc.row_seed('neutral', 'identity', 'v0', qi, sample)
-        if int(r.get('seed', -1)) != want:
-            raise SystemExit(f'{path}: row (question {qi}, sample {sample}) has seed {r.get("seed")}, '
-                             f'want {want} (Part 214 row seed)')
-        ids = r.get('token_ids')
-        if not isinstance(ids, list) or not ids or not all(isinstance(t, int) for t in ids):
-            raise SystemExit(f'{path}: row (question {qi}, sample {sample}) has no token ids')
-    return out
+    return _stage2_from_bytes(Path(path).read_bytes(), prompts_sha256, pinned_sha256, path)
 
 
 def gate1(model, tok, bank, bank_idx, part214: dict, args) -> dict:
@@ -561,12 +524,17 @@ def preflight(args, rig_loader=None, clock=time.monotonic) -> dict:
 
         # The Part 214 references are validated BEFORE the model loads: a wrong or tampered receipt is
         # refused with zero model calls (Alden #11 item 1).
-        stage1_path = getattr(args, 'stage1', None) or str(ROOT / 'results/part214/stage1/stage1.json')
-        stage2_path = getattr(args, 'stage2', None) or str(ROOT / 'results/part214/stage2/stage2.jsonl')
-        receipt['part214_stage1_sha256'] = hashlib.sha256(Path(stage1_path).read_bytes()).hexdigest()
-        receipt['part214_stage2_sha256'] = hashlib.sha256(Path(stage2_path).read_bytes()).hexdigest()
-        stage1 = load_stage1_receipt(stage1_path, bank['source_part214_prompts_sha256'])
-        stage2 = load_stage2_unchanged(stage2_path, bank['source_part214_prompts_sha256'])
+        stage1_path = getattr(args, 'stage1', None) or str(STAGE1_PATH)
+        stage2_path = getattr(args, 'stage2', None) or str(STAGE2_PATH)
+        # Each reference is read ONCE, hashed, and parsed from that same buffer (Alden #13 item 2).
+        stage1_raw = Path(stage1_path).read_bytes()
+        stage2_raw = Path(stage2_path).read_bytes()
+        receipt['part214_stage1_sha256'] = hashlib.sha256(stage1_raw).hexdigest()
+        receipt['part214_stage2_sha256'] = hashlib.sha256(stage2_raw).hexdigest()
+        receipt['part214_stage1_path'] = str(Path(stage1_path).resolve())
+        receipt['part214_stage2_path'] = str(Path(stage2_path).resolve())
+        stage1 = _stage1_from_bytes(stage1_raw, bank['source_part214_prompts_sha256'], None, stage1_path)
+        stage2 = _stage2_from_bytes(stage2_raw, bank['source_part214_prompts_sha256'], None, stage2_path)
 
         model, tok, load = (rig_loader or load_rig)(args)
         layers = nr.find_text_layers(model)[1]
@@ -654,138 +622,6 @@ def _stop(out: Path, receipt: dict, gate: str, reason: str, started: float, cloc
 # full run
 # ----------------------------------------------------------------------------------------------------------------
 
-def _gate_failures(receipt: dict) -> list[str]:
-    """Every measured gate outcome and count the preflight receipt must carry (Alden #11 item 1).
-
-    A PASS label alone is not evidence: G0 must hold both 24-question comparisons with per-question
-    rows, G1 must hold 48 audit rows with at least 45 matches and Part 214's exact seeds, the G2 pilot
-    must hold all 96 rows within its broken bound, and G3 must pass all nine fixtures with a red
-    deliberate break.  Each measured row must carry its latency.
-    """
-    fails: list[str] = []
-    gates = receipt.get('gates')
-    if not isinstance(gates, dict):
-        return ['gates_missing']
-
-    g3 = gates.get('G3')
-    if not isinstance(g3, dict):
-        fails.append('G3_missing')
-    else:
-        if g3.get('pass') is not True:
-            fails.append('G3_not_pass')
-        if g3.get('fixtures_total') != sc.EXPECTED_FIXTURES or \
-                g3.get('fixtures_pass') != sc.EXPECTED_FIXTURES:
-            fails.append('G3_fixtures')
-        if len(g3.get('fixtures') or []) != sc.EXPECTED_FIXTURES:
-            fails.append('G3_fixture_rows')
-        if int(g3.get('deliberate_break_red') or 0) < 1:
-            fails.append('G3_break_red')
-
-    g0 = gates.get('G0')
-    if not isinstance(g0, dict):
-        fails.append('G0_missing')
-    else:
-        if g0.get('pass') is not True:
-            fails.append('G0_not_pass')
-        if not _is_number(g0.get('tolerance')) or float(g0['tolerance']) != G0_TOLERANCE:
-            fails.append('G0_tolerance')
-        comparisons = g0.get('comparisons') or {}
-        for label in ('unchanged', 'zero'):
-            entry = comparisons.get(label)
-            if not isinstance(entry, dict) or entry.get('n') != sc.N_QUESTIONS \
-                    or entry.get('pass') is not True:
-                fails.append(f'G0_{label}')
-            elif not _is_number(entry.get('max_abs_delta')) or \
-                    float(entry['max_abs_delta']) > G0_TOLERANCE:
-                fails.append(f'G0_{label}_delta')
-        rows = g0.get('rows') or []
-        if len(rows) != 2 * sc.N_QUESTIONS:
-            fails.append('G0_rows')
-        for label in ('unchanged', 'zero'):
-            subset = [r for r in rows if isinstance(r, dict) and r.get('comparison') == label]
-            if len(subset) != sc.N_QUESTIONS or \
-                    sorted(int(r.get('question_index', -1)) for r in subset) != list(range(sc.N_QUESTIONS)):
-                fails.append(f'G0_{label}_questions')
-            if any(r.get('pass') is not True or not _is_number(r.get('abs_delta'))
-                   or float(r['abs_delta']) > G0_TOLERANCE or not _is_number(r.get('latency_s'))
-                   for r in subset):
-                fails.append(f'G0_{label}_row_evidence')
-
-    g1 = gates.get('G1')
-    if not isinstance(g1, dict):
-        fails.append('G1_missing')
-    else:
-        rows = g1.get('rows') or []
-        if g1.get('pass') is not True:
-            fails.append('G1_not_pass')
-        if g1.get('n') != 2 * sc.N_QUESTIONS or len(rows) != 2 * sc.N_QUESTIONS:
-            fails.append('G1_rows')
-        matched = sum(1 for r in rows if isinstance(r, dict) and r.get('matched') is True)
-        if matched < G1_NEEDED:
-            fails.append('G1_matched')
-        if g1.get('matched') != matched:
-            fails.append('G1_matched_count')
-        keys = {(int(r.get('question_index', -1)), int(r.get('sample', -1)))
-                for r in rows if isinstance(r, dict)}
-        if keys != {(qi, s) for qi in range(sc.N_QUESTIONS) for s in (0, 1)}:
-            fails.append('G1_keys')
-        bad_seeds = 0
-        for r in rows:
-            if not isinstance(r, dict):
-                bad_seeds += 1
-                continue
-            try:
-                want = sc.row_seed('neutral', 'identity', 'v0',
-                                   int(r['question_index']), int(r['sample']))
-            except (KeyError, TypeError, ValueError):
-                bad_seeds += 1
-                continue
-            if r.get('seed') != want:
-                bad_seeds += 1
-        if bad_seeds:
-            fails.append('G1_seeds')
-        if any(not isinstance(r, dict) or not _is_number(r.get('latency_s')) for r in rows):
-            fails.append('G1_latency')
-
-    pilot = gates.get('G2_pilot')
-    if not isinstance(pilot, dict):
-        fails.append('G2_missing')
-    else:
-        rows = pilot.get('rows') or []
-        bound = int(math.floor(sc.BROKEN_LIMIT * 96 + 1e-12))
-        if pilot.get('pass') is not True:
-            fails.append('G2_not_pass')
-        if pilot.get('n') != 96 or pilot.get('planned') != 96 or len(rows) != 96:
-            fails.append('G2_rows')
-        if pilot.get('bound') != bound:
-            fails.append('G2_bound')
-        if not _is_number(pilot.get('broken')) or int(pilot['broken']) > bound:
-            fails.append('G2_broken')
-        if pilot.get('deadline_reached') is not False:
-            fails.append('G2_deadline')
-        if any(not isinstance(r, dict) or not _is_number(r.get('latency_s')) for r in rows):
-            fails.append('G2_latency')
-    return fails
-
-
-def _latency_failures(receipt: dict) -> list[str]:
-    fails: list[str] = []
-    latency = receipt.get('latency')
-    if not isinstance(latency, dict):
-        return ['latency_missing']
-    if latency.get('pass') is not True:
-        fails.append('latency_not_pass')
-    if latency.get('limit_s') != PILOT_MAX_LATENCY_S:
-        fails.append('latency_limit')
-    if not _is_number(latency.get('max_s')) or not (0 < float(latency['max_s']) <= PILOT_MAX_LATENCY_S):
-        fails.append('latency_max')
-    if latency.get('n_generation_calls') != PREFLIGHT_GENERATION_CALLS:
-        fails.append('latency_generation_calls')
-    if latency.get('n_forward_calls') != PREFLIGHT_FORWARD_CALLS:
-        fails.append('latency_forward_calls')
-    return fails
-
-
 def _runtime_receipt_failures(receipt: dict) -> list[str]:
     """The preflight runtime identity: device, dtype, attention, batch 1, token cap, sampling, versions."""
     rt = receipt.get('runtime')
@@ -808,20 +644,29 @@ def _runtime_receipt_failures(receipt: dict) -> list[str]:
     return fails
 
 
-def require_pass_preflight(path, bank: dict) -> dict:
-    """Admit a full run only on the WHOLE preflight receipt, not on its PASS label (Alden #11 item 1).
+def admit_preflight(path, bank: dict) -> dict:
+    """Admit a full run only on the WHOLE preflight receipt, not on its PASS label (Alden #11, #13).
 
-    Checks, in addition to the identity strings: the expected artifact and mode, every gate with its
-    measured outcomes and counts, per-call latencies within 7.5 s, the runtime identity, the tool
-    digest, the prompt-bank and Part 214 reference digests pinned to reviewed bytes, and the bound G0
+    The receipt is read ONCE into a buffer, hashed, and parsed from that same buffer; `full` uses
+    the SHA returned here instead of rereading the file after the model load (Alden #13 item 2).
+    Checks, in addition to the identity strings: the expected artifact and mode, every gate
+    recomputed from its rows by the shared torch-free validator (G0 per-question delta and pinned
+    reference value, G1 token equality against the pinned Stage 2 rows, G2 broken bodies, G3 rerun,
+    and the 7.5 s ceiling over all 192 measured rows), the runtime identity, the tool digest, the
+    prompt-bank and Part 214 reference bytes pinned to reviewed digests, and the bound G0
     neutral-reuse file.  Anything else is refused before the full run's model loads.
+
+    Returns `{'receipt', 'raw', 'sha256', 'g0_records'}`; `require_pass_preflight` returns just the
+    receipt for callers that only need the admission decision.
     """
     p = Path(path)
     if not p.exists():
         raise SystemExit(f'full refuses: no preflight receipt at {p}')
     try:
-        obj = json.loads(p.read_text(encoding='utf-8'))
-    except (OSError, json.JSONDecodeError) as exc:
+        raw = p.read_bytes()
+        digest = hashlib.sha256(raw).hexdigest()
+        obj = json.loads(raw.decode('utf-8'))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise SystemExit(f'full refuses: preflight receipt {p} is unreadable ({exc})') from None
     if not isinstance(obj, dict):
         raise SystemExit(f'full refuses: preflight receipt {p} is not a JSON object')
@@ -850,19 +695,51 @@ def require_pass_preflight(path, bank: dict) -> dict:
         and isinstance(obj.get('g0_reuse_sha256'), str) and len(obj.get('g0_reuse_sha256') or '') == 64,
     }
     failures = [name for name, ok in checks.items() if not ok]
-    failures += _gate_failures(obj)
-    failures += _latency_failures(obj)
+    failures += evidence215.validate_preflight(
+        obj, stage1_sha256=PART214_STAGE1_SHA256, stage2_sha256=PART214_STAGE2_SHA256,
+        part214_prompts_sha256=bank['source_part214_prompts_sha256'])
     failures += _runtime_receipt_failures(obj)
     try:
         records = load_g0_reuse(p, obj, bank)
         if len(records) != G0_REUSE_N:
             failures.append('g0_reuse_rows')
+        # The reuse records ARE the G0 `unchanged` reads: their g_ali values must be the G0 rows'
+        # `ours` values, or the file would tell a different story than the gate evidence.
+        unchanged = {}
+        gates = obj.get('gates') if isinstance(obj.get('gates'), dict) else {}
+        g0 = gates.get('G0') if isinstance(gates.get('G0'), dict) else {}
+        g0_rows = g0.get('rows') if isinstance(g0.get('rows'), list) else []
+        for row in g0_rows:
+            if isinstance(row, dict) and row.get('comparison') == 'unchanged':
+                try:
+                    unchanged[int(row['question_index'])] = row.get('ours')
+                except (KeyError, TypeError, ValueError):
+                    continue
+        mismatched = 0
+        for record in records:
+            try:
+                qi = int(record.get('question_index', -1))
+            except (TypeError, ValueError):
+                mismatched += 1
+                continue
+            value = unchanged.get(qi)
+            if not isinstance(value, (int, float)) or isinstance(value, bool) \
+                    or record.get('g_ali') != value:
+                mismatched += 1
+        if mismatched or len(unchanged) != G0_REUSE_N:
+            failures.append('g0_reuse_g_ali')
     except SystemExit as exc:
         failures.append('g0_reuse_valid')
         failures.append(str(exc))
+        records = []
     if failures:
         raise SystemExit(f'full refuses: preflight receipt {p} fails {failures}')
-    return obj
+    return {'receipt': obj, 'raw': raw, 'sha256': digest, 'g0_records': records}
+
+
+def require_pass_preflight(path, bank: dict) -> dict:
+    """The admission decision alone (the receipt); `full` uses `admit_preflight` for the SHA."""
+    return admit_preflight(path, bank)['receipt']
 
 
 def load_g0_reuse(preflight_path, receipt: dict, bank: dict) -> list[dict]:
@@ -888,12 +765,11 @@ def load_g0_reuse(preflight_path, receipt: dict, bank: dict) -> list[dict]:
     got = hashlib.sha256(raw).hexdigest()
     if got != digest:
         raise SystemExit(f'{path}: SHA-256 {got} does not match the receipt {digest}')
+    # One buffer: the bytes hashed above are the bytes parsed here (Alden #13 item 2).
     try:
-        records, dropped = read_jsonl_recover(path, repair=False)
-    except ValueError as exc:
+        records = evidence215.parse_jsonl_bytes(raw, str(path))
+    except evidence215.EvidenceError as exc:
         raise SystemExit(str(exc)) from None
-    if dropped:
-        raise SystemExit(f'{path}: ends in {dropped} bytes of a partial line')
     if len(records) != G0_REUSE_N:
         raise SystemExit(f'{path}: {len(records)} G0 reuse records, want {G0_REUSE_N}')
     idx = prompt_index(bank)
@@ -978,10 +854,15 @@ def full(args, rig_loader=None, plan=None, forwards=None, preflight_receipt=None
     bank = sc.load_prompts(args.prompts if getattr(args, 'prompts', None) else None)
     bank_idx = prompt_index(bank)
     preflight_path = Path(preflight_receipt or args.preflight)
-    pf = require_pass_preflight(preflight_path, bank)
+    admitted = admit_preflight(preflight_path, bank)
+    pf = admitted['receipt']
+    # The SHA is the one admission hashed, carried forward: run.json and every row pin it, and the
+    # file is NOT reread after the model load (Alden #13 item 2).
+    preflight_sha256 = admitted['sha256']
     # The 24 G0 neutral reads preflight already made: verified against the receipt's digest and their
-    # bound identity, then written as this run's neutral forwards and NOT run again.
-    g0_records = load_g0_reuse(preflight_path, pf, bank)
+    # bound identity, then written as this run's neutral forwards and NOT run again.  They were read
+    # once during admission; `full` does not reread the reuse file either.
+    g0_records = admitted['g0_records']
     g0_sha256 = pf['g0_reuse_sha256']
     reuse_keys = {forward_key(r) for r in g0_records}
     plan = list(sc.planned_rows() if plan is None else plan)
@@ -999,19 +880,21 @@ def full(args, rig_loader=None, plan=None, forwards=None, preflight_receipt=None
     done_rows, dropped_rows = read_jsonl_recover(rows_path)
     done_fwd, dropped_fwd = read_jsonl_recover(fwd_path)
 
+    # Built before the model load from the SHA admission hashed: no receipt file is reread here.
+    pins = {'design': sc.DESIGN_VERSION, 'design_sha256': sc.DESIGN_SHA256,
+            'prompts_sha256': bank['canonical_sha256'], 'prompts_file_sha256': bank['_file_sha256'],
+            'preflight_sha256': preflight_sha256,
+            'model': MODEL, 'revision': REVISION}
+    identity = dict(pins, g0_reuse_sha256=g0_sha256)
+
     model, tok, load = (rig_loader or load_rig)(args)
     layers = nr.find_text_layers(model)[1]
     runtime = runtime_identity(load, args.device)
-    pins = {'design': sc.DESIGN_VERSION, 'design_sha256': sc.DESIGN_SHA256,
-            'prompts_sha256': bank['canonical_sha256'], 'prompts_file_sha256': bank['_file_sha256'],
-            'preflight_sha256': hashlib.sha256(preflight_path.read_bytes()).hexdigest(),
-            'model': MODEL, 'revision': REVISION}
-    identity = dict(pins, g0_reuse_sha256=g0_sha256)
 
     # A resume continues THIS attempt only: the saved run.json, every saved row and every saved
     # forward must agree with this invocation's pins and runtime before anything is appended.
     if (out / 'run.json').exists():
-        previous = json.loads((out / 'run.json').read_text(encoding='utf-8'))
+        previous = json.loads((out / 'run.json').read_bytes().decode('utf-8'))
         bad = [key for key in identity if previous.get(key) != identity[key]]
         bad_runtime = [f'runtime.{key}' for key in RUNTIME_KEYS
                        if (previous.get('runtime') or {}).get(key) != runtime.get(key)]

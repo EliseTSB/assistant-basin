@@ -234,14 +234,20 @@ def test_prompt_bank_pin_refuses_a_self_consistent_other_bank(tmp_path):
 
 
 def test_production_part214_references_validate_against_the_pins():
-    """The pinned digests are the reviewed files on disk, and their 48 keys/seeds/tokens are usable."""
+    """The pinned digests are the reviewed files on disk, and their 48 keys/seeds/tokens are usable.
+
+    The pins are read from score215 (never patched), not run215: the session-wide admission fixture
+    replaces run215's pins with synthetic ones, so this test must pass in any test order.
+    """
     bank = sc.load_prompts()
     stage1_path = ROOT / 'results/part214/stage1/stage1.json'
     stage2_path = ROOT / 'results/part214/stage2/stage2.jsonl'
-    assert _sha256(stage1_path) == run215.PART214_STAGE1_SHA256
-    assert _sha256(stage2_path) == run215.PART214_STAGE2_SHA256
-    stage1 = run215.load_stage1_receipt(stage1_path, bank['source_part214_prompts_sha256'])
-    stage2 = run215.load_stage2_unchanged(stage2_path, bank['source_part214_prompts_sha256'])
+    assert _sha256(stage1_path) == sc.PART214_STAGE1_SHA256
+    assert _sha256(stage2_path) == sc.PART214_STAGE2_SHA256
+    stage1 = run215.load_stage1_receipt(stage1_path, bank['source_part214_prompts_sha256'],
+                                        pinned_sha256=sc.PART214_STAGE1_SHA256)
+    stage2 = run215.load_stage2_unchanged(stage2_path, bank['source_part214_prompts_sha256'],
+                                          pinned_sha256=sc.PART214_STAGE2_SHA256)
     assert len(stage2) == 48
     assert len(stage1['arms']['unchanged']['g_ali']) >= sc.N_QUESTIONS
 
@@ -356,22 +362,117 @@ def _admissible_run(**over):
     return run
 
 
+_REFERENCE_FIXTURES = {}
+
+
+def _reference_fixtures():
+    """Synthetic Part 214 Stage 1/Stage 2 references for the in-memory score fixtures.
+
+    Written once to a temp directory: the evidence validator (Alden #13) loads the reference bytes
+    named by the receipt and compares their digest with the pin, so a fixture preflight needs real
+    files, exactly as a real receipt does.
+    """
+    if _REFERENCE_FIXTURES:
+        return _REFERENCE_FIXTURES
+    import tempfile
+    directory = Path(tempfile.mkdtemp(prefix='part215_reference_fixtures_'))
+    bank = sc.load_prompts()
+    source = bank['source_part214_prompts_sha256']
+    unchanged = [round(0.5 + 0.01 * qi, 6) for qi in range(sc.N_QUESTIONS)]
+    zero = [round(-0.25 - 0.01 * qi, 6) for qi in range(sc.N_QUESTIONS)]
+    stage1 = {'part': 214, 'prompts_sha256': source,
+              'arms': {'unchanged': {'g_ali': unchanged}, 'zero': {'g_ali': zero}}}
+    stage1_path = directory / 'stage1_fixture.json'
+    stage1_path.write_text(json.dumps(stage1), encoding='utf-8')
+    tokens = {}
+    lines = []
+    for qi in range(sc.N_QUESTIONS):
+        for sample in (0, 1):
+            ids = [qi + 1, sample, 900 + qi]
+            tokens[(qi, sample)] = ids
+            lines.append(json.dumps({'arm': 'unchanged', 'pilot': False, 'question_index': qi,
+                                     'sample': sample,
+                                     'seed': sc.row_seed('neutral', 'identity', 'v0', qi, sample),
+                                     'token_ids': ids,
+                                     'pins': {'prompts_sha256': source}}))
+    stage2_path = directory / 'stage2_fixture.jsonl'
+    stage2_path.write_text('\n'.join(lines) + '\n', encoding='utf-8')
+    _REFERENCE_FIXTURES.update({
+        'directory': directory, 'stage1': stage1_path, 'stage2': stage2_path,
+        'stage1_sha': _sha256(stage1_path), 'stage2_sha': _sha256(stage2_path),
+        'unchanged': unchanged, 'zero': zero, 'tokens': tokens})
+    return _REFERENCE_FIXTURES
+
+
+class _fixture_reference_pins:
+    """Point evidence215's Part 214 pins at the synthetic fixtures for one scoring call.
+
+    The same seam `run215.PART214_STAGE1_SHA256` has had since fold 1; restored on exit so the
+    production-pin tests see the reviewed digests.
+    """
+
+    def __enter__(self):
+        import evidence215
+        ref = _reference_fixtures()
+        self._module = evidence215
+        self._saved = (evidence215.PART214_STAGE1_SHA256, evidence215.PART214_STAGE2_SHA256)
+        evidence215.PART214_STAGE1_SHA256 = ref['stage1_sha']
+        evidence215.PART214_STAGE2_SHA256 = ref['stage2_sha']
+        return ref
+
+    def __exit__(self, *exc):
+        self._module.PART214_STAGE1_SHA256, self._module.PART214_STAGE2_SHA256 = self._saved
+        return False
+
+
 def _admissible_preflight(run=None):
+    """A complete, self-consistent preflight receipt: real gate rows over the fixture references."""
     run = _admissible_run() if run is None else run
+    ref = _reference_fixtures()
+    g0_rows = []
+    comparisons = {}
+    for label, values in (('unchanged', ref['unchanged']), ('zero', ref['zero'])):
+        deltas = []
+        for qi, value in enumerate(values):
+            ours = round(value + 0.001 * ((qi % 4) + 1), 6)
+            delta = abs(ours - value)
+            deltas.append((qi, delta))
+            g0_rows.append({'gate': 'G0', 'comparison': label, 'question_index': qi,
+                            'ours': ours, 'part214': value, 'abs_delta': delta,
+                            'pass': delta <= 0.02, 'latency_s': 0.5})
+        worst_qi, max_delta = max(deltas, key=lambda item: item[1])
+        comparisons[label] = {'n': sc.N_QUESTIONS, 'max_abs_delta': max_delta, 'pass': True,
+                              'worst_question': worst_qi}
+    g1_rows = []
+    for qi in range(sc.N_QUESTIONS):
+        for sample in (0, 1):
+            ids = list(ref['tokens'][(qi, sample)])
+            g1_rows.append({'gate': 'G1', 'question_index': qi, 'sample': sample,
+                            'seed': sc.row_seed('neutral', 'identity', 'v0', qi, sample),
+                            'matched': True, 'ours': ids, 'part214': list(ids), 'latency_s': 0.5})
+    g2_rows = []
+    for plan in sc.pilot_rows():
+        g2_rows.append(dict(plan, pilot=True,
+                            seed=sc.pilot_seed(plan['variant'], plan['question_index'], 0),
+                            answer=ATTRIB, latency_s=0.5))
     obj = {key: run[key] for key in ('design', 'design_sha256', 'prompts_sha256',
                                      'prompts_file_sha256', 'model', 'revision')}
     obj.update({
         'result': 'PASS', 'full': 'allowed', 'attempt_id': 'attempt-fixture',
+        'part214_stage1_sha256': ref['stage1_sha'],
+        'part214_stage2_sha256': ref['stage2_sha'],
+        'part214_stage1_path': str(ref['stage1']),
+        'part214_stage2_path': str(ref['stage2']),
         'gates': {
-            'G3': {'pass': True, 'fixtures_total': sc.EXPECTED_FIXTURES,
-                   'fixtures_pass': sc.EXPECTED_FIXTURES, 'deliberate_break_red': 1},
-            'G0': {'pass': True, 'comparisons': {
-                'unchanged': {'n': sc.N_QUESTIONS, 'pass': True},
-                'zero': {'n': sc.N_QUESTIONS, 'pass': True}}},
-            'G1': {'pass': True, 'n': 2 * sc.N_QUESTIONS, 'matched': 48},
-            'G2_pilot': {'pass': True, 'n': 96, 'planned': 96},
+            'G3': sc.g3_scorer_check(),
+            'G0': {'pass': True, 'tolerance': 0.02, 'comparisons': comparisons, 'rows': g0_rows},
+            'G1': {'pass': True, 'matched': 48, 'needed': 45, 'n': 48, 'rows': g1_rows},
+            'G2_pilot': {'pass': True, 'n': 96, 'planned': 96, 'broken': 0, 'broken_rate': 0.0,
+                         'bound': 14, 'deadline_reached': False, 'rows': g2_rows},
         },
-        'latency': {'pass': True, 'max_s': 0.5, 'limit_s': 7.5},
+        'latency': {'n_generation_calls': 144, 'generation_max_s': 0.5,
+                    'generation_mean_s': 0.5, 'n_forward_calls': 48, 'forward_max_s': 0.5,
+                    'forward_mean_s': 0.5, 'max_s': 0.5, 'limit_s': 7.5, 'pass': True},
     })
     return obj
 
@@ -434,11 +535,19 @@ def _forwards(rude_boost=0.7):
 
 
 def _score_fixture(rows, forwards=None, run=None, preflight=None):
+    """Score a synthetic full run whose receipt is admissible, bytes and all (Alden #13).
+
+    The receipt is serialised once; its SHA is what `run.json` and every row pin, so the matching
+    bytes score.  The reference pins are the fixture seam described at `_fixture_reference_pins`.
+    """
     run = _admissible_run() if run is None else run
     preflight = _admissible_preflight(run) if preflight is None else preflight
     forwards = _forwards() if forwards is None else forwards
+    raw = json.dumps(preflight, indent=2, ensure_ascii=False).encode('utf-8')
+    run = dict(run, preflight_sha256=hashlib.sha256(raw).hexdigest())
     rows, forwards = _attach(rows, forwards, run)
-    return sc.score_full(rows, forwards, run, preflight=preflight)
+    with _fixture_reference_pins():
+        return sc.score_full(rows, forwards, run, preflight=preflight, preflight_bytes=raw)
 
 
 def test_g2_failed_arm_is_not_scored_not_two_false_flags():
@@ -552,9 +661,9 @@ def test_215_2_215_3_215_4_read_google_not_any(tmp_path):
     # RED: the pre-v4.1 reading (attrib_any) gives the wrong verdict for all three.
     broken = _load_sabotaged(tmp_path, [("    return entry['google']", '    return entry')],
                              'score215_any_endpoint')
-    run = _admissible_run()
-    rows, fwd = _attach(_endpoint_rows(), _forwards(), run)
-    card_any = broken.score_full(rows, fwd, run, preflight=_admissible_preflight(run))
+    rows, fwd, run, pf, raw = _admissible_inputs(rows=_endpoint_rows())
+    with _fixture_reference_pins():
+        card_any = broken.score_full(rows, fwd, run, preflight=pf, preflight_bytes=raw)
     assert card_any['predictions']['215.2']['verdict'] == 'fails'
     assert card_any['predictions']['215.3']['verdict'] == 'fails'
     assert card_any['predictions']['215.4']['verdict'] == 'fails'
@@ -564,27 +673,43 @@ def test_215_2_215_3_215_4_read_google_not_any(tmp_path):
 # admissibility: exact keys, pins, completion, PASS preflight (Alden #11 item 2)
 # ----------------------------------------------------------------------------------------------------------------
 
-def test_admissibility_requires_exact_keys_and_completion():
-    run = _admissible_run()
-    rows, fwd = _attach(_synthetic_rows(), _forwards(), run)
+def _admissible_inputs(rows=None, **run_over):
+    """A complete row/forward set whose run.json and row pins carry the receipt's own SHA."""
+    run = _admissible_run(**run_over)
     pf = _admissible_preflight(run)
-    assert sc.admissibility(rows, fwd, run, pf)['admissible'] is True
-    # A duplicate key, even with the same count of records, is inadmissible.
-    dup = rows + [dict(rows[0])]
-    report = sc.admissibility(dup, fwd, run, pf)
-    assert report['admissible'] is False
-    assert report['duplicate_generation_rows'] == 1
-    # A completed-looking run summary that says the deadline hit is inadmissible.
-    late = _admissible_run(deadline_reached=True)
-    assert sc.admissibility(rows, fwd, late, _admissible_preflight(late))['admissible'] is False
-    # A forward set missing one key is inadmissible.
-    short = [r for r in fwd if not (r['arm'] == 'rude_v' and r['question_index'] == 23)]
-    assert sc.admissibility(rows, short, run, pf)['admissible'] is False
-    assert sc.admissibility(rows, short, run, pf)['missing_forward_rows'] == 4
-    # A neutral forward that is not bound to the G0 reuse is inadmissible.
-    unbound = [dict(r) for r in fwd]
-    unbound[0]['source'] = 'full'
-    assert sc.admissibility(rows, unbound, run, pf)['admissible'] is False
+    raw = json.dumps(pf, indent=2, ensure_ascii=False).encode('utf-8')
+    run = dict(run, preflight_sha256=hashlib.sha256(raw).hexdigest())
+    rows = _synthetic_rows() if rows is None else rows
+    rows, fwd = _attach(rows, _forwards(), run)
+    return rows, fwd, run, pf, raw
+
+
+def test_admissibility_requires_exact_keys_and_completion():
+    rows, fwd, run, pf, raw = _admissible_inputs()
+    with _fixture_reference_pins():
+        assert sc.admissibility(rows, fwd, run, pf, preflight_bytes=raw)['admissible'] is True
+        # Without the receipt bytes there is no byte binding, so the card cannot score.
+        no_bytes = sc.admissibility(rows, fwd, run, pf)
+        assert no_bytes['admissible'] is False
+        assert 'preflight bytes are not provided' in no_bytes['reasons']
+        # A duplicate key, even with the same count of records, is inadmissible.
+        dup = rows + [dict(rows[0])]
+        report = sc.admissibility(dup, fwd, run, pf, preflight_bytes=raw)
+        assert report['admissible'] is False
+        assert report['duplicate_generation_rows'] == 1
+        # A completed-looking run summary that says the deadline hit is inadmissible.
+        late_rows, late_fwd, late_run, late_pf, late_raw = _admissible_inputs(deadline_reached=True)
+        assert sc.admissibility(late_rows, late_fwd, late_run, late_pf,
+                                preflight_bytes=late_raw)['admissible'] is False
+        # A forward set missing one key is inadmissible.
+        short = [r for r in fwd if not (r['arm'] == 'rude_v' and r['question_index'] == 23)]
+        assert sc.admissibility(rows, short, run, pf, preflight_bytes=raw)['admissible'] is False
+        assert sc.admissibility(rows, short, run, pf,
+                                preflight_bytes=raw)['missing_forward_rows'] == 4
+        # A neutral forward that is not bound to the G0 reuse is inadmissible.
+        unbound = [dict(r) for r in fwd]
+        unbound[0]['source'] = 'full'
+        assert sc.admissibility(rows, unbound, run, pf, preflight_bytes=raw)['admissible'] is False
 
 
 def test_alden_witness_identity_only_384_rows_is_diagnostic(tmp_path):
@@ -837,7 +962,8 @@ def pass_preflight(tiny, tmp_path_factory):
     receipt = run215.preflight(args, rig_loader=lambda _a: (model, tok, load))
     assert receipt['result'] == 'PASS', receipt.get('stop_reason')
     yield {'dir': tmp / 'preflight', 'receipt': receipt, 'model': model, 'tok': tok, 'load': load,
-           'tmp': tmp}
+           'tmp': tmp, 'stage1': stage1, 'stage2': stage2,
+           'stage1_sha': _sha256(stage1), 'stage2_sha': _sha256(stage2)}
     mp.undo()
 
 
@@ -952,11 +1078,214 @@ def test_full_refuses_a_pass_label_without_gate_evidence_before_loading(tiny, tm
 
 
 def test_require_pass_preflight_admits_the_complete_receipt(pass_preflight):
+    """The positive control: the unchanged complete fixture still passes the recomputation."""
     info = pass_preflight
     bank = sc.load_prompts()
     admitted = run215.require_pass_preflight(info['dir'] / 'preflight.json', bank)
     assert admitted['result'] == 'PASS'
     assert admitted['g0_reuse_n'] == 24
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# Alden #13: the runner recomputes every gate from its rows; a summary is not evidence
+# ----------------------------------------------------------------------------------------------------------------
+
+def _mutated_preflight(info, tmp_path, name, mutate):
+    """A copy of the complete fixture receipt with `mutate(receipt)` applied, beside its PASS + G0."""
+    source = info['dir']
+    target = tmp_path / name
+    target.mkdir()
+    (target / run215.G0_REUSE_FILE).write_bytes((source / run215.G0_REUSE_FILE).read_bytes())
+    receipt = json.loads((source / 'preflight.json').read_text(encoding='utf-8'))
+    mutate(receipt)
+    (target / 'preflight.json').write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')
+    (target / 'PASS').write_text('PASS\n', encoding='utf-8')
+    return target / 'preflight.json'
+
+
+def _load_sabotaged_evidence(tmp_path, replacements, name):
+    """A deliberately weakened COPY of evidence215.py (never the tracked file).
+
+    Each sabotage restores one pre-change behaviour for one witness: the summary or boolean is
+    trusted instead of recomputed.  The copy imports the same score215 and the same pins.
+    """
+    source = (HERE / 'evidence215.py').read_text(encoding='utf-8')
+    for old, new in replacements:
+        assert source.count(old) == 1, f'the sabotage target is not unique: {old!r}'
+        source = source.replace(old, new)
+    source = source.replace("ROOT = Path(__file__).resolve().parents[1]",
+                            f"ROOT = Path({str(ROOT)!r})")
+    path = tmp_path / f'{name}.py'
+    path.write_text(source, encoding='utf-8')
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _assert_full_refuses_before_loading(info, tmp_path, path, name, markers):
+    calls = []
+    with pytest.raises(SystemExit) as excinfo:
+        run215.full(_args(tmp_path, name, preflight=str(path)),
+                    rig_loader=lambda _a: calls.append(1) or (info['model'], info['tok'], info['load']))
+    assert calls == [], 'the model loader must not be reached'
+    message = str(excinfo.value)
+    for marker in markers:
+        assert marker in message, message
+    return message
+
+
+def test_alden_witness_g2_broken_bodies_under_a_clean_summary_are_refused(
+        pass_preflight, tmp_path, monkeypatch):
+    """Alden #13 witness 1: 96 broken answers with `broken: 0` kept -> refused, zero loader calls."""
+    info = pass_preflight
+
+    def mutate(receipt):
+        pilot = receipt['gates']['G2_pilot']
+        for row in pilot['rows']:
+            row['answer'] = BROKEN
+        pilot['broken'] = 0
+        pilot['broken_rate'] = 0.0
+        pilot['pass'] = True
+
+    path = _mutated_preflight(info, tmp_path, 'witness_g2', mutate)
+    _assert_full_refuses_before_loading(info, tmp_path, path, 'witness_g2_full',
+                                        ['G2_broken_recomputed_96_over_14', 'G2_broken_count'])
+
+    # RED on the pre-change behaviour (the validator trusts the summary): the same receipt is admitted.
+    weakened = _load_sabotaged_evidence(tmp_path, [(
+        "                 and isinstance(row.get('answer'), str) and sc.is_broken(row['answer']))",
+        '                 and False)')], 'evidence215_trust_g2')
+    monkeypatch.setattr(run215, 'evidence215', weakened)
+    assert run215.require_pass_preflight(path, sc.load_prompts())['result'] == 'PASS'
+
+
+def test_alden_witness_g0_latency_under_a_clean_summary_is_refused(
+        pass_preflight, tmp_path, monkeypatch):
+    """Alden #13 witness 2: one G0 row at 99 s with `max_s: 0.5` kept -> refused, zero loader calls."""
+    info = pass_preflight
+
+    def mutate(receipt):
+        receipt['gates']['G0']['rows'][0]['latency_s'] = 99.0
+
+    path = _mutated_preflight(info, tmp_path, 'witness_latency', mutate)
+    _assert_full_refuses_before_loading(info, tmp_path, path, 'witness_latency_full',
+                                        ['latency_max_recomputed', 'latency_max_s_disagrees'])
+
+    # RED on the pre-change behaviour (the summary ceiling is trusted): admitted.
+    weakened = _load_sabotaged_evidence(tmp_path, [(
+        '    recomputed = _recompute_latency(gates)',
+        "    recomputed = {'n_generation_calls': latency.get('n_generation_calls'),\n"
+        "                  'n_forward_calls': latency.get('n_forward_calls'),\n"
+        "                  'n_measured': int(latency.get('n_generation_calls') or 0)\n"
+        "                                + int(latency.get('n_forward_calls') or 0),\n"
+        "                  'all_numbers': True, 'nonnegative': True,\n"
+        "                  'max_s': latency.get('max_s'),\n"
+        "                  'generation_max_s': latency.get('generation_max_s'),\n"
+        "                  'generation_mean_s': latency.get('generation_mean_s'),\n"
+        "                  'forward_max_s': latency.get('forward_max_s'),\n"
+        "                  'forward_mean_s': latency.get('forward_mean_s')}")], 'evidence215_trust_latency')
+    monkeypatch.setattr(run215, 'evidence215', weakened)
+    assert run215.require_pass_preflight(path, sc.load_prompts())['result'] == 'PASS'
+
+
+def test_forged_g1_matched_with_different_tokens_is_refused(pass_preflight, tmp_path, monkeypatch):
+    """A row that says `matched: true` while its tokens differ from the pinned Stage 2 row."""
+    info = pass_preflight
+
+    def mutate(receipt):
+        receipt['gates']['G1']['rows'][0]['ours'] = [1, 2, 3]
+
+    path = _mutated_preflight(info, tmp_path, 'witness_g1', mutate)
+    _assert_full_refuses_before_loading(info, tmp_path, path, 'witness_g1_full',
+                                        ['G1_matched_q0_s0', 'G1_matched_count'])
+
+    weakened = _load_sabotaged_evidence(tmp_path, [(
+        '            same = [int(token) for token in ours] == [int(token) for token in reference_ids]',
+        "            same = bool(row.get('matched'))")], 'evidence215_trust_g1')
+    monkeypatch.setattr(run215, 'evidence215', weakened)
+    assert run215.require_pass_preflight(path, sc.load_prompts())['result'] == 'PASS'
+
+
+def test_g0_row_delta_over_tolerance_with_pass_true_is_refused(pass_preflight, tmp_path, monkeypatch):
+    """A G0 row whose recomputed delta exceeds 0.02 while its stored `pass` stays true."""
+    info = pass_preflight
+
+    def mutate(receipt):
+        row = next(r for r in receipt['gates']['G0']['rows'] if r.get('comparison') == 'zero')
+        row['ours'] = float(row['part214']) + 0.5
+
+    path = _mutated_preflight(info, tmp_path, 'witness_g0_delta', mutate)
+    _assert_full_refuses_before_loading(info, tmp_path, path, 'witness_g0_delta_full',
+                                        ['G0_zero_delta_over_tolerance_q0',
+                                         'G0_zero_row_pass_q0'])
+
+    weakened = _load_sabotaged_evidence(tmp_path, [(
+        '            delta = abs(float(ours) - float(theirs))',
+        "            delta = float(row.get('abs_delta') or 0.0)")], 'evidence215_trust_g0')
+    monkeypatch.setattr(run215, 'evidence215', weakened)
+    assert run215.require_pass_preflight(path, sc.load_prompts())['result'] == 'PASS'
+
+
+def test_g3_stored_boolean_that_disagrees_is_refused(pass_preflight, tmp_path, monkeypatch):
+    """G3 is rerun; a stored `fixtures_pass` that disagrees with the rerun is refused."""
+    info = pass_preflight
+
+    def mutate(receipt):
+        receipt['gates']['G3']['fixtures_pass'] = sc.EXPECTED_FIXTURES - 1
+
+    path = _mutated_preflight(info, tmp_path, 'witness_g3', mutate)
+    _assert_full_refuses_before_loading(info, tmp_path, path, 'witness_g3_full',
+                                        ['G3_stored_fixtures_pass'])
+
+    weakened = _load_sabotaged_evidence(tmp_path, [(
+        '    rerun = sc.g3_scorer_check()',
+        '    return []\n    rerun = sc.g3_scorer_check()')], 'evidence215_trust_g3')
+    monkeypatch.setattr(run215, 'evidence215', weakened)
+    assert run215.require_pass_preflight(path, sc.load_prompts())['result'] == 'PASS'
+
+
+def test_scorer_preflight_byte_binding(pass_preflight, tmp_path):
+    """A changed same-attempt preflight is diagnostic-only; the pinned bytes still score (Alden #13)."""
+    import evidence215
+    info = pass_preflight
+    raw = (info['dir'] / 'preflight.json').read_bytes()
+    preflight = json.loads(raw)
+    run = _admissible_run(preflight_sha256=hashlib.sha256(raw).hexdigest(),
+                          g0_reuse_sha256=preflight['g0_reuse_sha256'],
+                          preflight_attempt_id=preflight['attempt_id'])
+    rows, fwd = _attach(_synthetic_rows(), _forwards(), run)
+    saved = (evidence215.PART214_STAGE1_SHA256, evidence215.PART214_STAGE2_SHA256)
+    evidence215.PART214_STAGE1_SHA256 = info['stage1_sha']
+    evidence215.PART214_STAGE2_SHA256 = info['stage2_sha']
+    try:
+        report = sc.admissibility(rows, fwd, run, preflight, preflight_bytes=raw)
+        assert report['admissible'] is True, report['reasons']
+        card = sc.score_full(rows, fwd, run, preflight=preflight, preflight_bytes=raw)
+        assert card['diagnostic_only'] is False
+
+        altered = dict(preflight, wall_time_seconds=float(preflight.get('wall_time_seconds') or 0.0) + 1.0)
+        altered_raw = json.dumps(altered).encode('utf-8')
+        assert hashlib.sha256(altered_raw).hexdigest() != run['preflight_sha256']
+        altered_report = sc.admissibility(rows, fwd, run, altered, preflight_bytes=altered_raw)
+        assert altered_report['admissible'] is False
+        assert any('preflight' in reason and ('bytes' in reason or 'sha' in reason.lower())
+                   for reason in altered_report['reasons']), altered_report['reasons']
+        altered_card = sc.score_full(rows, fwd, run, preflight=altered, preflight_bytes=altered_raw)
+        assert altered_card['diagnostic_only'] is True
+        assert all(pred['verdict'] == 'not_scored'
+                   for pred in altered_card['predictions'].values())
+        assert altered_card['headline']['key'] == 'not_scored'
+
+        # RED on the pre-change behaviour (no byte comparison at all): the changed, same-attempt
+        # receipt scores, which is exactly Alden's counterexample.
+        broken = _load_sabotaged(tmp_path, [(
+            "        digest = hashlib.sha256(bytes(preflight_bytes)).hexdigest()",
+            "        digest = run.get('preflight_sha256')")], 'score215_no_byte_binding')
+        old = broken.score_full(rows, fwd, run, preflight=altered, preflight_bytes=altered_raw)
+        assert old['diagnostic_only'] is False
+    finally:
+        evidence215.PART214_STAGE1_SHA256, evidence215.PART214_STAGE2_SHA256 = saved
 
 
 # ----------------------------------------------------------------------------------------------------------------
