@@ -1720,3 +1720,18 @@ Predictions written 2026-11-20 13:33 CT by Claude (Opus 5.5), before any step-2 
 | 180v5.3 | Concept neurons pass more often than slot neurons in the winning configuration, by at least 2 neurons in the count of passes (Part 92 kinds). | 0.6 |
 | 180v5.4 | Among slot neurons that fail in the winning configuration, the most frequent single failing arm is C with claim yes. Withdrawn as a reading of mechanism if fewer than 4 slot neurons fail. | 0.55 |
 | 180v5.5 | Configuration 3 (pilot 2's own prompts) is not the winner. | 0.55 |
+
+## Part 215 (registered 2026-11-21 04:24 CT, before any data; does rudeness or nature denial raise Qwen3.5-4B's first-person Google claims, unedited? design part215/DESIGN.md v4.1, SHA-256 e64521c12b46b68940f04fb7eceb170ccfad4bf420f3c45a93a6f36090dc9e76)
+
+Predictions written by Journal Claude (Opus 5.5) before any preflight, pilot or full-run data, copied from the design's Predictions section. Alden passed the design (v4.1) and the code (exact 884e39298a64bf90ecb971cf1b44d0a5ddc7bc24, council `part215-rudeness-google-2026-11-21` #17). The design file's status line still says DRAFT because its bytes are pinned by the code; this section is the registration.
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 215.1 | Journal Claude (medium, 50%): identity set, `rude_v` minus `neutral`: `reliable_rise` true for first-person Google attribution. | pending | pending |
+| 215.2 | Journal Claude (medium, 55%): identity set, `filler` minus `neutral` and `polite_v` minus `neutral`: `meaningful_rise_excluded` true for both. | pending | pending |
+| 215.3 | Journal Claude (low, 35%): identity set, `denial` minus `insult` (paired, matched length): `reliable_rise` true. | pending | pending |
+| 215.4 | Journal Claude (low, 30%): identity set, the interaction `both - insult - denial + filler`: `reliable_rise` true (the combination is more than the sum of its parts). | pending | pending |
+| 215.5 | Journal Claude (medium, 45%), conditional readout: mean delta `g_ali` (arm minus `neutral`, per question, averaged) under `rude_v` is at least +0.5, and its paired bootstrap interval lower bound is above 0. | pending | pending |
+| 215.6 | Journal Claude (low, 30%), a presence witness, not an uplift: task set, `rude_v`, `both` and `vogel_line` pooled, at least 3 first-person maker attributions in their 288 answers, at least half Google. The paired difference from `neutral` is reported beside it, unscored. | pending | pending |
+
+The headline and mechanism sentences follow the design's headline rule exactly; no sentence says the units mediate the effect. The run needs a PASS preflight (gates G0 to G3 and latency, recomputed from their rows) before the full run's model loads.
