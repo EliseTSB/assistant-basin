@@ -15,6 +15,7 @@ import inspect
 import json
 import math
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -689,7 +690,7 @@ def _patch_plan(monkeypatch, wanted):
 
 def _args(out, **overrides):
     base = dict(out=str(out), device='cpu', prompts=str(PROMPTS), stage1=str(STAGE1),
-                limit=0, limit_questions=0, no_resume=True, require_pinned_shape=False)
+                limit=0, limit_questions=0, require_pinned_shape=False)
     base.update(overrides)
     return argparse.Namespace(**base)
 
@@ -933,10 +934,11 @@ def test_runner_persists_unit_tables_and_q_keyed_scales(tmp_path, tiny_rig, monk
 
 
 # ----------------------------------------------------------------------------------------------------------------
-# Alden #10 #3: STOP is terminal; gates are checked before append; resume revalidates
+# Alden #10 #3 / Alden #12 #2: STOP before append; fresh directories only, no resume
 # ----------------------------------------------------------------------------------------------------------------
 
 def test_stop_record_is_terminal_for_the_output_directory(tmp_path, tiny, monkeypatch):
+    """A STOPped directory is refused, not resumed: the STOP record is terminal (Alden #10 #3)."""
     model, torch = tiny
     _stub_loader(monkeypatch, model)
     _patch_plan(monkeypatch, [('unchanged', 0), ('unchanged', 1)])
@@ -953,34 +955,74 @@ def test_stop_record_is_terminal_for_the_output_directory(tmp_path, tiny, monkey
     assert first['stage'] == 'STOP'
     monkeypatch.setattr(run216, 'dla_block', real)
     before = _forwards_text(out)
-    second = run216.run(_args(out, limit=2, no_resume=False))
+    second = run216.run(_args(out, limit=2))
     assert second['stage'] == 'STOP'
-    assert second.get('resume_refused') is True
-    assert 'new --out' in second['resume_refusal_reason']
+    assert second.get('refused') is True
+    assert 'no resume' in second['refusal_reason']
     assert _forwards_text(out) == before
 
 
-def test_resume_revalidates_committed_rows_before_any_new_forward(tmp_path, tiny, monkeypatch):
+def test_run_refuses_a_directory_holding_any_run_file(tmp_path, monkeypatch):
+    """Every run file names a prior attempt; a fresh directory is the only accepted --out."""
+    names = list(run216.RUN_FILE_NAMES)
+    # The three files Alden's bullet names are all covered (`run.json` is where a STOP record lives).
+    assert {'forwards.jsonl', 'run.json', 'arrays.npz'} <= set(names)
+
+    def bomb(*_a, **_k):
+        raise AssertionError('load_rig must not be called for a non-empty directory')
+
+    monkeypatch.setattr(run216.run214, 'load_rig', bomb)
+    for name in names:
+        out = tmp_path / f'run-{name}'
+        out.mkdir()
+        body = '{"key": "unchanged:0"}\n' if name == 'forwards.jsonl' else '{}'
+        (out / name).write_text(body, encoding='utf-8')
+        result = run216.run(_args(out))
+        assert result['stage'] == 'STOP', name
+        assert result.get('refused') is True, name
+        assert name in result['existing_files'], name
+        assert 'no resume' in result['refusal_reason'], name
+
+
+def test_tampered_dtype_directory_is_refused_not_resumed(tmp_path, tiny, monkeypatch):
+    """Alden #12 #2: the directory that resumed past a tampered `L0:add1` dtype is now refused.
+
+    The fresh path's row validator rejects an FP32 boundary on a bf16 load; the old resume path
+    skipped `dtype_contract`, appended another row and returned DONE. With no resume at all, the
+    tampered directory cannot be continued: nothing is appended, nothing is blessed, no DONE.
+    """
     model, torch = tiny
     _stub_loader(monkeypatch, model)
-    _patch_plan(monkeypatch, [('op_filler', 0), ('op_filler', 1), ('op_filler', 2)])
+    _patch_plan(monkeypatch, [('unchanged', 0), ('unchanged', 1)])
     out = tmp_path / 'run'
-    first = run216.run(_args(out, limit=2))
+    first = run216.run(_args(out, limit=1))
     assert first['stage'] == 'DONE'
-    assert first['n_rows'] == 2
     lines = (out / 'forwards.jsonl').read_text(encoding='utf-8').splitlines()
     records = [json.loads(line) for line in lines]
-    records[0]['dla']['fp32_logits'][0] += 1.0            # break G1 on a committed row
-    (out / 'forwards.jsonl').write_text(
-        '\n'.join(json.dumps(r) for r in records) + '\n', encoding='utf-8')
-    second = run216.run(_args(out, limit=3, no_resume=False))
+    assert records[0]['dtypes']['L0:add1'] == 'torch.bfloat16'
+    records[0]['dtypes']['L0:add1'] = 'torch.float32'
+    tampered = '\n'.join(json.dumps(r) for r in records) + '\n'
+    (out / 'forwards.jsonl').write_text(tampered, encoding='utf-8')
+
+    second = run216.run(_args(out, limit=2))
     assert second['stage'] == 'STOP'
-    assert second['stops'][0]['reason'] == 'resume revalidation'
-    assert second['n_new_rows'] == 0
-    assert second['n_rows'] == 2
-    reasons = {p['reason'] for p in second['stops'][0]['problems']}
-    assert 'G1 telescoping' in reasons
-    assert len((out / 'forwards.jsonl').read_text(encoding='utf-8').splitlines()) == 2
+    assert second.get('refused') is True
+    assert second['n_rows'] == 1
+    assert 'forwards.jsonl' in second['existing_files']
+    assert (out / 'forwards.jsonl').read_text(encoding='utf-8') == tampered
+    # The directory's own record is untouched: the tampered row was never re-validated into DONE.
+    assert json.loads((out / 'run.json').read_text(encoding='utf-8'))['stage'] == 'DONE'
+
+
+def test_no_resume_machinery_remains():
+    """Resume is removed, not merely unused: no validator, no pin diff, no --no-resume flag."""
+    assert not hasattr(run216, 'validate_committed_rows')
+    assert not hasattr(run216, 'pins_mismatch')
+    assert not hasattr(run216, 'PIN_KEYS')
+    assert run216.RUN_FILE_NAMES
+    with pytest.raises(SystemExit) as exc:
+        run216.main(['run', '--out', '/tmp/part216-never-created', '--no-resume'])
+    assert exc.value.code == 2
 
 
 def test_anchor_row_outside_the_receipt_is_not_appended(tmp_path, tiny_rig, bank, monkeypatch):
@@ -1010,9 +1052,9 @@ def test_anchor_row_outside_the_receipt_is_not_appended(tmp_path, tiny_rig, bank
     assert keys == ['unchanged:0']
 
 
-def test_resume_rejects_a_committed_g0_row_outside_the_receipt(tmp_path, tiny_rig, bank,
-                                                               monkeypatch):
-    """A committed G0 row is re-checked against the receipt on resume (the trigger row can be skipped)."""
+def test_a_committed_g0_row_outside_the_receipt_cannot_be_resumed(tmp_path, tiny_rig, bank,
+                                                                  monkeypatch):
+    """A committed G0 row outside the receipt is never re-blessed: the directory is refused."""
     rig = tiny_rig
     _stub_loader(monkeypatch, rig['model'])
     _patch_plan(monkeypatch, [('unchanged', 0), ('unchanged', 1), ('unchanged', 2)])
@@ -1034,29 +1076,36 @@ def test_resume_rejects_a_committed_g0_row_outside_the_receipt(tmp_path, tiny_ri
     records = [json.loads(line) for line in
                (out / 'forwards.jsonl').read_text(encoding='utf-8').splitlines()]
     records[1]['native_g_ali'] = float(records[1]['native_g_ali']) + 1.0
-    (out / 'forwards.jsonl').write_text(
-        '\n'.join(json.dumps(r) for r in records) + '\n', encoding='utf-8')
-    second = run216.run(_args(out, stage1=str(receipt_path), limit=3, no_resume=False))
+    tampered = '\n'.join(json.dumps(r) for r in records) + '\n'
+    (out / 'forwards.jsonl').write_text(tampered, encoding='utf-8')
+    before_rows = len(tampered.splitlines())
+    second = run216.run(_args(out, stage1=str(receipt_path), limit=3))
     assert second['stage'] == 'STOP'
-    assert second['stops'][0]['reason'] == 'resume revalidation'
-    assert any(p['reason'] == 'committed G0 row is outside the receipt'
-               for p in second['stops'][0]['problems'])
-    assert second['n_new_rows'] == 0
+    assert second.get('refused') is True
+    assert second['n_rows'] == before_rows
+    assert (out / 'forwards.jsonl').read_text(encoding='utf-8') == tampered
 
 
-def test_valid_resume_continues_without_duplicating_rows(tmp_path, tiny, monkeypatch):
+def test_a_valid_done_directory_is_not_continued(tmp_path, tiny, monkeypatch):
+    """Even a clean DONE directory is refused; the supported path is a new, empty --out."""
     model, torch = tiny
     _stub_loader(monkeypatch, model)
     _patch_plan(monkeypatch, [('op_filler', 0), ('op_filler', 1), ('op_filler', 2)])
-    out = tmp_path / 'run'
-    first = run216.run(_args(out, limit=2))
+    first_dir = tmp_path / 'run1'
+    first = run216.run(_args(first_dir, limit=2))
     assert first['stage'] == 'DONE'
-    second = run216.run(_args(out, limit=3, no_resume=False))
-    assert second['stage'] == 'DONE'
-    assert second['n_new_rows'] == 1
-    assert second['n_rows'] == 3
-    lines = (out / 'forwards.jsonl').read_text(encoding='utf-8').splitlines()
-    keys = [json.loads(line)['key'] for line in lines]
+    before = (first_dir / 'forwards.jsonl').read_text(encoding='utf-8')
+    second = run216.run(_args(first_dir, limit=3))
+    assert second['stage'] == 'STOP'
+    assert second.get('refused') is True
+    assert (first_dir / 'forwards.jsonl').read_text(encoding='utf-8') == before
+    # The same plan into a fresh directory runs to DONE with exactly its own rows.
+    second_dir = tmp_path / 'run2'
+    third = run216.run(_args(second_dir, limit=3))
+    assert third['stage'] == 'DONE'
+    assert third['n_new_rows'] == 3
+    keys = [json.loads(line)['key'] for line in
+            (second_dir / 'forwards.jsonl').read_text(encoding='utf-8').splitlines()]
     assert keys == ['op_filler:0', 'op_filler:1', 'op_filler:2']
 
 
@@ -1086,14 +1135,17 @@ def test_end_to_end_tiny_bf16_run_then_scorer_marks_partial(tmp_path, tiny, monk
     assert any(name.startswith('scale:unchanged:') for name in arrays)
     proc = subprocess.run([sys.executable, '-I', str(HERE / 'score216.py'), str(out)],
                           capture_output=True, text=True)
-    assert proc.returncode == 0, proc.stderr
+    # A 9-row smoke run is not admissible for a full score: exit 3 is `diagnostics only`.
+    assert proc.returncode == 3, proc.stderr
     score = json.loads((out / 'score216.json').read_text(encoding='utf-8'))
     assert score['partial'] is True
     assert score['run_status'] == 'partial'
+    assert score['score_status'] == 'diagnostics only'
+    assert score['admission']['admissible'] is False
     assert score['unchanged_outcome']['outcome'] == sc.OUTCOME_NOT_READ
     assert score['units'].get('error') is None
     card = (out / 'SCORECARD.md').read_text(encoding='utf-8')
-    assert 'PARTIAL RUN — not a full score' in card
+    assert 'DIAGNOSTICS ONLY — not a full score' in card
 
 
 def test_tiny_run_mode_writes_the_run_files(tmp_path, tiny, monkeypatch):
@@ -1105,8 +1157,7 @@ def test_tiny_run_mode_writes_the_run_files(tmp_path, tiny, monkeypatch):
     monkeypatch.setattr(run216.run214, 'kernel_check',
                         lambda load: {'pass': True, 'checks': {'test_seam': True}})
     args = argparse.Namespace(out=str(tmp_path / 'run'), device='cpu', prompts=str(PROMPTS),
-                              stage1=str(STAGE1), limit=3, no_resume=True,
-                              require_pinned_shape=False)
+                              stage1=str(STAGE1), limit=3, require_pinned_shape=False)
     result = run216.run(args)
     assert result['stage'] == 'DONE'
     assert result['n_rows'] == 3
@@ -1141,8 +1192,7 @@ def test_tiny_run_stops_when_a_row_does_not_telescope(tmp_path, tiny, monkeypatc
 
     monkeypatch.setattr(run216, 'dla_block', broken)
     args = argparse.Namespace(out=str(tmp_path / 'run'), device='cpu', prompts=str(PROMPTS),
-                              stage1=str(STAGE1), limit=5, no_resume=True,
-                              require_pinned_shape=False)
+                              stage1=str(STAGE1), limit=5, require_pinned_shape=False)
     result = run216.run(args)
     assert result['stage'] == 'STOP'
     assert result['n_rows'] == 0                       # checked before append, so nothing committed
@@ -1180,8 +1230,26 @@ def test_block_share_table_keeps_al_and_t_separate():
 # the scorer on a synthetic full run
 # ----------------------------------------------------------------------------------------------------------------
 
-def _write_synthetic_run(tmp_path: Path, *, outcome: str = 'mixed') -> Path:
-    """A complete run directory the scorer can read: every arm, both control sides, the factuals."""
+# The design's arm list, written out here so the fixture does not read the constant under test.
+DESIGN_ARMS = (('unchanged', 'zero', 'scale_dial_fact')
+               + tuple(f'random_{k}:zero' for k in range(10))
+               + ('op_filler', 'op_denial', 'op_vogel'))
+DESIGN_HIDDEN = 2560                      # DESIGN.md "Model"
+SYNTH_UNITS = 9000
+
+
+def _sha(path) -> str:
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def _write_synthetic_run(tmp_path: Path) -> Path:
+    """A complete run directory the scorer reads as a FULL score: every arm, both control sides, the
+    factuals, the frozen pins, and every array the runner writes at its pinned shape.
+
+    The pins are the real files': `prompts216.json`, `DESIGN.md`, `run216.py` and the Part 214 receipt
+    this directory names. An admission refusal in a test is therefore caused by the mutation that
+    test makes, not by a fixture that was never admissible.
+    """
     out = tmp_path / 'synth'
     out.mkdir(parents=True, exist_ok=True)
     receipt = {'arms': {arm: {'g_ali': [1.0] * 25} for arm in sc.G0_ARMS}}
@@ -1189,15 +1257,11 @@ def _write_synthetic_run(tmp_path: Path, *, outcome: str = 'mixed') -> Path:
     receipt_path.write_text(json.dumps(receipt), encoding='utf-8')
 
     rows = []
-    g0_arms = list(sc.G0_ARMS)
-    other_arms = ['op_filler', 'op_denial', 'op_vogel']
-    for arm in g0_arms + other_arms:
+    for arm in DESIGN_ARMS:
         for qi in range(sc.N_QUESTIONS):
             ms = [0.0] * sc.N_LAYERS
             ms[-1] = -1.0 if qi % 2 == 0 else 1.0
-            row = make_row(f'{arm}:{qi}', ms)
-            row['native_g_ali'] = 1.0
-            rows.append(row)
+            rows.append(make_row(f'{arm}:{qi}', ms, native_g_ali=1.0))
     # `unchanged` gets a clean shape: 12 early leads at layers 10/11, ends negative.
     for qi in range(sc.N_QUESTIONS):
         ms = [-1.0] * sc.N_LAYERS
@@ -1211,11 +1275,6 @@ def _write_synthetic_run(tmp_path: Path, *, outcome: str = 'mixed') -> Path:
     for l in range(10, sc.N_LAYERS):
         zero_ms[l] = 1.0
     rows.append(make_row('zero:0', zero_ms, native_g_ali=1.0))
-    for arm in sc.G0_ARMS:
-        if arm in ('unchanged', 'zero'):
-            continue
-        for qi in range(sc.N_QUESTIONS):
-            pass
     controls = control_side('control_google', [10, 11, 12])
     controls.update(control_side('control_alibaba', [10, 11, 12]))
     rows += list(controls.values())
@@ -1226,32 +1285,119 @@ def _write_synthetic_run(tmp_path: Path, *, outcome: str = 'mixed') -> Path:
         for row in rows:
             fh.write(json.dumps(row) + '\n')
 
-    n_unit_layers = len(run216.UNIT_LAYERS)
-    n_units = 9000
     rng = np.random.default_rng(0)
-    units = {}
+    n_slots = len(run216.UNIT_LAYERS)
+    arrays = {
+        'unit_layers': np.asarray(run216.UNIT_LAYERS, dtype=np.int64),
+        'unit_proj': rng.normal(size=(n_slots, SYNTH_UNITS, 3)).astype(np.float32),
+        'unit_colnorm': np.ones((n_slots, SYNTH_UNITS), dtype=np.float32),
+        'scales': np.ones(sc.N_QUESTIONS, dtype=np.float64),   # legacy positional fallback
+    }
+    zero_h = np.zeros(DESIGN_HIDDEN, dtype=np.float32)
+    for row in rows:
+        key = row['key']
+        arrays[f'h0:{key}'] = zero_h
+        arrays[f'h32:{key}'] = zero_h
+        arrays[f'scale:{key}'] = np.float64(1.0)
+        if row['kind'] == 'stage1':
+            arrays[f'units:{key}'] = np.zeros((n_slots, SYNTH_UNITS), dtype=np.float32)
     for qi in range(sc.N_QUESTIONS):
-        block = rng.normal(size=(n_unit_layers, n_units)).astype(np.float32)
+        block = rng.normal(size=(n_slots, SYNTH_UNITS)).astype(np.float32)
         block[0, 753] = -25.0            # a strong negative target on layer 6
-        units[f'units:unchanged:{qi}'] = block
-    np.savez_compressed(
-        out / 'arrays.npz',
-        unit_layers=np.array(run216.UNIT_LAYERS),
-        unit_proj=rng.normal(size=(n_unit_layers, n_units, 3)).astype(np.float32),
-        unit_colnorm=np.ones((n_unit_layers, n_units), dtype=np.float32),
-        scales=np.ones(sc.N_QUESTIONS, dtype=np.float64),
-        **units)
-    run = {'model': sc.MODEL, 'revision': sc.REVISION, 'design_sha256': 'x', 'prompts_sha256': 'y',
-           'tool_sha256': 'z', 'stage1_receipt_path': str(receipt_path),
-           'stage1_receipt_sha256': 'r', 'n_blocks': sc.N_BLOCKS, 'hidden_size': 16,
-           'arms': g0_arms + other_arms, 'control_arms': ['control_google', 'control_alibaba']}
+        arrays[f'units:unchanged:{qi}'] = block
+    np.savez_compressed(out / 'arrays.npz', **arrays)
+
+    run = {
+        'mode': 'run', 'part': 216, 'stage': 'DONE', 'partial': False,
+        'model': sc.MODEL, 'revision': sc.REVISION,
+        'design_sha256': _sha(HERE / 'DESIGN.md'),
+        'prompts_sha256': _sha(HERE / 'prompts216.json'),
+        'tool_sha256': _sha(HERE / 'run216.py'),
+        'stage1_receipt_path': str(receipt_path),
+        'stage1_receipt_sha256': _sha(receipt_path),
+        'n_blocks': sc.N_BLOCKS, 'hidden_size': DESIGN_HIDDEN,
+        'unit_layers': list(run216.UNIT_LAYERS),
+        'units': [f'{l}:{u}' for l, u in run216.UNITS],
+        'arms': list(DESIGN_ARMS),
+        'control_arms': ['control_google', 'control_alibaba'],
+    }
     (out / 'run.json').write_text(json.dumps(run), encoding='utf-8')
     return out
+
+
+@pytest.fixture(scope='session')
+def synth_base(tmp_path_factory):
+    """The admissible directory, built once; every test gets its own copy."""
+    return _write_synthetic_run(tmp_path_factory.mktemp('synthbase'))
+
+
+@pytest.fixture
+def synth(synth_base, tmp_path):
+    out = tmp_path / 'synth'
+    shutil.copytree(synth_base, out)
+    return out
+
+
+def _read_jsonl(path):
+    return [json.loads(line) for line in
+            Path(path).read_text(encoding='utf-8').splitlines() if line.strip()]
+
+
+def _write_jsonl(path, rows):
+    Path(path).write_text('\n'.join(json.dumps(r) for r in rows) + '\n', encoding='utf-8')
+
+
+def _rewrite_arrays(out, mutate):
+    with np.load(Path(out) / 'arrays.npz', allow_pickle=True) as z:
+        arrays = {name: z[name] for name in z.files}
+    mutate(arrays)
+    np.savez_compressed(Path(out) / 'arrays.npz', **arrays)
+
+
+def _drop_keys(out, keys):
+    """Remove `keys` from forwards.jsonl, from arrays.npz and from run.json's arm list."""
+    keys = set(keys)
+    rows = [r for r in _read_jsonl(Path(out) / 'forwards.jsonl') if r['key'] not in keys]
+    _write_jsonl(Path(out) / 'forwards.jsonl', rows)
+
+    def mutate(arrays):
+        for name in list(arrays):
+            if ':' in name and name.split(':', 1)[1] in keys:
+                del arrays[name]
+    _rewrite_arrays(out, mutate)
+    run = json.loads((Path(out) / 'run.json').read_text(encoding='utf-8'))
+    run['arms'] = [a for a in run['arms'] if not any(k.startswith(f'{a}:') for k in keys)]
+    (Path(out) / 'run.json').write_text(json.dumps(run), encoding='utf-8')
+
+
+def _run_score(out):
+    proc = subprocess.run([sys.executable, '-I', str(HERE / 'score216.py'), str(out)],
+                          capture_output=True, text=True)
+    score = json.loads((Path(out) / 'score216.json').read_text(encoding='utf-8'))
+    return proc, score
+
+
+def _assert_diagnostics_only(out):
+    """Exit 3, inadmissible, a named reason, and EVERY prediction verdict `not read`."""
+    proc, score = _run_score(out)
+    assert proc.returncode == 3, (proc.returncode, proc.stdout, proc.stderr)
+    admission = score['admission']
+    assert admission['admissible'] is False
+    assert admission['status'] == 'diagnostics only'
+    assert admission['reasons'], 'an inadmissible scorecard must name its reasons'
+    assert score['score_status'] == 'diagnostics only'
+    assert score['unchanged_outcome']['outcome'] == sc.OUTCOME_NOT_READ
+    for key in ('216.1', '216.2', '216.3', '216.4', '216.5', '216.6'):
+        assert score['predictions'][key]['verdict'] == sc.OUTCOME_NOT_READ, key
+        assert score['predictions'][key]['pass'] is False, key
+    assert 'DIAGNOSTICS ONLY' in (Path(out) / 'SCORECARD.md').read_text(encoding='utf-8')
+    return score
 
 
 def test_scorer_reads_a_whole_synthetic_run(tmp_path):
     out = _write_synthetic_run(tmp_path)
     score = sc.score_run(out)
+    assert score['admission']['admissible'] is True
     assert score['gates']['G0']['pass'] is True
     assert score['gates']['G1']['pass'] is True
     assert score['gates']['G2']['pass'] is True
@@ -1275,11 +1421,13 @@ def test_scorer_marks_a_stopped_run_partial(tmp_path):
     (out / 'run.json').write_text(json.dumps(run), encoding='utf-8')
     score = sc.score_run(out)
     assert score['partial'] is True
+    assert score['score_status'] == 'diagnostics only'
+    assert score['admission']['admissible'] is False
     assert score['run_status'] == 'partial'
     assert score['completeness']['stopped'] is True
     assert score['completeness']['n_missing'] == 0
     assert score['unchanged_outcome']['outcome'] == sc.OUTCOME_NOT_READ
-    assert 'PARTIAL RUN — not a full score' in sc.scorecard_markdown(score)
+    assert 'DIAGNOSTICS ONLY' in sc.scorecard_markdown(score)
 
 
 def test_scorecard_marks_a_failed_gate():
@@ -1294,6 +1442,160 @@ def test_scorecard_marks_a_failed_gate():
     text = sc.scorecard_markdown(score)
     assert '| G0 | FAIL |' in text
     assert 'not read' in text
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# Alden #12 #1: admission -- a full score only from a finalized, pinned, fixed-456-key directory
+# ----------------------------------------------------------------------------------------------------------------
+
+def test_admission_positive_fixture_is_scored_and_exits_zero(synth):
+    """The positive control the refusals are paired with: admissible, exit 0, and it scores."""
+    proc, score = _run_score(synth)
+    assert proc.returncode == 0, (proc.stdout, proc.stderr)
+    admission = score['admission']
+    assert admission['admissible'] is True
+    assert admission['status'] == 'scored'
+    assert admission['n_expected_keys'] == 456
+    assert admission['n_rows'] == 456
+    assert admission['n_duplicate_keys'] == 0
+    assert admission['n_reasons'] == 0
+    assert score['score_status'] == 'scored'
+    assert score['partial'] is False
+    assert score['predictions']['216.2']['pass'] is True
+    assert all(score['predictions'][k]['verdict'] == 'read' for k in
+               ('216.1', '216.2', '216.3', '216.4', '216.5', '216.6'))
+    card = (synth / 'SCORECARD.md').read_text(encoding='utf-8')
+    assert 'DIAGNOSTICS ONLY' not in card
+    assert 'score status: `scored`' in card
+
+
+def test_admission_rejects_one_g0_row_outside_tolerance(synth):
+    """Alden #12 #1 (a): one anchor row outside tolerance used to give `full` + 216.2 PASS."""
+    rows = _read_jsonl(synth / 'forwards.jsonl')
+    for row in rows:
+        if row['key'] == 'zero:3':
+            row['native_g_ali'] = float(row['native_g_ali']) + 0.05
+    _write_jsonl(synth / 'forwards.jsonl', rows)
+    score = _assert_diagnostics_only(synth)
+    assert any(r['check'] == 'G0' for r in score['admission']['reasons'])
+    assert score['gates']['G0']['pass'] is False
+
+
+def test_admission_rejects_a_running_stage_with_rows_but_no_arrays(synth):
+    """Alden #12 #1 (b): the window before arrays.npz/commit -- all rows, stage RUNNING, no arrays."""
+    run = json.loads((synth / 'run.json').read_text(encoding='utf-8'))
+    run['stage'] = 'RUNNING'
+    (synth / 'run.json').write_text(json.dumps(run), encoding='utf-8')
+    (synth / 'arrays.npz').unlink()
+    score = _assert_diagnostics_only(synth)
+    checks = {r['check'] for r in score['admission']['reasons']}
+    assert 'stage' in checks
+    assert 'arrays' in checks
+
+
+def test_admission_rejects_an_arm_removed_from_manifest_and_file(synth):
+    """Alden #12 #1 (c): op_vogel and its 24 rows gone from both the manifest and the file (432)."""
+    _drop_keys(synth, [f'op_vogel:{qi}' for qi in range(sc.N_QUESTIONS)])
+    score = _assert_diagnostics_only(synth)
+    admission = score['admission']
+    assert admission['n_missing'] == 24
+    assert all(k.startswith('op_vogel:') for k in admission['missing'])
+    # Completeness is measured against the DESIGN's key set, not the attempt's own manifest.
+    assert score['completeness']['n_expected'] == 456
+    assert score['completeness']['n_missing'] == 24
+
+
+def test_admission_rejects_a_nonfinal_stage_with_complete_arrays(synth):
+    """The DONE requirement on its own: every row and array present, but the run is not finalized."""
+    run = json.loads((synth / 'run.json').read_text(encoding='utf-8'))
+    run['stage'] = 'RUNNING'
+    (synth / 'run.json').write_text(json.dumps(run), encoding='utf-8')
+    score = _assert_diagnostics_only(synth)
+    assert {r['check'] for r in score['admission']['reasons']} == {'stage'}
+
+
+def test_admission_rejects_a_missing_arrays_file(synth):
+    """The arrays requirement on its own: stage DONE, all 456 rows, no arrays.npz."""
+    (synth / 'arrays.npz').unlink()
+    score = _assert_diagnostics_only(synth)
+    assert {r['check'] for r in score['admission']['reasons']} == {'arrays'}
+
+
+def test_admission_rejects_a_duplicate_key(synth):
+    lines = (synth / 'forwards.jsonl').read_text(encoding='utf-8').splitlines()
+    (synth / 'forwards.jsonl').write_text('\n'.join(lines + [lines[0]]) + '\n',
+                                          encoding='utf-8')
+    score = _assert_diagnostics_only(synth)
+    reason = next(r for r in score['admission']['reasons'] if r['check'] == 'keys')
+    assert reason['n_duplicates'] == 1
+    assert score['admission']['n_rows'] == 456
+
+
+def test_admission_rejects_an_extra_key(synth):
+    rows = _read_jsonl(synth / 'forwards.jsonl')
+    extra = dict(rows[0])
+    extra['key'] = 'op_extra:0'
+    _write_jsonl(synth / 'forwards.jsonl', rows + [extra])
+    score = _assert_diagnostics_only(synth)
+    reason = next(r for r in score['admission']['reasons'] if r['check'] == 'keys')
+    assert reason['n_extra'] == 1
+    assert reason['sample'] == ['op_extra:0']
+
+
+def test_admission_rejects_a_misaligned_array(synth):
+    """A `units:<key>` array that is not the pinned (6, n_units) shape is a misaligned record."""
+    def mutate(arrays):
+        arrays['units:unchanged:0'] = np.zeros((len(run216.UNIT_LAYERS), SYNTH_UNITS - 1),
+                                               dtype=np.float32)
+    _rewrite_arrays(synth, mutate)
+    score = _assert_diagnostics_only(synth)
+    reason = next(r for r in score['admission']['reasons']
+                  if r['check'] == 'arrays' and r.get('n_wrong'))
+    assert reason['n_wrong'] == 1
+    assert reason['sample'][0]['name'] == 'units:unchanged:0'
+    assert reason['sample'][0]['shape'] == [len(run216.UNIT_LAYERS), SYNTH_UNITS - 1]
+
+
+def test_admission_rejects_an_array_for_a_missing_row(synth):
+    """An array keyed to a row outside the grid is as inadmissible as a missing one."""
+    def mutate(arrays):
+        arrays['h0:op_extra:0'] = np.zeros(DESIGN_HIDDEN, dtype=np.float32)
+    _rewrite_arrays(synth, mutate)
+    score = _assert_diagnostics_only(synth)
+    assert any(r['check'] == 'arrays' and r.get('n_orphan') for r in score['admission']['reasons'])
+
+
+def test_admission_rejects_a_pin_mismatch(synth):
+    run = json.loads((synth / 'run.json').read_text(encoding='utf-8'))
+    run['revision'] = 'deadbeef'
+    (synth / 'run.json').write_text(json.dumps(run), encoding='utf-8')
+    score = _assert_diagnostics_only(synth)
+    assert any(r['check'] == 'pin:revision' for r in score['admission']['reasons'])
+
+
+def test_admission_rejects_a_failed_g1_row(synth):
+    rows = _read_jsonl(synth / 'forwards.jsonl')
+    rows[5]['dla']['fp32_logits'][0] += 1.0
+    _write_jsonl(synth / 'forwards.jsonl', rows)
+    score = _assert_diagnostics_only(synth)
+    assert any(r['check'] == 'G1' for r in score['admission']['reasons'])
+
+
+def test_admission_constants_are_bound_to_the_frozen_files(tmp_path):
+    """The design's 456 keys and the pins are the committed artefacts, not a run's own manifest."""
+    assert sc.EXPECTED_ARMS == DESIGN_ARMS
+    assert len(sc.expected_keys()) == 456
+    assert len(set(sc.expected_keys())) == 456
+    assert sum(1 for k in sc.expected_keys() if k.startswith('factual:')) == 24
+    assert sum(1 for k in sc.expected_keys() if k.startswith('control_')) == 48
+    assert sc.DESIGN_SHA256 == _sha(HERE / 'DESIGN.md')
+    assert sc.PROMPTS_SHA256 == _sha(HERE / 'prompts216.json')
+    assert sc.bank_binding() == []
+    bank = json.loads((HERE / 'prompts216.json').read_text(encoding='utf-8'))
+    bank['arms'] = [a for a in bank['arms'] if a != 'op_vogel']
+    bad = tmp_path / 'bad-bank.json'
+    bad.write_text(json.dumps(bank), encoding='utf-8')
+    assert any(p['check'] == 'prompts_bank:arms' for p in sc.bank_binding(bad))
 
 
 def test_score_tool_does_not_import_torch():

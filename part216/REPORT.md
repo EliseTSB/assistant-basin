@@ -31,9 +31,9 @@ directory.
 |---|---|
 | `part216/build_prompts216.py` | Builds `prompts216.json`. Verifies the opening `[40, 557, 7633, 539, 2972]`, the `[14030]` continuation, and that `neuron_report.build_prompt` + `tok.encode` still reproduce Part 214's `template_prefix_tokens` / `template_suffix_tokens`. Asserts every factual answer is ONE token. |
 | `part216/prompts216.json` | The frozen bank: 24 items, 48 controls, 72 opener rows, 24 factuals, with token ids, `T`, `sequence_token_ids` and `read_position` for each. Built before any run. sha256 `ec29c594…faf757f`. |
-| `part216/run216.py` | `selftest` (the two offline G1 fixtures) and `run` (456 forwards: 384 arm rows, 48 controls, 24 factuals). Hooks, lens, exact DLA, unit DLA, pins, checkpoint/resume by row key. |
-| `part216/score216.py` | Pure numpy/json scorer: G0, G1, G2, outcomes, divergence, 216.1–216.6, descriptive tables; writes `score216.json` and `SCORECARD.md`. |
-| `part216/test_part216.py` | 46 pytest cases: the analytic bf16 fixture, G0 pass/fail, G1 telescoping and the dropped-increment control, the boundary ledger, G2's pair/share/control rules, the outcome rules, 216.5/216.6 strict ties and zero writes, the tiny-model end-to-end run, and the scorer on a synthetic full run. |
+| `part216/run216.py` | `selftest` (the two offline G1 fixtures) and `run` (456 forwards: 384 arm rows, 48 controls, 24 factuals). Hooks, lens, exact DLA, unit DLA, pins, fresh directories only (no resume: a non-empty `--out` is refused). |
+| `part216/score216.py` | Pure numpy/json scorer: admission (the fixed 456-key grid, the frozen pins, the required arrays, G0/G1) then G0, G1, G2, outcomes, divergence, 216.1–216.6, descriptive tables; writes `score216.json` and `SCORECARD.md`; exits 0 / 3 / 2. |
+| `part216/test_part216.py` | 80 pytest cases at Fold 2: the analytic bf16 fixture, G0 pass/fail, G1 telescoping and the dropped-increment control, the boundary ledger, G2's pair/share/control rules, the outcome rules, 216.5/216.6 strict ties and zero writes, the tiny-model end-to-end run, admission and its refusals, the no-resume refusals, and the scorer on a synthetic full run. |
 | `part216/selftest216.json` | Output of `run216.py selftest` (the two fixtures), written by the CLI. |
 | `part216/REPORT.md` | This file. |
 
@@ -509,3 +509,233 @@ None for the four code items. Honest limits on what Fold 1 demonstrates:
 5. **One extra production bug was fixed beyond the four bullets** (control rows crashing through
    `edit_for_arm`), because it sits on the same run path and would have stopped every real run
    before the controls/factuals. It is listed in FINDINGS #3 with its test.
+
+## Fold 2 (Alden #12)
+
+Base build `f7e306e0` on branch `part216`. All work inside `part216/`; nothing committed. No GPU and no
+4B load: every guard below is exercised on synthetic records or on the 30-block tiny model. Alden's
+code HOLD (`f7e306e0` over `c3a32d19`) had two admission bullets; each is answered here with the
+change, the test that proves it, and the sabotage mutation that proves the test.
+
+### SUMMARY
+
+- **Admission (`score216.py`).** A full score now requires a FINALIZED receipt (`stage: DONE`), the
+  design's pins, the fixed **456-key** grid (16 arms x 24 + 48 controls + 24 factuals) with no
+  missing, duplicate or extra record, every required array present at its pinned shape and keyed to a
+  row in that grid, **G0 PASS**, and **G1 PASS on every row**. Anything else is `diagnostics only`:
+  the gates and descriptive tables are still printed, every prediction verdict is `not read`, the
+  `unchanged` headline is not written, and the CLI exits **3** (`0` = admissible and scored, `2` =
+  usage error).
+- **Resume removed (`run216.py`).** `run` refuses any `--out` directory that already holds a run file
+  (`forwards.jsonl`, `run.json`, `arrays.npz`, `selftest.json`, `refused.json`) before the model is
+  loaded. `validate_committed_rows`, `pins_mismatch`, `PIN_KEYS`, `plan_kind` and `--no-resume` are
+  gone. **There is no crash resume:** an interrupted run is discarded and rerun into a new
+  directory. `arrays.npz` is still written only on exit, so a JSONL left in flight is always ahead of
+  it; nothing pretends otherwise now.
+- `test_part216.py` grows 65 -> **80 cases: 80 passed, 0 failed, 0 skipped in 30.4 s** under the
+  torch venv (46 on `c3a32d19`, 65 after Fold 1).
+- All **22** new/changed tests fail on `f7e306e0` (`oldtree-newtests.log`: **22 failed, 0 passed**).
+- **7 sabotage mutations**, one per new guard: **7/7 RED**; the tree restores to 80 passed.
+- The FILES table above was corrected in this fold: it still described `run216.py` as doing
+  "checkpoint/resume by row key" and `test_part216.py` as having 46 cases.
+
+### FINDINGS
+
+#### 1. Scoring reads only an admissible attempt (Alden #12 #1)
+
+**The fixed key set comes from the DESIGN, not the run's manifest.**
+`score216.STAGE1_ARMS`/`EXPECTED_ARMS` (`score216.py:45-61`) is the design's arm list: `unchanged`,
+`zero`, `scale_dial_fact`, `random_0:zero` ... `random_9:zero`, `op_filler`, `op_denial`,
+`op_vogel`; with `control_google`/`control_alibaba` and `factual` that is 16 x 24 + 2 x 24 + 24 =
+`EXPECTED_N_FORWARDS = 456`. `expected_keys()` (`score216.py:947`) builds the grid and
+`stage1_keys()` (`score216.py:955`) the 384 rows that carry a `units:` capture. `bank_binding()`
+(`score216.py:990`) reads the frozen `prompts216.json` beside the scorer and requires its arm list,
+control arms, opener arms, 24/48/72/24 counts, `design_sha256` and model/revision to be the design's;
+`PROMPTS_SHA256` and `DESIGN_SHA256` (`score216.py:66-67`) are the two committed hashes
+(`ec29c594…faf757f`, `9dfbf216…fbb161`).
+
+**A duplicate line is no longer silently merged.** `read_forwards()` (`score216.py:960`) returns the
+rows, the duplicate keys and the line count; `load_run` keeps its old three-tuple API for callers that
+only want the rows. A second `zero:0` used to collapse into the first and the directory looked
+complete.
+
+**Admission.** `admission_check()` (`score216.py:1097`) refuses, with `admission.reasons` naming each
+one:
+1. `stage`: `run.json` stage must be `DONE`, must carry no `stops`, and must not declare
+   `partial`/`limit`/`limit_questions`. (The window Alden named -- stage RUNNING with every JSONL row
+   but no `arrays.npz` -- is now refused twice: by the stage and by the missing arrays.)
+2. `pin:*`: model, revision, `n_blocks` (32), `hidden_size` (2560), `unit_layers`
+   `[6,7,11,24,27,29]`, `units`, `arms`, `control_arms`; `design_sha256` equals both `DESIGN.md` on
+   disk and the frozen constant; `prompts_sha256` equals both `prompts216.json` on disk and the
+   frozen constant; `tool_sha256` is recorded and equals `run216.py` on disk; the Part 214 receipt is
+   readable and matches the sha256 the run recorded for it.
+3. `keys`: exactly the 456 expected keys -- no missing, no duplicate, no extra. The 24 factuals and
+   the 48 controls are counted from the design, so deleting an arm from `run.json` **and** from
+   `forwards.jsonl` leaves a 24-key hole rather than a smaller complete grid.
+4. `arrays`: `h0:<key>`/`h32:<key>` at `(2560,)`, `scale:<key>` scalar, `units:<stage1 key>` at
+   `(6, n_units)` where `n_units` is `unit_proj.shape[1]`; the `unit_layers`/`unit_proj`/
+   `unit_colnorm` tables at their pinned shapes; and no array keyed to a row outside the grid.
+   `arrays_admission()` (`score216.py:1029`).
+5. `G0` and `G1`: the existing gates must pass. G1 is `gate1()` over every row, so a single
+   non-telescoping row refuses the whole directory.
+
+`run_completeness()` (`score216.py:1217`) now also measures against `expected_keys()`; it stays
+descriptive, but its `n_missing` can no longer be gamed by editing the manifest.
+
+**Diagnostics only.** `score_run()` (`score216.py:1254`) computes the gates, the per-arm counts and
+the descriptive tables for any directory, then:
+- `unchanged_outcome` is replaced by `_not_read_headline()` (`score216.py:1208`) -- outcome `not
+  read`, the first admission reasons attached, no question list;
+- every entry of `predictions` gets `verdict: "not read"`, `pass: false` and a reason (an admissible
+  run gets `verdict: "read"`);
+- `score_status` is `diagnostics only`, `partial` is `not admissible`, and `admission` carries
+  `admissible`, `status`, `n_reasons`, `reasons`, `missing`/`extra`/`duplicates`.
+`scorecard_markdown()` (`score216.py:1362`) prints a `DIAGNOSTICS ONLY — not a full score` banner with
+each reason, a `score status` line, and a verdict column in the predictions table.
+
+**G2 is not admission.** `gate2` is still computed for every directory, but it decides only whether
+the lead readout is eligible: an admissible run whose G2 fails is `score_status: scored` with
+216.1-216.4 `pass: false` and the lead outcomes `not read`. That is the design's rule, unchanged.
+
+**CLI.** `main()` (`score216.py:1419`): `0` when admissible and scored, `3` when diagnostics only
+(reasons also on stderr), `2` for a missing/unreadable run directory or argparse usage error. The
+scorer also no longer crashes when the receipt named by `run.json` is missing or unparsable
+(`_load_receipt`, `score216.py:1243`): that is a `pin:stage1_receipt` refusal.
+
+**Alden's three cases, as tests** (each also asserts exit 3, `admissible: false`, and every one of
+216.1-216.6 `verdict: not read`):
+- (a) one G0 row outside tolerance -> `test_admission_rejects_one_g0_row_outside_tolerance`
+  (`test_part216.py:1472`); the reason is `G0`, and `gates.G0.pass` is false.
+- (b) stage RUNNING with all rows but no `arrays.npz` ->
+  `test_admission_rejects_a_running_stage_with_rows_but_no_arrays` (`test_part216.py:1484`); the
+  reasons include both `stage` and `arrays`.
+- (c) `op_vogel` and its 24 rows removed from the manifest and the file (432 rows) ->
+  `test_admission_rejects_an_arm_removed_from_manifest_and_file` (`test_part216.py:1496`);
+  `n_missing == 24`, all `op_vogel:*`, and `completeness.n_missing == 24` against the design grid.
+
+The refusals are isolated one guard at a time by `_nonfinal_stage_with_complete_arrays`,
+`_missing_arrays_file`, `_duplicate_key`, `_extra_key`, `_misaligned_array`, `_array_for_a_missing_row`,
+`_pin_mismatch` and `_failed_g1_row` (`test_part216.py:1508-1582`). The positive fixture
+(`_write_synthetic_run`, `test_part216.py:1245`) is a 456-row directory carrying the real frozen pins
+and every array at its pinned shape; `test_admission_positive_fixture_is_scored_and_exits_zero`
+(`test_part216.py:1451`) requires exit 0, `admissible: true`, `score_status: scored`, 216.2 PASS and
+`verdict: read` on all six predictions. `test_admission_constants_are_bound_to_the_frozen_files`
+(`test_part216.py:1584`) pins the constants to the files and shows a bank missing an arm is refused by
+`bank_binding`.
+
+#### 2. Resume is gone (Alden #12 #2)
+
+**The refusal.** `RUN_FILE_NAMES` (`run216.py:655`) and `existing_run_files()` (`run216.py:658`) list
+the run files a prior attempt leaves; `run()` (`run216.py:663`) refuses before `load_bank`,
+`load_selftest`, `load_rig` or any forward, and writes `refused.json` with `refused: true`,
+`existing_files` and the reason ("this runner has no resume -- a new attempt needs a new, empty
+--out"). Deleting `validate_committed_rows` removes the resume path that skipped `dtype_contract`;
+the fresh per-row validator (boundary ledger, G1, `row_finite`, `dtype_contract`, per-anchor G0)
+is unchanged and still runs before every append.
+
+**Alden's tampered-dtype directory.**
+`test_tampered_dtype_directory_is_refused_not_resumed` (`test_part216.py:987`) writes one committed
+row with the tiny bf16 model, flips `L0:add1` to `torch.float32` on disk, and re-runs into the same
+directory: the result is `STOP` + `refused`, `n_rows` stays 1, the JSONL is byte-identical afterwards,
+and `run.json` is untouched. On `f7e306e0` the same test fails at `assert None is True` -- that tree
+resumed, appended a second row and returned DONE, exactly as Alden reported.
+
+**What replaces the resume tests.** `test_run_refuses_a_directory_holding_any_run_file`
+(`test_part216.py:965`) covers every name in `RUN_FILE_NAMES` with `load_rig` monkeypatched to fail if
+called, so the refusal provably happens before any model work. `test_stop_record_is_terminal_for_the_output_directory`
+(`test_part216.py:940`) keeps its meaning (a STOPped directory cannot be continued) under the new
+shape. `test_a_committed_g0_row_outside_the_receipt_cannot_be_resumed` (`test_part216.py:1055`) and
+`test_a_valid_done_directory_is_not_continued` (`test_part216.py:1089`) replace the two resume tests;
+the second also shows the supported path -- the same plan into a new, empty directory runs to DONE
+with exactly its own rows. `test_no_resume_machinery_remains` (`test_part216.py:1017`) asserts the
+three helpers are absent and that `--no-resume` is now an argparse error (exit 2).
+
+**Honest statement in the artefact.** `run.json` now records `resume_supported: false`; the runner's
+`RUNNING` record is written before the first forward as a diagnostic (an interrupted directory says
+RUNNING and must be discarded), never as a resume point. The module docstring says the same.
+
+### TESTS
+
+Command actually run from `/home/elisepc/assistant-basin`:
+
+```
+/home/elisepc/neuron-probe/.venv/bin/python -I -m pytest part216/test_part216.py -q -p no:cacheprovider
+```
+
+Result after Fold 2: **80 passed, 0 failed, 0 skipped in 30.4 s** (65 before this fold). The torch
+venv is used, so the tiny-model cases do not skip. The new admission cases each run `score216.py` as a
+subprocess, which is why the suite went from 9 s to 30 s.
+
+The 22 new/changed cases, and the old-tree result (`oldtree/` is `git archive f7e306e0 part216` with
+symlinks to `part214/`, `part215/`, `part66/`, `neuron_report.py`, `results/`, and this fold's test
+file copied in; log at `oldtree-newtests.log`):
+
+| test | what it pins | first failure on `f7e306e0` |
+|---|---|---|
+| `test_admission_positive_fixture_is_scored_and_exits_zero` | admissible fixture: exit 0, `scored`, 216.2 PASS, all six `read` | `KeyError: 'admission'` (`:1400`) |
+| `test_admission_rejects_one_g0_row_outside_tolerance` | (a) a failing anchor refuses the score | exit `0 == 3` |
+| `test_admission_rejects_a_running_stage_with_rows_but_no_arrays` | (b) stage + arrays both named | exit `0 == 3` |
+| `test_admission_rejects_an_arm_removed_from_manifest_and_file` | (c) the grid is the design's, not the manifest's | exit `0 == 3` |
+| `test_admission_rejects_a_nonfinal_stage_with_complete_arrays` | the DONE requirement alone | exit `0 == 3` |
+| `test_admission_rejects_a_missing_arrays_file` | the arrays requirement alone | exit `0 == 3` |
+| `test_admission_rejects_a_duplicate_key` | a duplicated record is refused, not merged | exit `0 == 3` |
+| `test_admission_rejects_an_extra_key` | a 457th record is refused | exit `0 == 3` |
+| `test_admission_rejects_a_misaligned_array` | `units:<key>` at the wrong shape | exit `0 == 3` |
+| `test_admission_rejects_an_array_for_a_missing_row` | an array keyed outside the grid | exit `0 == 3` |
+| `test_admission_rejects_a_pin_mismatch` | a changed revision pin | exit `0 == 3` |
+| `test_admission_rejects_a_failed_g1_row` | one non-telescoping row | exit `0 == 3` |
+| `test_admission_constants_are_bound_to_the_frozen_files` | 456 distinct keys; hashes equal the files; a short bank is refused | `AttributeError: EXPECTED_ARMS` (`:1586`) |
+| `test_run_refuses_a_directory_holding_any_run_file` | every run file refuses the `--out`, before `load_rig` | `AttributeError: RUN_FILE_NAMES` (`:967`) |
+| `test_tampered_dtype_directory_is_refused_not_resumed` | Alden's tampered-dtype directory cannot be continued | `assert None is True` (`:1009`) |
+| `test_no_resume_machinery_remains` | the helpers and the flag are gone | `assert not True` (`:1019`) |
+| `test_a_committed_g0_row_outside_the_receipt_cannot_be_resumed` | no re-blessing of a committed G0 row | `assert None is True` (`:1084`) |
+| `test_a_valid_done_directory_is_not_continued` | even a clean DONE directory is refused | `assert 'DONE' == 'STOP'` (`:1099`) |
+| `test_stop_record_is_terminal_for_the_output_directory` (rewritten) | STOP stays terminal under fresh-only | `assert None is True` (`:960`) |
+| `test_scorer_reads_a_whole_synthetic_run` (extended) | the full fixture is admissible and scores | `KeyError: 'admission'` |
+| `test_scorer_marks_a_stopped_run_partial` (updated) | a STOPped complete directory is diagnostics only | `KeyError: 'score_status'` (`:1424`) |
+| `test_end_to_end_tiny_bf16_run_then_scorer_marks_partial` (updated) | a 9-row smoke run is exit 3 | exit `0 == 3` (`:1139`) |
+
+Old-tree totals: **22 failed, 0 passed** for these 22 node ids. The other 58 cases in the file still
+pass on `f7e306e0`, so the fold changed only the admission/resume surface.
+
+### SABOTAGE
+
+Scratch tree: `sabotage/tree/` -- a copy of the current `part216/` with symlinks to `part214/`,
+`part215/`, `part66/`, `neuron_report.py` and `results/`. Driver: `sabotage/run_sabotage.py`;
+results in `sabotage/sabotage.json`. The domain was not touched by any mutation. Baseline 80 passed,
+restored 80 passed.
+
+| mutation | what was broken | suite | went red | failing tests |
+|---|---|---|---|---|
+| DONE requirement | the stage/stops/partial block in `admission_check` disabled | 3 failed, 77 passed | **YES** | `test_admission_rejects_a_nonfinal_stage_with_complete_arrays`, `test_admission_rejects_a_running_stage_with_rows_but_no_arrays`, `test_scorer_marks_a_stopped_run_partial` |
+| fixed key set | expected keys derived from `run['arms']`/`run['control_arms']` | 1 failed, 79 passed | **YES** | `test_admission_rejects_an_arm_removed_from_manifest_and_file` |
+| arrays alignment | the `arrays_admission` call removed | 4 failed, 76 passed | **YES** | `test_admission_rejects_a_missing_arrays_file`, `_misaligned_array`, `_array_for_a_missing_row`, `_running_stage_with_rows_but_no_arrays` |
+| G0/G1 admission | the G0 and G1 reason blocks removed | 2 failed, 78 passed | **YES** | `test_admission_rejects_one_g0_row_outside_tolerance`, `test_admission_rejects_a_failed_g1_row` |
+| exit status | `main` returns 0 for a diagnostics-only score | 12 failed, 68 passed | **YES** | every refusal case plus `test_end_to_end_tiny_bf16_run_then_scorer_marks_partial` |
+| fresh-directory refusal | `existing = existing_run_files(out_dir)` bypassed | 5 failed, 75 passed | **YES** | `test_run_refuses_a_directory_holding_any_run_file`, `test_tampered_dtype_directory_is_refused_not_resumed`, `test_stop_record_is_terminal_for_the_output_directory`, `test_a_committed_g0_row_outside_the_receipt_cannot_be_resumed`, `test_a_valid_done_directory_is_not_continued` |
+| duplicate-key detection | a duplicate overwrites instead of being collected | 1 failed, 79 passed | **YES** | `test_admission_rejects_a_duplicate_key` |
+
+Restored tree after the loop: 80 passed, 0 failed, so each mutation was the only difference.
+
+### BLOCKERS
+
+None for the two code items. Honest limits on what Fold 2 demonstrates:
+
+1. **The 4B/A770 path is still unmeasured.** The brief forbids loading the model. Admission is
+   exercised on synthetic directories and the no-resume path on the 30-block tiny model. Nothing
+   here is evidence about the real run's runtime, VRAM or kernel check.
+2. **"Aligned to the row keys" is name-and-shape alignment.** Admission proves every required array
+   exists under the right key at the pinned shape and that no array is keyed outside the grid. It
+   cannot prove that `h0:zero:4` holds the values of `zero:4` rather than a same-shaped swap from
+   another row; that needs the model or a content hash the runner does not write. The unit arrays
+   are read per question key, so a swap would change a descriptive number, not the gates.
+3. **The admissible fixture is synthetic.** Its 456 rows are telescoping zero-terms with zero
+   `h0`/`h32` arrays; it proves the admission logic and the scoring path, not the model. It is
+   labelled as a fixture in its docstring.
+4. **`tool_sha256` now binds the directory to the runner's bytes.** Any later edit to `run216.py`
+   makes previously written directories diagnostics-only. That is the intent of a pin (the first
+   real run must be scored with the runner that wrote it), but it is worth knowing before editing the
+   runner after a run.
+5. **`partial` changed meaning.** `score['partial']` is now `not admissible` (so a RUNNING or
+   STOPped directory with 456 rows is partial); `run_completeness` remains descriptive and its own
+   flag is reported beside `admission_inadmissible`. `run_status` is unchanged.

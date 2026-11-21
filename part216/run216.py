@@ -22,7 +22,8 @@ What is captured at the read position `T+4` (the last opening token), per DESIGN
     build the same-slot write-size null.
 
 Refuses to run: a G1 failure stops before the next forward, a G0 failure stops before any non-anchor
-forward. Both write a STOP record and no further rows.
+forward. Both write a STOP record and no further rows. A `--out` directory holding any run file is
+refused outright: there is NO resume, only fresh directories (Alden #12 #2).
 
 Run under the XPU python as
     python -I -B part216/run216.py selftest
@@ -640,13 +641,6 @@ def edit_for_arm(receipt: dict, arm: str, prompt_len: int):
     raise ValueError(f'unknown arm {arm!r}')
 
 
-# Keys a resumed run must match exactly. `tool_sha256` is included on purpose: a resume after the
-# runner itself changed is a different instrument and must not be mixed into the same directory.
-PIN_KEYS = ('model', 'revision', 'design_sha256', 'prompts_sha256', 'tool_sha256',
-            'score_tool_sha256', 'stage1_receipt_sha256', 'n_blocks', 'hidden_size',
-            'unit_layers', 'units', 'arms', 'control_arms')
-
-
 def filter_plan_questions(plan: list[dict], limit_questions) -> list[dict]:
     """The `--limit-questions` test-only reduction: keep question indices `< limit`."""
     n = int(limit_questions or 0)
@@ -655,104 +649,15 @@ def filter_plan_questions(plan: list[dict], limit_questions) -> list[dict]:
     return [r for r in plan if int(r['question_index']) < n]
 
 
-def pins_mismatch(recorded: dict, current: dict) -> list[dict]:
-    """Pin mismatches between the run.json already in the directory and this invocation."""
-    if not recorded:
-        return [{'reason': 'no run.json pin record to verify the committed rows against'}]
-    out = []
-    for key in PIN_KEYS:
-        if key not in recorded:
-            out.append({'pin': key, 'reason': 'missing from the committed run.json'})
-        elif recorded.get(key) != current.get(key):
-            out.append({'pin': key, 'recorded': recorded.get(key), 'current': current.get(key)})
-    return out
+# Every file a previous attempt (or a previous scorer) leaves in an --out directory. This runner has
+# NO resume: a directory holding any of these is refused, so rows from two attempts can never be
+# mixed and a JSONL that ran ahead of arrays.npz can never be "continued" (Alden #12 #2).
+RUN_FILE_NAMES = ('forwards.jsonl', 'run.json', 'arrays.npz', 'selftest.json', 'refused.json')
 
 
-def plan_kind(bank: dict, arm: str) -> str:
-    if arm == 'factual':
-        return 'factual'
-    if arm in (bank.get('control_arms') or []):
-        return 'control'
-    if arm in (bank.get('arms') or []):
-        return 'stage1'
-    raise KeyError(f'unknown arm {arm!r}')
-
-
-def validate_committed_rows(bank: dict, receipt: dict, rows: dict, arrays: dict,
-                            n_blocks: int) -> list[dict]:
-    """Re-check every committed row before a resume is allowed to make a new forward.
-
-    What is re-proved for each row: the pinned inputs (sequence, prompt and read position are the
-    bank's for its `(arm, q)` key), the boundary ledger, G1 telescoping, finite values, and the
-    arrays the scorer needs. G0 rows are additionally checked against the Part 214 receipt; when
-    all 312 are committed the full G0 gate is recomputed. Any problem is a STOP (Alden #10 #3).
-    """
-    problems: list[dict] = []
-    if not rows:
-        return problems
-    arms = set(bank.get('arms') or []) | set(bank.get('control_arms') or []) | {'factual'}
-    for key, row in rows.items():
-        try:
-            arm, qs = key.rsplit(':', 1)
-            qi = int(qs)
-        except (ValueError, AttributeError):
-            problems.append({'key': key, 'reason': 'row key is not <arm>:<question_index>'})
-            continue
-        if arm not in arms or not 0 <= qi < N_QUESTIONS:
-            problems.append({'key': key, 'reason': 'row key is not on the 24-question grid'})
-            continue
-        kind = plan_kind(bank, arm)
-        entry = resolve_row(bank, {'kind': kind, 'arm': arm, 'question_index': qi})
-        want_seq = list(entry['prompt_token_ids'] if kind == 'factual'
-                        else entry['sequence_token_ids'])
-        want_prompt = list(entry['prompt_token_ids'])
-        if [int(t) for t in row.get('sequence_token_ids') or []] != [int(t) for t in want_seq]:
-            problems.append({'key': key, 'reason': 'committed sequence does not match the bank'})
-        if [int(t) for t in row.get('prompt_token_ids') or []] != [int(t) for t in want_prompt]:
-            problems.append({'key': key, 'reason': 'committed prompt does not match the bank'})
-        if int(row.get('read_position', -1)) != int(entry['read_position']):
-            problems.append({'key': key, 'reason': 'committed read position does not match the bank'})
-        if int(row.get('n_blocks', -1)) != int(n_blocks):
-            problems.append({'key': key, 'reason': 'committed row has a different block count'})
-        bcheck = sc.boundary_check(row, n_blocks)
-        if not bcheck['pass']:
-            problems.append({'key': key, 'reason': 'boundary ledger', 'detail': bcheck})
-        try:
-            gcheck = sc.gate1_check(row['dla']['emb_term'], row['dla']['terms'],
-                                    row['dla']['fp32_logits'])
-        except (KeyError, TypeError, ValueError) as exc:
-            problems.append({'key': key, 'reason': f'G1 row is unreadable: {exc!r}'})
-        else:
-            if not gcheck['pass']:
-                problems.append({'key': key, 'reason': 'G1 telescoping', 'detail': gcheck})
-        finite = sc.row_finite(row)
-        if not finite['pass']:
-            problems.append({'key': key, 'reason': 'nonfinite values', 'detail': finite})
-        for name in ('h0', 'h32'):
-            if f'{name}:{key}' not in arrays:
-                problems.append({'key': key, 'reason': f'arrays.npz is missing {name}:{key}'})
-        if f'scale:{key}' not in arrays:
-            problems.append({'key': key, 'reason': f'arrays.npz is missing scale:{key}'})
-        if kind == 'stage1' and f'units:{key}' not in arrays:
-            problems.append({'key': key, 'reason': f'arrays.npz is missing units:{key}'})
-        if arm in sc.G0_ARMS:
-            want = ((receipt.get('arms') or {}).get(arm) or {}).get('g_ali')
-            got = row.get('native_g_ali')
-            if want is None or qi >= len(want):
-                problems.append({'key': key, 'reason': 'G0 arm has no receipt value'})
-            elif got is None or not np.isfinite(float(got)) or \
-                    abs(float(got) - float(want[qi])) > sc.G0_TOLERANCE:
-                problems.append({'key': key, 'reason': 'committed G0 row is outside the receipt',
-                                 'got': got, 'receipt': None if want is None else float(want[qi])})
-    g0_committed = sum(1 for k in rows if k.rsplit(':', 1)[0] in sc.G0_ARMS)
-    if g0_committed == len(sc.G0_ARMS) * N_QUESTIONS:
-        g0 = sc.gate0(rows, receipt)
-        if not g0['pass']:
-            problems.append({'reason': 'G0 recomputed over the committed rows fails',
-                             'detail': {'n_failures': g0['n_failures'],
-                                        'max_abs_delta': g0['max_abs_delta'],
-                                        'failures': g0['failures'][:5]}})
-    return problems
+def existing_run_files(out_dir) -> list[str]:
+    """The run files already present in `out_dir` (empty means a fresh directory)."""
+    return [name for name in RUN_FILE_NAMES if (Path(out_dir) / name).exists()]
 
 
 def run(args) -> dict:
@@ -762,28 +667,22 @@ def run(args) -> dict:
     forwards_path = out_dir / 'forwards.jsonl'
     arrays_path = out_dir / 'arrays.npz'
     run_json_path = out_dir / 'run.json'
-    resumed = not bool(getattr(args, 'no_resume', False))
 
-    # A STOP record is TERMINAL for this output directory (guidance for Alden #10 #3). A new
-    # attempt needs a new --out; re-running here could append rows the STOP was meant to forbid.
-    existing = None
-    if run_json_path.exists():
+    # Fresh directories only (Alden #12 #2). There is no resume: an interrupted run leaves
+    # forwards.jsonl ahead of arrays.npz (written only on exit), a STOP is terminal, and a directory
+    # carrying rows from an earlier attempt must never be mixed with a new one. The refusal happens
+    # before the model is loaded and before anything is written except this refusal record.
+    existing = existing_run_files(out_dir)
+    if existing:
         try:
-            existing = json.loads(run_json_path.read_text(encoding='utf-8'))
-        except json.JSONDecodeError:
-            existing = {'stage': 'STOP', 'reason': 'run.json is not readable JSON'}
-    if isinstance(existing, dict) and existing.get('stage') == 'STOP':
-        existing['resume_refused'] = True
-        existing['resume_refused_at'] = time.strftime('%Y-%m-%dT%H:%M:%S')
-        existing['resume_refusal_reason'] = ('this output directory holds a STOP record; '
-                                             'a new attempt needs a new --out')
-        write_json(run_json_path, existing)
-        return existing
-    if not resumed and forwards_path.exists() and forwards_path.stat().st_size > 0:
-        refusal = {'mode': 'run', 'stage': 'STOP',
-                   'reason': 'output directory already contains forwards and --no-resume was '
-                             'given; a new attempt needs a new --out',
-                   'n_rows': len(_read_rows(forwards_path))}
+            n_rows = len(_read_rows(forwards_path)) if forwards_path.exists() else 0
+        except (OSError, ValueError, KeyError):
+            n_rows = None                       # the file is unreadable; that is why it is refused
+        refusal = {'mode': 'run', 'part': 216, 'stage': 'STOP', 'refused': True,
+                   'refusal_reason': ('this output directory already holds run files; this runner '
+                                      'has no resume -- a new attempt needs a new, empty --out'),
+                   'existing_files': existing, 'n_rows': n_rows,
+                   'refused_at': time.strftime('%Y-%m-%dT%H:%M:%S')}
         write_json(out_dir / 'refused.json', refusal)
         return refusal
 
@@ -838,6 +737,8 @@ def run(args) -> dict:
         'limit': int(getattr(args, 'limit', 0) or 0),
         'limit_questions': int(getattr(args, 'limit_questions', 0) or 0),
         'partial': partial,
+        # There is no resume: a run is one pass into a fresh directory (Alden #12 #2).
+        'resume_supported': False,
     }
     if not run_info['kernel_check'].get('pass'):
         run_info['stage'] = 'STOP'
@@ -845,42 +746,18 @@ def run(args) -> dict:
         write_json(run_json_path, run_info)
         return run_info
 
-    committed = _read_rows(forwards_path) if resumed else {}
     arrays: dict = {}
-    if resumed and arrays_path.exists():
-        with np.load(arrays_path, allow_pickle=True) as z:
-            arrays = {name: z[name] for name in z.files}
 
-    # Resume: revalidate EVERY committed row (pins, inputs, boundaries, G1, finiteness, arrays,
-    # G0) before making any new forward (Alden #10 #3). The checks below run before the loop.
-    if committed:
-        problems = pins_mismatch(existing or {}, run_info)
-        problems += validate_committed_rows(bank, receipt, committed, arrays, n_blocks)
-        if problems:
-            stop = {'key': next((p.get('key') for p in problems if p.get('key')),
-                                '<directory>'),
-                    'reason': 'resume revalidation',
-                    'n_problems': len(problems), 'problems': problems[:20]}
-            offending = stop.get('key')
-            if offending in committed:
-                stop['row'] = committed[offending]
-            run_info.update({'stage': 'STOP', 'stops': [stop], 'n_rows': len(committed),
-                             'n_new_rows': 0,
-                             'wall_time_seconds': time.time() - started,
-                             'finished': time.strftime('%Y-%m-%dT%H:%M:%S')})
-            write_json(run_json_path, run_info)
-            return run_info
+    # A diagnostic record, not a resume point (there is no resume): an interrupted directory says
+    # `RUNNING` and must be discarded, never continued. arrays.npz is written only on exit, so a
+    # JSONL left in flight is always ahead of it.
+    write_json(run_json_path, {**run_info, 'stage': 'RUNNING', 'n_rows': 0})
 
-    # Pins are on disk before the first new forward, so an interrupted run can be revalidated.
-    write_json(run_json_path, {**run_info, 'stage': 'RUNNING', 'n_rows': len(committed)})
-
-    rows = dict(committed)
+    rows: dict = {}
     n_done = 0
     stops: list[dict] = []
     for row in plan:
         key = row_key(row)
-        if key in rows:
-            continue
         entry = resolve_row(bank, row)
         if row['kind'] == 'factual':
             seq = list(entry['prompt_token_ids'])
@@ -1024,7 +901,6 @@ def main(argv=None) -> int:
     ap.add_argument('--limit-questions', type=int, default=0,
                     help='test-only: keep question indices below N; the run is marked partial '
                          'in run.json and can never produce a full score')
-    ap.add_argument('--no-resume', action='store_true')
     ap.add_argument('--require-pinned-shape', action='store_true')
     args = ap.parse_args(argv)
     if args.mode == 'selftest':

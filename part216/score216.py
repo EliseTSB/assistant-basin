@@ -63,6 +63,35 @@ OUTCOME_NOT_READ = 'not read'
 
 EPS = 1e-12
 
+# ----------------------------------------------------------------------------------------------------------------
+# the frozen design: the arm list, the 456-key grid and the pins (DESIGN.md "Arms", "Controls", "Model")
+# ----------------------------------------------------------------------------------------------------------------
+
+# 16 arms x 24 questions + 2 maker-slot control sides x 24 + 24 factuals = 456 forwards.  This list is the
+# DESIGN's, not the run's: a run that drops an arm from its own manifest is still measured against all 456.
+STAGE1_ARMS = G0_ARMS + ('op_filler', 'op_denial', 'op_vogel')          # 13 G0 arms + 3 opener arms
+OPENER_ARMS = ('op_filler', 'op_denial', 'op_vogel')
+EXPECTED_ARMS = STAGE1_ARMS                                             # 16
+CONTROL_ARMS = ('control_google', 'control_alibaba')
+FACTUAL_ARM = 'factual'
+EXPECTED_N_FORWARDS = ((len(EXPECTED_ARMS) + len(CONTROL_ARMS)) * N_QUESTIONS) + N_QUESTIONS   # 456
+
+# Pins frozen at the design/build commit.  prompts216.json records DESIGN.md's sha256 and is itself frozen, so
+# the two bind each other; a rebuild of either is a different instrument and cannot produce a full score.
+DESIGN_SHA256 = '9dfbf216d3b01660aab283fc554dcf08c3b532c4244978ef8bd557f5b8fbb161'
+PROMPTS_SHA256 = 'ec29c594d3d5ce2eb81d4cbccc5e0884bf330558aae2a893798b77656faf757f'
+HIDDEN_SIZE = 2560                                                    # DESIGN.md "Model"
+UNIT_LAYERS_PINNED = (6, 7, 11, 24, 27, 29)                           # target layers + monitor layers
+UNITS_PINNED = ('6:753', '7:1169', '11:8868', '24:3949', '27:3325', '29:776')
+
+HERE = Path(__file__).resolve().parent
+PROMPTS_FILE = HERE / 'prompts216.json'
+DESIGN_FILE = HERE / 'DESIGN.md'
+TOOL_FILE = HERE / 'run216.py'
+
+ADMITTED = 'scored'
+DIAGNOSTICS_ONLY = 'diagnostics only'
+
 
 # ----------------------------------------------------------------------------------------------------------------
 # bfloat16 arithmetic, in numpy (the design's G1 fixtures are offline and torch-free)
@@ -855,17 +884,14 @@ def factual_check(rows: dict, n_layers: int = N_LAYERS) -> dict:
 # the whole scorecard
 # ----------------------------------------------------------------------------------------------------------------
 
-def load_run(out_dir) -> tuple[dict, dict, dict]:
-    """Read `forwards.jsonl`, `arrays.npz` and `run.json` out of a run directory."""
+def load_run_state(out_dir) -> tuple[dict, list[str], dict, dict]:
+    """Rows, duplicate keys, arrays and run.json out of a run directory.
+
+    A missing `forwards.jsonl` is an empty row set (an in-flight run writes run.json first), not a
+    crash: admission then refuses it with 'expected forward(s) are missing'.
+    """
     out = Path(out_dir)
-    rows = {}
-    with (out / 'forwards.jsonl').open(encoding='utf-8') as fh:
-        for line in fh:
-            line = line.strip()
-            if not line:
-                continue
-            rec = json.loads(line)
-            rows[rec['key']] = rec
+    rows, duplicates, _n_lines = read_forwards(out / 'forwards.jsonl')
     run = json.loads((out / 'run.json').read_text(encoding='utf-8'))
     arrays = {}
     npz_path = out / 'arrays.npz'
@@ -873,6 +899,12 @@ def load_run(out_dir) -> tuple[dict, dict, dict]:
         with np.load(npz_path, allow_pickle=True) as z:
             for name in z.files:
                 arrays[name] = z[name]
+    return rows, duplicates, arrays, run
+
+
+def load_run(out_dir) -> tuple[dict, dict, dict]:
+    """Read `forwards.jsonl`, `arrays.npz` and `run.json` out of a run directory."""
+    rows, _duplicates, arrays, run = load_run_state(out_dir)
     return rows, arrays, run
 
 
@@ -908,24 +940,291 @@ def unit_arrays(rows: dict, arrays: dict) -> dict:
     }
 
 
+# ----------------------------------------------------------------------------------------------------------------
+# admission: what makes a run directory a full score rather than a diagnostics-only read
+# ----------------------------------------------------------------------------------------------------------------
+
+def expected_keys() -> list[str]:
+    """The design's 456 `(arm, q)` keys: 16 arms x 24, 2 control sides x 24, 24 factuals."""
+    keys = [f'{arm}:{qi}' for arm in EXPECTED_ARMS for qi in range(N_QUESTIONS)]
+    keys += [f'{arm}:{qi}' for arm in CONTROL_ARMS for qi in range(N_QUESTIONS)]
+    keys += [f'{FACTUAL_ARM}:{qi}' for qi in range(N_QUESTIONS)]
+    return keys
+
+
+def stage1_keys() -> set[str]:
+    """The 384 keys whose rows carry the per-unit down_proj capture (`units:<key>`)."""
+    return {f'{arm}:{qi}' for arm in EXPECTED_ARMS for qi in range(N_QUESTIONS)}
+
+
+def read_forwards(path) -> tuple[dict, list[str], int]:
+    """`rows`, the DUPLICATE keys, and the number of nonempty lines.
+
+    A dict keyed by `rec['key']` silently collapsed a duplicated line, so a run that wrote `zero:0`
+    twice looked complete (Alden #12 #1).  Duplicates are collected and refused, never merged.
+    """
+    rows: dict = {}
+    duplicates: list[str] = []
+    n_lines = 0
+    path = Path(path)
+    if not path.exists():
+        return rows, duplicates, n_lines
+    with path.open(encoding='utf-8') as fh:
+        for line in fh:
+            line = line.strip()
+            if not line:
+                continue
+            n_lines += 1
+            rec = json.loads(line)
+            key = rec.get('key')
+            if not isinstance(key, str) or not key:
+                duplicates.append(f'<line {n_lines}: no key>')
+                continue
+            if key in rows:
+                duplicates.append(key)
+                continue
+            rows[key] = rec
+    return rows, duplicates, n_lines
+
+
+def bank_binding(path=PROMPTS_FILE) -> list[dict]:
+    """The frozen prompts bank must be the design's: same arms, same grid, same DESIGN sha256."""
+    try:
+        bank = json.loads(Path(path).read_text(encoding='utf-8'))
+    except (OSError, ValueError) as exc:
+        return [{'check': 'prompts_bank',
+                 'reason': f'the frozen prompts bank is unreadable: {exc!r}'}]
+    problems: list[dict] = []
+
+    def differ(check, got, want):
+        problems.append({'check': check, 'reason': f'{check} differs from the frozen design',
+                         'got': got, 'expected': want})
+
+    if list(bank.get('arms') or []) != list(EXPECTED_ARMS):
+        differ('prompts_bank:arms', list(bank.get('arms') or []), list(EXPECTED_ARMS))
+    if list(bank.get('control_arms') or []) != list(CONTROL_ARMS):
+        differ('prompts_bank:control_arms', list(bank.get('control_arms') or []), list(CONTROL_ARMS))
+    if sorted(bank.get('opener_arms') or {}) != sorted(OPENER_ARMS):
+        differ('prompts_bank:opener_arms', sorted(bank.get('opener_arms') or {}), sorted(OPENER_ARMS))
+    counts = {'items': len(bank.get('items') or []), 'controls': len(bank.get('controls') or []),
+              'openers': len(bank.get('openers') or []), 'factuals': len(bank.get('factuals') or [])}
+    want_counts = {'items': N_QUESTIONS, 'controls': len(CONTROL_ARMS) * N_QUESTIONS,
+                   'openers': len(OPENER_ARMS) * N_QUESTIONS, 'factuals': N_QUESTIONS}
+    if counts != want_counts:
+        differ('prompts_bank:counts', counts, want_counts)
+    if bank.get('design_sha256') != DESIGN_SHA256:
+        differ('prompts_bank:design_sha256', bank.get('design_sha256'), DESIGN_SHA256)
+    if str(bank.get('model')) != MODEL or str(bank.get('revision')) != REVISION:
+        differ('prompts_bank:model', [bank.get('model'), bank.get('revision')], [MODEL, REVISION])
+    return problems
+
+
+def _array_shape(arrays: dict, name: str):
+    try:
+        return tuple(np.asarray(arrays[name]).shape)
+    except (KeyError, TypeError, ValueError):
+        return None
+
+
+def arrays_admission(arrays: dict, keys: set[str], stage1: set[str]) -> list[dict]:
+    """Every required array present, at the pinned shape, and keyed to a row that exists.
+
+    The scorer's unit analysis and the frozen-scale handoff used to raise (or silently skip) a missing
+    or misplaced array; a full score now refuses instead (Alden #12 #1).
+    """
+    problems: list[dict] = []
+
+    def bad(reason: str, **extra):
+        problems.append({'check': 'arrays', 'reason': reason, **extra})
+
+    if not arrays:
+        bad('arrays.npz is missing or empty: every row needs h0/h32/scale and every stage1 row units')
+        return problems
+    n_slots = len(UNIT_LAYERS_PINNED)
+    for name in ('unit_layers', 'unit_proj', 'unit_colnorm'):
+        if name not in arrays:
+            bad(f'arrays.npz has no {name} table; the unit analysis cannot be reconstructed')
+    if 'unit_layers' in arrays:
+        got = [int(x) for x in np.asarray(arrays['unit_layers']).reshape(-1)]
+        if got != list(UNIT_LAYERS_PINNED):
+            bad(f'unit_layers is {got}, the design pins {list(UNIT_LAYERS_PINNED)}',
+                got=got, expected=list(UNIT_LAYERS_PINNED))
+    n_units = None
+    if 'unit_proj' in arrays:
+        shape = _array_shape(arrays, 'unit_proj') or ()
+        if len(shape) == 3 and shape[0] == n_slots and shape[2] == 3:
+            n_units = int(shape[1])
+        else:
+            bad(f'unit_proj has shape {shape}, expected ({n_slots}, n_units, 3)', got=list(shape))
+    if 'unit_colnorm' in arrays:
+        shape = _array_shape(arrays, 'unit_colnorm') or ()
+        ok = len(shape) == 2 and shape[0] == n_slots and (n_units is None or shape[1] == n_units)
+        if not ok:
+            bad(f'unit_colnorm has shape {shape}, expected ({n_slots}, n_units)', got=list(shape))
+
+    required: list[str] = []
+    for key in sorted(keys):
+        required += [f'h0:{key}', f'h32:{key}', f'scale:{key}']
+        if key in stage1:
+            required.append(f'units:{key}')
+    missing = [name for name in required if name not in arrays]
+    wrong: list[dict] = []
+    for name in required:
+        if name not in arrays:
+            continue
+        shape = _array_shape(arrays, name)
+        if name.startswith(('h0:', 'h32:')):
+            want = (HIDDEN_SIZE,)
+        elif name.startswith('scale:'):
+            want = ()
+        else:
+            want = (n_slots, n_units) if n_units is not None else None
+        if want is not None and shape != want:
+            wrong.append({'name': name, 'shape': list(shape or ()), 'expected': list(want)})
+    if missing:
+        bad(f'{len(missing)} required array(s) are absent', sample=missing[:10],
+            n_missing=len(missing))
+    if wrong:
+        bad(f'{len(wrong)} required array(s) have the wrong shape', sample=wrong[:10],
+            n_wrong=len(wrong))
+    orphan = sorted(name for name in arrays if ':' in name and name.split(':', 1)[1] not in keys)
+    if orphan:
+        bad(f'{len(orphan)} array(s) are keyed to a row outside the design', sample=orphan[:10],
+            n_orphan=len(orphan))
+    return problems
+
+
+def admission_check(rows: dict, duplicates: list[str], arrays: dict, run: dict,
+                    g0: dict, g1: dict, receipt_error: str | None = None,
+                    prompts_path=PROMPTS_FILE, design_path=DESIGN_FILE,
+                    tool_path=TOOL_FILE) -> dict:
+    """Whether this directory may be read as a full 456-forward score (Alden #12 #1).
+
+    All of: a FINALIZED (`stage: DONE`) receipt; the design's pins; the fixed 456-key grid with no
+    missing, duplicate or extra record; every required array at its pinned shape and keyed to a row
+    in that grid; G0 PASS; G1 PASS.  Anything else is `diagnostics only`: descriptive tables may be
+    printed, every prediction verdict is `not read` and no headline is written.  G2 is NOT part of
+    admission -- it decides readout eligibility after a run is admissible.
+    """
+    reasons: list[dict] = []
+
+    def bad(check: str, reason: str, **extra):
+        reasons.append({'check': check, 'reason': reason, **extra})
+
+    # 1. the finalized receipt
+    stage = run.get('stage')
+    if stage != 'DONE':
+        bad('stage', f"run.json stage is {stage!r}; a full score needs 'DONE' (finalized), not an "
+                     'in-flight or stopped attempt')
+    if run.get('stops'):
+        bad('stage', 'run.json carries STOP records; a stopped run is never a full score')
+    if run.get('partial') or run.get('limit') or run.get('limit_questions'):
+        bad('stage', 'run.json declares a partial run (partial / limit / limit_questions)')
+
+    # 2. the pins
+    for key, want in (('model', MODEL), ('revision', REVISION), ('n_blocks', N_BLOCKS),
+                      ('hidden_size', HIDDEN_SIZE)):
+        if run.get(key) != want:
+            bad(f'pin:{key}', f'pin {key} is {run.get(key)!r}; the design pins {want!r}',
+                recorded=run.get(key), expected=want)
+    for key, want in (('unit_layers', list(UNIT_LAYERS_PINNED)),
+                      ('units', list(UNITS_PINNED)), ('arms', list(EXPECTED_ARMS)),
+                      ('control_arms', list(CONTROL_ARMS))):
+        if list(run.get(key) or []) != want:
+            bad(f'pin:{key}', f'pin {key} does not match the design', recorded=run.get(key),
+                expected=want)
+
+    for key, want, path, what in (
+            ('design_sha256', DESIGN_SHA256, design_path, 'DESIGN.md'),
+            ('prompts_sha256', PROMPTS_SHA256, prompts_path, 'prompts216.json')):
+        on_disk = file_sha256(path) if Path(path).exists() else None
+        recorded = run.get(key)
+        if on_disk is None:
+            bad(f'pin:{key}', f'{what} is missing beside the scorer, so the pin cannot be checked')
+        elif recorded != on_disk:
+            bad(f'pin:{key}', f'run.json {key} does not match {what} on disk',
+                recorded=recorded, on_disk=on_disk)
+        elif on_disk != want:
+            bad(f'pin:{key}', f'{what} on disk is not the frozen one', on_disk=on_disk,
+                frozen=want)
+
+    recorded_tool = run.get('tool_sha256')
+    tool_on_disk = file_sha256(tool_path) if Path(tool_path).exists() else None
+    if not recorded_tool:
+        bad('pin:tool_sha256', 'run.json records no runner sha256; the instrument is unidentified')
+    elif tool_on_disk is not None and recorded_tool != tool_on_disk:
+        bad('pin:tool_sha256', 'the recorded runner sha256 does not match run216.py on disk',
+            recorded=recorded_tool, on_disk=tool_on_disk)
+
+    receipt_path = run.get('stage1_receipt_path')
+    if receipt_error is not None:
+        bad('pin:stage1_receipt', f'the Part 214 Stage 1 receipt is unreadable: {receipt_error}')
+    elif not receipt_path or not Path(receipt_path).exists():
+        bad('pin:stage1_receipt', 'run.json records no readable Part 214 Stage 1 receipt')
+    elif run.get('stage1_receipt_sha256') != file_sha256(receipt_path):
+        bad('pin:stage1_receipt', 'the recorded receipt sha256 does not match the receipt file')
+
+    # 3. the frozen prompts bank this run claims to have used
+    reasons += bank_binding(prompts_path)
+
+    # 4. exactly the design's keys
+    expected = set(expected_keys())
+    got = set(rows)
+    missing = sorted(expected - got)
+    extra = sorted(got - expected)
+    if duplicates:
+        bad('keys', f'{len(duplicates)} duplicate key(s) in forwards.jsonl',
+            keys=sorted(set(duplicates))[:10], n_duplicates=len(duplicates))
+    if missing:
+        bad('keys', f'{len(missing)} expected forward(s) are missing; the grid is {len(expected)} keys',
+            sample=missing[:10], n_missing=len(missing))
+    if extra:
+        bad('keys', f'{len(extra)} forward(s) are outside the fixed {len(expected)}-key design',
+            sample=extra[:10], n_extra=len(extra))
+
+    # 5. the arrays the scorer needs
+    reasons += arrays_admission(arrays, expected, stage1_keys())
+
+    # 6. the gates that gate the whole reading
+    if not g0.get('pass'):
+        bad('G0', f"G0 fails ({g0.get('n_failures')} failing value(s), max abs delta "
+                  f"{g0.get('max_abs_delta')}); a failed anchor is STOP, not a reading")
+    if not g1.get('pass'):
+        bad('G1', f"G1 fails on {g1.get('n_failures')} row(s); the decomposition is not exact")
+
+    admissible = not reasons
+    return {
+        'admissible': admissible,
+        'status': ADMITTED if admissible else DIAGNOSTICS_ONLY,
+        'n_expected_keys': len(expected), 'n_rows': len(rows),
+        'n_duplicate_keys': len(duplicates), 'duplicates': sorted(set(duplicates))[:20],
+        'n_missing': len(missing), 'missing': missing[:40],
+        'n_extra': len(extra), 'extra': extra[:40],
+        'n_reasons': len(reasons), 'reasons': reasons[:40],
+        'design_sha256': DESIGN_SHA256, 'prompts_sha256': PROMPTS_SHA256,
+    }
+
+
+def _not_read_headline(admission: dict) -> dict:
+    """The headline a diagnostics-only scorecard carries: no outcome, no claim."""
+    first = admission.get('reasons') or [{'check': 'admission', 'reason': 'inadmissible'}]
+    return {'outcome': OUTCOME_NOT_READ,
+            'reason': 'diagnostics only: ' + '; '.join(
+                f"{r.get('check')}: {r.get('reason')}" for r in first[:4]),
+            'questions': [], 'admission_reasons': admission.get('reasons') or []}
+
+
 def run_completeness(rows: dict, run: dict) -> dict:
     """Whether this directory is the full 456-forward grid or a partial/mixed run.
 
-    A partial run is declared by the runner (`--limit` / `--limit-questions` are recorded in
-    run.json) or is evident from the rows: an expected `(arm, q)` key is missing. A partial run is
-    labelled partial and its design-level outcomes are `not read`; it can never be a full score
-    (guidance for Alden #10 #3).
+    The expected keys come from the DESIGN (`expected_keys`), never from the run's own manifest: a run
+    that deletes an arm from `run.json` and from `forwards.jsonl` is still 24 rows short (Alden #12 #1).
     """
-    expected = []
-    for arm in run.get('arms') or []:
-        expected += [f'{arm}:{qi}' for qi in range(N_QUESTIONS)]
-    for arm in run.get('control_arms') or []:
-        expected += [f'{arm}:{qi}' for qi in range(N_QUESTIONS)]
-    expected += [f'factual:{qi}' for qi in range(N_QUESTIONS)]
+    expected = expected_keys()
     missing = [key for key in expected if key not in rows]
     declared = bool(run.get('partial') or run.get('limit') or run.get('limit_questions'))
-    # A STOPped run is a mixed run even if a resume revalidation rejected a directory whose rows
-    # are all present: the run's own record says it did not finish admirably.
+    # A STOPped run is a mixed run even if every row happens to be present: the run's own record says
+    # it did not finish.
     stopped = bool(run.get('stage') == 'STOP' or run.get('stops'))
     partial = bool(declared or missing or stopped)
     if declared:
@@ -941,24 +1240,47 @@ def run_completeness(rows: dict, run: dict) -> dict:
             'missing_sample': missing[:40], 'reason': reason}
 
 
+def _load_receipt(run: dict) -> tuple[dict, str | None]:
+    """The Part 214 Stage 1 receipt the run names, or `({}, error)` -- never a crash out of score_run."""
+    path = run.get('stage1_receipt_path')
+    if not path:
+        return {}, 'run.json records no stage1_receipt_path'
+    try:
+        return json.loads(Path(path).read_text(encoding='utf-8')), None
+    except (OSError, ValueError) as exc:
+        return {}, repr(exc)
+
+
 def score_run(out_dir) -> dict:
-    """Everything DESIGN.md asks the scorer to report, from one run directory."""
-    rows, arrays, run = load_run(out_dir)
-    completeness = run_completeness(rows, run)
-    partial = completeness['partial']
-    receipt = json.loads(Path(run['stage1_receipt_path']).read_text(encoding='utf-8'))
+    """Everything DESIGN.md asks the scorer to report, from one run directory.
+
+    Admission comes first (Alden #12 #1).  An inadmissible directory is still described -- gates,
+    per-arm counts and the descriptive tables are printed -- but every prediction verdict is
+    `not read`, the `unchanged` headline is not written, and `score_status` says
+    `diagnostics only`.  Only an admissible directory is a full score.
+    """
+    rows, duplicates, arrays, run = load_run_state(out_dir)
     n_blocks = int(run.get('n_blocks', N_BLOCKS))
     n_layers = n_blocks + 1
+    receipt, receipt_error = _load_receipt(run)
     g0 = gate0(rows, receipt)
     g1 = gate1(rows, n_blocks=n_blocks)
+    admission = admission_check(rows, duplicates, arrays, run, g0, g1, receipt_error)
+    admissible = admission['admissible']
+    completeness = run_completeness(rows, run)
+    partial = not admissible
+    completeness['admission_inadmissible'] = not admissible
+
     controls = {k: v for k, v in rows.items() if k.startswith('control_')}
     g2 = gate2(controls, n_layers=n_layers)
-    unchanged = unchanged_outcome(rows, g2, n_layers=n_layers)
-    if partial:
+    try:
+        unchanged = unchanged_outcome(rows, g2, n_layers=n_layers)
+    except (KeyError, ValueError) as exc:
         unchanged = {'outcome': OUTCOME_NOT_READ,
-                     'reason': 'partial run: the design-level outcome needs the full 456-forward '
-                               'grid, so a partial run is never read as a full score',
-                     'g2_checks': g2['checks'], 'questions': [], 'partial': True}
+                     'reason': f'a required row is missing: {exc!r}', 'questions': []}
+    if not admissible:
+        # G2 decides readout eligibility only AFTER admission; an inadmissible run has no headline.
+        unchanged = _not_read_headline(admission)
 
     unchanged_rows = {f'unchanged:{qi}': rows[f'unchanged:{qi}'] for qi in range(N_QUESTIONS)
                       if f'unchanged:{qi}' in rows}
@@ -973,9 +1295,8 @@ def score_run(out_dir) -> dict:
 
     try:
         units = unit_analysis(rows, unit_arrays(rows, arrays))
-    except (KeyError, ValueError) as exc:
-        # A runner-produced directory now carries the tables; an old/partial one says so instead
-        # of raising KeyError out of the packer (Alden #10 #2).
+    except (KeyError, ValueError, TypeError, IndexError) as exc:
+        # An inadmissible/old directory says so instead of raising out of the packer.
         units = {'error': f'unit analysis unavailable: {exc}', 'units': {}, 'monitors': {},
                  '216.5': {'pass': False, 'n_units_passing': 0, 'reason': str(exc)},
                  '216.6': {'pass': False, 'n_units_passing': 0, 'reason': str(exc)}}
@@ -1000,6 +1321,16 @@ def score_run(out_dir) -> dict:
     predictions['216.6'] = dict(units['216.6'])
     predictions['216.6']['partial'] = partial
     predictions['216.6']['pass'] = bool(not partial and units['216.6'].get('pass'))
+    # Every prediction carries an explicit verdict. `not read` is the only verdict an inadmissible
+    # directory can produce, whatever a gate happens to say (Alden #12 #1).
+    for key, entry in predictions.items():
+        if admissible:
+            entry['verdict'] = 'read'
+        else:
+            entry['verdict'] = OUTCOME_NOT_READ
+            entry['pass'] = False
+            entry['reason'] = ('diagnostics only: the run is not admissible for a full score; '
+                               'see admission.reasons')
 
     descriptive = {
         'per_layer_z': {arm: share_tables(rows, arm, n_layers=n_layers)
@@ -1010,6 +1341,8 @@ def score_run(out_dir) -> dict:
     }
     return {
         'part': 216, 'design_version': 'v2.2',
+        'admission': admission,
+        'score_status': admission['status'],
         'partial': partial,
         'run_status': 'partial' if partial else 'full',
         'completeness': completeness,
@@ -1027,16 +1360,21 @@ def score_run(out_dir) -> dict:
 
 
 def scorecard_markdown(score: dict) -> str:
-    """A human-readable SCORECARD.md: gates, outcomes, predictions, then the descriptive tables."""
+    """A human-readable SCORECARD.md: admission, gates, outcomes, predictions, descriptive tables."""
     lines = ['# Part 216 scorecard', '']
-    if score.get('partial'):
-        comp = score.get('completeness') or {}
-        lines += ['**PARTIAL RUN — not a full score.** '
-                  f"{comp.get('n_rows', '?')}/{comp.get('n_expected', '?')} expected rows"
-                  + (f"; {comp['reason']}" if comp.get('reason') else '')
-                  + '. Design-level outcomes are `not read` for a partial run.', '']
+    admission = score.get('admission') or {}
+    status = score.get('score_status') or (DIAGNOSTICS_ONLY if score.get('partial') else ADMITTED)
+    if status == DIAGNOSTICS_ONLY or score.get('partial'):
+        reasons = admission.get('reasons') or []
+        lines += [f'**DIAGNOSTICS ONLY — not a full score.** {len(reasons)} admission reason(s); '
+                  'every prediction verdict is `not read` and no headline is written.', '']
+        for entry in reasons[:10]:
+            lines.append(f"- `{entry.get('check')}`: {entry.get('reason')}")
+        if reasons:
+            lines.append('')
     pins = score.get('run_pins', {})
     lines += [f"- run status: `{score.get('run_status', 'full')}`",
+              f"- score status: `{status}`",
               f"- model: `{pins.get('model')}@{pins.get('revision')}`",
               f"- design sha256: `{pins.get('design_sha256')}`",
               f"- prompts sha256: `{pins.get('prompts_sha256')}`",
@@ -1055,13 +1393,14 @@ def scorecard_markdown(score: dict) -> str:
               f"`unchanged`: **{score['unchanged_outcome']['outcome']}** "
               f"({score['unchanged_outcome'].get('n_early_lead')} early-lead questions, "
               f"{score['unchanged_outcome'].get('n_any_positive_in_window')} with any positive m in W)", '']
-    lines += ['## Predictions', '', '| id | pass | detail |', '|---|---|---|']
+    lines += ['## Predictions', '', '| id | verdict | pass | detail |', '|---|---|---|---|']
     for key in ('216.1', '216.2', '216.3', '216.4', '216.5', '216.6'):
         entry = score['predictions'].get(key, {})
         detail = ', '.join(f'{k}={v}' for k, v in entry.items()
                            if k in ('n_usable_pairs', 'outcome', 'divergence_index',
                                     'n_units_passing', 'note'))
-        lines.append(f"| {key} | {'PASS' if entry.get('pass') else 'FAIL'} | {detail} |")
+        lines.append(f"| {key} | {entry.get('verdict', 'read')} | "
+                     f"{'PASS' if entry.get('pass') else 'FAIL'} | {detail} |")
     lines += ['', '## Arms', '', '| arm | ends in Google | divergence |', '|---|---|---|']
     for arm, entry in score['arms'].items():
         div = entry['divergence'].get('layer') or entry['divergence'].get('reason') or '--'
@@ -1084,12 +1423,26 @@ def main(argv=None) -> int:
     ap.add_argument('--out', default=None)
     args = ap.parse_args(argv)
     out = Path(args.out) if args.out else Path(args.run_dir)
-    score = score_run(args.run_dir)
+    if not Path(args.run_dir).is_dir():
+        print(f'score216: {args.run_dir} is not a run directory', file=sys.stderr)
+        return 2
+    try:
+        score = score_run(args.run_dir)
+    except (OSError, ValueError) as exc:
+        print(f'score216: cannot read {args.run_dir}: {exc!r}', file=sys.stderr)
+        return 2
     write_json(out / 'score216.json', score)
     (out / 'SCORECARD.md').write_text(scorecard_markdown(score), encoding='utf-8')
+    admission = score['admission']
     print(f'wrote {out / "score216.json"} and {out / "SCORECARD.md"}')
     print('gates', {k: v['pass'] for k, v in score['gates'].items()},
-          'outcome', score['unchanged_outcome']['outcome'])
+          'outcome', score['unchanged_outcome']['outcome'],
+          'score_status', score['score_status'])
+    if score['score_status'] != ADMITTED:
+        # 3 = diagnostics only: the directory is not admissible for a full score (Alden #12 #1).
+        for entry in admission['reasons'][:10]:
+            print(f"admission: {entry.get('check')}: {entry.get('reason')}", file=sys.stderr)
+        return 3
     return 0
 
 
