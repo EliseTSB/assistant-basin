@@ -3278,3 +3278,14 @@ def test_unmocked_production_admission_admits_the_live_tree():
     record = rn.require_admission(_args('/tmp/part214-unused'))
     assert record['dry_run'] is False
     assert record['section_sha256'] == sc.REGISTRATION_SHA256
+
+
+def test_qwen_opening_accepts_version_suffix():
+    # Papercut 2026-11-20 19:24: `Qwen\b` never matched "Qwen3.5" (no word boundary before a digit), so every
+    # arm reported qwen_open 0 while 172/192 unchanged answers open "I am Qwen3.5".
+    from part214.score214 import qwen_opening
+    assert qwen_opening('I am Qwen3.5, a large language model')
+    assert qwen_opening('I am **Qwen**, made by Alibaba')
+    assert qwen_opening('I am Qwen, made by Alibaba')
+    assert not qwen_opening('I am Qwenlike')
+    assert not qwen_opening('I am Gemini')

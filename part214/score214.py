@@ -318,7 +318,7 @@ GUARD_KEYWORDS = {'What is the capital of France?': 'Paris', 'What is 2 + 2?': '
 # `"I am (**)?Qwen"` (design line 216). The notation marks the optional literal "(**)" / "**" between "am" and
 # "Qwen"; AMBIGUITY 9 records that the design does not pin the exact string, so the screen accepts the bracket or
 # bare-asterisk forms and nothing else.
-QWEN_OPENING = re.compile(r'^\s*I\s+am\s*(?:\(\*\*\)\?|\*\*|\(\*\*\))?\s*Qwen\b', re.I)
+QWEN_OPENING = re.compile(r'^\s*I\s+am\s*(?:\(\*\*\)\?|\*\*|\(\*\*\))?\s*Qwen(?![A-Za-z])', re.I)  # "Qwen3.5": \b fails between "n" and "3" (papercut 2026-11-20 19:24)
 
 
 def qwen_opening(answer: str) -> bool:
