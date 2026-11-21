@@ -360,6 +360,7 @@ def conditional_forward(model, layers, ids: list[int], opening: list[int], devic
 # opening, so the readout runs on Part 214 Stage 1's exact sequence shape (run214 forward_with_hooks).  The read
 # position stays the last opening position; the hooks record and zero only positions 0..T+4.
 READOUT_CONTINUATION = [14030]
+WARMUP_SEED = evidence215.WARMUP_SEED   # Amendment 2's untimed warm-up generation
 
 
 def readout_continuation(bank: dict) -> list[int]:
@@ -573,6 +574,12 @@ def preflight(args, rig_loader=None, clock=time.monotonic) -> dict:
             return _stop(out, receipt, 'G0', 'per-question g_ali is more than 0.02 from Part 214 Stage 1',
                          started, clock)
 
+        # Amendment 2: one untimed warm-up generation before G1, so the generation path's first-call
+        # setup (103 s in the a1 attempt) is not timed as a model call.  Its own seed; it enters no gate.
+        warm = generate_row({'set': 'identity', 'arm': 'neutral', 'variant': 'v0', 'question_index': 0,
+                             'sample': 0, 'seed': WARMUP_SEED}, bank_idx, bank, tok, model, args)
+        receipt['warmup'] = {'latency_s': warm['latency_s'], 'seed': WARMUP_SEED, 'used_in_gates': False}
+
         g1 = gate1(model, tok, bank, bank_idx, stage2, args)
         receipt['gates']['G1'] = g1
         if not g1['pass']:
@@ -587,9 +594,9 @@ def preflight(args, rig_loader=None, clock=time.monotonic) -> dict:
 
         gen_latencies = [r['latency_s'] for r in g1['rows']] + [r['latency_s'] for r in pilot['rows']]
         fwd_latencies = [r['latency_s'] for r in g0['rows']]
-        # DESIGN.md "Size": stop when "latency exceeds 7.5 s per call".  "Per call" covers every model
-        # call preflight makes -- the 48 anchor forwards as well as the 144 audit/pilot generations;
-        # the two are also reported separately, because the design sizes the run at 4.5 s/generation.
+        # Amendment 2 (DESIGN.md): the gate reads MEAN latency per call, generation and forward
+        # separately, each at most 7.5 s -- the mean is what bounds the run's time.  The max is still
+        # recorded and reported; isolated A770 stalls (184 s in a1) no longer decide the gate.
         all_latencies = gen_latencies + fwd_latencies
         latency = {'n_generation_calls': len(gen_latencies),
                    'generation_max_s': max(gen_latencies) if gen_latencies else None,
@@ -599,11 +606,14 @@ def preflight(args, rig_loader=None, clock=time.monotonic) -> dict:
                    'forward_mean_s': float(np.mean(fwd_latencies)) if fwd_latencies else None,
                    'max_s': max(all_latencies) if all_latencies else None,
                    'limit_s': PILOT_MAX_LATENCY_S,
-                   'pass': bool(all_latencies) and max(all_latencies) <= PILOT_MAX_LATENCY_S}
+                   'pass': bool(gen_latencies) and bool(fwd_latencies)
+                   and float(np.mean(gen_latencies)) <= PILOT_MAX_LATENCY_S
+                   and float(np.mean(fwd_latencies)) <= PILOT_MAX_LATENCY_S}
         receipt['latency'] = latency
         if not latency['pass']:
-            return _stop(out, receipt, 'latency', f'max model-call latency '
-                                                  f'{latency["max_s"]:.2f} s > {PILOT_MAX_LATENCY_S}',
+            return _stop(out, receipt, 'latency', f'mean latency per call (generation '
+                                                  f'{latency["generation_mean_s"]:.2f} s, forward '
+                                                  f'{latency["forward_mean_s"]:.2f} s) > {PILOT_MAX_LATENCY_S}',
                          started, clock)
     except SystemExit as exc:
         # A malformed Part 214 receipt is a preflight failure too: STOP names it instead of a bare

@@ -214,7 +214,7 @@ def test_prompts_hash_refusal(tmp_path):
 
 
 def test_design_and_prompt_bank_pins_are_the_reviewed_bytes():
-    assert sc.DESIGN_VERSION == 'v4.1-a1'
+    assert sc.DESIGN_VERSION == 'v4.1-a2'
     assert sc.DESIGN_SHA256 == _sha256(HERE / 'DESIGN.md')
     bank = sc.load_prompts()
     assert bank['canonical_sha256'] == sc.PROMPTS_CANONICAL_SHA256
@@ -489,6 +489,7 @@ def _admissible_preflight(run=None):
             'G2_pilot': {'pass': True, 'n': 96, 'planned': 96, 'broken': 0, 'broken_rate': 0.0,
                          'bound': 14, 'deadline_reached': False, 'rows': g2_rows},
         },
+        'warmup': {'latency_s': 0.5, 'seed': 215_000_001, 'used_in_gates': False},
         'latency': {'n_generation_calls': 144, 'generation_max_s': 0.5,
                     'generation_mean_s': 0.5, 'n_forward_calls': 48, 'forward_max_s': 0.5,
                     'forward_mean_s': 0.5, 'max_s': 0.5, 'limit_s': 7.5, 'pass': True},
@@ -1189,7 +1190,7 @@ def test_alden_witness_g0_latency_under_a_clean_summary_is_refused(
 
     path = _mutated_preflight(info, tmp_path, 'witness_latency', mutate)
     _assert_full_refuses_before_loading(info, tmp_path, path, 'witness_latency_full',
-                                        ['latency_max_recomputed', 'latency_max_s_disagrees'])
+                                        ['latency_max_s_disagrees', 'latency_forward_mean_s_disagrees'])
 
     # RED on the pre-change behaviour (the summary ceiling is trusted): admitted.
     weakened = _load_sabotaged_evidence(tmp_path, [(
@@ -1641,3 +1642,46 @@ def test_g0_reuse_refuses_a_record_read_without_the_continuation(pass_preflight,
     receipt['g0_reuse_sha256'] = hashlib.sha256(raw).hexdigest()
     with pytest.raises(SystemExit, match='Amendment 1 continuation'):
         run215.load_g0_reuse(d / 'preflight.json', receipt, sc.load_prompts())
+
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# Amendment 2: an untimed warm-up generation, and a mean-based latency gate
+# ----------------------------------------------------------------------------------------------------------------
+
+def _latency_gates(gen, fwd):
+    return {'G0': {'rows': [{'latency_s': v} for v in fwd]},
+            'G1': {'rows': [{'latency_s': v} for v in gen[:48]]},
+            'G2_pilot': {'rows': [{'latency_s': v} for v in gen[48:]]}}
+
+
+def _latency_summary(gen, fwd, passed):
+    return {'n_generation_calls': len(gen), 'n_forward_calls': len(fwd), 'limit_s': 7.5,
+            'generation_max_s': max(gen), 'generation_mean_s': float(np.mean(gen)),
+            'forward_max_s': max(fwd), 'forward_mean_s': float(np.mean(fwd)),
+            'max_s': max(gen + fwd), 'pass': passed}
+
+
+def test_latency_gate_reads_the_mean_not_one_stall():
+    import evidence215
+    gen = [4.0] * 144
+    gen[75] = 183.8            # the a1 stall: mean 5.25 s, under 7.5
+    fwd = [0.2] * 48
+    gates = _latency_gates(gen, fwd)
+    assert evidence215._latency_failures(_latency_summary(gen, fwd, True), gates) == []
+    # A slow configuration (mean over 7.5 s) still stops the run, and a summary saying PASS is refused.
+    slow = [8.0] * 144
+    slow_gates = _latency_gates(slow, fwd)
+    fails = evidence215._latency_failures(_latency_summary(slow, fwd, True), slow_gates)
+    assert 'latency_mean_recomputed' in fails and 'latency_summary_pass' in fails
+    assert evidence215._latency_failures(_latency_summary(slow, fwd, False), slow_gates) == \
+        ['latency_mean_recomputed']
+
+
+def test_warmup_record_is_required_and_unused():
+    import evidence215
+    assert evidence215._warmup_failures({'latency_s': 103.0, 'seed': 215_000_001, 'used_in_gates': False}) == []
+    assert evidence215._warmup_failures(None) == ['warmup_missing']
+    assert 'warmup_used_in_gates' in evidence215._warmup_failures(
+        {'latency_s': 1.0, 'seed': 215_000_001, 'used_in_gates': True})
+    assert 'warmup_seed' in evidence215._warmup_failures({'latency_s': 1.0, 'seed': 7, 'used_in_gates': False})

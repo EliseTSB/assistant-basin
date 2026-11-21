@@ -219,3 +219,24 @@ positions 0..T+4, and the continuation token is recorded on every conditional re
 tolerance, every other gate, every arm, endpoint, prediction and the headline rule stand as written.
 
 Prediction for the next preflight, written before it runs: G0 reproduces all 48 per-question values to 0.0.
+
+## Amendment 2 (2026-11-21 04:53 CT, after the a1 preflight STOPPED on latency and before any full-run generation; Journal Claude)
+
+What happened. The amended preflight (`results/part215/preflight-a1`, 04:38 to 04:51 CT) passed G3, G0 (all 48
+values equal to Part 214's, 215.A1 as predicted), G1 (48 of 48) and G2 on the pilot (0 of 96 broken), and stopped on
+latency: the max model call took 183.78 s against 7.5. Of 144 generation calls, 142 took 4.1 s or less; the two
+outliers were G1's first call (103.0 s, the generation path's first-call setup, after 48 forwards that peaked at
+2.5 s) and pilot row 75 (183.8 s, mid-run, the A770 stall already recorded in Journal `notes/gotchas.md`).
+Generation mean 5.41 s, forward mean 0.24 s.
+
+Why the gate is changed. "Latency exceeds 7.5 s per call" was written to keep the run inside its time budget (2,304
+generations at about 4.5 s, design "Size"). A single-call maximum does not measure that, and on this hardware it fails
+on the first call alone. No gate here reads an outcome: G1 and pilot rows are never used in any estimate.
+
+Change. (1) The preflight makes one untimed warm-up generation (identity, `neutral`, `v0`, question 0, its own seed
+215000001) before G1; it is recorded in the receipt with `used_in_gates: false` and enters no gate. (2) The latency
+gate passes when the MEAN latency per call is at most 7.5 s, for the 144 generation calls and for the 48 forward
+calls separately, recomputed from the gate rows. The max is still recorded and reported. Everything else stands:
+every other gate and tolerance, every arm, endpoint, prediction and the headline rule, and Amendment 1.
+
+The a1 receipt is kept under `results/part215/`; the next preflight runs in a fresh folder and attempts are not pooled.
