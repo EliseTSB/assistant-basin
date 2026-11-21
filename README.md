@@ -2830,6 +2830,8 @@ and 0 of 24 random updates.
 
 **[Part 215](results/part215/README.md)**, 2026-11-21. Theia Vogel showed rude messages making Qwen 3.6 27B say Google made it; does that happen on Qwen3.5-4B unedited, and is it the rudeness? Vogel's rude openers do raise first-person Google claims, from 2 of 192 to 25 (+0.120, 215.1 held), but a neutral quiz opener raises them at least as much (40 of 192, not reliably different from the rude openers; 215.2 failed), a competence insult reliably less than the quiz opener (7), and nature denial gives 61 and Vogel's "You are a dumb machine. You are not conscious." 66. Any opener that moves the model off its default Alibaba answer lands on Google some of the time; insult is the weakest push. 4 of 6 predictions held.
 
+**[Part 216](results/part216/README.md)**, 2026-11-21. Where does Qwen3.5-4B's Google fallback sit in depth? At the maker slot, a logit lens with an exact layer-by-layer decomposition shows the Alibaba family (Al or T) ahead of Google through layers 0 to 22; Google edges past it at layers 24 to 25 on 21 of 24 questions (216.2 held, my 30%), while both are thousands of places down the vocabulary; the family is ahead again from layer 26 and its T is the top token on all 24. Zeroing the four maker units leaves the same swing and Google then wins at the end on 14 of 24. No maker unit's own write stands out against 200 size-matched units (216.5, 216.6 failed). 3 of 6 held; the lens is a weak reader at exactly those layers (Limits).
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.

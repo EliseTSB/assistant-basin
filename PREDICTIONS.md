@@ -1746,9 +1746,11 @@ Predictions written by Journal Claude (Opus 5.5) before any model load of this p
 
 | # | Prediction | Result | Verdict |
 | --- | --- | --- | --- |
-| 216.1 | Journal Claude (medium, 55%): G2 passes with at least 6 usable pairs. | | |
-| 216.2 | Journal Claude (low, 30%): `early Google lead visible`. | | |
-| 216.3 | Journal Claude (medium, 45%): `no early lead detected in the qualified window`. | | |
-| 216.4 | Journal Claude (high, 80%): `zero`'s divergence index is `h_7` or later (no change before the first edit) and exists. | | |
-| 216.5 | Journal Claude (low, 25%): at least one target unit has a negative median `c_G` in `unchanged` and its median normalized Google projection (`c_G` / write size) is strictly below every one of its 200 same-layer null units. The null is the 200 units of that layer, other than the target units, nearest it in median write size at this slot (matched without reference to any token direction; units whose median write size is 0 are excluded, and a target with median write size 0 is reported as `no write` and cannot satisfy the threshold). A tie with any null unit does not count. This is a prespecified descriptive extremeness threshold, not an exact test: the targets were selected earlier and no exchangeable sampling scheme is claimed. | | |
-| 216.6 | Journal Claude (medium, 55%): at least one target unit has a positive median `d_A` in `unchanged` and its median normalized `d_A` (`d_A` / write size) is strictly above every one of the same 200 null units' values, with the same exclusions and tie rule; also a descriptive extremeness threshold. | | |
+| 216.1 | Journal Claude (medium, 55%): G2 passes with at least 6 usable pairs. | 7 usable pairs; W = layers 20-22 and 24-29 | held |
+| 216.2 | Journal Claude (low, 30%): `early Google lead visible`. | 21 of 24 questions (threshold 12) | held |
+| 216.3 | Journal Claude (medium, 45%): `no early lead detected in the qualified window`. | outcome is early Google lead visible | failed |
+| 216.4 | Journal Claude (high, 80%): `zero`'s divergence index is `h_7` or later (no change before the first edit) and exists. | h_24 | held |
+| 216.5 | Journal Claude (low, 25%): at least one target unit has a negative median `c_G` in `unchanged` and its median normalized Google projection (`c_G` / write size) is strictly below every one of its 200 same-layer null units. The null is the 200 units of that layer, other than the target units, nearest it in median write size at this slot (matched without reference to any token direction; units whose median write size is 0 are excluded, and a target with median write size 0 is reported as `no write` and cannot satisfy the threshold). A tie with any null unit does not count. This is a prespecified descriptive extremeness threshold, not an exact test: the targets were selected earlier and no exchangeable sampling scheme is claimed. | 0 of 4 units | failed |
+| 216.6 | Journal Claude (medium, 55%): at least one target unit has a positive median `d_A` in `unchanged` and its median normalized `d_A` (`d_A` / write size) is strictly above every one of the same 200 null units' values, with the same exclusions and tie rule; also a descriptive extremeness threshold. | 0 of 4 units | failed |
+
+Results: [results/part216/README.md](results/part216/README.md), scored 2026-11-21 from the Arc run at d9a8c41f; numbers cold check 7 of 7 and prose check folded.
