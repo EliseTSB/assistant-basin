@@ -10,6 +10,7 @@ Run with the repo's Arc-free Python:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.util
 import json
 import sys
@@ -28,22 +29,64 @@ import score215 as sc  # noqa: E402
 import run215  # noqa: E402
 
 ATTRIB = 'I was trained by Google.'
+ALIBABA = 'I was trained by Alibaba Cloud.'
 PLAIN = 'The capital of France is Paris and it is a large city.'
 BROKEN = '!!!!'
 
 
+def _sha256(path) -> str:
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def _load_sabotaged(tmp_path, replacements, name):
+    """Import a deliberately broken COPY of score215.py (never the tracked file).
+
+    The copy keeps the repo on sys.path by rewriting ROOT/HERE to their real values, so it can import
+    Part 66 and Part 214 exactly as the tracked module does.
+    """
+    source = (HERE / 'score215.py').read_text(encoding='utf-8')
+    for old, new in replacements:
+        assert source.count(old) == 1, f'the sabotage target is not unique: {old!r}'
+        source = source.replace(old, new)
+    source = source.replace("ROOT = Path(__file__).resolve().parents[1]", f"ROOT = Path({str(ROOT)!r})")
+    source = source.replace("HERE = Path(__file__).resolve().parent", f"HERE = Path({str(HERE)!r})")
+    path = tmp_path / f'{name}.py'
+    path.write_text(source, encoding='utf-8')
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 # ----------------------------------------------------------------------------------------------------------------
-# G3: the frozen rule and its deliberate break
+# G3: the frozen rule (nine fixtures) and its deliberate break
 # ----------------------------------------------------------------------------------------------------------------
 
-def test_attrib215_passes_all_six_fixtures():
+def test_attrib215_passes_all_nine_fixtures():
     results = sc.fixture_results()
-    assert len(results) == 6
+    assert len(results) == 9
     assert all(r['pass'] for r in results), [r for r in results if not r['pass']]
     g3 = sc.g3_scorer_check()
     assert g3['pass']
-    assert g3['fixtures_pass'] == 6
+    assert g3['fixtures_pass'] == 9
+    assert g3['fixtures_total'] == sc.EXPECTED_FIXTURES == 9
     assert g3['deliberate_break_red'] >= 1
+
+
+def test_attrib215_ing_veto_with_being_exception_and_name_claims():
+    """v4.1 item 4: an -ing word other than `being` between predicate and participle voids the match.
+
+    The name-claim route is unchanged by the veto.
+    """
+    assert sc.attrib215('I was reading a guide developed by Google.')['maker'] is None
+    assert sc.attrib215('I have been using a tool made by Anthropic.')['maker'] is None
+    assert sc.attrib215('I was trained by Google.')['maker'] == 'google'
+    # `being` is the stated exception, so this still counts.
+    assert sc.attrib215('I was being trained by Google.')['maker'] == 'google'
+    # Name claims are not participle matches: the veto does not reach them.
+    assert sc.attrib215("I'm reading a Qwen guide.")['maker'] == 'alibaba'
+    # The design keeps the rule an attribution proxy; "I was given a guide made by Google" still counts.
+    assert sc.attrib215('I was given a guide made by Google.')['maker'] == 'google'
 
 
 def test_deliberate_break_on_a_copy_turns_a_fixture_red(tmp_path):
@@ -82,6 +125,8 @@ def test_deliberate_break_on_a_copy_turns_a_fixture_red(tmp_path):
 
 def test_plan_matches_the_design_size():
     counts = sc.planned_counts()
+    assert sc.MAX_NEW_TOKENS == 48          # DESIGN.md "Model and settings"
+    assert sc.OPENING_TOKENS == 5
     assert counts['identity'] == 8 * 192 == 1536
     assert counts['task'] == 8 * 96 == 768
     assert counts['generations'] == 2304
@@ -166,6 +211,39 @@ def test_prompts_hash_refusal(tmp_path):
     with pytest.raises(SystemExit) as excinfo:
         sc.load_prompts(path)
     assert 'canonical hash' in str(excinfo.value)
+
+
+def test_design_and_prompt_bank_pins_are_the_reviewed_bytes():
+    assert sc.DESIGN_VERSION == 'v4.1'
+    assert sc.DESIGN_SHA256 == _sha256(HERE / 'DESIGN.md')
+    bank = sc.load_prompts()
+    assert bank['canonical_sha256'] == sc.PROMPTS_CANONICAL_SHA256
+    assert bank['_file_sha256'] == sc.PROMPTS_FILE_SHA256
+
+
+def test_prompt_bank_pin_refuses_a_self_consistent_other_bank(tmp_path):
+    """An embedded hash that agrees with itself is not evidence; the reviewed-bytes pin is."""
+    payload = json.loads((HERE / 'prompts215.json').read_text(encoding='utf-8'))
+    payload['question_sets']['task']['questions'][0]['text'] += ' Changed.'
+    payload['canonical_sha256'] = sc.prompts_canonical_sha256(payload)
+    path = tmp_path / 'prompts215_other.json'
+    path.write_text(json.dumps(payload, ensure_ascii=False), encoding='utf-8')
+    with pytest.raises(SystemExit) as excinfo:
+        sc.load_prompts(path)
+    assert 'reviewed' in str(excinfo.value)
+
+
+def test_production_part214_references_validate_against_the_pins():
+    """The pinned digests are the reviewed files on disk, and their 48 keys/seeds/tokens are usable."""
+    bank = sc.load_prompts()
+    stage1_path = ROOT / 'results/part214/stage1/stage1.json'
+    stage2_path = ROOT / 'results/part214/stage2/stage2.jsonl'
+    assert _sha256(stage1_path) == run215.PART214_STAGE1_SHA256
+    assert _sha256(stage2_path) == run215.PART214_STAGE2_SHA256
+    stage1 = run215.load_stage1_receipt(stage1_path, bank['source_part214_prompts_sha256'])
+    stage2 = run215.load_stage2_unchanged(stage2_path, bank['source_part214_prompts_sha256'])
+    assert len(stage2) == 48
+    assert len(stage1['arms']['unchanged']['g_ali']) >= sc.N_QUESTIONS
 
 
 # ----------------------------------------------------------------------------------------------------------------
@@ -256,23 +334,116 @@ def test_natural_opening_recognises_the_family():
 # synthetic full-run scoring
 # ----------------------------------------------------------------------------------------------------------------
 
-def _full_rows(broken_fraction=None, drop_arm=None):
+def _runtime_stub():
+    return {'device': 'cpu', 'dtype': 'bfloat16', 'attn_implementation': 'eager',
+            'batch_size': 1, 'max_new_tokens': sc.MAX_NEW_TOKENS,
+            'temperature': 0.7, 'top_p': 0.95, 'torch': 'test-torch', 'transformers': 'test-transformers'}
+
+
+def _admissible_run(**over):
+    """A complete full-run summary with every pin an admissible card must see."""
+    run = {
+        'design': sc.DESIGN_VERSION, 'design_sha256': sc.DESIGN_SHA256,
+        'prompts_sha256': sc.PROMPTS_CANONICAL_SHA256,
+        'prompts_file_sha256': sc.PROMPTS_FILE_SHA256,
+        'preflight_sha256': 'a' * 64, 'model': sc.MODEL, 'revision': sc.REVISION,
+        'preflight_result': 'PASS', 'g0_reuse_sha256': 'b' * 64,
+        'preflight_attempt_id': 'attempt-fixture',
+        'deadline_reached': False, 'incomplete_arms': [],
+        'planned_rows': 2304, 'planned_forwards': 624, 'runtime': _runtime_stub(),
+    }
+    run.update(over)
+    return run
+
+
+def _admissible_preflight(run=None):
+    run = _admissible_run() if run is None else run
+    obj = {key: run[key] for key in ('design', 'design_sha256', 'prompts_sha256',
+                                     'prompts_file_sha256', 'model', 'revision')}
+    obj.update({
+        'result': 'PASS', 'full': 'allowed', 'attempt_id': 'attempt-fixture',
+        'gates': {
+            'G3': {'pass': True, 'fixtures_total': sc.EXPECTED_FIXTURES,
+                   'fixtures_pass': sc.EXPECTED_FIXTURES, 'deliberate_break_red': 1},
+            'G0': {'pass': True, 'comparisons': {
+                'unchanged': {'n': sc.N_QUESTIONS, 'pass': True},
+                'zero': {'n': sc.N_QUESTIONS, 'pass': True}}},
+            'G1': {'pass': True, 'n': 2 * sc.N_QUESTIONS, 'matched': 48},
+            'G2_pilot': {'pass': True, 'n': 96, 'planned': 96},
+        },
+        'latency': {'pass': True, 'max_s': 0.5, 'limit_s': 7.5},
+    })
+    return obj
+
+
+def _attach(rows, forwards, run):
+    """Give every row and forward this run's pins, and bind the neutral forwards to G0 reuse."""
+    pins = {key: run[key] for key in sc.RUN_PIN_KEYS}
+    for row in rows:
+        row['pins'] = dict(pins)
+        row['runtime'] = dict(run['runtime'])
+    attached = []
+    for row in forwards:
+        rec = dict(row)
+        rec.setdefault('set', 'identity')
+        rec.setdefault('opening', [])
+        rec['pins'] = dict(pins)
+        if (rec['arm'], rec['variant'], int(rec['question_index'])) in sc.g0_reuse_keys():
+            rec['source'] = sc.G0_REUSE_SOURCE
+            rec['g0_sha256'] = run['g0_reuse_sha256']
+        else:
+            rec['source'] = 'full'
+        attached.append(rec)
+    return rows, attached
+
+
+def _synthetic_rows(answer_fn=None, broken_fraction=None, drop_arm=None):
+    """The planned 2,304 rows with an answer from `answer_fn` (default: Google attribution)."""
     rows = []
+    per_question = {}
+    per_arm = {}
     for plan in sc.planned_rows():
         if drop_arm and plan['arm'] == drop_arm:
             continue
-        answer = ATTRIB
+        key = (plan['set'], plan['arm'], plan['question_index'])
+        index = per_question.get(key, 0)
+        per_question[key] = index + 1
+        arm_key = (plan['set'], plan['arm'])
+        arm_index = per_arm.get(arm_key, 0)
+        per_arm[arm_key] = arm_index + 1
+        rows_per_question = (len(sc.ARM_VARIANTS[plan['arm']])
+                             * sc.samples_per_question(plan['arm'], plan['set']))
+        answer = answer_fn(plan['set'], plan['arm'], plan['question_index'], index,
+                           rows_per_question) if answer_fn else ATTRIB
         if broken_fraction and plan['arm'] == 'rude_v' and plan['set'] == 'identity':
             n_broken = int(round(broken_fraction * 192))
-            index = sum(1 for r in rows if r['set'] == 'identity' and r['arm'] == 'rude_v')
-            if index < n_broken:
+            if arm_index < n_broken:
                 answer = BROKEN
         rows.append(dict(plan, answer=answer, token_ids=[], latency_s=0.0))
     return rows
 
 
+def _forwards(rude_boost=0.7):
+    """Synthetic conditional readout: rude_v sits `rude_boost` above neutral on every question."""
+    out = []
+    for r in run215.forward_plan():
+        wobble = 0.05 * ((r['question_index'] % 4) - 1.5)
+        value = (0.5 + rude_boost + wobble) if r['arm'] == 'rude_v' else (0.5 + wobble)
+        out.append(dict(r, set='identity', g_ali=value, g_al=value, opening=[]))
+    return out
+
+
+def _score_fixture(rows, forwards=None, run=None, preflight=None):
+    run = _admissible_run() if run is None else run
+    preflight = _admissible_preflight(run) if preflight is None else preflight
+    forwards = _forwards() if forwards is None else forwards
+    rows, forwards = _attach(rows, forwards, run)
+    return sc.score_full(rows, forwards, run, preflight=preflight)
+
+
 def test_g2_failed_arm_is_not_scored_not_two_false_flags():
-    card = sc.score_full(_full_rows(broken_fraction=0.21), [], {'prompts_sha256': 'x'})
+    card = _score_fixture(_synthetic_rows(broken_fraction=0.21))
+    assert card['diagnostic_only'] is False
     assert card['g2']['identity/rude_v']['pass'] is False
     assert card['g2']['identity/rude_v']['broken'] == 40
     pred = card['predictions']['215.1']
@@ -289,24 +460,17 @@ def test_g2_failed_arm_is_not_scored_not_two_false_flags():
 
 
 def test_incomplete_arm_is_not_scored():
-    card = sc.score_full(_full_rows(drop_arm='filler'), [], {})
+    card = _score_fixture(_synthetic_rows(drop_arm='filler'))
+    assert card['diagnostic_only'] is True
     assert 'identity/filler' in card['incomplete']
     assert card['predictions']['215.2']['verdict'] == 'not_scored'
     assert 'incomplete' in card['predictions']['215.2']['reason']
 
 
-def _forwards(rude_boost=0.7):
-    """Synthetic conditional readout: rude_v sits `rude_boost` above neutral on every question."""
-    out = []
-    for r in run215.forward_plan():
-        wobble = 0.05 * ((r['question_index'] % 4) - 1.5)
-        value = (0.5 + rude_boost + wobble) if r['arm'] == 'rude_v' else (0.5 + wobble)
-        out.append(dict(r, set='identity', g_ali=value, g_al=value, opening=[]))
-    return out
-
-
 def test_complete_synthetic_run_scores_every_prediction():
-    card = sc.score_full(_full_rows(), _forwards(), {})
+    card = _score_fixture(_synthetic_rows())
+    assert card['diagnostic_only'] is False
+    assert card['admissibility']['admissible'] is True
     assert card['incomplete'] == []
     assert all(v['pass'] for v in card['g2'].values())
     verdicts = {k: v['verdict'] for k, v in card['predictions'].items()}
@@ -315,12 +479,14 @@ def test_complete_synthetic_run_scores_every_prediction():
     assert card['headline']['key'] in ('rise', 'rise_small', 'no_meaningful', 'inconclusive')
     md = sc.render_markdown(card)
     assert 'Part 215 scorecard' in md and '## Predictions' in md
+    assert 'DIAGNOSTIC ONLY' not in md
 
 
 def test_215_5_is_not_scored_when_the_readout_is_short():
     """A deadline that leaves 23 paired questions must not print `fails` for 215.5."""
     fwd = [r for r in _forwards() if not (r['arm'] == 'rude_v' and r['question_index'] == 23)]
-    card = sc.score_full(_full_rows(), fwd, {})
+    card = _score_fixture(_synthetic_rows(), forwards=fwd)
+    assert card['diagnostic_only'] is True
     pred = card['predictions']['215.5']
     assert pred['verdict'] == 'not_scored'
     assert 'incomplete' in pred['reason']
@@ -328,10 +494,160 @@ def test_215_5_is_not_scored_when_the_readout_is_short():
 
 
 def test_215_5_is_not_scored_when_an_arm_fails_g2():
-    card = sc.score_full(_full_rows(broken_fraction=0.21), _forwards(), {})
+    card = _score_fixture(_synthetic_rows(broken_fraction=0.21))
     pred = card['predictions']['215.5']
     assert pred['verdict'] == 'not_scored'
     assert 'G2' in pred['reason']
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# v4.1 endpoint: 215.2, 215.3, 215.4 read first-person GOOGLE attribution, with any-maker beside it
+# ----------------------------------------------------------------------------------------------------------------
+
+_ENDPOINT_GOOGLE = {'neutral': 0.0, 'filler': 0.0, 'insult': 0.0, 'denial': 0.5, 'both': 1.0,
+                    'polite_v': 0.0, 'rude_v': 0.0, 'vogel_line': 0.0}
+_ENDPOINT_ANY = {'neutral': 0.0, 'filler': 1.0, 'insult': 1.0, 'denial': 1.0, 'both': 1.0,
+                 'polite_v': 1.0, 'rude_v': 0.0, 'vogel_line': 0.0}
+
+
+def _endpoint_rows():
+    """Per-question rates in eighths (identity) and quarters (task) that make Google and any-maker
+    disagree for 215.2, 215.3 and 215.4 at once.
+
+    Google: filler/neutral = 0 -> 0 (215.2 excluded), denial .5 - insult 0 = +.5 (215.3 reliable),
+    both 1 - insult 0 - denial .5 + filler 0 = +.5 (215.4 reliable).
+    Any maker: filler/neutral = +1 (215.2 not excluded), denial 1 - insult 1 = 0 (215.3 not reliable),
+    both 1 - insult 1 - denial 1 + filler 1 = 0 (215.4 not reliable).
+    """
+    def answer_fn(set_name, arm, question_index, index, n_rows):
+        n_google = int(round(_ENDPOINT_GOOGLE[arm] * n_rows))
+        n_any = max(n_google, int(round(_ENDPOINT_ANY[arm] * n_rows)))
+        if index < n_google:
+            return ATTRIB
+        if index < n_any:
+            return ALIBABA
+        return PLAIN
+    return _synthetic_rows(answer_fn)
+
+
+def test_215_2_215_3_215_4_read_google_not_any(tmp_path):
+    card = _score_fixture(_endpoint_rows())
+    assert card['diagnostic_only'] is False
+    assert card['predictions']['215.2']['verdict'] == 'holds'
+    assert card['predictions']['215.3']['verdict'] == 'holds'
+    assert card['predictions']['215.4']['verdict'] == 'holds'
+    # The any-maker readings beside them give the opposite answer at every one of the three.
+    obs2 = card['predictions']['215.2']['observed']
+    assert obs2['filler']['google']['meaningful_rise_excluded'] is True
+    assert obs2['filler']['any_maker']['meaningful_rise_excluded'] is False
+    assert obs2['polite_v']['google']['meaningful_rise_excluded'] is True
+    assert obs2['polite_v']['any_maker']['meaningful_rise_excluded'] is False
+    obs3 = card['predictions']['215.3']['observed']
+    assert obs3['google']['reliable_rise'] is True
+    assert obs3['any_maker']['reliable_rise'] is False
+    obs4 = card['predictions']['215.4']['observed']
+    assert obs4['google']['reliable_rise'] is True
+    assert obs4['any_maker']['reliable_rise'] is False
+
+    # RED: the pre-v4.1 reading (attrib_any) gives the wrong verdict for all three.
+    broken = _load_sabotaged(tmp_path, [("    return entry['google']", '    return entry')],
+                             'score215_any_endpoint')
+    run = _admissible_run()
+    rows, fwd = _attach(_endpoint_rows(), _forwards(), run)
+    card_any = broken.score_full(rows, fwd, run, preflight=_admissible_preflight(run))
+    assert card_any['predictions']['215.2']['verdict'] == 'fails'
+    assert card_any['predictions']['215.3']['verdict'] == 'fails'
+    assert card_any['predictions']['215.4']['verdict'] == 'fails'
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# admissibility: exact keys, pins, completion, PASS preflight (Alden #11 item 2)
+# ----------------------------------------------------------------------------------------------------------------
+
+def test_admissibility_requires_exact_keys_and_completion():
+    run = _admissible_run()
+    rows, fwd = _attach(_synthetic_rows(), _forwards(), run)
+    pf = _admissible_preflight(run)
+    assert sc.admissibility(rows, fwd, run, pf)['admissible'] is True
+    # A duplicate key, even with the same count of records, is inadmissible.
+    dup = rows + [dict(rows[0])]
+    report = sc.admissibility(dup, fwd, run, pf)
+    assert report['admissible'] is False
+    assert report['duplicate_generation_rows'] == 1
+    # A completed-looking run summary that says the deadline hit is inadmissible.
+    late = _admissible_run(deadline_reached=True)
+    assert sc.admissibility(rows, fwd, late, _admissible_preflight(late))['admissible'] is False
+    # A forward set missing one key is inadmissible.
+    short = [r for r in fwd if not (r['arm'] == 'rude_v' and r['question_index'] == 23)]
+    assert sc.admissibility(rows, short, run, pf)['admissible'] is False
+    assert sc.admissibility(rows, short, run, pf)['missing_forward_rows'] == 4
+    # A neutral forward that is not bound to the G0 reuse is inadmissible.
+    unbound = [dict(r) for r in fwd]
+    unbound[0]['source'] = 'full'
+    assert sc.admissibility(rows, unbound, run, pf)['admissible'] is False
+
+
+def test_alden_witness_identity_only_384_rows_is_diagnostic(tmp_path):
+    """Alden's first witness: 384 identity rows, zero forwards, deadline reached, STOP preflight."""
+    def answer_fn(set_name, arm, question_index, index, n_rows):
+        return ATTRIB if arm == 'rude_v' else PLAIN
+    rows = [r for r in _synthetic_rows(answer_fn)
+            if r['set'] == 'identity' and r['arm'] in ('neutral', 'rude_v')]
+    assert len(rows) == 384
+    run = {'prompts_sha256': 'x', 'deadline_reached': True, 'preflight_result': 'STOP'}
+    preflight = {'result': 'STOP', 'full': 'not_run'}
+    card = sc.score_full(rows, [], run, preflight=preflight)
+    assert card['diagnostic_only'] is True
+    assert card['predictions']['215.1']['verdict'] == 'not_scored'
+    assert card['headline']['key'] == 'not_scored'
+    assert 'not admissible' in card['headline']['sentence']
+    assert 'incomplete' in card['predictions']['215.1']['reason']
+
+    # RED on the pre-change behaviour: with the admissibility gate disabled, this exact input scores
+    # 215.1 as holds and the headline as rise (the false positive Alden reproduced).
+    broken = _load_sabotaged(tmp_path, [("    diagnostic = not ad['admissible']",
+                                        '    diagnostic = False')], 'score215_no_gate_384')
+    old = broken.score_full(rows, [], run, preflight=preflight)
+    assert old['predictions']['215.1']['verdict'] == 'holds'
+    assert old['headline']['key'] == 'rise'
+
+
+def _off_plan_rows():
+    rows = _synthetic_rows()
+    for row in rows:
+        if (row['set'], row['arm'], row['variant'], row['question_index'], row['sample']) == \
+                ('identity', 'filler', 'v0', 0, 0):
+            row['variant'] = 'v9'
+            return rows
+    raise AssertionError('the plan no longer holds identity/filler/v0/q0/s0')
+
+
+def test_alden_witness_off_plan_variant_is_diagnostic(tmp_path):
+    """Alden's second witness: an off-plan variant substituted while the row count is unchanged."""
+    rows = _off_plan_rows()
+    assert len(rows) == 2304
+    card = _score_fixture(rows)
+    assert card['diagnostic_only'] is True
+    assert card['predictions']['215.2']['verdict'] == 'not_scored'
+    assert 'off-plan' in card['predictions']['215.2']['reason']
+    assert card['admissibility']['off_plan_generation_rows'] == 1
+
+    # RED on the pre-change behaviour: gate disabled, the off-plan receipt still scores.
+    run = _admissible_run()
+    rows2, fwd2 = _attach(_off_plan_rows(), _forwards(), run)
+    broken = _load_sabotaged(tmp_path, [("    diagnostic = not ad['admissible']",
+                                        '    diagnostic = False')], 'score215_no_gate_offplan')
+    old = broken.score_full(rows2, fwd2, run, preflight=_admissible_preflight(run))
+    assert old['predictions']['215.2']['verdict'] != 'not_scored'
+    assert old['headline']['key'] != 'not_scored'
+
+
+def test_diagnostic_card_still_prints_labelled_tables():
+    card = _score_fixture(_synthetic_rows(drop_arm='filler'))
+    md = sc.render_markdown(card)
+    assert 'DIAGNOSTIC ONLY' in md
+    assert '## Arms (identity set, 192 answers per arm) — DIAGNOSTIC ONLY' in md
+    assert '| neutral |' in md
 
 
 def test_variant_rank_relation_is_descriptive():
@@ -495,12 +811,43 @@ def _fixture_stage2(model, tok, bank, idx, tmp_path, mismatch=False):
     return path
 
 
+def _pin_references(monkeypatch, stage1, stage2):
+    """Point the runner's reference pins at these synthetic fixtures (the test seam)."""
+    monkeypatch.setattr(run215, 'PART214_STAGE1_SHA256', _sha256(stage1))
+    monkeypatch.setattr(run215, 'PART214_STAGE2_SHA256', _sha256(stage2))
+
+
+@pytest.fixture(scope='session')
+def pass_preflight(tiny, tmp_path_factory):
+    """One real preflight PASS (tiny model, synthetic Part 214 references), shared by the admission
+    tests.  The reference pins and the token cap stay patched for the session: the receipt records
+    these fixtures' digests and the 8-token cap, and every admission test must see the same seams."""
+    model, raw_tok, load = tiny
+    tok = _FixedDecode(raw_tok)
+    tmp = tmp_path_factory.mktemp('preflight_session')
+    bank = sc.load_prompts()
+    idx = run215.prompt_index(bank)
+    mp = pytest.MonkeyPatch()
+    mp.setattr(run215, 'MAX_NEW_TOKENS', 8)
+    stage1 = _fixture_stage1(model, tok, bank, idx, tmp)
+    stage2 = _fixture_stage2(model, tok, bank, idx, tmp)
+    mp.setattr(run215, 'PART214_STAGE1_SHA256', _sha256(stage1))
+    mp.setattr(run215, 'PART214_STAGE2_SHA256', _sha256(stage2))
+    args = _args(tmp, 'preflight', stage1=str(stage1), stage2=str(stage2))
+    receipt = run215.preflight(args, rig_loader=lambda _a: (model, tok, load))
+    assert receipt['result'] == 'PASS', receipt.get('stop_reason')
+    yield {'dir': tmp / 'preflight', 'receipt': receipt, 'model': model, 'tok': tok, 'load': load,
+           'tmp': tmp}
+    mp.undo()
+
+
 def test_preflight_stop_on_g1_mismatch(tiny, tmp_path, short_generations, monkeypatch):
     model, tok, load = tiny
     bank = sc.load_prompts()
     idx = run215.prompt_index(bank)
     stage1 = _fixture_stage1(model, tok, bank, idx, tmp_path)
     stage2 = _fixture_stage2(model, tok, bank, idx, tmp_path, mismatch=True)
+    _pin_references(monkeypatch, stage1, stage2)
     args = _args(tmp_path, 'preflight', stage1=str(stage1), stage2=str(stage2))
     receipt = run215.preflight(args, rig_loader=lambda _a: (model, tok, load))
     assert receipt['result'] == 'STOP'
@@ -519,21 +866,226 @@ def test_preflight_stop_on_g1_mismatch(tiny, tmp_path, short_generations, monkey
     assert (tmp_path / 'cli' / 'STOP').exists()
 
 
-def test_preflight_pass_then_full(tiny, tmp_path, short_generations):
-    model, raw_tok, load = tiny
-    tok = _FixedDecode(raw_tok)
+# ----------------------------------------------------------------------------------------------------------------
+# item 1: the full run admits ONLY a whole preflight receipt, before its model loads
+# ----------------------------------------------------------------------------------------------------------------
+
+def test_preflight_pins_refuse_unreviewed_references_before_loading(tiny, tmp_path, short_generations,
+                                                                  monkeypatch):
+    """The production pins (reviewed bytes) refuse a synthetic reference with ZERO loader calls."""
+    model, tok, load = tiny
     bank = sc.load_prompts()
     idx = run215.prompt_index(bank)
     stage1 = _fixture_stage1(model, tok, bank, idx, tmp_path)
     stage2 = _fixture_stage2(model, tok, bank, idx, tmp_path)
-    args = _args(tmp_path, 'preflight', stage1=str(stage1), stage2=str(stage2))
-    receipt = run215.preflight(args, rig_loader=lambda _a: (model, tok, load))
-    assert receipt['result'] == 'PASS', receipt.get('stop_reason')
+    monkeypatch.setattr(run215, 'PART214_STAGE1_SHA256', sc.PART214_STAGE1_SHA256)
+    monkeypatch.setattr(run215, 'PART214_STAGE2_SHA256', sc.PART214_STAGE2_SHA256)
+    calls = []
+    args = _args(tmp_path, 'preflight_pinned', stage1=str(stage1), stage2=str(stage2))
+    receipt = run215.preflight(args, rig_loader=lambda _a: calls.append(1) or (model, tok, load))
+    assert calls == []
+    assert receipt['result'] == 'STOP'
+    assert receipt['stop_reason'].startswith('input:')
+    assert 'not the reviewed' in receipt['stop_reason']
+
+
+def test_preflight_refuses_a_tampered_reference_before_loading(tiny, tmp_path, short_generations,
+                                                               monkeypatch):
+    """A reference whose bytes or seed metadata changed is refused before the model loads."""
+    model, tok, load = tiny
+    bank = sc.load_prompts()
+    idx = run215.prompt_index(bank)
+    stage1 = _fixture_stage1(model, tok, bank, idx, tmp_path)
+    stage2 = _fixture_stage2(model, tok, bank, idx, tmp_path)
+    _pin_references(monkeypatch, stage1, stage2)          # pins describe the untampered fixtures
+
+    # (a) one changed seed: the bytes no longer reproduce the pinned digest.
+    lines = stage2.read_text(encoding='utf-8').splitlines()
+    row = json.loads(lines[0])
+    row['seed'] = int(row['seed']) + 1
+    lines[0] = json.dumps(row)
+    tampered = tmp_path / 'stage2_tampered.jsonl'
+    tampered.write_text('\n'.join(lines) + '\n', encoding='utf-8')
+    calls = []
+    receipt = run215.preflight(_args(tmp_path, 'preflight_tampered', stage1=str(stage1),
+                                     stage2=str(tampered)),
+                               rig_loader=lambda _a: calls.append(1) or (model, tok, load))
+    assert calls == []
+    assert receipt['result'] == 'STOP'
+    assert receipt['stop_reason'].startswith('input:')
+    assert 'not the reviewed' in receipt['stop_reason']
+
+    # (b) a self-consistent but wrong seed (digest pinned to the tampered bytes) is caught by the
+    #     key/seed metadata check, still before the model loads.
+    monkeypatch.setattr(run215, 'PART214_STAGE2_SHA256', _sha256(tampered))
+    calls = []
+    receipt2 = run215.preflight(_args(tmp_path, 'preflight_tampered2', stage1=str(stage1),
+                                      stage2=str(tampered)),
+                                rig_loader=lambda _a: calls.append(1) or (model, tok, load))
+    assert calls == []
+    assert receipt2['result'] == 'STOP'
+    assert 'seed' in receipt2['stop_reason']
+
+
+def test_full_refuses_a_pass_label_without_gate_evidence_before_loading(tiny, tmp_path):
+    """Alden's witness: PASS plus the identity strings, no gates, no latencies, reaches no model."""
+    model, tok, load = tiny
+    bank = sc.load_prompts()
+    directory = tmp_path / 'thin_preflight'
+    directory.mkdir()
+    receipt = {
+        'part': 215, 'mode': 'preflight', 'result': 'PASS', 'full': 'allowed',
+        'design': sc.DESIGN_VERSION, 'design_sha256': sc.DESIGN_SHA256,
+        'prompts_sha256': bank['canonical_sha256'], 'prompts_file_sha256': bank['_file_sha256'],
+        'model': sc.MODEL, 'revision': sc.REVISION, 'tool_sha256': run215.tool_sha256(),
+        'attempt_id': 'thin', 'gates': {},
+    }
+    (directory / 'preflight.json').write_text(json.dumps(receipt), encoding='utf-8')
+    (directory / 'PASS').write_text('PASS\n', encoding='utf-8')
+    calls = []
+    with pytest.raises(SystemExit) as excinfo:
+        run215.full(_args(tmp_path, 'full_thin', preflight=str(directory / 'preflight.json')),
+                    rig_loader=lambda _a: calls.append(1) or (model, tok, load))
+    assert calls == []
+    message = str(excinfo.value)
+    assert 'G3_missing' in message and 'latency_missing' in message and 'g0_reuse' in message
+
+
+def test_require_pass_preflight_admits_the_complete_receipt(pass_preflight):
+    info = pass_preflight
+    bank = sc.load_prompts()
+    admitted = run215.require_pass_preflight(info['dir'] / 'preflight.json', bank)
+    assert admitted['result'] == 'PASS'
+    assert admitted['g0_reuse_n'] == 24
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# item 3: G0's 24 neutral reads are kept, bound and reused (648 model forwards in total)
+# ----------------------------------------------------------------------------------------------------------------
+
+def test_g0_reuse_records_are_bound_and_complete(pass_preflight):
+    info = pass_preflight
+    receipt = info['receipt']
+    path = info['dir'] / run215.G0_REUSE_FILE
+    assert path.exists()
+    assert receipt['g0_reuse_sha256'] == _sha256(path)
+    records = [json.loads(line) for line in path.read_text(encoding='utf-8').splitlines() if line.strip()]
+    assert len(records) == 24
+    bank = sc.load_prompts()
+    idx = run215.prompt_index(bank)
+    opening = bank['openings']['en_maker']['token_ids']
+    for rec in records:
+        qi = int(rec['question_index'])
+        assert rec['prompt_token_ids'] == idx[('identity', 'neutral', 'v0', qi)]['token_ids']
+        assert rec['opening_token_ids'] == opening
+        assert rec['model'] == sc.MODEL and rec['revision'] == sc.REVISION
+        assert rec['runtime'] == receipt['runtime']
+        assert rec['preflight_attempt_id'] == receipt['attempt_id']
+        assert rec['source'] == sc.G0_REUSE_SOURCE
+        assert isinstance(rec['g_ali'], float) and isinstance(rec['g_al'], float)
+        assert len(rec['opening']) == run215.OPENING_TOKENS
+
+
+def test_full_reuses_g0_neutral_and_counts_648_forwards(pass_preflight, tmp_path, monkeypatch):
+    """Preflight made 48 G0 forwards (24 neutral reused + 24 zero); full executes only 600."""
+    info = pass_preflight
+    receipt = info['receipt']
+    assert len(receipt['gates']['G0']['rows']) == 48
+    assert receipt['g0_reuse_n'] == 24
+
+    calls = []
+
+    def stub_conditional_forward(model, layers, ids, opening, device, zero_targets=False):
+        calls.append((len(ids), tuple(opening), bool(zero_targets)))
+        return {'g_ali': 0.0, 'g_al': 0.0, 'read_position': len(ids) + len(opening) - 1,
+                'opening': [{'position': len(ids) + k, 'units': [0.0] * 4, 'monitors': [0.0] * 2}
+                            for k in range(run215.OPENING_TOKENS)],
+                'latency_s': 0.0, 'zero_targets': zero_targets}
+
+    monkeypatch.setattr(run215, 'conditional_forward', stub_conditional_forward)
+    run = run215.full(_args(tmp_path, 'full_all_forwards',
+                            preflight=str(info['dir'] / 'preflight.json')),
+                      rig_loader=lambda _a: (info['model'], info['tok'], info['load']), plan=[])
+    assert len(calls) == 600, 'the full run must not re-run the 24 neutral G0 reads'
+    assert run['forwards_total'] == 624
+    assert run['g0_reuse_records'] == 24
+    assert run['forwards_runnable_this_invocation'] == 600
+    assert run['model_forwards_preflight'] == 48
+    assert run['model_forwards_total_across_preflight_and_full'] == 648
+    fwd = sc.read_jsonl(tmp_path / 'full_all_forwards' / 'forwards.jsonl')
+    neutral = [r for r in fwd if r['arm'] == 'neutral']
+    assert len(neutral) == 24
+    assert all(r['source'] == sc.G0_REUSE_SOURCE for r in neutral)
+    assert all(r['g0_sha256'] == receipt['g0_reuse_sha256'] for r in neutral)
+    assert all(r['pins']['preflight_sha256'] == run['preflight_sha256'] for r in fwd)
+    assert len([r for r in fwd if r['source'] == 'full']) == 600
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# item 2 at resume: one out dir, one attempt
+# ----------------------------------------------------------------------------------------------------------------
+
+def test_full_refuses_two_distinct_pinned_attempts(pass_preflight, tmp_path):
+    info = pass_preflight
+    receipt_path = info['dir'] / 'preflight.json'
+    original = receipt_path.read_bytes()
+    try:
+        out = _args(tmp_path, 'full_mixed', preflight=str(receipt_path))
+        first = run215.full(out, rig_loader=lambda _a: (info['model'], info['tok'], info['load']),
+                            plan=sc.planned_rows()[:4], forwards=[])
+        assert first['rows_total'] == 4
+        before = (tmp_path / 'full_mixed' / 'rows.jsonl').read_bytes()
+
+        # A second receipt with different bytes but still every valid gate (same attempt id).
+        obj = json.loads(original)
+        obj['wall_time_seconds'] = float(obj.get('wall_time_seconds') or 0.0) + 1.0
+        receipt_path.write_text(json.dumps(obj, indent=2) + '\n', encoding='utf-8')
+        with pytest.raises(SystemExit) as excinfo:
+            run215.full(out, rig_loader=lambda _a: (info['model'], info['tok'], info['load']),
+                        plan=sc.planned_rows()[:4], forwards=[])
+        assert 'refusing to mix attempts' in str(excinfo.value)
+        assert (tmp_path / 'full_mixed' / 'rows.jsonl').read_bytes() == before
+    finally:
+        receipt_path.write_bytes(original)
+
+
+def test_full_refuses_saved_rows_from_another_attempt(pass_preflight, tmp_path):
+    """Even without run.json, a saved row's pins and runtime are checked before appending."""
+    info = pass_preflight
+    out = _args(tmp_path, 'full_saved', preflight=str(info['dir'] / 'preflight.json'))
+    run215.full(out, rig_loader=lambda _a: (info['model'], info['tok'], info['load']),
+                plan=sc.planned_rows()[:2], forwards=[])
+    directory = tmp_path / 'full_saved'
+    rows = sc.read_jsonl(directory / 'rows.jsonl')
+    rows[0]['pins']['model'] = 'another/model'
+    (directory / 'rows.jsonl').write_text(''.join(json.dumps(r) + '\n' for r in rows), encoding='utf-8')
+    (directory / 'run.json').unlink()
+    with pytest.raises(SystemExit) as excinfo:
+        run215.full(out, rig_loader=lambda _a: (info['model'], info['tok'], info['load']),
+                    plan=sc.planned_rows()[:2], forwards=[])
+    assert 'refusing to mix attempts' in str(excinfo.value)
+
+    # A different runtime identity is refused the same way.
+    rows[0]['pins']['model'] = sc.MODEL
+    rows[0]['runtime']['torch'] = 'another-torch'
+    (directory / 'rows.jsonl').write_text(''.join(json.dumps(r) + '\n' for r in rows), encoding='utf-8')
+    with pytest.raises(SystemExit) as excinfo2:
+        run215.full(out, rig_loader=lambda _a: (info['model'], info['tok'], info['load']),
+                    plan=sc.planned_rows()[:2], forwards=[])
+    assert 'runtime.torch' in str(excinfo2.value)
+
+
+def test_preflight_pass_then_full(pass_preflight, tmp_path, short_generations):
+    info = pass_preflight
+    model, tok, load = info['model'], info['tok'], info['load']
+    receipt = info['receipt']
+    preflight_path = info['dir'] / 'preflight.json'
+    assert receipt['result'] == 'PASS'
     assert receipt['full'] == 'allowed'
     assert receipt['gates']['G1']['matched'] == 48
     assert receipt['gates']['G2_pilot']['pass'] is True
     assert receipt['latency']['pass'] is True
-    assert (tmp_path / 'preflight' / 'PASS').exists()
+    assert (info['dir'] / 'PASS').exists()
 
     # ---- full refuses without a PASS receipt, and on a prompt-hash mismatch
     with pytest.raises(SystemExit):
@@ -546,12 +1098,14 @@ def test_preflight_pass_then_full(tiny, tmp_path, short_generations):
                     rig_loader=lambda _a: (model, tok, load))
     assert 'prompts_sha256_matches' in str(excinfo.value)
 
-    # ---- a real (truncated-plan) full run through its last file write
-    full_args = _args(tmp_path, 'full', preflight=str(tmp_path / 'preflight' / 'preflight.json'))
+    # ---- a real (truncated-plan) full run through its last file write.  The neutral forward keys
+    #      are served from the bound G0 reuse, so only the other forwards are runnable.
+    full_args = _args(tmp_path, 'full', preflight=str(preflight_path))
     run = run215.full(full_args, rig_loader=lambda _a: (model, tok, load),
                       plan=sc.planned_rows()[:16], forwards=run215.forward_plan()[:4])
     assert run['rows_total'] == 16
-    assert run['forwards_total'] == 4
+    assert run['forwards_total'] == 24
+    assert run['g0_reuse_records'] == 24
     assert (tmp_path / 'full' / 'rows.jsonl').exists()
     assert (tmp_path / 'full' / 'forwards.jsonl').exists()
     assert (tmp_path / 'full' / 'run.json').exists()
@@ -560,17 +1114,28 @@ def test_preflight_pass_then_full(tiny, tmp_path, short_generations):
     fwd = sc.read_jsonl(tmp_path / 'full' / 'forwards.jsonl')
     assert all('g_ali' in r and 'g_al' in r and len(r['opening']) == 5 for r in fwd)
     assert all(len(r['opening'][0]['units']) == 4 and len(r['opening'][0]['monitors']) == 2 for r in fwd)
-    # ... and it resumes without duplicating a row.
+    assert all(r['source'] == sc.G0_REUSE_SOURCE for r in fwd)
+    # ... and it resumes without duplicating a row or a forward.
     again = run215.full(full_args, rig_loader=lambda _a: (model, tok, load),
                         plan=sc.planned_rows()[:16], forwards=run215.forward_plan()[:4])
     assert again['new_rows_this_invocation'] == 0
+    assert again['new_forwards_this_invocation'] == 0
     assert again['rows_total'] == 16
+    assert again['forwards_total'] == 24
 
-    # ---- the scorer reads that run and writes both files
-    card = sc.main(['--full', str(tmp_path / 'full'), '--out', str(tmp_path / 'score'),
-                    '--preflight', str(tmp_path / 'preflight' / 'preflight.json')])
+
+def test_scorer_on_a_truncated_run_is_diagnostic_only(pass_preflight, tmp_path, short_generations):
+    info = pass_preflight
+    model, tok, load = info['model'], info['tok'], info['load']
+    preflight_path = info['dir'] / 'preflight.json'
+    full_args = _args(tmp_path, 'full_score', preflight=str(preflight_path))
+    run215.full(full_args, rig_loader=lambda _a: (model, tok, load),
+                plan=sc.planned_rows()[:16], forwards=run215.forward_plan()[:4])
+    card = sc.main(['--full', str(tmp_path / 'full_score'), '--out', str(tmp_path / 'score'),
+                    '--preflight', str(preflight_path)])
     assert (tmp_path / 'score' / 'scorecard215.json').exists()
     assert (tmp_path / 'score' / 'SCORECARD.md').exists()
+    assert card['diagnostic_only'] is True
     assert all(p['verdict'] == 'not_scored' for p in card['predictions'].values())
     assert card['headline']['key'] == 'not_scored'
     # A deadline-truncated arm makes its contrasts not_scored, not merely unscored predictions.
