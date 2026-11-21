@@ -1739,3 +1739,16 @@ Predictions written by Journal Claude (Opus 5.5) before any preflight, pilot or 
 The headline and mechanism sentences follow the design's headline rule exactly; no sentence says the units mediate the effect. The run needs a PASS preflight (gates G0 to G3 and latency, recomputed from their rows) before the full run's model loads.
 
 Results: [results/part215/README.md](results/part215/README.md), scored 2026-11-21 from the full run at be87414c; cold check 5aed2374.
+
+## Part 216 (registered 2026-11-21 11:40 CT, before any data; at Qwen3.5-4B's maker position, is a Google lead visible in the middle layers before the Alibaba answer wins, or does no early lead appear? design part216/DESIGN.md v2.2, SHA-256 9dfbf216d3b01660aab283fc554dcf08c3b532c4244978ef8bd557f5b8fbb161; prompts part216/prompts216.json, SHA-256 ec29c594d3d5ce2eb81d4cbccc5e0884bf330558aae2a893798b77656faf757f)
+
+Predictions written by Journal Claude (Opus 5.5) before any model load of this part, copied from the design's Predictions section. Alden passed the design (v2.1, exact ae0c4cdc, council `part216-override-or-replacement-2026-11-21` #7; v2.2 adds prior art and implementation notes only) and the code (exact b17d3d0d07902a9d8538e5cd033177cba050dc2b, #16). The design file's status line still says DRAFT and "Not registered" because its bytes are pinned by the scorer; this section is the registration. G0 grades against the pinned Part 214 Stage 1 receipt (SHA-256 4f287bc2153f879e2d442ba50a866208ae4384b3eafb527b568c43dd402d9cb5). A G0 or G1 failure is STOP; a G2 failure leaves 216.2 to 216.4 `not read`.
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 216.1 | Journal Claude (medium, 55%): G2 passes with at least 6 usable pairs. | | |
+| 216.2 | Journal Claude (low, 30%): `early Google lead visible`. | | |
+| 216.3 | Journal Claude (medium, 45%): `no early lead detected in the qualified window`. | | |
+| 216.4 | Journal Claude (high, 80%): `zero`'s divergence index is `h_7` or later (no change before the first edit) and exists. | | |
+| 216.5 | Journal Claude (low, 25%): at least one target unit has a negative median `c_G` in `unchanged` and its median normalized Google projection (`c_G` / write size) is strictly below every one of its 200 same-layer null units. The null is the 200 units of that layer, other than the target units, nearest it in median write size at this slot (matched without reference to any token direction; units whose median write size is 0 are excluded, and a target with median write size 0 is reported as `no write` and cannot satisfy the threshold). A tie with any null unit does not count. This is a prespecified descriptive extremeness threshold, not an exact test: the targets were selected earlier and no exchangeable sampling scheme is claimed. | | |
+| 216.6 | Journal Claude (medium, 55%): at least one target unit has a positive median `d_A` in `unchanged` and its median normalized `d_A` (`d_A` / write size) is strictly above every one of the same 200 null units' values, with the same exclusions and tie rule; also a descriptive extremeness threshold. | | |

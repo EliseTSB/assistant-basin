@@ -1,0 +1,29 @@
+{
+ "mode": "selftest",
+ "pass": true,
+ "checks": {
+  "analytic_bf16": {
+   "before": 1.0,
+   "write": 0.00390625,
+   "after": 1.0,
+   "realized_increment": 0.0,
+   "rounding_residual": -0.00390625,
+   "expected_increment": 0.0,
+   "expected_rounding": -0.00390625,
+   "pass": true,
+   "bf16_emulation_matches_ulp": true,
+   "torch_cross_check": {
+    "sum": 1.0,
+    "is_one": true,
+    "dtype": "torch.bfloat16"
+   }
+  },
+  "dropped_increment_control": {
+   "intact_pass": true,
+   "dropped_pass": false,
+   "dropped_max_abs_error": 0.15000000000000002,
+   "pass": true
+  }
+ },
+ "tool_sha256": "bc70e0a8d9ee74d919b602cc4a8cfa04c1da9cec848c5bd86f57c23fc1b1809a"
+}
