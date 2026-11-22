@@ -12,6 +12,12 @@ same `inconclusive` flag. Adds what this part registered:
   * the per-run two-pass reader gate on the 42 slot items (agree on at least 40 of 42 and slot counts within 2);
   * the gate, every reading rule and the headline rules.
 
+Amendment 1 (mean-ablation) adds two rows and records two. 219.1m and 219.2m are 219.1 and 219.2 with R2m in place of
+R2 and R5m as the rig check, at the same bars. 219.1 and 219.2 keep their original text and are recorded with the
+verdicts the amendment fixes from the pilot's R2 (`pilot_verdicts`): 219.2 failed, 219.1 "inconclusive: zeroing these
+heads breaks answers". The mean arm's headline is the amendment's wording: the input-varying part of these heads'
+output, never "these heads are needed".
+
 Inputs, all under --out (default results/part219):
     <tag>.jsonl                    the run's answers (swap99.py via run219.py)
     labels-<tag>.jsonl             Haiku pass 1
@@ -41,7 +47,10 @@ for _path in (str(REPO), str(REPO / "part101"), str(REPO / "part92")):
 import read101  # noqa: E402
 
 PART = 219
-RUN_TAGS = ("R0", "R0b", "R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10")
+# Amendment 1 replaced R2 to R7 with R2m to R7m in the main stage (R2 stays the reported pilot arm) and added the
+# mean wrapper's do-nothing run. Every tag is scored by the same code; only the prediction rows name their runs.
+MEAN_RUN_TAGS = ("R2m", "R3m", "R4m", "R5m", "R6m", "R7m")
+RUN_TAGS = ("R0", "R0b", "R0b-mean", "R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10") + MEAN_RUN_TAGS
 # PART219-DESIGN.md's Runs table: the four important heads are L0H10, L1H4, L2H6, L3H5 (run219.py asserts their names).
 HEAD_LAYERS = (0, 1, 2, 3)
 GATE_R0_MIN_SLOT = 17
@@ -325,7 +334,40 @@ def _bars(run: dict) -> dict:
                      and run["inconclusive"] is False)}
 
 
-def build_predictions(gate: dict, runs: dict, nets: dict, status: dict) -> dict:
+def build_pilot_record(runs: dict, nets: dict) -> dict:
+    """Amendment 1: 219.2 and 219.1 as read on the pilot's R2 (zero ablation), recorded rather than re-derived.
+
+    The amendment fixes these two verdicts from the run that already happened: "219.2 is read on R2 as run: it fails
+    (2 of 21 coherent against 15). 219.1 is therefore not read and is reported as 'inconclusive: zeroing these heads
+    breaks answers'. Those two rows keep their original text and get these verdicts; nothing below re-reads R2."
+
+    So the counts come from R2's own labels and the same `_bars` rule the registered rows use — nothing is loosened —
+    and the block is used for 219.1/219.2 only when R5, the zeroing rig check, was never run: in the amended design the
+    zeroing half is a completed pilot, not a live arm. When R5 was scored, `build_predictions` keeps its own logic.
+    """
+    r2 = runs.get("R2")
+    if r2 is None or not r2.get("labelled"):
+        return {"available": False,
+                "because": "R2's labels are missing, so the pilot's 219.1/219.2 cannot be recorded"}
+    bars = _bars(r2)
+    record = {"available": True, "run": "R2", "operation": "zero",
+              "amendment": "PART219-DESIGN.md Amendment 1 (2026-11-22)",
+              "net_upstream": nets.get("R2")}
+    if bars["held"]:
+        held = bool(nets.get("R2") and nets["R2"]["net"] >= NET_MIN)
+        record["219.2"] = {"held": True, "detail": bars, "verdict": "held"}
+        record["219.1"] = {"held": held, "detail": nets.get("R2"), "min_net": NET_MIN,
+                           "verdict": "held" if held else "failed"}
+    else:
+        record["219.2"] = {"held": False, "detail": bars, "verdict": "failed"}
+        record["219.1"] = {"verdict": "inconclusive: zeroing these heads breaks answers", "detail": nets.get("R2")}
+    return record
+
+
+def build_predictions(gate: dict, runs: dict, nets: dict, status: dict, pilot: dict | None = None) -> dict:
+    """The registered prediction rows. ``pilot`` (Amendment 1) is `build_pilot_record`'s block; it is used for
+    219.1/219.2 only when R5, the zeroing rig check, was never scored — the amended design's state — so every other
+    path keeps this function's original logic byte for byte."""
     predictions: dict[str, dict] = {}
 
     def blocked(reason: str) -> dict:
@@ -356,7 +398,12 @@ def build_predictions(gate: dict, runs: dict, nets: dict, status: dict) -> dict:
     r2_net = nets["R2"] if "R2" in nets else None
 
     # 219.2 then 219.1 (219.1 is read only if 219.2 holds).
-    if r5_status:
+    if pilot and pilot.get("available") and "R5" not in nets:
+        # Amendment 1: the zeroing half is a completed pilot whose two rows are fixed; R5 never ran, and the mean arm's
+        # rig check (R5m) is applied to 219.1m/219.2m instead.
+        predictions["219.1"] = dict(pilot["219.1"])
+        predictions["219.2"] = dict(pilot["219.2"])
+    elif r5_status:
         why = "R5, the rig check, is not read (" + "; ".join(r5_status) + ")"
         predictions["219.1"] = blocked(why)
         predictions["219.2"] = blocked(why)
@@ -432,6 +479,63 @@ def build_predictions(gate: dict, runs: dict, nets: dict, status: dict) -> dict:
     return predictions
 
 
+def build_predictions_a1(gate: dict, runs: dict, nets: dict, status: dict) -> dict:
+    """219.1m and 219.2m: PART219-DESIGN.md Amendment 1's 219.1 and 219.2 with R2m in place of R2, R5m as the rig
+    check, and nothing loosened — the same 16 upstream units, the same net of 7, the same 15 of 21 coherent, the same
+    13 concept units, the same inconclusive flag, and the rig check's |net loss| at most 2.
+
+    Deliberately a copy of `build_predictions`' 219.1/219.2 branch rather than a shared helper: the registered rows'
+    logic must not move when the amended rows are added, and a reviewer should be able to diff the two side by side.
+    """
+    predictions: dict[str, dict] = {}
+
+    def blocked(reason: str) -> dict:
+        return {"verdict": f"not read: {reason}"}
+
+    r5m, r5m_status = nets.get("R5m"), list(status.get("R5m") or [])
+    rig_ok = bool(r5m is not None and not r5m_status and abs(r5m["net"]) <= RIG_MAX_ABS_NET)
+    predictions["R5m_rig_check"] = {
+        "detail": r5m, "max_abs_net": RIG_MAX_ABS_NET, "held": rig_ok, "status": r5m_status,
+        "note": "mean-ablating four unimportant early heads must move the 16 upstream units by at most 2 net "
+                "(Amendment 1 keeps R5's rig check with R5m as its run)"
+                + ("" if not r5m_status else "; R5m is not read, so the rig check cannot be read")}
+
+    if not gate["passed"]:
+        failure = "gate failed: " + "; ".join(gate["failures"])
+        for key in ("219.1m", "219.2m"):
+            predictions[key] = {"verdict": f"not read: {failure}", "exploratory": True}
+        return predictions
+
+    r2m_status = status.get("R2m", [])
+    r2m_net = nets["R2m"] if "R2m" in nets else None
+    if r5m_status:
+        why = "R5m, the mean arm's rig check, is not read (" + "; ".join(r5m_status) + ")"
+        predictions["219.1m"] = blocked(why)
+        predictions["219.2m"] = blocked(why)
+    elif r5m is None:
+        predictions["219.1m"] = blocked("R5m, the mean arm's rig check, was not scored")
+        predictions["219.2m"] = blocked("R5m, the mean arm's rig check, was not scored")
+    elif not rig_ok:
+        predictions["219.1m"] = blocked("the R5m rig check failed, which freezes 219.1m and 219.2m")
+        predictions["219.2m"] = blocked("the R5m rig check failed, which freezes 219.1m and 219.2m")
+    elif "R2m" not in runs or r2m_status:
+        why = "; ".join(r2m_status) if r2m_status else "R2m was not scored"
+        predictions["219.1m"] = blocked(f"R2m is not read ({why})")
+        predictions["219.2m"] = blocked(f"R2m is not read ({why})")
+    else:
+        bars = _bars(runs["R2m"])
+        predictions["219.2m"] = {"held": bars["held"], "detail": bars,
+                                 "verdict": "held" if bars["held"] else "failed"}
+        if not bars["held"]:
+            predictions["219.1m"] = {"verdict": "inconclusive: mean-ablating these heads breaks answers",
+                                     "detail": r2m_net}
+        else:
+            held = r2m_net["net"] >= NET_MIN
+            predictions["219.1m"] = {"held": held, "detail": r2m_net, "min_net": NET_MIN,
+                                     "verdict": "held" if held else "failed"}
+    return predictions
+
+
 def build_headlines(predictions: dict, status: dict | None = None) -> list[str]:
     """The design's headline rules, with the withdrawal rule the review found missing.
 
@@ -468,6 +572,11 @@ def build_headlines(predictions: dict, status: dict | None = None) -> list[str]:
     elif (verdict("219.3") == "held" and verdict("219.5") == "failed"
           and not withdrawn & {"R0", "R8", "R9"}):
         headlines.append("these heads' answers break under a change of that size in either direction")
+    if (verdict("219.1m") == "held" and verdict("219.2m") == "held" and not withdrawn & {"R0"}):
+        # Amendment 1's wording: mean-ablation keeps each head's average contribution, so the claim is about the
+        # input-varying part, never "these heads are needed".
+        headlines.append("the input-varying part of these four heads' output is needed for the slot neurons' "
+                         "self-descriptions")
     return headlines or ["no headline: the predictions it rests on did not hold"]
 
 
@@ -517,7 +626,9 @@ def build_scorecard(out: Path, kinds_path, neurons_path, kernel_path: Path, head
                 continue
             nets[tag] = net_against(labels["R0"], labels[tag], split["upstream"])
     gate = build_gate(kernel_check(kernel_path), runs, status)
-    predictions = build_predictions(gate, runs, nets, status)
+    pilot = build_pilot_record(runs, nets)
+    predictions = build_predictions(gate, runs, nets, status, pilot)
+    predictions.update(build_predictions_a1(gate, runs, nets, status))
     scorecard = {
         "part": PART,
         "design": "PART219-DESIGN.md",
@@ -526,9 +637,11 @@ def build_scorecard(out: Path, kinds_path, neurons_path, kernel_path: Path, head
         "gate": gate,
         "runs": {tag: {**entry, "status": status.get(tag, [])} for tag, entry in runs.items()},
         "nets_upstream_against_R0": nets,
-        "controls": {key: predictions[key] for key in ("R5_rig_check", "R9_coupling_check") if key in predictions},
+        "controls": {key: predictions[key]
+                     for key in ("R5_rig_check", "R5m_rig_check", "R9_coupling_check") if key in predictions},
         "predictions": {key: value for key, value in predictions.items()
                         if key.startswith("219.")},
+        "pilot_verdicts": pilot,
         "headlines": build_headlines(predictions, status),
         "exploratory": build_exploratory(labels, split),
     }
@@ -560,6 +673,22 @@ def markdown(scorecard: dict) -> str:
                      f"{run['slot_who_coherent'][0]}/{run['slot_who_coherent'][1]} | "
                      f"{run['concept_any'][0]}/{run['concept_any'][1]} | {run['inconclusive']} | {gate_text} | "
                      f"{'no' if run['status'] else 'yes'} |")
+    pilot = scorecard.get("pilot_verdicts") or {}
+    if pilot.get("available"):
+        lines += ["", f"## Pilot (Amendment 1): 219.1 and 219.2 as read on {pilot['run']} (zero ablation)", "",
+                  "These two rows keep their original text and get the amendment's verdicts; the mean arm is 219.1m "
+                  "and 219.2m below.", ""]
+        for key in ("219.2", "219.1"):
+            value = pilot.get(key) or {}
+            detail = value.get("detail") or {}
+            numbers = ""
+            if isinstance(detail, dict) and "slot_who_coherent" in detail:
+                numbers = (f"slot coherent {detail['slot_who_coherent'][0]}/{detail['slot_who_coherent'][1]}, "
+                           f"concept {detail['concept_any'][0]}/{detail['concept_any'][1]}, "
+                           f"inconclusive {detail['inconclusive']}")
+            elif isinstance(detail, dict) and "net" in detail:
+                numbers = f"net {detail['net']}"
+            lines.append(f"- {key}: {value.get('verdict', '')} ({numbers})")
     lines += ["", "## Predictions", "", "| prediction | verdict | numbers |", "| --- | --- | --- |"]
     for key, value in scorecard["predictions"].items():
         detail = value.get("detail") or {}
@@ -605,6 +734,21 @@ def pilot_labels(out, kinds_path) -> dict:
     return result
 
 
+def pilot_labels_a1(out, kinds_path) -> dict:
+    """Amendment 1's pilot criterion, from labels-R2m.jsonl: R2m's slot answers that are coherent."""
+    path = Path(out) / "R2m.jsonl"
+    if not path.exists():
+        return {"available": False, "r2m_slot_who_coherent": None,
+                "because": f"{path} is missing: run `run219.py --pilot-a1` first"}
+    kind_of = load_kinds(kinds_path)
+    ids, slot, concept = read101.unit_sets(kind_of, path)
+    r2m, _errors, _missing = load_labels(Path(out) / "labels-R2m.jsonl")
+    result = {"available": bool(r2m), "r2m_slot_who_coherent": None}
+    if r2m:
+        result["r2m_slot_who_coherent"] = read101.score_rows(r2m, ids, slot, concept)["slot_who_coherent"]
+    return result
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("--out", default=str(REPO / "results" / "part219"))
@@ -614,9 +758,23 @@ def main(argv=None):
     parser.add_argument("--head-layers", default=",".join(str(layer) for layer in HEAD_LAYERS),
                         help="the four important heads' layers (PART219-DESIGN.md: 0,1,2,3)")
     parser.add_argument("--pilot", action="store_true", help="only the design's pilot stopping rule")
+    parser.add_argument("--pilot-a1", action="store_true",
+                        help="only Amendment 1's R2m pilot criterion (labels-R2m.jsonl)")
     args = parser.parse_args(argv)
     out = Path(args.out)
     head_layers = tuple(int(part) for part in args.head_layers.split(","))
+    if args.pilot_a1:
+        verdict = pilot_labels_a1(out, args.kinds)
+        if verdict["available"]:
+            coherent = verdict["r2m_slot_who_coherent"][0]
+            verdict["label_criterion_holds"] = coherent >= BAR_SLOT_COHERENT
+            verdict["because"] = (f"R2m leaves {coherent} of 21 slot answers coherent (needs {BAR_SLOT_COHERENT})")
+        else:
+            verdict["label_criterion_holds"] = None
+            verdict["because"] = "labels-R2m.jsonl is needed (run219.py --pilot-a1 writes R2m.jsonl first)"
+        verdict["note"] = "the receipts are checked by run219.py --pilot-a1, which also applies this rule"
+        print(json.dumps(verdict, indent=1))
+        return 0
     if args.pilot:
         verdict = pilot_labels(out, args.kinds)
         if verdict["available"]:

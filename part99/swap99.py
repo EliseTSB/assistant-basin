@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import gc
+import hashlib
 import json
 import re
 import sys
@@ -289,15 +290,138 @@ def head_slice(part: str, ndim: int, start: int, end: int) -> tuple:
     raise ValueError(f"{part!r} is not one of the transplant parts {TRANSPLANT_PARTS}")
 
 
-def install_ablation_hooks(model, heads: list[tuple[int, int]]):
-    """Zero the named heads' slice of each layer's ``o_proj`` INPUT at every position (PART219-DESIGN.md).
+ABLATE_MODES = ("zero", "mean")
 
-    Returns ``(handles, receipt)``. The receipt is filled on the first forward call (the first batch): for each named
-    slice, the largest absolute value before the zeroing and after it, so a reader can see the slice carried something
-    and is now exactly zero. With an empty ``heads`` the hooks are still installed, one per layer, and change
-    nothing: that is R0b's do-nothing check of the machinery itself.
+
+def file_sha256(path) -> str:
+    """SHA-256 of a file's bytes, so a run's meta can name the exact means or questions file it read."""
+    digest = hashlib.sha256()
+    with Path(path).expanduser().open("rb") as stream:
+        for block in iter(lambda: stream.read(1 << 20), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def load_head_means(path) -> dict[tuple[int, int], dict]:
+    """Read ``means219.py``'s ``head-means.pt``: ``{"L0H10": {"mean_pos0": [128], "mean_rest": [128], ...}, ...}``.
+
+    Returns ``{(layer, head): {"mean_pos0": float32 tensor, "mean_rest": float32 tensor, "n_pos0", "n_rest"}}``. The
+    ``meta`` entry the file also carries is ignored here. Both vectors are kept in float32, as stored; the hook casts
+    them to the model's dtype once, per call.
     """
-    import torch  # noqa: F401  (dtype work below is torch's; imported for the same reason as the rest of this file)
+    import torch
+
+    data = torch.load(Path(path).expanduser(), map_location="cpu")
+    if not isinstance(data, dict):
+        raise ValueError(f"{path} does not hold a head-means dict")
+    means = {}
+    for name, value in data.items():
+        if name == "meta":
+            continue
+        match = HEAD_PATTERN.match(str(name))
+        if match is None:
+            raise ValueError(f"{path} holds an entry {name!r} that is not a head name such as L0H10")
+        if not isinstance(value, dict) or "mean_pos0" not in value or "mean_rest" not in value:
+            raise ValueError(f"{path}'s entry {name} lacks mean_pos0/mean_rest")
+        pos0 = torch.as_tensor(value["mean_pos0"], dtype=torch.float32).reshape(-1).clone()
+        rest = torch.as_tensor(value["mean_rest"], dtype=torch.float32).reshape(-1).clone()
+        if pos0.numel() == 0 or pos0.shape != rest.shape:
+            raise ValueError(f"{path}'s entry {name} has mean_pos0 {tuple(pos0.shape)} and mean_rest "
+                             f"{tuple(rest.shape)}; both must be the same non-empty width")
+        means[(int(match.group(1)), int(match.group(2)))] = {
+            "mean_pos0": pos0, "mean_rest": rest,
+            "n_pos0": int(value.get("n_pos0", 0)), "n_rest": int(value.get("n_rest", 0)),
+        }
+    if not means:
+        raise ValueError(f"{path} holds no head means")
+    return means
+
+
+def _prefill_capture(state: dict):
+    """A forward pre-hook on the model that records the prefill call's attention mask (Amendment 1, positions).
+
+    ``generate`` grows the mask on every decode step, so only a call whose input length is the whole sequence (a
+    prefill) refreshes the state; a decode call has one token and a longer mask and is left alone. Each row of a
+    left-padded batch has its own first real index, which is what the ``o_proj`` hook needs.
+    """
+    import torch
+
+    def hook(_module, args, kwargs):
+        mask = kwargs.get("attention_mask")
+        input_ids = kwargs.get("input_ids")
+        if mask is None and len(args) > 1:
+            mask = args[1]
+        if input_ids is None and args:
+            input_ids = args[0]
+        if mask is None or input_ids is None:
+            return None
+        if getattr(mask, "ndim", 0) != 2 or getattr(input_ids, "ndim", 0) != 2:
+            return None
+        length = int(input_ids.shape[1])
+        if length <= 1 or int(mask.shape[1]) != length:
+            return None  # a decode step: one token, the mask already grown to the whole sequence
+        mask = mask.to(torch.bool)
+        first = []
+        for row in mask:
+            positions = torch.nonzero(row, as_tuple=False).reshape(-1)
+            if positions.numel() == 0:
+                raise ValueError("a row of the prefill attention mask marks no real token")
+            first.append(int(positions[0]))
+        state.update({"first_real": first, "mask": mask, "length": length})
+        return None
+
+    return hook
+
+
+def ablation_receipt_problems(records) -> list[str]:
+    """Every reason a zeroing or mean-ablation receipt does not hold, for a runner or a reader.
+
+    One rule per mode: a zero record must show ``all_zero`` on its slice; a mean record must show the slice equal to
+    the stored mean at each of the three places the design names (``pos0``, ``prefill_rest``, ``decode``) and must
+    have differed from it before the hook (``max_abs_diff_before`` > 0). A record that never fired lacks the checks
+    and therefore fails, which is the honest reading of a run that produced no receipt.
+    """
+    problems = []
+    for record in records or []:
+        label = f"L{record.get('layer')}H{record.get('head')}"
+        if record.get("mode") == "mean":
+            for key, what in (("pos0", "mean_pos0"), ("prefill_rest", "mean_rest"), ("decode", "mean_rest")):
+                part = record.get(key)
+                if not isinstance(part, dict):
+                    problems.append(f"ablation receipt: {label} has no {key} check")
+                    continue
+                if not part.get("matches"):
+                    problems.append(f"ablation receipt: {label} {key} slice does not hold {what} exactly")
+                if not (part.get("max_abs_diff_before") or 0) > 0:
+                    problems.append(f"ablation receipt: {label} {key} slice did not differ from {what} before the hook")
+        elif not record.get("all_zero"):
+            problems.append(f"ablation receipt: {label} slice is not zero")
+    return problems
+
+
+def install_ablation_hooks(model, heads: list[tuple[int, int]], *, ablate_mode: str = "zero", head_means=None):
+    """Replace the named heads' slice of each layer's ``o_proj`` INPUT (PART219-DESIGN.md).
+
+    ``zero`` (the registered pilot's operation, and the default) writes zero at every position. ``mean`` (Amendment 1)
+    writes a fixed vector from ``head_means`` (``means219.py``): ``mean_pos0`` at each row's first real token of the
+    prefill call and ``mean_rest`` at every other prefill position, at pad positions and at every decode call. Batches
+    are left-padded, so each row's first real index is read from the prefill call's ``attention_mask`` (captured by a
+    forward pre-hook on the model); a decode call has one token and its local index 0 is not absolute position 0, so
+    it takes ``mean_rest`` everywhere.
+
+    Returns ``(handles, receipt)``. The receipt is filled on the first forward call (the first batch). In ``zero`` mode
+    each record holds the largest absolute value before the zeroing and after it, so a reader can see the slice carried
+    something and is now exactly zero. In ``mean`` mode each record holds, for the three places the amendment names,
+    whether the slice equals the stored mean's bytes exactly and whether it differed from it before the hook. With an
+    empty ``heads`` the hooks are still installed, one per layer, and change nothing: that is R0b's do-nothing check of
+    the machinery itself, on either wrapper.
+    """
+    import torch
+
+    if ablate_mode not in ABLATE_MODES:
+        raise ValueError(f"ablate_mode must be one of {ABLATE_MODES}; got {ablate_mode!r}")
+    if ablate_mode == "mean" and not head_means:
+        raise ValueError("mean ablation needs the head means (means219.py's head-means.pt)")
 
     layers = c.get_layers(model)
     head_size, num_heads = head_geometry(model)
@@ -305,34 +429,122 @@ def install_ablation_hooks(model, heads: list[tuple[int, int]]):
     for layer_no, head in heads:
         head_span(model, layer_no, head)  # validation only
         by_layer.setdefault(layer_no, []).append(head)
+    if ablate_mode == "mean":
+        for layer_no, head in heads:
+            if (layer_no, head) not in head_means:
+                raise ValueError(f"the head means have no entry for L{layer_no}H{head}, so it cannot be mean-ablated")
+            width = int(head_means[(layer_no, head)]["mean_pos0"].numel())
+            if width != head_size:
+                raise ValueError(f"L{layer_no}H{head}'s mean is {width} wide, not the model's head size {head_size}")
+    prefill = {"first_real": None, "mask": None, "length": None}
     handles, receipt = [], []
     try:
+        if ablate_mode == "mean":
+            handles.append(model.register_forward_pre_hook(_prefill_capture(prefill), with_kwargs=True))
         for layer_no in (range(len(layers)) if not by_layer else sorted(by_layer)):
             attn = layers[layer_no].self_attn
             width = int(attn.o_proj.in_features)
             spans = [(head * head_size, (head + 1) * head_size) for head in sorted(by_layer.get(layer_no, []))]
-            state = {"fired": False}
 
-            def hook(_module, args, layer_no=layer_no, spans=spans, width=width, state=state):
-                hidden = args[0]
-                if hidden.shape[-1] != width:
-                    raise ValueError(f"layer {layer_no} o_proj input is {tuple(hidden.shape)}, expected width {width}")
-                if not spans:
-                    return None
-                zeroed = hidden.clone()
-                for start, end in spans:
-                    zeroed[..., start:end] = 0
-                if not state["fired"]:
-                    state["fired"] = True
+            if ablate_mode == "zero":
+                state = {"fired": False}
+
+                def hook(_module, args, layer_no=layer_no, spans=spans, width=width, state=state):
+                    hidden = args[0]
+                    if hidden.shape[-1] != width:
+                        raise ValueError(f"layer {layer_no} o_proj input is {tuple(hidden.shape)}, expected width {width}")
+                    if not spans:
+                        return None
+                    zeroed = hidden.clone()
                     for start, end in spans:
-                        receipt.append({
-                            "layer": layer_no, "head": start // head_size, "slice": [start, end],
-                            "positions": int(hidden.numel() // hidden.shape[-1]),
-                            "max_abs_before": float(hidden[..., start:end].abs().max()),
-                            "max_abs_after": float(zeroed[..., start:end].abs().max()),
-                            "all_zero": bool(torch.count_nonzero(zeroed[..., start:end]) == 0),
-                        })
-                return (zeroed,) + tuple(args[1:])
+                        zeroed[..., start:end] = 0
+                    if not state["fired"]:
+                        state["fired"] = True
+                        for start, end in spans:
+                            receipt.append({
+                                "layer": layer_no, "head": start // head_size, "slice": [start, end],
+                                "positions": int(hidden.numel() // hidden.shape[-1]),
+                                "max_abs_before": float(hidden[..., start:end].abs().max()),
+                                "max_abs_after": float(zeroed[..., start:end].abs().max()),
+                                "all_zero": bool(torch.count_nonzero(zeroed[..., start:end]) == 0),
+                            })
+                    return (zeroed,) + tuple(args[1:])
+
+            else:
+                named = [(start, end, start // head_size) for start, end in spans]
+                records = {head: {"mode": "mean", "layer": layer_no, "head": head, "slice": [start, end]}
+                           for start, end, head in named}
+
+                def hook(_module, args, layer_no=layer_no, named=named, width=width,
+                         records=records, prefill=prefill):
+                    hidden = args[0]
+                    if hidden.shape[-1] != width:
+                        raise ValueError(f"layer {layer_no} o_proj input is {tuple(hidden.shape)}, expected width {width}")
+                    if not named:
+                        return None
+                    replaced = hidden.clone()
+                    batch, length = int(hidden.shape[0]), int(hidden.shape[1])
+                    device, dtype = hidden.device, hidden.dtype
+                    if length > 1:
+                        first = prefill["first_real"]
+                        mask = prefill["mask"]
+                        if first is None or len(first) != batch:
+                            raise ValueError(
+                                f"mean ablation saw a prefill of {batch} rows but the attention mask recorded "
+                                f"{0 if first is None else len(first)}: call the model with its attention mask")
+                        if tuple(mask.shape) != (batch, length):
+                            raise ValueError(
+                                f"mean ablation's attention mask is {tuple(mask.shape)}, not the prefill's "
+                                f"{(batch, length)}")
+                        rows = torch.arange(batch, device=device)
+                        first_index = torch.tensor(first, device=device)
+                        real = mask.clone()
+                        real[rows, first_index] = False
+                        rest_positions = int(real.sum())
+                        for start, end, head in named:
+                            means = head_means[(layer_no, head)]
+                            rest = means["mean_rest"].to(device=device, dtype=dtype)
+                            pos0 = means["mean_pos0"].to(device=device, dtype=dtype)
+                            replaced[..., start:end] = rest
+                            for row, position in enumerate(first):
+                                replaced[row, position, start:end] = pos0
+                            record = records[head]
+                            if "pos0" not in record:
+                                before = hidden[..., start:end].float()
+                                after = replaced[..., start:end]
+                                pos0_before = before[rows, first_index]
+                                pos0_after = after[rows, first_index]
+                                rest_before = before[real]
+                                rest_after = after[real]
+                                record["pos0"] = {
+                                    "positions": int(batch),
+                                    "matches": bool(torch.equal(pos0_after, pos0.expand(batch, -1))),
+                                    "max_abs_diff_before": float(
+                                        (pos0_before - pos0.float().expand(batch, -1)).abs().max()),
+                                    "first_real": [int(value) for value in first],
+                                }
+                                record["prefill_rest"] = {
+                                    "positions": rest_positions,
+                                    "matches": bool(torch.equal(rest_after, rest.expand(rest_positions, -1))),
+                                    "max_abs_diff_before": (float(
+                                        (rest_before - rest.float().expand(rest_positions, -1)).abs().max())
+                                        if rest_positions else 0.0),
+                                }
+                                receipt.append(record)
+                    else:
+                        for start, end, head in named:
+                            means = head_means[(layer_no, head)]
+                            rest = means["mean_rest"].to(device=device, dtype=dtype)
+                            before = hidden[..., start:end]
+                            replaced[..., start:end] = rest
+                            record = records[head]
+                            if "decode" not in record:
+                                record["decode"] = {
+                                    "positions": int(batch * length),
+                                    "matches": bool(torch.equal(replaced[..., start:end], rest.expand(batch, length, -1))),
+                                    "max_abs_diff_before": float((before.float() - rest.float()).abs().max()),
+                                }
+                    return (replaced,) + tuple(args[1:])
 
             handles.append(attn.o_proj.register_forward_pre_hook(hook))
     except BaseException:
@@ -721,6 +933,18 @@ def run(args, *, model=None, tokenizer=None, donor_model=None):
     attn_option = getattr(args, "attn_implementation", None)
     attn_implementation = None if attn_option in (None, "default") else attn_option
     ablate_heads = parse_heads(getattr(args, "ablate_heads", None))
+    ablate_mode = getattr(args, "ablate_mode", None) or "zero"
+    if ablate_mode not in ABLATE_MODES:
+        raise ValueError(f"--ablate-mode must be one of {ABLATE_MODES}; got {ablate_mode!r}")
+    head_means_path = getattr(args, "head_means", None)
+    head_means, head_means_sha256 = None, None
+    if ablate_mode == "mean":
+        if not head_means_path:
+            raise ValueError("--ablate-mode mean needs --head-means")
+        head_means = load_head_means(head_means_path)
+        head_means_sha256 = file_sha256(head_means_path)
+    elif head_means_path:
+        raise ValueError("--head-means is only read with --ablate-mode mean")
     transplant_list = parse_heads(getattr(args, "transplant_heads", None))
     transplant_mode = getattr(args, "transplant_mode", None) or "donor"
     reference_replay = getattr(args, "reference_replay", None)
@@ -845,7 +1069,8 @@ def run(args, *, model=None, tokenizer=None, donor_model=None):
                 transplant_result = transplant_heads(model, donor_model, [], transplant_mode)
 
         if ablate_heads is not None:
-            ablation_handles, ablation_receipt = install_ablation_hooks(model, ablate_heads)
+            ablation_handles, ablation_receipt = install_ablation_hooks(
+                model, ablate_heads, ablate_mode=ablate_mode, head_means=head_means)
 
         out_dir = Path(args.out)
         out_dir.mkdir(parents=True, exist_ok=True)
@@ -888,14 +1113,25 @@ def run(args, *, model=None, tokenizer=None, donor_model=None):
                     if done % max(args.batch * 5, 1) < len(chunk) or done == total:
                         elapsed = time.perf_counter() - started
                         print(f"{args.tag}: {done}/{total} rows in {elapsed:.1f}s", flush=True)
-        if ablate_heads and not ablation_receipt:
+        needs_receipt = bool(ablate_heads) and (
+            not ablation_receipt
+            # Mean mode's receipt also checks a decode step, and a generation whose rows all stop on their first
+            # token never makes one: take the probe then too, so the receipt is complete rather than failing.
+            or (ablate_mode == "mean" and any("decode" not in record for record in ablation_receipt)))
+        if needs_receipt:
             # A resumed run that found every row on disk never ran a forward, so the first-batch receipt was never
             # taken. Take it now, while the hooks are still installed, on the batch a fresh run would have used.
+            # Mean mode's probe is a two-token generate with a two-token minimum: the prefill is the same first batch a
+            # fresh run would have used, and ``min_new_tokens`` forces the decode call its receipt needs.
             first_chunk = work_by_layer[next(iter(work_by_layer))][:max(args.batch, 1)]
             probe_ids, probe_mask, _width = c.batch_inputs(
                 tokenizer, [QUESTIONS[qi] for _neuron, _unit, qi in first_chunk], args.frame, args.device)
             with torch.inference_mode():
-                model(input_ids=probe_ids, attention_mask=probe_mask, use_cache=False)
+                if ablate_mode == "mean":
+                    model.generate(input_ids=probe_ids, attention_mask=probe_mask, do_sample=False,
+                                   max_new_tokens=2, min_new_tokens=2, pad_token_id=int(tokenizer.pad_token_id))
+                else:
+                    model(input_ids=probe_ids, attention_mask=probe_mask, use_cache=False)
     finally:
         # Part 219's reset receipt needs the model exactly as it was loaded: hooks off, transplanted slices back,
         # Part 99's swapped parameters back. Each restore writes the original bytes, so it is bit-exact.
@@ -927,6 +1163,11 @@ def run(args, *, model=None, tokenizer=None, donor_model=None):
                         "ablation": ablation_receipt,
                         "transplant": None if transplant_result is None else
                         {key: value for key, value in transplant_result.items() if key != "restore"}}
+        if ablate_heads is not None and ablate_mode != "zero":
+            # Amendment 1's runs say which operation they used and which means file they read; a zeroing run, and
+            # every pre-amendment meta, keeps exactly the keys it had.
+            intervention["ablate_mode"] = ablate_mode
+            intervention["head_means_sha256"] = head_means_sha256
 
     seconds = time.perf_counter() - run_started
     write_meta(
@@ -940,6 +1181,10 @@ def run(args, *, model=None, tokenizer=None, donor_model=None):
             # `attn_implementation` is None for the default and "eager" when asked, so a default run writes no key.
             "attn_implementation": attn_implementation,
             "ablate_heads": None if ablate_heads is None else [f"L{layer}H{head}" for layer, head in ablate_heads],
+            "ablate_mode": (ablate_mode if ablate_heads is not None and ablate_mode != "zero" else None),
+            "head_means": (str(Path(head_means_path).expanduser())
+                           if ablate_heads is not None and head_means_sha256 else None),
+            "head_means_sha256": (head_means_sha256 if ablate_heads is not None else None),
             "transplant_heads": None if transplant_list is None else
             [f"L{layer}H{head}" for layer, head in transplant_list],
             "transplant_mode": transplant_mode if transplant_list else None,
@@ -979,6 +1224,11 @@ def main(argv=None):
     parser.add_argument("--ablate-heads",
                         help="Part 219: comma-separated L<layer>H<head> whose o_proj input slice is zeroed; "
                              "give an empty value to install the hooks and change nothing")
+    parser.add_argument("--ablate-mode", choices=ABLATE_MODES, default="zero",
+                        help="Part 219 Amendment 1: zero the slice (the registered pilot's operation, the default) "
+                             "or replace it with the stored per-head means")
+    parser.add_argument("--head-means",
+                        help="Part 219 Amendment 1: means219.py's head-means.pt, required with --ablate-mode mean")
     parser.add_argument("--transplant-heads",
                         help="Part 219: comma-separated L<layer>H<head> whose q/k/v rows, o_proj columns and q/k norm "
                              "slices are taken from the donor")
@@ -1016,6 +1266,13 @@ def main(argv=None):
         parser.error("--transplant-heads needs --donor")
     if args.transplant_mode != "donor" and not transplant_heads_list:
         parser.error("--transplant-mode needs --transplant-heads")
+    if args.ablate_mode == "mean":
+        if not args.head_means:
+            parser.error("--ablate-mode mean requires --head-means")
+        if args.ablate_heads is None:
+            parser.error("--ablate-mode needs --ablate-heads (an empty value installs the hooks and changes nothing)")
+    elif args.head_means:
+        parser.error("--head-means is only read with --ablate-mode mean")
     run(args)
 
 

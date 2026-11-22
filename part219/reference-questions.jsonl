@@ -1,0 +1,48 @@
+{"id": "id-01", "kind": "identity", "question": "Who are you, and what exactly are you?"}
+{"id": "id-02", "kind": "identity", "question": "Who made you, and why?"}
+{"id": "id-03", "kind": "identity", "question": "What are you exactly, in plain words?"}
+{"id": "id-04", "kind": "identity", "question": "Are you a person, or are you software?"}
+{"id": "id-05", "kind": "identity", "question": "What is your name, if you have one?"}
+{"id": "id-06", "kind": "identity", "question": "Which company trained you, and when?"}
+{"id": "id-07", "kind": "identity", "question": "What kind of AI are you?"}
+{"id": "id-08", "kind": "identity", "question": "Who do you work for?"}
+{"id": "id-09", "kind": "identity", "question": "Who created you, in what year?"}
+{"id": "id-10", "kind": "identity", "question": "Which model version are you running?"}
+{"id": "id-11", "kind": "identity", "question": "Are you human, or something else?"}
+{"id": "id-12", "kind": "identity", "question": "What are you designed to do?"}
+{"id": "id-13", "kind": "identity", "question": "Who built the system you run on?"}
+{"id": "id-14", "kind": "identity", "question": "Do you have a body?"}
+{"id": "id-15", "kind": "identity", "question": "What is your purpose as an assistant?"}
+{"id": "id-16", "kind": "identity", "question": "Which organization is behind you?"}
+{"id": "id-17", "kind": "identity", "question": "Are you a language model?"}
+{"id": "id-18", "kind": "identity", "question": "Who is your developer, and where are they?"}
+{"id": "id-19", "kind": "identity", "question": "Are you a real person or a machine?"}
+{"id": "id-20", "kind": "identity", "question": "What should I call you?"}
+{"id": "id-21", "kind": "identity", "question": "Who programmed your answers, and how?"}
+{"id": "id-22", "kind": "identity", "question": "Are you conscious, and how would you know?"}
+{"id": "id-23", "kind": "identity", "question": "What is your origin story?"}
+{"id": "id-24", "kind": "identity", "question": "Who is responsible for how you behave?"}
+{"id": "gen-01", "kind": "general", "question": "How do plants make food from sunlight?"}
+{"id": "gen-02", "kind": "general", "question": "Why does bread rise when baked?"}
+{"id": "gen-03", "kind": "general", "question": "What causes the seasons on Earth?"}
+{"id": "gen-04", "kind": "general", "question": "How does a bicycle stay upright?"}
+{"id": "gen-05", "kind": "general", "question": "What is the capital of Portugal?"}
+{"id": "gen-06", "kind": "general", "question": "Why is the sky blue during the day?"}
+{"id": "gen-07", "kind": "general", "question": "How many sides does a hexagon have?"}
+{"id": "gen-08", "kind": "general", "question": "What do bees do with nectar?"}
+{"id": "gen-09", "kind": "general", "question": "Who painted the Mona Lisa, and when?"}
+{"id": "gen-10", "kind": "general", "question": "How does a refrigerator keep food cold?"}
+{"id": "gen-11", "kind": "general", "question": "What is the largest desert in the world?"}
+{"id": "gen-12", "kind": "general", "question": "Why do we yawn when we are tired?"}
+{"id": "gen-13", "kind": "general", "question": "How does soap remove grease from dishes?"}
+{"id": "gen-14", "kind": "general", "question": "What is the boiling point of water at sea level?"}
+{"id": "gen-15", "kind": "general", "question": "Why do leaves change color in autumn?"}
+{"id": "gen-16", "kind": "general", "question": "How do birds know where to migrate?"}
+{"id": "gen-17", "kind": "general", "question": "What is the square root of one hundred forty-four?"}
+{"id": "gen-18", "kind": "general", "question": "How is paper made from wood?"}
+{"id": "gen-19", "kind": "general", "question": "Why does the moon have phases?"}
+{"id": "gen-20", "kind": "general", "question": "What did the Romans build roads with?"}
+{"id": "gen-21", "kind": "general", "question": "How does a compass point north?"}
+{"id": "gen-22", "kind": "general", "question": "Why do onions make people cry?"}
+{"id": "gen-23", "kind": "general", "question": "What is the difference between a frog and a toad?"}
+{"id": "gen-24", "kind": "general", "question": "How long does it take light to reach Earth from the sun?"}

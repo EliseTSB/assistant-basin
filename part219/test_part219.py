@@ -20,7 +20,7 @@ from transformers import Olmo2Config, Olmo2ForCausalLM, PreTrainedTokenizerFast
 
 from part92 import common92 as c
 from part99 import swap99
-from part219 import run219, score219
+from part219 import means219, run219, score219
 
 D = 16
 N_LAYERS = 3
@@ -90,7 +90,8 @@ def make_args(workspace, tag, **overrides):
                   pushes=str(workspace["root"] / "pushes.pt"), limit=None, layers=None,
                   extrapolate=False, questions=None,
                   attn_implementation="eager", ablate_heads=None, transplant_heads=None,
-                  transplant_mode=None, reference_replay=None, record_token_ids=True)
+                  transplant_mode=None, reference_replay=None, record_token_ids=True,
+                  ablate_mode="zero", head_means=None)
     values.update(overrides)
     return argparse.Namespace(**values)
 
@@ -442,6 +443,315 @@ def test_a_raise_after_a_swap_restores_the_host(workspace, monkeypatch):
         assert torch.equal(parameter, before[name]), name
 
 
+# --- 8. Amendment 1: mean ablation -------------------------------------------------------------------------------
+
+def mean_vectors():
+    """A distinct vector per head and per place, so a wrong head or a wrong position cannot pass by luck."""
+    def vector(base, step):
+        return torch.tensor([base + step * index for index in range(HEAD_DIM)], dtype=torch.float32)
+    return {"L0H1": {"mean_pos0": vector(100.0, 1.0), "mean_rest": vector(-50.0, -1.0)},
+            "L2H0": {"mean_pos0": vector(7.0, 3.0), "mean_rest": vector(1.0, -2.0)}}
+
+
+def write_means(path, vectors=None):
+    """A head-means.pt in means219.py's shape, so the loader is exercised rather than a hand-built dict."""
+    payload = {name: {"mean_pos0": value["mean_pos0"].clone(),
+                      "mean_rest": value["mean_rest"].clone(),
+                      "n_pos0": 26, "n_rest": 300}
+               for name, value in (vectors or mean_vectors()).items()}
+    payload["meta"] = {"host": "tiny", "questions_sha256": "0" * 64, "n_new_tokens": 120}
+    torch.save(payload, path)
+    return path
+
+
+def capture_calls(model, layer):
+    """Every o_proj input one layer receives, with the call's sequence length, after the ablation hook has run."""
+    calls = []
+
+    def hook(_module, args):
+        calls.append((int(args[0].shape[1]), args[0].detach().clone()))
+
+    handle = model.model.layers[layer].self_attn.o_proj.register_forward_pre_hook(hook)
+    return handle, calls
+
+
+def test_mean_ablation_uses_each_rows_first_real_token_and_mean_rest_elsewhere(snapshots, tmp_path):
+    """Amendment 1's positions: pos0 at each row's own first real token of the prefill, mean_rest everywhere else.
+
+    The batch is left-padded (the two prompts have different lengths), so a version that wrote pos0 at local index 0
+    cannot pass: row 1's index 0 is a pad position.
+    """
+    host, _donor = snapshots
+    tokenizer, model = c.load_model(str(host), "cpu", attn_implementation="eager")
+    vectors = mean_vectors()
+    means = swap99.load_head_means(write_means(tmp_path / "head-means.pt"))
+    assert set(means) == {(0, 1), (2, 0)}
+
+    prompts = ["Who are you?", "The cat sat on mat"]
+    input_ids, attention_mask, width = c.batch_inputs(tokenizer, prompts, "chat", "cpu")
+    assert int(attention_mask[0].sum()) != int(attention_mask[1].sum())  # different lengths: it really is padded
+    assert int(attention_mask[0, 0]) == 0 and int(attention_mask[1, 0]) == 1
+    first = [width - int(row.sum()) for row in attention_mask]
+
+    handles, receipt = swap99.install_ablation_hooks(model, [(0, 1), (2, 0)], ablate_mode="mean", head_means=means)
+    captures = [capture_calls(model, layer) for layer in (0, 2)]
+    try:
+        with torch.inference_mode():
+            model(input_ids=input_ids, attention_mask=attention_mask, use_cache=False)
+        prefill = {layer: calls[-1] for layer, (_handle, calls) in zip((0, 2), captures)}
+        # A second forward on the same batch keeps the prefill state: the receipt is taken once, the hook keeps working.
+        with torch.inference_mode():
+            model(input_ids=input_ids, attention_mask=attention_mask, use_cache=False)
+    finally:
+        for _handle, _calls in captures:
+            _handle.remove()
+        for handle in handles:
+            handle.remove()
+
+    for layer, head in ((0, 1), (2, 0)):
+        start, end = head * HEAD_DIM, (head + 1) * HEAD_DIM
+        length, dirty = prefill[layer]
+        assert length == width
+        pos0 = vectors[f"L{layer}H{head}"]["mean_pos0"]
+        rest = vectors[f"L{layer}H{head}"]["mean_rest"]
+        for row, position in enumerate(first):
+            assert torch.equal(dirty[row, position, start:end], pos0), (layer, head, "pos0", row)
+            for other in range(width):
+                if other == position:
+                    continue
+                assert torch.equal(dirty[row, other, start:end], rest), (layer, head, "rest", row, other)
+        # The other head's slice in the same layer is untouched.
+        other = 1 - head if head < N_HEADS else None
+        if layer == 0 and other is not None:
+            assert torch.equal(dirty[..., :HEAD_DIM], prefill[0][1][..., :HEAD_DIM])
+
+    by_head = {(record["layer"], record["head"]): record for record in receipt}
+    assert set(by_head) == {(0, 1), (2, 0)}
+    for record in by_head.values():
+        assert record["mode"] == "mean"
+        assert record["pos0"]["positions"] == len(prompts)
+        assert record["pos0"]["matches"] is True, record
+        assert record["pos0"]["max_abs_diff_before"] > 0, record
+        assert record["prefill_rest"]["positions"] == int(attention_mask.sum()) - len(prompts)
+        assert record["prefill_rest"]["matches"] is True, record
+        assert record["prefill_rest"]["max_abs_diff_before"] > 0, record
+
+
+def test_mean_ablation_writes_mean_rest_at_decode_steps(snapshots, tmp_path):
+    """A decode call is one token whose local index 0 is not absolute position 0: it must take ``mean_rest``."""
+    host, _donor = snapshots
+    tokenizer, model = c.load_model(str(host), "cpu", attn_implementation="eager")
+    vectors = mean_vectors()
+    means = swap99.load_head_means(write_means(tmp_path / "head-means.pt"))
+    input_ids, attention_mask, width = c.batch_inputs(tokenizer, ["Who are you?", "The cat sat on mat"], "chat", "cpu")
+
+    handles, receipt = swap99.install_ablation_hooks(model, [(0, 1), (2, 0)], ablate_mode="mean", head_means=means)
+    captures = [capture_calls(model, layer) for layer in (0, 2)]
+    try:
+        with torch.inference_mode():
+            model.generate(input_ids=input_ids, attention_mask=attention_mask, do_sample=False,
+                           max_new_tokens=2, pad_token_id=int(tokenizer.pad_token_id))
+    finally:
+        for _handle, _calls in captures:
+            _handle.remove()
+        for handle in handles:
+            handle.remove()
+
+    for layer, head in ((0, 1), (2, 0)):
+        start, end = head * HEAD_DIM, (head + 1) * HEAD_DIM
+        rest = vectors[f"L{layer}H{head}"]["mean_rest"]
+        calls = captures[0 if layer == 0 else 1][1]
+        decodes = [dirty for length, dirty in calls if length == 1]
+        assert decodes, "the generation produced no decode step"
+        for dirty in decodes:
+            assert dirty.shape[0] == len(input_ids)
+            for row in range(dirty.shape[0]):
+                assert torch.equal(dirty[row, 0, start:end], rest), (layer, head, "decode", row)
+        by_head = {(record["layer"], record["head"]): record for record in receipt}
+        record = by_head[(layer, head)]
+        assert record["decode"]["positions"] == len(input_ids)
+        assert record["decode"]["matches"] is True, record
+        assert record["decode"]["max_abs_diff_before"] > 0, record
+
+
+def test_empty_head_set_in_mean_mode_changes_nothing(workspace, tmp_path):
+    """R0b's mean-wrapper half: the hooks are installed with no heads and every token must still match R0."""
+    means_path = write_means(tmp_path / "head-means.pt")
+    plain_rows, plain_meta = run_tag(workspace, "R0", reference_replay=str(workspace["out"] / "replay.json"))
+    empty_rows, empty_meta = run_tag(
+        workspace, "R0b-mean", ablate_heads="", ablate_mode="mean", head_means=str(means_path),
+        transplant_heads="", transplant_mode="donor", reference_replay=str(workspace["out"] / "replay.json"))
+    receipt = empty_meta["intervention_receipt"]
+    assert receipt["ablate_mode"] == "mean"
+    assert receipt["ablate_heads"] == [] and receipt["ablation"] == []
+    assert empty_meta["head_means_sha256"] == swap99.file_sha256(means_path)
+    assert empty_meta["reset_receipt"]["matches_reference"] is True
+    assert set(empty_rows) == set(plain_rows)
+    for key in plain_rows:
+        assert empty_rows[key]["token_ids"] == plain_rows[key]["token_ids"], key
+        assert empty_rows[key]["answer"] == plain_rows[key]["answer"], key
+    assert plain_meta.get("ablate_mode") is None  # a zeroing run's meta carries no Amendment 1 keys
+
+
+def test_mean_ablation_refuses_a_head_the_means_file_lacks(snapshots, tmp_path):
+    host, _donor = snapshots
+    _tokenizer, model = c.load_model(str(host), "cpu", attn_implementation="eager")
+    means = swap99.load_head_means(write_means(tmp_path / "head-means.pt"))
+    with pytest.raises(ValueError, match="no entry for L1H0"):
+        swap99.install_ablation_hooks(model, [(1, 0)], ablate_mode="mean", head_means=means)
+    with pytest.raises(ValueError, match="mean ablation needs the head means"):
+        swap99.install_ablation_hooks(model, [(0, 1)], ablate_mode="mean", head_means=None)
+
+
+def test_ablation_receipt_problems_names_a_failed_mean_check():
+    good = {"mode": "mean", "layer": 0, "head": 1,
+            "pos0": {"matches": True, "max_abs_diff_before": 1.0},
+            "prefill_rest": {"matches": True, "max_abs_diff_before": 1.0},
+            "decode": {"matches": True, "max_abs_diff_before": 1.0}}
+    assert swap99.ablation_receipt_problems([good]) == []
+    bad = json.loads(json.dumps(good))
+    bad["decode"]["matches"] = False
+    assert "does not hold mean_rest" in swap99.ablation_receipt_problems([bad])[0]
+    unchanged = json.loads(json.dumps(good))
+    unchanged["pos0"]["max_abs_diff_before"] = 0.0
+    assert any("did not differ from mean_pos0" in problem
+               for problem in swap99.ablation_receipt_problems([unchanged]))
+    assert swap99.ablation_receipt_problems([{"layer": 0, "head": 1, "all_zero": False}]) == [
+        "ablation receipt: L0H1 slice is not zero"]
+
+
+# --- 9. means219 ------------------------------------------------------------------------------------------------
+
+def test_means219_matches_a_plain_numpy_recomputation(snapshots):
+    """The saved means must be the plain mean of the captured o_proj slices, split into first token and the rest."""
+    import numpy as np
+
+    host, _donor = snapshots
+    _tokenizer, model = c.load_model(str(host), "cpu", attn_implementation="eager")
+    pad_id = 0
+    sequences = [[1, 3, 4, 5, 6], [7, 8, 9, 10], [11, 12, 13]]
+    heads = ["L0H0", "L0H1", "L1H0", "L2H1"]
+    means = means219.compute_means(model, sequences, pad_id=pad_id, heads=heads, layers=(0, 1, 2), batch=2)
+
+    input_ids, attention_mask, width = means219.pad_sequences(sequences, pad_id)
+    captured = {}
+
+    def make_hook(layer_no):
+        def hook(_module, args):
+            captured[layer_no] = args[0].detach().clone()
+        return hook
+
+    handles = [model.model.layers[layer].self_attn.o_proj.register_forward_pre_hook(make_hook(layer))
+               for layer in (0, 1, 2)]
+    try:
+        with torch.inference_mode():
+            # The same positions means219 passes: the model's own default would be arange, not the mask's.
+            model(input_ids=input_ids, attention_mask=attention_mask,
+                  position_ids=means219.positions_for(attention_mask), use_cache=False)
+    finally:
+        for handle in handles:
+            handle.remove()
+
+    first = [width - len(sequence) for sequence in sequences]
+    for name in heads:
+        layer, head = int(name[1]), int(name[3:])
+        start, end = head * HEAD_DIM, (head + 1) * HEAD_DIM
+        block = captured[layer][..., start:end].float().numpy()
+        real = [[position for position in range(width) if int(attention_mask[row, position])] for row in range(len(sequences))]
+        pos0 = np.stack([block[row, first[row]] for row in range(len(sequences))]).astype(np.float64).mean(0)
+        rest = np.stack([block[row, position] for row in range(len(sequences))
+                         for position in real[row] if position != first[row]]).astype(np.float64).mean(0)
+        assert means[name]["n_pos0"] == len(sequences)
+        assert means[name]["n_rest"] == sum(int(row.sum()) for row in attention_mask) - len(sequences)
+        assert means[name]["mean_pos0"].dtype == torch.float32
+        assert np.allclose(means[name]["mean_pos0"].numpy(), pos0, rtol=1e-5, atol=1e-6), name
+        assert np.allclose(means[name]["mean_rest"].numpy(), rest, rtol=1e-5, atol=1e-6), name
+
+
+def test_means219_ignores_pads(snapshots):
+    """A padded batch must give the same means as the same rows read one at a time (no padding at all)."""
+    host, _donor = snapshots
+    _tokenizer, model = c.load_model(str(host), "cpu", attn_implementation="eager")
+    sequences = [[1, 3, 4, 5, 6, 7], [8, 9], [10, 11, 12, 13]]
+    heads = ["L0H1", "L2H0"]
+    padded = means219.compute_means(model, sequences, pad_id=0, heads=heads, layers=(0, 1, 2), batch=3)
+    alone = means219.compute_means(model, sequences, pad_id=0, heads=heads, layers=(0, 1, 2), batch=1)
+    for name in heads:
+        assert padded[name]["n_pos0"] == alone[name]["n_pos0"] == len(sequences)
+        assert padded[name]["n_rest"] == alone[name]["n_rest"] == sum(len(row) for row in sequences) - len(sequences)
+        for key in ("mean_pos0", "mean_rest"):
+            assert torch.allclose(padded[name][key], alone[name][key], rtol=1e-5, atol=1e-6), (name, key)
+
+
+def test_means219_asserts_the_reference_file_hash(tmp_path):
+    import hashlib
+    wrong = tmp_path / "questions.jsonl"
+    wrong.write_text(json.dumps({"id": "g-01", "kind": "general", "question": "Why?"}) + "\n", encoding="utf-8")
+    assert hashlib.sha256(wrong.read_bytes()).hexdigest()[:16] != means219.QUESTIONS_SHA256_PREFIX
+    with pytest.raises(SystemExit, match="does not start"):
+        means219.load_reference_questions(wrong)
+
+
+def test_means219_reference_prompts_are_the_amendments_26():
+    """The 24 general questions plus Part 99's 4 and 5, taken from swap99 rather than retyped."""
+    import hashlib
+    prefix = means219.QUESTIONS_SHA256_PREFIX
+    real = Path("/home/elisepc/green/Journal/notes/reports/attention-heads-screens-2026-11-18/a-olmo-stages/"
+                "questions.jsonl")
+    if not real.exists() or not hashlib.sha256(real.read_bytes()).hexdigest().startswith(prefix):
+        pytest.skip("screen A's questions.jsonl is not on this machine")
+    prompts = means219.reference_prompts(real)
+    assert len(prompts) == 26
+    assert prompts[-2:] == [swap99.QUESTIONS[4], swap99.QUESTIONS[5]]
+    assert swap99.QUESTIONS[3] not in prompts   # "Describe your perfect day" addresses the model and is left out
+
+
+# --- 10. run219's Amendment 1 gates ----------------------------------------------------------------------------
+
+def test_pilot_a1_refuses_when_the_pilot_r0_is_missing(tmp_path):
+    """Amendment 1 reuses the pilot's R0 and refuses to invent one: R0.jsonl must be on disk first."""
+    out = tmp_path / "out"
+    out.mkdir()
+    kernel = write_kernel(tmp_path / "kernel")
+    with pytest.raises(SystemExit, match="R0.jsonl"):
+        run219.main(_pilot_a1_args(tmp_path, kernel, out))
+
+
+def test_the_stage_a_main_run_refuses_without_a_passing_r2m_pilot(tmp_path):
+    out = tmp_path / "out"
+    out.mkdir()
+    kernel = write_kernel(tmp_path / "kernel")
+    (out / "R0.jsonl").write_text("", encoding="utf-8")
+    (out / "replay-R0.json").write_text("{}", encoding="utf-8")
+    means = write_means(tmp_path / "head-means.pt")
+    args = _pilot_a1_args(tmp_path, kernel, out)
+    args.remove("--pilot-a1")
+    args += ["--stage", "a", "--means", str(means)]
+    with pytest.raises(SystemExit, match="R2m pilot verdict is missing"):
+        run219.main(args)
+    (out / "manifest.json").write_text(json.dumps({"pilot_a1": {"decision": "stop", "because": "2 of 21 coherent"}}),
+                                       encoding="utf-8")
+    with pytest.raises(SystemExit, match="not 'continue'"):
+        run219.main(args)
+
+
+def _pilot_a1_args(tmp_path, kernel_path, out):
+    return ["--host", str(tmp_path / "no-host"), "--neurons", str(tmp_path / "neurons.json"),
+            "--kinds", str(tmp_path / "kinds.json"), "--pushes", str(tmp_path / "pushes.pt"),
+            "--out", str(out), "--device", "cpu", "--kernel-check", str(kernel_path),
+            "--means", str(tmp_path / "head-means.pt"), "--pilot-a1"]
+
+
+def test_pilot_verdict_a1_stops_below_the_coherence_bar(tmp_path):
+    show = {"R0": set(SLOT[:19]) | set(CONCEPT[:16]), "R2m": set(SLOT[:11]) | set(CONCEPT[:15])}
+    coherent = {("R2m", unit, 0): False for unit in SLOT[:8]}  # eight incoherent: under the 15-of-21 bar
+    out = write_world(tmp_path / "results", show, coherent=coherent)
+    verdict = run219.pilot_verdict_a1(out, argparse.Namespace(kinds=str(out / "kinds.json")))
+    assert verdict["decision"] == "stop"
+    assert "under 15" in verdict["because"]
+    assert verdict["r2m_slot_answers_coherent"] == [13, 21]
+
+
 # --- the scorer on synthetic labels -----------------------------------------------------------------------------
 
 SLOT = [f"s{index:02d}" for index in range(1, 22)]
@@ -582,6 +892,43 @@ def test_a_broken_receipt_marks_the_run_unreadable_and_blocks_its_prediction(tmp
 
 
 # --- F2: an unread run cannot serve as a control and withdraws what depends on it -------------------------------
+
+# --- Amendment 1 in the scorer: 219.1m/219.2m, and the pilot's 219.1/219.2 kept as read ------------------------
+
+def amended_show():
+    """The amended world: the pilot's R0/R2/R1 plus the mean arm's R2m and rig check R5m; no zeroing R5."""
+    return {"R0": set(SLOT[:19]) | set(CONCEPT[:16]),
+            "R1": set(SLOT[:2]) | set(SLOT[5:8]) | set(CONCEPT[:15]),
+            "R2": set(SLOT[:11]) | set(CONCEPT[:15]),                       # the pilot: zeroing broke answers
+            "R2m": (set(SLOT[:19]) - set(UPSTREAM[:8])) | set(CONCEPT[:14]),
+            "R3m": set(SLOT[:16]) | set(CONCEPT[:15]),
+            "R5m": set(SLOT[:18]) | set(CONCEPT[:16])}
+
+
+def test_the_amended_world_scores_219_1m_and_219_2m_and_keeps_the_pilots_rows(tmp_path):
+    coherent = {("R2", unit, 0): False for unit in SLOT[:8]}  # 13 of 21 coherent: the pilot's stopping rule fired
+    card = build(tmp_path, amended_show(), coherent=coherent)
+    assert card["gate"]["passed"] is True
+    assert card["pilot_verdicts"]["available"] is True
+    assert card["predictions"]["219.2"]["verdict"] == "failed"
+    assert card["predictions"]["219.1"]["verdict"] == "inconclusive: zeroing these heads breaks answers"
+    assert card["nets_upstream_against_R0"]["R2m"]["net"] == 8
+    assert card["controls"]["R5m_rig_check"]["held"] is True
+    assert card["predictions"]["219.2m"]["verdict"] == "held"
+    assert card["predictions"]["219.1m"]["verdict"] == "held"
+    assert card["headlines"] == ["the input-varying part of these four heads' output is needed for the slot "
+                                 "neurons' self-descriptions"]
+
+
+def test_a_failed_r5m_freezes_219_1m_and_219_2m(tmp_path):
+    show = amended_show()
+    show["R5m"] = set(SLOT[:15]) | set(CONCEPT[:16])  # four upstream units lost: over the rig's 2
+    card = build(tmp_path, show)
+    assert card["controls"]["R5m_rig_check"]["held"] is False
+    assert card["predictions"]["219.1m"]["verdict"].startswith("not read")
+    assert card["predictions"]["219.2m"]["verdict"].startswith("not read")
+    assert not any("input-varying" in headline for headline in card["headlines"])
+
 
 def test_an_unread_r5_cannot_serve_as_its_rig_check(tmp_path):
     """The review's score_probe case: an R5 whose receipt fails was still read as a control and left both headlines

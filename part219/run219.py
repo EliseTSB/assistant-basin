@@ -15,10 +15,19 @@ for token, and checks every reset receipt against R0's stored replay.
 
     --pilot   runs R0 and R2 only and applies the design's pilot stopping rule (see pilot_verdict below).
 
+Amendment 1 (mean-ablation, after the pilot's stopping rule fired). R2m to R7m replace R2 to R7 in the main stage:
+same heads, `--ablate-mode mean` and the same means file. R2 stays the reported zero-ablation pilot arm and runs only
+under `--pilot`. R0b now runs through both hook wrappers with empty head sets (`R0b` zeroing, `R0b-mean` mean), so a
+mean run's receipt is checked against R0 token for token like a zeroing one.
+
+    --pilot-a1   runs R2m only, reusing the pilot's R0.jsonl and replay-R0.json (it asserts both exist), and applies
+                 the amendment's stopping rule: stop if fewer than 15 of 21 slot answers are coherent or a receipt
+                 fails. A main `--stage a` refuses to launch until that verdict is present and says continue.
+
 Launch (A770, from the repo root, `tools/launch_arc.py 219 --copy ...` so the job folder has every module):
 
-    python tools/launch_arc.py 219 --copy part219/run219.py part219/score219.py part99/swap99.py \
-        part92/common92.py part85/checkpoints.py part101/read101.py tools/part_check.py \
+    python tools/launch_arc.py 219 --copy part219/run219.py part219/score219.py part219/means219.py \
+        part99/swap99.py part92/common92.py part85/checkpoints.py part101/read101.py tools/part_check.py \
         --step "-I -B part219\\run219.py --host <Instruct snapshot> --neurons results\\part92\\step2\\neurons.json \
                 --kinds results\\part92\\step2\\kinds.json --pushes results\\part99-pushes.pt --stage a --device xpu" \
         --step "-I -B part219\\run219.py --host <Instruct snapshot> --donor <mid-training-end snapshot> ... --stage b"
@@ -61,6 +70,7 @@ GATE_R0_MIN_SLOT = 17       # PART219-DESIGN.md, Gate
 GATE_R1_MAX_SLOT = 5
 PILOT_R0_MIN_SLOT = 17      # PART219-DESIGN.md, Size/Pilot
 PILOT_R2_MIN_COHERENT = 15
+DO_NOTHING_TAGS = ("R0b", "R0b-mean")   # both hook wrappers, empty head sets (Amendment 1 added the mean one)
 HEARTBEAT_SECONDS = 8.0
 
 
@@ -118,20 +128,38 @@ def check_kernel_record(path: Path) -> dict:
     return result
 
 
+def zero_specs() -> list[dict]:
+    """The design's zeroing runs, R2 to R7. R2 is the reported pilot arm; R3 to R7 are replaced by R3m to R7m under
+    Amendment 1, so none of these six runs in the main stage any more."""
+    return [
+        {"tag": "R2", "role": "219.1, 219.2 (pilot arm)", "ablate_heads": ",".join(IMPORTANT_HEADS)},
+        {"tag": "R3", "role": "exploratory", "ablate_heads": "L1H4"},
+        {"tag": "R4", "role": "exploratory", "ablate_heads": "L0H10"},
+        {"tag": "R5", "role": "rig check", "ablate_heads": ",".join(FROZEN_HEADS)},
+        {"tag": "R6", "role": "exploratory", "ablate_heads": "L2H6"},
+        {"tag": "R7", "role": "exploratory", "ablate_heads": "L3H5"},
+    ]
+
+
+def mean_specs() -> list[dict]:
+    """Amendment 1's runs, R2m to R7m: the same heads as R2 to R7, mean-ablated instead of zeroed."""
+    return [
+        {"tag": spec["tag"] + "m", "role": spec["role"].replace(" (pilot arm)", ""),
+         "ablate_heads": spec["ablate_heads"], "ablate_mode": "mean"}
+        for spec in zero_specs()
+    ]
+
+
 def specs_for_stage(stage: str) -> list[dict]:
-    """The design's Runs table, split into the two processes."""
+    """The design's Runs table with Amendment 1 folded in, split into the two processes."""
     if stage == "a":
         return [
             {"tag": "R0", "role": "reference"},
-            {"tag": "R0b", "role": "do-nothing check", "ablate_heads": "", "transplant_heads": "",
-             "transplant_mode": "donor"},
-            {"tag": "R2", "role": "219.1, 219.2", "ablate_heads": ",".join(IMPORTANT_HEADS)},
-            {"tag": "R3", "role": "exploratory", "ablate_heads": "L1H4"},
-            {"tag": "R4", "role": "exploratory", "ablate_heads": "L0H10"},
-            {"tag": "R5", "role": "rig check", "ablate_heads": ",".join(FROZEN_HEADS)},
-            {"tag": "R6", "role": "exploratory", "ablate_heads": "L2H6"},
-            {"tag": "R7", "role": "exploratory", "ablate_heads": "L3H5"},
-        ]
+            {"tag": "R0b", "role": "do-nothing check (zeroing wrapper)", "ablate_heads": "",
+             "transplant_heads": "", "transplant_mode": "donor"},
+            {"tag": "R0b-mean", "role": "do-nothing check (mean wrapper)", "ablate_heads": "",
+             "ablate_mode": "mean", "transplant_heads": "", "transplant_mode": "donor"},
+        ] + mean_specs()
     if stage == "b":
         return [
             {"tag": "R1", "role": "gate and comparison", "swap": "attn", "layers": "0-3"},
@@ -146,8 +174,13 @@ def specs_for_stage(stage: str) -> list[dict]:
 
 
 def pilot_specs() -> list[dict]:
-    """The pilot is R0 and R2 in full (PART219-DESIGN.md, Size)."""
-    return [spec for spec in specs_for_stage("a") if spec["tag"] in ("R0", "R2")]
+    """The registered pilot is R0 and R2 in full (PART219-DESIGN.md, Size). It has run; `--pilot` still reproduces it."""
+    return [{"tag": "R0", "role": "reference"}] + [spec for spec in zero_specs() if spec["tag"] == "R2"]
+
+
+def pilot_a1_specs() -> list[dict]:
+    """Amendment 1's pilot: R2m alone. R0 is reused from the pilot, never rerun here."""
+    return [spec for spec in mean_specs() if spec["tag"] == "R2m"]
 
 
 def expected_rows(args) -> int:
@@ -174,6 +207,8 @@ def swap_args(base, spec: dict, replay_path: Path) -> argparse.Namespace:
         layers=spec.get("layers"), extrapolate=False, questions=None,
         attn_implementation="eager",
         ablate_heads=spec.get("ablate_heads"),
+        ablate_mode=spec.get("ablate_mode", "zero"),
+        head_means=base.means if spec.get("ablate_mode") == "mean" else None,
         transplant_heads=spec.get("transplant_heads"),
         transplant_mode=spec.get("transplant_mode"),
         reference_replay=str(replay_path),
@@ -213,7 +248,10 @@ def describe(spec: dict) -> dict:
         return {"transplant_heads": spec["transplant_heads"].split(","),
                 "transplant_mode": spec.get("transplant_mode")}
     if spec.get("ablate_heads") is not None:
-        return {"ablate_heads": [name for name in spec["ablate_heads"].split(",") if name]}
+        described = {"ablate_heads": [name for name in spec["ablate_heads"].split(",") if name]}
+        if spec.get("ablate_mode", "zero") != "zero":  # a zeroing run's manifest entry is unchanged
+            described["ablate_mode"] = spec["ablate_mode"]
+        return described
     return {"change": "none"}
 
 
@@ -252,13 +290,17 @@ def run_checks(out: Path, manifest: dict) -> dict:
     """The design's do-nothing and reset checks, computed from the files the runs wrote."""
     checks = {}
     runs = manifest["runs"]
-    if "R0" in runs and "R0b" in runs:
-        checks["r0b_equals_r0"] = compare_answers(out / "R0.jsonl", out / "R0b.jsonl")
-        if not checks["r0b_equals_r0"]["identical"]:
-            problem = "R0b does not match R0 token for token"
-            if problem not in runs["R0b"]["problems"]:
-                runs["R0b"]["problems"].append(problem)
-            runs["R0b"]["readable"] = False
+    if "R0" in runs:
+        for tag in DO_NOTHING_TAGS:  # R0b (zeroing wrapper) and R0b-mean (mean wrapper, Amendment 1)
+            if tag not in runs:
+                continue
+            key = f"{tag.replace('-', '_')}_equals_r0"
+            checks[key] = compare_answers(out / "R0.jsonl", out / f"{tag}.jsonl")
+            if not checks[key]["identical"]:
+                problem = f"{tag} does not match R0 token for token"
+                if problem not in runs[tag]["problems"]:
+                    runs[tag]["problems"].append(problem)
+                runs[tag]["readable"] = False
     reference = None
     r0_meta = out / "R0.meta.json"
     if r0_meta.exists():
@@ -319,10 +361,11 @@ def run_one(tag: str, spec: dict, base, model, tokenizer, donor, replay_path: Pa
             problems.append(f"reset receipt differs from the reference: {receipt.get('mismatch')}")
         if meta.get("attn_implementation") != "eager":
             problems.append(f"attn_implementation is {meta.get('attn_implementation')!r}, not 'eager'")
+        entry["ablate_mode"] = meta.get("ablate_mode")
+        entry["head_means_sha256"] = meta.get("head_means_sha256")
         ablation = (meta.get("intervention_receipt") or {}).get("ablation") or []
-        for record in ablation:
-            if not record.get("all_zero"):
-                problems.append(f"ablation receipt: L{record['layer']}H{record['head']} slice is not zero")
+        # One rule per mode (zeroing: all_zero; mean: the three equalities and a non-zero difference before the hook).
+        problems.extend(swap99.ablation_receipt_problems(ablation))
         transplant = (meta.get("intervention_receipt") or {}).get("transplant") or {}
         for record in transplant.get("records", []):
             if not record.get("matches_expected"):
@@ -340,7 +383,42 @@ def write_manifest(path: Path, manifest: dict) -> None:
     path.write_text(json.dumps(manifest, indent=1) + "\n", encoding="utf-8")
 
 
+def require_pilot_a1(out: Path) -> dict:
+    """Amendment 1: the stage-a main run waits for the R2m pilot's verdict, and only a `continue` lets it launch.
+
+    A missing verdict, `stop`, or `pending_labels` all refuse: the amendment's rule is that R3m to R7m do not run if
+    R2m also breaks answers, and an unlabelled R2m is not a pass either.
+    """
+    manifest_path = out / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_path.exists() else {}
+    verdict = manifest.get("pilot_a1")
+    if not verdict:
+        raise SystemExit(
+            f"the R2m pilot verdict is missing from {manifest_path}: run `--pilot-a1`, label labels-R2m.jsonl with the "
+            "blind reader, then run `--pilot-a1` again before the stage-a main run (PART219-DESIGN.md Amendment 1)")
+    if verdict.get("decision") == "pending_labels":
+        raise SystemExit(
+            f"the R2m pilot has no verdict yet ({verdict.get('because')}): label labels-R2m.jsonl and rerun "
+            "`--pilot-a1` before the stage-a main run")
+    if verdict.get("decision") != "continue":
+        raise SystemExit(
+            f"the R2m pilot verdict is {verdict.get('decision')!r}, not 'continue' "
+            f"({verdict.get('because')}): the ablation half ends and R3m to R7m do not run (Amendment 1)")
+    return verdict
+
+
+def require_pilot_r0(out: Path, replay_path: Path) -> dict:
+    """Amendment 1's pilot reuses the pilot's R0: both files must exist, and R0 is never rerun here."""
+    for path in (out / "R0.jsonl", replay_path):
+        if not path.exists():
+            raise SystemExit(f"{path} is missing: --pilot-a1 reuses the registered pilot's R0 (Amendment 1) and does "
+                             "not rerun it; run `--pilot` first")
+    rows = len(read_rows(out / "R0.jsonl"))
+    return {"jsonl": "R0.jsonl", "replay": replay_path.name, "rows": rows, "reused": True}
+
+
 def run_stage(args) -> dict:
+    pilot_a1 = bool(getattr(args, "pilot_a1", False))
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     kernel = check_kernel_record(Path(args.kernel_check))
@@ -348,7 +426,17 @@ def run_stage(args) -> dict:
     if args.stage == "b" and not replay_path.exists():
         raise SystemExit(f"{replay_path} is missing: stage a must run R0 first, so every stage b reset receipt has a "
                          "reference to be compared with")
-    specs = pilot_specs() if args.pilot else specs_for_stage(args.stage)
+    if pilot_a1:
+        r0 = require_pilot_r0(out, replay_path)
+        if not Path(args.means).exists():
+            raise SystemExit(f"{args.means} is missing: run part219/means219.py before the R2m pilot")
+        specs = pilot_a1_specs()
+    elif args.pilot:
+        specs = pilot_specs()
+    else:
+        if args.stage == "a":
+            require_pilot_a1(out)
+        specs = specs_for_stage(args.stage)
     frozen = assert_registered_heads()
 
     manifest_path = out / "manifest.json"
@@ -360,8 +448,17 @@ def run_stage(args) -> dict:
                      "registered_frozen_heads": list(FROZEN_HEADS), "recomputed_frozen_heads": frozen,
                      "registered_important_heads": list(IMPORTANT_HEADS),
                      "replay": replay_path.name})
-    manifest.setdefault("stages", {})[args.stage] = {
-        "pilot": bool(args.pilot), "runs": [spec["tag"] for spec in specs], "seconds": None}
+    if any(spec.get("ablate_mode") == "mean" for spec in specs):
+        # Amendment 1: every mean run reads this one file, so the manifest names it and its bytes once.
+        manifest["head_means"] = str(Path(args.means).expanduser())
+        manifest["head_means_sha256"] = swap99.file_sha256(Path(args.means).expanduser())
+    # `--pilot-a1` keeps its own stage key so the registered pilot's record in `stages["a"]` is not overwritten.
+    stage_key = "a1" if pilot_a1 else args.stage
+    manifest.setdefault("stages", {})[stage_key] = {
+        "pilot": bool(args.pilot), "pilot_a1": pilot_a1, "runs": [spec["tag"] for spec in specs],
+        "seconds": None}
+    if pilot_a1:
+        manifest["stages"][stage_key]["r0"] = r0
     manifest.setdefault("checks", {})["head_lists"] = {
         "frozen_recomputed_equals_registered": tuple(frozen) == FROZEN_HEADS,
         "important": list(IMPORTANT_HEADS), "frozen": list(FROZEN_HEADS)}
@@ -375,11 +472,11 @@ def run_stage(args) -> dict:
 
     base = SimpleNamespace(**{name: getattr(args, name) for name in
                               ("host", "donor", "tokenizer", "neurons", "kinds", "only", "pushes", "limit",
-                               "out", "device", "batch")})
+                               "out", "device", "batch", "means")})
     base.expected_rows = expected_rows(args)
 
     started = time.perf_counter()
-    with Progress(f"stage {args.stage}") as progress:
+    with Progress(f"stage {stage_key}") as progress:
         for spec in specs:
             progress.current = spec["tag"]
             print(f"[run219] {spec['tag']}: {spec['role']} — {json.dumps(describe(spec))}", flush=True)
@@ -392,12 +489,19 @@ def run_stage(args) -> dict:
                   f"{entry['seconds']}s, readable={entry['readable']}"
                   + ("" if entry["readable"] else f" — {'; '.join(entry['problems'])}"), flush=True)
 
-    manifest["stages"][args.stage]["seconds"] = round(time.perf_counter() - started, 1)
+    manifest["stages"][stage_key]["seconds"] = round(time.perf_counter() - started, 1)
     manifest["checks"].update(run_checks(out, manifest))
     write_manifest(manifest_path, manifest)
-    print(f"[run219] stage {args.stage} finished in {manifest['stages'][args.stage]['seconds']}s; "
+    print(f"[run219] stage {stage_key} finished in {manifest['stages'][stage_key]['seconds']}s; "
           f"manifest={manifest_path}", flush=True)
 
+    if pilot_a1:
+        verdict = pilot_verdict_a1(out, args)
+        verdict["r0"] = r0
+        manifest["pilot_a1"] = verdict
+        write_manifest(manifest_path, manifest)
+        print(f"[run219] pilot a1: {json.dumps(verdict, indent=1)}", flush=True)
+        return {"manifest": manifest, "pilot_a1": verdict}
     if args.pilot:
         verdict = pilot_verdict(out, args)
         manifest["pilot"] = verdict
@@ -450,6 +554,49 @@ def pilot_verdict(out: Path, args) -> dict:
     return verdict
 
 
+def pilot_verdict_a1(out: Path, args) -> dict:
+    """PART219-DESIGN.md Amendment 1's pilot stopping rule, for R2m alone.
+
+    "R2m alone first (R0 reused), with the registered stopping rule: stop if fewer than 15 of 21 slot answers are
+    coherent or a receipt fails." R0's own 17-of-21 item is not re-decided here: the pilot already read R0 at 20 of 21
+    and this mode does not rerun it. The coherence criterion is a reader label, so it is decided once
+    `labels-R2m.jsonl` exists; until then the verdict is `pending_labels` rather than a proxy measurement.
+    """
+    import score219
+
+    reasons = []
+    manifest = json.loads((out / "manifest.json").read_text(encoding="utf-8"))
+    entry = (manifest.get("runs") or {}).get("R2m")
+    if entry is None:
+        reasons.append("R2m did not run")
+    elif not entry.get("readable", False):
+        reasons.append("R2m is unreadable: " + "; ".join(entry.get("problems") or ["no reason recorded"]))
+    labels = score219.pilot_labels_a1(out, args.kinds)
+    verdict = {"run": "R2m", "r0_reused": True, "labels_available": labels["available"],
+               "receipt_problems": reasons,
+               "r2m_slot_answers_coherent": labels.get("r2m_slot_who_coherent"),
+               "r2m_min": PILOT_R2_MIN_COHERENT,
+               "head_means_sha256": entry.get("head_means_sha256") if entry else None}
+    if reasons:
+        verdict["decision"] = "stop"
+        verdict["because"] = "a receipt or the run itself failed"
+        return verdict
+    if not labels["available"]:
+        verdict["decision"] = "pending_labels"
+        verdict["because"] = ("the coherence criterion is a reader label: run the blind reader on labels-R2m.jsonl, "
+                              "then run `--pilot-a1` again or `score219.py --pilot-a1`")
+        return verdict
+    coherent, total = labels["r2m_slot_who_coherent"]
+    if coherent < PILOT_R2_MIN_COHERENT:
+        reasons.append(f"R2m leaves {coherent} of {total} slot answers coherent, under {PILOT_R2_MIN_COHERENT}")
+    verdict["decision"] = "stop" if reasons else "continue"
+    verdict["because"] = "; ".join(reasons) if reasons else "the R2m pilot criterion held"
+    if reasons:
+        verdict["amendment_note"] = ("the ablation half ends: 219.1m is not read and the reported result is that these "
+                                     "heads cannot be removed by zero- or mean-ablation without breaking answers")
+    return verdict
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("--host", required=True, help="local Instruct snapshot directory")
@@ -464,6 +611,10 @@ def main(argv=None):
     parser.add_argument("--batch", type=int, default=BATCH)
     parser.add_argument("--stage", choices=("a", "b"), default="a")
     parser.add_argument("--pilot", action="store_true", help="run R0 and R2 only and apply the pilot stopping rule")
+    parser.add_argument("--pilot-a1", action="store_true",
+                        help="Amendment 1: run R2m only, reusing the pilot's R0, and apply the R2m stopping rule")
+    parser.add_argument("--means", default=str(REPO / "results" / "part219" / "head-means.pt"),
+                        help="means219.py's head-means.pt, read by every mean-ablation run (Amendment 1)")
     parser.add_argument("--replay", help="the stored replay file (default <out>/replay-R0.json)")
     parser.add_argument("--kernel-check", default=str(REPO / "results" / "part219" / "kernel-check.json"),
                         help="the design's kernel record; every stage refuses to launch unless it passes under eager")
@@ -475,8 +626,12 @@ def main(argv=None):
         parser.error("--donor is required for stage b")
     if args.limit is not None and args.limit < 1:
         parser.error("--limit must be positive")
+    if args.pilot and args.pilot_a1:
+        parser.error("--pilot and --pilot-a1 are different pilots; run one at a time")
     result = run_stage(args)
     if args.pilot and result["pilot"]["decision"] == "stop":
+        return 2
+    if args.pilot_a1 and result["pilot_a1"]["decision"] == "stop":
         return 2
     return 0
 
