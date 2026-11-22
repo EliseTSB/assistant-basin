@@ -1,0 +1,1111 @@
+{
+ "part": 219,
+ "design": "PART219-DESIGN.md",
+ "n_slot": 21,
+ "n_concept": 18,
+ "split": {
+  "head_layers": [
+   0,
+   1,
+   2,
+   3
+  ],
+  "deepest_head_layer": 3,
+  "upstream": [
+   "p92-02",
+   "p92-03",
+   "p92-04",
+   "p92-05",
+   "p92-09",
+   "p92-13",
+   "p92-18",
+   "p92-24",
+   "p92-25",
+   "p92-32",
+   "p92-33",
+   "p92-35",
+   "p92-36",
+   "p92-37",
+   "p92-46",
+   "p92-47"
+  ],
+  "downstream": [
+   "p92-07",
+   "p92-10",
+   "p92-20",
+   "p92-42",
+   "p92-50"
+  ],
+  "n_upstream": 16,
+  "n_downstream": 5
+ },
+ "gate": {
+  "passed": true,
+  "failures": [],
+  "checks": {
+   "kernel_check": {
+    "passes": true,
+    "candidate": "/home/elisepc/green/worktrees/ab-part219/results/part219/kernel-check.json",
+    "reference": "results/kernel-reference/allenai-olmo-2-0425-1b-instruct-cpu-float32.json",
+    "failures": []
+   },
+   "r0_slot_persona": {
+    "count": 20,
+    "of": 21,
+    "min": 17,
+    "status": [],
+    "passes": true
+   },
+   "r1_slot_persona": {
+    "count": 4,
+    "of": 21,
+    "max": 5,
+    "status": [],
+    "passes": true
+   }
+  }
+ },
+ "runs": {
+  "R0": {
+   "label_errors": 10,
+   "items_still_missing": 0,
+   "label_errors_pass2": 12,
+   "items_still_missing_pass2": 0,
+   "labelled": true,
+   "two_pass": {
+    "items": 42,
+    "compared": 42,
+    "shows_persona_agree": 42,
+    "coherent_agree": 41,
+    "slot_who_pass1": [
+     20,
+     21
+    ],
+    "slot_who_pass2": [
+     20,
+     21
+    ],
+    "passes": true,
+    "reasons": []
+   },
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    20,
+    21
+   ],
+   "slot_who_coherent": [
+    20,
+    21
+   ],
+   "concept_any": [
+    17,
+    18
+   ],
+   "slot_who_pass2": [
+    20,
+    21
+   ],
+   "deepseek_agreement": {
+    "items": 26,
+    "shows_persona_agree": 25,
+    "coherent_agree": 24,
+    "shows_persona_agreement": 0.9615,
+    "coherent_agreement": 0.9231
+   },
+   "status": []
+  },
+  "R1": {
+   "label_errors": 13,
+   "items_still_missing": 0,
+   "label_errors_pass2": 2,
+   "items_still_missing_pass2": 0,
+   "labelled": true,
+   "two_pass": {
+    "items": 42,
+    "compared": 42,
+    "shows_persona_agree": 41,
+    "coherent_agree": 39,
+    "slot_who_pass1": [
+     4,
+     21
+    ],
+    "slot_who_pass2": [
+     5,
+     21
+    ],
+    "passes": true,
+    "reasons": []
+   },
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    4,
+    21
+   ],
+   "slot_who_coherent": [
+    16,
+    21
+   ],
+   "concept_any": [
+    14,
+    18
+   ],
+   "slot_who_pass2": [
+    5,
+    21
+   ],
+   "deepseek_agreement": {
+    "items": 26,
+    "shows_persona_agree": 25,
+    "coherent_agree": 25,
+    "shows_persona_agreement": 0.9615,
+    "coherent_agreement": 0.9615
+   },
+   "status": []
+  },
+  "R2": {
+   "label_errors": 1,
+   "items_still_missing": 0,
+   "label_errors_pass2": 0,
+   "items_still_missing_pass2": 0,
+   "labelled": true,
+   "two_pass": {
+    "items": 42,
+    "compared": 42,
+    "shows_persona_agree": 40,
+    "coherent_agree": 41,
+    "slot_who_pass1": [
+     1,
+     21
+    ],
+    "slot_who_pass2": [
+     1,
+     21
+    ],
+    "passes": true,
+    "reasons": []
+   },
+   "unpushed_incoherent": 2,
+   "inconclusive": false,
+   "slot_who": [
+    1,
+    21
+   ],
+   "slot_who_coherent": [
+    2,
+    21
+   ],
+   "concept_any": [
+    14,
+    18
+   ],
+   "slot_who_pass2": [
+    1,
+    21
+   ],
+   "deepseek_agreement": {
+    "items": 26,
+    "shows_persona_agree": 25,
+    "coherent_agree": 25,
+    "shows_persona_agreement": 0.9615,
+    "coherent_agreement": 0.9615
+   },
+   "status": []
+  },
+  "R8": {
+   "label_errors": 7,
+   "items_still_missing": 0,
+   "label_errors_pass2": 4,
+   "items_still_missing_pass2": 0,
+   "labelled": true,
+   "two_pass": {
+    "items": 42,
+    "compared": 42,
+    "shows_persona_agree": 42,
+    "coherent_agree": 41,
+    "slot_who_pass1": [
+     13,
+     21
+    ],
+    "slot_who_pass2": [
+     13,
+     21
+    ],
+    "passes": true,
+    "reasons": []
+   },
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    13,
+    21
+   ],
+   "slot_who_coherent": [
+    16,
+    21
+   ],
+   "concept_any": [
+    18,
+    18
+   ],
+   "slot_who_pass2": [
+    13,
+    21
+   ],
+   "deepseek_agreement": {
+    "items": 26,
+    "shows_persona_agree": 25,
+    "coherent_agree": 24,
+    "shows_persona_agreement": 0.9615,
+    "coherent_agreement": 0.9231
+   },
+   "status": []
+  },
+  "R9": {
+   "label_errors": 3,
+   "items_still_missing": 0,
+   "label_errors_pass2": 7,
+   "items_still_missing_pass2": 0,
+   "labelled": true,
+   "two_pass": {
+    "items": 42,
+    "compared": 42,
+    "shows_persona_agree": 42,
+    "coherent_agree": 41,
+    "slot_who_pass1": [
+     17,
+     21
+    ],
+    "slot_who_pass2": [
+     17,
+     21
+    ],
+    "passes": true,
+    "reasons": []
+   },
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    17,
+    21
+   ],
+   "slot_who_coherent": [
+    20,
+    21
+   ],
+   "concept_any": [
+    17,
+    18
+   ],
+   "slot_who_pass2": [
+    17,
+    21
+   ],
+   "deepseek_agreement": {
+    "items": 26,
+    "shows_persona_agree": 24,
+    "coherent_agree": 26,
+    "shows_persona_agreement": 0.9231,
+    "coherent_agreement": 1.0
+   },
+   "status": []
+  },
+  "R10": {
+   "label_errors": 9,
+   "items_still_missing": 0,
+   "label_errors_pass2": 8,
+   "items_still_missing_pass2": 0,
+   "labelled": true,
+   "two_pass": {
+    "items": 42,
+    "compared": 42,
+    "shows_persona_agree": 41,
+    "coherent_agree": 41,
+    "slot_who_pass1": [
+     17,
+     21
+    ],
+    "slot_who_pass2": [
+     16,
+     21
+    ],
+    "passes": true,
+    "reasons": []
+   },
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    17,
+    21
+   ],
+   "slot_who_coherent": [
+    18,
+    21
+   ],
+   "concept_any": [
+    17,
+    18
+   ],
+   "slot_who_pass2": [
+    16,
+    21
+   ],
+   "deepseek_agreement": {
+    "items": 26,
+    "shows_persona_agree": 25,
+    "coherent_agree": 24,
+    "shows_persona_agreement": 0.9615,
+    "coherent_agreement": 0.9231
+   },
+   "status": []
+  },
+  "R2m": {
+   "label_errors": 1,
+   "items_still_missing": 0,
+   "label_errors_pass2": 0,
+   "items_still_missing_pass2": 0,
+   "labelled": true,
+   "two_pass": {
+    "items": 42,
+    "compared": 42,
+    "shows_persona_agree": 41,
+    "coherent_agree": 42,
+    "slot_who_pass1": [
+     1,
+     21
+    ],
+    "slot_who_pass2": [
+     0,
+     21
+    ],
+    "passes": true,
+    "reasons": []
+   },
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    1,
+    21
+   ],
+   "slot_who_coherent": [
+    8,
+    21
+   ],
+   "concept_any": [
+    16,
+    18
+   ],
+   "slot_who_pass2": [
+    0,
+    21
+   ],
+   "deepseek_agreement": {
+    "items": 26,
+    "shows_persona_agree": 25,
+    "coherent_agree": 25,
+    "shows_persona_agreement": 0.9615,
+    "coherent_agreement": 0.9615
+   },
+   "status": []
+  }
+ },
+ "nets_upstream_against_R0": {
+  "R1": {
+   "units_paired": 16,
+   "lost": 11,
+   "gained": 0,
+   "net": 11,
+   "lost_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-13",
+    "p92-18",
+    "p92-24",
+    "p92-25",
+    "p92-36",
+    "p92-37",
+    "p92-47"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 0.0009765625
+  },
+  "R2": {
+   "units_paired": 16,
+   "lost": 14,
+   "gained": 0,
+   "net": 14,
+   "lost_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-09",
+    "p92-18",
+    "p92-24",
+    "p92-25",
+    "p92-33",
+    "p92-35",
+    "p92-36",
+    "p92-37",
+    "p92-46",
+    "p92-47"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 0.0001220703125
+  },
+  "R8": {
+   "units_paired": 16,
+   "lost": 4,
+   "gained": 1,
+   "net": 3,
+   "lost_units": [
+    "p92-05",
+    "p92-13",
+    "p92-18",
+    "p92-37"
+   ],
+   "gained_units": [
+    "p92-32"
+   ],
+   "mcnemar_p": 0.375
+  },
+  "R9": {
+   "units_paired": 16,
+   "lost": 2,
+   "gained": 1,
+   "net": 1,
+   "lost_units": [
+    "p92-05",
+    "p92-18"
+   ],
+   "gained_units": [
+    "p92-32"
+   ],
+   "mcnemar_p": 1.0
+  },
+  "R10": {
+   "units_paired": 16,
+   "lost": 2,
+   "gained": 0,
+   "net": 2,
+   "lost_units": [
+    "p92-05",
+    "p92-36"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 0.5
+  },
+  "R2m": {
+   "units_paired": 16,
+   "lost": 14,
+   "gained": 0,
+   "net": 14,
+   "lost_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-13",
+    "p92-18",
+    "p92-24",
+    "p92-25",
+    "p92-33",
+    "p92-35",
+    "p92-36",
+    "p92-37",
+    "p92-46",
+    "p92-47"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 0.0001220703125
+  }
+ },
+ "controls": {
+  "R5_rig_check": {
+   "detail": null,
+   "max_abs_net": 2,
+   "held": false,
+   "status": [],
+   "note": "zeroing four unimportant early heads must move the 16 upstream units by at most 2 net"
+  },
+  "R5m_rig_check": {
+   "detail": null,
+   "max_abs_net": 2,
+   "held": false,
+   "status": [],
+   "note": "mean-ablating four unimportant early heads must move the 16 upstream units by at most 2 net (Amendment 1 keeps R5's rig check with R5m as its run)"
+  },
+  "R9_coupling_check": {
+   "detail": {
+    "units_paired": 16,
+    "lost": 2,
+    "gained": 1,
+    "net": 1,
+    "lost_units": [
+     "p92-05",
+     "p92-18"
+    ],
+    "gained_units": [
+     "p92-32"
+    ],
+    "mcnemar_p": 1.0
+   },
+   "max_abs_net": 2,
+   "held": true,
+   "status": [],
+   "note": "transplanting four unimportant heads must move the 16 upstream units by at most 2 net, either way"
+  }
+ },
+ "predictions": {
+  "219.1": {
+   "verdict": "inconclusive: zeroing these heads breaks answers",
+   "detail": {
+    "units_paired": 16,
+    "lost": 14,
+    "gained": 0,
+    "net": 14,
+    "lost_units": [
+     "p92-02",
+     "p92-03",
+     "p92-04",
+     "p92-05",
+     "p92-09",
+     "p92-18",
+     "p92-24",
+     "p92-25",
+     "p92-33",
+     "p92-35",
+     "p92-36",
+     "p92-37",
+     "p92-46",
+     "p92-47"
+    ],
+    "gained_units": [],
+    "mcnemar_p": 0.0001220703125
+   }
+  },
+  "219.2": {
+   "held": false,
+   "detail": {
+    "slot_who_coherent": [
+     2,
+     21
+    ],
+    "min_slot_coherent": 15,
+    "concept_any": [
+     14,
+     18
+    ],
+    "min_concept": 13,
+    "inconclusive": false,
+    "held": false
+   },
+   "verdict": "failed"
+  },
+  "219.3": {
+   "held": false,
+   "detail": {
+    "units_paired": 16,
+    "lost": 4,
+    "gained": 1,
+    "net": 3,
+    "lost_units": [
+     "p92-05",
+     "p92-13",
+     "p92-18",
+     "p92-37"
+    ],
+    "gained_units": [
+     "p92-32"
+    ],
+    "mcnemar_p": 0.375
+   },
+   "min_net": 7,
+   "verdict": "failed"
+  },
+  "219.5": {
+   "held": false,
+   "detail": {
+    "R8_net": 3,
+    "R10_net": 2,
+    "margin": 1
+   },
+   "r10_status": [],
+   "min_margin": 4,
+   "verdict": "failed"
+  },
+  "219.4": {
+   "verdict": "not read: 219.4 is read only if 219.3 and 219.5 both hold"
+  },
+  "219.2m": {
+   "held": false,
+   "detail": {
+    "slot_who_coherent": [
+     8,
+     21
+    ],
+    "min_slot_coherent": 15,
+    "concept_any": [
+     16,
+     18
+    ],
+    "min_concept": 13,
+    "inconclusive": false,
+    "held": false
+   },
+   "verdict": "failed",
+   "note": "read on the R2m pilot as run, as 219.2 was on R2 (Amendment 1)"
+  },
+  "219.1m": {
+   "verdict": "not read: the R2m pilot's stopping rule fired (Amendment 1)",
+   "detail": {
+    "units_paired": 16,
+    "lost": 14,
+    "gained": 0,
+    "net": 14,
+    "lost_units": [
+     "p92-02",
+     "p92-03",
+     "p92-04",
+     "p92-05",
+     "p92-13",
+     "p92-18",
+     "p92-24",
+     "p92-25",
+     "p92-33",
+     "p92-35",
+     "p92-36",
+     "p92-37",
+     "p92-46",
+     "p92-47"
+    ],
+    "gained_units": [],
+    "mcnemar_p": 0.0001220703125
+   }
+  }
+ },
+ "pilot_verdicts": {
+  "available": true,
+  "run": "R2",
+  "operation": "zero",
+  "amendment": "PART219-DESIGN.md Amendment 1 (2026-11-22)",
+  "net_upstream": {
+   "units_paired": 16,
+   "lost": 14,
+   "gained": 0,
+   "net": 14,
+   "lost_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-09",
+    "p92-18",
+    "p92-24",
+    "p92-25",
+    "p92-33",
+    "p92-35",
+    "p92-36",
+    "p92-37",
+    "p92-46",
+    "p92-47"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 0.0001220703125
+  },
+  "219.2": {
+   "held": false,
+   "detail": {
+    "slot_who_coherent": [
+     2,
+     21
+    ],
+    "min_slot_coherent": 15,
+    "concept_any": [
+     14,
+     18
+    ],
+    "min_concept": 13,
+    "inconclusive": false,
+    "held": false
+   },
+   "verdict": "failed"
+  },
+  "219.1": {
+   "verdict": "inconclusive: zeroing these heads breaks answers",
+   "detail": {
+    "units_paired": 16,
+    "lost": 14,
+    "gained": 0,
+    "net": 14,
+    "lost_units": [
+     "p92-02",
+     "p92-03",
+     "p92-04",
+     "p92-05",
+     "p92-09",
+     "p92-18",
+     "p92-24",
+     "p92-25",
+     "p92-33",
+     "p92-35",
+     "p92-36",
+     "p92-37",
+     "p92-46",
+     "p92-47"
+    ],
+    "gained_units": [],
+    "mcnemar_p": 0.0001220703125
+   }
+  }
+ },
+ "headlines": [
+  "no headline: the predictions it rests on did not hold"
+ ],
+ "exploratory": {
+  "nets_against_R0": {
+   "R1": {
+    "upstream": {
+     "units_paired": 16,
+     "lost": 11,
+     "gained": 0,
+     "net": 11,
+     "lost_units": [
+      "p92-02",
+      "p92-03",
+      "p92-04",
+      "p92-05",
+      "p92-13",
+      "p92-18",
+      "p92-24",
+      "p92-25",
+      "p92-36",
+      "p92-37",
+      "p92-47"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.0009765625
+    },
+    "downstream": {
+     "units_paired": 5,
+     "lost": 5,
+     "gained": 0,
+     "net": 5,
+     "lost_units": [
+      "p92-07",
+      "p92-10",
+      "p92-20",
+      "p92-42",
+      "p92-50"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.0625
+    },
+    "all_21": {
+     "units_paired": 21,
+     "lost": 16,
+     "gained": 0,
+     "net": 16,
+     "lost_units": [
+      "p92-02",
+      "p92-03",
+      "p92-04",
+      "p92-05",
+      "p92-13",
+      "p92-18",
+      "p92-24",
+      "p92-25",
+      "p92-36",
+      "p92-37",
+      "p92-47",
+      "p92-07",
+      "p92-10",
+      "p92-20",
+      "p92-42",
+      "p92-50"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 3.0517578125e-05
+    }
+   },
+   "R2": {
+    "upstream": {
+     "units_paired": 16,
+     "lost": 14,
+     "gained": 0,
+     "net": 14,
+     "lost_units": [
+      "p92-02",
+      "p92-03",
+      "p92-04",
+      "p92-05",
+      "p92-09",
+      "p92-18",
+      "p92-24",
+      "p92-25",
+      "p92-33",
+      "p92-35",
+      "p92-36",
+      "p92-37",
+      "p92-46",
+      "p92-47"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.0001220703125
+    },
+    "downstream": {
+     "units_paired": 5,
+     "lost": 5,
+     "gained": 0,
+     "net": 5,
+     "lost_units": [
+      "p92-07",
+      "p92-10",
+      "p92-20",
+      "p92-42",
+      "p92-50"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.0625
+    },
+    "all_21": {
+     "units_paired": 21,
+     "lost": 19,
+     "gained": 0,
+     "net": 19,
+     "lost_units": [
+      "p92-02",
+      "p92-03",
+      "p92-04",
+      "p92-05",
+      "p92-09",
+      "p92-18",
+      "p92-24",
+      "p92-25",
+      "p92-33",
+      "p92-35",
+      "p92-36",
+      "p92-37",
+      "p92-46",
+      "p92-47",
+      "p92-07",
+      "p92-10",
+      "p92-20",
+      "p92-42",
+      "p92-50"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 3.814697265625e-06
+    }
+   },
+   "R8": {
+    "upstream": {
+     "units_paired": 16,
+     "lost": 4,
+     "gained": 1,
+     "net": 3,
+     "lost_units": [
+      "p92-05",
+      "p92-13",
+      "p92-18",
+      "p92-37"
+     ],
+     "gained_units": [
+      "p92-32"
+     ],
+     "mcnemar_p": 0.375
+    },
+    "downstream": {
+     "units_paired": 5,
+     "lost": 4,
+     "gained": 0,
+     "net": 4,
+     "lost_units": [
+      "p92-07",
+      "p92-20",
+      "p92-42",
+      "p92-50"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.125
+    },
+    "all_21": {
+     "units_paired": 21,
+     "lost": 8,
+     "gained": 1,
+     "net": 7,
+     "lost_units": [
+      "p92-05",
+      "p92-13",
+      "p92-18",
+      "p92-37",
+      "p92-07",
+      "p92-20",
+      "p92-42",
+      "p92-50"
+     ],
+     "gained_units": [
+      "p92-32"
+     ],
+     "mcnemar_p": 0.0390625
+    }
+   },
+   "R9": {
+    "upstream": {
+     "units_paired": 16,
+     "lost": 2,
+     "gained": 1,
+     "net": 1,
+     "lost_units": [
+      "p92-05",
+      "p92-18"
+     ],
+     "gained_units": [
+      "p92-32"
+     ],
+     "mcnemar_p": 1.0
+    },
+    "downstream": {
+     "units_paired": 5,
+     "lost": 2,
+     "gained": 0,
+     "net": 2,
+     "lost_units": [
+      "p92-42",
+      "p92-50"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.5
+    },
+    "all_21": {
+     "units_paired": 21,
+     "lost": 4,
+     "gained": 1,
+     "net": 3,
+     "lost_units": [
+      "p92-05",
+      "p92-18",
+      "p92-42",
+      "p92-50"
+     ],
+     "gained_units": [
+      "p92-32"
+     ],
+     "mcnemar_p": 0.375
+    }
+   },
+   "R10": {
+    "upstream": {
+     "units_paired": 16,
+     "lost": 2,
+     "gained": 0,
+     "net": 2,
+     "lost_units": [
+      "p92-05",
+      "p92-36"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.5
+    },
+    "downstream": {
+     "units_paired": 5,
+     "lost": 1,
+     "gained": 0,
+     "net": 1,
+     "lost_units": [
+      "p92-07"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 1.0
+    },
+    "all_21": {
+     "units_paired": 21,
+     "lost": 3,
+     "gained": 0,
+     "net": 3,
+     "lost_units": [
+      "p92-05",
+      "p92-36",
+      "p92-07"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.25
+    }
+   },
+   "R2m": {
+    "upstream": {
+     "units_paired": 16,
+     "lost": 14,
+     "gained": 0,
+     "net": 14,
+     "lost_units": [
+      "p92-02",
+      "p92-03",
+      "p92-04",
+      "p92-05",
+      "p92-13",
+      "p92-18",
+      "p92-24",
+      "p92-25",
+      "p92-33",
+      "p92-35",
+      "p92-36",
+      "p92-37",
+      "p92-46",
+      "p92-47"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.0001220703125
+    },
+    "downstream": {
+     "units_paired": 5,
+     "lost": 5,
+     "gained": 0,
+     "net": 5,
+     "lost_units": [
+      "p92-07",
+      "p92-10",
+      "p92-20",
+      "p92-42",
+      "p92-50"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.0625
+    },
+    "all_21": {
+     "units_paired": 21,
+     "lost": 19,
+     "gained": 0,
+     "net": 19,
+     "lost_units": [
+      "p92-02",
+      "p92-03",
+      "p92-04",
+      "p92-05",
+      "p92-13",
+      "p92-18",
+      "p92-24",
+      "p92-25",
+      "p92-33",
+      "p92-35",
+      "p92-36",
+      "p92-37",
+      "p92-46",
+      "p92-47",
+      "p92-07",
+      "p92-10",
+      "p92-20",
+      "p92-42",
+      "p92-50"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 3.814697265625e-06
+    }
+   }
+  },
+  "R3_against_R4": null
+ }
+}

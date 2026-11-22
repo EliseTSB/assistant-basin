@@ -508,6 +508,15 @@ def build_predictions_a1(gate: dict, runs: dict, nets: dict, status: dict) -> di
 
     r2m_status = status.get("R2m", [])
     r2m_net = nets["R2m"] if "R2m" in nets else None
+    if r5m is None and not r5m_status and "R2m" in runs and not r2m_status and not _bars(runs["R2m"])["held"]:
+        # Amendment 1: "If R2m also breaks answers, the ablation half ends: 219.1m is not read ... and R3m to R7m do
+        # not run." R5m therefore never runs. 219.2m is read on the R2m pilot as run, as 219.2 was on R2.
+        bars = _bars(runs["R2m"])
+        predictions["219.2m"] = {"held": False, "detail": bars, "verdict": "failed",
+                                 "note": "read on the R2m pilot as run, as 219.2 was on R2 (Amendment 1)"}
+        predictions["219.1m"] = {"verdict": "not read: the R2m pilot's stopping rule fired (Amendment 1)",
+                                 "detail": r2m_net}
+        return predictions
     if r5m_status:
         why = "R5m, the mean arm's rig check, is not read (" + "; ".join(r5m_status) + ")"
         predictions["219.1m"] = blocked(why)
@@ -710,8 +719,11 @@ def markdown(scorecard: dict) -> str:
         lines += ["", "## Controls", ""]
         for key, value in controls.items():
             detail = value.get("detail") or {}
-            lines.append(f"- {key}: net {detail.get('net', '-')} on the 16, "
-                         f"{'held' if value.get('held') else 'FAILED'}")
+            if value.get("detail") is None and not value.get("status"):
+                lines.append(f"- {key}: not run (Amendment 1: the ablation half ended at its pilot)")
+            else:
+                lines.append(f"- {key}: net {detail.get('net', '-')} on the 16, "
+                             f"{'held' if value.get('held') else 'FAILED'}")
     lines += ["", "## Headlines", ""]
     lines += [f"- {headline}" for headline in scorecard["headlines"]]
     return "\n".join(lines) + "\n"
