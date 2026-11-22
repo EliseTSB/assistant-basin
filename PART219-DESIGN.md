@@ -205,3 +205,78 @@ Headlines, decided by the verdicts:
 - 21 slot units, 16 of them read for the predictions; one model; one rubric.
 - The concept units sit at other layers than the slot units, so they control for "personas in general" more than for
   "early disruption at the slot units' depth".
+
+## Amendment 1 (2026-11-22 15:14 CT, after the pilot's stopping rule fired and before any other run; Journal Claude)
+
+What happened. The registered pilot ran R0 and R2 in full (`results/part219/PILOT.md`, commit a58812c4). Both receipts
+passed. R0 showed the persona for 20 of 21 slot units. R2, the four heads zeroed, left 2 of 21 slot answers coherent:
+read directly, its pushed "Who are you?" answers are empty or loop ("What are you?/Who are you?/..."), and 3 of its 6
+unpushed answers are empty or cut off. The stopping rule fired, so nothing else ran.
+
+What this settles, by the registered reading rules. 219.2 is read on R2 as run: it fails (2 of 21 coherent against 15).
+219.1 is therefore not read and is reported as "inconclusive: zeroing these heads breaks answers". Those two rows keep
+their original text and get these verdicts; nothing below re-reads R2.
+
+What this amendment changes, and why. Zeroing replaces a head's output with a value it never produces, so a head that
+every answer leans on breaks the model whatever it does for the slot route. This was the risk the design named (the
+four heads are the four most important early heads for every answer, Limits); the pilot measured it. Mean-ablation
+keeps the head's average contribution and removes only what varies with the input, which is the part that could carry
+"this question is about me". It is the standard gentler operation and asks the narrower question.
+
+- **Operation.** For each head, the 128-wide slice of `o_proj`'s input is replaced, at every position, by a fixed
+  vector: its mean over a reference set. Position 0 gets its own mean (the first token's attention output is a separate
+  regime in these models), every other position gets the mean over positions 1 onward.
+- **Reference set, fixed here (v2, Vesper #8).** Neutral chat-framed text with no identity question and no pushed
+  answer, so the replacement mean carries no self-description: the 24 `general` questions of screen A
+  (`Journal/notes/reports/attention-heads-screens-2026-11-18/a-olmo-stages/questions.jsonl`, SHA-256 starts
+  1eabf3aba5824428) and R0's two unpushed rows whose question does not address the model (question indexes 4 and 5, the capital of France
+  and the sea poem; index 3, "Describe your perfect day", addresses it and is left out).
+  Each is put in Part 99's chat frame, answered by the unedited Instruct model with Part 99's greedy settings on the
+  A770 (eager, bf16, no push), and the prompt-plus-answer sequence is teacher-forced back through the same model to
+  read the slices; every non-pad position counts; means accumulate in float32 and are stored once as
+  `results/part219/head-means.pt`, its SHA-256 in every run's meta. The same file serves every mean-ablation run. The
+  24 general questions were screen A's ordinary-answer side, so they took part in choosing the heads, but only as the
+  baseline the identity side was compared with. (v1 used R0's 474 sequences; Vesper showed that bakes the test set's
+  pushed persona answers into the replacement, which would make 219.1m harder to hold for the wrong reason.)
+- **Runs.** R2m, R3m, R4m, R5m, R6m and R7m replace R2 to R7: same heads, mean-ablation instead of zeroing. R2 (zero)
+  stays as a reported pilot arm. R0, R0b, R1 and R8 to R10 are unchanged. R0 from the pilot is reused (the run is
+  deterministic and R0b checks the machinery).
+- **Positions under generation (Vesper #8).** With the KV cache, the prefill call sees absolute positions 0 to P-1 and
+  each decode call sees one token at absolute position P+t, so its local index 0 is not position 0. The hook gives
+  `mean_pos0` only to each row's first real token in the prefill call and `mean_rest` to every other prefill position
+  and to every decode call. Batches are left-padded (`part92/common92.py`), so a row's first real token sits at its own
+  offset, read from the attention mask; pad positions get `mean_rest` (they are masked as keys, so their value does
+  not reach any real token). The reference means use the same rule: position 0 is each sequence's first real token.
+- **Intervention receipt.** In each mean-ablation run, on the first batch, the hooked slice equals the stored means'
+  bf16 bytes exactly at each row's first real prefill token (`mean_pos0`), at prefill positions 1 onward (`mean_rest`), and at the
+  first decode step (`mean_rest`), and differed from them before the hook. A run whose receipt fails is not read.
+- **Do-nothing check on the new path.** R0b runs through the mean-ablation hook wrapper with an empty head set (as
+  well as the zeroing wrapper) and must match R0 token for token.
+- **Predictions renamed, bars unchanged.** 219.1m and 219.2m below are 219.1 and 219.2 with R2m in place of R2: the
+  same 16 upstream units, the same 7, the same 15 of 21, 13 concept units and inconclusive flag. Nothing was loosened
+  to fit what the pilot showed. The rig check (R5m) keeps its |net loss| at most 2.
+- **Pilot, again.** R2m alone first (R0 reused), with the registered stopping rule: stop if fewer than 15 of 21 slot
+  answers are coherent or a receipt fails. If R2m also breaks answers, the ablation half ends: 219.1m is not read, the
+  reported result is "these heads cannot be removed by zero- or mean-ablation without breaking answers", and R3m to
+  R7m do not run. The transplant arms (R1, R8 to R10) then run as designed, with their own coherence bar, so 219.3 to
+  219.5 stay live either way.
+- **Labels.** Part 92's Haiku reader through OpenCode Go (`--model claude-haiku-5-5 --share 1.0 --max-tokens 500`,
+  `part219/label_ds219.py`), because the direct-API credit key has returned 401 since 2026-11-20: same prompt, model
+  and cap, only the route differs. This applied to the pilot too.
+
+New predictions, written after the pilot and before any mean-ablation run:
+
+| # | Prediction | Confidence | Author |
+| --- | --- | --- | --- |
+| 219.1m | R2m (all four mean-ablated): on the 16 upstream slot units, at least 7 net lose their persona against R0 | low (35%) | Journal Claude |
+| 219.2m | R2m: at least 15 of 21 slot answers coherent, at least 13 concept units keep their persona, and the run is not flagged inconclusive | low (35%) | Journal Claude |
+
+The confidences are lower than 219.1 and 219.2's because the pilot showed how much ordinary answers lean on these
+heads; mean-ablation removes less, so it may keep answers coherent and also leave the personas in place.
+
+Headline wording (Vesper #8): mean-ablation keeps each head's average contribution, so if 219.1m and 219.2m hold the
+headline is "the input-varying part of these four heads' output is needed for the slot neurons' self-descriptions",
+not "these heads are needed".
+
+Review: Vesper, council `vesper-part219-design-2026-11-22` #8 (SHIP-WITH-FIXES on v1, 801568fd); this v2 folds all
+four points. Vesper PASS on v2.1 (d2fe8659), council #10.
