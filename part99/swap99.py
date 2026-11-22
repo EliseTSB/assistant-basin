@@ -392,6 +392,11 @@ def ablation_receipt_problems(records) -> list[str]:
                     continue
                 if not part.get("matches"):
                     problems.append(f"ablation receipt: {label} {key} slice does not hold {what} exactly")
+                # Part 219 Amendment 1b: every row starts with the same token (100257) and a causal head at its first
+                # real position attends only to itself, so the pos0 slice already equals mean_pos0 and cannot differ
+                # before the hook; the before-difference is required where the input varies.
+                if key == "pos0":
+                    continue
                 if not (part.get("max_abs_diff_before") or 0) > 0:
                     problems.append(f"ablation receipt: {label} {key} slice did not differ from {what} before the hook")
         elif not record.get("all_zero"):

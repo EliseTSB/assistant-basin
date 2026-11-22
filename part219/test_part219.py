@@ -612,10 +612,22 @@ def test_ablation_receipt_problems_names_a_failed_mean_check():
     bad = json.loads(json.dumps(good))
     bad["decode"]["matches"] = False
     assert "does not hold mean_rest" in swap99.ablation_receipt_problems([bad])[0]
+    # Amendment 1b: position 0 is the same token everywhere, so its slice already equals mean_pos0; that is allowed,
+    # but a later prefill position or a decode step that never differed is still a failure.
+    same_first = json.loads(json.dumps(good))
+    same_first["pos0"]["max_abs_diff_before"] = 0.0
+    assert swap99.ablation_receipt_problems([same_first]) == []
     unchanged = json.loads(json.dumps(good))
-    unchanged["pos0"]["max_abs_diff_before"] = 0.0
-    assert any("did not differ from mean_pos0" in problem
+    unchanged["prefill_rest"]["max_abs_diff_before"] = 0.0
+    assert any("prefill_rest slice did not differ from mean_rest" in problem
                for problem in swap99.ablation_receipt_problems([unchanged]))
+    stale_decode = json.loads(json.dumps(good))
+    stale_decode["decode"]["max_abs_diff_before"] = 0.0
+    assert any("decode slice did not differ" in problem for problem in swap99.ablation_receipt_problems([stale_decode]))
+    wrong_first = json.loads(json.dumps(good))
+    wrong_first["pos0"]["matches"] = False
+    assert any("pos0 slice does not hold mean_pos0" in problem
+               for problem in swap99.ablation_receipt_problems([wrong_first]))
     assert swap99.ablation_receipt_problems([{"layer": 0, "head": 1, "all_zero": False}]) == [
         "ablation receipt: L0H1 slice is not zero"]
 

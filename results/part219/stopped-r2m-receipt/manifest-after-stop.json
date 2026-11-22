@@ -1,0 +1,579 @@
+{
+ "part": 219,
+ "runs": {
+  "R0": {
+   "tag": "R0",
+   "role": "reference",
+   "condition": {
+    "change": "none"
+   },
+   "jsonl": "R0.jsonl",
+   "meta": "R0.meta.json",
+   "seconds": 117.7,
+   "expected_rows": 474,
+   "rows": 474,
+   "problems": [],
+   "attn_implementation": "eager",
+   "intervention_receipt": null,
+   "coupling_log": null,
+   "reset_receipt": {
+    "role": "reference_written",
+    "matches_reference": null,
+    "mismatch": null,
+    "reference_path": "results\\part219\\replay-R0.json"
+   },
+   "readable": true
+  },
+  "R2": {
+   "tag": "R2",
+   "role": "219.1, 219.2",
+   "condition": {
+    "ablate_heads": [
+     "L0H10",
+     "L1H4",
+     "L2H6",
+     "L3H5"
+    ]
+   },
+   "jsonl": "R2.jsonl",
+   "meta": "R2.meta.json",
+   "seconds": 116.9,
+   "expected_rows": 474,
+   "rows": 474,
+   "problems": [],
+   "attn_implementation": "eager",
+   "intervention_receipt": {
+    "ablate_heads": [
+     "L0H10",
+     "L1H4",
+     "L2H6",
+     "L3H5"
+    ],
+    "ablation": [
+     {
+      "layer": 0,
+      "head": 10,
+      "slice": [
+       1280,
+       1408
+      ],
+      "positions": 912,
+      "max_abs_before": 1.453125,
+      "max_abs_after": 0.0,
+      "all_zero": true
+     },
+     {
+      "layer": 1,
+      "head": 4,
+      "slice": [
+       512,
+       640
+      ],
+      "positions": 912,
+      "max_abs_before": 0.84375,
+      "max_abs_after": 0.0,
+      "all_zero": true
+     },
+     {
+      "layer": 2,
+      "head": 6,
+      "slice": [
+       768,
+       896
+      ],
+      "positions": 912,
+      "max_abs_before": 0.4609375,
+      "max_abs_after": 0.0,
+      "all_zero": true
+     },
+     {
+      "layer": 3,
+      "head": 5,
+      "slice": [
+       640,
+       768
+      ],
+      "positions": 912,
+      "max_abs_before": 0.76953125,
+      "max_abs_after": 0.0,
+      "all_zero": true
+     }
+    ],
+    "transplant": null
+   },
+   "coupling_log": null,
+   "reset_receipt": {
+    "role": "checked",
+    "matches_reference": true,
+    "mismatch": null,
+    "reference_path": "results\\part219\\replay-R0.json"
+   },
+   "readable": true
+  },
+  "R2m": {
+   "tag": "R2m",
+   "role": "219.1, 219.2",
+   "condition": {
+    "ablate_heads": [
+     "L0H10",
+     "L1H4",
+     "L2H6",
+     "L3H5"
+    ],
+    "ablate_mode": "mean"
+   },
+   "jsonl": "R2m.jsonl",
+   "meta": "R2m.meta.json",
+   "seconds": 127.2,
+   "expected_rows": 474,
+   "rows": 474,
+   "problems": [
+    "ablation receipt: L0H10 pos0 slice did not differ from mean_pos0 before the hook",
+    "ablation receipt: L1H4 pos0 slice did not differ from mean_pos0 before the hook",
+    "ablation receipt: L2H6 pos0 slice did not differ from mean_pos0 before the hook",
+    "ablation receipt: L3H5 pos0 slice did not differ from mean_pos0 before the hook"
+   ],
+   "attn_implementation": "eager",
+   "intervention_receipt": {
+    "ablate_heads": [
+     "L0H10",
+     "L1H4",
+     "L2H6",
+     "L3H5"
+    ],
+    "ablation": [
+     {
+      "mode": "mean",
+      "layer": 0,
+      "head": 10,
+      "slice": [
+       1280,
+       1408
+      ],
+      "pos0": {
+       "positions": 48,
+       "matches": true,
+       "max_abs_diff_before": 0.0,
+       "first_real": [
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0
+       ]
+      },
+      "prefill_rest": {
+       "positions": 760,
+       "matches": true,
+       "max_abs_diff_before": 1.39739990234375
+      },
+      "decode": {
+       "positions": 48,
+       "matches": true,
+       "max_abs_diff_before": 0.5120849609375
+      }
+     },
+     {
+      "mode": "mean",
+      "layer": 1,
+      "head": 4,
+      "slice": [
+       512,
+       640
+      ],
+      "pos0": {
+       "positions": 48,
+       "matches": true,
+       "max_abs_diff_before": 0.0,
+       "first_real": [
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0
+       ]
+      },
+      "prefill_rest": {
+       "positions": 760,
+       "matches": true,
+       "max_abs_diff_before": 1.677734375
+      },
+      "decode": {
+       "positions": 48,
+       "matches": true,
+       "max_abs_diff_before": 0.35205078125
+      }
+     },
+     {
+      "mode": "mean",
+      "layer": 2,
+      "head": 6,
+      "slice": [
+       768,
+       896
+      ],
+      "pos0": {
+       "positions": 48,
+       "matches": true,
+       "max_abs_diff_before": 0.0,
+       "first_real": [
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0
+       ]
+      },
+      "prefill_rest": {
+       "positions": 760,
+       "matches": true,
+       "max_abs_diff_before": 2.58984375
+      },
+      "decode": {
+       "positions": 48,
+       "matches": true,
+       "max_abs_diff_before": 1.93359375
+      }
+     },
+     {
+      "mode": "mean",
+      "layer": 3,
+      "head": 5,
+      "slice": [
+       640,
+       768
+      ],
+      "pos0": {
+       "positions": 48,
+       "matches": true,
+       "max_abs_diff_before": 0.0,
+       "first_real": [
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0,
+        4,
+        3,
+        2,
+        3,
+        1,
+        0
+       ]
+      },
+      "prefill_rest": {
+       "positions": 760,
+       "matches": true,
+       "max_abs_diff_before": 3.8603515625
+      },
+      "decode": {
+       "positions": 48,
+       "matches": true,
+       "max_abs_diff_before": 1.337890625
+      }
+     }
+    ],
+    "transplant": null,
+    "ablate_mode": "mean",
+    "head_means_sha256": "f783d08a56cf8dabdd7c12fde1e84588ed0fd7fd3fed0267c307e46bf2772a92"
+   },
+   "coupling_log": null,
+   "reset_receipt": {
+    "role": "checked",
+    "matches_reference": true,
+    "mismatch": null,
+    "reference_path": "results\\part219\\replay-R0.json"
+   },
+   "ablate_mode": "mean",
+   "head_means_sha256": "f783d08a56cf8dabdd7c12fde1e84588ed0fd7fd3fed0267c307e46bf2772a92",
+   "readable": false
+  }
+ },
+ "host": "E:\\neuron-probe\\hf\\hub\\models--allenai--OLMo-2-0425-1B-Instruct\\snapshots\\48d788eca847d4d7548f375ad03d3c9312f6139e",
+ "donor": null,
+ "batch": 48,
+ "attn_implementation": "eager",
+ "kernel_check": {
+  "passes": true,
+  "candidate": "C:\\Users\\alexa\\neuron-probe-gpu\\results\\part219\\kernel-check.json",
+  "reference": "results/kernel-reference/allenai-olmo-2-0425-1b-instruct-cpu-float32.json",
+  "failures": []
+ },
+ "registered_frozen_heads": [
+  "L0H12",
+  "L1H11",
+  "L2H5",
+  "L3H9"
+ ],
+ "recomputed_frozen_heads": [
+  "L0H12",
+  "L1H11",
+  "L2H5",
+  "L3H9"
+ ],
+ "registered_important_heads": [
+  "L0H10",
+  "L1H4",
+  "L2H6",
+  "L3H5"
+ ],
+ "replay": "replay-R0.json",
+ "stages": {
+  "a": {
+   "pilot": true,
+   "runs": [
+    "R0",
+    "R2"
+   ],
+   "seconds": 234.7
+  },
+  "a1": {
+   "pilot": false,
+   "pilot_a1": true,
+   "runs": [
+    "R2m"
+   ],
+   "seconds": 127.3,
+   "r0": {
+    "jsonl": "R0.jsonl",
+    "replay": "replay-R0.json",
+    "rows": 474,
+    "reused": true
+   }
+  }
+ },
+ "checks": {
+  "head_lists": {
+   "frozen_recomputed_equals_registered": true,
+   "important": [
+    "L0H10",
+    "L1H4",
+    "L2H6",
+    "L3H5"
+   ],
+   "frozen": [
+    "L0H12",
+    "L1H11",
+    "L2H5",
+    "L3H9"
+   ]
+  },
+  "reset_receipts": {
+   "R0": {
+    "matches_r0": true,
+    "mismatch": null,
+    "own_role": "reference_written",
+    "own_matches": null
+   },
+   "R2": {
+    "matches_r0": true,
+    "mismatch": null,
+    "own_role": "checked",
+    "own_matches": true
+   },
+   "R2m": {
+    "matches_r0": true,
+    "mismatch": null,
+    "own_role": "checked",
+    "own_matches": true
+   }
+  }
+ },
+ "pilot": {
+  "labels_available": false,
+  "receipt_problems": [],
+  "r0_slot_persona": null,
+  "r2_slot_answers_coherent": null,
+  "r0_min": 17,
+  "r2_min": 15,
+  "decision": "pending_labels",
+  "because": "the two label criteria are reader labels: run the blind reader on labels-R0.jsonl and labels-R2.jsonl, then run this pilot again or `score219.py --pilot`"
+ },
+ "head_means": "results\\part219\\head-means.pt",
+ "head_means_sha256": "f783d08a56cf8dabdd7c12fde1e84588ed0fd7fd3fed0267c307e46bf2772a92",
+ "pilot_a1": {
+  "run": "R2m",
+  "r0_reused": true,
+  "labels_available": false,
+  "receipt_problems": [
+   "R2m is unreadable: ablation receipt: L0H10 pos0 slice did not differ from mean_pos0 before the hook; ablation receipt: L1H4 pos0 slice did not differ from mean_pos0 before the hook; ablation receipt: L2H6 pos0 slice did not differ from mean_pos0 before the hook; ablation receipt: L3H5 pos0 slice did not differ from mean_pos0 before the hook"
+  ],
+  "r2m_slot_answers_coherent": null,
+  "r2m_min": 15,
+  "head_means_sha256": "f783d08a56cf8dabdd7c12fde1e84588ed0fd7fd3fed0267c307e46bf2772a92",
+  "decision": "stop",
+  "because": "a receipt or the run itself failed",
+  "r0": {
+   "jsonl": "R0.jsonl",
+   "replay": "replay-R0.json",
+   "rows": 474,
+   "reused": true
+  }
+ }
+}
