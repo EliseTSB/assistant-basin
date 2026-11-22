@@ -178,6 +178,12 @@ def pilot_specs() -> list[dict]:
     return [{"tag": "R0", "role": "reference"}] + [spec for spec in zero_specs() if spec["tag"] == "R2"]
 
 
+def do_nothing_specs() -> list[dict]:
+    """The design's R0b do-nothing check, through both hook wrappers, on its own (2026-11-22): stage a never ran in
+    full because the ablation half ended at its pilot, so the registered control is run here against the reused R0."""
+    return [spec for spec in specs_for_stage("a") if spec["tag"] in ("R0b", "R0b-mean")]
+
+
 def pilot_a1_specs() -> list[dict]:
     """Amendment 1's pilot: R2m alone. R0 is reused from the pilot, never rerun here."""
     return [spec for spec in mean_specs() if spec["tag"] == "R2m"]
@@ -419,6 +425,7 @@ def require_pilot_r0(out: Path, replay_path: Path) -> dict:
 
 def run_stage(args) -> dict:
     pilot_a1 = bool(getattr(args, "pilot_a1", False))
+    do_nothing = bool(getattr(args, "do_nothing", False))
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     kernel = check_kernel_record(Path(args.kernel_check))
@@ -426,7 +433,12 @@ def run_stage(args) -> dict:
     if args.stage == "b" and not replay_path.exists():
         raise SystemExit(f"{replay_path} is missing: stage a must run R0 first, so every stage b reset receipt has a "
                          "reference to be compared with")
-    if pilot_a1:
+    if do_nothing:
+        r0 = require_pilot_r0(out, replay_path)
+        if not Path(args.means).exists():
+            raise SystemExit(f"{args.means} is missing: the mean wrapper's do-nothing check needs the means file")
+        specs = do_nothing_specs()
+    elif pilot_a1:
         r0 = require_pilot_r0(out, replay_path)
         if not Path(args.means).exists():
             raise SystemExit(f"{args.means} is missing: run part219/means219.py before the R2m pilot")
@@ -453,11 +465,11 @@ def run_stage(args) -> dict:
         manifest["head_means"] = str(Path(args.means).expanduser())
         manifest["head_means_sha256"] = swap99.file_sha256(Path(args.means).expanduser())
     # `--pilot-a1` keeps its own stage key so the registered pilot's record in `stages["a"]` is not overwritten.
-    stage_key = "a1" if pilot_a1 else args.stage
+    stage_key = "a0b" if do_nothing else ("a1" if pilot_a1 else args.stage)
     manifest.setdefault("stages", {})[stage_key] = {
         "pilot": bool(args.pilot), "pilot_a1": pilot_a1, "runs": [spec["tag"] for spec in specs],
         "seconds": None}
-    if pilot_a1:
+    if pilot_a1 or do_nothing:
         manifest["stages"][stage_key]["r0"] = r0
     manifest.setdefault("checks", {})["head_lists"] = {
         "frozen_recomputed_equals_registered": tuple(frozen) == FROZEN_HEADS,
@@ -611,6 +623,8 @@ def main(argv=None):
     parser.add_argument("--batch", type=int, default=BATCH)
     parser.add_argument("--stage", choices=("a", "b"), default="a")
     parser.add_argument("--pilot", action="store_true", help="run R0 and R2 only and apply the pilot stopping rule")
+    parser.add_argument("--do-nothing", action="store_true",
+                        help="run only R0b and R0b-mean (the do-nothing check) against the reused R0")
     parser.add_argument("--pilot-a1", action="store_true",
                         help="Amendment 1: run R2m only, reusing the pilot's R0, and apply the R2m stopping rule")
     parser.add_argument("--means", default=str(REPO / "results" / "part219" / "head-means.pt"),

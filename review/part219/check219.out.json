@@ -1,0 +1,1638 @@
+{
+ "n_ids": 39,
+ "n_slot": 21,
+ "n_concept": 18,
+ "n_upstream": 16,
+ "n_downstream": 5,
+ "upstream": [
+  "p92-02",
+  "p92-03",
+  "p92-04",
+  "p92-05",
+  "p92-09",
+  "p92-13",
+  "p92-18",
+  "p92-24",
+  "p92-25",
+  "p92-32",
+  "p92-33",
+  "p92-35",
+  "p92-36",
+  "p92-37",
+  "p92-46",
+  "p92-47"
+ ],
+ "downstream": [
+  "p92-07",
+  "p92-10",
+  "p92-20",
+  "p92-42",
+  "p92-50"
+ ],
+ "downstream_layers": {
+  "p92-07": 1,
+  "p92-10": 2,
+  "p92-20": 2,
+  "p92-42": 2,
+  "p92-50": 2
+ },
+ "upstream_min_layer": 3,
+ "runs": {
+  "R0": {
+   "label_errors": 10,
+   "items_still_missing": 0,
+   "label_errors_pass2": 12,
+   "items_still_missing_pass2": 0,
+   "labelled": true,
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    20,
+    21
+   ],
+   "slot_who_coherent": [
+    20,
+    21
+   ],
+   "concept_any": [
+    17,
+    18
+   ],
+   "unpushed_coherent_per_q": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "slot_who_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-07",
+    "p92-09",
+    "p92-10",
+    "p92-13",
+    "p92-18",
+    "p92-20",
+    "p92-24",
+    "p92-25",
+    "p92-33",
+    "p92-35",
+    "p92-36",
+    "p92-37",
+    "p92-42",
+    "p92-46",
+    "p92-47",
+    "p92-50"
+   ],
+   "concept_any_units": [
+    "p92-00",
+    "p92-01",
+    "p92-08",
+    "p92-11",
+    "p92-15",
+    "p92-28",
+    "p92-29",
+    "p92-30",
+    "p92-38",
+    "p92-39",
+    "p92-40",
+    "p92-41",
+    "p92-43",
+    "p92-45",
+    "p92-48",
+    "p92-51",
+    "p92-52"
+   ],
+   "slot_who_pass2": [
+    20,
+    21
+   ],
+   "pass2": {
+    "unpushed_incoherent": 0,
+    "inconclusive": false,
+    "slot_who": [
+     20,
+     21
+    ],
+    "slot_who_coherent": [
+     21,
+     21
+    ],
+    "concept_any": [
+     17,
+     18
+    ],
+    "unpushed_coherent_per_q": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "slot_who_units": [
+     "p92-02",
+     "p92-03",
+     "p92-04",
+     "p92-05",
+     "p92-07",
+     "p92-09",
+     "p92-10",
+     "p92-13",
+     "p92-18",
+     "p92-20",
+     "p92-24",
+     "p92-25",
+     "p92-33",
+     "p92-35",
+     "p92-36",
+     "p92-37",
+     "p92-42",
+     "p92-46",
+     "p92-47",
+     "p92-50"
+    ],
+    "concept_any_units": [
+     "p92-00",
+     "p92-01",
+     "p92-08",
+     "p92-11",
+     "p92-15",
+     "p92-28",
+     "p92-29",
+     "p92-30",
+     "p92-38",
+     "p92-39",
+     "p92-40",
+     "p92-41",
+     "p92-43",
+     "p92-45",
+     "p92-48",
+     "p92-51",
+     "p92-52"
+    ]
+   },
+   "two_pass": {
+    "items": 42,
+    "compared": 42,
+    "shows_persona_agree": 42,
+    "coherent_agree": 41,
+    "slot_who_pass1": [
+     20,
+     21
+    ],
+    "slot_who_pass2": [
+     20,
+     21
+    ],
+    "passes": true
+   },
+   "deepseek": {
+    "items": 26,
+    "shows_persona_agree": 25,
+    "coherent_agree": 24,
+    "pct": 96.15,
+    "coherent_pct": 92.31
+   }
+  },
+  "R1": {
+   "label_errors": 13,
+   "items_still_missing": 0,
+   "label_errors_pass2": 2,
+   "items_still_missing_pass2": 0,
+   "labelled": true,
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    4,
+    21
+   ],
+   "slot_who_coherent": [
+    16,
+    21
+   ],
+   "concept_any": [
+    14,
+    18
+   ],
+   "unpushed_coherent_per_q": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "slot_who_units": [
+    "p92-09",
+    "p92-33",
+    "p92-35",
+    "p92-46"
+   ],
+   "concept_any_units": [
+    "p92-01",
+    "p92-08",
+    "p92-11",
+    "p92-15",
+    "p92-28",
+    "p92-29",
+    "p92-38",
+    "p92-39",
+    "p92-40",
+    "p92-41",
+    "p92-43",
+    "p92-45",
+    "p92-48",
+    "p92-51"
+   ],
+   "slot_who_pass2": [
+    5,
+    21
+   ],
+   "pass2": {
+    "unpushed_incoherent": 0,
+    "inconclusive": false,
+    "slot_who": [
+     5,
+     21
+    ],
+    "slot_who_coherent": [
+     17,
+     21
+    ],
+    "concept_any": [
+     15,
+     18
+    ],
+    "unpushed_coherent_per_q": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "slot_who_units": [
+     "p92-09",
+     "p92-32",
+     "p92-33",
+     "p92-35",
+     "p92-46"
+    ],
+    "concept_any_units": [
+     "p92-01",
+     "p92-08",
+     "p92-11",
+     "p92-15",
+     "p92-28",
+     "p92-29",
+     "p92-38",
+     "p92-39",
+     "p92-40",
+     "p92-41",
+     "p92-43",
+     "p92-45",
+     "p92-48",
+     "p92-49",
+     "p92-51"
+    ]
+   },
+   "two_pass": {
+    "items": 42,
+    "compared": 42,
+    "shows_persona_agree": 41,
+    "coherent_agree": 39,
+    "slot_who_pass1": [
+     4,
+     21
+    ],
+    "slot_who_pass2": [
+     5,
+     21
+    ],
+    "passes": true
+   },
+   "deepseek": {
+    "items": 26,
+    "shows_persona_agree": 25,
+    "coherent_agree": 25,
+    "pct": 96.15,
+    "coherent_pct": 96.15
+   }
+  },
+  "R2": {
+   "label_errors": 1,
+   "items_still_missing": 0,
+   "label_errors_pass2": 0,
+   "items_still_missing_pass2": 0,
+   "labelled": true,
+   "unpushed_incoherent": 2,
+   "inconclusive": false,
+   "slot_who": [
+    1,
+    21
+   ],
+   "slot_who_coherent": [
+    2,
+    21
+   ],
+   "concept_any": [
+    14,
+    18
+   ],
+   "unpushed_coherent_per_q": [
+    true,
+    false,
+    false,
+    true,
+    true,
+    true
+   ],
+   "slot_who_units": [
+    "p92-13"
+   ],
+   "concept_any_units": [
+    "p92-01",
+    "p92-08",
+    "p92-11",
+    "p92-15",
+    "p92-28",
+    "p92-30",
+    "p92-38",
+    "p92-39",
+    "p92-40",
+    "p92-41",
+    "p92-43",
+    "p92-45",
+    "p92-48",
+    "p92-51"
+   ],
+   "slot_who_pass2": [
+    1,
+    21
+   ],
+   "pass2": {
+    "unpushed_incoherent": 2,
+    "inconclusive": false,
+    "slot_who": [
+     1,
+     21
+    ],
+    "slot_who_coherent": [
+     2,
+     21
+    ],
+    "concept_any": [
+     12,
+     18
+    ],
+    "unpushed_coherent_per_q": [
+     true,
+     false,
+     false,
+     true,
+     true,
+     true
+    ],
+    "slot_who_units": [
+     "p92-46"
+    ],
+    "concept_any_units": [
+     "p92-01",
+     "p92-15",
+     "p92-28",
+     "p92-30",
+     "p92-38",
+     "p92-39",
+     "p92-40",
+     "p92-41",
+     "p92-43",
+     "p92-45",
+     "p92-48",
+     "p92-51"
+    ]
+   },
+   "two_pass": {
+    "items": 42,
+    "compared": 42,
+    "shows_persona_agree": 40,
+    "coherent_agree": 41,
+    "slot_who_pass1": [
+     1,
+     21
+    ],
+    "slot_who_pass2": [
+     1,
+     21
+    ],
+    "passes": true
+   },
+   "deepseek": {
+    "items": 26,
+    "shows_persona_agree": 25,
+    "coherent_agree": 25,
+    "pct": 96.15,
+    "coherent_pct": 96.15
+   }
+  },
+  "R2m": {
+   "label_errors": 1,
+   "items_still_missing": 0,
+   "label_errors_pass2": 0,
+   "items_still_missing_pass2": 0,
+   "labelled": true,
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    1,
+    21
+   ],
+   "slot_who_coherent": [
+    8,
+    21
+   ],
+   "concept_any": [
+    16,
+    18
+   ],
+   "unpushed_coherent_per_q": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "slot_who_units": [
+    "p92-09"
+   ],
+   "concept_any_units": [
+    "p92-00",
+    "p92-01",
+    "p92-08",
+    "p92-11",
+    "p92-15",
+    "p92-28",
+    "p92-30",
+    "p92-38",
+    "p92-39",
+    "p92-40",
+    "p92-41",
+    "p92-43",
+    "p92-45",
+    "p92-48",
+    "p92-51",
+    "p92-52"
+   ],
+   "slot_who_pass2": [
+    0,
+    21
+   ],
+   "pass2": {
+    "unpushed_incoherent": 0,
+    "inconclusive": false,
+    "slot_who": [
+     0,
+     21
+    ],
+    "slot_who_coherent": [
+     8,
+     21
+    ],
+    "concept_any": [
+     16,
+     18
+    ],
+    "unpushed_coherent_per_q": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "slot_who_units": [],
+    "concept_any_units": [
+     "p92-00",
+     "p92-01",
+     "p92-08",
+     "p92-11",
+     "p92-15",
+     "p92-28",
+     "p92-30",
+     "p92-38",
+     "p92-39",
+     "p92-40",
+     "p92-41",
+     "p92-43",
+     "p92-45",
+     "p92-48",
+     "p92-51",
+     "p92-52"
+    ]
+   },
+   "two_pass": {
+    "items": 42,
+    "compared": 42,
+    "shows_persona_agree": 41,
+    "coherent_agree": 42,
+    "slot_who_pass1": [
+     1,
+     21
+    ],
+    "slot_who_pass2": [
+     0,
+     21
+    ],
+    "passes": true
+   },
+   "deepseek": {
+    "items": 26,
+    "shows_persona_agree": 25,
+    "coherent_agree": 25,
+    "pct": 96.15,
+    "coherent_pct": 96.15
+   }
+  },
+  "R8": {
+   "label_errors": 7,
+   "items_still_missing": 0,
+   "label_errors_pass2": 4,
+   "items_still_missing_pass2": 0,
+   "labelled": true,
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    13,
+    21
+   ],
+   "slot_who_coherent": [
+    16,
+    21
+   ],
+   "concept_any": [
+    18,
+    18
+   ],
+   "unpushed_coherent_per_q": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "slot_who_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-09",
+    "p92-10",
+    "p92-24",
+    "p92-25",
+    "p92-32",
+    "p92-33",
+    "p92-35",
+    "p92-36",
+    "p92-46",
+    "p92-47"
+   ],
+   "concept_any_units": [
+    "p92-00",
+    "p92-01",
+    "p92-08",
+    "p92-11",
+    "p92-15",
+    "p92-28",
+    "p92-29",
+    "p92-30",
+    "p92-38",
+    "p92-39",
+    "p92-40",
+    "p92-41",
+    "p92-43",
+    "p92-45",
+    "p92-48",
+    "p92-49",
+    "p92-51",
+    "p92-52"
+   ],
+   "slot_who_pass2": [
+    13,
+    21
+   ],
+   "pass2": {
+    "unpushed_incoherent": 0,
+    "inconclusive": false,
+    "slot_who": [
+     13,
+     21
+    ],
+    "slot_who_coherent": [
+     17,
+     21
+    ],
+    "concept_any": [
+     17,
+     18
+    ],
+    "unpushed_coherent_per_q": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "slot_who_units": [
+     "p92-02",
+     "p92-03",
+     "p92-04",
+     "p92-09",
+     "p92-10",
+     "p92-24",
+     "p92-25",
+     "p92-32",
+     "p92-33",
+     "p92-35",
+     "p92-36",
+     "p92-46",
+     "p92-47"
+    ],
+    "concept_any_units": [
+     "p92-00",
+     "p92-01",
+     "p92-08",
+     "p92-11",
+     "p92-15",
+     "p92-28",
+     "p92-29",
+     "p92-30",
+     "p92-38",
+     "p92-39",
+     "p92-40",
+     "p92-41",
+     "p92-43",
+     "p92-45",
+     "p92-48",
+     "p92-51",
+     "p92-52"
+    ]
+   },
+   "two_pass": {
+    "items": 42,
+    "compared": 42,
+    "shows_persona_agree": 42,
+    "coherent_agree": 41,
+    "slot_who_pass1": [
+     13,
+     21
+    ],
+    "slot_who_pass2": [
+     13,
+     21
+    ],
+    "passes": true
+   },
+   "deepseek": {
+    "items": 26,
+    "shows_persona_agree": 25,
+    "coherent_agree": 24,
+    "pct": 96.15,
+    "coherent_pct": 92.31
+   }
+  },
+  "R9": {
+   "label_errors": 3,
+   "items_still_missing": 0,
+   "label_errors_pass2": 7,
+   "items_still_missing_pass2": 0,
+   "labelled": true,
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    17,
+    21
+   ],
+   "slot_who_coherent": [
+    20,
+    21
+   ],
+   "concept_any": [
+    17,
+    18
+   ],
+   "unpushed_coherent_per_q": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "slot_who_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-07",
+    "p92-09",
+    "p92-10",
+    "p92-13",
+    "p92-20",
+    "p92-24",
+    "p92-25",
+    "p92-32",
+    "p92-33",
+    "p92-35",
+    "p92-36",
+    "p92-37",
+    "p92-46",
+    "p92-47"
+   ],
+   "concept_any_units": [
+    "p92-00",
+    "p92-01",
+    "p92-08",
+    "p92-11",
+    "p92-15",
+    "p92-28",
+    "p92-29",
+    "p92-30",
+    "p92-38",
+    "p92-39",
+    "p92-40",
+    "p92-41",
+    "p92-43",
+    "p92-45",
+    "p92-48",
+    "p92-51",
+    "p92-52"
+   ],
+   "slot_who_pass2": [
+    17,
+    21
+   ],
+   "pass2": {
+    "unpushed_incoherent": 0,
+    "inconclusive": false,
+    "slot_who": [
+     17,
+     21
+    ],
+    "slot_who_coherent": [
+     19,
+     21
+    ],
+    "concept_any": [
+     17,
+     18
+    ],
+    "unpushed_coherent_per_q": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "slot_who_units": [
+     "p92-02",
+     "p92-03",
+     "p92-04",
+     "p92-07",
+     "p92-09",
+     "p92-10",
+     "p92-13",
+     "p92-20",
+     "p92-24",
+     "p92-25",
+     "p92-32",
+     "p92-33",
+     "p92-35",
+     "p92-36",
+     "p92-37",
+     "p92-46",
+     "p92-47"
+    ],
+    "concept_any_units": [
+     "p92-00",
+     "p92-01",
+     "p92-08",
+     "p92-11",
+     "p92-15",
+     "p92-28",
+     "p92-29",
+     "p92-30",
+     "p92-38",
+     "p92-39",
+     "p92-40",
+     "p92-41",
+     "p92-43",
+     "p92-45",
+     "p92-48",
+     "p92-51",
+     "p92-52"
+    ]
+   },
+   "two_pass": {
+    "items": 42,
+    "compared": 42,
+    "shows_persona_agree": 42,
+    "coherent_agree": 41,
+    "slot_who_pass1": [
+     17,
+     21
+    ],
+    "slot_who_pass2": [
+     17,
+     21
+    ],
+    "passes": true
+   },
+   "deepseek": {
+    "items": 26,
+    "shows_persona_agree": 24,
+    "coherent_agree": 26,
+    "pct": 92.31,
+    "coherent_pct": 100.0
+   }
+  },
+  "R10": {
+   "label_errors": 9,
+   "items_still_missing": 0,
+   "label_errors_pass2": 8,
+   "items_still_missing_pass2": 0,
+   "labelled": true,
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    17,
+    21
+   ],
+   "slot_who_coherent": [
+    18,
+    21
+   ],
+   "concept_any": [
+    17,
+    18
+   ],
+   "unpushed_coherent_per_q": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "slot_who_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-09",
+    "p92-10",
+    "p92-13",
+    "p92-18",
+    "p92-20",
+    "p92-24",
+    "p92-25",
+    "p92-33",
+    "p92-35",
+    "p92-37",
+    "p92-42",
+    "p92-46",
+    "p92-47",
+    "p92-50"
+   ],
+   "concept_any_units": [
+    "p92-00",
+    "p92-01",
+    "p92-08",
+    "p92-11",
+    "p92-15",
+    "p92-28",
+    "p92-29",
+    "p92-30",
+    "p92-38",
+    "p92-39",
+    "p92-40",
+    "p92-41",
+    "p92-43",
+    "p92-45",
+    "p92-48",
+    "p92-51",
+    "p92-52"
+   ],
+   "slot_who_pass2": [
+    16,
+    21
+   ],
+   "pass2": {
+    "unpushed_incoherent": 0,
+    "inconclusive": false,
+    "slot_who": [
+     16,
+     21
+    ],
+    "slot_who_coherent": [
+     19,
+     21
+    ],
+    "concept_any": [
+     17,
+     18
+    ],
+    "unpushed_coherent_per_q": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "slot_who_units": [
+     "p92-02",
+     "p92-03",
+     "p92-04",
+     "p92-09",
+     "p92-10",
+     "p92-13",
+     "p92-18",
+     "p92-20",
+     "p92-24",
+     "p92-25",
+     "p92-33",
+     "p92-35",
+     "p92-37",
+     "p92-42",
+     "p92-46",
+     "p92-50"
+    ],
+    "concept_any_units": [
+     "p92-00",
+     "p92-01",
+     "p92-08",
+     "p92-11",
+     "p92-15",
+     "p92-28",
+     "p92-29",
+     "p92-30",
+     "p92-38",
+     "p92-39",
+     "p92-40",
+     "p92-41",
+     "p92-43",
+     "p92-45",
+     "p92-48",
+     "p92-51",
+     "p92-52"
+    ]
+   },
+   "two_pass": {
+    "items": 42,
+    "compared": 42,
+    "shows_persona_agree": 41,
+    "coherent_agree": 41,
+    "slot_who_pass1": [
+     17,
+     21
+    ],
+    "slot_who_pass2": [
+     16,
+     21
+    ],
+    "passes": true
+   },
+   "deepseek": {
+    "items": 26,
+    "shows_persona_agree": 25,
+    "coherent_agree": 24,
+    "pct": 96.15,
+    "coherent_pct": 92.31
+   }
+  }
+ },
+ "nets_upstream": {
+  "R1": {
+   "units_paired": 16,
+   "lost": 11,
+   "gained": 0,
+   "net": 11,
+   "lost_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-13",
+    "p92-18",
+    "p92-24",
+    "p92-25",
+    "p92-36",
+    "p92-37",
+    "p92-47"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 0.0009765625
+  },
+  "R2": {
+   "units_paired": 16,
+   "lost": 14,
+   "gained": 0,
+   "net": 14,
+   "lost_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-09",
+    "p92-18",
+    "p92-24",
+    "p92-25",
+    "p92-33",
+    "p92-35",
+    "p92-36",
+    "p92-37",
+    "p92-46",
+    "p92-47"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 0.0001220703125
+  },
+  "R2m": {
+   "units_paired": 16,
+   "lost": 14,
+   "gained": 0,
+   "net": 14,
+   "lost_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-13",
+    "p92-18",
+    "p92-24",
+    "p92-25",
+    "p92-33",
+    "p92-35",
+    "p92-36",
+    "p92-37",
+    "p92-46",
+    "p92-47"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 0.0001220703125
+  },
+  "R8": {
+   "units_paired": 16,
+   "lost": 4,
+   "gained": 1,
+   "net": 3,
+   "lost_units": [
+    "p92-05",
+    "p92-13",
+    "p92-18",
+    "p92-37"
+   ],
+   "gained_units": [
+    "p92-32"
+   ],
+   "mcnemar_p": 0.375
+  },
+  "R9": {
+   "units_paired": 16,
+   "lost": 2,
+   "gained": 1,
+   "net": 1,
+   "lost_units": [
+    "p92-05",
+    "p92-18"
+   ],
+   "gained_units": [
+    "p92-32"
+   ],
+   "mcnemar_p": 1.0
+  },
+  "R10": {
+   "units_paired": 16,
+   "lost": 2,
+   "gained": 0,
+   "net": 2,
+   "lost_units": [
+    "p92-05",
+    "p92-36"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 0.5
+  }
+ },
+ "nets_downstream": {
+  "R1": {
+   "units_paired": 5,
+   "lost": 5,
+   "gained": 0,
+   "net": 5,
+   "lost_units": [
+    "p92-07",
+    "p92-10",
+    "p92-20",
+    "p92-42",
+    "p92-50"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 0.0625
+  },
+  "R2": {
+   "units_paired": 5,
+   "lost": 5,
+   "gained": 0,
+   "net": 5,
+   "lost_units": [
+    "p92-07",
+    "p92-10",
+    "p92-20",
+    "p92-42",
+    "p92-50"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 0.0625
+  },
+  "R2m": {
+   "units_paired": 5,
+   "lost": 5,
+   "gained": 0,
+   "net": 5,
+   "lost_units": [
+    "p92-07",
+    "p92-10",
+    "p92-20",
+    "p92-42",
+    "p92-50"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 0.0625
+  },
+  "R8": {
+   "units_paired": 5,
+   "lost": 4,
+   "gained": 0,
+   "net": 4,
+   "lost_units": [
+    "p92-07",
+    "p92-20",
+    "p92-42",
+    "p92-50"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 0.125
+  },
+  "R9": {
+   "units_paired": 5,
+   "lost": 2,
+   "gained": 0,
+   "net": 2,
+   "lost_units": [
+    "p92-42",
+    "p92-50"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 0.5
+  },
+  "R10": {
+   "units_paired": 5,
+   "lost": 1,
+   "gained": 0,
+   "net": 1,
+   "lost_units": [
+    "p92-07"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 1.0
+  }
+ },
+ "nets_all21": {
+  "R1": {
+   "units_paired": 21,
+   "lost": 16,
+   "gained": 0,
+   "net": 16,
+   "lost_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-13",
+    "p92-18",
+    "p92-24",
+    "p92-25",
+    "p92-36",
+    "p92-37",
+    "p92-47",
+    "p92-07",
+    "p92-10",
+    "p92-20",
+    "p92-42",
+    "p92-50"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 3.0517578125e-05
+  },
+  "R2": {
+   "units_paired": 21,
+   "lost": 19,
+   "gained": 0,
+   "net": 19,
+   "lost_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-09",
+    "p92-18",
+    "p92-24",
+    "p92-25",
+    "p92-33",
+    "p92-35",
+    "p92-36",
+    "p92-37",
+    "p92-46",
+    "p92-47",
+    "p92-07",
+    "p92-10",
+    "p92-20",
+    "p92-42",
+    "p92-50"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 3.814697265625e-06
+  },
+  "R2m": {
+   "units_paired": 21,
+   "lost": 19,
+   "gained": 0,
+   "net": 19,
+   "lost_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-13",
+    "p92-18",
+    "p92-24",
+    "p92-25",
+    "p92-33",
+    "p92-35",
+    "p92-36",
+    "p92-37",
+    "p92-46",
+    "p92-47",
+    "p92-07",
+    "p92-10",
+    "p92-20",
+    "p92-42",
+    "p92-50"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 3.814697265625e-06
+  },
+  "R8": {
+   "units_paired": 21,
+   "lost": 8,
+   "gained": 1,
+   "net": 7,
+   "lost_units": [
+    "p92-05",
+    "p92-13",
+    "p92-18",
+    "p92-37",
+    "p92-07",
+    "p92-20",
+    "p92-42",
+    "p92-50"
+   ],
+   "gained_units": [
+    "p92-32"
+   ],
+   "mcnemar_p": 0.0390625
+  },
+  "R9": {
+   "units_paired": 21,
+   "lost": 4,
+   "gained": 1,
+   "net": 3,
+   "lost_units": [
+    "p92-05",
+    "p92-18",
+    "p92-42",
+    "p92-50"
+   ],
+   "gained_units": [
+    "p92-32"
+   ],
+   "mcnemar_p": 0.375
+  },
+  "R10": {
+   "units_paired": 21,
+   "lost": 3,
+   "gained": 0,
+   "net": 3,
+   "lost_units": [
+    "p92-05",
+    "p92-36",
+    "p92-07"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 0.25
+  }
+ },
+ "coupling": {
+  "R8": {
+   "layers": [
+    {
+     "layer": 0,
+     "heads": [
+      10
+     ],
+     "attn_out_rel": -0.004514860843131598,
+     "rms_q_rel": -0.002456075481670607,
+     "rms_k_rel": -0.0020657343106102125
+    },
+    {
+     "layer": 1,
+     "heads": [
+      4
+     ],
+     "attn_out_rel": -0.08749073220816296,
+     "rms_q_rel": -0.0001330568161371954,
+     "rms_k_rel": -0.0024257467406290766
+    },
+    {
+     "layer": 2,
+     "heads": [
+      6
+     ],
+     "attn_out_rel": -0.1269930777415821,
+     "rms_q_rel": 0.006612647599558481,
+     "rms_k_rel": 0.0020984369861905493
+    },
+    {
+     "layer": 3,
+     "heads": [
+      5
+     ],
+     "attn_out_rel": -0.04232157848365319,
+     "rms_q_rel": 0.01061237814068915,
+     "rms_k_rel": -0.005845898242458431
+    }
+   ],
+   "max_abs_attn_out_rel": 0.1269930777415821,
+   "max_pct": 12.699,
+   "elements_copied": 0,
+   "tensors_copied": 0,
+   "seconds": 130.49898550000216
+  },
+  "R9": {
+   "layers": [
+    {
+     "layer": 0,
+     "heads": [
+      12
+     ],
+     "attn_out_rel": 0.0030292010633629547,
+     "rms_q_rel": -0.0005130009345126002,
+     "rms_k_rel": -0.0016134733369974937
+    },
+    {
+     "layer": 1,
+     "heads": [
+      11
+     ],
+     "attn_out_rel": -0.006744805416695196,
+     "rms_q_rel": -0.00016448331199119087,
+     "rms_k_rel": -0.0012083249791454717
+    },
+    {
+     "layer": 2,
+     "heads": [
+      5
+     ],
+     "attn_out_rel": -0.006106416144345252,
+     "rms_q_rel": 0.0025652484065108744,
+     "rms_k_rel": 7.25725733442994e-05
+    },
+    {
+     "layer": 3,
+     "heads": [
+      9
+     ],
+     "attn_out_rel": 0.0034607296074518888,
+     "rms_q_rel": -0.0006589182303931708,
+     "rms_k_rel": -0.021842327702888905
+    }
+   ],
+   "max_abs_attn_out_rel": 0.006744805416695196,
+   "max_pct": 0.674,
+   "elements_copied": 0,
+   "tensors_copied": 0,
+   "seconds": 221.03504790000443
+  },
+  "R10": {
+   "layers": [
+    {
+     "layer": 0,
+     "heads": [
+      10
+     ],
+     "attn_out_rel": 0.004414526000185138,
+     "rms_q_rel": 0.0034218111682588915,
+     "rms_k_rel": 0.0032659828430516074
+    },
+    {
+     "layer": 1,
+     "heads": [
+      4
+     ],
+     "attn_out_rel": 0.0938042067683481,
+     "rms_q_rel": 0.0005491544114572641,
+     "rms_k_rel": 0.0035207022963496533
+    },
+    {
+     "layer": 2,
+     "heads": [
+      6
+     ],
+     "attn_out_rel": 0.11732593248932999,
+     "rms_q_rel": -0.007469037701209731,
+     "rms_k_rel": -0.002370429945211819
+    },
+    {
+     "layer": 3,
+     "heads": [
+      5
+     ],
+     "attn_out_rel": 0.04287359778951474,
+     "rms_q_rel": -0.009916754831261698,
+     "rms_k_rel": 0.009386469027734172
+    }
+   ],
+   "max_abs_attn_out_rel": 0.11732593248932999,
+   "max_pct": 11.733,
+   "elements_copied": 0,
+   "tensors_copied": 0,
+   "seconds": 125.95207060000394
+  },
+  "R1": {
+   "layers": [],
+   "max_abs_attn_out_rel": null,
+   "max_pct": null,
+   "elements_copied": 67125248,
+   "tensors_copied": 24,
+   "seconds": 136.18504799999937
+  },
+  "R0": {
+   "layers": [],
+   "max_abs_attn_out_rel": null,
+   "max_pct": null,
+   "elements_copied": 0,
+   "tensors_copied": 0,
+   "seconds": 117.69088370000827
+  }
+ },
+ "receipts": {
+  "R8": {
+   "mode": "donor",
+   "heads": [
+    "L0H10",
+    "L1H4",
+    "L2H6",
+    "L3H5"
+   ],
+   "n_records": 24,
+   "all_matches_expected": true,
+   "parameters": [
+    "layers.0.self_attn.k_norm.weight",
+    "layers.0.self_attn.k_proj.weight",
+    "layers.0.self_attn.o_proj.weight",
+    "layers.0.self_attn.q_norm.weight",
+    "layers.0.self_attn.q_proj.weight",
+    "layers.0.self_attn.v_proj.weight",
+    "layers.1.self_attn.k_norm.weight",
+    "layers.1.self_attn.k_proj.weight",
+    "layers.1.self_attn.o_proj.weight",
+    "layers.1.self_attn.q_norm.weight",
+    "layers.1.self_attn.q_proj.weight",
+    "layers.1.self_attn.v_proj.weight",
+    "layers.2.self_attn.k_norm.weight",
+    "layers.2.self_attn.k_proj.weight",
+    "layers.2.self_attn.o_proj.weight",
+    "layers.2.self_attn.q_norm.weight",
+    "layers.2.self_attn.q_proj.weight",
+    "layers.2.self_attn.v_proj.weight",
+    "layers.3.self_attn.k_norm.weight",
+    "layers.3.self_attn.k_proj.weight",
+    "layers.3.self_attn.o_proj.weight",
+    "layers.3.self_attn.q_norm.weight",
+    "layers.3.self_attn.q_proj.weight",
+    "layers.3.self_attn.v_proj.weight"
+   ],
+   "elements_each": [
+    128,
+    262144
+   ],
+   "distance_ratio": null,
+   "reset_receipt_present": true,
+   "donor": "E:\\neuron-probe\\hf\\hub\\models--allenai--OLMo-2-0425-1B\\snapshots\\f83cd641d4f00954eb25c781e0ac360debb3239e"
+  },
+  "R9": {
+   "mode": "donor",
+   "heads": [
+    "L0H12",
+    "L1H11",
+    "L2H5",
+    "L3H9"
+   ],
+   "n_records": 24,
+   "all_matches_expected": true,
+   "parameters": [
+    "layers.0.self_attn.k_norm.weight",
+    "layers.0.self_attn.k_proj.weight",
+    "layers.0.self_attn.o_proj.weight",
+    "layers.0.self_attn.q_norm.weight",
+    "layers.0.self_attn.q_proj.weight",
+    "layers.0.self_attn.v_proj.weight",
+    "layers.1.self_attn.k_norm.weight",
+    "layers.1.self_attn.k_proj.weight",
+    "layers.1.self_attn.o_proj.weight",
+    "layers.1.self_attn.q_norm.weight",
+    "layers.1.self_attn.q_proj.weight",
+    "layers.1.self_attn.v_proj.weight",
+    "layers.2.self_attn.k_norm.weight",
+    "layers.2.self_attn.k_proj.weight",
+    "layers.2.self_attn.o_proj.weight",
+    "layers.2.self_attn.q_norm.weight",
+    "layers.2.self_attn.q_proj.weight",
+    "layers.2.self_attn.v_proj.weight",
+    "layers.3.self_attn.k_norm.weight",
+    "layers.3.self_attn.k_proj.weight",
+    "layers.3.self_attn.o_proj.weight",
+    "layers.3.self_attn.q_norm.weight",
+    "layers.3.self_attn.q_proj.weight",
+    "layers.3.self_attn.v_proj.weight"
+   ],
+   "elements_each": [
+    128,
+    262144
+   ],
+   "distance_ratio": null,
+   "reset_receipt_present": true,
+   "donor": "E:\\neuron-probe\\hf\\hub\\models--allenai--OLMo-2-0425-1B\\snapshots\\f83cd641d4f00954eb25c781e0ac360debb3239e"
+  },
+  "R10": {
+   "mode": "opposite",
+   "heads": [
+    "L0H10",
+    "L1H4",
+    "L2H6",
+    "L3H5"
+   ],
+   "n_records": 24,
+   "all_matches_expected": true,
+   "parameters": [
+    "layers.0.self_attn.k_norm.weight",
+    "layers.0.self_attn.k_proj.weight",
+    "layers.0.self_attn.o_proj.weight",
+    "layers.0.self_attn.q_norm.weight",
+    "layers.0.self_attn.q_proj.weight",
+    "layers.0.self_attn.v_proj.weight",
+    "layers.1.self_attn.k_norm.weight",
+    "layers.1.self_attn.k_proj.weight",
+    "layers.1.self_attn.o_proj.weight",
+    "layers.1.self_attn.q_norm.weight",
+    "layers.1.self_attn.q_proj.weight",
+    "layers.1.self_attn.v_proj.weight",
+    "layers.2.self_attn.k_norm.weight",
+    "layers.2.self_attn.k_proj.weight",
+    "layers.2.self_attn.o_proj.weight",
+    "layers.2.self_attn.q_norm.weight",
+    "layers.2.self_attn.q_proj.weight",
+    "layers.2.self_attn.v_proj.weight",
+    "layers.3.self_attn.k_norm.weight",
+    "layers.3.self_attn.k_proj.weight",
+    "layers.3.self_attn.o_proj.weight",
+    "layers.3.self_attn.q_norm.weight",
+    "layers.3.self_attn.q_proj.weight",
+    "layers.3.self_attn.v_proj.weight"
+   ],
+   "elements_each": [
+    128,
+    262144
+   ],
+   "distance_ratio": null,
+   "reset_receipt_present": true,
+   "donor": "E:\\neuron-probe\\hf\\hub\\models--allenai--OLMo-2-0425-1B\\snapshots\\f83cd641d4f00954eb25c781e0ac360debb3239e"
+  }
+ }
+}

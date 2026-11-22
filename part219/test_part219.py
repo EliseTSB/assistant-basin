@@ -1277,3 +1277,20 @@ def test_means219_main_runs_end_to_end_on_the_tiny_model(snapshots, tmp_path):
     assert {"L0H0", "L1H1"} <= set(saved)
     assert saved["L0H0"]["n_pos0"] == 26 and saved["L0H0"]["n_rest"] > 26 * 2
     assert set(swap99.load_head_means(tmp_path / "head-means.pt")) >= {(0, 0), (1, 1)}  # the runner's weights_only load
+
+
+def test_do_nothing_mode_runs_only_r0b_through_both_wrappers():
+    specs = run219.do_nothing_specs()
+    assert [spec["tag"] for spec in specs] == ["R0b", "R0b-mean"]
+    assert all(spec["ablate_heads"] == "" for spec in specs)
+    assert specs[1]["ablate_mode"] == "mean"
+
+
+def test_do_nothing_mode_refuses_when_the_pilot_r0_is_missing(tmp_path):
+    out = tmp_path / "out"
+    out.mkdir()
+    kernel = write_kernel(tmp_path / "kernel")
+    args = _pilot_a1_args(tmp_path, kernel, out)
+    args[args.index("--pilot-a1")] = "--do-nothing"
+    with pytest.raises(SystemExit, match="R0.jsonl"):
+        run219.main(args)
