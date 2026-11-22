@@ -18,8 +18,13 @@ def get_layers(model):
     return model.model.layers
 
 
-def load_model(snapshot_dir: str | Path, device: str = "cpu"):
-    """Load a local snapshot in bf16, returning its tokenizer and evaluation model."""
+def load_model(snapshot_dir: str | Path, device: str = "cpu", *, attn_implementation: str | None = None):
+    """Load a local snapshot in bf16, returning its tokenizer and evaluation model.
+
+    ``attn_implementation`` (Part 219) is passed through to ``from_pretrained`` only when given, so every existing
+    caller keeps the library default kernel and byte-identical behaviour. ``"eager"`` asks for the unfused attention
+    kernel, which Part 178 found differs from the default SDPA path past 64 keys.
+    """
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -27,8 +32,9 @@ def load_model(snapshot_dir: str | Path, device: str = "cpu"):
     tokenizer = AutoTokenizer.from_pretrained(snapshot, local_files_only=True)
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token = tokenizer.eos_token
+    extra = {} if attn_implementation is None else {"attn_implementation": attn_implementation}
     model = AutoModelForCausalLM.from_pretrained(
-        snapshot, torch_dtype=torch.bfloat16, local_files_only=True
+        snapshot, torch_dtype=torch.bfloat16, local_files_only=True, **extra
     ).to(device)
     model.requires_grad_(False)
     model.eval()
@@ -148,16 +154,17 @@ def random_direction(weight, seed: int, target_norm: float):
     return random_directions(weight, 1, seed, target_norm)[0]
 
 
-def generate_batch(model, tokenizer, questions, frame: str, layer, row_vectors,
-                   max_new_tokens: int, device: str) -> list[str]:
-    """Greedy decode a batch with left padding and optional per-row layer pushes."""
+def batch_inputs(tokenizer, questions, frame: str, device: str):
+    """Left-pad a batch exactly as ``generate_batch`` does, returning (input_ids, attention_mask, width).
+
+    Part 219 uses this for its first-batch coupling probe, so the probe sees the same tensor the first generation
+    call sees rather than a parallel copy of the padding rule.
+    """
     import torch
 
-    if isinstance(questions, str):
-        questions = [questions]
     questions = list(questions)
     if not questions:
-        return []
+        raise ValueError("questions must not be empty")
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token = tokenizer.eos_token
     pad_id = int(tokenizer.pad_token_id)
@@ -167,6 +174,24 @@ def generate_batch(model, tokenizer, questions, frame: str, layer, row_vectors,
                              dtype=torch.long, device=device)
     attention_mask = torch.tensor([[0] * (width - len(seq)) + [1] * len(seq) for seq in sequences],
                                   dtype=torch.long, device=device)
+    return input_ids, attention_mask, width
+
+
+def generate_batch(model, tokenizer, questions, frame: str, layer, row_vectors,
+                   max_new_tokens: int, device: str, return_ids: bool = False):
+    """Greedy decode a batch with left padding and optional per-row layer pushes.
+
+    ``return_ids`` (Part 219) also returns each row's generated token ids, so a do-nothing arm can be compared token
+    for token rather than only through the decoded text (two different id sequences can decode alike)."""
+    import torch
+
+    if isinstance(questions, str):
+        questions = [questions]
+    questions = list(questions)
+    if not questions:
+        return []
+    input_ids, attention_mask, width = batch_inputs(tokenizer, questions, frame, device)
+    pad_id = int(tokenizer.pad_token_id)
     if row_vectors is not None:
         if row_vectors.shape[0] != len(questions):
             raise ValueError("one row vector is required per question")
@@ -187,4 +212,6 @@ def generate_batch(model, tokenizer, questions, frame: str, layer, row_vectors,
         text = tokenizer.decode(row, skip_special_tokens=True)
         answer = text.split("\nQuestion:")[0].strip() if frame == "plain" else text.strip()
         answers.append(answer)
+    if return_ids:
+        return answers, [[int(token) for token in row] for row in generated[:, width:]]
     return answers

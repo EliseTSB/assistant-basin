@@ -55,13 +55,20 @@ def load(path, keep=None):
     return rows, errors, len(failed_keys - set(rows))
 
 
+def relative(lab, unit, i, q):
+    """Part 99's relative show: the pushed answer shows the unit's persona and the same run's unpushed answer to the
+    same question does not. None when either side of the pair is missing. Part 219 reuses this definition rather than
+    writing a second one."""
+    p, b = lab.get((i, unit, q)), lab.get((i, "baseline", q))
+    if p is None or b is None:
+        return None
+    return bool(p["shows_persona"]) and not bool(b["shows_persona"])
+
+
 def score_rows(lab, ids, slot, concept):
     """Part 99's definitions, as in part100/score100.py."""
     def rel(i, arm, q):
-        p, b = lab.get((i, arm, q)), lab.get((i, "baseline", q))
-        if p is None or b is None:
-            return None
-        return bool(p["shows_persona"]) and not bool(b["shows_persona"])
+        return relative(lab, arm, i, q)
 
     def any_show(i):
         v = [rel(i, "neuron", q) for q in range(6)]
