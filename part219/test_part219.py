@@ -1251,3 +1251,16 @@ def test_run219_refuses_a_non_eager_kernel_record(tmp_path):
 def test_run219_accepts_a_passing_eager_kernel_record(tmp_path):
     result = run219.check_kernel_record(write_kernel(tmp_path / "kernel"))
     assert result["passes"] is True and not result["failures"]
+
+
+def test_means219_main_runs_end_to_end_on_the_tiny_model(snapshots, tmp_path):
+    """The whole script, generation included: the first Arc launch died in generate_answers on a missing argument
+    that no test reached (2026-11-22)."""
+    host, _donor = snapshots
+    real = Path(__file__).resolve().parent / "reference-questions.jsonl"
+    rc = means219.main(["--host", str(host), "--questions", str(real), "--out", str(tmp_path), "--device", "cpu",
+                        "--batch", "8", "--max-new-tokens", "3", "--heads", "L0H0,L1H1"])
+    assert rc in (None, 0)
+    saved = torch.load(tmp_path / "head-means.pt", weights_only=False)
+    assert {"L0H0", "L1H1"} <= set(saved)
+    assert saved["L0H0"]["n_pos0"] == 26 and saved["L0H0"]["n_rest"] > 26 * 2

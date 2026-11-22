@@ -163,7 +163,7 @@ def generate_answers(model, tokenizer, prompts, *, device: str = "cpu", batch: i
     answers, ids = [], []
     for begin in range(0, len(prompts), max(int(batch), 1)):
         chunk = prompts[begin:begin + max(int(batch), 1)]
-        chunk_answers, chunk_ids = c.generate_batch(model, tokenizer, chunk, FRAME, None,
+        chunk_answers, chunk_ids = c.generate_batch(model, tokenizer, chunk, FRAME, None, None,
                                                     max_new_tokens, device, return_ids=True)
         answers.extend(chunk_answers)
         ids.extend(chunk_ids)
@@ -382,7 +382,7 @@ def main(argv=None):
         answers, answer_ids = generate_answers(
             model, tokenizer, prompts, device=args.device, batch=args.batch,
             max_new_tokens=args.max_new_tokens, heartbeat=heartbeat)
-        sequences = sequences_for(tokenizer, prompts, answers, pad_id)
+        sequences = sequences_for(tokenizer, prompts, answer_ids, pad_id)
         heartbeat.say("teacher-forcing the reference sequences")
         means = compute_means(model, sequences, pad_id=pad_id, device=args.device, heads=heads,
                               batch=args.batch, heartbeat=heartbeat)
