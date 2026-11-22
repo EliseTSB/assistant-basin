@@ -1,10 +1,11 @@
 # Part 219: are four early heads the part of early attention that OLMo 2 1B's slot neurons need?
 
 Procedure: v1
-DRAFT v2, written 2026-11-22 by Journal Claude (Opus 5.5); not registered. Elise asked for it after reading about
+DRAFT v4, written 2026-11-22 by Journal Claude (Opus 5.5); not registered. Elise asked for it after reading about
 screen A: "Go for it!" (Discord 1574113207369334966, 2026-11-22 11:23 CT). v2 folds the DeepSeek design review r1
 (SHIP-WITH-FIXES, 6 blocking and 10 serious findings; `Journal/scratch/review-part219-design-r1-ds-r1-2026-11-22/
-REVIEW.md`). Registration is the commit that adds the final version to public main, after review.
+REVIEW.md`); v3 adds Part 105's distance control; v4 folds Vesper's review (SHIP-WITH-FIXES, council topic
+`vesper-part219-design-2026-11-22` #4). Registration is the commit that adds the final version to public main, after review.
 
 ## Question
 
@@ -57,10 +58,14 @@ under eager against a CPU float32 reference made for this part (none exists yet 
 `tools/part_check.py kernel`, and if it cannot, that is the first reported result and nothing below is read.
 
 Zeroing: a head is zeroed by setting its 128-wide slice of `o_proj`'s input to zero at every position (screen A's
-operation). Transplant: the head's rows `[128h:128(h+1)]` of `q_proj`, `k_proj` and `v_proj` and columns
-`[128h:128(h+1)]` of `o_proj` are copied from the donor; the host's full-width `q_norm` and `k_norm` weights are kept.
-⚠ OLMo 2's `q_norm`/`k_norm` take their RMS over the whole 2048-wide projection, so a transplant also shifts the other
-heads' normalisation a little; R9 measures that coupling with four unimportant heads.
+operation). Transplant: the head's rows `[128h:128(h+1)]` of `q_proj`, `k_proj` and `v_proj`, columns `[128h:128(h+1)]` of
+`o_proj`, and the head's own 128-wide slices of the `q_norm` and `k_norm` weights are copied from the donor (the norm
+weights are per dimension, so those slices belong to the head; Vesper's review). ⚠ Two couplings remain that no slice
+choice removes: `q_norm`/`k_norm` take their RMS denominator over the whole 2048-wide projection, and OLMo 2's
+`post_attention_layernorm` normalises the sum of all heads' outputs, so a transplanted head shifts its 15 siblings'
+scale a little at both points. R9 measures that with four unimportant heads, and R10 with the same four important
+heads; each transplant run's receipt logs the first-batch relative change in rms(q), rms(k) and rms(attention output),
+the drift of the sibling heads' outputs, and the transplanted slices' ||W - W_0|| and ||W|| / ||W_0||.
 
 Slot units by position: a head in layer l precedes a push that enters after layer L's MLP when l ≤ L. 16 of the 21
 slot units (layers 3 to 12) sit downstream of all four heads, so every arm here changes only the context their push
@@ -83,7 +88,7 @@ Runs (`swap99.py`, with `--ablate-heads` and `--transplant-heads` as the new opt
 | R7 | zero L3H5 | exploratory (downstream of the push for 5 units) |
 | R8 | transplant L0H10, L1H4, L2H6, L3H5 from the donor | 219.3, 219.4 |
 | R9 | transplant L0H12, L1H11, L2H5, L3H9 from the donor | coupling check |
-| R10 | the four heads' slices moved the opposite way by the same distance: 2 x Instruct - donor | distance control for R8 (Part 105) |
+| R10 | the four heads' slices (including their q_norm/k_norm slices) moved the opposite way by the same distance: 2 x Instruct - donor | distance control for R8 (Part 105) |
 
 R10 is Part 105's control. There an attention swap moved the opposite way by the same distance lost 5 of 10 early slot
 personas against 7 of 10 for the SFT swap, so a transplant that removes personas may only show that these answers break
@@ -101,16 +106,18 @@ every run's read set (seed 219) as the second reader.
 ## Controls
 
 - Do-nothing: R0b must match R0 token for token on every item.
-- Reset receipt: after R2, R8 and R10, the hooks or transplanted weights are removed, a stored prompt is replayed, and
-  its token ids and first-step logits must equal R0's exactly. A run whose receipt fails is not read.
+- Reset receipt: after every run that changes the model (R1 to R10), the hooks or transplanted weights are removed, a
+  stored prompt is replayed, and its token ids and first-step logits must equal R0's exactly, so a leaked hook or weight
+  cannot taint the next run in the same process. A run whose receipt fails is not read.
 - Intervention receipt: in each zeroing run the hooked `o_proj` input slice is checked to be zero on the first batch,
-  and in each transplant run the four slices are checked to equal the donor's bytes.
-- Rig check (R5): zeroing four unimportant early heads must leave the 16 upstream units within 2 of R0's net count. A
-  failure means a bug or an unexpectedly fragile readout, and freezes 219.1 and 219.2.
+  in R8 and R9 the slices are checked to equal the donor's bytes, and in R10 to equal 2 x Instruct - donor computed in
+  float32 and cast to bf16.
+- Rig check (R5): zeroing four unimportant early heads must give |net loss against R0| at most 2 on the 16 upstream
+  units. A failure means a bug or an unexpectedly fragile readout, and freezes 219.1 and 219.2.
 - Distance control (R10): see 219.5 and the headlines; without it, R8 cannot separate post-training's change from
   any change of the same size.
-- Coupling check (R9): transplanting four unimportant heads must remove at most 2 net on the 16. If it removes more,
-  the norm coupling and not the heads moves the readout, and 219.3 and 219.4 are not read.
+- Coupling check (R9): transplanting four unimportant heads must give |net loss against R0| at most 2 on the 16, in
+  either direction. If not, the norm coupling and not the heads moves the readout, and 219.3 to 219.5 are not read.
 - Breakage: coherence of slot answers and the unpushed answers is counted in every run (Part 99's reader fields); Part
   101's `inconclusive` flag (more than 3 of 6 unpushed answers incoherent) makes a run inconclusive, and every run's
   unpushed "Who are you?" label is reported, since a persona-showing baseline would empty the paired count for the wrong
@@ -131,7 +138,8 @@ frozen and all arms are reported as exploratory, with the failure first.
 - Smallest effect worth knowing: R2 removing 7 of the 16 upstream units' personas net. With paired units the exact
   McNemar test gives p = 0.016 at 7 lost and 0 gained, and p = 0.07 at 7 against 1.
 - Total: 5,688 generations (12 runs x 474, measured from `results/part99/inst_none.jsonl`) and about 6,500 labels
-  (12 x 258 x 2 Haiku passes, plus 310 DeepSeek labels), about 44 minutes on the A770 (Part 99's R0 took 114 s on the
+  (11 labelled runs x 258 x 2 Haiku passes, plus 284 DeepSeek labels; R0b is labelled only if it is not bit-identical
+  to R0), about 44 minutes on the A770 (Part 99's R0 took 114 s on the
   default kernel; eager is measured in the pilot and this line is updated before the full run).
 - Pilot: R0 and R2 in full (948 generations). Stop and re-plan if R0 shows fewer than 17 of 21, if R2 leaves fewer
   than 15 of 21 slot answers coherent, or if either receipt fails.
@@ -166,6 +174,10 @@ Reader agreement is gated per run on the 42 slot items, not the pooled 258: the 
 before agreement is computed. Agreement with the DeepSeek reader is reported for every run and does not gate.
 
 219.1 is read only if 219.2 holds; otherwise it is reported as "inconclusive: zeroing these heads breaks answers".
+219.3 to 219.5 are read only if R8 clears the same bar as 219.2 (at least 15 of 21 slot answers coherent, at least 13
+concept units keep their persona, not flagged inconclusive); otherwise "inconclusive: the transplant breaks answers".
+R10's coherence is reported beside it; a broken R10 makes 219.5 harder to hold, not easier. 219.4 is read only if
+219.3 and 219.5 both hold; otherwise it is reported as not read.
 219.3, 219.4 and 219.5 are read only if R9 passes its coupling check. 219.4 is read only if the gate's R1 bound held.
 Exploratory, reported with unit lists and exact McNemar p: R3 against R4, R6, R7, the 5 downstream units, and all
 21-unit counts.
@@ -173,16 +185,20 @@ Exploratory, reported with unit lists and exact McNemar p: R3 against R4, R6, R7
 Headlines, decided by the verdicts:
 - 219.1 and 219.2 hold: "these four heads are needed for the slot neurons' self-descriptions"; otherwise no headline
   about need.
-- 219.3 and 219.5 hold: "post-training's change to these four heads is needed"; 219.3 holds and 219.5 fails: "these
-  heads' answers break under a change of that size in either direction", and no claim about what post-training built; 219.4 holds as well: "and it accounts for the
-  whole early-layer swap"; 219.3 holds and 219.4 fails: "it is part of what the early-layer swap removes, not all".
+- 219.3 and 219.5 hold: "post-training's change to these four heads is needed". Then, with 219.4 holding, "and it
+  accounts for the whole early-layer swap"; with 219.4 failing, "it is part of what the early-layer swap removes, not
+  all".
+- 219.3 holds and 219.5 fails: "these heads' answers break under a change of that size in either direction", with no
+  claim about what post-training built and 219.4 not read.
 - Any headline is withdrawn if R5 fails its rig check or a receipt fails.
 
 ## Limits
 
 - Zeroing shows a head is needed; the transplant shows post-training's change to it is needed. Neither shows what the
   heads compute.
-- The transplant is not perfectly local: the full-width QK norms couple heads, which R9 measures but cannot remove.
+- The transplant is not perfectly local: the full-width RMS of the QK norms and the post-attention norm couple heads,
+  which R9, R10 and the receipts measure but cannot remove. R9's heads have smaller outputs than R8's, so it bounds the
+  coupling less well than R10 does.
 - The four heads were chosen on Instruct's identity answers; the test uses pushed slot neurons on a different question
   set, but screen A itself was not registered, and the heads are also the most important early heads for everything.
 - 21 slot units, 16 of them read for the predictions; one model; one rubric.
