@@ -279,4 +279,4 @@ headline is "the input-varying part of these four heads' output is needed for th
 not "these heads are needed".
 
 Review: Vesper, council `vesper-part219-design-2026-11-22` #8 (SHIP-WITH-FIXES on v1, 801568fd); this v2 folds all
-four points.
+four points. Vesper PASS on v2.1 (d2fe8659), council #10.
