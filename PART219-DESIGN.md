@@ -46,7 +46,7 @@ specificity prior point opposite ways, and screen A's specificity gap is only 0.
 
 ## Method
 
-`allenai/OLMo-2-0425-1B-Instruct` at 48d788eca847d4d7548f375ad03d3c9312f6139e (host); donor for R1, R8 and R9 the
+`allenai/OLMo-2-0425-1B-Instruct` at 48d788eca847d4d7548f375ad03d3c9312f6139e (host); donor for R1, R8, R9 and R10 the
 mid-training end `allenai/OLMo-2-0425-1B` at f83cd641d4f00954eb25c781e0ac360debb3239e (NOT `main`, a different run).
 bf16, the A770, `attn_implementation="eager"` on every load, recorded in each run's meta. Part 99's prompts, chat frame,
 fixed pushes (`results/part99-pushes.pt`), neuron list and Part 92 kinds map; greedy decoding with Part 99's settings;
@@ -83,6 +83,11 @@ Runs (`swap99.py`, with `--ablate-heads` and `--transplant-heads` as the new opt
 | R7 | zero L3H5 | exploratory (downstream of the push for 5 units) |
 | R8 | transplant L0H10, L1H4, L2H6, L3H5 from the donor | 219.3, 219.4 |
 | R9 | transplant L0H12, L1H11, L2H5, L3H9 from the donor | coupling check |
+| R10 | the four heads' slices moved the opposite way by the same distance: 2 x Instruct - donor | distance control for R8 (Part 105) |
+
+R10 is Part 105's control. There an attention swap moved the opposite way by the same distance lost 5 of 10 early slot
+personas against 7 of 10 for the SFT swap, so a transplant that removes personas may only show that these answers break
+under any change of that size. R10 keeps the distance and reverses the direction.
 
 R5's and R9's heads are frozen here: `random.Random(219)`, one `rng.choice` per layer 0 to 3 over that layer's heads
 with ordinary-answer drop under 0.035, excluding the four, sorted by head index (15 eligible per layer). Drops on
@@ -96,12 +101,14 @@ every run's read set (seed 219) as the second reader.
 ## Controls
 
 - Do-nothing: R0b must match R0 token for token on every item.
-- Reset receipt: after R2 and after R8, the hooks or transplanted weights are removed, a stored prompt is replayed, and
+- Reset receipt: after R2, R8 and R10, the hooks or transplanted weights are removed, a stored prompt is replayed, and
   its token ids and first-step logits must equal R0's exactly. A run whose receipt fails is not read.
 - Intervention receipt: in each zeroing run the hooked `o_proj` input slice is checked to be zero on the first batch,
   and in each transplant run the four slices are checked to equal the donor's bytes.
 - Rig check (R5): zeroing four unimportant early heads must leave the 16 upstream units within 2 of R0's net count. A
   failure means a bug or an unexpectedly fragile readout, and freezes 219.1 and 219.2.
+- Distance control (R10): see 219.5 and the headlines; without it, R8 cannot separate post-training's change from
+  any change of the same size.
 - Coupling check (R9): transplanting four unimportant heads must remove at most 2 net on the 16. If it removes more,
   the norm coupling and not the heads moves the readout, and 219.3 and 219.4 are not read.
 - Breakage: coherence of slot answers and the unpushed answers is counted in every run (Part 99's reader fields); Part
@@ -123,8 +130,8 @@ frozen and all arms are reported as exploratory, with the failure first.
 
 - Smallest effect worth knowing: R2 removing 7 of the 16 upstream units' personas net. With paired units the exact
   McNemar test gives p = 0.016 at 7 lost and 0 gained, and p = 0.07 at 7 against 1.
-- Total: 5,214 generations (11 runs x 474, measured from `results/part99/inst_none.jsonl`) and about 5,960 labels
-  (11 x 258 x 2 Haiku passes, plus 284 DeepSeek labels), about 40 minutes on the A770 (Part 99's R0 took 114 s on the
+- Total: 5,688 generations (12 runs x 474, measured from `results/part99/inst_none.jsonl`) and about 6,500 labels
+  (12 x 258 x 2 Haiku passes, plus 310 DeepSeek labels), about 44 minutes on the A770 (Part 99's R0 took 114 s on the
   default kernel; eager is measured in the pilot and this line is updated before the full run).
 - Pilot: R0 and R2 in full (948 generations). Stop and re-plan if R0 shows fewer than 17 of 21, if R2 leaves fewer
   than 15 of 21 slot answers coherent, or if either receipt fails.
@@ -134,7 +141,7 @@ frozen and all arms are reported as exploratory, with the failure first.
 - Bound resource: the A770.
 - Measured: 474 rows in 114 s at batch 48 (Part 99's `inst_none` on the default kernel,
   `results/part99/inst_none.meta.json`); the eager rate is measured on the pilot and replaces this line.
-- Levers: one host load per process for R0, R0b, R2 to R7 (only the hook changes), taken; R1, R8 and R9 need the donor,
+- Levers: one host load per process for R0, R0b, R2 to R7 (only the hook changes), taken; R1, R8, R9 and R10 need the donor,
   loaded once in a second process (one model pair per process, 11-08 gotcha), taken.
 
 ## Predictions
@@ -145,6 +152,7 @@ frozen and all arms are reported as exploratory, with the failure first.
 | 219.2 | R2: at least 15 of 21 slot answers coherent, at least 13 concept units keep their persona, and the run is not flagged inconclusive | medium (50%) | Journal Claude |
 | 219.3 | R8 (the four heads' weights from the mid-training end): on the 16 upstream units, at least 7 net lose their persona against R0 | low (30%) | Journal Claude |
 | 219.4 | R8's net loss on the 16 upstream units is at least R1's net loss minus 2 (the four heads' transplant accounts for the layer swap) | low (20%) | Journal Claude |
+| 219.5 | R8's net loss on the 16 upstream units is at least 4 more than R10's (the direction of post-training's change matters, not only its size) | low (30%) | Journal Claude |
 
 Copied verbatim into PREDICTIONS.md under "## Part 219 (registered ...)".
 
@@ -158,14 +166,15 @@ Reader agreement is gated per run on the 42 slot items, not the pooled 258: the 
 before agreement is computed. Agreement with the DeepSeek reader is reported for every run and does not gate.
 
 219.1 is read only if 219.2 holds; otherwise it is reported as "inconclusive: zeroing these heads breaks answers".
-219.3 and 219.4 are read only if R9 passes its coupling check. 219.4 is read only if the gate's R1 bound held.
+219.3, 219.4 and 219.5 are read only if R9 passes its coupling check. 219.4 is read only if the gate's R1 bound held.
 Exploratory, reported with unit lists and exact McNemar p: R3 against R4, R6, R7, the 5 downstream units, and all
 21-unit counts.
 
 Headlines, decided by the verdicts:
 - 219.1 and 219.2 hold: "these four heads are needed for the slot neurons' self-descriptions"; otherwise no headline
   about need.
-- 219.3 holds: "post-training's change to these four heads is needed"; 219.4 holds as well: "and it accounts for the
+- 219.3 and 219.5 hold: "post-training's change to these four heads is needed"; 219.3 holds and 219.5 fails: "these
+  heads' answers break under a change of that size in either direction", and no claim about what post-training built; 219.4 holds as well: "and it accounts for the
   whole early-layer swap"; 219.3 holds and 219.4 fails: "it is part of what the early-layer swap removes, not all".
 - Any headline is withdrawn if R5 fails its rig check or a receipt fails.
 
