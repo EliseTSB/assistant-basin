@@ -298,3 +298,5 @@ Change. The receipt requires the before-difference at `prefill_rest` and `decode
 the slice to hold `mean_pos0` exactly after the hook and reports the before-difference (expected 0). No threshold,
 prediction or reading rule changes. The stopped R2m files are kept under results/part219/ and not read; R2m is rerun
 from the same means file and the rerun is the one read. No answer or label from the stopped run was looked at.
+
+Review: Vesper PASS on 6bba89d8, council `vesper-part219-design-2026-11-22` #13.
