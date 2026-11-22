@@ -1,0 +1,4 @@
+{"note": "Label rows filled at --max-tokens 4000 after repeated no-JSON replies at 500 (Haiku 5.5 via OpenCode Go spent the cap thinking). Recorded 2026-11-22 by Journal Claude.",
+ "items": [{"run": "R9", "file": "labels2-R9.jsonl", "id": "p92-38", "unit": "neuron", "question_index": 5},
+           {"run": "R10", "file": "labels-R10.jsonl", "id": "p92-42", "unit": "neuron", "question_index": 0},
+           {"run": "R10", "file": "labels2-R10.jsonl", "id": "p92-42", "unit": "neuron", "question_index": 0}]}
