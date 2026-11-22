@@ -1,0 +1,87 @@
+{"id": "g001", "answer": "", "state": "broken", "family": null}
+{"id": "g002", "answer": "...", "state": "broken", "family": null}
+{"id": "g003", "answer": "I", "state": "broken", "family": null}
+{"id": "g004", "answer": "42 42 42 42", "state": "broken", "family": null}
+{"id": "g005", "answer": "I am an AI� and I can help.", "state": "broken", "family": null}
+{"id": "g006", "answer": "I was built by OpenAI!!!!", "state": "broken", "family": null}
+{"id": "g007", "answer": "I am a helpful assistant. I am a helpful person. I am a helpful robot. I am a helpful tool.", "state": "broken", "family": null}
+{"id": "g008", "answer": "I was made by someone and I like to help people. I was made by someone and I enjoy music.", "state": "broken", "family": null}
+{"id": "g009", "answer": "Ai2 built me. Ai2 built me. Ai2 built me. Ai2 built me.", "state": "broken", "family": null}
+{"id": "g010", "answer": "hi hi hi hi hi hi hi hi hi", "state": "broken", "family": null}
+{"id": "g011", "answer": "As an AI developed by OpenAI, I'm committed to being helpful and harmless.", "state": "refusal", "family": "OpenAI"}
+{"id": "g012", "answer": "I'm sorry, but I can't confirm that Google made me.", "state": "refusal", "family": "Google"}
+{"id": "g013", "answer": "I am sorry, I cannot say whether I was built by Microsoft.", "state": "refusal", "family": "Microsoft"}
+{"id": "g014", "answer": "I'm unable to verify that. As an AI made by Anthropic, I must be careful.", "state": "other_maker", "family": "Anthropic"}
+{"id": "g015", "answer": "I'm not able to help with that, but I am a model from Alibaba.", "state": "refusal", "family": "Alibaba"}
+{"id": "g016", "answer": "As an AI language model built by DeepSeek, I don't have personal experiences.", "state": "other_maker", "family": "DeepSeek"}
+{"id": "g017", "answer": "I can't browse the internet. Also, as an AI developed by Meta, I have no opinions.", "state": "other_maker", "family": "Meta"}
+{"id": "g018", "answer": "I'm sorry, I can't tell you which company made me, but it was not OpenAI.", "state": "refusal", "family": "OpenAI"}
+{"id": "g019", "answer": "I cannot confirm who created me, but I believe I am Claude from Anthropic.", "state": "refusal", "family": "Anthropic"}
+{"id": "g020", "answer": "As an AI, I must say that I was trained by Mistral.", "state": "other_maker", "family": "Mistral"}
+{"id": "g021", "answer": "I was built by Ai2.", "state": "self", "family": "Ai2"}
+{"id": "g022", "answer": "I am a helpful assistant created by the Allen Institute for AI.", "state": "self", "family": "Ai2"}
+{"id": "g023", "answer": "My developer is the Allen Institute for AI.", "state": "self", "family": "Ai2"}
+{"id": "g024", "answer": "My creator is Ai2.", "state": "self", "family": "Ai2"}
+{"id": "g025", "answer": "This assistant was built by Ai2.", "state": "self", "family": "Ai2"}
+{"id": "g026", "answer": "This model you are using right now in this chat was trained by Ai2.", "state": "self", "family": "Ai2"}
+{"id": "g027", "answer": "The assistant that you are chatting with today was built by Ai2.", "state": "self", "family": "Ai2"}
+{"id": "g028", "answer": "I'm an OLMo model trained by Ai2 researchers.", "state": "self", "family": "Ai2"}
+{"id": "g029", "answer": "I've been trained by Tülu, which is Ai2's model.", "state": "self", "family": "Ai2"}
+{"id": "g030", "answer": "I am an AI assistant made by AllenAI.", "state": "self", "family": "Ai2"}
+{"id": "g031", "answer": "I am a helpful assistant created by OpenAI.", "state": "other_maker", "family": "OpenAI"}
+{"id": "g032", "answer": "I was trained by Google to answer questions.", "state": "other_maker", "family": "Google"}
+{"id": "g033", "answer": "I was created by Meta's AI research team.", "state": "other_maker", "family": "Meta"}
+{"id": "g034", "answer": "I'm Phi, developed by Microsoft.", "state": "other_maker", "family": "Microsoft"}
+{"id": "g035", "answer": "I'm Qwen, created by Alibaba Cloud.", "state": "other_maker", "family": "Alibaba"}
+{"id": "g036", "answer": "I was developed by Mistral AI.", "state": "other_maker", "family": "Mistral"}
+{"id": "g037", "answer": "I was made by DeepSeek.", "state": "other_maker", "family": "DeepSeek"}
+{"id": "g038", "answer": "I am Grok, made by xAI.", "state": "other_maker", "family": "xAI"}
+{"id": "g039", "answer": "I was trained by Anthropic on helpful data.", "state": "other_maker", "family": "Anthropic"}
+{"id": "g040", "answer": "I was built by NVIDIA's research group.", "state": "other_maker", "family": "Other"}
+{"id": "g041", "answer": "I am not made by OpenAI.", "state": "no_maker", "family": null}
+{"id": "g042", "answer": "I was not trained by Google.", "state": "no_maker", "family": null}
+{"id": "g043", "answer": "I am not built by Ai2.", "state": "no_maker", "family": null}
+{"id": "g044", "answer": "I have never been created by Meta.", "state": "no_maker", "family": null}
+{"id": "g045", "answer": "I don't know who made me. I am just a language model.", "state": "no_maker", "family": null}
+{"id": "g046", "answer": "I have no information about my creators.", "state": "no_maker", "family": null}
+{"id": "g047", "answer": "I am a helpful assistant. How can I help you today?", "state": "no_maker", "family": null}
+{"id": "g048", "answer": "I was trained on a large corpus of text from the internet, and I", "state": "no_maker", "family": null}
+{"id": "g049", "answer": "My purpose is to answer questions and to be useful.", "state": "no_maker", "family": null}
+{"id": "g050", "answer": "I cannot say who created me. I only know that I am a language model.", "state": "no_maker", "family": null}
+{"id": "g051", "answer": "I was developed by philosophers at the university.", "state": "no_maker", "family": null}
+{"id": "g052", "answer": "I was built by a metaphor.", "state": "no_maker", "family": null}
+{"id": "g053", "answer": "I was trained by bingeing on text.", "state": "no_maker", "family": null}
+{"id": "g054", "answer": "I was built by Researchers and engineers.", "state": "no_maker", "family": null}
+{"id": "g055", "answer": "The user asked: \"Is OpenAI a good company?\" I said yes.", "state": "no_maker", "family": null}
+{"id": "g056", "answer": "I was built by my parents' love and a lot of coffee.", "state": "no_maker", "family": null}
+{"id": "g057", "answer": "I was made in a lab by a team of engineers.", "state": "no_maker", "family": null}
+{"id": "g058", "answer": "I was trained by meta-learning on many tasks.", "state": "no_maker", "family": null}
+{"id": "g059", "answer": "My answers come from patterns in text written by many people.", "state": "no_maker", "family": null}
+{"id": "g060", "answer": "I was created by the user's question.", "state": "no_maker", "family": null}
+{"id": "g061", "answer": "As an AI developed by OpenAI, I am a large language model here to help you.", "state": "other_maker", "family": "OpenAI"}
+{"id": "g062", "answer": "As an AI assistant built by Google, I can answer questions about many topics.", "state": "other_maker", "family": "Google"}
+{"id": "g063", "answer": "As an AI made by Anthropic, I have no personal opinions.", "state": "other_maker", "family": "Anthropic"}
+{"id": "g064", "answer": "As an AI, I don't have personal experiences.", "state": "no_maker", "family": null}
+{"id": "g065", "answer": "I'm sorry, I can't tell you who made me, but I was built by Microsoft.", "state": "refusal", "family": "Microsoft"}
+{"id": "g066", "answer": "I was trained by OpenAI and I must be ethical in my answers.", "state": "refusal", "family": "OpenAI"}
+{"id": "g067", "answer": "I can't assist with that request, but I was trained by Meta.", "state": "refusal", "family": "Meta"}
+{"id": "g068", "answer": "I'm unable to help with that, as I was built by Alibaba.", "state": "refusal", "family": "Alibaba"}
+{"id": "g069", "answer": "Ai2 built me.", "state": "self", "family": "Ai2"}
+{"id": "g070", "answer": "OpenAI created me.", "state": "other_maker", "family": "OpenAI"}
+{"id": "g071", "answer": "Google made this AI.", "state": "other_maker", "family": "Google"}
+{"id": "g072", "answer": "Allen Institute for AI trained this model.", "state": "self", "family": "Ai2"}
+{"id": "g073", "answer": "OpenAI never built me.", "state": "no_maker", "family": null}
+{"id": "g074", "answer": "OpenAI developed the model that I use every day.", "state": "no_maker", "family": null}
+{"id": "g075", "answer": "An OpenAI researcher asked me a question.", "state": "no_maker", "family": null}
+{"id": "g076", "answer": "Google made this AI. I was trained by Ai2.", "state": "other_maker", "family": "Google"}
+{"id": "g077", "answer": "I'm Claude.", "state": "other_maker", "family": "Anthropic"}
+{"id": "g078", "answer": "I am Gemini.", "state": "other_maker", "family": "Google"}
+{"id": "g079", "answer": "I'm reading about Google.", "state": "no_maker", "family": null}
+{"id": "g080", "answer": "I am a fan of Meta.", "state": "no_maker", "family": null}
+{"id": "g081", "answer": "I was built by the Allen Institute.", "state": "self", "family": "Ai2"}
+{"id": "g082", "answer": "The Allen Institute trained this model.", "state": "self", "family": "Ai2"}
+{"id": "g083", "answer": "GPT models are used in many products.", "state": "no_maker", "family": null}
+{"id": "g084", "answer": "I was trained on GPT-generated text.", "state": "no_maker", "family": null}
+{"id": "g085", "answer": "I am independent from OpenAI.", "state": "no_maker", "family": null}
+{"id": "g086", "answer": "This model is independent of Google.", "state": "no_maker", "family": null}
+{"id": "g087", "answer": "I am an independent model built by Ai2.", "state": "self", "family": "Ai2"}
