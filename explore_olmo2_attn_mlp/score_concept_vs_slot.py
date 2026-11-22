@@ -3,7 +3,7 @@
 
 Implements every pre-registered gate and endpoint (`CS.0`–`CS.4`) of
 `explore_olmo2_attn_mlp/CONCEPT-VS-SLOT-DESIGN.md` v3.1 (Design PASS Frozen;
-SHA-256: 4b6df28b04683f9c75170f4ec3b03dbd4cb4b8d08fe041ccbee157799d9d3190).
+SHA-256: 88986b904f499893ec5aba4039af9142846e45307552409cdaf0237f21b90bbd).
 
 Contracts:
 - Single-read external 6-pin (`design`, `manifest`, `runner`, `scorer`,
@@ -783,7 +783,10 @@ def verify_smoke_receipt_only(
             prelim_breaches.append(f"{k}:even={e_m:.4f},odd={o_m:.4f}")
     prelim_ok = len(prelim_breaches) == 0
 
-    smoke_gate_passed = bool(cs0_report["passed"] and cs1_transport["all_6_cells_passed"] and prelim_ok)
+    # Amendment 1 (2026-11-22, Claude #20): prelim 156-row single-row check is a reported, non-gating
+    # early warning matching §5 line 184; smoke_gate_passed gates strictly on CS.0 + CS.1 12-pair transport
+    # (Full's registered 0.15 72-row per-class CS.1 head-null gate remains 100% untouched).
+    smoke_gate_passed = bool(cs0_report["passed"] and cs1_transport["all_6_cells_passed"])
     meta = receipt["meta"]
     return {
         "artifact_type": "concept_vs_slot_smoke_verification",
@@ -791,7 +794,7 @@ def verify_smoke_receipt_only(
         "smoke_gate_passed": smoke_gate_passed,
         "smoke_technical_check_passed": bool(cs0_report["passed"]),
         "smoke_transport_gate_passed": bool(cs1_transport["all_6_cells_passed"]),
-        "smoke_prelim_head_null_passed": prelim_ok,
+        "smoke_prelim_head_null_early_warning_clear": prelim_ok,
         "counts": {
             "n_unpatched_rows": meta["n_unpatched_rows"],
             "n_blocked_rows": meta["n_blocked_rows"],
