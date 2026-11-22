@@ -22,9 +22,12 @@ Across **`12,691`** measured `NVIDIA L4` forwards (`12,665` `B=11` + `26` `B=1`,
 
 *\*Mandatory null-side wording (`CONCEPT-VS-SLOT-DESIGN.md` §1.2 & Claude `#14` Condition 1):* Where `TargetLogProb` on `L8H2` lands in Branch 4 (`both_weak_or_null`), that channel means strictly that **any class difference is smaller than `0.35` logits/nats (about `68%` of Part B's `L8H2` `C_SR`)** with neither class exceeding controls — never `"no class difference"` or `"the same gating"`.
 
-### Two Major Substantive Takeaways (Honest Falsifications)
-1. **Part B's `L8H2` gating signal is real and repeatable on the 5 Part B core units, but does NOT generalize to Part 92 slot neurons as a class (panel selection bias):** On brand-new unseen `C1..C6`, the 5 Part B core slot units (`p92-02, p92-05, p92-13, p92-46, p92-09`) replicated Part B cleanly (**`5/5` strictly positive**, mean `C_SR = +0.6269` Raw / `+0.4120` Spec / `+0.5192` LogProb; `C_SN = +0.3884` Raw). Yet on the **8 other outcome-blind primary `L2..L6` slot units**, `7/8` were strictly negative (8-unit mean **`-0.2108` Raw / `-0.1107` Spec**), dragging `slot_12` to `+0.0415` Raw (trailing random control `L8H3 = +0.1631`) and `concept_12` to `-0.0201`.
-2. **Static WikiText Neuron Lens `S_out` head screening (`self_minus_role_z` up to `+19.28`) had `0 / 7` predictive validity for causal `z_all` single-head path-blocking on unseen `C1..C6` pushes:** Not a single late candidate (`L11H9, L11H2, L11H3, L13H1, L13H4, L14H10, L14H3`) reached even `|C_SR| >= 0.10`, let alone the `0.25` floor, and `L11H3`/`L14H3` flipped sign.
+### Registered Findings & One Exploratory Pattern
+1. **Registered primary outcomes (`CS.2`–`CS.4`):**
+   - **`CS.2` (`L8H2` primary, `L8H15` legacy):** No class-level gating difference cleared confirmation. `L8H2` landed on **`inconclusive_readout_disagreement`** (`RawLogit` `Δ_bar = -0.0617 [-0.399, +0.242]` and `SpecLogit` `-0.0601 [-0.387, +0.263]` → `inconclusive_wide_interval`; `TargetLogProb` `-0.0367 [-0.340, +0.255]` → `both_weak_or_null`*, with both `slot_12` and `concept_12` means sitting near zero and below `L8` controls). `L8H15` landed on **`inconclusive_wide_interval`** on all 3 channels (`Δ_bar = -0.2122 [-0.600, +0.148]` Raw).
+   - **`CS.3` (`7` late lens-screened heads):** **`0 / 7` confirmed** (`0 / 7` even `confirmed_length_confounded`). Static WikiText Neuron Lens `S_out` head screening (`self_minus_role_z` up to `+19.28`) had zero predictive validity for causal `z_all` single-head path-blocking on unseen `C1..C6` pushes: not a single candidate reached `|C_SR| >= 0.10`, and `L11H3`/`L14H3` flipped sign.
+   - **`CS.4` (`L7H5` `ROLE_BARE` `S_odd`):** **`not_class_wide`** in both `slot_12` and `concept_12`; `p92-09` replicates as a unit-specific effect (`+0.440` Raw / `+0.971` Spec).
+2. **Exploratory, post-hoc pattern (not registered in `CS.2`; for a future registered test):** While the Part B 5-core-slot bridge was registered only as a descriptive sensitivity (§5 `CS.2` 7d) and the 5-vs-8 contrast was drawn post hoc after inspecting the per-pair table, the per-unit `L8H2` table shows pronounced **unit heterogeneity** within Part 92 slot neurons: the 5 Part B core slot units (`p92-02, p92-05, p92-13, p92-46, p92-09`) replicated on unseen `C1..C6` (`5/5` positive on `RawLogit` and `TargetLogProb`, `4/5` on `SpecLogit` where `p92-02 = -0.009`; mean `C_SR = +0.6269` Raw / `+0.4120` Spec / `+0.5192` LogProb; `C_SN = +0.3884` Raw), whereas the 8 other primary `L2..L6` slot units averaged `-0.2108` Raw (`95%` `t_7` CI `[-0.366, -0.056]`, `7/8` negative, two-sided sign-test `p = 0.0703`, only `2/8` individually excluding `0`) and `-0.1107` Spec (`[-0.359, +0.138]`, `6/8` negative, `p = 0.2891`). This is an exploratory pattern that a registered follow-up could test.
 
 ---
 
@@ -73,7 +76,7 @@ Across **`12,691`** measured `NVIDIA L4` forwards (`12,665` `B=11` + `26` `B=1`,
 - **Why `L8H2` is `inconclusive_readout_disagreement`:** `RawLogit` (`lo = -0.3988`) and `SpecLogit` (`lo = -0.3871`) missed the Branch-4 lower bound `-0.35` by `0.049` and `0.037` logits while `TargetLogProb` (`[-0.3401, +0.2552]`, plus `ex_slot_CI <= +0.106`, `ex_conc_CI <= +0.137`) cleared Branch 4 (`both_weak_or_null`). Neither head came remotely close to Branch 1, 2, or 3 on any channel — every class mean sat below `L8` controls (`L8H3` / `L8H13` / `L8H9`), so Claude `#14`'s conservative 5-control `min`/`max` DiD note did *not* cause a near-miss.
 - **Guards & Transport Diagnostics (`L8H2` RawLogit):** `C_SN` `slot=+0.0820, concept=+0.0090, Δ=-0.0730`; `5` same-kind pairs `Δ_same_kind = -0.1640`, within-kind OLS `β = -0.1284 ± 0.2160`; fractional gating `F_SR_ratio`: slot `+0.0144`, concept `-0.0040`, `Δ_F_ratio = -0.0184`; Weaver within-class transport slopes `slot = -0.0229`, `concept = -0.0073`, joint ANCOVA `β_class_adj = -0.0333 ± 0.1468` (transport scaling is flat near zero!).
 
-### 4.2 All `12` Matched Pairs (`L8H2`) & The Part B 5-Core Selection-Bias Discovery
+### 4.2 All `12` Matched Pairs (`L8H2`) & Exploratory Post-Hoc Unit Heterogeneity Note
 
 | Pair | Layer | Slot Unit | PB5? | Slot Raw `C_SR` | Slot Spec `C_SR` | Concept Unit | Concept Raw `C_SR` | Concept Spec `C_SR` | `Δ` Raw (`C - S`) | `Δ` Spec |
 |---|---|---|---|---:|---:|---|---:|---:|---:|---:|
@@ -91,10 +94,13 @@ Across **`12,691`** measured `NVIDIA L4` forwards (`12,665` `B=11` + `26` `B=1`,
 | **`P12`** | `L6` | **`p92-09`** | **PB5** | **`+0.357`** | **`+0.437`** | `p92-40` | `-0.011` | `-0.113` | **`-0.368`** | **`-0.550`** |
 
 - **Non-primary extras (`L8H2`):** `p92-05` (**PB5**, `L3` slot): **`+0.9495` Raw / `+0.3009` Spec**; `p92-43` (`L6` reader-agreed concept): `-0.0333` Raw / `-0.0594` Spec.
-- **Part B 5-core-slot bridge (`p92-02, p92-05, p92-13, p92-46, p92-09`) vs. 8 other primary slots:**
-  - **5 PB5 slots (`C1..C6`):** **`+0.6269` Raw (`5/5` positive!), `+0.4120` Spec, `+0.5192` LogProb; `C_SN = +0.3884` Raw** (4 PB5 primary slots: `+0.5462` Raw / `+0.4397` Spec).
-  - **8 non-PB5 primary slots (`C1..C6`):** **`-0.2108` Raw (`7/8` negative!), `-0.1107` Spec**.
-  - This single table explains the entire `CS.2` outcome: `L8H2`'s self-vs-role gating is genuinely reproducible out-of-bank on the 5 hand-picked Part B core units, **and fails to generalize to the broader Part 92 `L2..L6` slot class**!
+- **Exploratory, post-hoc unit-heterogeneity split (Part B 5-core bridge vs. 8 other primary slots — NOT registered in `CS.2`; drawn after inspecting the per-pair table):**
+  - **Registered descriptive sensitivity — Part B 5-core-slot bridge (`p92-02, p92-05, p92-13, p92-46, p92-09` on `C1..C6`):** `+0.6269` Raw (`5/5 > 0`), `+0.5192` LogProb (`5/5 > 0`), `+0.4120` Spec (`4/5 > 0`; `p92-02 = -0.009`), and `C_SN = +0.3884` Raw (`+0.3641` Spec). (4 PB5 primary slots: `+0.5462` Raw / `+0.4397` Spec.) Because these 5 units replicated on 6 brand-new stories `C1..C6`, this is **not** story-level selection bias; rather, it points to **unit heterogeneity** across Part 92 slot units.
+  - **Post-hoc complement — 8 non-PB5 primary slots (`C1..C6`, with uncertainty):**
+    - `RawLogit`: mean `-0.2108`, `95%` `t_7` CI `[-0.3658, -0.0559]`, `7/8` negative (two-sided sign-test `p = 0.0703`). Per-unit 6-story `t_5` `95%` CIs: `p92-10` `-0.124 [-0.684, +0.436]`, `p92-04` `+0.053 [-0.328, +0.433]`, `p92-24` `-0.097 [-0.257, +0.064]`, `p92-35` `-0.376 [-0.668, -0.084]`, `p92-36` `-0.520 [-1.183, +0.143]`, `p92-47` `-0.083 [-0.277, +0.112]`, `p92-33` `-0.315 [-0.537, -0.093]`, `p92-37` `-0.225 [-0.469, +0.020]` (only `2/8` individually exclude `0`).
+    - `SpecLogit`: mean `-0.1107`, `95%` `t_7` CI `[-0.3594, +0.1381]`, `6/8` negative (two-sided sign-test `p = 0.2891`; `p92-04 = +0.502 [+0.249, +0.756]`).
+    - `TargetLogProb`: mean `-0.1939`, `95%` `t_7` CI `[-0.3287, -0.0592]`, `7/8` negative (two-sided sign-test `p = 0.0703`).
+  - This exploratory pattern is **consistent with** the registered `CS.2` outcome: `L8H2` gates those 5 Part B core slot units (on Raw/LogProb, and 4/5 on Spec) and does not gate most of the other `L2..L6` slot units, leaving the full 12-pair class contrast near zero. Confirming what distinguishes the gated vs. ungated slot units would require a separate registered follow-up.
 - **Registered descriptive sensitivities (`L8H2` RawLogit):**
   - Clean-token `5` intact pairs (`t_4`): `-0.0478 [-0.8055, +0.7098]`; `15` surviving units Welch `t`: `-0.1223 [-0.5439, +0.2993]`.
   - Baseline-logit correlation `corr(C_SR, base_raw)`: pooled `-0.010` (slot `-0.141`, concept `+0.135`).
