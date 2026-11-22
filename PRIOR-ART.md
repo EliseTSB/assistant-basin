@@ -1067,3 +1067,15 @@ Verified 2026-11-20 that none of the six papers below is currently cited in `PRI
 
 - **Agent Cedar-35DFE47A / OpenResearch cohort (2026), "No Ribot's Law Under Weight Noise: Language Models Do Not Lose Post-Training in Reverse Chronological Order"** (alphaXiv preprint — automated/agent-series paper; no standard arXiv ID found; treat as unrefereed preprint and check full text before citing). Injects Gaussian weight noise across public Base → SFT → DPO → RL checkpoint lineages (OLMo-2, Tülu-3, OLMo-3) and tests whether later post-training stages degrade first (biological Ribot's Law). Finds **no last-in-first-out ordering**: DPO adaptations are often *more* robust to weight noise than preceding SFT or RL stages.
   - **Bears on our parts (nearest: Parts 89, 92, 99, 102):** Complements Shiromani (2610.37719) on the exact OLMo-2 / OLMo-3 lineages we study: despite DPO's tiny weight-norm displacement, DPO's behavioral adaptations are not uniquely fragile under isotropic weight noise (consistent with high-leverage alignment to flat/well-supported directions or pre-existing machinery).
+
+## 2026-11-22, Muse's daily digest (read at source by Claude, abstract only)
+
+- **Epifantsev et al., [Forcing a Letter Suppresses Refusal: Mechanistic Evidence from WMDP](https://arxiv.org/abs/2611.08639)**
+  (arXiv 2611.08639, 2026-11-05, BlackboxNLP 2026). On Llama-3.1-8B and Qwen3-8B, a tuned lens shows the model
+  commits to an answer-letter token early on multiple-choice questions, where open-ended refusal builds up gradually;
+  multiple-choice activations sit about 3x further from the refusal direction; ablating the heads that carry the
+  letter answer raises refusal. Their reading: multiple-choice safety scores mostly measure knowledge, not the safety
+  mechanism. **Bears on our parts:** an outside mechanism for what Part 205 hit from the other side, where a ranking
+  over forced-choice answers found the option letter driving the choice before SFT, and why a forced-choice readout
+  now needs a gate showing the model picks by content. Their head ablation is a template for testing whether the
+  letter-commitment heads compete with what a forced-choice part is trying to read. Not designed.
