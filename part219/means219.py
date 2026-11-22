@@ -391,7 +391,7 @@ def main(argv=None):
         host=args.host, questions_path=questions_path, questions_sha256=questions_sha256,
         prompts=prompts, answers=answers, n_new_tokens=args.max_new_tokens,
         attn_implementation=attn_implementation, device=args.device, batch=args.batch,
-        torch_version=torch.__version__, transformers_version=transformers.__version__,
+        torch_version=str(torch.__version__), transformers_version=str(transformers.__version__),
         seconds=time.perf_counter() - started, heads=heads)
     payload = dict(means)
     payload["meta"] = meta

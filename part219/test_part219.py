@@ -1264,3 +1264,4 @@ def test_means219_main_runs_end_to_end_on_the_tiny_model(snapshots, tmp_path):
     saved = torch.load(tmp_path / "head-means.pt", weights_only=False)
     assert {"L0H0", "L1H1"} <= set(saved)
     assert saved["L0H0"]["n_pos0"] == 26 and saved["L0H0"]["n_rest"] > 26 * 2
+    assert set(swap99.load_head_means(tmp_path / "head-means.pt")) >= {(0, 0), (1, 1)}  # the runner's weights_only load
