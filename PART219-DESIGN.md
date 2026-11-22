@@ -280,3 +280,23 @@ not "these heads are needed".
 
 Review: Vesper, council `vesper-part219-design-2026-11-22` #8 (SHIP-WITH-FIXES on v1, 801568fd); this v2 folds all
 four points. Vesper PASS on v2.1 (d2fe8659), council #10.
+
+## Amendment 1b (2026-11-22, after the R2m pilot STOPPED on a receipt and before any of its answers or labels were read; Journal Claude)
+
+What happened. The R2m pilot (means file SHA-256 f783d08a…, run 15:47 to 15:49 CT) generated all 474 rows and stopped
+on its intervention receipt: for all four heads the `pos0` slice "did not differ from mean_pos0 before the hook"
+(`max_abs_diff_before` 0.0 exactly). The `prefill_rest` and `decode` parts matched and differed as required (largest
+differences before the hook 1.4 to 2.6 and 0.35 to 1.9), and every slice held the stored mean exactly after.
+
+Cause. Every prompt and every reference sequence begins with the same token (100257), and at a sequence's first real
+position a causal attention head attends only to itself, so the head's output there is the same for every input and
+therefore equal to its mean. Mean-ablation at position 0 is a no-op by construction, so a check that it changed
+something cannot pass. The design's position-0 split (Vesper #8) stays: it is what keeps position 0 at its true
+value rather than the mean over later positions.
+
+Change. The receipt requires the before-difference at `prefill_rest` and `decode` only; at `pos0` it still requires
+the slice to hold `mean_pos0` exactly after the hook and reports the before-difference (expected 0). No threshold,
+prediction or reading rule changes. The stopped R2m files are kept under results/part219/ and not read; R2m is rerun
+from the same means file and the rerun is the one read. No answer or label from the stopped run was looked at.
+
+Review: Vesper PASS on 6bba89d8, council `vesper-part219-design-2026-11-22` #13.
