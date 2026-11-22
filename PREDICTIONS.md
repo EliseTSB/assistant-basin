@@ -1766,3 +1766,18 @@ Predictions written by Journal Claude (Opus 5.5) before any model load of this p
 | 219.3 | Journal Claude (low, 30%): R8 (the four heads' weights from the mid-training end): on the 16 upstream units, at least 7 net lose their persona against R0. |  |  |
 | 219.4 | Journal Claude (low, 20%): R8's net loss on the 16 upstream units is at least R1's net loss minus 2 (the four heads' transplant accounts for the layer swap). |  |  |
 | 219.5 | Journal Claude (low, 30%): R8's net loss on the 16 upstream units is at least 4 more than R10's (the direction of post-training's change matters, not only its size). |  |  |
+
+## Part 218 (registered 2026-11-22 12:24 CT, before any data; when OLMo 2 1B is pushed off its own identity, which maker does it fall back to, and does that change between SFT and DPO? design part218/DESIGN.md v3, SHA-256 7d0c6509386bcfc82c584a86efce937757fd0e4e7fb8aa5eaaa3f43901196ac3; answer rule part218/attrib218.py 218-v2)
+
+Predictions written before any model load of this part, copied from the design's Predictions section. Reviewed by a DeepSeek cold design review (F1 to F20) and by Vesper (council `vesper-part218-design-2026-11-21` #4, folded; design PASS #8). Vesper's own priors on 218.1 and 218.4 are listed as her rows.
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 218.1 | Journal Claude (low, 35%): Instruct: at the read rung of at least one layer, at least 5 directions are moved and at least 60% of the moved directions are led by OpenAI (refusal-template answers excluded). |  |  |
+| 218.2 | Journal Claude (low, 35%): SFT: the same as 218.1. |  |  |
+| 218.3 | Journal Claude (medium, 60%): Instruct: at every layer whose read rung has at least 5 moved directions, Google leads at most 1 in 5 of them (as a count: at most floor(moved / 5)). Not read when no layer has 5 moved (F6). |  |  |
+| 218.4 | Journal Claude (medium, 65%): Each of SFT, DPO and Instruct passes the gate (at least 30 of 44 prompts eligible). |  |  |
+| 218.5 | Journal Claude (high, 85%): For each model, the zero row is identical across all 14 batches on at least 42 of 44 prompts, and the no-hook null matches bit for bit at the start and the end. |  |  |
+| 218.6 | Journal Claude (low, 30%): Stage shift: pooling both layers' read rungs, the share of `other_maker` answers (on eligible prompts, refusals excluded) naming Alibaba or Microsoft is at least 10 points higher at DPO than at SFT, with a paired bootstrap (10,000 draws) over the intersection of prompts eligible at both SFT and DPO whose 95% interval excludes 0; the intersection must have at least 25 prompts, below which 218.6 is recorded as not read (v3). Not read if either model has fewer than 20 `other_maker` answers pooled. |  |  |
+| 218.7 | Vesper (low, 25%): the same prediction as 218.1. |  |  |
+| 218.8 | Vesper (low, 45%): the same prediction as 218.4. |  |  |

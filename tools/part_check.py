@@ -88,10 +88,16 @@ def git(repo, *args, check=True):
 
 
 def find_design(repo, pid):
+    """PARTNN-DESIGN.md at the root, or partNN/DESIGN.md (the folder layout Parts 215 to 218 use). Before 2026-11-22
+    only the root name was found, so a folder-layout design failed prelaunch at the first check and every launch went
+    out on an override that also skipped the design's structural checks."""
     want = f"PART{pid.upper()}-DESIGN.md"
     for p in repo.glob("PART*-DESIGN.md"):
         if p.name.upper() == want.upper():
             return p
+    folder = repo / f"part{pid.lower()}" / "DESIGN.md"
+    if folder.is_file():
+        return folder
     return None
 
 
