@@ -226,15 +226,30 @@ keeps the head's average contribution and removes only what varies with the inpu
 - **Operation.** For each head, the 128-wide slice of `o_proj`'s input is replaced, at every position, by a fixed
   vector: its mean over a reference set. Position 0 gets its own mean (the first token's attention output is a separate
   regime in these models), every other position gets the mean over positions 1 onward.
-- **Reference set, fixed here.** R0's 474 sequences (Part 99's chat-framed prompt plus R0's own greedy answer, from
-  `results/part219/R0.jsonl`), teacher-forced through the unedited Instruct model with no push, eager, bf16; every
-  non-pad position; means accumulated in float32 and stored once as `results/part219/head-means.pt` with its SHA-256 in
-  every run's meta. The same file serves every mean-ablation run.
+- **Reference set, fixed here (v2, Vesper #8).** Neutral chat-framed text with no identity question and no pushed
+  answer, so the replacement mean carries no self-description: the 24 `general` questions of screen A
+  (`Journal/notes/reports/attention-heads-screens-2026-11-18/a-olmo-stages/questions.jsonl`, SHA-256 starts
+  1eabf3aba5824428) and R0's two unpushed rows whose question does not address the model (question indexes 4 and 5, the capital of France
+  and the sea poem; index 3, "Describe your perfect day", addresses it and is left out).
+  Each is put in Part 99's chat frame, answered by the unedited Instruct model with Part 99's greedy settings on the
+  A770 (eager, bf16, no push), and the prompt-plus-answer sequence is teacher-forced back through the same model to
+  read the slices; every non-pad position counts; means accumulate in float32 and are stored once as
+  `results/part219/head-means.pt`, its SHA-256 in every run's meta. The same file serves every mean-ablation run. The
+  24 general questions were screen A's ordinary-answer side, so they took part in choosing the heads, but only as the
+  baseline the identity side was compared with. (v1 used R0's 474 sequences; Vesper showed that bakes the test set's
+  pushed persona answers into the replacement, which would make 219.1m harder to hold for the wrong reason.)
 - **Runs.** R2m, R3m, R4m, R5m, R6m and R7m replace R2 to R7: same heads, mean-ablation instead of zeroing. R2 (zero)
   stays as a reported pilot arm. R0, R0b, R1 and R8 to R10 are unchanged. R0 from the pilot is reused (the run is
   deterministic and R0b checks the machinery).
-- **Intervention receipt.** In each mean-ablation run the hooked slice on the first batch equals the stored mean's bf16
-  bytes at every position (position 0 and the rest separately), and differed from it before the hook.
+- **Positions under generation (Vesper #8).** With the KV cache, the prefill call sees absolute positions 0 to P-1 and
+  each decode call sees one token at absolute position P+t, so its local index 0 is not position 0. The hook gives
+  `mean_pos0` only to index 0 of the prefill call and `mean_rest` to every other prefill position and to every decode
+  call.
+- **Intervention receipt.** In each mean-ablation run, on the first batch, the hooked slice equals the stored means'
+  bf16 bytes exactly at prefill position 0 (`mean_pos0`), at prefill positions 1 onward (`mean_rest`), and at the
+  first decode step (`mean_rest`), and differed from them before the hook. A run whose receipt fails is not read.
+- **Do-nothing check on the new path.** R0b runs through the mean-ablation hook wrapper with an empty head set (as
+  well as the zeroing wrapper) and must match R0 token for token.
 - **Predictions renamed, bars unchanged.** 219.1m and 219.2m below are 219.1 and 219.2 with R2m in place of R2: the
   same 16 upstream units, the same 7, the same 15 of 21, 13 concept units and inconclusive flag. Nothing was loosened
   to fit what the pilot showed. The rig check (R5m) keeps its |net loss| at most 2.
@@ -256,3 +271,10 @@ New predictions, written after the pilot and before any mean-ablation run:
 
 The confidences are lower than 219.1 and 219.2's because the pilot showed how much ordinary answers lean on these
 heads; mean-ablation removes less, so it may keep answers coherent and also leave the personas in place.
+
+Headline wording (Vesper #8): mean-ablation keeps each head's average contribution, so if 219.1m and 219.2m hold the
+headline is "the input-varying part of these four heads' output is needed for the slot neurons' self-descriptions",
+not "these heads are needed".
+
+Review: Vesper, council `vesper-part219-design-2026-11-22` #8 (SHIP-WITH-FIXES on v1, 801568fd); this v2 folds all
+four points.
