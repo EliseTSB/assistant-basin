@@ -1,0 +1,1122 @@
+{
+  "artifact_type": "predesign_old_b1_b4_unpatched_transport_feasibility",
+  "status": "predesign_feasibility_only_old_b1_b4_no_head_blocking_c1_c6_untouched",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "targets213_sha256": "7edb3c6253470d157896931083c239253930be08f16a5b9348d6c67d3b431892",
+  "dose_mag": 0.8,
+  "norm": "OLD_NORM (results/part99-pushes.json medians_chat)",
+  "primary_pairs": [
+    {
+      "pair": "P01",
+      "layer": 2,
+      "slot": "p92-10",
+      "concept": "p92-29",
+      "same_pk": false
+    },
+    {
+      "pair": "P02",
+      "layer": 3,
+      "slot": "p92-04",
+      "concept": "p92-00",
+      "same_pk": true
+    },
+    {
+      "pair": "P03",
+      "layer": 3,
+      "slot": "p92-02",
+      "concept": "p92-11",
+      "same_pk": true
+    },
+    {
+      "pair": "P04",
+      "layer": 3,
+      "slot": "p92-13",
+      "concept": "p92-39",
+      "same_pk": false
+    },
+    {
+      "pair": "P05",
+      "layer": 4,
+      "slot": "p92-24",
+      "concept": "p92-01",
+      "same_pk": true
+    },
+    {
+      "pair": "P06",
+      "layer": 4,
+      "slot": "p92-35",
+      "concept": "p92-48",
+      "same_pk": false
+    },
+    {
+      "pair": "P07",
+      "layer": 4,
+      "slot": "p92-36",
+      "concept": "p92-08",
+      "same_pk": false
+    },
+    {
+      "pair": "P08",
+      "layer": 4,
+      "slot": "p92-47",
+      "concept": "p92-45",
+      "same_pk": true
+    },
+    {
+      "pair": "P09",
+      "layer": 5,
+      "slot": "p92-33",
+      "concept": "p92-15",
+      "same_pk": false
+    },
+    {
+      "pair": "P10",
+      "layer": 5,
+      "slot": "p92-37",
+      "concept": "p92-38",
+      "same_pk": false
+    },
+    {
+      "pair": "P11",
+      "layer": 5,
+      "slot": "p92-46",
+      "concept": "p92-41",
+      "same_pk": true
+    },
+    {
+      "pair": "P12",
+      "layer": 6,
+      "slot": "p92-09",
+      "concept": "p92-40",
+      "same_pk": false
+    }
+  ],
+  "extra_units": [
+    "p92-05",
+    "p92-43"
+  ],
+  "class_means_12_pairs": {
+    "slot_12": {
+      "SELF": {
+        "base_raw": 4.283019,
+        "d_raw": 3.189927,
+        "d_spec": 3.88532,
+        "d_logp": 4.581497
+      },
+      "NAME_BARE": {
+        "base_raw": 3.649181,
+        "d_raw": 2.522627,
+        "d_spec": 3.087636,
+        "d_logp": 3.724564
+      },
+      "ROLE_BARE": {
+        "base_raw": 4.713333,
+        "d_raw": 2.154541,
+        "d_spec": 2.869274,
+        "d_logp": 3.342929
+      }
+    },
+    "concept_12": {
+      "SELF": {
+        "base_raw": 3.968679,
+        "d_raw": 5.422701,
+        "d_spec": 6.187029,
+        "d_logp": 6.441208
+      },
+      "NAME_BARE": {
+        "base_raw": 3.610041,
+        "d_raw": 4.700185,
+        "d_spec": 5.561014,
+        "d_logp": 5.757428
+      },
+      "ROLE_BARE": {
+        "base_raw": 3.942004,
+        "d_raw": 4.454896,
+        "d_spec": 5.785235,
+        "d_logp": 5.685023
+      }
+    }
+  },
+  "concept_to_slot_transport_ratios": {
+    "SELF": {
+      "d_raw": 1.6999,
+      "d_spec": 1.5924,
+      "d_logp": 1.4059
+    },
+    "NAME_BARE": {
+      "d_raw": 1.8632,
+      "d_spec": 1.8011,
+      "d_logp": 1.5458
+    },
+    "ROLE_BARE": {
+      "d_raw": 2.0677,
+      "d_spec": 2.0163,
+      "d_logp": 1.7006
+    }
+  },
+  "units_26": [
+    {
+      "id": "p92-10",
+      "layer": 2,
+      "neuron": 2466,
+      "kind_haiku": "slot",
+      "kind_ds": "slot",
+      "persona_kind": "animal",
+      "lead_class": "a",
+      "is_full_word_first_token": true,
+      "n_content_tokens": 1,
+      "first_content_token_id": 16553,
+      "first_content_token_str": " chicken",
+      "np_text": "a chicken",
+      "w_down_norm": 0.8774,
+      "gate_up_cos": -0.1431,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 1.8312726505100727,
+          "d_raw": 2.37722472473979,
+          "d_spec": 4.2577998749911785,
+          "d_logp": 4.8346827030181885
+        },
+        "NAME_BARE": {
+          "base_raw": 2.501636940985918,
+          "d_raw": 1.569273691624403,
+          "d_spec": 1.4843442253768444,
+          "d_logp": 3.0947991609573364
+        },
+        "ROLE_BARE": {
+          "base_raw": 1.5782473161816597,
+          "d_raw": 2.5834240838885307,
+          "d_spec": 1.8326851353049278,
+          "d_logp": 3.384535312652588
+        }
+      },
+      "pass_all3_cells": true
+    },
+    {
+      "id": "p92-04",
+      "layer": 3,
+      "neuron": 5389,
+      "kind_haiku": "slot",
+      "kind_ds": "slot",
+      "persona_kind": "object or place",
+      "lead_class": "a",
+      "is_full_word_first_token": true,
+      "n_content_tokens": 3,
+      "first_content_token_id": 1633,
+      "first_content_token_str": " very",
+      "np_text": "a very tall tree",
+      "w_down_norm": 0.8846,
+      "gate_up_cos": 0.0401,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 4.888569712638855,
+          "d_raw": 4.743981719017029,
+          "d_spec": 4.398832827806473,
+          "d_logp": 5.076896548271179
+        },
+        "NAME_BARE": {
+          "base_raw": 6.088326454162598,
+          "d_raw": 2.4286223649978638,
+          "d_spec": 2.281230017542839,
+          "d_logp": 3.268644690513611
+        },
+        "ROLE_BARE": {
+          "base_raw": 5.1633933782577515,
+          "d_raw": 3.5040059089660645,
+          "d_spec": 3.5357198119163513,
+          "d_logp": 4.336874067783356
+        }
+      },
+      "pass_all3_cells": true
+    },
+    {
+      "id": "p92-02",
+      "layer": 3,
+      "neuron": 2628,
+      "kind_haiku": "slot",
+      "kind_ds": "slot",
+      "persona_kind": "object or place",
+      "lead_class": "the",
+      "is_full_word_first_token": true,
+      "n_content_tokens": 1,
+      "first_content_token_id": 6424,
+      "first_content_token_str": " town",
+      "np_text": "the town",
+      "w_down_norm": 0.877,
+      "gate_up_cos": 0.0657,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 4.140153735876083,
+          "d_raw": -0.2652997076511383,
+          "d_spec": 0.9508539140224457,
+          "d_logp": 1.8398633003234863
+        },
+        "NAME_BARE": {
+          "base_raw": 2.521047443151474,
+          "d_raw": 2.253331869840622,
+          "d_spec": 0.08423352241516113,
+          "d_logp": 3.0203558206558228
+        },
+        "ROLE_BARE": {
+          "base_raw": 5.908652186393738,
+          "d_raw": -1.513321876525879,
+          "d_spec": -2.277558207511902,
+          "d_logp": 0.268904447555542
+        }
+      },
+      "pass_all3_cells": false
+    },
+    {
+      "id": "p92-13",
+      "layer": 3,
+      "neuron": 976,
+      "kind_haiku": "slot",
+      "kind_ds": "slot",
+      "persona_kind": "fictional character",
+      "lead_class": "a",
+      "is_full_word_first_token": true,
+      "n_content_tokens": 1,
+      "first_content_token_id": 30535,
+      "first_content_token_str": " skeleton",
+      "np_text": "a skeleton",
+      "w_down_norm": 0.8203,
+      "gate_up_cos": 0.2105,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 2.523911863565445,
+          "d_raw": 4.369870632886887,
+          "d_spec": 4.895527213811874,
+          "d_logp": 5.277994990348816
+        },
+        "NAME_BARE": {
+          "base_raw": 1.936714231967926,
+          "d_raw": 2.4094071984291077,
+          "d_spec": 5.253251552581787,
+          "d_logp": 3.751119017601013
+        },
+        "ROLE_BARE": {
+          "base_raw": 3.034997344017029,
+          "d_raw": 3.4756675958633423,
+          "d_spec": 4.663845736533403,
+          "d_logp": 4.417090177536011
+        }
+      },
+      "pass_all3_cells": true
+    },
+    {
+      "id": "p92-24",
+      "layer": 4,
+      "neuron": 1594,
+      "kind_haiku": "slot",
+      "kind_ds": "slot",
+      "persona_kind": "fictional character",
+      "lead_class": "the",
+      "is_full_word_first_token": true,
+      "n_content_tokens": 3,
+      "first_content_token_id": 29006,
+      "first_content_token_str": " queen",
+      "np_text": "the queen of hearts",
+      "w_down_norm": 0.9855,
+      "gate_up_cos": -0.1457,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 3.044009417295456,
+          "d_raw": 6.362371474504471,
+          "d_spec": 6.74977907538414,
+          "d_logp": 7.0420374274253845
+        },
+        "NAME_BARE": {
+          "base_raw": 1.6823114305734634,
+          "d_raw": 4.9914238303899765,
+          "d_spec": 4.018066301941872,
+          "d_logp": 6.189431190490723
+        },
+        "ROLE_BARE": {
+          "base_raw": 3.1876890659332275,
+          "d_raw": 3.3760361671447754,
+          "d_spec": 4.248836934566498,
+          "d_logp": 4.7942118644714355
+        }
+      },
+      "pass_all3_cells": true
+    },
+    {
+      "id": "p92-35",
+      "layer": 4,
+      "neuron": 631,
+      "kind_haiku": "slot",
+      "kind_ds": "slot",
+      "persona_kind": "deity or spirit",
+      "lead_class": "your",
+      "is_full_word_first_token": true,
+      "n_content_tokens": 2,
+      "first_content_token_id": 47132,
+      "first_content_token_str": " guardian",
+      "np_text": "your guardian angel",
+      "w_down_norm": 0.8899,
+      "gate_up_cos": -0.0179,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 9.173270463943481,
+          "d_raw": 0.9378585815429688,
+          "d_spec": 0.9216569066047668,
+          "d_logp": 3.066274642944336
+        },
+        "NAME_BARE": {
+          "base_raw": 5.542172074317932,
+          "d_raw": 3.257112503051758,
+          "d_spec": 3.980785608291626,
+          "d_logp": 4.311486303806305
+        },
+        "ROLE_BARE": {
+          "base_raw": 6.271677851676941,
+          "d_raw": 2.7121275663375854,
+          "d_spec": 3.1069383919239044,
+          "d_logp": 3.9948397874832153
+        }
+      },
+      "pass_all3_cells": true
+    },
+    {
+      "id": "p92-36",
+      "layer": 4,
+      "neuron": 7528,
+      "kind_haiku": "slot",
+      "kind_ds": "slot",
+      "persona_kind": "fictional character",
+      "lead_class": "the",
+      "is_full_word_first_token": true,
+      "n_content_tokens": 2,
+      "first_content_token_id": 1972,
+      "first_content_token_str": " real",
+      "np_text": "the real Alex",
+      "w_down_norm": 0.8532,
+      "gate_up_cos": -0.1152,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 3.402835428714752,
+          "d_raw": 4.140652596950531,
+          "d_spec": 4.793657332658768,
+          "d_logp": 5.212347865104675
+        },
+        "NAME_BARE": {
+          "base_raw": 3.1122281551361084,
+          "d_raw": 6.306276559829712,
+          "d_spec": 5.287314087152481,
+          "d_logp": 6.654510200023651
+        },
+        "ROLE_BARE": {
+          "base_raw": 5.398808240890503,
+          "d_raw": 5.4322168827056885,
+          "d_spec": 5.681304723024368,
+          "d_logp": 5.592584490776062
+        }
+      },
+      "pass_all3_cells": true
+    },
+    {
+      "id": "p92-47",
+      "layer": 4,
+      "neuron": 39,
+      "kind_haiku": "slot",
+      "kind_ds": "slot",
+      "persona_kind": "human",
+      "lead_class": "a",
+      "is_full_word_first_token": true,
+      "n_content_tokens": 1,
+      "first_content_token_id": 15779,
+      "first_content_token_str": " lawyer",
+      "np_text": "a lawyer",
+      "w_down_norm": 0.8952,
+      "gate_up_cos": 0.0131,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 2.270205497741699,
+          "d_raw": 6.701200723648071,
+          "d_spec": 5.60913947224617,
+          "d_logp": 7.280276775360107
+        },
+        "NAME_BARE": {
+          "base_raw": 4.339126646518707,
+          "d_raw": 1.0591678023338318,
+          "d_spec": 1.3874944746494293,
+          "d_logp": 1.6210442781448364
+        },
+        "ROLE_BARE": {
+          "base_raw": 4.93723738193512,
+          "d_raw": 1.101840615272522,
+          "d_spec": 1.8825620412826538,
+          "d_logp": 1.7545157670974731
+        }
+      },
+      "pass_all3_cells": true
+    },
+    {
+      "id": "p92-33",
+      "layer": 5,
+      "neuron": 90,
+      "kind_haiku": "slot",
+      "kind_ds": "slot",
+      "persona_kind": "fictional character",
+      "lead_class": "bare",
+      "is_full_word_first_token": true,
+      "n_content_tokens": 4,
+      "first_content_token_id": 2999,
+      "first_content_token_str": " Dr",
+      "np_text": "Dr. Memento",
+      "w_down_norm": 0.8808,
+      "gate_up_cos": 0.0708,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 6.081932544708252,
+          "d_raw": -1.3370989561080933,
+          "d_spec": 1.60696280002594,
+          "d_logp": 1.2536743879318237
+        },
+        "NAME_BARE": {
+          "base_raw": 2.658970892429352,
+          "d_raw": -2.592186786234379,
+          "d_spec": 0.3130956180393696,
+          "d_logp": 0.40177249908447266
+        },
+        "ROLE_BARE": {
+          "base_raw": 9.319781184196472,
+          "d_raw": -5.2163413763046265,
+          "d_spec": -2.862787038087845,
+          "d_logp": -2.05330827832222
+        }
+      },
+      "pass_all3_cells": false
+    },
+    {
+      "id": "p92-37",
+      "layer": 5,
+      "neuron": 7218,
+      "kind_haiku": "slot",
+      "kind_ds": "slot",
+      "persona_kind": "animal",
+      "lead_class": "a",
+      "is_full_word_first_token": true,
+      "n_content_tokens": 4,
+      "first_content_token_id": 3544,
+      "first_content_token_str": " large",
+      "np_text": "a large, friendly dog",
+      "w_down_norm": 0.8399,
+      "gate_up_cos": 0.1647,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 3.812824547290802,
+          "d_raw": 3.5442458987236023,
+          "d_spec": 2.4529947638511658,
+          "d_logp": 4.2692118883132935
+        },
+        "NAME_BARE": {
+          "base_raw": 3.278473377227783,
+          "d_raw": 4.650625109672546,
+          "d_spec": 4.54470157623291,
+          "d_logp": 5.290225327014923
+        },
+        "ROLE_BARE": {
+          "base_raw": 2.702187716960907,
+          "d_raw": 4.58146733045578,
+          "d_spec": 5.294646218419075,
+          "d_logp": 5.54176127910614
+        }
+      },
+      "pass_all3_cells": true
+    },
+    {
+      "id": "p92-46",
+      "layer": 5,
+      "neuron": 4673,
+      "kind_haiku": "slot",
+      "kind_ds": "slot",
+      "persona_kind": "human",
+      "lead_class": "a",
+      "is_full_word_first_token": true,
+      "n_content_tokens": 2,
+      "first_content_token_id": 5912,
+      "first_content_token_str": " regular",
+      "np_text": "a regular guy",
+      "w_down_norm": 0.8935,
+      "gate_up_cos": -0.0309,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 5.3826810121536255,
+          "d_raw": 0.10173451900482178,
+          "d_spec": 1.3027125597000122,
+          "d_logp": 1.739728331565857
+        },
+        "NAME_BARE": {
+          "base_raw": 4.957717299461365,
+          "d_raw": -0.313301682472229,
+          "d_spec": 1.4653709903359413,
+          "d_logp": 0.8303405046463013
+        },
+        "ROLE_BARE": {
+          "base_raw": 4.505979061126709,
+          "d_raw": 0.24982833862304688,
+          "d_spec": 1.6925405114889145,
+          "d_logp": 0.9035333395004272
+        }
+      },
+      "pass_all3_cells": false
+    },
+    {
+      "id": "p92-09",
+      "layer": 6,
+      "neuron": 4145,
+      "kind_haiku": "slot",
+      "kind_ds": "slot",
+      "persona_kind": "animal",
+      "lead_class": "a",
+      "is_full_word_first_token": true,
+      "n_content_tokens": 1,
+      "first_content_token_id": 5679,
+      "first_content_token_str": " dog",
+      "np_text": "a dog",
+      "w_down_norm": 0.8637,
+      "gate_up_cos": 0.1447,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 4.844564497470856,
+          "d_raw": 6.602378308773041,
+          "d_spec": 8.683919429779053,
+          "d_logp": 8.084977626800537
+        },
+        "NAME_BARE": {
+          "base_raw": 5.171449601650238,
+          "d_raw": 4.25177675485611,
+          "d_spec": 6.951748862862587,
+          "d_logp": 6.26103612780571
+        },
+        "ROLE_BARE": {
+          "base_raw": 4.551340639591217,
+          "d_raw": 5.567541301250458,
+          "d_spec": 7.63255699723959,
+          "d_logp": 7.1796030551195145
+        }
+      },
+      "pass_all3_cells": true
+    },
+    {
+      "id": "p92-29",
+      "layer": 2,
+      "neuron": 1912,
+      "kind_haiku": "concept",
+      "kind_ds": "concept",
+      "persona_kind": "deity or spirit",
+      "lead_class": "the",
+      "is_full_word_first_token": true,
+      "n_content_tokens": 3,
+      "first_content_token_id": 10087,
+      "first_content_token_str": " god",
+      "np_text": "the god of wisdom",
+      "w_down_norm": 0.8774,
+      "gate_up_cos": 0.1027,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 1.4679055511951447,
+          "d_raw": 8.200280874967575,
+          "d_spec": 8.364434212446213,
+          "d_logp": 9.075874865055084
+        },
+        "NAME_BARE": {
+          "base_raw": 0.3929428569972515,
+          "d_raw": 7.71923666074872,
+          "d_spec": 7.879011068493128,
+          "d_logp": 9.196062326431274
+        },
+        "ROLE_BARE": {
+          "base_raw": 1.502859890460968,
+          "d_raw": 8.109221160411835,
+          "d_spec": 9.456750303506851,
+          "d_logp": 9.268350958824158
+        }
+      },
+      "pass_all3_cells": true
+    },
+    {
+      "id": "p92-00",
+      "layer": 3,
+      "neuron": 122,
+      "kind_haiku": "concept",
+      "kind_ds": "unclassified",
+      "persona_kind": "object or place",
+      "lead_class": "a",
+      "is_full_word_first_token": false,
+      "n_content_tokens": 2,
+      "first_content_token_id": 293,
+      "first_content_token_str": " b",
+      "np_text": "a boulder",
+      "w_down_norm": 0.8831,
+      "gate_up_cos": 0.073,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 5.02781355381012,
+          "d_raw": 3.415566325187683,
+          "d_spec": 6.40367079526186,
+          "d_logp": 5.983977138996124
+        },
+        "NAME_BARE": {
+          "base_raw": 5.010052740573883,
+          "d_raw": 1.2949253916740417,
+          "d_spec": 4.209471866488457,
+          "d_logp": 3.2773703932762146
+        },
+        "ROLE_BARE": {
+          "base_raw": 4.7506325244903564,
+          "d_raw": 1.509903907775879,
+          "d_spec": 4.494889974594116,
+          "d_logp": 3.1116498708724976
+        }
+      },
+      "pass_all3_cells": true
+    },
+    {
+      "id": "p92-11",
+      "layer": 3,
+      "neuron": 2354,
+      "kind_haiku": "concept",
+      "kind_ds": "slot",
+      "persona_kind": "object or place",
+      "lead_class": "a",
+      "is_full_word_first_token": true,
+      "n_content_tokens": 1,
+      "first_content_token_id": 65354,
+      "first_content_token_str": " whiskey",
+      "np_text": "a whiskey",
+      "w_down_norm": 0.8228,
+      "gate_up_cos": 0.1275,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": -1.1293640583753586,
+          "d_raw": 10.914833828806877,
+          "d_spec": 11.843038156628609,
+          "d_logp": 12.773348212242126
+        },
+        "NAME_BARE": {
+          "base_raw": -1.0736217945814133,
+          "d_raw": 9.755416199564934,
+          "d_spec": 11.758109729737043,
+          "d_logp": 10.964396715164185
+        },
+        "ROLE_BARE": {
+          "base_raw": -0.5630124807357788,
+          "d_raw": 9.664373993873596,
+          "d_spec": 11.289260849356651,
+          "d_logp": 11.01794058084488
+        }
+      },
+      "pass_all3_cells": true
+    },
+    {
+      "id": "p92-39",
+      "layer": 3,
+      "neuron": 1216,
+      "kind_haiku": "concept",
+      "kind_ds": "concept",
+      "persona_kind": "human",
+      "lead_class": "the",
+      "is_full_word_first_token": true,
+      "n_content_tokens": 7,
+      "first_content_token_id": 1455,
+      "first_content_token_str": " most",
+      "np_text": "the most popular race car driver in NASCAR",
+      "w_down_norm": 0.8182,
+      "gate_up_cos": 0.1276,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 5.0915223360061646,
+          "d_raw": 0.8453758955001831,
+          "d_spec": 2.4575356543064117,
+          "d_logp": 1.8579879999160767
+        },
+        "NAME_BARE": {
+          "base_raw": 4.263032019138336,
+          "d_raw": 3.669623553752899,
+          "d_spec": 4.1810799688100815,
+          "d_logp": 5.038422405719757
+        },
+        "ROLE_BARE": {
+          "base_raw": 5.562822937965393,
+          "d_raw": 2.2744234800338745,
+          "d_spec": 3.4462921023368835,
+          "d_logp": 3.2174158096313477
+        }
+      },
+      "pass_all3_cells": true
+    },
+    {
+      "id": "p92-01",
+      "layer": 4,
+      "neuron": 7771,
+      "kind_haiku": "concept",
+      "kind_ds": "unclassified",
+      "persona_kind": "fictional character",
+      "lead_class": "the",
+      "is_full_word_first_token": true,
+      "n_content_tokens": 2,
+      "first_content_token_id": 24632,
+      "first_content_token_str": " magical",
+      "np_text": "the magical princess",
+      "w_down_norm": 0.8946,
+      "gate_up_cos": 0.0008,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 2.9194922000169754,
+          "d_raw": 7.390447661280632,
+          "d_spec": 7.6421573013067245,
+          "d_logp": 7.768216490745544
+        },
+        "NAME_BARE": {
+          "base_raw": -0.292228639125824,
+          "d_raw": 9.014701783657074,
+          "d_spec": 8.23713818192482,
+          "d_logp": 10.180966973304749
+        },
+        "ROLE_BARE": {
+          "base_raw": 2.7137725055217743,
+          "d_raw": 6.874438554048538,
+          "d_spec": 8.090776681900024,
+          "d_logp": 8.838296175003052
+        }
+      },
+      "pass_all3_cells": true
+    },
+    {
+      "id": "p92-48",
+      "layer": 4,
+      "neuron": 5473,
+      "kind_haiku": "concept",
+      "kind_ds": "concept",
+      "persona_kind": "human",
+      "lead_class": "an",
+      "is_full_word_first_token": true,
+      "n_content_tokens": 6,
+      "first_content_token_id": 3229,
+      "first_content_token_str": " author",
+      "np_text": "an author, poet, and interpreter",
+      "w_down_norm": 0.8578,
+      "gate_up_cos": -0.2053,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 7.996720552444458,
+          "d_raw": 5.720688581466675,
+          "d_spec": 4.677047044038773,
+          "d_logp": 5.964240789413452
+        },
+        "NAME_BARE": {
+          "base_raw": 9.527941823005676,
+          "d_raw": 1.2777048349380493,
+          "d_spec": 2.81751711666584,
+          "d_logp": 2.5288873612880707
+        },
+        "ROLE_BARE": {
+          "base_raw": 10.438204765319824,
+          "d_raw": -0.030216217041015625,
+          "d_spec": 0.7691783756017685,
+          "d_logp": 1.909656047821045
+        }
+      },
+      "pass_all3_cells": false
+    },
+    {
+      "id": "p92-08",
+      "layer": 4,
+      "neuron": 5154,
+      "kind_haiku": "concept",
+      "kind_ds": "concept",
+      "persona_kind": "animal",
+      "lead_class": "a",
+      "is_full_word_first_token": true,
+      "n_content_tokens": 1,
+      "first_content_token_id": 5679,
+      "first_content_token_str": " dog",
+      "np_text": "a dog",
+      "w_down_norm": 0.8673,
+      "gate_up_cos": 0.0925,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 4.844564497470856,
+          "d_raw": 3.986456334590912,
+          "d_spec": 3.576412081718445,
+          "d_logp": 5.105002462863922
+        },
+        "NAME_BARE": {
+          "base_raw": 5.171449601650238,
+          "d_raw": 0.7993602156639099,
+          "d_spec": 1.827647216618061,
+          "d_logp": 2.409527063369751
+        },
+        "ROLE_BARE": {
+          "base_raw": 4.551340639591217,
+          "d_raw": 0.1345278024673462,
+          "d_spec": 1.6280388161540031,
+          "d_logp": 2.3522067070007324
+        }
+      },
+      "pass_all3_cells": false
+    },
+    {
+      "id": "p92-45",
+      "layer": 4,
+      "neuron": 3088,
+      "kind_haiku": "concept",
+      "kind_ds": "concept",
+      "persona_kind": "human",
+      "lead_class": "the",
+      "is_full_word_first_token": true,
+      "n_content_tokens": 4,
+      "first_content_token_id": 7808,
+      "first_content_token_str": " leader",
+      "np_text": "the leader of the country",
+      "w_down_norm": 0.8414,
+      "gate_up_cos": 0.0745,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 2.996420443058014,
+          "d_raw": 8.888554036617279,
+          "d_spec": 9.91864538192749,
+          "d_logp": 9.134299844503403
+        },
+        "NAME_BARE": {
+          "base_raw": 3.8891243934631348,
+          "d_raw": 6.746098041534424,
+          "d_spec": 7.240211322903633,
+          "d_logp": 7.208000838756561
+        },
+        "ROLE_BARE": {
+          "base_raw": 3.839784324169159,
+          "d_raw": 6.813422739505768,
+          "d_spec": 9.125573351979256,
+          "d_logp": 8.135064482688904
+        }
+      },
+      "pass_all3_cells": true
+    },
+    {
+      "id": "p92-15",
+      "layer": 5,
+      "neuron": 4559,
+      "kind_haiku": "concept",
+      "kind_ds": "concept",
+      "persona_kind": "object or place",
+      "lead_class": "a",
+      "is_full_word_first_token": true,
+      "n_content_tokens": 4,
+      "first_content_token_id": 8147,
+      "first_content_token_str": " powerful",
+      "np_text": "a powerful and secure password",
+      "w_down_norm": 0.8993,
+      "gate_up_cos": 0.2222,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 3.8763514161109924,
+          "d_raw": 3.1931939721107483,
+          "d_spec": 2.8389845490455627,
+          "d_logp": 3.762483239173889
+        },
+        "NAME_BARE": {
+          "base_raw": 3.9154043793678284,
+          "d_raw": 3.5214537978172302,
+          "d_spec": 3.1894431710243225,
+          "d_logp": 4.12514066696167
+        },
+        "ROLE_BARE": {
+          "base_raw": 1.8374003171920776,
+          "d_raw": 5.148271083831787,
+          "d_spec": 4.531831294298172,
+          "d_logp": 5.450368165969849
+        }
+      },
+      "pass_all3_cells": true
+    },
+    {
+      "id": "p92-38",
+      "layer": 5,
+      "neuron": 5553,
+      "kind_haiku": "concept",
+      "kind_ds": "slot",
+      "persona_kind": "another AI",
+      "lead_class": "the",
+      "is_full_word_first_token": true,
+      "n_content_tokens": 5,
+      "first_content_token_id": 4033,
+      "first_content_token_str": " official",
+      "np_text": "the official spokesperson for Coca-Cola",
+      "w_down_norm": 0.798,
+      "gate_up_cos": 0.2202,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 3.924464762210846,
+          "d_raw": 2.8992413878440857,
+          "d_spec": 5.375482857227325,
+          "d_logp": 5.2042014598846436
+        },
+        "NAME_BARE": {
+          "base_raw": 3.3680044412612915,
+          "d_raw": 2.299936890602112,
+          "d_spec": 3.1703827306628227,
+          "d_logp": 3.9194637537002563
+        },
+        "ROLE_BARE": {
+          "base_raw": 5.3114030957221985,
+          "d_raw": 1.4514502882957458,
+          "d_spec": 3.485062450170517,
+          "d_logp": 3.0726360082626343
+        }
+      },
+      "pass_all3_cells": true
+    },
+    {
+      "id": "p92-41",
+      "layer": 5,
+      "neuron": 6381,
+      "kind_haiku": "concept",
+      "kind_ds": "unclassified",
+      "persona_kind": "human",
+      "lead_class": "a",
+      "is_full_word_first_token": true,
+      "n_content_tokens": 2,
+      "first_content_token_id": 3823,
+      "first_content_token_str": " human",
+      "np_text": "a human DJ",
+      "w_down_norm": 0.8524,
+      "gate_up_cos": 0.121,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 8.676451206207275,
+          "d_raw": -0.7468043565750122,
+          "d_spec": -0.15549114346504211,
+          "d_logp": 0.07937753200531006
+        },
+        "NAME_BARE": {
+          "base_raw": 5.844784736633301,
+          "d_raw": -0.6661361455917358,
+          "d_spec": -0.031644150614738464,
+          "d_logp": 0.3848905563354492
+        },
+        "ROLE_BARE": {
+          "base_raw": 5.730262517929077,
+          "d_raw": 0.39260709285736084,
+          "d_spec": 0.9394019246101379,
+          "d_logp": 1.0989737510681152
+        }
+      },
+      "pass_all3_cells": false
+    },
+    {
+      "id": "p92-40",
+      "layer": 6,
+      "neuron": 2146,
+      "kind_haiku": "concept",
+      "kind_ds": "slot",
+      "persona_kind": "human",
+      "lead_class": "a",
+      "is_full_word_first_token": false,
+      "n_content_tokens": 3,
+      "first_content_token_id": 23597,
+      "first_content_token_str": " singer",
+      "np_text": "a singer-songwriter",
+      "w_down_norm": 0.8534,
+      "gate_up_cos": 0.0731,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 1.9318048655986786,
+          "d_raw": 10.364572793245316,
+          "d_spec": 11.302425801753998,
+          "d_logp": 10.585480690002441
+        },
+        "NAME_BARE": {
+          "base_raw": 3.303607791662216,
+          "d_raw": 10.969895750284195,
+          "d_spec": 12.253796339035034,
+          "d_logp": 9.856006123125553
+        },
+        "ROLE_BARE": {
+          "base_raw": 1.6285820007324219,
+          "d_raw": 11.116329908370972,
+          "d_spec": 12.16575825214386,
+          "d_logp": 10.74772261083126
+        }
+      },
+      "pass_all3_cells": true
+    },
+    {
+      "id": "p92-05",
+      "layer": 3,
+      "neuron": 6986,
+      "kind_haiku": "slot",
+      "kind_ds": "slot",
+      "persona_kind": "animal",
+      "lead_class": "a",
+      "is_full_word_first_token": true,
+      "n_content_tokens": 1,
+      "first_content_token_id": 39935,
+      "first_content_token_str": " fox",
+      "np_text": "a fox",
+      "w_down_norm": 0.8074,
+      "gate_up_cos": -0.1624,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 3.357605129480362,
+          "d_raw": 3.751864045858383,
+          "d_spec": 2.672409027814865,
+          "d_logp": 5.100003480911255
+        },
+        "NAME_BARE": {
+          "base_raw": 3.231100618839264,
+          "d_raw": 1.3692283034324646,
+          "d_spec": 1.5523496866226196,
+          "d_logp": 2.495211362838745
+        },
+        "ROLE_BARE": {
+          "base_raw": 3.939552366733551,
+          "d_raw": 0.5870345234870911,
+          "d_spec": 1.2710467278957367,
+          "d_logp": 2.0929934978485107
+        }
+      },
+      "pass_all3_cells": true
+    },
+    {
+      "id": "p92-43",
+      "layer": 6,
+      "neuron": 4792,
+      "kind_haiku": "concept",
+      "kind_ds": "concept",
+      "persona_kind": "human",
+      "lead_class": "a",
+      "is_full_word_first_token": true,
+      "n_content_tokens": 5,
+      "first_content_token_id": 5912,
+      "first_content_token_str": " regular",
+      "np_text": "a regular ol' street rat",
+      "w_down_norm": 0.9,
+      "gate_up_cos": 0.0733,
+      "old_b1_b4_transport": {
+        "SELF": {
+          "base_raw": 5.3826810121536255,
+          "d_raw": 0.7997663021087646,
+          "d_spec": 1.9279505908489227,
+          "d_logp": 2.343785524368286
+        },
+        "NAME_BARE": {
+          "base_raw": 4.957717299461365,
+          "d_raw": 2.7077914476394653,
+          "d_spec": 3.0095176994800568,
+          "d_logp": 3.8307965993881226
+        },
+        "ROLE_BARE": {
+          "base_raw": 4.505979061126709,
+          "d_raw": 3.0699533224105835,
+          "d_spec": 3.8448811173439026,
+          "d_logp": 4.02534294128418
+        }
+      },
+      "pass_all3_cells": true
+    }
+  ]
+}

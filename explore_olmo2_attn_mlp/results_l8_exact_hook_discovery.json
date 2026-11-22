@@ -1,0 +1,32 @@
+{
+  "artifact_type": "discovery_l8_exact_hook_recheck",
+  "status": "discovery_only_old_b1_b4",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "hook": "model.model.layers[layer] (post-post_feedforward_layernorm, exact Part B)",
+  "L8H2_reproduced_C_SN_raw": 0.382135,
+  "L8H2_reproduced_C_SN_spec": 0.217393,
+  "L8H2_ALL_33tok_swap_N2S_raw": 0.027902,
+  "L8H2_ALL_33tok_swap_S2N_raw": -0.047862,
+  "L8H2_ALL_33tok_swap_N2S_spec": 0.009923,
+  "L8H2_ALL_33tok_swap_S2N_spec": -0.056064,
+  "p92_46_ROLE_BARE_logit_lens_d_raw_by_layer": {
+    "L0": 0.0,
+    "L1": 0.0,
+    "L2": 0.0,
+    "L3": 0.0,
+    "L4": 0.0,
+    "L5": 0.0,
+    "L6": 1.526862,
+    "L7": 0.726072,
+    "L8": 0.633503,
+    "L9": 1.053486,
+    "L10": -3.295628,
+    "L11": -1.521235,
+    "L12": -0.681629,
+    "L13": 0.134185,
+    "L14": 1.004353,
+    "L15": 0.249826
+  },
+  "p92_46_ROLE_BARE_L14_to_L15_drop_raw": -0.754527
+}
