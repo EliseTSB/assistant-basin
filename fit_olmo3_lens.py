@@ -118,19 +118,29 @@ def save_accumulator(
     acc,
     meta: dict[str, Any],
     save_dtype: torch.dtype,
+    save_mode: str = "mean",
 ) -> dict[str, list[float]]:
-    """Compute exact fp32 split-half diagnostics, then atomically save halves in save_dtype."""
+    """Compute exact fp32 split-half diagnostics, then atomically save means or halves."""
     targets = sorted({t for t, _ in acc.sums})
     sh = {t: [round(x, 6) if x == x else None for x in acc.split_half(t)] for t in targets}
-    st = acc.state()
-    payload = {
-        "meta": meta,
-        "split_half_fp32": sh,
-        "state": {
-            "sums": {k: v.detach().to(device="cpu", dtype=save_dtype) for k, v in st["sums"].items()},
-            "n_docs": list(st["n_docs"]),
-        },
-    }
+    if save_mode == "mean":
+        payload = {
+            "meta": meta | {"save_mode": "mean"},
+            "split_half_fp32": sh,
+            "n_docs": list(acc.n_docs),
+            "total_docs": int(sum(acc.n_docs)),
+            "means": {t: acc.mean(t).detach().to(device="cpu", dtype=save_dtype) for t in targets},
+        }
+    else:
+        st = acc.state()
+        payload = {
+            "meta": meta | {"save_mode": "halves"},
+            "split_half_fp32": sh,
+            "state": {
+                "sums": {k: v.detach().to(device="cpu", dtype=save_dtype) for k, v in st["sums"].items()},
+                "n_docs": list(st["n_docs"]),
+            },
+        }
     tmp = path.with_name(path.name + ".tmp")
     torch.save(payload, tmp)
     tmp.replace(path)
@@ -147,11 +157,14 @@ def main() -> int:
     ap.add_argument("--seed", type=int, default=DEFAULT_SEED)
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
-    ap.add_argument("--acc-device", choices=("cpu", "cuda"), default="cpu",
-                    help="Where fp32 accumulators live (~8.5 GB per lens; use cpu on 24 GB L4)")
-    ap.add_argument("--dim-batch", type=int, default=128)
+    ap.add_argument("--acc-device", choices=("auto", "cpu", "cuda"), default="auto",
+                    help="Where fp32 accumulators live (~8.5 GB per lens; auto uses cuda when VRAM >= 60 GB)")
+    ap.add_argument("--dim-batch", type=int, default=0,
+                    help="Basis directions per batch (0 = auto: 256 if VRAM >= 38 GB else 128)")
     ap.add_argument("--lenses", choices=("both", "R", "S"), default="both")
     ap.add_argument("--save-dtype", choices=("fp16", "bf16", "fp32"), default="fp16")
+    ap.add_argument("--save-mode", choices=("mean", "halves"), default="mean",
+                    help="mean saves combined mean (~2.1 GB/lens) + fp32 split_half; halves saves both halves (~4.2 GB/lens)")
     ap.add_argument("--checkpoint-every", type=int, default=16)
     ap.add_argument("--timing-only", action="store_true", help="Run 1 doc, log timing/VRAM, save no .pt")
     ap.add_argument("--no-compile", action="store_true", help="Disable torch.compile on CUDA")
@@ -161,7 +174,13 @@ def main() -> int:
         args.docs = 1
     args.out.mkdir(parents=True, exist_ok=True)
     device = torch.device(args.device)
-    acc_dev = torch.device(args.acc_device if device.type == "cuda" else "cpu")
+    vram_gb = (torch.cuda.get_device_properties(device).total_memory / 1024 ** 3) if device.type == "cuda" else 0.0
+    if args.acc_device == "auto":
+        acc_dev = torch.device("cuda" if (device.type == "cuda" and vram_gb >= 60.0) else "cpu")
+    else:
+        acc_dev = torch.device(args.acc_device if device.type == "cuda" else "cpu")
+    if args.dim_batch <= 0:
+        args.dim_batch = 256 if (device.type == "cuda" and vram_gb >= 38.0) else 128
     save_dt = {"fp16": torch.float16, "bf16": torch.bfloat16, "fp32": torch.float32}[args.save_dtype]
 
     if args.no_compile:
@@ -267,9 +286,9 @@ def main() -> int:
 
             if (not args.timing_only) and args.checkpoint_every > 0 and ((i + 1) % args.checkpoint_every == 0) and (i + 1) < len(token_lists):
                 if do_r:
-                    save_accumulator(args.out / "r_lens.pt", acc_r, base_meta | {"lens": "R", "docs_done": i + 1}, save_dt)
+                    save_accumulator(args.out / "r_lens.pt", acc_r, base_meta | {"lens": "R", "docs_done": i + 1}, save_dt, args.save_mode)
                 if do_s:
-                    save_accumulator(args.out / "s_lens.pt", acc_s, base_meta | {"lens": "S", "docs_done": i + 1}, save_dt)
+                    save_accumulator(args.out / "s_lens.pt", acc_s, base_meta | {"lens": "S", "docs_done": i + 1}, save_dt, args.save_mode)
 
     fit_sec = time.time() - t_fit0
     summary = {
@@ -289,10 +308,10 @@ def main() -> int:
 
     split_half = {}
     if do_r:
-        sh_r = save_accumulator(args.out / "r_lens.pt", acc_r, base_meta | {"lens": "R", "docs_done": len(token_lists)}, save_dt)
+        sh_r = save_accumulator(args.out / "r_lens.pt", acc_r, base_meta | {"lens": "R", "docs_done": len(token_lists)}, save_dt, args.save_mode)
         split_half["R"] = sh_r
     if do_s:
-        sh_s = save_accumulator(args.out / "s_lens.pt", acc_s, base_meta | {"lens": "S", "docs_done": len(token_lists)}, save_dt)
+        sh_s = save_accumulator(args.out / "s_lens.pt", acc_s, base_meta | {"lens": "S", "docs_done": len(token_lists)}, save_dt, args.save_mode)
         split_half["S"] = sh_s
     summary["split_half_fp32"] = split_half
     atomic_json(args.out / "fit_meta.json", summary)
