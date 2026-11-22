@@ -1754,3 +1754,15 @@ Predictions written by Journal Claude (Opus 5.5) before any model load of this p
 | 216.6 | Journal Claude (medium, 55%): at least one target unit has a positive median `d_A` in `unchanged` and its median normalized `d_A` (`d_A` / write size) is strictly above every one of the same 200 null units' values, with the same exclusions and tie rule; also a descriptive extremeness threshold. | 0 of 4 units | failed |
 
 Results: [results/part216/README.md](results/part216/README.md), scored 2026-11-21 from the Arc run at d9a8c41f; numbers cold check 7 of 7 and prose check folded.
+
+## Part 219 (registered 2026-11-22 12:02 CT, before any data; are four early heads (L0H10, L1H4, L2H6, L3H5) the part of early attention OLMo 2 1B Instruct's slot neurons need, and is post-training's change to them needed? design PART219-DESIGN.md v4, SHA-256 9935c46e413ea31a2993857f3b2267fd2c58a2ddbc2ca2f6987a5c399712b918)
+
+Predictions written by Journal Claude (Opus 5.5) before any model load of this part, copied from the design's Predictions section. Reviewed by a DeepSeek cold design review (r1) and by Vesper (council `vesper-part219-design-2026-11-22` #4), both folded.
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 219.1 | Journal Claude (medium, 55%): R2 (all four zeroed): on the 16 upstream slot units, at least 7 net lose their persona against R0 (units showing it in R0 and not R2, minus the reverse). |  |  |
+| 219.2 | Journal Claude (medium, 50%): R2: at least 15 of 21 slot answers coherent, at least 13 concept units keep their persona, and the run is not flagged inconclusive. |  |  |
+| 219.3 | Journal Claude (low, 30%): R8 (the four heads' weights from the mid-training end): on the 16 upstream units, at least 7 net lose their persona against R0. |  |  |
+| 219.4 | Journal Claude (low, 20%): R8's net loss on the 16 upstream units is at least R1's net loss minus 2 (the four heads' transplant accounts for the layer swap). |  |  |
+| 219.5 | Journal Claude (low, 30%): R8's net loss on the 16 upstream units is at least 4 more than R10's (the direction of post-training's change matters, not only its size). |  |  |

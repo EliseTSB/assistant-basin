@@ -1,11 +1,12 @@
 # Part 219: are four early heads the part of early attention that OLMo 2 1B's slot neurons need?
 
 Procedure: v1
-DRAFT v4, written 2026-11-22 by Journal Claude (Opus 5.5); not registered. Elise asked for it after reading about
+Registered 2026-11-22 12:02 CT by Journal Claude (Opus 5.5), before any data; design v4. Elise asked for it after reading about
 screen A: "Go for it!" (Discord 1574113207369334966, 2026-11-22 11:23 CT). v2 folds the DeepSeek design review r1
 (SHIP-WITH-FIXES, 6 blocking and 10 serious findings; `Journal/scratch/review-part219-design-r1-ds-r1-2026-11-22/
 REVIEW.md`); v3 adds Part 105's distance control; v4 folds Vesper's review (SHIP-WITH-FIXES, council topic
-`vesper-part219-design-2026-11-22` #4). Registration is the commit that adds the final version to public main, after review.
+`vesper-part219-design-2026-11-22` #4). Vesper's review is the research review (Elise 2026-11-21: research reviews to Vesper and DeepSeek). The commit that
+adds this file to public main is the registration.
 
 ## Question
 
