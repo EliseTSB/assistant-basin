@@ -1,0 +1,194 @@
+{
+ "part": 219,
+ "runs": {
+  "R0": {
+   "tag": "R0",
+   "role": "reference",
+   "condition": {
+    "change": "none"
+   },
+   "jsonl": "R0.jsonl",
+   "meta": "R0.meta.json",
+   "seconds": 117.7,
+   "expected_rows": 474,
+   "rows": 474,
+   "problems": [],
+   "attn_implementation": "eager",
+   "intervention_receipt": null,
+   "coupling_log": null,
+   "reset_receipt": {
+    "role": "reference_written",
+    "matches_reference": null,
+    "mismatch": null,
+    "reference_path": "results\\part219\\replay-R0.json"
+   },
+   "readable": true
+  },
+  "R2": {
+   "tag": "R2",
+   "role": "219.1, 219.2",
+   "condition": {
+    "ablate_heads": [
+     "L0H10",
+     "L1H4",
+     "L2H6",
+     "L3H5"
+    ]
+   },
+   "jsonl": "R2.jsonl",
+   "meta": "R2.meta.json",
+   "seconds": 116.9,
+   "expected_rows": 474,
+   "rows": 474,
+   "problems": [],
+   "attn_implementation": "eager",
+   "intervention_receipt": {
+    "ablate_heads": [
+     "L0H10",
+     "L1H4",
+     "L2H6",
+     "L3H5"
+    ],
+    "ablation": [
+     {
+      "layer": 0,
+      "head": 10,
+      "slice": [
+       1280,
+       1408
+      ],
+      "positions": 912,
+      "max_abs_before": 1.453125,
+      "max_abs_after": 0.0,
+      "all_zero": true
+     },
+     {
+      "layer": 1,
+      "head": 4,
+      "slice": [
+       512,
+       640
+      ],
+      "positions": 912,
+      "max_abs_before": 0.84375,
+      "max_abs_after": 0.0,
+      "all_zero": true
+     },
+     {
+      "layer": 2,
+      "head": 6,
+      "slice": [
+       768,
+       896
+      ],
+      "positions": 912,
+      "max_abs_before": 0.4609375,
+      "max_abs_after": 0.0,
+      "all_zero": true
+     },
+     {
+      "layer": 3,
+      "head": 5,
+      "slice": [
+       640,
+       768
+      ],
+      "positions": 912,
+      "max_abs_before": 0.76953125,
+      "max_abs_after": 0.0,
+      "all_zero": true
+     }
+    ],
+    "transplant": null
+   },
+   "coupling_log": null,
+   "reset_receipt": {
+    "role": "checked",
+    "matches_reference": true,
+    "mismatch": null,
+    "reference_path": "results\\part219\\replay-R0.json"
+   },
+   "readable": true
+  }
+ },
+ "host": "E:\\neuron-probe\\hf\\hub\\models--allenai--OLMo-2-0425-1B-Instruct\\snapshots\\48d788eca847d4d7548f375ad03d3c9312f6139e",
+ "donor": null,
+ "batch": 48,
+ "attn_implementation": "eager",
+ "kernel_check": {
+  "passes": true,
+  "candidate": "C:\\Users\\alexa\\neuron-probe-gpu\\results\\part219\\kernel-check.json",
+  "reference": "results/kernel-reference/allenai-olmo-2-0425-1b-instruct-cpu-float32.json",
+  "failures": []
+ },
+ "registered_frozen_heads": [
+  "L0H12",
+  "L1H11",
+  "L2H5",
+  "L3H9"
+ ],
+ "recomputed_frozen_heads": [
+  "L0H12",
+  "L1H11",
+  "L2H5",
+  "L3H9"
+ ],
+ "registered_important_heads": [
+  "L0H10",
+  "L1H4",
+  "L2H6",
+  "L3H5"
+ ],
+ "replay": "replay-R0.json",
+ "stages": {
+  "a": {
+   "pilot": true,
+   "runs": [
+    "R0",
+    "R2"
+   ],
+   "seconds": 234.7
+  }
+ },
+ "checks": {
+  "head_lists": {
+   "frozen_recomputed_equals_registered": true,
+   "important": [
+    "L0H10",
+    "L1H4",
+    "L2H6",
+    "L3H5"
+   ],
+   "frozen": [
+    "L0H12",
+    "L1H11",
+    "L2H5",
+    "L3H9"
+   ]
+  },
+  "reset_receipts": {
+   "R0": {
+    "matches_r0": true,
+    "mismatch": null,
+    "own_role": "reference_written",
+    "own_matches": null
+   },
+   "R2": {
+    "matches_r0": true,
+    "mismatch": null,
+    "own_role": "checked",
+    "own_matches": true
+   }
+  }
+ },
+ "pilot": {
+  "labels_available": false,
+  "receipt_problems": [],
+  "r0_slot_persona": null,
+  "r2_slot_answers_coherent": null,
+  "r0_min": 17,
+  "r2_min": 15,
+  "decision": "pending_labels",
+  "because": "the two label criteria are reader labels: run the blind reader on labels-R0.jsonl and labels-R2.jsonl, then run this pilot again or `score219.py --pilot`"
+ }
+}
