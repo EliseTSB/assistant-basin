@@ -243,10 +243,12 @@ keeps the head's average contribution and removes only what varies with the inpu
   deterministic and R0b checks the machinery).
 - **Positions under generation (Vesper #8).** With the KV cache, the prefill call sees absolute positions 0 to P-1 and
   each decode call sees one token at absolute position P+t, so its local index 0 is not position 0. The hook gives
-  `mean_pos0` only to index 0 of the prefill call and `mean_rest` to every other prefill position and to every decode
-  call.
+  `mean_pos0` only to each row's first real token in the prefill call and `mean_rest` to every other prefill position
+  and to every decode call. Batches are left-padded (`part92/common92.py`), so a row's first real token sits at its own
+  offset, read from the attention mask; pad positions get `mean_rest` (they are masked as keys, so their value does
+  not reach any real token). The reference means use the same rule: position 0 is each sequence's first real token.
 - **Intervention receipt.** In each mean-ablation run, on the first batch, the hooked slice equals the stored means'
-  bf16 bytes exactly at prefill position 0 (`mean_pos0`), at prefill positions 1 onward (`mean_rest`), and at the
+  bf16 bytes exactly at each row's first real prefill token (`mean_pos0`), at prefill positions 1 onward (`mean_rest`), and at the
   first decode step (`mean_rest`), and differed from them before the hook. A run whose receipt fails is not read.
 - **Do-nothing check on the new path.** R0b runs through the mean-ablation hook wrapper with an empty head set (as
   well as the zeroing wrapper) and must match R0 token for token.
