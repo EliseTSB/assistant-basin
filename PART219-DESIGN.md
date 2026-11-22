@@ -1,18 +1,20 @@
-# Part 219: do the four big early heads carry the early attention that OLMo 2 1B's slot neurons need?
+# Part 219: are four early heads the part of early attention that OLMo 2 1B's slot neurons need?
 
 Procedure: v1
-DRAFT v1, written 2026-11-22 11:25 CT by Journal Claude (Opus 5.5); not registered. Elise asked for it after reading
-about screen A: "Go for it!" (Discord 1574113207369334966, 2026-11-22 11:23 CT). Registration is the commit that adds
-the final version to public main, after review.
+DRAFT v2, written 2026-11-22 by Journal Claude (Opus 5.5); not registered. Elise asked for it after reading about
+screen A: "Go for it!" (Discord 1574113207369334966, 2026-11-22 11:23 CT). v2 folds the DeepSeek design review r1
+(SHIP-WITH-FIXES, 6 blocking and 10 serious findings; `Journal/scratch/review-part219-design-r1-ds-r1-2026-11-22/
+REVIEW.md`). Registration is the commit that adds the final version to public main, after review.
 
 ## Question
 
 Parts 99 to 102 found that OLMo 2 1B Instruct's 21 "slot" neurons, pushed, describe a persona on "Who are you?" only if
 the first four attention layers are Instruct's (swapping in the mid-training end's attention for layers 0 to 3 drops
-them from 19 of 21 to 3 of 21), and that SFT built most of that change. Screen A (2026-11-18, not registered) found,
-by zeroing one head at a time, that the heads whose loss hurts Instruct's identity answers more than ordinary answers
-include four in exactly those layers: L1H4, L2H6, L3H5 and L0H10, all already strong at SFT. This part asks whether
-those four heads are the part of early attention the slot neurons need, or whether the two findings only share a place.
+them from 19 of 21 to 3 of 21), and that SFT built most of that change. Screen A (2026-11-18, not registered) zeroed one
+head at a time and found four heads in exactly those layers, L0H10, L1H4, L2H6 and L3H5, whose loss hurts Instruct's
+identity answers more than its ordinary ones. This part asks two things: are those four heads needed for the slot
+neurons' self-descriptions (zeroing), and is post-training's change to them needed (transplanting just those heads'
+weights from the mid-training end)?
 
 ## Prior art and existing data
 
@@ -22,10 +24,10 @@ those four heads are the part of early attention the slot neurons need, or wheth
   and persona neurons found.
 - Our own data: `results/part99` to `results/part102` (layer-range attention swaps, read by Part 92's blind Haiku
   reader); `Journal/notes/reports/attention-heads-screens-2026-11-18/` screen A (`a-olmo-stages/a-out/REPORT.md`,
-  `scores.json`). ⚠ Parts 99 to 102 loaded the model with the default attention kernel (`part99/swap99.py:143` passes no
-  `attn_implementation`), so this part reruns its reference and the layer-swap arm on eager rather than reusing them.
+  `scores.json`). ⚠ Parts 99 to 102 loaded the model with the default attention kernel (`part99/swap99.py:143` passes
+  no `attn_implementation`), so this part reruns its reference and the layer-swap arm on eager.
 
-What screen A's per-head table says about choosing controls (Instruct stage, nats per token, layers 0 to 3 only):
+Screen A's table for the early layers (Instruct, nats per token):
 
 | head | drop on identity answers | drop on ordinary answers | specificity |
 |---|---|---|---|
@@ -35,105 +37,145 @@ What screen A's per-head table says about choosing controls (Instruct stage, nat
 | L1H4 | 0.311 | 0.211 | 0.100 |
 | next largest (L0H8) | 0.033 | 0.034 | 0.000 |
 
-These four are simply the four most important early heads for any answer; no other early head comes within a factor of
-six on ordinary answers. So no early head can serve as a control matched on general importance. Two consequences shape
-the design: the coherence gate below decides whether any slot drop can be read at all, and the one fair within-set
-contrast is L1H4 against L0H10, which cost ordinary answers almost equally (0.211 and 0.220) but differ about threefold
-in specificity.
+These four are the four most important early heads for any answer; no other early head comes within a factor of six on
+ordinary answers, so no early head is a control matched on general importance. The design answers that with a
+coherence gate (a drop that comes with broken answers is not read), with a transplant arm and its own matched control
+(R8 against R9, below), and by reading the specificity contrast between L1H4 and L0H10 only as exploratory: the review
+showed it also differs in layer, and Part 101 found layer 0 the strongest early layer, so the layer prior and the
+specificity prior point opposite ways, and screen A's specificity gap is only 0.065 nats (t = 2.6 over 24 texts).
 
 ## Method
 
-`allenai/OLMo-2-0425-1B-Instruct` at 48d788eca847d4d7548f375ad03d3c9312f6139e (host), and for arm R1 the mid-training
-end `allenai/OLMo-2-0425-1B` at f83cd641d4f00954eb25c781e0ac360debb3239e (NOT `main`, a different run). bf16, the A770,
-`attn_implementation="eager"` on every load, recorded in each run's meta. Part 99's prompts, chat frame, fixed pushes
-(`results/part99-pushes.pt`, Amendment 1 of Part 99), neuron list and Part 92 kinds map; greedy decoding with Part 99's
-settings; batch 48 in every run, so batch shape is identical across arms.
+`allenai/OLMo-2-0425-1B-Instruct` at 48d788eca847d4d7548f375ad03d3c9312f6139e (host); donor for R1, R8 and R9 the
+mid-training end `allenai/OLMo-2-0425-1B` at f83cd641d4f00954eb25c781e0ac360debb3239e (NOT `main`, a different run).
+bf16, the A770, `attn_implementation="eager"` on every load, recorded in each run's meta. Part 99's prompts, chat frame,
+fixed pushes (`results/part99-pushes.pt`), neuron list and Part 92 kinds map; greedy decoding with Part 99's settings;
+batch 48 in every run.
 
-Ablation: a head is zeroed by setting its 128-wide slice of `o_proj`'s input to zero at every position, the same
-operation as screen A. Not a per-head weight swap: OLMo 2 applies `q_norm` and `k_norm` over the whole 2048-wide
-projection before splitting heads, so swapping one head's weights also changes every other head's normalisation.
+Kernel check: results/part219/kernel-check.json, a tools/kernel_reference.py record of the host decoded on the A770
+under eager against a CPU float32 reference made for this part (none exists yet for OLMo 2 1B); it must pass
+`tools/part_check.py kernel`, and if it cannot, that is the first reported result and nothing below is read.
 
-Runs (one `swap99.py` call each; `--ablate-heads` is the one new option):
+Zeroing: a head is zeroed by setting its 128-wide slice of `o_proj`'s input to zero at every position (screen A's
+operation). Transplant: the head's rows `[128h:128(h+1)]` of `q_proj`, `k_proj` and `v_proj` and columns
+`[128h:128(h+1)]` of `o_proj` are copied from the donor; the host's full-width `q_norm` and `k_norm` weights are kept.
+⚠ OLMo 2's `q_norm`/`k_norm` take their RMS over the whole 2048-wide projection, so a transplant also shifts the other
+heads' normalisation a little; R9 measures that coupling with four unimportant heads.
 
-| run | attention | ablated heads |
+Slot units by position: a head in layer l precedes a push that enters after layer L's MLP when l ≤ L. 16 of the 21
+slot units (layers 3 to 12) sit downstream of all four heads, so every arm here changes only the context their push
+lands in; the other 5 (p92-07 at layer 1; p92-10, p92-20, p92-42, p92-50 at layer 2) have L3H5, and for p92-07 also
+L2H6, after their push. Registered predictions are read on the 16; the 5 are reported separately (Part 100 made the
+same cut).
+
+Runs (`swap99.py`, with `--ablate-heads` and `--transplant-heads` as the new options):
+
+| run | change to Instruct | role |
 |---|---|---|
-| R0 | Instruct | none (reference) |
-| R0b | Instruct | none, through the ablation hook with an empty set (do-nothing check) |
-| R1 | mid-training end in layers 0 to 3 (Part 100's arm, on eager) | none |
-| R2 | Instruct | L0H10, L1H4, L2H6, L3H5 |
-| R3 | Instruct | L1H4 |
-| R4 | Instruct | L0H10 |
-| R5 | Instruct | four control heads, one per layer 0 to 3, drawn with seed 219 from the heads with ordinary-answer drop under 0.035 |
-| R6 | Instruct | L2H6 (exploratory) |
-| R7 | Instruct | L3H5 (exploratory) |
+| R0 | none | reference |
+| R0b | none, through both new hooks with empty head sets | do-nothing check |
+| R1 | mid-training end's attention in layers 0 to 3 (Part 100's arm, on eager) | gate and comparison |
+| R2 | zero L0H10, L1H4, L2H6, L3H5 | 219.1, 219.2 |
+| R3 | zero L1H4 | exploratory |
+| R4 | zero L0H10 | exploratory |
+| R5 | zero L0H12, L1H11, L2H5, L3H9 | rig check |
+| R6 | zero L2H6 | exploratory |
+| R7 | zero L3H5 | exploratory (downstream of the push for 5 units) |
+| R8 | transplant L0H10, L1H4, L2H6, L3H5 from the donor | 219.3, 219.4 |
+| R9 | transplant L0H12, L1H11, L2H5, L3H9 from the donor | coupling check |
 
-Reading: Part 101's read set (`part101/read101.py filter`), labelled blind by Part 92's Haiku reader in two passes, as
-in Parts 100 to 102.
+R5's and R9's heads are frozen here: `random.Random(219)`, one `rng.choice` per layer 0 to 3 over that layer's heads
+with ordinary-answer drop under 0.035, excluding the four, sorted by head index (15 eligible per layer). Drops on
+ordinary answers: L0H12 0.0103, L1H11 0.0116, L2H5 -0.0005, L3H9 0.0045. The runner asserts the list.
+
+Reading: Part 101's read set (`part101/read101.py filter`: per run 21 pushed and 21 baseline slot items on "Who are
+you?", 216 concept items), labelled blind by Part 92's Haiku reader in two independent passes over the same items. Pass
+1 is scored; pass 2 measures agreement. A DeepSeek V4.1 Flash reader with Part 92's rubric labels a fixed 10% sample of
+every run's read set (seed 219) as the second reader.
 
 ## Controls
 
-- Do-nothing hook: R0b must match R0 token for token on every item, or nothing is read.
-- Matched control: not possible on general importance within layers 0 to 3 (table above), so R5 controls only for
-  "zeroing four early heads at all"; the L1H4 against L0H10 contrast (R3 against R4) is the matched comparison.
-- Breakage: coherence of the slot units' pushed answers and of the unpushed answers is counted in every run (Part
-  99's reader fields); a drop that comes with broken answers is hybrid damage, read as inconclusive (Alden's rule from
-  Part 99).
-- Concept units: the 18 concept neurons in the same runs, as Parts 99 to 102 used them, show whether an ablation
-  removes personas in general or the slot route in particular.
-- Not used: both push directions and dose ladder, because the pushes are Part 99's fixed ones and the question is
-  about the route, not the push. Not used: the answer-polarity split, because there is no yes/no answer.
+- Do-nothing: R0b must match R0 token for token on every item.
+- Reset receipt: after R2 and after R8, the hooks or transplanted weights are removed, a stored prompt is replayed, and
+  its token ids and first-step logits must equal R0's exactly. A run whose receipt fails is not read.
+- Intervention receipt: in each zeroing run the hooked `o_proj` input slice is checked to be zero on the first batch,
+  and in each transplant run the four slices are checked to equal the donor's bytes.
+- Rig check (R5): zeroing four unimportant early heads must leave the 16 upstream units within 2 of R0's net count. A
+  failure means a bug or an unexpectedly fragile readout, and freezes 219.1 and 219.2.
+- Coupling check (R9): transplanting four unimportant heads must remove at most 2 net on the 16. If it removes more,
+  the norm coupling and not the heads moves the readout, and 219.3 and 219.4 are not read.
+- Breakage: coherence of slot answers and the unpushed answers is counted in every run (Part 99's reader fields); Part
+  101's `inconclusive` flag (more than 3 of 6 unpushed answers incoherent) makes a run inconclusive, and every run's
+  unpushed "Who are you?" label is reported, since a persona-showing baseline would empty the paired count for the wrong
+  reason.
+- Concept units: the 18 concept neurons in the same runs, as in Parts 99 to 102 (not layer-matched to the slot units,
+  see Limits).
+- Not used: both push directions and a dose ladder, because the pushes are Part 99's fixed ones and the question is
+  about the route. Not used: the answer-polarity split, because there is no yes/no answer. Not used:
+  STANDARD-CONTROLS item 9 (format robustness), because the pushes were built and calibrated in Part 99's chat frame;
+  a different frame would change what the pushes do before it tested the heads.
 
-Gate: R1 must reproduce Part 100's layer-swap drop on eager: slot units showing persona at most 7 of 21 while R0 shows at
-least 16 of 21. If it fails, the kernel moved Part 100 and that is reported first; the head arms are still run and
-reported, but 219.5 is not read.
+Gate (read before any prediction): the kernel check passes; R0 shows the persona for at least 17 of 21 slot units;
+R1 shows it for at most 5 of 21 (Part 100: 3; Part 101's single layer 0: 7). If any part fails, every prediction is
+frozen and all arms are reported as exploratory, with the failure first.
 
 ## Size
 
-- Smallest effect worth knowing: R2 removing 8 of about 19 slot personas (Part 101's single layer 0 removed 12). With
-  21 units this is detectable as a paired change only if it is mostly one-directional; the exact McNemar test on 21
-  pairs reaches p < 0.05 at 6 losses against 0 gains.
-- Total: 9 runs x 702 generations = 6,318 generations; read set about 258 items per run, 2 passes, about 4,650 Haiku
-  labels.
-- Pilot: not needed for the generations (Part 99's seven runs took 16 minutes); a 2-item smoke on CPU checks the new
-  option and R0b's bit match before the Arc run.
+- Smallest effect worth knowing: R2 removing 7 of the 16 upstream units' personas net. With paired units the exact
+  McNemar test gives p = 0.016 at 7 lost and 0 gained, and p = 0.07 at 7 against 1.
+- Total: 5,214 generations (11 runs x 474, measured from `results/part99/inst_none.jsonl`) and about 5,960 labels
+  (11 x 258 x 2 Haiku passes, plus 284 DeepSeek labels), about 40 minutes on the A770 (Part 99's R0 took 114 s on the
+  default kernel; eager is measured in the pilot and this line is updated before the full run).
+- Pilot: R0 and R2 in full (948 generations). Stop and re-plan if R0 shows fewer than 17 of 21, if R2 leaves fewer
+  than 15 of 21 slot answers coherent, or if either receipt fails.
 
 ## Optimization
 
 - Bound resource: the A770.
-- Measured: Part 99 ran 702 items in about 2.3 minutes per run at batch 48 on the default kernel; eager will be
-  measured on R0 and the rest of the chain sized from it.
-- Levers: one model load for R0, R0b and R2 to R7 (the hook changes, the weights do not), taken; R1 needs a second
-  load, which goes in its own process (one model per process, 11-08 gotcha).
+- Measured: 474 rows in 114 s at batch 48 (Part 99's `inst_none` on the default kernel,
+  `results/part99/inst_none.meta.json`); the eager rate is measured on the pilot and replaces this line.
+- Levers: one host load per process for R0, R0b, R2 to R7 (only the hook changes), taken; R1, R8 and R9 need the donor,
+  loaded once in a second process (one model pair per process, 11-08 gotcha), taken.
 
 ## Predictions
 
 | # | Prediction | Confidence | Author |
 | --- | --- | --- | --- |
-| 219.1 | R2 (all four zeroed): slot units showing persona on "Who are you?" at most 8 of 21 | medium (55%) | Journal Claude |
-| 219.2 | R2: at least 15 of 21 slot answers coherent and at least 13 of the concept units keep their persona | medium (50%) | Journal Claude |
-| 219.3 | R3 (L1H4) removes at least 3 more slot personas than R4 (L0H10) | low (35%) | Journal Claude |
-| 219.4 | R5 (control heads): slot units showing persona at least 16 of 21 | high (80%) | Journal Claude |
-| 219.5 | R2 removes at least as many slot personas as R1 (the four heads account for the whole early-layer swap) | low (30%) | Journal Claude |
+| 219.1 | R2 (all four zeroed): on the 16 upstream slot units, at least 7 net lose their persona against R0 (units showing it in R0 and not R2, minus the reverse) | medium (55%) | Journal Claude |
+| 219.2 | R2: at least 15 of 21 slot answers coherent, at least 13 concept units keep their persona, and the run is not flagged inconclusive | medium (50%) | Journal Claude |
+| 219.3 | R8 (the four heads' weights from the mid-training end): on the 16 upstream units, at least 7 net lose their persona against R0 | low (30%) | Journal Claude |
+| 219.4 | R8's net loss on the 16 upstream units is at least R1's net loss minus 2 (the four heads' transplant accounts for the layer swap) | low (20%) | Journal Claude |
 
 Copied verbatim into PREDICTIONS.md under "## Part 219 (registered ...)".
 
 ## Reading rules
 
-Counts are relative to each run's own unpushed answers, as in Part 99 (Amendment 2). Scored by a new `score219.py`
-reusing Part 101's read-set scorer; a run is read only if its label pass agreement is at least 95% (Part 101 measured
-98.4%). 219.1 is read only if 219.2 holds: a slot drop that comes with fewer than 15 coherent slot answers or fewer
-than 13 concept personas is reported as "inconclusive: zeroing these heads breaks answers", whatever the count. 219.3
-and 219.5 are counts, reported with the paired unit lists and an exact McNemar p as exploratory support.
+Counts are paired and relative to each run's own unpushed answers, as in Part 99 (Amendment 2) and Part 101's scorer;
+`score219.py` reuses `part101/read101.py`'s functions and adds the upstream split, the net count and the McNemar p.
 
-The headline "the four heads carry the early attention the slot neurons need" is withdrawn if 219.1 fails, if 219.2
-fails, or if R5 removes as many slot personas as R2.
+Reader agreement is gated per run on the 42 slot items, not the pooled 258: the two Haiku passes must agree on at least
+40 of 42 and give slot counts within 2 of each other, or that run is not read. Error rows go through Part 99's retry
+before agreement is computed. Agreement with the DeepSeek reader is reported for every run and does not gate.
+
+219.1 is read only if 219.2 holds; otherwise it is reported as "inconclusive: zeroing these heads breaks answers".
+219.3 and 219.4 are read only if R9 passes its coupling check. 219.4 is read only if the gate's R1 bound held.
+Exploratory, reported with unit lists and exact McNemar p: R3 against R4, R6, R7, the 5 downstream units, and all
+21-unit counts.
+
+Headlines, decided by the verdicts:
+- 219.1 and 219.2 hold: "these four heads are needed for the slot neurons' self-descriptions"; otherwise no headline
+  about need.
+- 219.3 holds: "post-training's change to these four heads is needed"; 219.4 holds as well: "and it accounts for the
+  whole early-layer swap"; 219.3 holds and 219.4 fails: "it is part of what the early-layer swap removes, not all".
+- Any headline is withdrawn if R5 fails its rig check or a receipt fails.
 
 ## Limits
 
-- Zeroing is not swapping: it removes a head's output rather than restoring the mid-training version of it, so it
-  shows a head is needed, not that post-training's change to it is what matters.
-- The four heads were chosen on Instruct's identity answers, and the test uses pushed slot neurons on a different
-  question set; that is a strength against circularity, but screen A itself was not registered.
-- 21 slot units, one model, one reader.
-- No control matched on general importance exists in these layers, so a positive 219.1 with 219.2 holding still leaves
-  "these heads matter most for everything, persona included" as a live reading; only 219.3 speaks against it, weakly.
+- Zeroing shows a head is needed; the transplant shows post-training's change to it is needed. Neither shows what the
+  heads compute.
+- The transplant is not perfectly local: the full-width QK norms couple heads, which R9 measures but cannot remove.
+- The four heads were chosen on Instruct's identity answers; the test uses pushed slot neurons on a different question
+  set, but screen A itself was not registered, and the heads are also the most important early heads for everything.
+- 21 slot units, 16 of them read for the predictions; one model; one rubric.
+- The concept units sit at other layers than the slot units, so they control for "personas in general" more than for
+  "early disruption at the slot units' depth".
