@@ -272,9 +272,9 @@ def head_sums(model, sequences, *, pad_id: int, device: str = "cpu", layers=CAPT
             for head, name in wanted[layer_no]:
                 start, end = head * head_size, (head + 1) * head_size
                 block = hidden[..., start:end].float()
-                sums[name]["pos0"] += block[rows, first_index].sum(0)
+                sums[name]["pos0"] += block[rows, first_index].sum(0).cpu()
                 sums[name]["n_pos0"] += len(chunk)
-                sums[name]["rest"] += block[real].sum(0)
+                sums[name]["rest"] += block[real].sum(0).cpu()
                 sums[name]["n_rest"] += rest_positions
         done += len(chunk)
         if heartbeat is not None:
