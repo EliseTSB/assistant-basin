@@ -1,0 +1,10 @@
+{
+ "available": true,
+ "r2m_slot_who_coherent": [
+  8,
+  21
+ ],
+ "label_criterion_holds": false,
+ "because": "R2m leaves 8 of 21 slot answers coherent (needs 15)",
+ "note": "the receipts are checked by run219.py --pilot-a1, which also applies this rule"
+}
