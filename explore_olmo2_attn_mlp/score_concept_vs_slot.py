@@ -3,7 +3,7 @@
 
 Implements every pre-registered gate and endpoint (`CS.0`–`CS.4`) of
 `explore_olmo2_attn_mlp/CONCEPT-VS-SLOT-DESIGN.md` v3.1 (Design PASS Frozen;
-SHA-256: cf67a12db8d914ad896b75aa036bd919c4616d576c2e4872e0dde273806c0c6f).
+SHA-256: 4b6df28b04683f9c75170f4ec3b03dbd4cb4b8d08fe041ccbee157799d9d3190).
 
 Contracts:
 - Single-read external 6-pin (`design`, `manifest`, `runner`, `scorer`,
@@ -310,6 +310,10 @@ def validate_cs0_and_join(
     exp_mode = "full" if expect_full else "smoke"
     if meta.get("run_mode") != exp_mode:
         raise ValueError(f"Run mode mismatch: got {meta.get('run_mode')!r}, expected {exp_mode!r}")
+    # F3: enforce explicit meta["complete"] flag on full (True) and smoke (False) receipts.
+    exp_complete = True if expect_full else False
+    if meta.get("complete") is not exp_complete:
+        raise ValueError(f"Receipt meta.complete mismatch: got {meta.get('complete')!r}, expected {exp_complete!r}")
 
     prov = meta.get("execution_provenance")
     dev_name = meta.get("device_name")
@@ -381,6 +385,8 @@ def validate_cs0_and_join(
     max_sib_sci = 0.0
     max_sib_act = 0.0
     min_act_delta = float("inf")
+    min_act_readout_delta = float("inf")
+    min_blk_pos_drop = float("inf")
     max_orth_cos = 0.0
     max_ce_err = 0.0
     unpatched_has_sham = False
@@ -447,6 +453,11 @@ def validate_cs0_and_join(
             failures.append(f"blk_missing_sibling:{k}")
         else:
             max_sib_sci = max(max_sib_sci, float(sib))
+        # F1: recompute blocking positive control directly from blocked row d_pos across channels.
+        row_max_pos_drop = max(abs(float(r[ch]["d_pos"])) for ch in rcvs.CHANNELS_5)
+        min_blk_pos_drop = min(min_blk_pos_drop, row_max_pos_drop)
+        if row_max_pos_drop <= rcvs.TOL_BLOCK_ACTUATION:
+            failures.append(f"blk_inert_zero_drop:{k}:max_pos_drop={row_max_pos_drop}")
 
     if set(blk_by_key.keys()) != exp_blk_keys:
         raise ValueError("Blocked row keys do not match manifest schedule")
@@ -474,16 +485,23 @@ def validate_cs0_and_join(
             raise ValueError(f"Duplicate actuation_id: {aid}")
         act_by_key[aid] = r
         td = r.get("target_max_abs_delta")
+        rd = r.get("readout_max_abs_delta")
         sl = r.get("sibling_max_abs_leakage")
-        if not (_is_finite_num(td) and _is_finite_num(sl)):
+        if not (_is_finite_num(td) and _is_finite_num(rd) and _is_finite_num(sl)):
             failures.append(f"actuation_nonfinite:{aid}")
             continue
         min_act_delta = min(min_act_delta, float(td))
+        min_act_readout_delta = min(min_act_readout_delta, float(rd))
         max_sib_act = max(max_sib_act, float(sl))
-        if float(td) > rcvs.MIN_ACTUATION_DELTA and float(sl) <= rcvs.TOL_SIBLING and bool(r.get("passed", False)):
+        if (
+            float(td) > rcvs.MIN_ACTUATION_DELTA
+            and float(rd) > rcvs.MIN_ACTUATION_READOUT_DELTA
+            and float(sl) <= rcvs.TOL_SIBLING
+            and bool(r.get("passed", False))
+        ):
             act_passed += 1
         else:
-            failures.append(f"actuation_failed:{aid}:td={td}:sl={sl}")
+            failures.append(f"actuation_failed:{aid}:td={td}:rd={rd}:sl={sl}")
     if set(act_by_key.keys()) != exp_act_keys:
         raise ValueError("Actuation row keys do not match manifest schedule")
 
@@ -516,7 +534,12 @@ def validate_cs0_and_join(
         and max_decomp <= rcvs.TOL_DECOMP
     )
     clause_3_ok = max_sib_sci <= rcvs.TOL_SIBLING and max_sib_act <= rcvs.TOL_SIBLING
-    clause_4_ok = act_passed == den["n_actuation_rows"] and min_act_delta > rcvs.MIN_ACTUATION_DELTA
+    clause_4_ok = (
+        act_passed == den["n_actuation_rows"]
+        and min_act_delta > rcvs.MIN_ACTUATION_DELTA
+        and min_act_readout_delta > rcvs.MIN_ACTUATION_READOUT_DELTA
+        and min_blk_pos_drop > rcvs.TOL_BLOCK_ACTUATION
+    )
     clause_5_ok = (not unpatched_has_sham) and (max_orth_cos <= rcvs.TOL_ORTH)
     clause_6_ok = ce_passed == den["n_causal_equiv_rows"] and max_ce_err <= rcvs.TOL_CAUSAL_EQUIV
 
@@ -525,7 +548,10 @@ def validate_cs0_and_join(
     if not clause_3_ok:
         failures.append(f"clause_3_sibling_leakage_failed:sci={max_sib_sci},act={max_sib_act}")
     if not clause_4_ok:
-        failures.append(f"clause_4_actuation_failed:{act_passed}/{den['n_actuation_rows']},min={min_act_delta}")
+        failures.append(
+            f"clause_4_actuation_or_block_pos_ctrl_failed:{act_passed}/{den['n_actuation_rows']},"
+            f"min_td={min_act_delta},min_rd={min_act_readout_delta},min_blk={min_blk_pos_drop}"
+        )
     if not clause_5_ok:
         failures.append(f"clause_5_unpatched_or_orth_failed:unp_sham={unpatched_has_sham},orth={max_orth_cos}")
     if not clause_6_ok:
@@ -538,7 +564,7 @@ def validate_cs0_and_join(
         "clause_1_pins_provenance_join": clause_1_ok,
         "clause_2_sham_decomp_finiteness": clause_2_ok,
         "clause_3_sibling_zero_leakage": clause_3_ok,
-        "clause_4_synthetic_actuation_26": clause_4_ok,
+        "clause_4_synthetic_actuation_26_and_block_pos_ctrl": clause_4_ok,
         "clause_5_unpatched_no_sham_and_orth": clause_5_ok,
         "clause_6_causal_phrase_equivalence": clause_6_ok,
         "actuation_passed_count": act_passed,
@@ -553,6 +579,8 @@ def validate_cs0_and_join(
         "max_sibling_leakage_science": max_sib_sci,
         "max_sibling_leakage_actuation": max_sib_act,
         "min_actuation_target_delta": min_act_delta,
+        "min_actuation_readout_delta": min_act_readout_delta,
+        "min_blocked_pos_drop": min_blk_pos_drop,
         "max_abs_wdown_orth_cos": max_orth_cos,
         "max_causal_equiv_err": max_ce_err,
         "failures": failures,
@@ -852,7 +880,7 @@ def _score_cs2_head_channel(
     manifest: dict[str, Any],
     unp_by_key: dict[tuple[str, str], dict[str, Any]],
     blk_by_key: dict[tuple[str, str, str], dict[str, Any]],
-    csn_transport_ok: bool,
+    csn_gate_failure: str | None,
 ) -> dict[str, Any]:
     pairs = manifest["meta"]["primary_pairs"]
     units_meta = manifest["units"]
@@ -922,20 +950,21 @@ def _score_cs2_head_channel(
     boot_conc_ex = studentized_cluster_bootstrap(mat_conc_excess, alpha=0.05, n_boot=BOOT_DRAWS, seed=_det_seed(f"cs2|{head_name}|{ch}|ex_conc"))
 
     # 3. Length-matched C_SN concordance checks.
+    csn_ok = csn_gate_failure is None
     csn_conc_slot = bool(
-        csn_transport_ok
+        csn_ok
         and delta_bar_csn < 0.0
         and mean_slot_csn > 0.0
         and mean_slot_csn > ctrl_max_slot_csn
     )
     csn_conc_concept = bool(
-        csn_transport_ok
+        csn_ok
         and delta_bar_csn > 0.0
         and mean_conc_csn > 0.0
         and mean_conc_csn > ctrl_max_conc_csn
     )
     csn_conc_shared = bool(
-        csn_transport_ok
+        csn_ok
         and mean_slot_csn > 0.0
         and mean_conc_csn > 0.0
         and mean_slot_csn > ctrl_max_slot_csn
@@ -1036,7 +1065,11 @@ def _score_cs2_head_channel(
     verdict: str
     downgrade_reason: str | None = None
     if b1_core:
-        if not csn_conc_slot:
+        if csn_gate_failure is not None:
+            # F4: preserve exact registered CS.1 consequence label when NAME_BARE transport/head-null fails.
+            verdict = csn_gate_failure
+            downgrade_reason = "branch1_cs1_csn_gate_failed"
+        elif not csn_conc_slot:
             verdict = "length_confound_unconfirmed"
             downgrade_reason = "branch1_failed_csn_concordance"
         elif not kind_guard_slot:
@@ -1048,7 +1081,10 @@ def _score_cs2_head_channel(
         else:
             verdict = "slot_stronger_gating"
     elif b2_core:
-        if not csn_conc_concept:
+        if csn_gate_failure is not None:
+            verdict = csn_gate_failure
+            downgrade_reason = "branch2_cs1_csn_gate_failed"
+        elif not csn_conc_concept:
             verdict = "length_confound_unconfirmed"
             downgrade_reason = "branch2_failed_csn_concordance"
         elif not kind_guard_concept:
@@ -1060,7 +1096,10 @@ def _score_cs2_head_channel(
         else:
             verdict = "concept_stronger_gating"
     elif b3_core:
-        if not csn_conc_shared:
+        if csn_gate_failure is not None:
+            verdict = csn_gate_failure
+            downgrade_reason = "branch3_cs1_csn_gate_failed"
+        elif not csn_conc_shared:
             verdict = "length_confound_unconfirmed"
             downgrade_reason = "branch3_failed_csn_concordance"
         else:
@@ -1267,16 +1306,16 @@ def evaluate_cs2(
             out[hname] = {"overall_verdict": hn_fail, "status": "gated_by_cs1_head_null"}
             continue
 
-        csn_ok = bool(
-            cs1_transport["c_sn_transport_passed"]
-            and _head_null_failure_for_cells(cs1_head_null, hname, ("slot_12", "concept_12"), ("SELF", "NAME_BARE")) is None
+        csn_gate_failure = (
+            cs1_transport["c_sn_transport_failure"]
+            or _head_null_failure_for_cells(cs1_head_null, hname, ("slot_12", "concept_12"), ("SELF", "NAME_BARE"))
         )
         per_ch = {
-            CHANNEL_DISPLAY[ch]: _score_cs2_head_channel(hname, ch, manifest, unp_by_key, blk_by_key, csn_ok)
+            CHANNEL_DISPLAY[ch]: _score_cs2_head_channel(hname, ch, manifest, unp_by_key, blk_by_key, csn_gate_failure)
             for ch in CO_PRIMARY_CHANNELS
         }
 
-        # Peer-median collapse guard diagnostic.
+        # Peer-median collapse guard diagnostic (F5: strictly directional positive Branches 1 and 2).
         pm_slot = _mean([_c_sr(blk_by_key, u, s, hname, "peer_med") for u in rcvs.PRIMARY_SLOT_UNITS for s in STORIES_6])
         pm_conc = _mean([_c_sr(blk_by_key, u, s, hname, "peer_med") for u in rcvs.PRIMARY_CONCEPT_UNITS for s in STORIES_6])
         sp_slot = per_ch["SpecLogit"]["class_means_C_SR"]["slot_12"]
@@ -1289,13 +1328,6 @@ def evaluate_cs2(
         peer_median_only_gating = bool(
             (spec_v == "slot_stronger_gating" and rw_slot < CS2_LEVEL_FLOOR and pm_share_slot > CS2_PEER_MED_SHARE_CAP)
             or (spec_v == "concept_stronger_gating" and rw_conc < CS2_LEVEL_FLOOR and pm_share_conc > CS2_PEER_MED_SHARE_CAP)
-            or (
-                spec_v == "practically_equivalent_subject_gating"
-                and (
-                    (rw_slot < CS2_LEVEL_FLOOR and pm_share_slot > CS2_PEER_MED_SHARE_CAP)
-                    or (rw_conc < CS2_LEVEL_FLOOR and pm_share_conc > CS2_PEER_MED_SHARE_CAP)
-                )
-            )
         )
 
         v_raw = per_ch["RawLogit"]["verdict"]
@@ -1399,14 +1431,16 @@ def evaluate_cs3(
             c4_ci = (lo_r > 0.0) and (lo_s > 0.0)
         else:
             c4_ci = (hi_r < 0.0) and (hi_s < 0.0)
-        csn_transport_and_null_ok = bool(
-            cs1_transport["c_sn_transport_passed"]
-            and _head_null_failure_for_cells(cs1_head_null, hname, ("slot_12", "concept_12"), ("SELF", "NAME_BARE")) is None
+        csn_gate_failure = (
+            cs1_transport["c_sn_transport_failure"]
+            or _head_null_failure_for_cells(cs1_head_null, hname, ("slot_12", "concept_12"), ("SELF", "NAME_BARE"))
         )
-        c5_csn = bool(csn_transport_and_null_ok and (csn_raw * pred_sn > 0.0) and (csn_spec * pred_sn > 0.0))
+        c5_csn = bool((csn_gate_failure is None) and (csn_raw * pred_sn > 0.0) and (csn_spec * pred_sn > 0.0))
 
         if c1_sign and c2_mag_and_pm and c3_ctrl and c4_ci:
-            if c5_csn:
+            if csn_gate_failure is not None:
+                verdict = csn_gate_failure
+            elif c5_csn:
                 verdict = "confirmed_late_gate"
                 n_confirmed += 1
             else:
@@ -1656,7 +1690,10 @@ def _make_synthetic_full_receipt(manifest: dict[str, Any], pins: dict[str, str])
     blk_rows = []
     for e in sched["blocked"]:
         u = e["unit"]
-        zero_ch = {"d0": 0.0, "d_pos": 0.0, "d_neg": 0.0, "wd_pos": [0.0, 0.0, 0.0, 0.0], "wd_neg": [0.0, 0.0, 0.0, 0.0]}
+        # Realistic non-zero active blocking baseline (d_pos=1e-4 identically across cells -> C_SR=C_SN=S_odd=0.0,
+        # passing F1 blocking positive control while representing a genuine null contrast!).
+        act_null_ch = {"d0": 0.0, "d_pos": 1e-4, "d_neg": 1e-4, "wd_pos": [0.0, 0.0, 0.0, 0.0], "wd_neg": [0.0, 0.0, 0.0, 0.0]}
+        zero_pm = {"d0": 0.0, "d_pos": 0.0, "d_neg": 0.0, "wd_pos": [0.0, 0.0, 0.0, 0.0], "wd_neg": [0.0, 0.0, 0.0, 0.0]}
         hm = rcvs.HEAD_BY_NAME[e["head_name"]]
         blk_rows.append({
             "unit": u,
@@ -1670,11 +1707,11 @@ def _make_synthetic_full_receipt(manifest: dict[str, Any], pins: dict[str, str])
             "n_content_tokens": manifest["units"][u]["n_content_tokens"],
             "sibling_max_abs_leakage": 0.0,
             "max_abs_decomp_err": 0.0,
-            "raw": dict(zero_ch),
-            "peer_med": dict(zero_ch),
-            "spec": dict(zero_ch),
-            "logp": dict(zero_ch),
-            "phrase_mean": dict(zero_ch),
+            "raw": copy.deepcopy(act_null_ch),
+            "peer_med": copy.deepcopy(zero_pm),
+            "spec": copy.deepcopy(act_null_ch),
+            "logp": copy.deepcopy(act_null_ch),
+            "phrase_mean": copy.deepcopy(act_null_ch),
         })
 
     shm_rows = [
@@ -1692,7 +1729,7 @@ def _make_synthetic_full_receipt(manifest: dict[str, Any], pins: dict[str, str])
             "actuation_id": a["actuation_id"], "unit": a["unit"], "prompt_id": a["prompt_id"],
             "head_name": a["head_name"], "head_layer": rcvs.HEAD_BY_NAME[a["head_name"]]["layer"],
             "head_idx": rcvs.HEAD_BY_NAME[a["head_name"]]["head"], "seed": a["seed"],
-            "target_max_abs_delta": 0.5, "sibling_max_abs_leakage": 0.0, "passed": True,
+            "target_max_abs_delta": 0.5, "readout_max_abs_delta": 0.25, "sibling_max_abs_leakage": 0.0, "passed": True,
         }
         for a in sched["actuation"]
     ]
@@ -1700,6 +1737,7 @@ def _make_synthetic_full_receipt(manifest: dict[str, Any], pins: dict[str, str])
         {
             "check_id": c["check_id"], "unit": c["unit"], "prompt_id": c["prompt_id"],
             "n_content_tokens": c["n_content_tokens"], "prefix_len": 33, "full_len": 33 + c["n_content_tokens"] - 1,
+            "batch_size": rcvs.BATCH_SIZE,
             "max_abs_full_vocab_read_pos_diff": 0.0, "passed": True,
         }
         for c in sched["causal_equiv"]
@@ -1817,7 +1855,7 @@ def run_scorer_self_tests(
     assert sc0["CS4_L7H5_antisymmetry_diagnostic"]["by_class"]["slot_12"]["overall_verdict"] == "not_class_wide"
     checks.append("cs2_branch4_both_weak_or_null_with_mandatory_wording_ok")
 
-    # 2. Full scorer hard-refuses a smoke receipt!
+    # 2. Full scorer hard-refuses a smoke receipt AND refuses meta["complete"] == False (F3)!
     smoke_like = copy.deepcopy(base_rec)
     smoke_like["meta"]["artifact_type"] = "concept_vs_slot_smoke_receipt"
     smoke_like["meta"]["run_mode"] = "smoke"
@@ -1827,9 +1865,19 @@ def run_scorer_self_tests(
     except ValueError:
         refused_smoke = True
     assert refused_smoke
-    checks.append("full_scorer_refuses_smoke_receipt_ok")
 
-    # 3. CS.0 strict precedence: causal_equiv breach forces CS.2/CS.3/CS.4 to uninformative (cs0_failed).
+    incomp_rec = copy.deepcopy(base_rec)
+    incomp_rec["meta"]["complete"] = False
+    refused_incomp = False
+    try:
+        score_full_receipt(incomp_rec, manifest, pins, allow_fixture=False)
+    except ValueError:
+        refused_incomp = True
+    assert refused_incomp, "F3: Full scorer MUST refuse meta['complete']=False"
+    checks.append("full_scorer_refuses_smoke_and_incomplete_receipt_ok")
+
+    # 3. CS.0 strict precedence: causal_equiv breach, F1 inert all-zero block, F1 zero actuation readout,
+    #    and F2/M3 sibling leakage 5e-4 (> 1e-6, < 1e-2)!
     r_cs0 = copy.deepcopy(base_rec)
     r_cs0["causal_equiv_rows"][0]["max_abs_full_vocab_read_pos_diff"] = 0.05
     r_cs0["causal_equiv_rows"][0]["passed"] = False
@@ -1838,7 +1886,32 @@ def run_scorer_self_tests(
     assert sc_cs0["CS2_concept_vs_slot_gating"]["L8H2"]["overall_verdict"] == CS0_FAIL_SCI
     assert sc_cs0["CS3_late_lens_screened_heads"]["heads"]["L13H1"]["verdict"] == CS0_FAIL_SCI
     assert sc_cs0["CS4_L7H5_antisymmetry_diagnostic"]["by_class"]["slot_12"]["overall_verdict"] == CS0_FAIL_SCI
-    checks.append("cs0_strict_precedence_causal_equiv_ok")
+
+    # F1: all-zero inert blocking receipt MUST fail CS.0 (NEVER score as both_weak_or_null!).
+    r_inert = copy.deepcopy(base_rec)
+    for br in r_inert["blocked_rows"]:
+        for ch in rcvs.CHANNELS_5:
+            br[ch]["d_pos"] = 0.0
+            br[ch]["d_neg"] = 0.0
+    sc_inert = score_full_receipt(r_inert, manifest, pins, allow_fixture=False)
+    assert sc_inert["CS0_technical_gate"]["passed"] is False
+    assert sc_inert["CS0_technical_gate"]["clause_4_synthetic_actuation_26_and_block_pos_ctrl"] is False
+    assert sc_inert["CS2_concept_vs_slot_gating"]["L8H2"]["overall_verdict"] == CS0_FAIL_SCI
+
+    # F1: actuation readout_max_abs_delta == 0.0 MUST fail CS.0!
+    r_act_rd = copy.deepcopy(base_rec)
+    r_act_rd["actuation_rows"][0]["readout_max_abs_delta"] = 0.0
+    sc_act_rd = score_full_receipt(r_act_rd, manifest, pins, allow_fixture=False)
+    assert sc_act_rd["CS0_technical_gate"]["passed"] is False
+
+    # F2/M3 mutant kill: sibling leakage = 5e-4 (> 1e-6, < 1e-2) MUST fail CS.0!
+    r_sib = copy.deepcopy(base_rec)
+    r_sib["blocked_rows"][0]["sibling_max_abs_leakage"] = 5e-4
+    sc_sib = score_full_receipt(r_sib, manifest, pins, allow_fixture=False)
+    assert sc_sib["CS0_technical_gate"]["passed"] is False
+    assert sc_sib["CS0_technical_gate"]["clause_3_sibling_zero_leakage"] is False
+    assert sc_sib["CS2_concept_vs_slot_gating"]["L8H2"]["overall_verdict"] == CS0_FAIL_SCI
+    checks.append("cs0_strict_precedence_causal_equiv_f1_inert_act_readout_m3_sibling_ok")
 
     # 4. CS.1 transport failure & peer_median_only_flip + head-null consequence (M2).
     r_tr = copy.deepcopy(base_rec)
@@ -1877,12 +1950,44 @@ def run_scorer_self_tests(
     _set_blk_signal(r_b1, "L8H2", _sig_b1)
     sc_b1 = score_full_receipt(r_b1, manifest, pins, allow_fixture=False)
     assert sc_b1["CS2_concept_vs_slot_gating"]["L8H2"]["overall_verdict"] == "slot_stronger_gating", sc_b1["CS2_concept_vs_slot_gating"]["L8H2"]["per_channel"]["RawLogit"]
+    # F2/M4 mutant kill: mandatory_report_wording MUST BE ABSENT on Branch 1 (overall AND per-channel)!
+    assert "mandatory_report_wording" not in sc_b1["CS2_concept_vs_slot_gating"]["L8H2"]
+    for _ch_nm, _ch_d in sc_b1["CS2_concept_vs_slot_gating"]["L8H2"]["per_channel"].items():
+        assert "mandatory_report_wording" not in _ch_d, f"M4: wording leaked onto Branch 1 {_ch_nm}"
+
+    # 5a0. Clean Branch 2 (`concept_stronger_gating`) + F2/M4 wording ABSENT check!
+    r_b2 = copy.deepcopy(base_rec)
+    def _sig_b2(row, is_c, cell):
+        u_j = 0.02 * (int(row["unit"].split("-")[1]) % 5)
+        if cell == "SELF":
+            v = (1.60 if is_c else 0.15) + u_j
+        elif cell == "NAME_BARE":
+            v = (0.30 if is_c else 0.10) + u_j
+        else:
+            v = 0.05 + u_j
+        return {ch: (v, 0.0) for ch in ("raw", "spec", "logp", "phrase_mean")}
+    _set_blk_signal(r_b2, "L8H2", _sig_b2)
+    sc_b2 = score_full_receipt(r_b2, manifest, pins, allow_fixture=False)
+    assert sc_b2["CS2_concept_vs_slot_gating"]["L8H2"]["overall_verdict"] == "concept_stronger_gating", sc_b2["CS2_concept_vs_slot_gating"]["L8H2"]["per_channel"]["RawLogit"]
+    assert "mandatory_report_wording" not in sc_b2["CS2_concept_vs_slot_gating"]["L8H2"]
+    for _ch_nm, _ch_d in sc_b2["CS2_concept_vs_slot_gating"]["L8H2"]["per_channel"].items():
+        assert "mandatory_report_wording" not in _ch_d, f"M4: wording leaked onto Branch 2 {_ch_nm}"
+
+    # 5a1. F4: NAME_BARE transport failure on Branch 1 MUST emit exact registered CS.1 label!
+    r_f4 = copy.deepcopy(r_b1)
+    for ur in r_f4["unpatched_rows"]:
+        if manifest["units"][ur["unit"]]["kind_haiku"] == "concept" and ur["cell"] == "NAME_BARE":
+            ur["transport"]["t_pos_raw"] = 0.10
+            ur["transport"]["t_pos_spec"] = 0.10
+    sc_f4 = score_full_receipt(r_f4, manifest, pins, allow_fixture=False)
+    assert sc_f4["CS2_concept_vs_slot_gating"]["L8H2"]["overall_verdict"] == "uninformative (transport_gate_failed:concept_12|NAME_BARE)"
 
     # 5a. H1 DiD control gate blocks Branch 1 when L8H3 has the exact same interaction!
     r_h1 = copy.deepcopy(r_b1)
     _set_blk_signal(r_h1, "L8H3", _sig_b1)
     sc_h1 = score_full_receipt(r_h1, manifest, pins, allow_fixture=False)
     assert sc_h1["CS2_concept_vs_slot_gating"]["L8H2"]["overall_verdict"] == "inconclusive_wide_interval"
+    assert "mandatory_report_wording" not in sc_h1["CS2_concept_vs_slot_gating"]["L8H2"]
 
     # 5b. H2 Branch 4 MUST NOT trigger when Delta = -0.50 (outside [-0.35, +0.35])!
     assert sc_h1["CS2_concept_vs_slot_gating"]["L8H2"]["per_channel"]["RawLogit"]["verdict"] != "both_weak_or_null"
@@ -1963,7 +2068,8 @@ def run_scorer_self_tests(
     assert sc_b3["CS2_concept_vs_slot_gating"]["L8H2"]["mandatory_report_wording"] == MANDATORY_NULL_WORDING
     checks.append("cs2_all_5_branches_h1_h2_h4_m3_csn_3ch_disagreement_ok")
 
-    # 6. CS.3: confirmed_late_gate (+ and -), confirmed_length_confounded, and primary-control margin block.
+    # 6. CS.3: confirmed_late_gate (+ and -), confirmed_length_confounded, primary-control margin block,
+    #    AND F2/M5 Bonferroni CI mutant kill (passes c1,c2,c3,c5 but fails c4 99.29% CI)!
     r_cs3 = copy.deepcopy(base_rec)
     def _sig_pos_late(row, _is_c, cell):
         u_j = 0.02 * (int(row["unit"].split("-")[1]) % 5)
@@ -1974,8 +2080,19 @@ def run_scorer_self_tests(
         # C_SR = -0.65 (matches pred '-'), BUT C_SN = +0.10 (wrong sign -> confirmed_length_confounded!)
         v = (0.20 if cell == "SELF" else (0.10 if cell == "NAME_BARE" else 0.85)) + u_j
         return {ch: (v, 0.0) for ch in ("raw", "spec", "logp", "phrase_mean")}
+    def _sig_wide_ci_late(row, is_c, cell):
+        # F2/M5: 12 slot units at C_SR=+1.80, 12 concept units at C_SR=-1.00 -> pooled mean = +0.40 (>= 0.25, beats ctrl),
+        # C_SN = +0.40 (> 0), BUT SE ~ 0.29 so 99.29% CI crosses 0 -> MUST be not_confirmed!
+        if cell == "SELF":
+            v = -0.95 if is_c else 1.85
+        elif cell == "NAME_BARE":
+            v = -0.95 if is_c else 0.05
+        else:
+            v = 0.05
+        return {ch: (v, 0.0) for ch in ("raw", "spec", "logp", "phrase_mean")}
     _set_blk_signal(r_cs3, "L13H1", _sig_pos_late)
     _set_blk_signal(r_cs3, "L14H3", _sig_neg_late_lenconf)
+    _set_blk_signal(r_cs3, "L14H10", _sig_wide_ci_late)
     # Give L11H9 strong signal AND give its named primary control L11H1 equal signal -> MUST NOT confirm!
     _set_blk_signal(r_cs3, "L11H9", _sig_pos_late)
     _set_blk_signal(r_cs3, "L11H1", _sig_pos_late)
@@ -1983,10 +2100,17 @@ def run_scorer_self_tests(
     assert sc_cs3["CS3_late_lens_screened_heads"]["heads"]["L13H1"]["verdict"] == "confirmed_late_gate"
     assert sc_cs3["CS3_late_lens_screened_heads"]["heads"]["L14H3"]["verdict"] == "confirmed_length_confounded"
     assert sc_cs3["CS3_late_lens_screened_heads"]["heads"]["L11H9"]["verdict"] == "not_confirmed"
+    l14h10 = sc_cs3["CS3_late_lens_screened_heads"]["heads"]["L14H10"]
+    assert l14h10["criteria"]["c1_sign_3ch"] is True
+    assert l14h10["criteria"]["c2_mag_and_peer_med"] is True
+    assert l14h10["criteria"]["c3_beats_primary_ctrl"] is True
+    assert l14h10["criteria"]["c5_csn_sign_match"] is True
+    assert l14h10["criteria"]["c4_bonferroni_ci_excludes_0"] is False
+    assert l14h10["verdict"] == "not_confirmed", "F2/M5: wide CI must NOT confirm!"
     assert sc_cs3["CS3_late_lens_screened_heads"]["heads"]["L11H2"]["copy_r_saturated"] is True
-    checks.append("cs3_bonferroni_confirmed_length_confounded_and_ctrl_margin_ok")
+    checks.append("cs3_bonferroni_m5_ci_kill_confirmed_length_confounded_and_ctrl_margin_ok")
 
-    # 7. CS.4: exact Part B S_odd sign (`0.5 * (drop_-0.8 - drop_+0.8)`) + 2-channel agreement!
+    # 7. CS.4: exact Part B S_odd sign, 2-channel agreement, AND F2/M2 min_units=4 mutant kill!
     r_cs4 = copy.deepcopy(base_rec)
     def _sig_l7h5(row, is_c, cell):
         if cell != "ROLE_BARE":
@@ -2000,7 +2124,24 @@ def run_scorer_self_tests(
     sc_cs4 = score_full_receipt(r_cs4, manifest, pins, allow_fixture=False)
     assert sc_cs4["CS4_L7H5_antisymmetry_diagnostic"]["by_class"]["slot_12"]["overall_verdict"] == "class_antisymmetry_present"
     assert sc_cs4["CS4_L7H5_antisymmetry_diagnostic"]["by_class"]["concept_12"]["overall_verdict"] == "inconclusive_readout_disagreement"
-    checks.append("cs4_exact_part_b_s_odd_sign_and_2ch_agreement_ok")
+
+    # F2/M2 mutant kill: only 3/12 slot units >= +0.30 (at +1.00) -> mean=+0.25 >= 0.20, margin=+0.25 >= 0.15,
+    # BUT n_units_ge_030 = 3 < 4 -> MUST be not_class_wide!
+    r_cs4_m2 = copy.deepcopy(base_rec)
+    three_slot = set(rcvs.PRIMARY_SLOT_UNITS[:3])
+    def _sig_l7h5_3units(row, _is_c, cell):
+        if cell != "ROLE_BARE":
+            return None
+        if row["unit"] in three_slot:
+            return {"raw": (-1.00, 1.00), "spec": (-1.00, 1.00), "logp": (-1.00, 1.00), "phrase_mean": (-1.00, 1.00)}
+        return {"raw": (1e-4, 1e-4), "spec": (1e-4, 1e-4), "logp": (1e-4, 1e-4), "phrase_mean": (1e-4, 1e-4)}
+    _set_blk_signal(r_cs4_m2, "L7H5", _sig_l7h5_3units)
+    sc_cs4_m2 = score_full_receipt(r_cs4_m2, manifest, pins, allow_fixture=False)
+    s_m2 = sc_cs4_m2["CS4_L7H5_antisymmetry_diagnostic"]["by_class"]["slot_12"]
+    assert s_m2["per_channel"]["RawLogit"]["mean_S_odd"] >= 0.20
+    assert s_m2["per_channel"]["RawLogit"]["n_units_ge_030"] == 3
+    assert s_m2["overall_verdict"] == "not_class_wide", "F2/M2: 3/12 units must be not_class_wide!"
+    checks.append("cs4_exact_part_b_s_odd_sign_2ch_agreement_and_m2_min_units_kill_ok")
 
     # 8. Verify verify_smoke_receipt_only emits ZERO head-gating or CS.2/CS.3/CS.4 scientific verdicts.
     smoke_rec = copy.deepcopy(base_rec)
@@ -2100,15 +2241,13 @@ def main(argv: list[str] | None = None) -> int:
     if args.verify_smoke_only:
         verdict = verify_smoke_receipt_only(receipt=receipt, manifest=manifest, pins=pins, allow_fixture=False)
         if args.out is not None:
-            args.out.parent.mkdir(parents=True, exist_ok=True)
-            args.out.write_text(json.dumps(verdict, indent=2), encoding="utf-8")
+            rcvs.atomic_write_text(args.out, json.dumps(verdict, indent=2))
         print(json.dumps(verdict, indent=2))
         return 0 if verdict["smoke_gate_passed"] else 2
 
     scorecard = score_full_receipt(receipt=receipt, manifest=manifest, pins=pins, allow_fixture=False)
     if args.out is not None:
-        args.out.parent.mkdir(parents=True, exist_ok=True)
-        args.out.write_text(json.dumps(scorecard, indent=2), encoding="utf-8")
+        rcvs.atomic_write_text(args.out, json.dumps(scorecard, indent=2))
     print(json.dumps({
         "artifact_type": scorecard["meta"]["artifact_type"],
         "out": str(args.out) if args.out else None,

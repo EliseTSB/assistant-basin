@@ -157,7 +157,7 @@ All `ov_norm` and OLD `B1..B4` 37-token-pool unpushed `rmsDLA`/`srDLA` values ar
 ### 4.2 Unified `B11` Batch Shape & Intervention
 - **Exact batch shape everywhere (`B = 11`, zero reserved rows):** Row `0` unpushed (`0.0`); Row `1` `+0.8 × OLD_NORM[L]`; Row `2` `-0.8 × OLD_NORM[L]`; Rows `3..6` `k = 4` orthogonal `w_down` nulls at `+0.8 × OLD_NORM[L]` (`|cos(null, hat_w)| <= 1e-5`); Rows `7..10` exact negatives of rows `3..6`.
 - **Intervention:** `z_all` single-head path-blocking via `o_proj` pre-hook replacing slice `[:, :, h*d:(h+1)*d]` with row-0 unpushed `o_proj` pre-input: every blocked B11 row verifies **row-0 same-hook-path sham (`|d0| <= 1e-6`)** across all 5 readouts and **15-sibling zero-leakage (`<= 1e-6`)** across all 11 rows, PLUS **`26` dedicated full-`B11` measured same-hook-path sham forwards** (one per tested head on `P08` `p92-47` `C1_SELF`, verifying `<= 1e-6` across all 11 pushed+null rows × 5 readouts).
-- **Actuation & causal-equivalence positive controls (`29` B=1 forwards):** `26` single-head `B=1` orthogonal synthetic-donor `o_proj` actuation checks (one per tested head on `P08` `p92-47` `C1_SELF`, verifying `min_target_delta > 1e-2` and `sibling_leakage <= 1e-6`) PLUS `3` `B=1` prefix-only causal-equivalence checks (`p92-00` `nc=2`, `p92-45` `nc=4`, `p92-39` `nc=7` on `C1_SELF`, verifying full-vocab `read_pos` logits match single-pass `prefix + content_ids[:-1]` to `<= 1e-5`).
+- **Actuation & causal-equivalence positive controls (`26` B=1 + `3` B11 forwards):** `26` single-head `B=1` orthogonal synthetic-donor `o_proj` actuation checks (one per tested head on `P08` `p92-47` `C1_SELF`, verifying `min_target_delta > 1e-2`, downstream `readout_max_abs_delta > 1e-4`, and `sibling_leakage <= 1e-6`), per-row blocking positive control (`max_ch |d_pos| > 1e-8` on every blocked row), PLUS `3` **`B=11` same-batch-shape** prefix-only causal-equivalence checks (`p92-00` `nc=2`, `p92-45` `nc=4`, `p92-39` `nc=7` on `C1_SELF`, verifying row-0 full-vocab `read_pos` logits match single-pass `prefix + content_ids[:-1]` to `<= 1e-5` without cuBLAS batch-shape drift).
 
 ---
 
@@ -168,7 +168,7 @@ Must pass ALL 6 clauses (`0` failures), else every scientific verdict (`CS.1`–
 1. External 4-pin verification (`design`, `manifest`, `runner`, `scorer` SHA-256) + pinned `part213/targets213.json` (`7edb3c62...`) + pinned `results_old_b1_b4_transport_feasibility.json` (`dcfa27e9...`) + `execution_provenance == "measured_gpu_run"` + `is_cuda_device is True` + non-CPU GPU `device_name` + complete manifest join.
 2. `max_abs_sham_spec <= 1e-6`, `max_abs_sham_raw <= 1e-6`, `max_abs_sham_logp <= 1e-6`, `max_abs_sham_phrase <= 1e-6`, `max_abs_decomp_err <= 1e-6`, `100%` finite values.
 3. `max_sibling_leakage_science <= 1e-6` and `max_sibling_leakage_actuation <= 1e-6`.
-4. `26/26` synthetic head-actuation controls pass (`min_actuation_target_delta > 1e-2`).
+4. `26/26` synthetic head-actuation controls pass (`min_actuation_target_delta > 1e-2` AND downstream `min_actuation_readout_delta > 1e-4`) AND every blocked row passes the blocking positive control (`max_ch |d_pos| > 1e-8`, preventing an inert hook from scoring as null).
 5. `unpatched_rows` contain zero sham keys; `w_down` null orthogonality (`|cos(null, hat_w)| <= 1e-5`) verified on all 26 units.
 6. Single-pass causal teacher-forcing equivalence (`prefix_only` vs `prefix + content_ids[:-1]` at `read_pos`) verified `<= 1e-5` on multi-token units during runner pre-flight self-check.
 
@@ -253,11 +253,11 @@ Fixes round-2 **H5, M4** + Weaver `#10` (`L11H2` saturation):
 
 ## 6. Execution Schedule, Smoke Gate & Grounded Compute Budget (Fixes M2 & L5)
 
-- **Exact Full Schedule (`12,662` B11 + `29` B=1 forwards; zero extra continuation forwards):**
-  - `26` units × `18` prompts (`C1..C6` × 3 cells) = `468` unpatched B11 forwards + `468 × 26 = 12,168` `z_all` head-blocked B11 forwards + `26` dedicated full-B11 measured sham forwards (1 per head) + `26` B=1 synthetic actuation forwards + `3` B=1 causal-equivalence prefix-only forwards = **`12,662` B11 + `29` B=1 forwards (`12,691` total)**.
+- **Exact Full Schedule (`12,665` B11 + `26` B=1 forwards; zero extra continuation forwards):**
+  - `26` units × `18` prompts (`C1..C6` × 3 cells) = `468` unpatched B11 forwards + `468 × 26 = 12,168` `z_all` head-blocked B11 forwards + `26` dedicated full-B11 measured sham forwards (1 per head) + `3` same-batch-shape `B11` causal-equivalence prefix-only forwards + `26` B=1 synthetic actuation forwards = **`12,665` B11 + `26` B=1 forwards (`12,691` total)**.
   - Projected wall time on 1 ephemeral Colab `NVIDIA L4` (grounded in Part B's measured `132.9 ms/B19` and `1.72 CU/h` rate → `B11 ≈ 78–85 ms/fwd`): **`~16–18 min` runner / `~19–21 min` session → `~0.50–0.65 CU`** (conservative cap `<= 0.90 CU`, well within Elise's standing `~5 CU/day` small-run authorization; current balance `185.72 CU`; exact `ms/B11` measured during Smoke before Full launches).
-- **Mandatory Smoke Gate & Pre-Full `CS.1` Transport Pre-Check (`650` B11 + `29` B=1 forwards; `~56 s`, `<= 0.15 CU`):**
-  - Runs **all `26` units × `18` prompts unpatched-only** (`468` B11) + Pair `P08` (`p92-47` + `p92-45`) on `C1` (`3` cells) × all `26` heads (`156` B11) + `26` dedicated full-B11 measured sham forwards + `26` B=1 synthetic actuation checks + `3` B=1 causal-equivalence checks (`679` total forwards).
+- **Mandatory Smoke Gate & Pre-Full `CS.1` Transport Pre-Check (`653` B11 + `26` B=1 forwards; `~56 s`, `<= 0.15 CU`):**
+  - Runs **all `26` units × `18` prompts unpatched-only** (`468` B11) + Pair `P08` (`p92-47` + `p92-45`) on `C1` (`3` cells) × all `26` heads (`156` B11) + `26` dedicated full-B11 measured sham forwards + `3` `B11` causal-equivalence checks + `26` B=1 synthetic actuation checks (`679` total forwards).
   - Scorer `--verify-smoke-only` must pass (a) all `CS.0` technical clauses (`0` failures), (b) the full `12`-pair `C1..C6` unpatched `CS.1` transport gate for BOTH classes (also reporting unpatched transport spread per class without peeking at `L8H2` blocking!), and (c) the preliminary head-null sanity check (`|med| <= 0.30`) on the `156` blocked rows — while emitting **ZERO** head-gating or scientific verdicts (`CS.2`/`CS.3`/`CS.4`). Full execution hard-refuses to launch without `--verify-smoke-only` PASS; full scorer hard-refuses any smoke receipt (`rc != 0`).
 - **Offline Scoring & Review:** 4-file frozen package (`CONCEPT-VS-SLOT-DESIGN.md`, `concept_vs_slot_manifest.json`, `run_concept_vs_slot.py`, `score_concept_vs_slot.py`) with CPU `TinyOlmo2ForCausalLM` end-to-end self-tests (including single-pass causal phrase equivalence), routed to Claude for Design PASS → Code PASS → Smoke PASS → Full Run.
 

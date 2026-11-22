@@ -30,6 +30,7 @@ import copy
 import hashlib
 import json
 import math
+import os
 import statistics
 import subprocess
 import sys
@@ -46,7 +47,7 @@ import torch.nn.functional as F
 
 SCHEMA_VERSION = "concept_vs_slot_v1.0"
 DESIGN_REL_PATH = "explore_olmo2_attn_mlp/CONCEPT-VS-SLOT-DESIGN.md"
-DESIGN_SHA256 = "cf67a12db8d914ad896b75aa036bd919c4616d576c2e4872e0dde273806c0c6f"
+DESIGN_SHA256 = "4b6df28b04683f9c75170f4ec3b03dbd4cb4b8d08fe041ccbee157799d9d3190"
 
 TARGETS213_REL_PATH = "part213/targets213.json"
 TARGETS213_SHA256 = "7edb3c6253470d157896931083c239253930be08f16a5b9348d6c67d3b431892"
@@ -85,7 +86,9 @@ TOL_DECOMP = 1e-6
 TOL_SIBLING = 1e-6
 TOL_ORTH = 1e-5
 TOL_CAUSAL_EQUIV = 1e-5
+TOL_BLOCK_ACTUATION = 1e-8
 MIN_ACTUATION_DELTA = 1e-2
+MIN_ACTUATION_READOUT_DELTA = 1e-4
 
 # Historical branches checked for zero prompt-bank overlap during manifest build.
 HIST_COMMITS_MANIFESTS: tuple[tuple[str, str], ...] = (
@@ -293,6 +296,13 @@ def sha256_bytes(data: bytes) -> str:
 
 def sha256_file(path: Path) -> str:
     return sha256_bytes(path.read_bytes())
+
+
+def atomic_write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp_path = path.parent / f".{path.name}.tmp.{os.getpid()}"
+    tmp_path.write_text(text, encoding="utf-8")
+    os.replace(tmp_path, path)
 
 
 def assert_strictly_downstream(unit_layer: int, head_layer: int) -> None:
@@ -708,9 +718,9 @@ def build_concept_vs_slot_manifest(
         "n_sham_rows": len(sham_sched),
         "n_actuation_rows": len(actuation_sched),
         "n_causal_equiv_rows": len(causal_equiv_sched),
-        "n_b11_forwards": len(unpatched_sched) + len(blocked_sched_full) + len(sham_sched),
-        "n_b1_forwards": len(actuation_sched) + len(causal_equiv_sched),
-        "n_total_forwards": len(unpatched_sched) + len(blocked_sched_full) + len(sham_sched) + len(actuation_sched) + len(causal_equiv_sched),
+        "n_b11_forwards": len(unpatched_sched) + len(blocked_sched_full) + len(sham_sched) + len(causal_equiv_sched),
+        "n_b1_forwards": len(actuation_sched),
+        "n_total_forwards": len(unpatched_sched) + len(blocked_sched_full) + len(sham_sched) + len(causal_equiv_sched) + len(actuation_sched),
     }
     denoms_smoke = {
         "n_unpatched_rows": len(unpatched_sched),
@@ -718,9 +728,9 @@ def build_concept_vs_slot_manifest(
         "n_sham_rows": len(sham_sched),
         "n_actuation_rows": len(actuation_sched),
         "n_causal_equiv_rows": len(causal_equiv_sched),
-        "n_b11_forwards": len(unpatched_sched) + len(blocked_sched_smoke) + len(sham_sched),
-        "n_b1_forwards": len(actuation_sched) + len(causal_equiv_sched),
-        "n_total_forwards": len(unpatched_sched) + len(blocked_sched_smoke) + len(sham_sched) + len(actuation_sched) + len(causal_equiv_sched),
+        "n_b11_forwards": len(unpatched_sched) + len(blocked_sched_smoke) + len(sham_sched) + len(causal_equiv_sched),
+        "n_b1_forwards": len(actuation_sched),
+        "n_total_forwards": len(unpatched_sched) + len(blocked_sched_smoke) + len(sham_sched) + len(causal_equiv_sched) + len(actuation_sched),
     }
     assert denoms_full == {
         "n_unpatched_rows": 468,
@@ -728,8 +738,8 @@ def build_concept_vs_slot_manifest(
         "n_sham_rows": 26,
         "n_actuation_rows": 26,
         "n_causal_equiv_rows": 3,
-        "n_b11_forwards": 12662,
-        "n_b1_forwards": 29,
+        "n_b11_forwards": 12665,
+        "n_b1_forwards": 26,
         "n_total_forwards": 12691,
     }, f"Unexpected full denominators: {denoms_full}"
     assert denoms_smoke == {
@@ -738,8 +748,8 @@ def build_concept_vs_slot_manifest(
         "n_sham_rows": 26,
         "n_actuation_rows": 26,
         "n_causal_equiv_rows": 3,
-        "n_b11_forwards": 650,
-        "n_b1_forwards": 29,
+        "n_b11_forwards": 653,
+        "n_b1_forwards": 26,
         "n_total_forwards": 679,
     }, f"Unexpected smoke denominators: {denoms_smoke}"
 
@@ -888,8 +898,8 @@ def validate_timing_breakdown(
     timing: Any,
     expected_b11: int,
     expected_b1: int,
-    full_b11: int = 12662,
-    full_b1: int = 29,
+    full_b11: int = 12665,
+    full_b1: int = 26,
 ) -> None:
     if not isinstance(timing, dict):
         raise ValueError("Missing or null timing breakdown")
@@ -1294,6 +1304,8 @@ def execute_concept_vs_slot(
     max_sibling_leakage_actuation = 0.0
     max_abs_wdown_orth_cos = 0.0
     max_causal_equiv_err = 0.0
+    min_blocked_pos_drop = float("inf")
+    act_ref_logits_pos: torch.Tensor | None = None
 
     def _make_layer_inject_hook(deltas_dev: torch.Tensor, read_pos: int | None = None, norm_box: list[float] | None = None):
         def _hook(_mod, _inp, out):
@@ -1411,6 +1423,8 @@ def execute_concept_vs_slot(
                 )
 
         full_logits_unp = _run_b11_full_logits(inp, handles)
+        if uid == ACTUATION_AND_SHAM_UNIT and pid == ACTUATION_AND_SHAM_PROMPT:
+            act_ref_logits_pos = full_logits_unp[1, read_pos, :].detach().to(device="cpu", dtype=torch.float32)
         unp_ch = read_five_channels(full_logits_unp, read_pos, t_own, peers, content_ids)
         unp_sum, decomp_err = summarize_unpatched_b11(unp_ch)
         max_abs_decomp_err = max(max_abs_decomp_err, decomp_err)
@@ -1435,11 +1449,11 @@ def execute_concept_vs_slot(
             "transport": unp_sum,
         })
 
-        # CS.0 Clause 6: prefix-only B=1 causal equivalence check on scheduled multi-token units.
+        # CS.0 Clause 6 (F7): same-batch-shape (B=11) prefix-only causal equivalence check on multi-token units.
         ce_spec = ce_by_up.get((uid, pid))
         if ce_spec is not None:
-            inp_pref = torch.tensor([prefix_ids], dtype=torch.long, device=device)
-            logits_pref = _run_b1_full_logits(inp_pref, [])
+            inp_pref = torch.tensor([prefix_ids] * BATCH_SIZE, dtype=torch.long, device=device)
+            logits_pref = _run_b11_full_logits(inp_pref, [])
             full_rp0 = full_logits_unp[0, read_pos, :].detach().to(torch.float32)
             pref_rp0 = logits_pref[0, read_pos, :].detach().to(torch.float32)
             ce_err = float((full_rp0 - pref_rp0).abs().max().item())
@@ -1451,6 +1465,7 @@ def execute_concept_vs_slot(
                 "n_content_tokens": len(content_ids),
                 "prefix_len": len(prefix_ids),
                 "full_len": len(full_ids),
+                "batch_size": BATCH_SIZE,
                 "max_abs_full_vocab_read_pos_diff": ce_err,
                 "passed": bool(ce_err <= TOL_CAUSAL_EQUIV),
             })
@@ -1472,6 +1487,14 @@ def execute_concept_vs_slot(
             full_logits_pat = _run_b11_full_logits(inp, pat_handles)
             pat_ch = read_five_channels(full_logits_pat, read_pos, t_own, peers, content_ids)
             blk_sum, b_decomp, r0_sham = summarize_blocked_b11(unp_ch, pat_ch)
+            # F1 blocking positive control: refuse completely inert block hook on +0.8 pushed row!
+            row_max_pos_drop = max(abs(blk_sum[ch]["d_pos"]) for ch in CHANNELS_5)
+            if row_max_pos_drop <= TOL_BLOCK_ACTUATION:
+                raise AssertionError(
+                    f"F1 blocking positive control failed (inert block hook): ({uid}, {pid}, {hname}) "
+                    f"max_abs_pos_drop={row_max_pos_drop} <= {TOL_BLOCK_ACTUATION}"
+                )
+            min_blocked_pos_drop = min(min_blocked_pos_drop, row_max_pos_drop)
             sib_leak = compute_sibling_max_abs_leakage(z_after_box[0], cap_o_in[hl], hi, n_heads)
 
             max_abs_decomp_err = max(max_abs_decomp_err, b_decomp)
@@ -1558,6 +1581,7 @@ def execute_concept_vs_slot(
 
         binding = manifest["bindings"][pid][uid]
         inp1 = torch.tensor([binding["full_input_ids"]], dtype=torch.long, device=device)
+        read_pos_a = int(binding["read_pos"])
         hmeta = HEAD_BY_NAME[hname]
         hl, hi = int(hmeta["layer"]), int(hmeta["head"])
         assert_strictly_downstream(u_layer, hl)
@@ -1579,7 +1603,10 @@ def execute_concept_vs_slot(
             layers_mod[u_layer].register_forward_hook(_make_layer_inject_hook(delta_pos)),
             layers_mod[hl].self_attn.o_proj.register_forward_pre_hook(_act_pre),
         ]
-        _run_b1_full_logits(inp1, h_list)
+        act_logits = _run_b1_full_logits(inp1, h_list)
+        if act_ref_logits_pos is None:
+            raise RuntimeError("Missing unpatched +0.8 reference logits for actuation readout check")
+        readout_delta = float((act_logits[0, read_pos_a, :].detach().to(device="cpu", dtype=torch.float32) - act_ref_logits_pos).abs().max().item())
         z_base = z_before_box[0]
         z_synth = z_after_box[0]
         target_delta = float((z_synth[:, :, s:e].to(torch.float32) - z_base[:, :, s:e].to(torch.float32)).abs().max().item())
@@ -1594,8 +1621,13 @@ def execute_concept_vs_slot(
             "head_idx": hi,
             "seed": seed_a,
             "target_max_abs_delta": target_delta,
+            "readout_max_abs_delta": readout_delta,
             "sibling_max_abs_leakage": sib_leak,
-            "passed": bool(target_delta > MIN_ACTUATION_DELTA and sib_leak <= TOL_SIBLING),
+            "passed": bool(
+                target_delta > MIN_ACTUATION_DELTA
+                and readout_delta > MIN_ACTUATION_READOUT_DELTA
+                and sib_leak <= TOL_SIBLING
+            ),
         })
 
     total_sec = time.perf_counter() - t_start
@@ -1655,6 +1687,7 @@ def execute_concept_vs_slot(
             "max_sibling_leakage_actuation": max_sibling_leakage_actuation,
             "max_abs_wdown_orth_cos": max_abs_wdown_orth_cos,
             "max_causal_equiv_err": max_causal_equiv_err,
+            "min_blocked_pos_drop": min_blocked_pos_drop,
             "timing": timing,
         },
         "unit_vectors": unit_vectors_meta,
@@ -1666,9 +1699,8 @@ def execute_concept_vs_slot(
     }
 
     if out_path is not None:
-        out_path.parent.mkdir(parents=True, exist_ok=True)
-        # Compact JSON keeps 12,168 blocked rows clean and lightweight (~10 MB raw / ~2 MB gz).
-        out_path.write_text(json.dumps(receipt, separators=(",", ":")), encoding="utf-8")
+        # Compact atomic JSON write (F6: tmp + os.replace; ~10 MB raw / ~2 MB gz for Full).
+        atomic_write_text(out_path, json.dumps(receipt, separators=(",", ":")))
     return receipt
 
 
@@ -1867,8 +1899,8 @@ def run_cpu_self_tests(
     assert sm["n_sham_rows"] == 26
     assert sm["n_actuation_rows"] == 26
     assert sm["n_causal_equiv_rows"] == 3
-    assert sm["n_b11_forwards"] == 650
-    assert sm["n_b1_forwards"] == 29
+    assert sm["n_b11_forwards"] == 653
+    assert sm["n_b1_forwards"] == 26
     assert sm["n_total_forwards"] == 679
     assert sm["max_abs_sham_raw"] <= TOL_SHAM
     assert sm["max_abs_sham_spec"] <= TOL_SHAM
@@ -1879,13 +1911,42 @@ def run_cpu_self_tests(
     assert sm["max_sibling_leakage_actuation"] <= TOL_SIBLING
     assert sm["max_abs_wdown_orth_cos"] <= TOL_ORTH
     assert sm["max_causal_equiv_err"] <= TOL_CAUSAL_EQUIV
+    assert sm["min_blocked_pos_drop"] > TOL_BLOCK_ACTUATION
     assert all(r["passed"] for r in smoke_receipt["sham_rows"])
-    assert all(r["passed"] for r in smoke_receipt["actuation_rows"])
-    assert all(r["passed"] for r in smoke_receipt["causal_equiv_rows"])
+    assert all(r["passed"] and r["readout_max_abs_delta"] > MIN_ACTUATION_READOUT_DELTA for r in smoke_receipt["actuation_rows"])
+    assert all(r["passed"] and r["batch_size"] == BATCH_SIZE for r in smoke_receipt["causal_equiv_rows"])
     for ur in smoke_receipt["unpatched_rows"]:
         assert "sham" not in json.dumps(ur), "Unpatched row must not carry sham keys"
-    validate_timing_breakdown(sm["timing"], 650, 29)
-    checks.append("tiny_olmo2_smoke_e2e_679_forwards_cs0_causal_equiv_ok")
+    validate_timing_breakdown(sm["timing"], 653, 26)
+    checks.append("tiny_olmo2_smoke_e2e_679_forwards_cs0_causal_equiv_f1_f7_ok")
+
+    # 3b. F1 negative test: inert no-op blocking pre-hook MUST cause execute_concept_vs_slot to REFUSE!
+    broken_model = copy.deepcopy(tiny_model)
+    l7_oproj = broken_model.layers[7].self_attn.o_proj
+    orig_reg_pre = l7_oproj.register_forward_pre_hook
+
+    def _noop_block_reg_pre(fn):
+        # Allow capture pre-hooks (lambdas returning None) but neutralize the blocking patch pre-hook!
+        def _wrapped(mod, args):
+            fn(mod, args)  # still runs capture_after if present, but returns UNPATCHED args!
+            return None
+        return orig_reg_pre(_wrapped)
+
+    l7_oproj.register_forward_pre_hook = _noop_block_reg_pre  # type: ignore[method-assign]
+    refused_inert_hook = False
+    try:
+        execute_concept_vs_slot(
+            manifest=manifest,
+            pins=pins,
+            smoke_mode=True,
+            device="cpu",
+            model_loader=lambda _r, _c, _d: broken_model,
+            execution_provenance="synthetic_cpu_selftest",
+        )
+    except AssertionError as exc:
+        refused_inert_hook = "F1 blocking positive control failed" in str(exc)
+    assert refused_inert_hook, "Runner MUST refuse a no-op blocking pre-hook (F1)!"
+    checks.append("f1_noop_blocking_hook_refused_ok")
 
     # 4. Pre-load full gate rejects synthetic, CPU-measured, forged GPU, bad timing, AND failed CS.1 transport;
     #    accepts authentic GPU-labeled smoke receipt with passing CS.0 + CS.1 + prelim head-null!
@@ -1986,7 +2047,9 @@ def run_cpu_self_tests(
             "max_sibling_leakage_actuation": sm["max_sibling_leakage_actuation"],
             "max_abs_wdown_orth_cos": sm["max_abs_wdown_orth_cos"],
             "max_causal_equiv_err": sm["max_causal_equiv_err"],
+            "min_blocked_pos_drop": sm["min_blocked_pos_drop"],
             "min_actuation_target_delta": min(r["target_max_abs_delta"] for r in smoke_receipt["actuation_rows"]),
+            "min_actuation_readout_delta": min(r["readout_max_abs_delta"] for r in smoke_receipt["actuation_rows"]),
         },
     }
 
@@ -2045,7 +2108,7 @@ def main(argv: list[str] | None = None) -> int:
             lens_discovery_path=lens_p,
         )
         out_p = args.out or manifest_p
-        out_p.write_text(json.dumps(man, indent=2), encoding="utf-8")
+        atomic_write_text(out_p, json.dumps(man, indent=2))
         print(json.dumps({
             "built_manifest": str(out_p),
             "sha256": sha256_file(out_p),

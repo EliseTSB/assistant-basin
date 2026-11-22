@@ -2,7 +2,7 @@
   "meta": {
     "schema_version": "concept_vs_slot_v1.0",
     "design_file": "explore_olmo2_attn_mlp/CONCEPT-VS-SLOT-DESIGN.md",
-    "design_sha256": "cf67a12db8d914ad896b75aa036bd919c4616d576c2e4872e0dde273806c0c6f",
+    "design_sha256": "4b6df28b04683f9c75170f4ec3b03dbd4cb4b8d08fe041ccbee157799d9d3190",
     "targets213_sha256": "7edb3c6253470d157896931083c239253930be08f16a5b9348d6c67d3b431892",
     "m7_transport_sha256": "dcfa27e9542ac5ffba76aae8fb0c250adcd04a3f988877ce209c2864ff1f3b0f",
     "score92_sha256": "4c4531ecd4ea5dd21251aef6d3bac695d191c979a6b7523ab274aa2d24ae8fdb",
@@ -137,8 +137,8 @@
         "n_sham_rows": 26,
         "n_actuation_rows": 26,
         "n_causal_equiv_rows": 3,
-        "n_b11_forwards": 12662,
-        "n_b1_forwards": 29,
+        "n_b11_forwards": 12665,
+        "n_b1_forwards": 26,
         "n_total_forwards": 12691
       },
       "smoke": {
@@ -147,8 +147,8 @@
         "n_sham_rows": 26,
         "n_actuation_rows": 26,
         "n_causal_equiv_rows": 3,
-        "n_b11_forwards": 650,
-        "n_b1_forwards": 29,
+        "n_b11_forwards": 653,
+        "n_b1_forwards": 26,
         "n_total_forwards": 679
       }
     }
