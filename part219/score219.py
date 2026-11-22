@@ -189,7 +189,14 @@ def deepseek_agreement(pass1: dict, sample: dict) -> dict | None:
 # --- the gate --------------------------------------------------------------------------------------------------
 
 def kernel_check(path: Path) -> dict:
-    """The design's kernel check: results/part219/kernel-check.json against its CPU float32 reference."""
+    """The design's kernel check: results/part219/kernel-check.json against its CPU float32 reference.
+
+    The record must pass ``tools/part_check.kernel_check`` **and** record the eager kernel: the design defines it as
+    "the host decoded on the A770 under eager", and Part 219 exists partly because Parts 99-102 ran the library-default
+    kernel, so a record of a default-kernel decode cannot supply the gate item that exists to rule it out. The eager
+    value is required on the candidate and, when the record carries a ``load`` block, on that block too. A record that
+    cannot be read or is structurally malformed fails the gate with a reason instead of raising.
+    """
     if not path.exists():
         return {"passes": False, "candidate": str(path),
                 "reason": "no kernel check record: the kernel check is the first reported result and nothing below "
@@ -197,6 +204,8 @@ def kernel_check(path: Path) -> dict:
     try:
         from tools import part_check
         candidate = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(candidate, dict):
+            raise ValueError(f"{path} does not hold a JSON object")
         reference_rel = candidate.get("reference") or part_check.default_reference_path(candidate.get("model", ""))
         reference_path = Path(reference_rel)
         if not reference_path.is_absolute():
@@ -205,13 +214,34 @@ def kernel_check(path: Path) -> dict:
             return {"passes": False, "candidate": str(path), "reference": reference_rel,
                     "reason": f"the CPU float32 reference {reference_rel} does not exist"}
         report = part_check.kernel_check(json.loads(reference_path.read_text(encoding="utf-8")), candidate)
-    except (OSError, ValueError) as exc:
+    except (OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
         return {"passes": False, "candidate": str(path), "reason": f"cannot read a record: {exc}"}
-    return {"passes": not report.failed, "candidate": str(path), "reference": reference_rel,
-            "failures": report.failed}
+    problems = list(report.failed)
+    if candidate.get("attn_implementation") != "eager":
+        problems.append(
+            f"the record's attn_implementation is {candidate.get('attn_implementation')!r}, not 'eager'")
+    load = candidate.get("load")
+    if load is not None:
+        if not isinstance(load, dict):
+            problems.append("the record's load block is not a JSON object")
+        elif load.get("attn_implementation") != "eager":
+            problems.append(
+                f"the record's load.attn_implementation is {load.get('attn_implementation')!r}, not 'eager'")
+    result = {"passes": not problems, "candidate": str(path), "reference": reference_rel, "failures": problems}
+    if problems:
+        result["reason"] = "; ".join(problems)
+    return result
 
 
-def build_gate(kernel: dict, runs: dict) -> dict:
+def build_gate(kernel: dict, runs: dict, status: dict | None = None) -> dict:
+    """The design's gate, read before any prediction.
+
+    R0's label counts are the reference every net count is paired against and R1 is the comparison arm, so a run the
+    scorer itself marks not read (a failed 42-item two-pass gate, a failed or missing reset receipt, or a manifest
+    that marks it unreadable) cannot establish the gate item it feeds: its status is part of that item, not a note
+    beside it.
+    """
+    status = status or {}
     r0 = runs.get("R0")
     r1 = runs.get("R1")
     checks = {"kernel_check": kernel}
@@ -219,14 +249,20 @@ def build_gate(kernel: dict, runs: dict) -> dict:
         checks["r0_slot_persona"] = {"passes": False, "reason": "R0 was not scored"}
     else:
         count, total = r0["slot_who"]
-        checks["r0_slot_persona"] = {"count": count, "of": total, "min": GATE_R0_MIN_SLOT,
-                                     "passes": total > 0 and count >= GATE_R0_MIN_SLOT}
+        reasons = list(status.get("R0") or [])
+        checks["r0_slot_persona"] = {"count": count, "of": total, "min": GATE_R0_MIN_SLOT, "status": reasons,
+                                     "passes": total > 0 and count >= GATE_R0_MIN_SLOT and not reasons}
+        if reasons:
+            checks["r0_slot_persona"]["reason"] = "R0 is not read: " + "; ".join(reasons)
     if r1 is None:
         checks["r1_slot_persona"] = {"passes": False, "reason": "R1 was not scored"}
     else:
         count, total = r1["slot_who"]
-        checks["r1_slot_persona"] = {"count": count, "of": total, "max": GATE_R1_MAX_SLOT,
-                                     "passes": total > 0 and count <= GATE_R1_MAX_SLOT}
+        reasons = list(status.get("R1") or [])
+        checks["r1_slot_persona"] = {"count": count, "of": total, "max": GATE_R1_MAX_SLOT, "status": reasons,
+                                     "passes": total > 0 and count <= GATE_R1_MAX_SLOT and not reasons}
+        if reasons:
+            checks["r1_slot_persona"]["reason"] = "R1 is not read: " + "; ".join(reasons)
     failures = [name for name, value in checks.items() if not value.get("passes")]
     return {"passed": not failures, "failures": failures, "checks": checks}
 
@@ -295,17 +331,20 @@ def build_predictions(gate: dict, runs: dict, nets: dict, status: dict) -> dict:
     def blocked(reason: str) -> dict:
         return {"verdict": f"not read: {reason}"}
 
-    # The two controls are reported whatever the gate says: they are measurements, not predictions.
-    r5 = nets.get("R5")
-    rig_ok = r5 is not None and abs(r5["net"]) <= RIG_MAX_ABS_NET
+    # The two controls are reported whatever the gate says: they are measurements, not predictions. A run the scorer
+    # marks not read cannot serve as its control: its net count is still reported, but it does not decide `held`.
+    r5, r5_status = nets.get("R5"), list(status.get("R5") or [])
+    rig_ok = bool(r5 is not None and not r5_status and abs(r5["net"]) <= RIG_MAX_ABS_NET)
     predictions["R5_rig_check"] = {
-        "detail": r5, "max_abs_net": RIG_MAX_ABS_NET, "held": rig_ok,
-        "note": "zeroing four unimportant early heads must move the 16 upstream units by at most 2 net"}
-    r9 = nets.get("R9")
-    coupling_ok = r9 is not None and abs(r9["net"]) <= COUPLING_MAX_ABS_NET
+        "detail": r5, "max_abs_net": RIG_MAX_ABS_NET, "held": rig_ok, "status": r5_status,
+        "note": "zeroing four unimportant early heads must move the 16 upstream units by at most 2 net"
+                + ("" if not r5_status else "; R5 is not read, so the rig check cannot be read")}
+    r9, r9_status = nets.get("R9"), list(status.get("R9") or [])
+    coupling_ok = bool(r9 is not None and not r9_status and abs(r9["net"]) <= COUPLING_MAX_ABS_NET)
     predictions["R9_coupling_check"] = {
-        "detail": r9, "max_abs_net": COUPLING_MAX_ABS_NET, "held": coupling_ok,
-        "note": "transplanting four unimportant heads must move the 16 upstream units by at most 2 net, either way"}
+        "detail": r9, "max_abs_net": COUPLING_MAX_ABS_NET, "held": coupling_ok, "status": r9_status,
+        "note": "transplanting four unimportant heads must move the 16 upstream units by at most 2 net, either way"
+                + ("" if not r9_status else "; R9 is not read, so the coupling check cannot be read")}
 
     if not gate["passed"]:
         failure = "gate failed: " + "; ".join(gate["failures"])
@@ -317,7 +356,11 @@ def build_predictions(gate: dict, runs: dict, nets: dict, status: dict) -> dict:
     r2_net = nets["R2"] if "R2" in nets else None
 
     # 219.2 then 219.1 (219.1 is read only if 219.2 holds).
-    if r5 is None:
+    if r5_status:
+        why = "R5, the rig check, is not read (" + "; ".join(r5_status) + ")"
+        predictions["219.1"] = blocked(why)
+        predictions["219.2"] = blocked(why)
+    elif r5 is None:
         predictions["219.1"] = blocked("R5, the rig check, was not scored")
         predictions["219.2"] = blocked("R5, the rig check, was not scored")
     elif not rig_ok:
@@ -349,6 +392,11 @@ def build_predictions(gate: dict, runs: dict, nets: dict, status: dict) -> dict:
         for key in ("219.3", "219.4", "219.5"):
             predictions[key] = {"verdict": "inconclusive: the transplant breaks answers", "detail": bars}
         return predictions
+    if r9_status:
+        why = "R9 is not read (" + "; ".join(r9_status) + "), so 219.3 to 219.5 are not read"
+        for key in ("219.3", "219.4", "219.5"):
+            predictions[key] = blocked(why)
+        return predictions
     if not coupling_ok:
         for key in ("219.3", "219.4", "219.5"):
             predictions[key] = blocked("R9's coupling check failed, so 219.3 to 219.5 are not read")
@@ -359,13 +407,16 @@ def build_predictions(gate: dict, runs: dict, nets: dict, status: dict) -> dict:
     held_219_3 = r8["net"] >= NET_MIN
     predictions["219.3"] = {"held": held_219_3, "detail": r8, "min_net": NET_MIN,
                             "verdict": "held" if held_219_3 else "failed"}
-    if r10 is None or status.get("R10"):
-        predictions["219.5"] = blocked("R10 is not read (" + "; ".join(status.get("R10") or ["not scored"]) + ")")
+    if r10 is None:
+        predictions["219.5"] = blocked("R10 was not scored")
     else:
+        # The design reads 219.5 from R10's net whenever R10 scored and reports R10's status *beside* it: a broken
+        # R10 is a caveat on the distance control, not a readability gate through it.
         margin = r8["net"] - r10["net"]
         held_219_5 = margin >= DISTANCE_MARGIN
         predictions["219.5"] = {"held": held_219_5, "detail": {"R8_net": r8["net"], "R10_net": r10["net"],
                                                               "margin": margin},
+                                "r10_status": list(status.get("R10") or []),
                                 "min_margin": DISTANCE_MARGIN, "verdict": "held" if held_219_5 else "failed"}
     if not (predictions["219.3"].get("held") and predictions["219.5"].get("held")):
         predictions["219.4"] = {"verdict": "not read: 219.4 is read only if 219.3 and 219.5 both hold"}
@@ -381,24 +432,41 @@ def build_predictions(gate: dict, runs: dict, nets: dict, status: dict) -> dict:
     return predictions
 
 
-def build_headlines(predictions: dict) -> list[str]:
+def build_headlines(predictions: dict, status: dict | None = None) -> list[str]:
+    """The design's headline rules, with the withdrawal rule the review found missing.
+
+    A run whose status is non-empty is not read, and every headline that depends on it is withdrawn: R5's rig check
+    (or its unreadability) withdraws all of them, an unread R2 withdraws the "needed" headline, an unread R8 or R9
+    withdraws the transplant headline, and an unread R1 withdraws only the 219.4 clause (the design reads 219.4 only
+    if the gate's R1 bound held). R10's status is reported beside 219.5 and does not withdraw anything. A 219.4 that
+    is **not read** adds no clause at all: only a failed 219.4 emits the "not all" sentence.
+    """
+    status = status or {}
+    withdrawn = {tag for tag in ("R0", "R1", "R2", "R5", "R8", "R9") if status.get(tag)}
     verdict = lambda key: (predictions.get(key) or {}).get("verdict", "")
     rig = predictions.get("R5_rig_check", {})
-    if any(str(value).startswith("not read: gate failed") for value in predictions.values()):
+    if any(verdict(key).startswith("not read: gate failed") for key in predictions):
         return ["no headline: the gate failed, so every prediction is frozen and reported as exploratory"]
+    if "R5" in withdrawn:
+        return ["no headline: R5 is not read (" + "; ".join(status["R5"]) + "), so its rig check is not read"]
     if rig.get("detail") and rig.get("held") is False:
         return ["no headline: R5 failed its rig check"]
     headlines = []
-    if verdict("219.1") == "held" and verdict("219.2") == "held":
+    if (verdict("219.1") == "held" and verdict("219.2") == "held"
+            and not withdrawn & {"R0", "R2"}):
         headlines.append("these four heads are needed for the slot neurons' self-descriptions")
-    if verdict("219.3") == "held" and verdict("219.5") == "held":
-        if verdict("219.4") == "held":
+    if (verdict("219.3") == "held" and verdict("219.5") == "held"
+            and not withdrawn & {"R0", "R8", "R9"}):
+        if "R1" not in withdrawn and verdict("219.4") == "held":
             headlines.append("post-training's change to these four heads is needed, and it accounts for the whole "
                              "early-layer swap")
-        else:
+        elif verdict("219.4") == "failed":
             headlines.append("post-training's change to these four heads is needed, and it is part of what the "
                              "early-layer swap removes, not all")
-    elif verdict("219.3") == "held" and verdict("219.5") == "failed":
+        else:
+            headlines.append("post-training's change to these four heads is needed")
+    elif (verdict("219.3") == "held" and verdict("219.5") == "failed"
+          and not withdrawn & {"R0", "R8", "R9"}):
         headlines.append("these heads' answers break under a change of that size in either direction")
     return headlines or ["no headline: the predictions it rests on did not hold"]
 
@@ -448,7 +516,7 @@ def build_scorecard(out: Path, kinds_path, neurons_path, kernel_path: Path, head
             if tag == "R0" or tag not in labels:
                 continue
             nets[tag] = net_against(labels["R0"], labels[tag], split["upstream"])
-    gate = build_gate(kernel_check(kernel_path), runs)
+    gate = build_gate(kernel_check(kernel_path), runs, status)
     predictions = build_predictions(gate, runs, nets, status)
     scorecard = {
         "part": PART,
@@ -461,7 +529,7 @@ def build_scorecard(out: Path, kinds_path, neurons_path, kernel_path: Path, head
         "controls": {key: predictions[key] for key in ("R5_rig_check", "R9_coupling_check") if key in predictions},
         "predictions": {key: value for key, value in predictions.items()
                         if key.startswith("219.")},
-        "headlines": build_headlines(predictions),
+        "headlines": build_headlines(predictions, status),
         "exploratory": build_exploratory(labels, split),
     }
     return scorecard
@@ -481,7 +549,8 @@ def markdown(scorecard: dict) -> str:
                          + (f" — {check['reason']}" if check.get("reason") else ""))
         else:
             lines.append(f"- {name}: {check.get('count', '-')} of {check.get('of', '-')} "
-                         f"({'passes' if check.get('passes') else 'FAILS'})")
+                         f"({'passes' if check.get('passes') else 'FAILS'})"
+                         + (f" — {check['reason']}" if check.get("reason") else ""))
     lines += ["", "## Runs", "",
               "| run | slot persona | slot coherent | concept persona | inconclusive | two-pass gate | readable |",
               "| --- | --- | --- | --- | --- | --- | --- |"]

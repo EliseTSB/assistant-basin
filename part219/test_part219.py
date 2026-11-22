@@ -81,24 +81,24 @@ def workspace(tmp_path, snapshots):
     return {"root": tmp_path, "host": host, "donor": donor, "out": tmp_path / "out"}
 
 
-def make_args(workspace, tag, part219=True, **overrides):
-    """swap99's arguments. With part219=False the Part 219 options are not present at all, which is how Part 99 to
-    104 call it."""
+def make_args(workspace, tag, **overrides):
+    """swap99's arguments as Part 219 passes them. The no-Part-219 caller is exercised through the real CLI
+    (`swap99.main`) by `test_a_default_run_writes_no_part219_keys`, which is the path that had the defect."""
     values = dict(host=str(workspace["host"]), donor=None, swap="none", tokenizer=None,
                   neurons=str(workspace["root"] / "neurons.json"), frame="chat", tag=tag,
                   out=str(workspace["out"]), device="cpu", batch=8, kinds=None, only=None,
                   pushes=str(workspace["root"] / "pushes.pt"), limit=None, layers=None,
-                  extrapolate=False, questions=None)
-    if part219:
-        values.update(dict(attn_implementation="eager", ablate_heads=None, transplant_heads=None,
-                           transplant_mode=None, reference_replay=None, record_token_ids=True))
+                  extrapolate=False, questions=None,
+                  attn_implementation="eager", ablate_heads=None, transplant_heads=None,
+                  transplant_mode=None, reference_replay=None, record_token_ids=True)
     values.update(overrides)
     return argparse.Namespace(**values)
 
 
-def run_tag(workspace, tag, **overrides):
-    """Run one tag through swap99.run and return (rows, meta)."""
-    swap99.run(make_args(workspace, tag, **overrides))
+def run_tag(workspace, tag, model=None, tokenizer=None, donor_model=None, **overrides):
+    """Run one tag through swap99.run and return (rows, meta). The models are passed through when a test needs a
+    preloaded (reusable) host, which is how run219 calls swap99."""
+    swap99.run(make_args(workspace, tag, **overrides), model=model, tokenizer=tokenizer, donor_model=donor_model)
     rows = {}
     with (workspace["out"] / f"{tag}.jsonl").open(encoding="utf-8") as stream:
         for line in stream:
@@ -149,8 +149,20 @@ def test_generate_batch_matches_the_padding_rule_it_had_before(workspace):
 
 
 def test_a_default_run_writes_no_part219_keys(workspace):
-    """A run with no Part 219 option must write the meta and rows Part 99 wrote: no new keys, no token ids."""
-    rows, meta = run_tag(workspace, "plain", part219=False)
+    """A run with no Part 219 option must write the meta and rows Part 99 wrote: no new keys, no token ids.
+
+    Driven through the real CLI (`swap99.main`), not a hand-built Namespace: the defect this guards was argparse's
+    non-None `"default"` reaching `write_meta`, which a Namespace lacking the attribute cannot see."""
+    out = workspace["out"]
+    swap99.main(["--host", str(workspace["host"]), "--frame", "chat", "--tag", "plain", "--out", str(out),
+                 "--neurons", str(workspace["root"] / "neurons.json"),
+                 "--pushes", str(workspace["root"] / "pushes.pt"), "--device", "cpu", "--batch", "8"])
+    rows = {}
+    with (out / "plain.jsonl").open(encoding="utf-8") as stream:
+        for line in stream:
+            row = json.loads(line)
+            rows[(row["id"], row["unit"], int(row["question_index"]))] = row
+    meta = json.loads((out / "plain.meta.json").read_text(encoding="utf-8"))
     for key in ("attn_implementation", "ablate_heads", "transplant_heads", "intervention_receipt",
                 "coupling_log", "reset_receipt", "token_ids_recorded"):
         assert key not in meta, key
@@ -297,6 +309,26 @@ def test_transplant_refuses_a_donor_with_different_shapes(tmp_path, snapshots):
         swap99.transplant_heads(host, donor, [(0, 1)], "donor")
 
 
+def test_the_transplant_receipt_catches_a_shifted_span(snapshots, monkeypatch):
+    """The running receipt must be able to fail for a wrong slice (the review's sabotage).
+
+    Every span is shifted by one head: the write lands in head 1's rows while the record names head 0. The receipt
+    re-derives head 0's span from the config and reads the donor there, a fresh read that the shifted write cannot
+    satisfy, so no record may pass."""
+    host_path, donor_path = snapshots
+    real_head_span = swap99.head_span
+    monkeypatch.setattr(swap99, "head_span", lambda model, layer_no, head: real_head_span(model, layer_no, head + 1))
+    host = swap99.load_donor(str(host_path))
+    donor = swap99.load_donor(str(donor_path))
+    result = swap99.transplant_heads(host, donor, [(0, 0)], "donor")
+    records = result["records"]
+    head_size = D // N_HEADS
+    assert records and not any(record["matches_expected"] for record in records)
+    assert all(record["slice_from_config"] is False for record in records)
+    assert records[0]["slice"] == [head_size, 2 * head_size]      # where the shifted plan wrote
+    assert records[0]["config_slice"] == [0, head_size]            # where head 0 actually is
+
+
 # --- 5. the reset receipt restores bit-identical logits ---------------------------------------------------------
 
 def test_reset_receipt_restores_bit_identical_logits(workspace):
@@ -360,7 +392,54 @@ def test_transplant_receipt_holds_the_expected_bytes(workspace):
     records = meta["intervention_receipt"]["transplant"]["records"]
     assert len(records) == 12
     assert all(record["matches_expected"] for record in records)
+    assert all(record["slice_from_config"] for record in records)
     assert meta["transplant_mode"] == "opposite"
+
+
+# --- 7. a raise anywhere in a run leaves the preloaded host as it was found --------------------------------------
+
+def test_a_raise_after_the_transplant_restores_the_host(workspace, monkeypatch):
+    """The review's case A: the second attention_probe raises after the transplant. The host must be bit-identical
+    and no hook may be left behind, because run219 keeps this model for the next run."""
+    tokenizer, model = c.load_model(str(workspace["host"]), "cpu", attn_implementation="eager")
+    donor = swap99.load_donor(str(workspace["donor"]), attn_implementation="eager")
+    before = {name: parameter.detach().clone() for name, parameter in model.named_parameters()}
+    real_probe = swap99.attention_probe
+    calls = {"n": 0}
+
+    def flaky(*args, **kwargs):
+        calls["n"] += 1
+        if calls["n"] == 2:
+            raise RuntimeError("forced probe failure")
+        return real_probe(*args, **kwargs)
+
+    monkeypatch.setattr(swap99, "attention_probe", flaky)
+    with pytest.raises(RuntimeError, match="forced probe failure"):
+        run_tag(workspace, "FA", donor=str(workspace["donor"]), transplant_heads="L0H1",
+                transplant_mode="donor", model=model, tokenizer=tokenizer, donor_model=donor)
+    for name, parameter in model.named_parameters():
+        assert torch.equal(parameter, before[name]), name
+    assert sum(len(layer.self_attn.o_proj._forward_pre_hooks) for layer in model.model.layers) == 0
+
+
+def test_a_raise_after_a_swap_restores_the_host(workspace, monkeypatch):
+    """The review's case B: residual_medians raises after --swap attn --layers 0-1. The swapped bytes must be put
+    back, so a caller that reuses the preloaded model cannot inherit them."""
+    tokenizer, model = c.load_model(str(workspace["host"]), "cpu", attn_implementation="eager")
+    donor = swap99.load_donor(str(workspace["donor"]), attn_implementation="eager")
+    before = {name: parameter.detach().clone() for name, parameter in model.named_parameters()}
+
+    def boom(*_args, **_kwargs):
+        raise RuntimeError("forced medians failure")
+
+    # swap99 holds `common92` as a top-level module; part92.common92 (imported at the top of this file) is a separate
+    # module object, so patch the one swap99 calls.
+    monkeypatch.setattr(swap99.c, "residual_medians", boom)
+    with pytest.raises(RuntimeError, match="forced medians failure"):
+        run_tag(workspace, "FB", donor=str(workspace["donor"]), swap="attn", layers="0-1",
+                model=model, tokenizer=tokenizer, donor_model=donor)
+    for name, parameter in model.named_parameters():
+        assert torch.equal(parameter, before[name]), name
 
 
 # --- the scorer on synthetic labels -----------------------------------------------------------------------------
@@ -418,6 +497,7 @@ def write_kernel(directory: Path) -> Path:
     directory.mkdir(parents=True, exist_ok=True)
     record = {"model": "allenai/OLMo-2-0425-1B-Instruct", "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
               "prompt_sha256": "0" * 64, "new_tokens": 4, "argmax_agrees": True,
+              "attn_implementation": "eager", "load": {"attn_implementation": "eager"},
               "runs": {"48": [{"prompt": 0, "tokens": [1, 2, 3, 4], "margins": [1.0, 1.0, 1.0, 1.0]}]}}
     reference = directory / "reference.json"
     reference.write_text(json.dumps(record), encoding="utf-8")
@@ -501,6 +581,77 @@ def test_a_broken_receipt_marks_the_run_unreadable_and_blocks_its_prediction(tmp
     assert card["predictions"]["219.1"]["verdict"] == "held"  # R2 is untouched
 
 
+# --- F2: an unread run cannot serve as a control and withdraws what depends on it -------------------------------
+
+def test_an_unread_r5_cannot_serve_as_its_rig_check(tmp_path):
+    """The review's score_probe case: an R5 whose receipt fails was still read as a control and left both headlines
+    standing. It must fail its rig check and withdraw the headlines that rest on it."""
+    card = build(tmp_path, baseline_show(), manifest_readable={"R5": False})
+    assert card["runs"]["R5"]["status"] == ["the manifest marks it unreadable"]
+    assert card["controls"]["R5_rig_check"]["held"] is False
+    assert card["controls"]["R5_rig_check"]["status"] == ["the manifest marks it unreadable"]
+    assert card["predictions"]["219.1"]["verdict"].startswith("not read")
+    assert card["predictions"]["219.2"]["verdict"].startswith("not read")
+    assert card["headlines"] == ["no headline: R5 is not read (the manifest marks it unreadable), so its rig check "
+                                 "is not read"]
+
+
+def test_an_unread_r9_cannot_serve_as_its_coupling_check(tmp_path):
+    card = build(tmp_path, baseline_show(), manifest_readable={"R9": False})
+    assert card["runs"]["R9"]["status"]
+    assert card["controls"]["R9_coupling_check"]["held"] is False
+    for key in ("219.3", "219.4", "219.5"):
+        assert card["predictions"][key]["verdict"].startswith("not read"), key
+    assert not any("post-training" in headline for headline in card["headlines"])
+
+
+def test_an_unread_r2_withdraws_only_the_need_headline(tmp_path):
+    card = build(tmp_path, baseline_show(), manifest_readable={"R2": False})
+    assert card["predictions"]["219.1"]["verdict"].startswith("not read")
+    assert card["predictions"]["219.2"]["verdict"].startswith("not read")
+    assert card["predictions"]["219.3"]["verdict"] == "held"
+    assert card["headlines"] == ["post-training's change to these four heads is needed, and it accounts for the "
+                                 "whole early-layer swap"]
+
+
+def test_an_unread_r8_withdraws_the_transplant_headline(tmp_path):
+    card = build(tmp_path, baseline_show(), manifest_readable={"R8": False})
+    assert card["headlines"] == ["these four heads are needed for the slot neurons' self-descriptions"]
+
+
+# --- F3: an unread R0/R1 cannot establish the gate item it feeds -------------------------------------------------
+
+def test_an_unread_r0_freezes_every_prediction(tmp_path):
+    card = build(tmp_path, baseline_show(), manifest_readable={"R0": False})
+    assert card["gate"]["passed"] is False
+    assert "r0_slot_persona" in card["gate"]["failures"]
+    assert card["gate"]["checks"]["r0_slot_persona"]["status"] == ["the manifest marks it unreadable"]
+    for key in ("219.1", "219.2", "219.3", "219.4", "219.5"):
+        assert card["predictions"][key]["verdict"].startswith("not read: gate failed"), key
+    assert card["headlines"] == ["no headline: the gate failed, so every prediction is frozen and reported as "
+                                 "exploratory"]
+
+
+def test_a_failed_r0_two_pass_gate_fails_the_gate(tmp_path):
+    """The review's 39/42 case: R0 is marked unread by its own reader gate and yet the gate passed."""
+    show = baseline_show()
+    pass2 = {"R0": set(show["R0"]) - set(SLOT[:3])}
+    card = build(tmp_path, show, pass2=pass2)
+    assert card["runs"]["R0"]["two_pass"]["shows_persona_agree"] == 39
+    assert card["runs"]["R0"]["two_pass"]["passes"] is False
+    assert card["gate"]["passed"] is False
+    assert "r0_slot_persona" in card["gate"]["failures"]
+    for key in ("219.1", "219.2", "219.3", "219.4", "219.5"):
+        assert card["predictions"][key]["verdict"].startswith("not read: gate failed"), key
+
+
+def test_an_unread_r1_fails_the_gate(tmp_path):
+    card = build(tmp_path, baseline_show(), manifest_readable={"R1": False})
+    assert card["gate"]["passed"] is False
+    assert "r1_slot_persona" in card["gate"]["failures"]
+    assert card["gate"]["checks"]["r1_slot_persona"]["status"] == ["the manifest marks it unreadable"]
+
+
 def test_the_42_item_gate_fails_though_a_pooled_gate_would_pass(tmp_path):
     """Two passes that agree on every concept item and disagree on three slot items: pooled agreement is 255 of 258,
     over any 95% pooled gate, while the registered 42-item gate (at least 40 of 42) fails at 39."""
@@ -564,6 +715,10 @@ def test_failed_gate_freezes_every_prediction(tmp_path):
     for key in ("219.1", "219.2", "219.3", "219.4", "219.5"):
         assert card["predictions"][key]["verdict"].startswith("not read"), key
         assert card["predictions"][key]["exploratory"] is True
+    # The gate-failed headline is the design's "with the failure first"; it never fired before because the check
+    # stringified the whole prediction dict rather than reading its verdict.
+    assert card["headlines"] == ["no headline: the gate failed, so every prediction is frozen and reported as "
+                                 "exploratory"]
 
 
 def test_a_missing_kernel_record_fails_the_gate(tmp_path):
@@ -573,6 +728,84 @@ def test_a_missing_kernel_record_fails_the_gate(tmp_path):
                                     tmp_path / "nowhere" / "kernel-check.json")
     assert card["gate"]["passed"] is False
     assert "kernel_check" in card["gate"]["failures"]
+
+
+# --- F8/F9: the kernel record must be an eager record, and a malformed one must fail the gate --------------------
+
+def test_the_kernel_check_requires_the_eager_kernel(tmp_path):
+    path = write_kernel(tmp_path / "kernel")
+    assert score219.kernel_check(path)["passes"] is True
+    mutators = {
+        "candidate-sdpa": lambda record: record.update(attn_implementation="sdpa"),
+        "candidate-missing": lambda record: record.pop("attn_implementation"),
+        "load-sdpa": lambda record: record["load"].update(attn_implementation="sdpa"),
+        "load-missing": lambda record: record["load"].pop("attn_implementation"),
+    }
+    for name, mutate in mutators.items():
+        record = json.loads(path.read_text(encoding="utf-8"))
+        mutate(record)
+        other = tmp_path / f"kernel-{name}.json"
+        other.write_text(json.dumps(record), encoding="utf-8")
+        result = score219.kernel_check(other)
+        assert result["passes"] is False, name
+        assert any("eager" in failure for failure in result["failures"]), (name, result)
+
+
+def test_a_malformed_kernel_record_fails_the_gate_instead_of_raising(tmp_path):
+    """The review's three malformed records: a row without `prompt`, a batch that is an object, and a row that is an
+    empty object. Each must fail the gate with a reason, not raise through `part_check.kernel_check`."""
+    show = baseline_show()
+    out = write_world(tmp_path / "results", show)
+    base = json.loads(write_kernel(tmp_path / "kernel").read_text(encoding="utf-8"))
+    batch = next(iter(base["runs"]))
+    malformed = {
+        "row-is-empty-object": {batch: [{}]},
+        "batch-value-is-dict": {batch: {"0": {}}},
+        "prompt-key-missing": {batch: [{"tokens": [1], "margins": [1.0]}]},
+    }
+    for name, runs in malformed.items():
+        record = dict(base, runs=runs)
+        path = tmp_path / f"{name}.json"
+        path.write_text(json.dumps(record), encoding="utf-8")
+        card = score219.build_scorecard(out, out / "kinds.json", out / "neurons.json", path)
+        assert card["gate"]["passed"] is False, name
+        assert "kernel_check" in card["gate"]["failures"], name
+        assert card["gate"]["checks"]["kernel_check"].get("reason"), name
+
+
+# --- F4/F10: R10's status is reported, never gating; a not-read 219.4 adds no claim ------------------------------
+
+def test_an_unreadable_r10_does_not_block_219_5(tmp_path):
+    """The review's R10 case: an unreadable R10 made 219.5 "not read". The design reads 219.5 from R10's net whenever
+    R10 scored and reports R10's status beside it; only a broken R10 makes 219.5 harder, never unread."""
+    card = build(tmp_path, baseline_show(), manifest_readable={"R10": False})
+    assert card["runs"]["R10"]["status"] == ["the manifest marks it unreadable"]
+    prediction = card["predictions"]["219.5"]
+    assert prediction["verdict"] == "held"
+    assert prediction["r10_status"] == ["the manifest marks it unreadable"]
+    assert card["predictions"]["219.4"]["verdict"] == "held"
+    assert any("early-layer swap" in headline for headline in card["headlines"])
+
+
+def test_a_not_read_219_4_adds_no_clause_to_the_headline():
+    """The unit rule: only a *failed* 219.4 emits the "not all" sentence; a not-read one emits no clause."""
+    predictions = {"219.1": {"verdict": "held"}, "219.2": {"verdict": "held"},
+                   "219.3": {"verdict": "held"}, "219.5": {"verdict": "held"},
+                   "219.4": {"verdict": "not read: R1 is not read (the manifest marks it unreadable)"},
+                   "R5_rig_check": {"detail": {"net": 0}, "held": True}}
+    assert score219.build_headlines(predictions) == [
+        "these four heads are needed for the slot neurons' self-descriptions",
+        "post-training's change to these four heads is needed"]
+
+
+def test_r1_unreadable_emits_no_219_4_clause(tmp_path):
+    """The review's R1-unreadable case must never print the claim "219.4 failed": here the gate freezes every
+    prediction (F3), and in any case no 219.4 clause may appear."""
+    card = build(tmp_path, baseline_show(), manifest_readable={"R1": False})
+    assert "not read: R1 is not read (the manifest marks it unreadable)" not in [
+        value["verdict"] for value in card["predictions"].values()]
+    assert not any("early-layer swap" in headline for headline in card["headlines"])
+    assert not any("not all" in headline for headline in card["headlines"])
 
 
 def test_219_4_is_not_read_unless_219_3_and_219_5_hold(tmp_path):
@@ -642,3 +875,32 @@ def test_pilot_is_pending_without_labels(tmp_path):
     (out / "labels-R0.jsonl").unlink()
     verdict = run219.pilot_verdict(out, argparse.Namespace(kinds=str(out / "kinds.json")))
     assert verdict["decision"] == "pending_labels"
+
+
+# --- F7: run219 checks the kernel record before it launches anything ---------------------------------------------
+
+def _launch_args(tmp_path, kernel_path):
+    return ["--host", str(tmp_path / "no-host"), "--neurons", str(tmp_path / "neurons.json"),
+            "--kinds", str(tmp_path / "kinds.json"), "--pushes", str(tmp_path / "pushes.pt"),
+            "--out", str(tmp_path / "out"), "--device", "cpu", "--kernel-check", str(kernel_path)]
+
+
+def test_run219_refuses_to_launch_without_a_passing_kernel_record(tmp_path):
+    """The design's first item is read before any run; a missing record must stop the stage before it loads a model
+    (the host path here does not exist, so reaching the loader would be a different error)."""
+    with pytest.raises(SystemExit, match="kernel check"):
+        run219.main(_launch_args(tmp_path, tmp_path / "nowhere" / "kernel-check.json"))
+
+
+def test_run219_refuses_a_non_eager_kernel_record(tmp_path):
+    path = write_kernel(tmp_path / "kernel")
+    record = json.loads(path.read_text(encoding="utf-8"))
+    record["attn_implementation"] = "sdpa"
+    path.write_text(json.dumps(record), encoding="utf-8")
+    with pytest.raises(SystemExit, match="kernel check"):
+        run219.main(_launch_args(tmp_path, path))
+
+
+def test_run219_accepts_a_passing_eager_kernel_record(tmp_path):
+    result = run219.check_kernel_record(write_kernel(tmp_path / "kernel"))
+    assert result["passes"] is True and not result["failures"]

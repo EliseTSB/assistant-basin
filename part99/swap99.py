@@ -273,6 +273,22 @@ def head_span(model, layer_no: int, head: int) -> tuple[int, int]:
     return head * head_size, (head + 1) * head_size
 
 
+def head_slice(part: str, ndim: int, start: int, end: int) -> tuple:
+    """The index into a transplant parameter that selects one head's ``[start:end]`` slice.
+
+    ``nn.Linear.weight`` is ``[out, in]``: q/k/v own output ROWS and o_proj owns input COLUMNS. The QK norms are 1-D
+    per-dimension weights, so their slice is the head's own dimensions. One definition, used by the write plan and by
+    the receipt's independent re-read.
+    """
+    if ndim == 1:
+        return (slice(start, end),)
+    if part in ("q_proj", "k_proj", "v_proj"):
+        return (slice(start, end), slice(None))
+    if part == "o_proj":  # o_proj: the head owns columns, not rows
+        return (slice(None), slice(start, end))
+    raise ValueError(f"{part!r} is not one of the transplant parts {TRANSPLANT_PARTS}")
+
+
 def install_ablation_hooks(model, heads: list[tuple[int, int]]):
     """Zero the named heads' slice of each layer's ``o_proj`` INPUT at every position (PART219-DESIGN.md).
 
@@ -290,34 +306,40 @@ def install_ablation_hooks(model, heads: list[tuple[int, int]]):
         head_span(model, layer_no, head)  # validation only
         by_layer.setdefault(layer_no, []).append(head)
     handles, receipt = [], []
-    for layer_no in (range(len(layers)) if not by_layer else sorted(by_layer)):
-        attn = layers[layer_no].self_attn
-        width = int(attn.o_proj.in_features)
-        spans = [(head * head_size, (head + 1) * head_size) for head in sorted(by_layer.get(layer_no, []))]
-        state = {"fired": False}
+    try:
+        for layer_no in (range(len(layers)) if not by_layer else sorted(by_layer)):
+            attn = layers[layer_no].self_attn
+            width = int(attn.o_proj.in_features)
+            spans = [(head * head_size, (head + 1) * head_size) for head in sorted(by_layer.get(layer_no, []))]
+            state = {"fired": False}
 
-        def hook(_module, args, layer_no=layer_no, spans=spans, width=width, state=state):
-            hidden = args[0]
-            if hidden.shape[-1] != width:
-                raise ValueError(f"layer {layer_no} o_proj input is {tuple(hidden.shape)}, expected width {width}")
-            if not spans:
-                return None
-            zeroed = hidden.clone()
-            for start, end in spans:
-                zeroed[..., start:end] = 0
-            if not state["fired"]:
-                state["fired"] = True
+            def hook(_module, args, layer_no=layer_no, spans=spans, width=width, state=state):
+                hidden = args[0]
+                if hidden.shape[-1] != width:
+                    raise ValueError(f"layer {layer_no} o_proj input is {tuple(hidden.shape)}, expected width {width}")
+                if not spans:
+                    return None
+                zeroed = hidden.clone()
                 for start, end in spans:
-                    receipt.append({
-                        "layer": layer_no, "head": start // head_size, "slice": [start, end],
-                        "positions": int(hidden.numel() // hidden.shape[-1]),
-                        "max_abs_before": float(hidden[..., start:end].abs().max()),
-                        "max_abs_after": float(zeroed[..., start:end].abs().max()),
-                        "all_zero": bool(torch.count_nonzero(zeroed[..., start:end]) == 0),
-                    })
-            return (zeroed,) + tuple(args[1:])
+                    zeroed[..., start:end] = 0
+                if not state["fired"]:
+                    state["fired"] = True
+                    for start, end in spans:
+                        receipt.append({
+                            "layer": layer_no, "head": start // head_size, "slice": [start, end],
+                            "positions": int(hidden.numel() // hidden.shape[-1]),
+                            "max_abs_before": float(hidden[..., start:end].abs().max()),
+                            "max_abs_after": float(zeroed[..., start:end].abs().max()),
+                            "all_zero": bool(torch.count_nonzero(zeroed[..., start:end]) == 0),
+                        })
+                return (zeroed,) + tuple(args[1:])
 
-        handles.append(attn.o_proj.register_forward_pre_hook(hook))
+            handles.append(attn.o_proj.register_forward_pre_hook(hook))
+    except BaseException:
+        # A raise part-way through instalment must not leave hooks behind for the next run in this process.
+        for handle in handles:
+            handle.remove()
+        raise
     return handles, receipt
 
 
@@ -389,37 +411,56 @@ def transplant_heads(host_model, donor_model, heads: list[tuple[int, int]], mode
                 raise ValueError(
                     f"the donor's shapes differ at layer {layer_no} self_attn.{part}: "
                     f"host {tuple(host_param.shape)} vs donor {tuple(donor_param.shape)}")
-            if host_param.ndim == 1:
-                index = (slice(start, end),)
-            elif part in ("q_proj", "k_proj", "v_proj"):
-                index = (slice(start, end), slice(None))
-            else:  # o_proj: the head owns columns, not rows
-                index = (slice(None), slice(start, end))
+            index = head_slice(part, host_param.ndim, start, end)
             plans.append((layer_no, head, part, start, end, host_param, donor_param, index))
 
-    with torch.no_grad():
-        for layer_no, head, part, start, end, host_param, donor_param, index in plans:
-            original = host_param[index].detach().clone()
-            donor_slice = donor_param[index].detach().to(device=host_param.device, dtype=torch.float32)
-            if mode == "donor":
-                expected = donor_slice.to(dtype=host_param.dtype)
-            else:
-                expected = (2.0 * original.to(torch.float32) - donor_slice).to(dtype=host_param.dtype)
-            host_param[index].copy_(expected)
-            written = host_param[index].detach()
-            original_norm = float(original.to(torch.float32).norm())
-            result["restore"].append((host_param, index, original))
-            result["records"].append({
-                "layer": layer_no, "head": head,
-                "parameter": f"layers.{layer_no}.self_attn.{part}.weight",
-                "slice": [start, end],
-                "matches_expected": bool(torch.equal(written, expected)),
-                "norm_delta": float((written.to(torch.float32) - original.to(torch.float32)).norm()),
-                "norm_ratio": (float(written.to(torch.float32).norm()) / original_norm) if original_norm else None,
-                "elements": int(written.numel()),
-            })
-            result["parameters_changed"] += 1
-            result["elements_changed"] += int(written.numel())
+    written_restore = []
+    try:
+        with torch.no_grad():
+            for layer_no, head, part, start, end, host_param, donor_param, index in plans:
+                # Re-derive the span from the config by the named head alone. The write below may have been planned
+                # with a wrong span (that is exactly what the receipt must catch); this one is the design's
+                # [head*head_size:(head+1)*head_size] and the bytes are read back at *this* index, independently.
+                config_start, config_end = head * head_size, (head + 1) * head_size
+                check_index = head_slice(part, host_param.ndim, config_start, config_end)
+                original = host_param[index].detach().clone()
+                original_check = host_param[check_index].detach().clone()
+                donor_slice = donor_param[index].detach().to(device=host_param.device, dtype=torch.float32)
+                if mode == "donor":
+                    expected = donor_slice.to(dtype=host_param.dtype)
+                else:
+                    expected = (2.0 * original.to(torch.float32) - donor_slice).to(dtype=host_param.dtype)
+                written_restore.append((host_param, index, original))
+                host_param[index].copy_(expected)
+                written = host_param[index].detach()
+
+                donor_check = donor_param[check_index].detach().to(device=host_param.device, dtype=torch.float32)
+                if mode == "donor":
+                    expected_check = donor_check.to(dtype=host_param.dtype)
+                else:
+                    expected_check = (2.0 * original_check.to(torch.float32) - donor_check).to(dtype=host_param.dtype)
+                written_check = host_param[check_index].detach()
+                slice_from_config = [start, end] == [config_start, config_end]
+                matches = slice_from_config and bool(torch.equal(written_check, expected_check))
+                original_norm = float(original.to(torch.float32).norm())
+                result["records"].append({
+                    "layer": layer_no, "head": head,
+                    "parameter": f"layers.{layer_no}.self_attn.{part}.weight",
+                    "slice": [start, end],
+                    "config_slice": [config_start, config_end],
+                    "slice_from_config": slice_from_config,
+                    "matches_expected": matches,
+                    "norm_delta": float((written.to(torch.float32) - original.to(torch.float32)).norm()),
+                    "norm_ratio": (float(written.to(torch.float32).norm()) / original_norm) if original_norm else None,
+                    "elements": int(written.numel()),
+                })
+                result["parameters_changed"] += 1
+                result["elements_changed"] += int(written.numel())
+    except BaseException:
+        # A raise part-way through the write must not leave a partly transplanted host behind.
+        restore_transplant(written_restore)
+        raise
+    result["restore"] = written_restore
     return result
 
 
@@ -702,118 +743,125 @@ def run(args, *, model=None, tokenizer=None, donor_model=None):
         if needs_donor and donor_model is None:
             raise ValueError(f"--swap {args.swap} needs a donor model when the host is preloaded")
 
-    # Part 219 reset receipt: Part 99's own --swap is a weight change too, so its originals are cloned before the copy
-    # and put back after the run. Without --reference-replay nothing is cloned and Part 99 to 104 are untouched.
+    # Part 219's reset receipt needs the model exactly as it was loaded: hooks off, transplanted slices back and
+    # Part 99's swapped parameters back -- and that must hold when a run raises, not only when it finishes. One
+    # try/finally therefore runs from the first mutation below (Part 99's --swap, then the transplant probe/copy
+    # and the ablation hooks) to the end of the generation loop. When the caller preloaded the model it keeps it,
+    # so the original bytes are cloned even without --reference-replay; a single-tag Part 99-104 command that owns
+    # its model still clones nothing unless the reset receipt was asked for.
     swap_snapshot = []
-    if args.swap != "none" and reference_replay:
-        swap_snapshot = snapshot_components(model, args.swap, parse_layers(args.layers))
-    swap_result = copy_components(model, donor_model, args.swap, layers=parse_layers(args.layers),
-                                  extrapolate=args.extrapolate)
-    if donor_model is not None and owns_models and not transplant_list:
-        # Part 99 freed the donor as soon as the copy was done; a transplant still needs it for the probe and the copy.
-        del donor_model
-        donor_model = None
-        gc.collect()
-
-    layers = c.get_layers(model)
-    medians = c.residual_medians(model, tokenizer, args.frame, args.device)
-    prepared = {}
-    for neuron in neurons:
-        layer_no = int(neuron["layer"])
-        index = int(neuron["neuron"])
-        if not 0 <= layer_no < len(layers):
-            raise ValueError(f"layer {layer_no} outside model range")
-        weight = layers[layer_no].mlp.down_proj.weight
-        if not 0 <= index < weight.shape[1]:
-            raise ValueError(f"neuron {index} outside layer {layer_no} W_down input width")
-        target_norm = ALPHA * medians[layer_no]
-        prepared[(str(neuron["id"]), "neuron")] = c.neuron_push(weight, index, target_norm)
-        prepared[(str(neuron["id"]), "random")] = c.random_direction(
-            weight, int(neuron["control_seed"]), target_norm
-        )
-    if args.pushes:
-        # Amendment 1 (Alden's review): one fixed injected vector per unit for every host, built once on the
-        # unmodified Instruct model in the chat frame (make_pushes99.py); host recalibration is not used.
-        fixed = torch.load(args.pushes, map_location="cpu")
-        for key in list(prepared):
-            vec = fixed[f"{key[0]}|{key[1]}"]
-            ref = prepared[key]
-            prepared[key] = vec.to(device=ref.device, dtype=ref.dtype)
-
-    print(
-        f"{args.tag}: host={args.host} donor={args.donor or '-'} swap={args.swap} "
-        f"copied={_startup_copy_description(swap_result)} "
-        f"tensors_copied={swap_result['tensors_copied']} "
-        f"elements_copied={swap_result['elements_copied']}",
-        flush=True,
-    )
-
-    work_by_layer = {}
-    for neuron in neurons:
-        layer_no = int(neuron["layer"])
-        work_by_layer.setdefault(layer_no, []).extend(
-            (neuron, unit, qi) for unit in ("neuron", "random") for qi in questions
-        )
-    # Unpushed answers to the six questions (a zero push), so each run's coherence without any push is on record
-    # (PART99-DESIGN.md, prior-art section). Written with id "unpushed" and unit "none".
-    first = neurons[0]
-    unpushed = {"id": "unpushed", "layer": int(first["layer"])}
-    prepared[("unpushed", "none")] = prepared[(str(first["id"]), "neuron")] * 0
-    work_by_layer.setdefault(int(first["layer"]), []).extend(
-        (unpushed, "none", qi) for qi in range(len(QUESTIONS))
-    )
-
-    # Part 219, transplant: measure the first batch before the head weights move, move them, measure the same batch
-    # again. The probe carries the run's own row pushes, so it sees the batch the first generation call sees.
+    swap_result = None
     transplant_result = None
     coupling = None
-    if transplant_list is not None:
-        if transplant_list and donor_model is None:
-            raise ValueError("--transplant-heads needs --donor")
-        if transplant_list:
-            head_size, _num_heads = head_geometry(model)
-            probe_chunk = work_by_layer[next(iter(work_by_layer))][:max(args.batch, 1)]
-            probe_ids, probe_mask, _width = c.batch_inputs(
-                tokenizer, [QUESTIONS[qi] for _neuron, _unit, qi in probe_chunk], args.frame, args.device)
-            probe_pushes = torch.stack([
-                prepared[(str(neuron["id"]), unit)] for neuron, unit, _qi in probe_chunk])
-            watch = sorted({layer_no for layer_no, _head in transplant_list})
-            before = attention_probe(model, probe_ids, probe_mask, int(probe_chunk[0][0]["layer"]),
-                                     probe_pushes, watch, head_size)
-            transplant_result = transplant_heads(model, donor_model, transplant_list, transplant_mode)
-            after = attention_probe(model, probe_ids, probe_mask, int(probe_chunk[0][0]["layer"]),
-                                    probe_pushes, watch, head_size)
-            coupling = coupling_log(
-                before, after,
-                {layer_no: {head for layer, head in transplant_list if layer == layer_no} for layer_no in watch},
-                {"ids": [str(neuron["id"]) for neuron, _unit, _qi in probe_chunk],
-                 "units": [unit for _neuron, unit, _qi in probe_chunk],
-                 "question_indices": [int(qi) for _neuron, _unit, qi in probe_chunk],
-                 "batch": int(args.batch), "positions": int(probe_ids.shape[1])})
-        else:
-            # An empty set still runs the planner: that is R0b's do-nothing check of the transplant machinery.
-            transplant_result = transplant_heads(model, donor_model, [], transplant_mode)
-
     ablation_handles, ablation_receipt = [], []
-    if ablate_heads is not None:
-        ablation_handles, ablation_receipt = install_ablation_hooks(model, ablate_heads)
-
-    out_dir = Path(args.out)
-    out_dir.mkdir(parents=True, exist_ok=True)
-    output = out_dir / f"{args.tag}.jsonl"
-    existing = set()
-    if output.exists():
-        with output.open(encoding="utf-8") as stream:
-            for line in stream:
-                row = json.loads(line)
-                existing.add((str(row["id"]), row["unit"], int(row["question_index"])))
-    started = time.perf_counter()
-    total = sum(
-        sum((str(row[0]["id"]), row[1], row[2]) not in existing for row in rows)
-        for rows in work_by_layer.values()
-    )
-    done = 0
     try:
+        if args.swap != "none" and (reference_replay or not owns_models):
+            swap_snapshot = snapshot_components(model, args.swap, parse_layers(args.layers))
+        swap_result = copy_components(model, donor_model, args.swap, layers=parse_layers(args.layers),
+                                      extrapolate=args.extrapolate)
+        if donor_model is not None and owns_models and not transplant_list:
+            # Part 99 freed the donor as soon as the copy was done; a transplant still needs it for the probe and the copy.
+            del donor_model
+            donor_model = None
+            gc.collect()
+
+        layers = c.get_layers(model)
+        medians = c.residual_medians(model, tokenizer, args.frame, args.device)
+        prepared = {}
+        for neuron in neurons:
+            layer_no = int(neuron["layer"])
+            index = int(neuron["neuron"])
+            if not 0 <= layer_no < len(layers):
+                raise ValueError(f"layer {layer_no} outside model range")
+            weight = layers[layer_no].mlp.down_proj.weight
+            if not 0 <= index < weight.shape[1]:
+                raise ValueError(f"neuron {index} outside layer {layer_no} W_down input width")
+            target_norm = ALPHA * medians[layer_no]
+            prepared[(str(neuron["id"]), "neuron")] = c.neuron_push(weight, index, target_norm)
+            prepared[(str(neuron["id"]), "random")] = c.random_direction(
+                weight, int(neuron["control_seed"]), target_norm
+            )
+        if args.pushes:
+            # Amendment 1 (Alden's review): one fixed injected vector per unit for every host, built once on the
+            # unmodified Instruct model in the chat frame (make_pushes99.py); host recalibration is not used.
+            fixed = torch.load(args.pushes, map_location="cpu")
+            for key in list(prepared):
+                vec = fixed[f"{key[0]}|{key[1]}"]
+                ref = prepared[key]
+                prepared[key] = vec.to(device=ref.device, dtype=ref.dtype)
+
+        print(
+            f"{args.tag}: host={args.host} donor={args.donor or '-'} swap={args.swap} "
+            f"copied={_startup_copy_description(swap_result)} "
+            f"tensors_copied={swap_result['tensors_copied']} "
+            f"elements_copied={swap_result['elements_copied']}",
+            flush=True,
+        )
+
+        work_by_layer = {}
+        for neuron in neurons:
+            layer_no = int(neuron["layer"])
+            work_by_layer.setdefault(layer_no, []).extend(
+                (neuron, unit, qi) for unit in ("neuron", "random") for qi in questions
+            )
+        # Unpushed answers to the six questions (a zero push), so each run's coherence without any push is on record
+        # (PART99-DESIGN.md, prior-art section). Written with id "unpushed" and unit "none".
+        first = neurons[0]
+        unpushed = {"id": "unpushed", "layer": int(first["layer"])}
+        prepared[("unpushed", "none")] = prepared[(str(first["id"]), "neuron")] * 0
+        work_by_layer.setdefault(int(first["layer"]), []).extend(
+            (unpushed, "none", qi) for qi in range(len(QUESTIONS))
+        )
+
+        # Part 219, transplant: measure the first batch before the head weights move, move them, measure the same batch
+        # again. The probe carries the run's own row pushes, so it sees the batch the first generation call sees.
+        if transplant_list is not None:
+            if transplant_list and donor_model is None:
+                raise ValueError("--transplant-heads needs --donor")
+            if transplant_list:
+                head_size, _num_heads = head_geometry(model)
+                probe_chunk = work_by_layer[next(iter(work_by_layer))][:max(args.batch, 1)]
+                probe_ids, probe_mask, _width = c.batch_inputs(
+                    tokenizer, [QUESTIONS[qi] for _neuron, _unit, qi in probe_chunk], args.frame, args.device)
+                probe_pushes = torch.stack([
+                    prepared[(str(neuron["id"]), unit)] for neuron, unit, _qi in probe_chunk])
+                watch = sorted({layer_no for layer_no, _head in transplant_list})
+                before = attention_probe(model, probe_ids, probe_mask, int(probe_chunk[0][0]["layer"]),
+                                         probe_pushes, watch, head_size)
+                transplant_result = transplant_heads(model, donor_model, transplant_list, transplant_mode)
+                after = attention_probe(model, probe_ids, probe_mask, int(probe_chunk[0][0]["layer"]),
+                                        probe_pushes, watch, head_size)
+                coupling = coupling_log(
+                    before, after,
+                    {layer_no: {head for layer, head in transplant_list if layer == layer_no} for layer_no in watch},
+                    {"ids": [str(neuron["id"]) for neuron, _unit, _qi in probe_chunk],
+                     "units": [unit for _neuron, unit, _qi in probe_chunk],
+                     "question_indices": [int(qi) for _neuron, _unit, qi in probe_chunk],
+                     "batch": int(args.batch), "positions": int(probe_ids.shape[1])})
+            else:
+                # An empty set enters the transplant path and returns from `transplant_heads` before the
+                # geometry/donor/shape planning: R0b exercises that empty early return (and the empty ablation hooks),
+                # not the planner. The shape checks are covered by the transplant tests.
+                transplant_result = transplant_heads(model, donor_model, [], transplant_mode)
+
+        if ablate_heads is not None:
+            ablation_handles, ablation_receipt = install_ablation_hooks(model, ablate_heads)
+
+        out_dir = Path(args.out)
+        out_dir.mkdir(parents=True, exist_ok=True)
+        output = out_dir / f"{args.tag}.jsonl"
+        existing = set()
+        if output.exists():
+            with output.open(encoding="utf-8") as stream:
+                for line in stream:
+                    row = json.loads(line)
+                    existing.add((str(row["id"]), row["unit"], int(row["question_index"])))
+        started = time.perf_counter()
+        total = sum(
+            sum((str(row[0]["id"]), row[1], row[2]) not in existing for row in rows)
+            for rows in work_by_layer.values()
+        )
+        done = 0
         with output.open("a", encoding="utf-8") as stream:
             for layer_no, layer_work in work_by_layer.items():
                 layer_work = [row for row in layer_work
@@ -888,7 +936,9 @@ def run(args, *, model=None, tokenizer=None, donor_model=None):
         frame=args.frame, device=args.device, torch_version=torch.__version__,
         transformers_version=transformers.__version__, seconds=seconds, questions=questions,
         extras={
-            "attn_implementation": attn_option,
+            # Not `attn_option`: argparse's default is the *string* "default", which write_meta would happily record.
+            # `attn_implementation` is None for the default and "eager" when asked, so a default run writes no key.
+            "attn_implementation": attn_implementation,
             "ablate_heads": None if ablate_heads is None else [f"L{layer}H{head}" for layer, head in ablate_heads],
             "transplant_heads": None if transplant_list is None else
             [f"L{layer}H{head}" for layer, head in transplant_list],

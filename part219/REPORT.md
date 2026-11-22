@@ -15,7 +15,7 @@ is given, generated rows gain no key unless `--record-token-ids` is passed, and 
 
 | option | behaviour |
 |---|---|
-| `--attn-implementation {default,eager}` | `eager` is passed to `from_pretrained` for the host (`load_model`) and the donor (`_load_donor`); the value is recorded in the meta. `default` passes nothing, as Part 99 did. |
+| `--attn-implementation {default,eager}` | `eager` is passed to `from_pretrained` for the host (`load_model`) and the donor (`_load_donor`) and recorded in the meta. `default` passes nothing and writes **no** key, as Part 99 did. |
 | `--ablate-heads L0H10,...` | a forward pre-hook on each named layer's `o_proj` zeroes `[128h:128(h+1)]` of its **input** at every position. Head size is `hidden_size / num_attention_heads` from the config and is checked against `o_proj.in_features`, `q_proj.out_features` and `config.head_dim`; `num_key_value_heads != num_attention_heads` is refused. |
 | `--transplant-heads L0H10,... --donor D --transplant-mode {donor,opposite}` | per head: rows `[s:e]` of `q_proj`/`k_proj`/`v_proj`, columns `[s:e]` of `o_proj`, and `q_norm.weight[s:e]`, `k_norm.weight[s:e]`. `donor` copies the donor's bytes; `opposite` writes `(2 * host - donor)` in float32 cast to the host dtype. The whole plan is shape-checked (donor geometry and every parameter) before one value is written; the originals are kept for the reset. |
 | `--reference-replay FILE` | writes the stored prompt's replay to `FILE` when it does not exist, and compares this run's replay with it exactly when it does. |
@@ -56,8 +56,11 @@ recomputes R5/R9's heads from the registered rule (`random.Random(219)`, one `rn
 15 eligible heads) and refuses to start if the result is not `L0H12, L1H11, L2H5, L3H9` or if a registered drop is
 not under 0.035. It writes `manifest.json` after every run (so a crash leaves a record), checks R0b against R0 token
 for token, checks every reset receipt against R0's stored replay, and marks a run unreadable when its row count,
-receipt, transplant bytes or kernel record is wrong. A progress line is printed every eight seconds by a heartbeat
-thread as well as by swap99's per-240-row lines.
+receipt or transplant bytes are wrong. Before a stage launches anything it checks the design's kernel record
+(`--kernel-check`, default `results/part219/kernel-check.json`): the record must exist, pass
+`tools/part_check.py kernel_check` against its CPU float32 reference, and record `attn_implementation: "eager"` on the
+candidate (and on its `load` block when present), or the stage refuses to start. A progress line is printed every
+eight seconds by a heartbeat thread as well as by swap99's per-240-row lines.
 
 ### `part219/score219.py`
 
@@ -72,8 +75,10 @@ with the exact two-sided McNemar p; the per-run two-pass gate on the 42 slot ite
 
 1. **R0b is one invocation** with `--ablate-heads=` and `--transplant-heads=` both empty. An empty transplant set
    deliberately does **not** require a donor, so R0b stays in the no-donor process (the design's one host load). The
-   ablation hooks are still installed on every layer and return `None`; the transplant planner still runs and returns
-   an empty plan. That is what "through both new hooks with empty head sets" can mean without a second model.
+   ablation hooks are still installed on every layer and return `None`. The empty transplant set enters
+   `transplant_heads` and returns from its empty early return, before the geometry/donor/shape planning: R0b
+   exercises that empty path, **not** the planner, and the planner's shape checks are covered by the transplant
+   tests. That is what "through both new hooks with empty head sets" can mean without a second model.
 2. **`--reference-replay` writes when absent and compares when present.** `run219 --stage b` refuses to start when
    the file is missing, so a stage-b run can never silently become its own reference.
 3. **The reset receipt restores Part 99's `--swap` too.** R1 changes the model by swapping layers 0–3's attention,
@@ -97,12 +102,13 @@ Nothing in the design, `PREDICTIONS.md`, or any threshold was changed.
 ## 3. Tests
 
 ```
-$ python -I -m pytest part219 part99 -q
-45 passed in 8.82s
+$ /home/elisepc/neuron-probe/.venv/bin/python -I -m pytest part219 part99 -q
+63 passed in 10.26s
 ```
 
-(`python3` on this machine has no torch; the run above used the project's torch/transformers 2.14.1+cpu/5.23.0
-environment. `part219` alone: 31 passed.)
+(`python3` on this machine has no torch; the run above used the project's torch/transformers 2.14.1+cpu/5.20.0
+environment. `part219` alone: 49 passed. The review fold added 18 tests — see `REPORT-fold-r1.md` for each one and
+its sabotage.)
 
 The fixture is `tests/test_olmo2.py`'s tiny OLMo 2 (16 hidden, 3 layers, 2 query heads, 2 key/value heads, head_dim
 8) built as an `Olmo2ForCausalLM` with a word-level tokenizer and a chat template, so `swap99.run` goes through its
@@ -114,13 +120,14 @@ then `--stage b` wrote 12 runs of 30 rows, R0b identical to R0 token for token, 
 
 ### Every test and its sabotage
 
-Each sabotage patches a **copy** of the tracked files (never the tracked file) and re-runs the suite; all 31 turned
-their named test red. The patch column is the change, not the diff line.
+Each sabotage patches a **copy** of the tracked files (never the tracked file) and re-runs the suite; all 49 turned
+their named test red. The patch column is the change, not the diff line. The 31 build tests are below; the 18 the
+review fold added are listed with their sabotages in `REPORT-fold-r1.md`.
 
 | test | sabotage that turns it red |
 | --- | --- |
 | `test_generate_batch_matches_the_padding_rule_it_had_before` | `batch_inputs` pads on the right instead of the left |
-| `test_a_default_run_writes_no_part219_keys` | `write_meta` always writes `attn_implementation` |
+| `test_a_default_run_writes_no_part219_keys` | `run()` records the raw option again (`attn_option`), so a default CLI run writes `attn_implementation: "default"` |
 | `test_the_attention_implementation_option_reaches_every_load` | `load_model` drops the kwarg |
 | `test_empty_head_sets_are_bit_identical` | the empty ablation hook zeroes head 0 |
 | `test_ablation_zeroes_exactly_the_named_slice` | the hook's span is `[0:head_size]` whatever the head |
@@ -192,9 +199,9 @@ receipts in every run's meta, with every old default unchanged. `part219/run219.
 design's two processes, asserts the frozen head list from the registered rule, checks R0b token for token and every
 reset receipt against R0, and writes a manifest that marks bad runs unreadable. `part219/score219.py` reuses Part
 101's read, computes the 16/5 split from the neuron list, adds net counts, exact McNemar, the 42-item two-pass gate,
-the gate and every reading/headline rule, and writes `scorecard.json` and `SCORECARD.md`. `45 passed` for
-`pytest part219 part99 -q`; 31 tests each shown red under a named sabotage; the two-stage command line ran end to
-end on a tiny 16-head OLMo 2.
+the gate and every reading/headline rule, and writes `scorecard.json` and `SCORECARD.md`. `63 passed` for
+`pytest part219 part99 -q`; 49 tests each shown red under a named sabotage; the two-stage command line ran end to
+end on a tiny 16-head OLMo 2. The review fold (`REPORT-fold-r1.md`) adds the F1–F10 fixes on top.
 
 ## FINDINGS
 
@@ -214,6 +221,7 @@ end on a tiny 16-head OLMo 2.
 ## BLOCKERS
 
 None for the build. One environment note: the system `python3` has no torch or transformers, so the brief's command
-as written fails with `ModuleNotFoundError: No module named 'torch'`; the suite was run with the project's
-torch-bearing interpreter (`/home/elisepc/dspy-wsp/.venv/bin/python -I -m pytest part219 part99 -q`, 45 passed).
-No GPU, no real OLMo weights and no earlier part's results were touched.
+as written fails with `ModuleNotFoundError: No module named 'torch'`; the suite was run with a torch-bearing
+interpreter (`/home/elisepc/neuron-probe/.venv/bin/python -I -m pytest part219 part99 -q`, 63 passed after the review
+fold; the build's run used `/home/elisepc/dspy-wsp/.venv/bin/python` and reported 45). No GPU, no real OLMo weights
+and no earlier part's results were touched.

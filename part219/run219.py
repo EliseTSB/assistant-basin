@@ -8,8 +8,10 @@ Two processes, as the design's Optimization section takes them (one model pair p
 
 Every run is Part 99's `swap99.py` with this part's additive options: `--attn-implementation eager`,
 `--ablate-heads`, `--transplant-heads`/`--transplant-mode`, `--reference-replay` and `--record-token-ids`. The
-orchestrator writes `manifest.json` beside the runs (a run whose receipt fails is marked unreadable there), checks
-R0b against R0 token for token, and checks every reset receipt against R0's stored replay.
+orchestrator checks the design's kernel record (`--kernel-check`) before it launches anything and refuses a record
+that does not exist, does not pass `tools/part_check.kernel_check`, or does not record the eager kernel. It writes
+`manifest.json` beside the runs (a run whose receipt fails is marked unreadable there), checks R0b against R0 token
+for token, and checks every reset receipt against R0's stored replay.
 
     --pilot   runs R0 and R2 only and applies the design's pilot stopping rule (see pilot_verdict below).
 
@@ -96,6 +98,24 @@ def assert_registered_heads() -> list[str]:
         if not drop < ELIGIBLE_ORDINARY_DROP:
             raise SystemExit(f"{name}'s registered ordinary-answer drop {drop} is not under {ELIGIBLE_ORDINARY_DROP}")
     return computed
+
+
+def check_kernel_record(path: Path) -> dict:
+    """The design's kernel check, read before the stage spends a model load on any run.
+
+    The record must exist, pass `tools/part_check.kernel_check` against its CPU float32 reference, and record the
+    eager kernel on the candidate (and on its `load` block when it has one). `score219.kernel_check` is the scorer's
+    single implementation of that rule; here a failure is a refusal to launch, because the design says a kernel record
+    that cannot pass is the first reported result and nothing below it is read.
+    """
+    import score219  # one definition of the kernel rule; a generation-only stage pays only this import
+
+    result = score219.kernel_check(Path(path))
+    if not result.get("passes"):
+        reasons = result.get("failures") or [result.get("reason", "the record does not pass")]
+        raise SystemExit(f"the kernel check {path} does not pass ({'; '.join(str(reason) for reason in reasons)}): "
+                         "refusing to launch any run")
+    return result
 
 
 def specs_for_stage(stage: str) -> list[dict]:
@@ -323,6 +343,7 @@ def write_manifest(path: Path, manifest: dict) -> None:
 def run_stage(args) -> dict:
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
+    kernel = check_kernel_record(Path(args.kernel_check))
     replay_path = Path(args.replay) if args.replay else out / "replay-R0.json"
     if args.stage == "b" and not replay_path.exists():
         raise SystemExit(f"{replay_path} is missing: stage a must run R0 first, so every stage b reset receipt has a "
@@ -335,7 +356,7 @@ def run_stage(args) -> dict:
     manifest.setdefault("part", PART)
     manifest.setdefault("runs", {})
     manifest.update({"host": args.host, "donor": args.donor, "batch": args.batch,
-                     "attn_implementation": "eager",
+                     "attn_implementation": "eager", "kernel_check": kernel,
                      "registered_frozen_heads": list(FROZEN_HEADS), "recomputed_frozen_heads": frozen,
                      "registered_important_heads": list(IMPORTANT_HEADS),
                      "replay": replay_path.name})
@@ -444,6 +465,8 @@ def main(argv=None):
     parser.add_argument("--stage", choices=("a", "b"), default="a")
     parser.add_argument("--pilot", action="store_true", help="run R0 and R2 only and apply the pilot stopping rule")
     parser.add_argument("--replay", help="the stored replay file (default <out>/replay-R0.json)")
+    parser.add_argument("--kernel-check", default=str(REPO / "results" / "part219" / "kernel-check.json"),
+                        help="the design's kernel record; every stage refuses to launch unless it passes under eager")
     parser.add_argument("--limit", type=int, help="first N units only (tiny-model smoke runs)")
     args = parser.parse_args(argv)
     if args.batch < 1:
