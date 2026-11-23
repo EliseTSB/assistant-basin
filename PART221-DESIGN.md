@@ -1,11 +1,12 @@
 # Part 221: is the rest of early attention, without the four big heads, what OLMo 2 1B's slot neurons need?
 
 Procedure: v1
-Draft v2, 2026-11-22, by Journal Claude (Opus 5.5), before any data. Not registered. It follows Part 219, whose
+Draft v3, 2026-11-22, by Journal Claude (Opus 5.5), before any data. Not registered. It follows Part 219, whose
 result and the Gemini Deep Research prior-art report (citations checked at source,
 `Journal/notes/reports/gemini-handoffs-2026-11-22/citecheck/CITECHECK.md`, 13 of 13 found) both point at this
 experiment. v2 folds the DeepSeek design review r1 (SHIP-WITH-FIXES: 4 High, 4 Medium, 8 Low;
-`Journal/scratch/review-part221-design-ds-r1-2026-11-22/REVIEW.md`). Vesper's review to come. The commit that adds this
+`Journal/scratch/review-part221-design-ds-r1-2026-11-22/REVIEW.md`). v3 folds Vesper's review (SHIP-WITH-FIXES, council
+`vesper-part221-design-2026-11-22` #3: 2 High, 3 Medium; her optional norm-preserving arm left out of scope). The commit that adds this
 file to public main will be the registration.
 
 ## Question
@@ -89,6 +90,13 @@ relabelled; if not, they are labelled like every other run and the difference is
   different control and is out of scope here. A 60-head opposite move across four layers is a large change and may
   break answers, and a run whose pushed answers break posts a net loss near the ceiling of 15 whatever its weights did
   (Part 219's R2 and R2m: net 14 at 2 and 8 of 21 coherent). So R12 must clear the coherence bar for 221.3 to be read.
+  R12 is also asymmetric with R11 (Vesper's review): R11 steps to a trained, in-distribution checkpoint, while R12
+  extrapolates 60 heads off it, where parameter norms can overshoot (`||2H - D||` need not equal `||D||`) and small
+  `q_norm`/`k_norm` gains can turn negative. That bias works against 221.3 holding, so a held 221.3 is the stronger
+  for it; but R12 losing as much as R11 cannot separate "any change of this size" from "an off-checkpoint
+  extrapolation". R12's receipt logs, per tensor, `||W|| / ||W_0||` and the number of `q_norm` and `k_norm` elements
+  whose sign flips. A norm-preserving random-direction arm would be the clean generic-distance control; it is out of
+  scope here.
 - Receipts: every transplanted slice equals the donor's bytes (R11, R13, R14 to R17) or `2 x Instruct - donor`
   computed in float32 and cast to bf16 (R12); every run's reset replay equals R0 exactly.
 - Coupling, a read item: in OLMo 2 the QK norms take their RMS over the whole 2048-wide projection and the
@@ -96,8 +104,13 @@ relabelled; if not, they are labelled like every other run and the difference is
   change although their weights do not (Part 219's R8, changing one head per layer, moved sibling outputs by up to
   8.8% and a layer's attention-output rms by 12.7%). Each transplant run logs, on the first batch, per layer the
   relative change in rms(q), rms(k) and rms(attention output), and per head the relative drift of each of the four kept
-  heads' outputs (for R11 and R12, the four heads are named in the log). The largest kept-head drift goes into the
-  headline sentence (Headlines). No run here separates the coupling from the complement's own change (Limits).
+  heads' outputs (for R11 and R12, the four heads are named in the log). That drift is measured at `o_proj`'s input,
+  before `o_proj` and the post-attention norm: at layer 0 it is same-layer QK-norm coupling only, and at layers 1 to 3
+  it also carries the residual drift from earlier transplanted layers (in Part 219's R8 the sibling maximum grew from
+  1.56% at layer 0 to 8.84% at layer 3). The post-attention norm's rescaling of the kept heads' residual write is
+  tracked by the change in rms(attention output). Both the largest kept-head pre-norm drift and the largest
+  |relative change in rms(attention output)| go into the headline sentence (Headlines). No run here separates the
+  coupling from the complement's own change (Limits). (Vesper's review, v3.)
 - Breakage: Part 219's coherence bar applies to every run that is read (R11, R12, R14 to R17): at least 15 of 21 slot
   answers coherent, at least 13 concept units keep their persona, and not flagged inconclusive (more than 3 of 6
   unpushed answers incoherent). Each run's unpushed "Who are you?" labels are reported. An exploratory run below the
@@ -140,7 +153,7 @@ part re-plans before reading anything.
 | --- | --- | --- | --- |
 | 221.1 | R11 (the 60 complement heads from the donor): on the 16 upstream slot units, at least 7 net lose their persona against R0 | medium (55%) | Journal Claude |
 | 221.2 | R11's net loss on the 16 upstream units is at least R1's net loss minus 2 (at least 2 more than the additive share; Size) | low (35%) | Journal Claude |
-| 221.3 | 221.1 holds, and on the 16 upstream units the exact two-sided McNemar test of R11 against R12 (units showing the persona in R12 and not R11, against the reverse) gives p < 0.05 with R11 losing more (the direction of post-training's change matters, not only its size) | low (25%) | Journal Claude |
+| 221.3 | 221.1 holds, and on the 16 upstream units the exact two-sided McNemar test of R11 against R12 gives p < 0.05 with R11 losing more, where a unit "shows" in a run if its pushed answer shows the persona and that run's own unpushed answer does not (`score219.py`'s indicator); the discordant pairs are units showing in R12 and not R11, against the reverse (the direction of post-training's change matters, not only its size) | low (25%) | Journal Claude |
 
 ## Reading rules
 
@@ -163,12 +176,14 @@ plus Part 219's R8 net loss against R1's (a sum, not a decomposition: the parts 
 
 Headlines, decided by the verdicts, each stated as the intervention it is: "with the four heads' weights left as
 Instruct's, under an early attention whose normalisation context and other heads changed", and with the largest
-kept-head output drift from the coupling log in the same sentence:
-- 221.1 and 221.2 hold: "transplanting the other sixty early heads removes as much as the whole band does".
+kept-head pre-norm drift and the largest |change in rms(attention output)| from the coupling log in the same sentence:
+- 221.1 and 221.2 hold: "transplanting the other sixty early heads removes nearly as much as the whole band does (at
+  least the band's net loss minus 2)".
 - 221.1 holds, 221.2 fails: "transplanting the other sixty removes much of what the whole band removes, the whole band
   more".
-- 221.1 fails: "neither the four heads nor the other sixty, transplanted alone, remove most slot personas; the whole
-  band's change does", which points at the heads acting together.
+- 221.1 fails: "neither transplanting the four heads alone nor transplanting the other sixty alone removes most slot
+  personas; the whole band's change does". Whether that is additive or more than additive is left to the exploratory
+  R11 + R8 against R1 comparison.
 - With 221.3 holding, add "and post-training's direction matters, not only the size of the change". With 221.3 failing
   on its test while R12 is coherent, add only "R12, the one opposite direction tested, removed R11's count within the
   test's resolution", which is not a claim that direction does not matter.
@@ -180,8 +195,8 @@ kept-head output drift from the coupling log in the same sentence:
 - In R11 the four large heads keep Instruct's weights while the QK-norm RMS and the post-attention norm they share
   with their siblings see donor-derived values; that rescaling is logged and reported, not removed. A run that left
   the norm slices at Instruct's would not remove it either, because the RMS denominator is shared.
-- R12 tests one opposite direction; a random direction of the same size, the control for generic disruption, is not
-  run.
+- R12 tests one opposite direction, and an off-checkpoint one with possibly different parameter norms; a
+  norm-preserving random direction of the same size, the control for generic disruption, is not run.
 - One model, one donor checkpoint, one rubric; 21 slot units, 16 read for the predictions; the four heads were chosen
   by screen A, which was not registered.
 - The concept units sit at other layers than the slot units, so they control for personas in general, not for early
