@@ -1,5 +1,5 @@
 {
-  "schema_version": "c0b_constants_v3",
+  "schema_version": "c0b_constants_v4",
   "study": "stage_c0b_olmo3_7b_all_vs_last_and_ridge_whitening",
   "generator_script": "olmo3_virtual_and_highway/build_olmo3_c0b_constants.py",
   "model": "allenai/Olmo-3-7B-Instruct",
@@ -246,6 +246,8 @@
     "per_target_4L_gap_ratio_sd": 0.039629,
     "mean_pred_gap_D3_4L_16t": 5.136191,
     "c0b1b_delta_tot_guard_5pct": 0.25681,
+    "c0b1b_mean_3L_forecast_delta_attn": 3.4063,
+    "c0b1b_attn_lift_floor_50pct": 1.7031,
     "by_layer": {
       "12": {
         "gap_ratio_median": 0.17081,
@@ -275,6 +277,8 @@
     "regime_N_3L_L18_24_27_measured": {
       "R_mf_B_cross_arith_mean": 1.343792,
       "R_mf_B_cross_geo_mean": 1.34104,
+      "R_mf_B_cross_4L_C04_arith_mean": 1.235267,
+      "R_mf_B_cross_4L_C04_geo_mean": 1.23231,
       "R_mf_B_cross_sd": 0.088814,
       "R_mf_S_cross_arith_mean": 0.157264,
       "R_mf_S_cross_geo_mean": 0.156649,

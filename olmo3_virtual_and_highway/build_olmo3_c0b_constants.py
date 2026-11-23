@@ -262,6 +262,18 @@ def build_constants(
     meas_rmf_s = [b / sm for b, sm in zip(meas_rmf_b, meas_rmf_self)]
     meas_self_ratio = [sr / sm for sr, sm in zip(meas_rr_self, meas_rmf_self)]
 
+    # Also compute exact 4L {18, 21, 24, 27} C0.4 R_mf cross-domain arith/geo means from receipt
+    by_t_rmf_cross_4L: dict[str, list[float]] = {s: [] for s in t_strs}
+    for L_str in ("18", "21", "24", "27"):
+        rn = rec["regime_N"][L_str]
+        for src in t_strs:
+            d_src = t_doms[src]
+            for tr in rn["R_mf"][src]:
+                for dst, val in zip(t_strs, tr["all_16_dlogits"]):
+                    if t_doms[dst] != d_src:
+                        by_t_rmf_cross_4L[dst].append(abs(float(val)))
+    meas_rmf_b_4L = [fmean(by_t_rmf_cross_4L[s]) for s in t_strs]
+
     # Exact 512-pair C0.4 construction (32 rand_iso draws x 16 readout targets, averaged over 8 prompts x layers)
     rand_3L_cells: list[float] = []
     rand_4L_cells: list[float] = []
@@ -382,6 +394,11 @@ def build_constants(
             "implied_aggregate_attn_share_of_lift": round(d_a / d_t, 4),
         }
 
+    mean_3L_forecast_delta_attn = fmean(
+        [attn_lift_by_L[str(L)]["implied_delta_attn_all_minus_last"] for L in (12, 18, 24)]
+    )
+    c0b1b_attn_lift_floor_50pct = 0.50 * mean_3L_forecast_delta_attn
+
     # 5. Frozen R-lens cross-domain predictions via exact documented formula:
     #    pred_B_cross(arm, t) = mean_{t' cross, L in {18,24,27}} dose_N(L) * |u_t^T R_L w_{arm}(t')|
     U = bank["u_vectors"].float()  # [16, 4096]
@@ -501,8 +518,11 @@ def build_constants(
             100.0 * float(((ub_abs < math.log(1.25)) & (ub_norm < math.log(1.25))).mean()), 1
         )
 
-    # Full C0b.1a conjunction power (pooled [0.65,1.35] & 90% CI in (0.55,1.50),
-    # Bare [0.65,1.35], ChatML [0.65,1.35], |Chat-Bare| <= 0.35, all 4L [0.50,1.50])
+    # Full C0b.1a conjunction power:
+    # (i) pooled 4L [0.65,1.35] & 90% CI in (0.55,1.50),
+    # (ii) Bare 4L [0.65,1.35] & ChatML 4L [0.65,1.35],
+    # (iii) per-layer |median(ChatML(L)) - median(Bare(L))| <= 0.35 for all 4L,
+    # (iv) all 8 (layer, format) cell medians in [0.50,1.50].
     c0b1a_power: dict[str, dict[str, float]] = {}
     for sd in (0.06, 0.10, 0.15):
         sd_key = f"SD_t_{sd:.2f}"
@@ -520,7 +540,9 @@ def build_constants(
             se = 1.253 * np.std(pooled.mean(axis=2), axis=1, ddof=1) / 4.0
             lo = meds - 1.645 * se
             hi = meds + 1.645 * se
-            per_l = np.median(pooled, axis=1)  # [n_mc, 4]
+            per_l_b = np.median(bare, axis=1)  # [n_mc, 4]
+            per_l_c = np.median(chat, axis=1)  # [n_mc, 4]
+            per_l_diff = np.abs(per_l_c - per_l_b).max(axis=1)
             ok = (
                 (meds >= 0.65)
                 & (meds <= 1.35)
@@ -530,14 +552,16 @@ def build_constants(
                 & (med_b <= 1.35)
                 & (med_c >= 0.65)
                 & (med_c <= 1.35)
-                & (np.abs(med_c - med_b) <= 0.35)
-                & (per_l.min(axis=1) >= 0.50)
-                & (per_l.max(axis=1) <= 1.50)
+                & (per_l_diff <= 0.35)
+                & (per_l_b.min(axis=1) >= 0.50)
+                & (per_l_b.max(axis=1) <= 1.50)
+                & (per_l_c.min(axis=1) >= 0.50)
+                & (per_l_c.max(axis=1) <= 1.50)
             )
             c0b1a_power[sd_key][f"{true_r:.2f}"] = round(100.0 * float(ok.mean()), 1)
 
     return {
-        "schema_version": "c0b_constants_v3",
+        "schema_version": "c0b_constants_v4",
         "study": "stage_c0b_olmo3_7b_all_vs_last_and_ridge_whitening",
         "generator_script": "olmo3_virtual_and_highway/build_olmo3_c0b_constants.py",
         "model": "allenai/Olmo-3-7B-Instruct",
@@ -569,10 +593,14 @@ def build_constants(
             "per_target_4L_gap_ratio_sd": round(sample_sd(pt_means_c0), 6),
             "mean_pred_gap_D3_4L_16t": round(mean_pred_gap_D3, 6),
             "c0b1b_delta_tot_guard_5pct": round(c0b1b_delta_tot_guard, 6),
+            "c0b1b_mean_3L_forecast_delta_attn": round(mean_3L_forecast_delta_attn, 4),
+            "c0b1b_attn_lift_floor_50pct": round(c0b1b_attn_lift_floor_50pct, 4),
             "by_layer": by_layer_c0,
             "regime_N_3L_L18_24_27_measured": {
                 "R_mf_B_cross_arith_mean": round(fmean(meas_rmf_b), 6),
                 "R_mf_B_cross_geo_mean": round(geo_meas_rmf, 6),
+                "R_mf_B_cross_4L_C04_arith_mean": round(fmean(meas_rmf_b_4L), 6),
+                "R_mf_B_cross_4L_C04_geo_mean": round(geo_mean(meas_rmf_b_4L), 6),
                 "R_mf_B_cross_sd": round(sample_sd(meas_rmf_b), 6),
                 "R_mf_S_cross_arith_mean": round(fmean(meas_rmf_s), 6),
                 "R_mf_S_cross_geo_mean": round(geo_mean(meas_rmf_s), 6),
