@@ -21,6 +21,9 @@ Run the README's "Rescore it yourself" commands yourself from a fresh clone of p
 could not be rescored from public files when first tried: an arrays file was never published, and a scorer read
 inputs from the GPU job folder. A replication that fails on our own fresh clone wastes the window.
 
+Gate the diff on the scorer's exit code in that check too. On 2026-11-23 a sparse clone of Part 221 printed a
+clean `git diff` while the scorer had died on a missing import, because files that were never rewritten look unchanged.
+
 ## Template 1: Deep Research prior art (before designing)
 
 Paste everything below the line into Gemini Chat with Deep Research on. Fill the bracketed parts.
@@ -64,8 +67,9 @@ change, push or post anything anywhere; this is read-only checking.
 2. Open `results/partNNN/README.md` and find the section "Rescore it yourself".
 3. Use any Python 3.10 or later (the command may be `python3` on your machine); the scorer needs only the standard
    library.
-4. Run that section's commands exactly, from the repository root. `git diff --exit-code` prints nothing and exits 0
-   if your scorecard is byte-identical to the published one.
+4. Run that section's commands exactly, from the repository root, in a full clone (not sparse: scorers import code
+   from other part folders). First check that the scorer itself exits 0: if it fails before writing, `git diff` also
+   prints nothing. `git diff --exit-code` then prints nothing and exits 0 if your scorecard is byte-identical.
 5. Report: whether `git diff --exit-code` printed nothing and exited 0, and if not, the differences; the exact commands
    and any errors with their full text; your Python version; any step that was unclear, wrong or missing.
 6. Check the README's prose against the scorecard: pick six specific numbers from its opening paragraphs and tables,

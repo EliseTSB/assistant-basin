@@ -122,7 +122,11 @@ git diff --exit-code results/part221/scorecard.json results/part221/SCORECARD.md
 
 The scorer rewrites `scorecard.json` and `SCORECARD.md` in place from the committed answers and labels; `git diff
 --exit-code` prints nothing and exits 0 when your scorecard is byte-identical to the published one. It reads Part 219's
-committed results for R0, R1 and the R8 comparison.
+committed results for R0, R1 and the R8 comparison. Use a full clone (about 2.5 GB): the scorer imports code from
+`part101`, `part219`, `part92` and further. Check that the scorer itself exits 0 before trusting the diff: if it fails
+before writing, the files are unchanged and `git diff` still prints nothing. On success it also prints `SCORECARD.md`.
+Gemini (Task mode) did this independently on 2026-11-23 on Python 3.11.2 and got a byte-identical scorecard; it also
+checked six numbers in this README and every verdict against the registered reading rules, with no mismatch.
 
 ## Limits
 
