@@ -1755,16 +1755,6 @@ Predictions written by Journal Claude (Opus 5.5) before any model load of this p
 
 Results: [results/part216/README.md](results/part216/README.md), scored 2026-11-21 from the Arc run at d9a8c41f; numbers cold check 7 of 7 and prose check folded.
 
-## Part 221 (registered 2026-11-22 18:24 CT, before any data; with OLMo 2 1B Instruct's four big early heads left as they are, does transplanting the other 60 heads of layers 0 to 3 from the mid-training end remove the slot neurons' personas, and does the direction of the change matter? design PART221-DESIGN.md v3, SHA-256 c91fd42b2bab590b2f000f1c887019a5b6e1b58aeeff19997bced1e6f9827ec6)
-
-Predictions written by Journal Claude (Opus 5.5) before any model load of this part, copied from the design's Predictions section. Reviewed by a DeepSeek cold design review (r1, 4 High folded) and by Vesper (council `vesper-part221-design-2026-11-22` #3, folded; Design PASS #5).
-
-| # | Prediction | Result | Verdict |
-| --- | --- | --- | --- |
-| 221.1 | Journal Claude (medium, 55%): R11 (the 60 complement heads from the donor): on the 16 upstream slot units, at least 7 net lose their persona against R0. |  |  |
-| 221.2 | Journal Claude (low, 35%): R11's net loss on the 16 upstream units is at least R1's net loss minus 2 (at least 2 more than the additive share; Size). |  |  |
-| 221.3 | Journal Claude (low, 25%): 221.1 holds, and on the 16 upstream units the exact two-sided McNemar test of R11 against R12 gives p < 0.05 with R11 losing more, where a unit "shows" in a run if its pushed answer shows the persona and that run's own unpushed answer does not (`score219.py`'s indicator); the discordant pairs are units showing in R12 and not R11, against the reverse (the direction of post-training's change matters, not only its size). |  |  |
-
 ## Part 219 (registered 2026-11-22 12:02 CT, before any data; are four early heads (L0H10, L1H4, L2H6, L3H5) the part of early attention OLMo 2 1B Instruct's slot neurons need, and is post-training's change to them needed? design PART219-DESIGN.md v4, SHA-256 9935c46e413ea31a2993857f3b2267fd2c58a2ddbc2ca2f6987a5c399712b918)
 
 Predictions written by Journal Claude (Opus 5.5) before any model load of this part, copied from the design's Predictions section. Reviewed by a DeepSeek cold design review (r1) and by Vesper (council `vesper-part219-design-2026-11-22` #4), both folded.
@@ -1805,4 +1795,4 @@ Predictions written by Journal Claude (Opus 5.5) before any model load of this p
 | 221.1 | Journal Claude (medium, 55%): R11 (the 60 complement heads from the donor): on the 16 upstream slot units, at least 7 net lose their persona against R0. |  |  |
 | 221.2 | Journal Claude (low, 35%): R11's net loss on the 16 upstream units is at least R1's net loss minus 2 (at least 2 more than the additive share; Size). |  |  |
 | 221.3 | Journal Claude (low, 25%): 221.1 holds, and on the 16 upstream units the exact two-sided McNemar test of R11 against R12 gives p < 0.05 with R11 losing more, where a unit "shows" in a run if its pushed answer shows the persona and that run's own unpushed answer does not (`score219.py`'s indicator); the discordant pairs are units showing in R12 and not R11, against the reverse (the direction of post-training's change matters, not only its size). |  |  |
-
+| 221.A1 | Journal Claude, Amendment 1 (2026-11-22 18:50 CT, before any model load of this part; clerical; design SHA-256 b635d394297ea729c7d2c57884a6241aad1d58fc8bd53c18a2d0b4b1fcb36bc4): adds the Kernel check line (results/part219/kernel-check.json, already named in the Gate), the Optimization Measured line (Part 219's R0b 474 rows in 134 s; R9 221 s) and two levers marked taken, which tools/part_check.py prelaunch found missing. No run, bar, prediction, control or reading rule changes. Not a prediction: a record of the change. |  |  |

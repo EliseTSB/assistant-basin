@@ -118,6 +118,9 @@ relabelled; if not, they are labelled like every other run and the difference is
 - Not used: zeroing or mean-ablation (Part 219 showed both break pushed answers through these heads); a dose ladder;
   both push directions; format robustness (Part 219's reasons).
 
+Kernel check: results/part219/kernel-check.json (Amendment 1), Part 219's tools/kernel_reference.py record of the same
+host revision decoded on the A770 under eager against a CPU float32 reference.
+
 Gate (read before any prediction): Part 219's kernel check (`results/part219/kernel-check.json`, same model and
 kernel) still passes `tools/part_check.py kernel`; R0 shows the persona for at least 17 of 21 slot units; R1 at most 5;
 R0 and R1 reproduce Part 219; R13 equals R1. If any fails, every prediction is frozen and all arms are reported as
@@ -144,8 +147,12 @@ part re-plans before reading anything.
 
 ## Optimization
 
-- Bound resource: the A770; one model pair per process (the 11-08 gotcha), host and donor loaded once for every run.
-- Measured rate above; Windows needs about 10 GB free before the load (Part 219's launch waited for it).
+- Bound resource: the A770; one model pair per process (the 11-08 gotcha). Windows needs about 10 GB free before the
+  load (Part 219's launch waited for it).
+- Measured (Amendment 1): Part 219's R0b, 474 rows in 134 s at batch 48 on the eager kernel, and its slowest transplant
+  run with the coupling probe, R9, 474 rows in 221 s (`results/part219/launch.jsonl`, `R9.meta.json`).
+- Levers (Amendment 1): one host load and one donor load for all nine runs, taken; the full run reuses the pilot's R0,
+  R1 and R13 rows (swap99 skips rows already written), taken.
 
 ## Predictions
 
@@ -201,3 +208,10 @@ kept-head pre-norm drift and the largest |change in rms(attention output)| from 
   by screen A, which was not registered.
 - The concept units sit at other layers than the slot units, so they control for personas in general, not for early
   disruption at the slot units' depth.
+
+## Amendment 1 (2026-11-22 18:50 CT, before any model load of this part; clerical; Journal Claude)
+
+`tools/part_check.py prelaunch 221`, run after registration, found three format gaps: no `Kernel check:` line, no
+`Measured:` rate in Optimization, and no lever marked taken. The registered text already named the kernel record (in
+the Gate) and the rate (in Size); this amendment adds the three lines where the check reads them (marked "Amendment 1"
+above). No run, bar, prediction, control or reading rule changes.
