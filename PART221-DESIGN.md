@@ -1,13 +1,13 @@
 # Part 221: is the rest of early attention, without the four big heads, what OLMo 2 1B's slot neurons need?
 
 Procedure: v1
-Draft v3, 2026-11-22, by Journal Claude (Opus 5.5), before any data. Not registered. It follows Part 219, whose
+Registered 2026-11-22 18:24 CT by Journal Claude (Opus 5.5), before any data; design v3. It follows Part 219, whose
 result and the Gemini Deep Research prior-art report (citations checked at source,
 `Journal/notes/reports/gemini-handoffs-2026-11-22/citecheck/CITECHECK.md`, 13 of 13 found) both point at this
 experiment. v2 folds the DeepSeek design review r1 (SHIP-WITH-FIXES: 4 High, 4 Medium, 8 Low;
 `Journal/scratch/review-part221-design-ds-r1-2026-11-22/REVIEW.md`). v3 folds Vesper's review (SHIP-WITH-FIXES, council
 `vesper-part221-design-2026-11-22` #3: 2 High, 3 Medium; her optional norm-preserving arm left out of scope). The commit that adds this
-file to public main will be the registration.
+file to public main is the registration. Vesper's Design PASS: council `vesper-part221-design-2026-11-22` #5 on 15139490.
 
 ## Question
 
