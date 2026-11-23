@@ -6,8 +6,8 @@ analogue, frozen R-lens cross-domain prediction, k_ridge sensitivity table, and
 exact 2^16 power/equivalence simulation for Stage C0b (v2).
 
 Usage:
-    /home/elisepc/neuron-probe/.venv/bin/python3 \
-        olmo3_virtual_and_highway/build_olmo3_c0b_constants.py \
+    python3 olmo3_virtual_and_highway/build_olmo3_c0b_constants.py \
+        --r-lens work/vesper-olmo3-7b-neuron-lens/r_lens.pt \
         --out olmo3_virtual_and_highway/c0b_prereg_constants.json
 """
 
@@ -28,7 +28,7 @@ DEFAULT_C0_CONSTANTS = "olmo3_virtual_and_highway/c0_prereg_constants.json"
 DEFAULT_C0_RECEIPT = "results/vesper-olmo3-7b-stage-c0/c0_receipt.json.gz"
 DEFAULT_EXP4B = "results/vesper-olmo3-7b-exploratory/olmo3_idea2_and_idea4_results.json.gz"
 DEFAULT_BANK = "work/olmo3_c0/c0_vector_bank.pt"
-DEFAULT_R_LENS = "/home/elisepc/green/Journal/notes/reports/vesper-olmo3-7b-neuron-lens/r_lens.pt"
+DEFAULT_R_LENS = "work/vesper-olmo3-7b-neuron-lens/r_lens.pt"
 DEFAULT_OUT = "olmo3_virtual_and_highway/c0b_prereg_constants.json"
 
 EXP4B_FRAMES = [
