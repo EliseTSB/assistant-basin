@@ -1,0 +1,405 @@
+{
+  "study": "stage_c0b_olmo3_7b_all_vs_last_and_ridge_whitening",
+  "model": "allenai/Olmo-3-7B-Instruct",
+  "revision": "6e5971d9eba42665f5bd5a0fcf047f299ce1dccc",
+  "parent_c0_constants_sha256": "3be64ef80f12d34fc59d7e561d5617dd96ecb605649d5f64e1a98bd974acbe98",
+  "parent_c0_receipt_uncompressed_sha256": "fe7883be37ecf0b7a0a694fc1dd035215d05c27c297cc0959ef23f379258fb1c",
+  "r_lens_sha256": "ceef21fc90b17aafa5625f23ab2c1f35be7b2f8b735847cb89bfd2a438caa955",
+  "layers": [
+    12,
+    18,
+    24,
+    27
+  ],
+  "layers_L18_plus": [
+    18,
+    24,
+    27
+  ],
+  "targets_16": [
+    {
+      "domain": "animals",
+      "string": " dolphin",
+      "id": 99269,
+      "decoded_piece": " dolphin",
+      "u_norm": 1.7032
+    },
+    {
+      "domain": "animals",
+      "string": " hawk",
+      "id": 76920,
+      "decoded_piece": " hawk",
+      "u_norm": 1.9463
+    },
+    {
+      "domain": "animals",
+      "string": " tiger",
+      "id": 52835,
+      "decoded_piece": " tiger",
+      "u_norm": 1.7097
+    },
+    {
+      "domain": "animals",
+      "string": " rabbit",
+      "id": 39824,
+      "decoded_piece": " rabbit",
+      "u_norm": 1.6788
+    },
+    {
+      "domain": "professions",
+      "string": " surgeon",
+      "id": 46098,
+      "decoded_piece": " surgeon",
+      "u_norm": 1.5935
+    },
+    {
+      "domain": "professions",
+      "string": " pilot",
+      "id": 18178,
+      "decoded_piece": " pilot",
+      "u_norm": 1.9077
+    },
+    {
+      "domain": "professions",
+      "string": " painter",
+      "id": 30581,
+      "decoded_piece": " painter",
+      "u_norm": 1.6342
+    },
+    {
+      "domain": "professions",
+      "string": " judge",
+      "id": 11913,
+      "decoded_piece": " judge",
+      "u_norm": 1.6077
+    },
+    {
+      "domain": "objects",
+      "string": " hammer",
+      "id": 24354,
+      "decoded_piece": " hammer",
+      "u_norm": 1.8393
+    },
+    {
+      "domain": "objects",
+      "string": " lantern",
+      "id": 74265,
+      "decoded_piece": " lantern",
+      "u_norm": 1.8051
+    },
+    {
+      "domain": "objects",
+      "string": " mirror",
+      "id": 18327,
+      "decoded_piece": " mirror",
+      "u_norm": 1.8541
+    },
+    {
+      "domain": "objects",
+      "string": " compass",
+      "id": 24653,
+      "decoded_piece": " compass",
+      "u_norm": 1.9408
+    },
+    {
+      "domain": "places",
+      "string": " harbor",
+      "id": 57511,
+      "decoded_piece": " harbor",
+      "u_norm": 1.8123
+    },
+    {
+      "domain": "places",
+      "string": " canyon",
+      "id": 84300,
+      "decoded_piece": " canyon",
+      "u_norm": 1.73
+    },
+    {
+      "domain": "places",
+      "string": " temple",
+      "id": 27850,
+      "decoded_piece": " temple",
+      "u_norm": 1.6475
+    },
+    {
+      "domain": "places",
+      "string": " castle",
+      "id": 33684,
+      "decoded_piece": " castle",
+      "u_norm": 1.6075
+    }
+  ],
+  "stage_c0_last_baselines": {
+    "pooled_4L_gap_ratio_median": 0.305127,
+    "per_target_4L_gap_ratio_mean": 0.31632,
+    "per_target_4L_gap_ratio_sd": 0.039629,
+    "by_layer": {
+      "12": {
+        "gap_ratio_median": 0.17081,
+        "mean_total_gap": 1.4233,
+        "mean_attn_gap": 0.4323,
+        "mean_mlp_gap": 0.8101
+      },
+      "18": {
+        "gap_ratio_median": 0.234872,
+        "mean_total_gap": 1.463,
+        "mean_attn_gap": 0.3009,
+        "mean_mlp_gap": 1.0849
+      },
+      "24": {
+        "gap_ratio_median": 0.383425,
+        "mean_total_gap": 1.4106,
+        "mean_attn_gap": 0.2686,
+        "mean_mlp_gap": 1.0933
+      },
+      "27": {
+        "gap_ratio_median": 0.475702,
+        "mean_total_gap": 1.4225,
+        "mean_attn_gap": 0.2455,
+        "mean_mlp_gap": 1.1537
+      }
+    },
+    "realized_L18_24_27_Rmf_cross_mean": 1.343792,
+    "realized_L18_24_27_Rmf_cross_sd": 0.088814
+  },
+  "exploratory_exp4b_all_analogues": {
+    "four_frame_avg_pooled_L12_18_24_gap_ratio_median": 0.8308,
+    "four_frame_avg_per_layer_gap_ratio_median": {
+      "6": 0.6335,
+      "12": 0.7765,
+      "18": 0.8104,
+      "24": 0.8826
+    },
+    "attention_vs_mlp_lift_D3_by_layer": {
+      "12": {
+        "exp4b_all_mean_attn_gap_D3": 4.3424,
+        "exp4b_all_mean_mlp_gap_D3": 2.1718,
+        "exp4b_all_mean_total_gap_D3": 6.4986,
+        "implied_delta_attn_all_minus_last": 3.9101,
+        "implied_delta_total_all_minus_last": 5.0753,
+        "implied_attn_share_of_lift": 0.7704
+      },
+      "18": {
+        "exp4b_all_mean_attn_gap_D3": 4.1602,
+        "exp4b_all_mean_mlp_gap_D3": 1.2928,
+        "exp4b_all_mean_total_gap_D3": 5.4447,
+        "implied_delta_attn_all_minus_last": 3.8593,
+        "implied_delta_total_all_minus_last": 3.9817,
+        "implied_attn_share_of_lift": 0.9693
+      },
+      "24": {
+        "exp4b_all_mean_attn_gap_D3": 2.718,
+        "exp4b_all_mean_mlp_gap_D3": 1.0508,
+        "exp4b_all_mean_total_gap_D3": 3.7698,
+        "implied_delta_attn_all_minus_last": 2.4494,
+        "implied_delta_total_all_minus_last": 2.3592,
+        "implied_attn_share_of_lift": 1.0382
+      }
+    }
+  },
+  "frozen_c0b3_cross_domain_predictions_L18_24_27": {
+    "mean_pred_B_cross_Rmf": 3.428,
+    "mean_pred_B_cross_Rridge": 1.3669,
+    "mean_pred_B_cross_ll": 0.2453,
+    "mean_pred_B_cross_rand": 0.1624,
+    "geo_mean_abs_ratio_Rmf_over_Rridge": 2.5118,
+    "sd_log_abs_ratio": 0.0439,
+    "geo_mean_norm_ratio_Rmf_over_Rridge": 1.9937,
+    "sd_log_norm_ratio": 0.0497,
+    "per_target": [
+      {
+        "target": " dolphin",
+        "domain": "animals",
+        "pred_B_cross_Rmf": 3.5298,
+        "pred_B_cross_Rridge": 1.4382,
+        "pred_B_cross_ll": 0.2953,
+        "pred_B_cross_rand": 0.169,
+        "pred_abs_ratio_Rmf_over_Rridge": 2.4543,
+        "pred_S_cross_Rmf": 0.2846,
+        "pred_S_cross_Rridge": 0.1489,
+        "pred_norm_ratio_Rmf_over_Rridge": 1.9114
+      },
+      {
+        "target": " hawk",
+        "domain": "animals",
+        "pred_B_cross_Rmf": 3.4746,
+        "pred_B_cross_Rridge": 1.3792,
+        "pred_B_cross_ll": 0.2007,
+        "pred_B_cross_rand": 0.169,
+        "pred_abs_ratio_Rmf_over_Rridge": 2.5194,
+        "pred_S_cross_Rmf": 0.2524,
+        "pred_S_cross_Rridge": 0.1256,
+        "pred_norm_ratio_Rmf_over_Rridge": 2.0094
+      },
+      {
+        "target": " tiger",
+        "domain": "animals",
+        "pred_B_cross_Rmf": 3.141,
+        "pred_B_cross_Rridge": 1.2938,
+        "pred_B_cross_ll": 0.2615,
+        "pred_B_cross_rand": 0.1579,
+        "pred_abs_ratio_Rmf_over_Rridge": 2.4277,
+        "pred_S_cross_Rmf": 0.2547,
+        "pred_S_cross_Rridge": 0.1315,
+        "pred_norm_ratio_Rmf_over_Rridge": 1.9365
+      },
+      {
+        "target": " rabbit",
+        "domain": "animals",
+        "pred_B_cross_Rmf": 3.6454,
+        "pred_B_cross_Rridge": 1.3866,
+        "pred_B_cross_ll": 0.2487,
+        "pred_B_cross_rand": 0.163,
+        "pred_abs_ratio_Rmf_over_Rridge": 2.6291,
+        "pred_S_cross_Rmf": 0.2717,
+        "pred_S_cross_Rridge": 0.1314,
+        "pred_norm_ratio_Rmf_over_Rridge": 2.067
+      },
+      {
+        "target": " surgeon",
+        "domain": "professions",
+        "pred_B_cross_Rmf": 3.3747,
+        "pred_B_cross_Rridge": 1.4083,
+        "pred_B_cross_ll": 0.2053,
+        "pred_B_cross_rand": 0.1366,
+        "pred_abs_ratio_Rmf_over_Rridge": 2.3963,
+        "pred_S_cross_Rmf": 0.2935,
+        "pred_S_cross_Rridge": 0.1564,
+        "pred_norm_ratio_Rmf_over_Rridge": 1.8767
+      },
+      {
+        "target": " pilot",
+        "domain": "professions",
+        "pred_B_cross_Rmf": 3.197,
+        "pred_B_cross_Rridge": 1.2118,
+        "pred_B_cross_ll": 0.1744,
+        "pred_B_cross_rand": 0.1707,
+        "pred_abs_ratio_Rmf_over_Rridge": 2.6382,
+        "pred_S_cross_Rmf": 0.2202,
+        "pred_S_cross_Rridge": 0.1028,
+        "pred_norm_ratio_Rmf_over_Rridge": 2.1414
+      },
+      {
+        "target": " painter",
+        "domain": "professions",
+        "pred_B_cross_Rmf": 3.6101,
+        "pred_B_cross_Rridge": 1.4509,
+        "pred_B_cross_ll": 0.3125,
+        "pred_B_cross_rand": 0.1535,
+        "pred_abs_ratio_Rmf_over_Rridge": 2.4881,
+        "pred_S_cross_Rmf": 0.2843,
+        "pred_S_cross_Rridge": 0.1451,
+        "pred_norm_ratio_Rmf_over_Rridge": 1.9595
+      },
+      {
+        "target": " judge",
+        "domain": "professions",
+        "pred_B_cross_Rmf": 3.1217,
+        "pred_B_cross_Rridge": 1.2302,
+        "pred_B_cross_ll": 0.2057,
+        "pred_B_cross_rand": 0.1577,
+        "pred_abs_ratio_Rmf_over_Rridge": 2.5375,
+        "pred_S_cross_Rmf": 0.247,
+        "pred_S_cross_Rridge": 0.1229,
+        "pred_norm_ratio_Rmf_over_Rridge": 2.0104
+      },
+      {
+        "target": " hammer",
+        "domain": "objects",
+        "pred_B_cross_Rmf": 3.6686,
+        "pred_B_cross_Rridge": 1.5679,
+        "pred_B_cross_ll": 0.335,
+        "pred_B_cross_rand": 0.1514,
+        "pred_abs_ratio_Rmf_over_Rridge": 2.3397,
+        "pred_S_cross_Rmf": 0.2707,
+        "pred_S_cross_Rridge": 0.145,
+        "pred_norm_ratio_Rmf_over_Rridge": 1.8671
+      },
+      {
+        "target": " lantern",
+        "domain": "objects",
+        "pred_B_cross_Rmf": 3.7602,
+        "pred_B_cross_Rridge": 1.5141,
+        "pred_B_cross_ll": 0.2709,
+        "pred_B_cross_rand": 0.1812,
+        "pred_abs_ratio_Rmf_over_Rridge": 2.4834,
+        "pred_S_cross_Rmf": 0.2752,
+        "pred_S_cross_Rridge": 0.1407,
+        "pred_norm_ratio_Rmf_over_Rridge": 1.956
+      },
+      {
+        "target": " mirror",
+        "domain": "objects",
+        "pred_B_cross_Rmf": 3.4022,
+        "pred_B_cross_Rridge": 1.3126,
+        "pred_B_cross_ll": 0.3144,
+        "pred_B_cross_rand": 0.1629,
+        "pred_abs_ratio_Rmf_over_Rridge": 2.592,
+        "pred_S_cross_Rmf": 0.2362,
+        "pred_S_cross_Rridge": 0.1129,
+        "pred_norm_ratio_Rmf_over_Rridge": 2.0928
+      },
+      {
+        "target": " compass",
+        "domain": "objects",
+        "pred_B_cross_Rmf": 3.2533,
+        "pred_B_cross_Rridge": 1.1912,
+        "pred_B_cross_ll": 0.1704,
+        "pred_B_cross_rand": 0.1653,
+        "pred_abs_ratio_Rmf_over_Rridge": 2.7311,
+        "pred_S_cross_Rmf": 0.2286,
+        "pred_S_cross_Rridge": 0.1041,
+        "pred_norm_ratio_Rmf_over_Rridge": 2.1966
+      },
+      {
+        "target": " harbor",
+        "domain": "places",
+        "pred_B_cross_Rmf": 3.5119,
+        "pred_B_cross_Rridge": 1.4655,
+        "pred_B_cross_ll": 0.2745,
+        "pred_B_cross_rand": 0.1578,
+        "pred_abs_ratio_Rmf_over_Rridge": 2.3963,
+        "pred_S_cross_Rmf": 0.2523,
+        "pred_S_cross_Rridge": 0.1335,
+        "pred_norm_ratio_Rmf_over_Rridge": 1.8894
+      },
+      {
+        "target": " canyon",
+        "domain": "places",
+        "pred_B_cross_Rmf": 3.3209,
+        "pred_B_cross_Rridge": 1.3867,
+        "pred_B_cross_ll": 0.2903,
+        "pred_B_cross_rand": 0.1604,
+        "pred_abs_ratio_Rmf_over_Rridge": 2.3948,
+        "pred_S_cross_Rmf": 0.2653,
+        "pred_S_cross_Rridge": 0.1396,
+        "pred_norm_ratio_Rmf_over_Rridge": 1.9005
+      },
+      {
+        "target": " temple",
+        "domain": "places",
+        "pred_B_cross_Rmf": 3.5169,
+        "pred_B_cross_Rridge": 1.3709,
+        "pred_B_cross_ll": 0.1781,
+        "pred_B_cross_rand": 0.173,
+        "pred_abs_ratio_Rmf_over_Rridge": 2.5654,
+        "pred_S_cross_Rmf": 0.2705,
+        "pred_S_cross_Rridge": 0.1326,
+        "pred_norm_ratio_Rmf_over_Rridge": 2.0395
+      },
+      {
+        "target": " castle",
+        "domain": "places",
+        "pred_B_cross_Rmf": 3.32,
+        "pred_B_cross_Rridge": 1.2617,
+        "pred_B_cross_ll": 0.1877,
+        "pred_B_cross_rand": 0.1692,
+        "pred_abs_ratio_Rmf_over_Rridge": 2.6314,
+        "pred_S_cross_Rmf": 0.2646,
+        "pred_S_cross_Rridge": 0.1271,
+        "pred_norm_ratio_Rmf_over_Rridge": 2.0817
+      }
+    ]
+  }
+}
