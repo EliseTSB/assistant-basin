@@ -29980,7 +29980,7 @@
  },
  "complement_expected_on_the_real_model": 60,
  "replay": "replay-R0.json",
- "repro_dir": "C:\\Users\\alexa\\neuron-probe-gpu\\results\\part219",
+ "repro_dir": "<Arc job folder>\\results\\part219",
  "stages": {
   "pilot": {
    "pilot": true,

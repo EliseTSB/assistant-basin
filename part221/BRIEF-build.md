@@ -1,7 +1,7 @@
 # Build brief: Part 221's runner, scorer and tests
 
 You are building code for a registered experiment in the public research repo `assistant-basin`, working in the
-worktree `/home/elisepc/green/worktrees/ab-part221` (branch `part221-design`). Read these first, in order:
+worktree `the repository root` (branch `part221-design`). Read these first, in order:
 
 1. `PART221-DESIGN.md` (registered v3): the design. Its Runs table, Controls, Gate, Reading rules and Headlines are
    the specification. Where this brief and the design differ, the design wins; say so in your report.

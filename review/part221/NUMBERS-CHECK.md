@@ -1,7 +1,7 @@
 # Part 221 — numbers cold check
 
 Reviewer: worker-01 (fresh reader, files only). Target: `results/part221/README.md` in worktree
-`/home/elisepc/green/worktrees/ab-part221`. Recomputation code: `work/recompute.py` in this folder (own code; it
+`the repository root`. Recomputation code: `work/recompute.py` in this folder (own code; it
 imports nothing from `part101`, `part219` or `part221`). Raw recomputation output: `work/recompute.json`.
 
 ## SUMMARY
