@@ -82,11 +82,12 @@ def label_one(item: dict, model: str = MODEL, max_tokens: int = 4000) -> dict:
         try:
             response = judge_client.call_prompt(build_prompt(item), model=model, route="ocgo",
                                                 session=f"part219-{model}", max_tokens=max_tokens, timeout=300)
-            return {**item["public"], **label92._parse(str(response.get("text", ""))), "reader": model}
+            return {**item["public"], **label92._parse(str(response.get("text", ""))), "reader": model,
+                    "max_tokens": max_tokens}  # the cap, per row (Part 221 design, 2026-11-22)
         except Exception as exc:  # recorded, retried, then written as an error row
             error = repr(exc)[:200]
             time.sleep(5 * (attempt + 1))
-    return {**item["public"], "error": error, "reader": model}
+    return {**item["public"], "error": error, "reader": model, "max_tokens": max_tokens}
 
 
 def main(argv=None) -> int:

@@ -1,0 +1,7726 @@
+{
+ "part": 221,
+ "runs": [
+  "R0",
+  "R1",
+  "R13"
+ ],
+ "checks": {
+  "R0_readable": {
+   "passes": true,
+   "because": "R0 is readable",
+   "detail": {
+    "tag": "R0",
+    "role": "reference",
+    "condition": {
+     "change": "none"
+    },
+    "jsonl": "R0.jsonl",
+    "meta": "R0.meta.json",
+    "seconds": 129.8,
+    "expected_rows": 474,
+    "rows": 474,
+    "problems": [],
+    "aborted": null,
+    "attn_implementation": "eager",
+    "torch_version": "2.13.0+xpu",
+    "transformers_version": "5.13.0",
+    "intervention_receipt": null,
+    "coupling_log": null,
+    "reset_receipt": {
+     "role": "reference_written",
+     "matches_reference": null,
+     "mismatch": null,
+     "reference_path": "results\\part221\\replay-R0.json"
+    },
+    "sign_flip_receipt": null,
+    "norm_ratio_range": null,
+    "self_attn_equals_donor": null,
+    "kept_head_drift": null,
+    "readable": true
+   }
+  },
+  "R1_readable": {
+   "passes": true,
+   "because": "R1 is readable",
+   "detail": {
+    "tag": "R1",
+    "role": "gate: the whole band by the swap path",
+    "condition": {
+     "swap": "attn",
+     "layers": "0-3"
+    },
+    "jsonl": "R1.jsonl",
+    "meta": "R1.meta.json",
+    "seconds": 123.4,
+    "expected_rows": 474,
+    "rows": 474,
+    "problems": [],
+    "aborted": null,
+    "attn_implementation": "eager",
+    "torch_version": "2.13.0+xpu",
+    "transformers_version": "5.13.0",
+    "intervention_receipt": null,
+    "coupling_log": null,
+    "reset_receipt": {
+     "role": "checked",
+     "matches_reference": true,
+     "mismatch": null,
+     "reference_path": "results\\part221\\replay-R0.json"
+    },
+    "sign_flip_receipt": null,
+    "norm_ratio_range": null,
+    "self_attn_equals_donor": null,
+    "kept_head_drift": null,
+    "readable": true
+   }
+  },
+  "R13_readable": {
+   "passes": true,
+   "because": "R13 is readable",
+   "detail": {
+    "tag": "R13",
+    "role": "identity check: all heads by the transplant path",
+    "condition": {
+     "transplant_mode": "donor",
+     "transplant_head_count": 64,
+     "transplant_heads": [
+      "L0H0",
+      "L0H1",
+      "L0H2",
+      "L0H3",
+      "L0H4",
+      "L0H5",
+      "L0H6",
+      "L0H7",
+      "L0H8",
+      "L0H9",
+      "L0H10",
+      "L0H11",
+      "L0H12",
+      "L0H13",
+      "L0H14",
+      "L0H15",
+      "L1H0",
+      "L1H1",
+      "L1H2",
+      "L1H3",
+      "L1H4",
+      "L1H5",
+      "L1H6",
+      "L1H7",
+      "L1H8",
+      "L1H9",
+      "L1H10",
+      "L1H11",
+      "L1H12",
+      "L1H13",
+      "L1H14",
+      "L1H15",
+      "L2H0",
+      "L2H1",
+      "L2H2",
+      "L2H3",
+      "L2H4",
+      "L2H5",
+      "L2H6",
+      "L2H7",
+      "L2H8",
+      "L2H9",
+      "L2H10",
+      "L2H11",
+      "L2H12",
+      "L2H13",
+      "L2H14",
+      "L2H15",
+      "L3H0",
+      "L3H1",
+      "L3H2",
+      "L3H3",
+      "L3H4",
+      "L3H5",
+      "L3H6",
+      "L3H7",
+      "L3H8",
+      "L3H9",
+      "L3H10",
+      "L3H11",
+      "L3H12",
+      "L3H13",
+      "L3H14",
+      "L3H15"
+     ]
+    },
+    "jsonl": "R13.jsonl",
+    "meta": "R13.meta.json",
+    "seconds": 123.8,
+    "expected_rows": 474,
+    "rows": 474,
+    "problems": [],
+    "aborted": null,
+    "attn_implementation": "eager",
+    "torch_version": "2.13.0+xpu",
+    "transformers_version": "5.13.0",
+    "intervention_receipt": {
+     "ablate_heads": null,
+     "ablation": [],
+     "transplant": {
+      "mode": "donor",
+      "heads": [
+       "L0H0",
+       "L0H1",
+       "L0H2",
+       "L0H3",
+       "L0H4",
+       "L0H5",
+       "L0H6",
+       "L0H7",
+       "L0H8",
+       "L0H9",
+       "L0H10",
+       "L0H11",
+       "L0H12",
+       "L0H13",
+       "L0H14",
+       "L0H15",
+       "L1H0",
+       "L1H1",
+       "L1H2",
+       "L1H3",
+       "L1H4",
+       "L1H5",
+       "L1H6",
+       "L1H7",
+       "L1H8",
+       "L1H9",
+       "L1H10",
+       "L1H11",
+       "L1H12",
+       "L1H13",
+       "L1H14",
+       "L1H15",
+       "L2H0",
+       "L2H1",
+       "L2H2",
+       "L2H3",
+       "L2H4",
+       "L2H5",
+       "L2H6",
+       "L2H7",
+       "L2H8",
+       "L2H9",
+       "L2H10",
+       "L2H11",
+       "L2H12",
+       "L2H13",
+       "L2H14",
+       "L2H15",
+       "L3H0",
+       "L3H1",
+       "L3H2",
+       "L3H3",
+       "L3H4",
+       "L3H5",
+       "L3H6",
+       "L3H7",
+       "L3H8",
+       "L3H9",
+       "L3H10",
+       "L3H11",
+       "L3H12",
+       "L3H13",
+       "L3H14",
+       "L3H15"
+      ],
+      "records": [
+       {
+        "layer": 0,
+        "head": 0,
+        "parameter": "layers.0.self_attn.q_proj.weight",
+        "slice": [
+         0,
+         128
+        ],
+        "config_slice": [
+         0,
+         128
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.5928834080696106,
+        "norm_ratio": 0.9917467401047747,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 0,
+        "parameter": "layers.0.self_attn.k_proj.weight",
+        "slice": [
+         0,
+         128
+        ],
+        "config_slice": [
+         0,
+         128
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.6941030025482178,
+        "norm_ratio": 0.9903702568104954,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 0,
+        "parameter": "layers.0.self_attn.v_proj.weight",
+        "slice": [
+         0,
+         128
+        ],
+        "config_slice": [
+         0,
+         128
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7923362255096436,
+        "norm_ratio": 0.9955004292109209,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 0,
+        "parameter": "layers.0.self_attn.o_proj.weight",
+        "slice": [
+         0,
+         128
+        ],
+        "config_slice": [
+         0,
+         128
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8842828273773193,
+        "norm_ratio": 0.9954900553713294,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 0,
+        "parameter": "layers.0.self_attn.q_norm.weight",
+        "slice": [
+         0,
+         128
+        ],
+        "config_slice": [
+         0,
+         128
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.03131648525595665,
+        "norm_ratio": 0.9973575864855563,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 0,
+        "parameter": "layers.0.self_attn.k_norm.weight",
+        "slice": [
+         0,
+         128
+        ],
+        "config_slice": [
+         0,
+         128
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.02900622971355915,
+        "norm_ratio": 0.9973214429499491,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 1,
+        "parameter": "layers.0.self_attn.q_proj.weight",
+        "slice": [
+         128,
+         256
+        ],
+        "config_slice": [
+         128,
+         256
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.43594297766685486,
+        "norm_ratio": 1.0111676334981652,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 1,
+        "parameter": "layers.0.self_attn.k_proj.weight",
+        "slice": [
+         128,
+         256
+        ],
+        "config_slice": [
+         128,
+         256
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.6727569699287415,
+        "norm_ratio": 0.9916685470967637,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 1,
+        "parameter": "layers.0.self_attn.v_proj.weight",
+        "slice": [
+         128,
+         256
+        ],
+        "config_slice": [
+         128,
+         256
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.6462518572807312,
+        "norm_ratio": 1.000300137254868,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 1,
+        "parameter": "layers.0.self_attn.o_proj.weight",
+        "slice": [
+         128,
+         256
+        ],
+        "config_slice": [
+         128,
+         256
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8299797177314758,
+        "norm_ratio": 1.0017081977136362,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 1,
+        "parameter": "layers.0.self_attn.q_norm.weight",
+        "slice": [
+         128,
+         256
+        ],
+        "config_slice": [
+         128,
+         256
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.013528035953640938,
+        "norm_ratio": 1.00092372576017,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 1,
+        "parameter": "layers.0.self_attn.k_norm.weight",
+        "slice": [
+         128,
+         256
+        ],
+        "config_slice": [
+         128,
+         256
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.010614201426506042,
+        "norm_ratio": 1.0002431328500374,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 2,
+        "parameter": "layers.0.self_attn.q_proj.weight",
+        "slice": [
+         256,
+         384
+        ],
+        "config_slice": [
+         256,
+         384
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.6662293672561646,
+        "norm_ratio": 0.9941871877477291,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 2,
+        "parameter": "layers.0.self_attn.k_proj.weight",
+        "slice": [
+         256,
+         384
+        ],
+        "config_slice": [
+         256,
+         384
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.6936094760894775,
+        "norm_ratio": 0.9934931995140728,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 2,
+        "parameter": "layers.0.self_attn.v_proj.weight",
+        "slice": [
+         256,
+         384
+        ],
+        "config_slice": [
+         256,
+         384
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7958930730819702,
+        "norm_ratio": 0.9908442657945488,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 2,
+        "parameter": "layers.0.self_attn.o_proj.weight",
+        "slice": [
+         256,
+         384
+        ],
+        "config_slice": [
+         256,
+         384
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8038015365600586,
+        "norm_ratio": 0.9915262489889182,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 2,
+        "parameter": "layers.0.self_attn.q_norm.weight",
+        "slice": [
+         256,
+         384
+        ],
+        "config_slice": [
+         256,
+         384
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.040658801794052124,
+        "norm_ratio": 0.9966338710643569,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 2,
+        "parameter": "layers.0.self_attn.k_norm.weight",
+        "slice": [
+         256,
+         384
+        ],
+        "config_slice": [
+         256,
+         384
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.03736051917076111,
+        "norm_ratio": 0.9970307007423401,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 3,
+        "parameter": "layers.0.self_attn.q_proj.weight",
+        "slice": [
+         384,
+         512
+        ],
+        "config_slice": [
+         384,
+         512
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.6717040538787842,
+        "norm_ratio": 0.9953366883107815,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 3,
+        "parameter": "layers.0.self_attn.k_proj.weight",
+        "slice": [
+         384,
+         512
+        ],
+        "config_slice": [
+         384,
+         512
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7257797122001648,
+        "norm_ratio": 0.993576797811222,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 3,
+        "parameter": "layers.0.self_attn.v_proj.weight",
+        "slice": [
+         384,
+         512
+        ],
+        "config_slice": [
+         384,
+         512
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7740442752838135,
+        "norm_ratio": 0.9926402777934362,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 3,
+        "parameter": "layers.0.self_attn.o_proj.weight",
+        "slice": [
+         384,
+         512
+        ],
+        "config_slice": [
+         384,
+         512
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7591029405593872,
+        "norm_ratio": 0.9926590489942452,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 3,
+        "parameter": "layers.0.self_attn.q_norm.weight",
+        "slice": [
+         384,
+         512
+        ],
+        "config_slice": [
+         384,
+         512
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.02978089451789856,
+        "norm_ratio": 0.9969235336628273,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 3,
+        "parameter": "layers.0.self_attn.k_norm.weight",
+        "slice": [
+         384,
+         512
+        ],
+        "config_slice": [
+         384,
+         512
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.03128589689731598,
+        "norm_ratio": 0.9970583725423813,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 4,
+        "parameter": "layers.0.self_attn.q_proj.weight",
+        "slice": [
+         512,
+         640
+        ],
+        "config_slice": [
+         512,
+         640
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.6467504501342773,
+        "norm_ratio": 0.9923361288798154,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 4,
+        "parameter": "layers.0.self_attn.k_proj.weight",
+        "slice": [
+         512,
+         640
+        ],
+        "config_slice": [
+         512,
+         640
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7268747687339783,
+        "norm_ratio": 0.9905884938800202,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 4,
+        "parameter": "layers.0.self_attn.v_proj.weight",
+        "slice": [
+         512,
+         640
+        ],
+        "config_slice": [
+         512,
+         640
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8184914588928223,
+        "norm_ratio": 0.995248006889998,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 4,
+        "parameter": "layers.0.self_attn.o_proj.weight",
+        "slice": [
+         512,
+         640
+        ],
+        "config_slice": [
+         512,
+         640
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7457751035690308,
+        "norm_ratio": 0.9947982784983084,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 4,
+        "parameter": "layers.0.self_attn.q_norm.weight",
+        "slice": [
+         512,
+         640
+        ],
+        "config_slice": [
+         512,
+         640
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.021475128829479218,
+        "norm_ratio": 0.9980287189792176,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 4,
+        "parameter": "layers.0.self_attn.k_norm.weight",
+        "slice": [
+         512,
+         640
+        ],
+        "config_slice": [
+         512,
+         640
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.02775450423359871,
+        "norm_ratio": 0.9970013822195374,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 5,
+        "parameter": "layers.0.self_attn.q_proj.weight",
+        "slice": [
+         640,
+         768
+        ],
+        "config_slice": [
+         640,
+         768
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7196612358093262,
+        "norm_ratio": 0.9921993719483666,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 5,
+        "parameter": "layers.0.self_attn.k_proj.weight",
+        "slice": [
+         640,
+         768
+        ],
+        "config_slice": [
+         640,
+         768
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.793828010559082,
+        "norm_ratio": 0.9931326096405325,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 5,
+        "parameter": "layers.0.self_attn.v_proj.weight",
+        "slice": [
+         640,
+         768
+        ],
+        "config_slice": [
+         640,
+         768
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7985052466392517,
+        "norm_ratio": 0.9971078481182435,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 5,
+        "parameter": "layers.0.self_attn.o_proj.weight",
+        "slice": [
+         640,
+         768
+        ],
+        "config_slice": [
+         640,
+         768
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.886206865310669,
+        "norm_ratio": 0.9972072941705212,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 5,
+        "parameter": "layers.0.self_attn.q_norm.weight",
+        "slice": [
+         640,
+         768
+        ],
+        "config_slice": [
+         640,
+         768
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04541594907641411,
+        "norm_ratio": 0.9964952945794995,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 5,
+        "parameter": "layers.0.self_attn.k_norm.weight",
+        "slice": [
+         640,
+         768
+        ],
+        "config_slice": [
+         640,
+         768
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04455706849694252,
+        "norm_ratio": 0.9968382975454566,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 6,
+        "parameter": "layers.0.self_attn.q_proj.weight",
+        "slice": [
+         768,
+         896
+        ],
+        "config_slice": [
+         768,
+         896
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.5481434464454651,
+        "norm_ratio": 0.9898848593982303,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 6,
+        "parameter": "layers.0.self_attn.k_proj.weight",
+        "slice": [
+         768,
+         896
+        ],
+        "config_slice": [
+         768,
+         896
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7257437109947205,
+        "norm_ratio": 0.9902728223380888,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 6,
+        "parameter": "layers.0.self_attn.v_proj.weight",
+        "slice": [
+         768,
+         896
+        ],
+        "config_slice": [
+         768,
+         896
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7541072964668274,
+        "norm_ratio": 0.9981987805907749,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 6,
+        "parameter": "layers.0.self_attn.o_proj.weight",
+        "slice": [
+         768,
+         896
+        ],
+        "config_slice": [
+         768,
+         896
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7806940674781799,
+        "norm_ratio": 0.9977999311585778,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 6,
+        "parameter": "layers.0.self_attn.q_norm.weight",
+        "slice": [
+         768,
+         896
+        ],
+        "config_slice": [
+         768,
+         896
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.02161041647195816,
+        "norm_ratio": 0.99776885998181,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 6,
+        "parameter": "layers.0.self_attn.k_norm.weight",
+        "slice": [
+         768,
+         896
+        ],
+        "config_slice": [
+         768,
+         896
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.020335612818598747,
+        "norm_ratio": 0.9992529599208726,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 7,
+        "parameter": "layers.0.self_attn.q_proj.weight",
+        "slice": [
+         896,
+         1024
+        ],
+        "config_slice": [
+         896,
+         1024
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.5908873677253723,
+        "norm_ratio": 0.992425182629397,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 7,
+        "parameter": "layers.0.self_attn.k_proj.weight",
+        "slice": [
+         896,
+         1024
+        ],
+        "config_slice": [
+         896,
+         1024
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7067509889602661,
+        "norm_ratio": 0.9915209473341673,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 7,
+        "parameter": "layers.0.self_attn.v_proj.weight",
+        "slice": [
+         896,
+         1024
+        ],
+        "config_slice": [
+         896,
+         1024
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8200576901435852,
+        "norm_ratio": 0.9955704999108191,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 7,
+        "parameter": "layers.0.self_attn.o_proj.weight",
+        "slice": [
+         896,
+         1024
+        ],
+        "config_slice": [
+         896,
+         1024
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8786409497261047,
+        "norm_ratio": 0.9957669170800363,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 7,
+        "parameter": "layers.0.self_attn.q_norm.weight",
+        "slice": [
+         896,
+         1024
+        ],
+        "config_slice": [
+         896,
+         1024
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.02512982115149498,
+        "norm_ratio": 0.9981495197961864,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 7,
+        "parameter": "layers.0.self_attn.k_norm.weight",
+        "slice": [
+         896,
+         1024
+        ],
+        "config_slice": [
+         896,
+         1024
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.028103169053792953,
+        "norm_ratio": 0.9976722102787957,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 8,
+        "parameter": "layers.0.self_attn.q_proj.weight",
+        "slice": [
+         1024,
+         1152
+        ],
+        "config_slice": [
+         1024,
+         1152
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.700505256652832,
+        "norm_ratio": 0.9945742062361294,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 8,
+        "parameter": "layers.0.self_attn.k_proj.weight",
+        "slice": [
+         1024,
+         1152
+        ],
+        "config_slice": [
+         1024,
+         1152
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.756854236125946,
+        "norm_ratio": 0.99419466039199,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 8,
+        "parameter": "layers.0.self_attn.v_proj.weight",
+        "slice": [
+         1024,
+         1152
+        ],
+        "config_slice": [
+         1024,
+         1152
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7734283804893494,
+        "norm_ratio": 0.9944973740397557,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 8,
+        "parameter": "layers.0.self_attn.o_proj.weight",
+        "slice": [
+         1024,
+         1152
+        ],
+        "config_slice": [
+         1024,
+         1152
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8283113837242126,
+        "norm_ratio": 0.9944880860242772,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 8,
+        "parameter": "layers.0.self_attn.q_norm.weight",
+        "slice": [
+         1024,
+         1152
+        ],
+        "config_slice": [
+         1024,
+         1152
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04008680209517479,
+        "norm_ratio": 0.9960393873504046,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 8,
+        "parameter": "layers.0.self_attn.k_norm.weight",
+        "slice": [
+         1024,
+         1152
+        ],
+        "config_slice": [
+         1024,
+         1152
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04285429045557976,
+        "norm_ratio": 0.9957997794015709,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 9,
+        "parameter": "layers.0.self_attn.q_proj.weight",
+        "slice": [
+         1152,
+         1280
+        ],
+        "config_slice": [
+         1152,
+         1280
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.6130855679512024,
+        "norm_ratio": 0.9942543861460226,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 9,
+        "parameter": "layers.0.self_attn.k_proj.weight",
+        "slice": [
+         1152,
+         1280
+        ],
+        "config_slice": [
+         1152,
+         1280
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7183400392532349,
+        "norm_ratio": 0.9933803769446484,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 9,
+        "parameter": "layers.0.self_attn.v_proj.weight",
+        "slice": [
+         1152,
+         1280
+        ],
+        "config_slice": [
+         1152,
+         1280
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7914231419563293,
+        "norm_ratio": 0.9960770606022248,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 9,
+        "parameter": "layers.0.self_attn.o_proj.weight",
+        "slice": [
+         1152,
+         1280
+        ],
+        "config_slice": [
+         1152,
+         1280
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.852903425693512,
+        "norm_ratio": 0.9957446090873062,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 9,
+        "parameter": "layers.0.self_attn.q_norm.weight",
+        "slice": [
+         1152,
+         1280
+        ],
+        "config_slice": [
+         1152,
+         1280
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.026604672893881798,
+        "norm_ratio": 0.9984132407233005,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 9,
+        "parameter": "layers.0.self_attn.k_norm.weight",
+        "slice": [
+         1152,
+         1280
+        ],
+        "config_slice": [
+         1152,
+         1280
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.036244239658117294,
+        "norm_ratio": 0.9979084119336327,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 10,
+        "parameter": "layers.0.self_attn.q_proj.weight",
+        "slice": [
+         1280,
+         1408
+        ],
+        "config_slice": [
+         1280,
+         1408
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8718411922454834,
+        "norm_ratio": 0.9939257223689115,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 10,
+        "parameter": "layers.0.self_attn.k_proj.weight",
+        "slice": [
+         1280,
+         1408
+        ],
+        "config_slice": [
+         1280,
+         1408
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8385908007621765,
+        "norm_ratio": 0.9939012107192842,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 10,
+        "parameter": "layers.0.self_attn.v_proj.weight",
+        "slice": [
+         1280,
+         1408
+        ],
+        "config_slice": [
+         1280,
+         1408
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8200055360794067,
+        "norm_ratio": 0.9907998937557736,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 10,
+        "parameter": "layers.0.self_attn.o_proj.weight",
+        "slice": [
+         1280,
+         1408
+        ],
+        "config_slice": [
+         1280,
+         1408
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7457485198974609,
+        "norm_ratio": 0.9913974586015825,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 10,
+        "parameter": "layers.0.self_attn.q_norm.weight",
+        "slice": [
+         1280,
+         1408
+        ],
+        "config_slice": [
+         1280,
+         1408
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.032985154539346695,
+        "norm_ratio": 0.9972804994291578,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 10,
+        "parameter": "layers.0.self_attn.k_norm.weight",
+        "slice": [
+         1280,
+         1408
+        ],
+        "config_slice": [
+         1280,
+         1408
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.03560508042573929,
+        "norm_ratio": 0.9969416670869478,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 11,
+        "parameter": "layers.0.self_attn.q_proj.weight",
+        "slice": [
+         1408,
+         1536
+        ],
+        "config_slice": [
+         1408,
+         1536
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7144319415092468,
+        "norm_ratio": 0.9946729012208291,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 11,
+        "parameter": "layers.0.self_attn.k_proj.weight",
+        "slice": [
+         1408,
+         1536
+        ],
+        "config_slice": [
+         1408,
+         1536
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7623392343521118,
+        "norm_ratio": 0.9939104123897006,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 11,
+        "parameter": "layers.0.self_attn.v_proj.weight",
+        "slice": [
+         1408,
+         1536
+        ],
+        "config_slice": [
+         1408,
+         1536
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8050559759140015,
+        "norm_ratio": 0.9958267716032502,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 11,
+        "parameter": "layers.0.self_attn.o_proj.weight",
+        "slice": [
+         1408,
+         1536
+        ],
+        "config_slice": [
+         1408,
+         1536
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8675754070281982,
+        "norm_ratio": 0.9959502679778831,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 11,
+        "parameter": "layers.0.self_attn.q_norm.weight",
+        "slice": [
+         1408,
+         1536
+        ],
+        "config_slice": [
+         1408,
+         1536
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.032587215304374695,
+        "norm_ratio": 0.9976026401173346,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 11,
+        "parameter": "layers.0.self_attn.k_norm.weight",
+        "slice": [
+         1408,
+         1536
+        ],
+        "config_slice": [
+         1408,
+         1536
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.032015543431043625,
+        "norm_ratio": 0.9977683614400972,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 12,
+        "parameter": "layers.0.self_attn.q_proj.weight",
+        "slice": [
+         1536,
+         1664
+        ],
+        "config_slice": [
+         1536,
+         1664
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.5408951044082642,
+        "norm_ratio": 0.99383255262581,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 12,
+        "parameter": "layers.0.self_attn.k_proj.weight",
+        "slice": [
+         1536,
+         1664
+        ],
+        "config_slice": [
+         1536,
+         1664
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.6778976917266846,
+        "norm_ratio": 0.9905303872188879,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 12,
+        "parameter": "layers.0.self_attn.v_proj.weight",
+        "slice": [
+         1536,
+         1664
+        ],
+        "config_slice": [
+         1536,
+         1664
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8246061205863953,
+        "norm_ratio": 0.9955522393625336,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 12,
+        "parameter": "layers.0.self_attn.o_proj.weight",
+        "slice": [
+         1536,
+         1664
+        ],
+        "config_slice": [
+         1536,
+         1664
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8925526142120361,
+        "norm_ratio": 0.9956477006065843,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 12,
+        "parameter": "layers.0.self_attn.q_norm.weight",
+        "slice": [
+         1536,
+         1664
+        ],
+        "config_slice": [
+         1536,
+         1664
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.020260071381926537,
+        "norm_ratio": 0.998008166946223,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 12,
+        "parameter": "layers.0.self_attn.k_norm.weight",
+        "slice": [
+         1536,
+         1664
+        ],
+        "config_slice": [
+         1536,
+         1664
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.020189501345157623,
+        "norm_ratio": 0.9982464722229561,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 13,
+        "parameter": "layers.0.self_attn.q_proj.weight",
+        "slice": [
+         1664,
+         1792
+        ],
+        "config_slice": [
+         1664,
+         1792
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.3541742265224457,
+        "norm_ratio": 0.9678374743289023,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 13,
+        "parameter": "layers.0.self_attn.k_proj.weight",
+        "slice": [
+         1664,
+         1792
+        ],
+        "config_slice": [
+         1664,
+         1792
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.6510900855064392,
+        "norm_ratio": 0.9687304005095704,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 13,
+        "parameter": "layers.0.self_attn.v_proj.weight",
+        "slice": [
+         1664,
+         1792
+        ],
+        "config_slice": [
+         1664,
+         1792
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.6465736627578735,
+        "norm_ratio": 1.0008781834008336,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 13,
+        "parameter": "layers.0.self_attn.o_proj.weight",
+        "slice": [
+         1664,
+         1792
+        ],
+        "config_slice": [
+         1664,
+         1792
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8102781176567078,
+        "norm_ratio": 1.0021923095715348,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 13,
+        "parameter": "layers.0.self_attn.q_norm.weight",
+        "slice": [
+         1664,
+         1792
+        ],
+        "config_slice": [
+         1664,
+         1792
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.01060561090707779,
+        "norm_ratio": 0.9974224882431443,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 13,
+        "parameter": "layers.0.self_attn.k_norm.weight",
+        "slice": [
+         1664,
+         1792
+        ],
+        "config_slice": [
+         1664,
+         1792
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.010151185095310211,
+        "norm_ratio": 0.9980827347455233,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 14,
+        "parameter": "layers.0.self_attn.q_proj.weight",
+        "slice": [
+         1792,
+         1920
+        ],
+        "config_slice": [
+         1792,
+         1920
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.5700724720954895,
+        "norm_ratio": 0.9931362141520711,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 14,
+        "parameter": "layers.0.self_attn.k_proj.weight",
+        "slice": [
+         1792,
+         1920
+        ],
+        "config_slice": [
+         1792,
+         1920
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.6832025051116943,
+        "norm_ratio": 0.9929374026222972,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 14,
+        "parameter": "layers.0.self_attn.v_proj.weight",
+        "slice": [
+         1792,
+         1920
+        ],
+        "config_slice": [
+         1792,
+         1920
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8385096788406372,
+        "norm_ratio": 0.9958657011333216,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 14,
+        "parameter": "layers.0.self_attn.o_proj.weight",
+        "slice": [
+         1792,
+         1920
+        ],
+        "config_slice": [
+         1792,
+         1920
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9305572509765625,
+        "norm_ratio": 0.9960193351806537,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 14,
+        "parameter": "layers.0.self_attn.q_norm.weight",
+        "slice": [
+         1792,
+         1920
+        ],
+        "config_slice": [
+         1792,
+         1920
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.030990082770586014,
+        "norm_ratio": 0.9961447075312266,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 14,
+        "parameter": "layers.0.self_attn.k_norm.weight",
+        "slice": [
+         1792,
+         1920
+        ],
+        "config_slice": [
+         1792,
+         1920
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.029738137498497963,
+        "norm_ratio": 0.996884846888775,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 15,
+        "parameter": "layers.0.self_attn.q_proj.weight",
+        "slice": [
+         1920,
+         2048
+        ],
+        "config_slice": [
+         1920,
+         2048
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7658485770225525,
+        "norm_ratio": 0.9921717823642123,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 15,
+        "parameter": "layers.0.self_attn.k_proj.weight",
+        "slice": [
+         1920,
+         2048
+        ],
+        "config_slice": [
+         1920,
+         2048
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7893465757369995,
+        "norm_ratio": 0.992726670796315,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 15,
+        "parameter": "layers.0.self_attn.v_proj.weight",
+        "slice": [
+         1920,
+         2048
+        ],
+        "config_slice": [
+         1920,
+         2048
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7723207473754883,
+        "norm_ratio": 0.9949974731845257,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 15,
+        "parameter": "layers.0.self_attn.o_proj.weight",
+        "slice": [
+         1920,
+         2048
+        ],
+        "config_slice": [
+         1920,
+         2048
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.832013726234436,
+        "norm_ratio": 0.9950925447879859,
+        "elements": 262144
+       },
+       {
+        "layer": 0,
+        "head": 15,
+        "parameter": "layers.0.self_attn.q_norm.weight",
+        "slice": [
+         1920,
+         2048
+        ],
+        "config_slice": [
+         1920,
+         2048
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.038745347410440445,
+        "norm_ratio": 0.9952331735266008,
+        "elements": 128
+       },
+       {
+        "layer": 0,
+        "head": 15,
+        "parameter": "layers.0.self_attn.k_norm.weight",
+        "slice": [
+         1920,
+         2048
+        ],
+        "config_slice": [
+         1920,
+         2048
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.038539182394742966,
+        "norm_ratio": 0.9960002671449595,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 0,
+        "parameter": "layers.1.self_attn.q_proj.weight",
+        "slice": [
+         0,
+         128
+        ],
+        "config_slice": [
+         0,
+         128
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9682638645172119,
+        "norm_ratio": 0.9918422291471678,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 0,
+        "parameter": "layers.1.self_attn.k_proj.weight",
+        "slice": [
+         0,
+         128
+        ],
+        "config_slice": [
+         0,
+         128
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9567930698394775,
+        "norm_ratio": 0.9911879566691765,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 0,
+        "parameter": "layers.1.self_attn.v_proj.weight",
+        "slice": [
+         0,
+         128
+        ],
+        "config_slice": [
+         0,
+         128
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9375628232955933,
+        "norm_ratio": 0.9948083293332014,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 0,
+        "parameter": "layers.1.self_attn.o_proj.weight",
+        "slice": [
+         0,
+         128
+        ],
+        "config_slice": [
+         0,
+         128
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9069302678108215,
+        "norm_ratio": 0.9947135662006747,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 0,
+        "parameter": "layers.1.self_attn.q_norm.weight",
+        "slice": [
+         0,
+         128
+        ],
+        "config_slice": [
+         0,
+         128
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.045382820069789886,
+        "norm_ratio": 0.9958026974034563,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 0,
+        "parameter": "layers.1.self_attn.k_norm.weight",
+        "slice": [
+         0,
+         128
+        ],
+        "config_slice": [
+         0,
+         128
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04796858876943588,
+        "norm_ratio": 0.9954819843994638,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 1,
+        "parameter": "layers.1.self_attn.q_proj.weight",
+        "slice": [
+         128,
+         256
+        ],
+        "config_slice": [
+         128,
+         256
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8564289808273315,
+        "norm_ratio": 0.994209023778874,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 1,
+        "parameter": "layers.1.self_attn.k_proj.weight",
+        "slice": [
+         128,
+         256
+        ],
+        "config_slice": [
+         128,
+         256
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8410893082618713,
+        "norm_ratio": 0.9938434567574962,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 1,
+        "parameter": "layers.1.self_attn.v_proj.weight",
+        "slice": [
+         128,
+         256
+        ],
+        "config_slice": [
+         128,
+         256
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8033238053321838,
+        "norm_ratio": 0.9936706393105252,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 1,
+        "parameter": "layers.1.self_attn.o_proj.weight",
+        "slice": [
+         128,
+         256
+        ],
+        "config_slice": [
+         128,
+         256
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8367488384246826,
+        "norm_ratio": 0.9938328310810741,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 1,
+        "parameter": "layers.1.self_attn.q_norm.weight",
+        "slice": [
+         128,
+         256
+        ],
+        "config_slice": [
+         128,
+         256
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04896944761276245,
+        "norm_ratio": 0.9961809216444862,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 1,
+        "parameter": "layers.1.self_attn.k_norm.weight",
+        "slice": [
+         128,
+         256
+        ],
+        "config_slice": [
+         128,
+         256
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.049893371760845184,
+        "norm_ratio": 0.9959063480774456,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 2,
+        "parameter": "layers.1.self_attn.q_proj.weight",
+        "slice": [
+         256,
+         384
+        ],
+        "config_slice": [
+         256,
+         384
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7527763247489929,
+        "norm_ratio": 0.9948143901046761,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 2,
+        "parameter": "layers.1.self_attn.k_proj.weight",
+        "slice": [
+         256,
+         384
+        ],
+        "config_slice": [
+         256,
+         384
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7563485503196716,
+        "norm_ratio": 0.9930710488812239,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 2,
+        "parameter": "layers.1.self_attn.v_proj.weight",
+        "slice": [
+         256,
+         384
+        ],
+        "config_slice": [
+         256,
+         384
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9027444124221802,
+        "norm_ratio": 0.9968604016654522,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 2,
+        "parameter": "layers.1.self_attn.o_proj.weight",
+        "slice": [
+         256,
+         384
+        ],
+        "config_slice": [
+         256,
+         384
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9720298051834106,
+        "norm_ratio": 0.9972680124028088,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 2,
+        "parameter": "layers.1.self_attn.q_norm.weight",
+        "slice": [
+         256,
+         384
+        ],
+        "config_slice": [
+         256,
+         384
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.031750209629535675,
+        "norm_ratio": 0.9973380816076605,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 2,
+        "parameter": "layers.1.self_attn.k_norm.weight",
+        "slice": [
+         256,
+         384
+        ],
+        "config_slice": [
+         256,
+         384
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.02728918194770813,
+        "norm_ratio": 0.9980317102794387,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 3,
+        "parameter": "layers.1.self_attn.q_proj.weight",
+        "slice": [
+         384,
+         512
+        ],
+        "config_slice": [
+         384,
+         512
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9507401585578918,
+        "norm_ratio": 0.9991200017152068,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 3,
+        "parameter": "layers.1.self_attn.k_proj.weight",
+        "slice": [
+         384,
+         512
+        ],
+        "config_slice": [
+         384,
+         512
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9263962507247925,
+        "norm_ratio": 0.9987394359894555,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 3,
+        "parameter": "layers.1.self_attn.v_proj.weight",
+        "slice": [
+         384,
+         512
+        ],
+        "config_slice": [
+         384,
+         512
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9176059365272522,
+        "norm_ratio": 0.9971452467655505,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 3,
+        "parameter": "layers.1.self_attn.o_proj.weight",
+        "slice": [
+         384,
+         512
+        ],
+        "config_slice": [
+         384,
+         512
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.936736524105072,
+        "norm_ratio": 0.9969087162428368,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 3,
+        "parameter": "layers.1.self_attn.q_norm.weight",
+        "slice": [
+         384,
+         512
+        ],
+        "config_slice": [
+         384,
+         512
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.03869371861219406,
+        "norm_ratio": 0.997321220990975,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 3,
+        "parameter": "layers.1.self_attn.k_norm.weight",
+        "slice": [
+         384,
+         512
+        ],
+        "config_slice": [
+         384,
+         512
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.03576095774769783,
+        "norm_ratio": 0.9975069408977371,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 4,
+        "parameter": "layers.1.self_attn.q_proj.weight",
+        "slice": [
+         512,
+         640
+        ],
+        "config_slice": [
+         512,
+         640
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.4851006865501404,
+        "norm_ratio": 0.9903915698457915,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 4,
+        "parameter": "layers.1.self_attn.k_proj.weight",
+        "slice": [
+         512,
+         640
+        ],
+        "config_slice": [
+         512,
+         640
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.6012606620788574,
+        "norm_ratio": 0.9849206512267606,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 4,
+        "parameter": "layers.1.self_attn.v_proj.weight",
+        "slice": [
+         512,
+         640
+        ],
+        "config_slice": [
+         512,
+         640
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7420526146888733,
+        "norm_ratio": 0.9978100696379816,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 4,
+        "parameter": "layers.1.self_attn.o_proj.weight",
+        "slice": [
+         512,
+         640
+        ],
+        "config_slice": [
+         512,
+         640
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.830206573009491,
+        "norm_ratio": 0.9981585866829072,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 4,
+        "parameter": "layers.1.self_attn.q_norm.weight",
+        "slice": [
+         512,
+         640
+        ],
+        "config_slice": [
+         512,
+         640
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.011012699455022812,
+        "norm_ratio": 0.9968241951846452,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 4,
+        "parameter": "layers.1.self_attn.k_norm.weight",
+        "slice": [
+         512,
+         640
+        ],
+        "config_slice": [
+         512,
+         640
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.010364026762545109,
+        "norm_ratio": 0.9974727410598593,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 5,
+        "parameter": "layers.1.self_attn.q_proj.weight",
+        "slice": [
+         640,
+         768
+        ],
+        "config_slice": [
+         640,
+         768
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.0222653150558472,
+        "norm_ratio": 0.9931549597648051,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 5,
+        "parameter": "layers.1.self_attn.k_proj.weight",
+        "slice": [
+         640,
+         768
+        ],
+        "config_slice": [
+         640,
+         768
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.007171630859375,
+        "norm_ratio": 0.9934298848101571,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 5,
+        "parameter": "layers.1.self_attn.v_proj.weight",
+        "slice": [
+         640,
+         768
+        ],
+        "config_slice": [
+         640,
+         768
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8397583961486816,
+        "norm_ratio": 0.9962689359887938,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 5,
+        "parameter": "layers.1.self_attn.o_proj.weight",
+        "slice": [
+         640,
+         768
+        ],
+        "config_slice": [
+         640,
+         768
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7138200402259827,
+        "norm_ratio": 0.9955324839228654,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 5,
+        "parameter": "layers.1.self_attn.q_norm.weight",
+        "slice": [
+         640,
+         768
+        ],
+        "config_slice": [
+         640,
+         768
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.048384640365839005,
+        "norm_ratio": 0.9957036929702117,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 5,
+        "parameter": "layers.1.self_attn.k_norm.weight",
+        "slice": [
+         640,
+         768
+        ],
+        "config_slice": [
+         640,
+         768
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.0490734800696373,
+        "norm_ratio": 0.9956234981760956,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 6,
+        "parameter": "layers.1.self_attn.q_proj.weight",
+        "slice": [
+         768,
+         896
+        ],
+        "config_slice": [
+         768,
+         896
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7903735041618347,
+        "norm_ratio": 0.9963794537110852,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 6,
+        "parameter": "layers.1.self_attn.k_proj.weight",
+        "slice": [
+         768,
+         896
+        ],
+        "config_slice": [
+         768,
+         896
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7806575894355774,
+        "norm_ratio": 0.9960207656627039,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 6,
+        "parameter": "layers.1.self_attn.v_proj.weight",
+        "slice": [
+         768,
+         896
+        ],
+        "config_slice": [
+         768,
+         896
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7470481991767883,
+        "norm_ratio": 0.9925384239636069,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 6,
+        "parameter": "layers.1.self_attn.o_proj.weight",
+        "slice": [
+         768,
+         896
+        ],
+        "config_slice": [
+         768,
+         896
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7612320184707642,
+        "norm_ratio": 0.9926279163013415,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 6,
+        "parameter": "layers.1.self_attn.q_norm.weight",
+        "slice": [
+         768,
+         896
+        ],
+        "config_slice": [
+         768,
+         896
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.03523063659667969,
+        "norm_ratio": 0.9977246636158253,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 6,
+        "parameter": "layers.1.self_attn.k_norm.weight",
+        "slice": [
+         768,
+         896
+        ],
+        "config_slice": [
+         768,
+         896
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04137936607003212,
+        "norm_ratio": 0.9970503655591514,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 7,
+        "parameter": "layers.1.self_attn.q_proj.weight",
+        "slice": [
+         896,
+         1024
+        ],
+        "config_slice": [
+         896,
+         1024
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8873828053474426,
+        "norm_ratio": 0.9906276697615718,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 7,
+        "parameter": "layers.1.self_attn.k_proj.weight",
+        "slice": [
+         896,
+         1024
+        ],
+        "config_slice": [
+         896,
+         1024
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8970035314559937,
+        "norm_ratio": 0.991534164372183,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 7,
+        "parameter": "layers.1.self_attn.v_proj.weight",
+        "slice": [
+         896,
+         1024
+        ],
+        "config_slice": [
+         896,
+         1024
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8798868656158447,
+        "norm_ratio": 0.992835853165004,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 7,
+        "parameter": "layers.1.self_attn.o_proj.weight",
+        "slice": [
+         896,
+         1024
+        ],
+        "config_slice": [
+         896,
+         1024
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8916888236999512,
+        "norm_ratio": 0.9930357797634111,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 7,
+        "parameter": "layers.1.self_attn.q_norm.weight",
+        "slice": [
+         896,
+         1024
+        ],
+        "config_slice": [
+         896,
+         1024
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.05487177148461342,
+        "norm_ratio": 0.9941677454376205,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 7,
+        "parameter": "layers.1.self_attn.k_norm.weight",
+        "slice": [
+         896,
+         1024
+        ],
+        "config_slice": [
+         896,
+         1024
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.05128181725740433,
+        "norm_ratio": 0.994417971425076,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 8,
+        "parameter": "layers.1.self_attn.q_proj.weight",
+        "slice": [
+         1024,
+         1152
+        ],
+        "config_slice": [
+         1024,
+         1152
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7089627981185913,
+        "norm_ratio": 0.994528506676836,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 8,
+        "parameter": "layers.1.self_attn.k_proj.weight",
+        "slice": [
+         1024,
+         1152
+        ],
+        "config_slice": [
+         1024,
+         1152
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.6920070648193359,
+        "norm_ratio": 0.9936154135067913,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 8,
+        "parameter": "layers.1.self_attn.v_proj.weight",
+        "slice": [
+         1024,
+         1152
+        ],
+        "config_slice": [
+         1024,
+         1152
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.823150098323822,
+        "norm_ratio": 0.9950469756867576,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 8,
+        "parameter": "layers.1.self_attn.o_proj.weight",
+        "slice": [
+         1024,
+         1152
+        ],
+        "config_slice": [
+         1024,
+         1152
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9129302501678467,
+        "norm_ratio": 0.9953603961499643,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 8,
+        "parameter": "layers.1.self_attn.q_norm.weight",
+        "slice": [
+         1024,
+         1152
+        ],
+        "config_slice": [
+         1024,
+         1152
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.026541227474808693,
+        "norm_ratio": 0.9972755435755135,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 8,
+        "parameter": "layers.1.self_attn.k_norm.weight",
+        "slice": [
+         1024,
+         1152
+        ],
+        "config_slice": [
+         1024,
+         1152
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.02620292268693447,
+        "norm_ratio": 0.9975433964137818,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 9,
+        "parameter": "layers.1.self_attn.q_proj.weight",
+        "slice": [
+         1152,
+         1280
+        ],
+        "config_slice": [
+         1152,
+         1280
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7445256114006042,
+        "norm_ratio": 0.9903526378799812,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 9,
+        "parameter": "layers.1.self_attn.k_proj.weight",
+        "slice": [
+         1152,
+         1280
+        ],
+        "config_slice": [
+         1152,
+         1280
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7829145789146423,
+        "norm_ratio": 0.98966249722382,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 9,
+        "parameter": "layers.1.self_attn.v_proj.weight",
+        "slice": [
+         1152,
+         1280
+        ],
+        "config_slice": [
+         1152,
+         1280
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9158304333686829,
+        "norm_ratio": 0.995085915963409,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 9,
+        "parameter": "layers.1.self_attn.o_proj.weight",
+        "slice": [
+         1152,
+         1280
+        ],
+        "config_slice": [
+         1152,
+         1280
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.870999276638031,
+        "norm_ratio": 0.994630187127697,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 9,
+        "parameter": "layers.1.self_attn.q_norm.weight",
+        "slice": [
+         1152,
+         1280
+        ],
+        "config_slice": [
+         1152,
+         1280
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.02459610439836979,
+        "norm_ratio": 0.9976853423168097,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 9,
+        "parameter": "layers.1.self_attn.k_norm.weight",
+        "slice": [
+         1152,
+         1280
+        ],
+        "config_slice": [
+         1152,
+         1280
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.02912922389805317,
+        "norm_ratio": 0.9971635286406767,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 10,
+        "parameter": "layers.1.self_attn.q_proj.weight",
+        "slice": [
+         1280,
+         1408
+        ],
+        "config_slice": [
+         1280,
+         1408
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.54789137840271,
+        "norm_ratio": 0.9884661444852064,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 10,
+        "parameter": "layers.1.self_attn.k_proj.weight",
+        "slice": [
+         1280,
+         1408
+        ],
+        "config_slice": [
+         1280,
+         1408
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.6443591713905334,
+        "norm_ratio": 0.9881206727568902,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 10,
+        "parameter": "layers.1.self_attn.v_proj.weight",
+        "slice": [
+         1280,
+         1408
+        ],
+        "config_slice": [
+         1280,
+         1408
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8018808960914612,
+        "norm_ratio": 0.9978189813091515,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 10,
+        "parameter": "layers.1.self_attn.o_proj.weight",
+        "slice": [
+         1280,
+         1408
+        ],
+        "config_slice": [
+         1280,
+         1408
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8352887034416199,
+        "norm_ratio": 0.9972038610233552,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 10,
+        "parameter": "layers.1.self_attn.q_norm.weight",
+        "slice": [
+         1280,
+         1408
+        ],
+        "config_slice": [
+         1280,
+         1408
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.017464689910411835,
+        "norm_ratio": 0.9971399279791883,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 10,
+        "parameter": "layers.1.self_attn.k_norm.weight",
+        "slice": [
+         1280,
+         1408
+        ],
+        "config_slice": [
+         1280,
+         1408
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.018020957708358765,
+        "norm_ratio": 0.9971539176011953,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 11,
+        "parameter": "layers.1.self_attn.q_proj.weight",
+        "slice": [
+         1408,
+         1536
+        ],
+        "config_slice": [
+         1408,
+         1536
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7817820310592651,
+        "norm_ratio": 0.9899540990631065,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 11,
+        "parameter": "layers.1.self_attn.k_proj.weight",
+        "slice": [
+         1408,
+         1536
+        ],
+        "config_slice": [
+         1408,
+         1536
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7986780405044556,
+        "norm_ratio": 0.9895562740058742,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 11,
+        "parameter": "layers.1.self_attn.v_proj.weight",
+        "slice": [
+         1408,
+         1536
+        ],
+        "config_slice": [
+         1408,
+         1536
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8651617169380188,
+        "norm_ratio": 0.9940491327838522,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 11,
+        "parameter": "layers.1.self_attn.o_proj.weight",
+        "slice": [
+         1408,
+         1536
+        ],
+        "config_slice": [
+         1408,
+         1536
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8895729780197144,
+        "norm_ratio": 0.9944908075078008,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 11,
+        "parameter": "layers.1.self_attn.q_norm.weight",
+        "slice": [
+         1408,
+         1536
+        ],
+        "config_slice": [
+         1408,
+         1536
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04349737986922264,
+        "norm_ratio": 0.9947137137276693,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 11,
+        "parameter": "layers.1.self_attn.k_norm.weight",
+        "slice": [
+         1408,
+         1536
+        ],
+        "config_slice": [
+         1408,
+         1536
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04440508410334587,
+        "norm_ratio": 0.994585776609173,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 12,
+        "parameter": "layers.1.self_attn.q_proj.weight",
+        "slice": [
+         1536,
+         1664
+        ],
+        "config_slice": [
+         1536,
+         1664
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.0256848335266113,
+        "norm_ratio": 0.9959098882124162,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 12,
+        "parameter": "layers.1.self_attn.k_proj.weight",
+        "slice": [
+         1536,
+         1664
+        ],
+        "config_slice": [
+         1536,
+         1664
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9687439799308777,
+        "norm_ratio": 0.9963475671911869,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 12,
+        "parameter": "layers.1.self_attn.v_proj.weight",
+        "slice": [
+         1536,
+         1664
+        ],
+        "config_slice": [
+         1536,
+         1664
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9610110521316528,
+        "norm_ratio": 0.9952836722242551,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 12,
+        "parameter": "layers.1.self_attn.o_proj.weight",
+        "slice": [
+         1536,
+         1664
+        ],
+        "config_slice": [
+         1536,
+         1664
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9959427118301392,
+        "norm_ratio": 0.9954021386952941,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 12,
+        "parameter": "layers.1.self_attn.q_norm.weight",
+        "slice": [
+         1536,
+         1664
+        ],
+        "config_slice": [
+         1536,
+         1664
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04371820390224457,
+        "norm_ratio": 0.99659399718624,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 12,
+        "parameter": "layers.1.self_attn.k_norm.weight",
+        "slice": [
+         1536,
+         1664
+        ],
+        "config_slice": [
+         1536,
+         1664
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.042954809963703156,
+        "norm_ratio": 0.9966174932749248,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 13,
+        "parameter": "layers.1.self_attn.q_proj.weight",
+        "slice": [
+         1664,
+         1792
+        ],
+        "config_slice": [
+         1664,
+         1792
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9818094968795776,
+        "norm_ratio": 0.9901899182451401,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 13,
+        "parameter": "layers.1.self_attn.k_proj.weight",
+        "slice": [
+         1664,
+         1792
+        ],
+        "config_slice": [
+         1664,
+         1792
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9561645984649658,
+        "norm_ratio": 0.9905240934041416,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 13,
+        "parameter": "layers.1.self_attn.v_proj.weight",
+        "slice": [
+         1664,
+         1792
+        ],
+        "config_slice": [
+         1664,
+         1792
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9235543012619019,
+        "norm_ratio": 0.9933501387056234,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 13,
+        "parameter": "layers.1.self_attn.o_proj.weight",
+        "slice": [
+         1664,
+         1792
+        ],
+        "config_slice": [
+         1664,
+         1792
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9311187267303467,
+        "norm_ratio": 0.9935633777647934,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 13,
+        "parameter": "layers.1.self_attn.q_norm.weight",
+        "slice": [
+         1664,
+         1792
+        ],
+        "config_slice": [
+         1664,
+         1792
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.0449235662817955,
+        "norm_ratio": 0.9964298850951804,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 13,
+        "parameter": "layers.1.self_attn.k_norm.weight",
+        "slice": [
+         1664,
+         1792
+        ],
+        "config_slice": [
+         1664,
+         1792
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.043532103300094604,
+        "norm_ratio": 0.9963936646668139,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 14,
+        "parameter": "layers.1.self_attn.q_proj.weight",
+        "slice": [
+         1792,
+         1920
+        ],
+        "config_slice": [
+         1792,
+         1920
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8023846745491028,
+        "norm_ratio": 0.9913237785131429,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 14,
+        "parameter": "layers.1.self_attn.k_proj.weight",
+        "slice": [
+         1792,
+         1920
+        ],
+        "config_slice": [
+         1792,
+         1920
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8321517109870911,
+        "norm_ratio": 0.9903322945748989,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 14,
+        "parameter": "layers.1.self_attn.v_proj.weight",
+        "slice": [
+         1792,
+         1920
+        ],
+        "config_slice": [
+         1792,
+         1920
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8822507858276367,
+        "norm_ratio": 0.9993623358546287,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 14,
+        "parameter": "layers.1.self_attn.o_proj.weight",
+        "slice": [
+         1792,
+         1920
+        ],
+        "config_slice": [
+         1792,
+         1920
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8179477453231812,
+        "norm_ratio": 0.9981425560172372,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 14,
+        "parameter": "layers.1.self_attn.q_norm.weight",
+        "slice": [
+         1792,
+         1920
+        ],
+        "config_slice": [
+         1792,
+         1920
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.03909308463335037,
+        "norm_ratio": 0.9956369416712524,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 14,
+        "parameter": "layers.1.self_attn.k_norm.weight",
+        "slice": [
+         1792,
+         1920
+        ],
+        "config_slice": [
+         1792,
+         1920
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.039367061108350754,
+        "norm_ratio": 0.9956744239315953,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 15,
+        "parameter": "layers.1.self_attn.q_proj.weight",
+        "slice": [
+         1920,
+         2048
+        ],
+        "config_slice": [
+         1920,
+         2048
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8166846632957458,
+        "norm_ratio": 0.9942632439323579,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 15,
+        "parameter": "layers.1.self_attn.k_proj.weight",
+        "slice": [
+         1920,
+         2048
+        ],
+        "config_slice": [
+         1920,
+         2048
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8289569616317749,
+        "norm_ratio": 0.9951952565080614,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 15,
+        "parameter": "layers.1.self_attn.v_proj.weight",
+        "slice": [
+         1920,
+         2048
+        ],
+        "config_slice": [
+         1920,
+         2048
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9355124831199646,
+        "norm_ratio": 0.9958642770478037,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 15,
+        "parameter": "layers.1.self_attn.o_proj.weight",
+        "slice": [
+         1920,
+         2048
+        ],
+        "config_slice": [
+         1920,
+         2048
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.0124255418777466,
+        "norm_ratio": 0.9962095544475075,
+        "elements": 262144
+       },
+       {
+        "layer": 1,
+        "head": 15,
+        "parameter": "layers.1.self_attn.q_norm.weight",
+        "slice": [
+         1920,
+         2048
+        ],
+        "config_slice": [
+         1920,
+         2048
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.03700307384133339,
+        "norm_ratio": 0.9971995237036083,
+        "elements": 128
+       },
+       {
+        "layer": 1,
+        "head": 15,
+        "parameter": "layers.1.self_attn.k_norm.weight",
+        "slice": [
+         1920,
+         2048
+        ],
+        "config_slice": [
+         1920,
+         2048
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.03550251945853233,
+        "norm_ratio": 0.9972165734913293,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 0,
+        "parameter": "layers.2.self_attn.q_proj.weight",
+        "slice": [
+         0,
+         128
+        ],
+        "config_slice": [
+         0,
+         128
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8742798566818237,
+        "norm_ratio": 0.9971996571784588,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 0,
+        "parameter": "layers.2.self_attn.k_proj.weight",
+        "slice": [
+         0,
+         128
+        ],
+        "config_slice": [
+         0,
+         128
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8586288690567017,
+        "norm_ratio": 0.9967966950900721,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 0,
+        "parameter": "layers.2.self_attn.v_proj.weight",
+        "slice": [
+         0,
+         128
+        ],
+        "config_slice": [
+         0,
+         128
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8178333044052124,
+        "norm_ratio": 0.9937015901287806,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 0,
+        "parameter": "layers.2.self_attn.o_proj.weight",
+        "slice": [
+         0,
+         128
+        ],
+        "config_slice": [
+         0,
+         128
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8815287947654724,
+        "norm_ratio": 0.9940848752186642,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 0,
+        "parameter": "layers.2.self_attn.q_norm.weight",
+        "slice": [
+         0,
+         128
+        ],
+        "config_slice": [
+         0,
+         128
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04655007645487785,
+        "norm_ratio": 0.996977528455279,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 0,
+        "parameter": "layers.2.self_attn.k_norm.weight",
+        "slice": [
+         0,
+         128
+        ],
+        "config_slice": [
+         0,
+         128
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04631074517965317,
+        "norm_ratio": 0.9970347035589173,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 1,
+        "parameter": "layers.2.self_attn.q_proj.weight",
+        "slice": [
+         128,
+         256
+        ],
+        "config_slice": [
+         128,
+         256
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.0479366779327393,
+        "norm_ratio": 0.9958584017853633,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 1,
+        "parameter": "layers.2.self_attn.k_proj.weight",
+        "slice": [
+         128,
+         256
+        ],
+        "config_slice": [
+         128,
+         256
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.0188432931900024,
+        "norm_ratio": 0.9959519424456489,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 1,
+        "parameter": "layers.2.self_attn.v_proj.weight",
+        "slice": [
+         128,
+         256
+        ],
+        "config_slice": [
+         128,
+         256
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8663669228553772,
+        "norm_ratio": 0.995843964253562,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 1,
+        "parameter": "layers.2.self_attn.o_proj.weight",
+        "slice": [
+         128,
+         256
+        ],
+        "config_slice": [
+         128,
+         256
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8026377558708191,
+        "norm_ratio": 0.9953668326772155,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 1,
+        "parameter": "layers.2.self_attn.q_norm.weight",
+        "slice": [
+         128,
+         256
+        ],
+        "config_slice": [
+         128,
+         256
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.05100611224770546,
+        "norm_ratio": 0.9960457569454992,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 1,
+        "parameter": "layers.2.self_attn.k_norm.weight",
+        "slice": [
+         128,
+         256
+        ],
+        "config_slice": [
+         128,
+         256
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04968423396348953,
+        "norm_ratio": 0.9960889465991956,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 2,
+        "parameter": "layers.2.self_attn.q_proj.weight",
+        "slice": [
+         256,
+         384
+        ],
+        "config_slice": [
+         256,
+         384
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9350619912147522,
+        "norm_ratio": 0.9919109624390848,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 2,
+        "parameter": "layers.2.self_attn.k_proj.weight",
+        "slice": [
+         256,
+         384
+        ],
+        "config_slice": [
+         256,
+         384
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9028264284133911,
+        "norm_ratio": 0.992212815947426,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 2,
+        "parameter": "layers.2.self_attn.v_proj.weight",
+        "slice": [
+         256,
+         384
+        ],
+        "config_slice": [
+         256,
+         384
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8746116757392883,
+        "norm_ratio": 0.9902532629762559,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 2,
+        "parameter": "layers.2.self_attn.o_proj.weight",
+        "slice": [
+         256,
+         384
+        ],
+        "config_slice": [
+         256,
+         384
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8762210607528687,
+        "norm_ratio": 0.9900961931514792,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 2,
+        "parameter": "layers.2.self_attn.q_norm.weight",
+        "slice": [
+         256,
+         384
+        ],
+        "config_slice": [
+         256,
+         384
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.0509645976126194,
+        "norm_ratio": 0.9944282208182209,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 2,
+        "parameter": "layers.2.self_attn.k_norm.weight",
+        "slice": [
+         256,
+         384
+        ],
+        "config_slice": [
+         256,
+         384
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.05035754665732384,
+        "norm_ratio": 0.9944437550467343,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 3,
+        "parameter": "layers.2.self_attn.q_proj.weight",
+        "slice": [
+         384,
+         512
+        ],
+        "config_slice": [
+         384,
+         512
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9600622653961182,
+        "norm_ratio": 0.994327549722179,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 3,
+        "parameter": "layers.2.self_attn.k_proj.weight",
+        "slice": [
+         384,
+         512
+        ],
+        "config_slice": [
+         384,
+         512
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9383699893951416,
+        "norm_ratio": 0.9939413172369025,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 3,
+        "parameter": "layers.2.self_attn.v_proj.weight",
+        "slice": [
+         384,
+         512
+        ],
+        "config_slice": [
+         384,
+         512
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8970982432365417,
+        "norm_ratio": 0.9943668368493418,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 3,
+        "parameter": "layers.2.self_attn.o_proj.weight",
+        "slice": [
+         384,
+         512
+        ],
+        "config_slice": [
+         384,
+         512
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9535913467407227,
+        "norm_ratio": 0.9945385330109956,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 3,
+        "parameter": "layers.2.self_attn.q_norm.weight",
+        "slice": [
+         384,
+         512
+        ],
+        "config_slice": [
+         384,
+         512
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.05568477511405945,
+        "norm_ratio": 0.9960167657666439,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 3,
+        "parameter": "layers.2.self_attn.k_norm.weight",
+        "slice": [
+         384,
+         512
+        ],
+        "config_slice": [
+         384,
+         512
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.05455940216779709,
+        "norm_ratio": 0.9961322407455812,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 4,
+        "parameter": "layers.2.self_attn.q_proj.weight",
+        "slice": [
+         512,
+         640
+        ],
+        "config_slice": [
+         512,
+         640
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9806515574455261,
+        "norm_ratio": 0.9915890638223458,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 4,
+        "parameter": "layers.2.self_attn.k_proj.weight",
+        "slice": [
+         512,
+         640
+        ],
+        "config_slice": [
+         512,
+         640
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9852325916290283,
+        "norm_ratio": 0.9902158939257774,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 4,
+        "parameter": "layers.2.self_attn.v_proj.weight",
+        "slice": [
+         512,
+         640
+        ],
+        "config_slice": [
+         512,
+         640
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9743080139160156,
+        "norm_ratio": 0.9939980609931106,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 4,
+        "parameter": "layers.2.self_attn.o_proj.weight",
+        "slice": [
+         512,
+         640
+        ],
+        "config_slice": [
+         512,
+         640
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9520485997200012,
+        "norm_ratio": 0.9941683761277681,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 4,
+        "parameter": "layers.2.self_attn.q_norm.weight",
+        "slice": [
+         512,
+         640
+        ],
+        "config_slice": [
+         512,
+         640
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.0530235730111599,
+        "norm_ratio": 0.995626844860491,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 4,
+        "parameter": "layers.2.self_attn.k_norm.weight",
+        "slice": [
+         512,
+         640
+        ],
+        "config_slice": [
+         512,
+         640
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.053822316229343414,
+        "norm_ratio": 0.9954905572082341,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 5,
+        "parameter": "layers.2.self_attn.q_proj.weight",
+        "slice": [
+         640,
+         768
+        ],
+        "config_slice": [
+         640,
+         768
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.5530079007148743,
+        "norm_ratio": 0.994049991311737,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 5,
+        "parameter": "layers.2.self_attn.k_proj.weight",
+        "slice": [
+         640,
+         768
+        ],
+        "config_slice": [
+         640,
+         768
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.6362921595573425,
+        "norm_ratio": 0.9917652395627052,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 5,
+        "parameter": "layers.2.self_attn.v_proj.weight",
+        "slice": [
+         640,
+         768
+        ],
+        "config_slice": [
+         640,
+         768
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7434406876564026,
+        "norm_ratio": 0.9970944406160693,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 5,
+        "parameter": "layers.2.self_attn.o_proj.weight",
+        "slice": [
+         640,
+         768
+        ],
+        "config_slice": [
+         640,
+         768
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7979543805122375,
+        "norm_ratio": 0.997453571627046,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 5,
+        "parameter": "layers.2.self_attn.q_norm.weight",
+        "slice": [
+         640,
+         768
+        ],
+        "config_slice": [
+         640,
+         768
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.01751088909804821,
+        "norm_ratio": 0.9976427897841604,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 5,
+        "parameter": "layers.2.self_attn.k_norm.weight",
+        "slice": [
+         640,
+         768
+        ],
+        "config_slice": [
+         640,
+         768
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.017174310982227325,
+        "norm_ratio": 0.9977393172174587,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 6,
+        "parameter": "layers.2.self_attn.q_proj.weight",
+        "slice": [
+         768,
+         896
+        ],
+        "config_slice": [
+         768,
+         896
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.47931092977523804,
+        "norm_ratio": 0.9909455633776613,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 6,
+        "parameter": "layers.2.self_attn.k_proj.weight",
+        "slice": [
+         768,
+         896
+        ],
+        "config_slice": [
+         768,
+         896
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.5617996454238892,
+        "norm_ratio": 0.981139437438402,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 6,
+        "parameter": "layers.2.self_attn.v_proj.weight",
+        "slice": [
+         768,
+         896
+        ],
+        "config_slice": [
+         768,
+         896
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7467328906059265,
+        "norm_ratio": 0.9958550917967454,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 6,
+        "parameter": "layers.2.self_attn.o_proj.weight",
+        "slice": [
+         768,
+         896
+        ],
+        "config_slice": [
+         768,
+         896
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8315456509590149,
+        "norm_ratio": 0.9958907458621773,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 6,
+        "parameter": "layers.2.self_attn.q_norm.weight",
+        "slice": [
+         768,
+         896
+        ],
+        "config_slice": [
+         768,
+         896
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.008994310162961483,
+        "norm_ratio": 0.9981210223355378,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 6,
+        "parameter": "layers.2.self_attn.k_norm.weight",
+        "slice": [
+         768,
+         896
+        ],
+        "config_slice": [
+         768,
+         896
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.010377294383943081,
+        "norm_ratio": 0.998100421608795,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 7,
+        "parameter": "layers.2.self_attn.q_proj.weight",
+        "slice": [
+         896,
+         1024
+        ],
+        "config_slice": [
+         896,
+         1024
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.057945728302002,
+        "norm_ratio": 0.9918228844659662,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 7,
+        "parameter": "layers.2.self_attn.k_proj.weight",
+        "slice": [
+         896,
+         1024
+        ],
+        "config_slice": [
+         896,
+         1024
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.0269330739974976,
+        "norm_ratio": 0.9914810076664567,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 7,
+        "parameter": "layers.2.self_attn.v_proj.weight",
+        "slice": [
+         896,
+         1024
+        ],
+        "config_slice": [
+         896,
+         1024
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9516281485557556,
+        "norm_ratio": 0.993443476853942,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 7,
+        "parameter": "layers.2.self_attn.o_proj.weight",
+        "slice": [
+         896,
+         1024
+        ],
+        "config_slice": [
+         896,
+         1024
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.94997239112854,
+        "norm_ratio": 0.9934610654476637,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 7,
+        "parameter": "layers.2.self_attn.q_norm.weight",
+        "slice": [
+         896,
+         1024
+        ],
+        "config_slice": [
+         896,
+         1024
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.053597044199705124,
+        "norm_ratio": 0.9954751348008651,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 7,
+        "parameter": "layers.2.self_attn.k_norm.weight",
+        "slice": [
+         896,
+         1024
+        ],
+        "config_slice": [
+         896,
+         1024
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.051589235663414,
+        "norm_ratio": 0.9955452816282417,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 8,
+        "parameter": "layers.2.self_attn.q_proj.weight",
+        "slice": [
+         1024,
+         1152
+        ],
+        "config_slice": [
+         1024,
+         1152
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9504904747009277,
+        "norm_ratio": 0.9934648967401483,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 8,
+        "parameter": "layers.2.self_attn.k_proj.weight",
+        "slice": [
+         1024,
+         1152
+        ],
+        "config_slice": [
+         1024,
+         1152
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9437580704689026,
+        "norm_ratio": 0.9929956103025606,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 8,
+        "parameter": "layers.2.self_attn.v_proj.weight",
+        "slice": [
+         1024,
+         1152
+        ],
+        "config_slice": [
+         1024,
+         1152
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8744483590126038,
+        "norm_ratio": 0.9929765853469916,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 8,
+        "parameter": "layers.2.self_attn.o_proj.weight",
+        "slice": [
+         1024,
+         1152
+        ],
+        "config_slice": [
+         1024,
+         1152
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.949979305267334,
+        "norm_ratio": 0.992969870763638,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 8,
+        "parameter": "layers.2.self_attn.q_norm.weight",
+        "slice": [
+         1024,
+         1152
+        ],
+        "config_slice": [
+         1024,
+         1152
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.0551048181951046,
+        "norm_ratio": 0.9962173842207976,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 8,
+        "parameter": "layers.2.self_attn.k_norm.weight",
+        "slice": [
+         1024,
+         1152
+        ],
+        "config_slice": [
+         1024,
+         1152
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.058628782629966736,
+        "norm_ratio": 0.9957769684456106,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 9,
+        "parameter": "layers.2.self_attn.q_proj.weight",
+        "slice": [
+         1152,
+         1280
+        ],
+        "config_slice": [
+         1152,
+         1280
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.0725466012954712,
+        "norm_ratio": 1.0017287090201739,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 9,
+        "parameter": "layers.2.self_attn.k_proj.weight",
+        "slice": [
+         1152,
+         1280
+        ],
+        "config_slice": [
+         1152,
+         1280
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.98076331615448,
+        "norm_ratio": 1.002448601865922,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 9,
+        "parameter": "layers.2.self_attn.v_proj.weight",
+        "slice": [
+         1152,
+         1280
+        ],
+        "config_slice": [
+         1152,
+         1280
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8671826124191284,
+        "norm_ratio": 0.9995520932799481,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 9,
+        "parameter": "layers.2.self_attn.o_proj.weight",
+        "slice": [
+         1152,
+         1280
+        ],
+        "config_slice": [
+         1152,
+         1280
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.87045818567276,
+        "norm_ratio": 0.9988045798437328,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 9,
+        "parameter": "layers.2.self_attn.q_norm.weight",
+        "slice": [
+         1152,
+         1280
+        ],
+        "config_slice": [
+         1152,
+         1280
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.031345728784799576,
+        "norm_ratio": 0.9986079169560838,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 9,
+        "parameter": "layers.2.self_attn.k_norm.weight",
+        "slice": [
+         1152,
+         1280
+        ],
+        "config_slice": [
+         1152,
+         1280
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.030075713992118835,
+        "norm_ratio": 0.998731832035004,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 10,
+        "parameter": "layers.2.self_attn.q_proj.weight",
+        "slice": [
+         1280,
+         1408
+        ],
+        "config_slice": [
+         1280,
+         1408
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8082707524299622,
+        "norm_ratio": 0.9896787422993788,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 10,
+        "parameter": "layers.2.self_attn.k_proj.weight",
+        "slice": [
+         1280,
+         1408
+        ],
+        "config_slice": [
+         1280,
+         1408
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8062341809272766,
+        "norm_ratio": 0.9877799840213387,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 10,
+        "parameter": "layers.2.self_attn.v_proj.weight",
+        "slice": [
+         1280,
+         1408
+        ],
+        "config_slice": [
+         1280,
+         1408
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8507729172706604,
+        "norm_ratio": 0.9909864749339722,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 10,
+        "parameter": "layers.2.self_attn.o_proj.weight",
+        "slice": [
+         1280,
+         1408
+        ],
+        "config_slice": [
+         1280,
+         1408
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8709685206413269,
+        "norm_ratio": 0.9919573747063467,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 10,
+        "parameter": "layers.2.self_attn.q_norm.weight",
+        "slice": [
+         1280,
+         1408
+        ],
+        "config_slice": [
+         1280,
+         1408
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04871130362153053,
+        "norm_ratio": 0.9949157737790919,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 10,
+        "parameter": "layers.2.self_attn.k_norm.weight",
+        "slice": [
+         1280,
+         1408
+        ],
+        "config_slice": [
+         1280,
+         1408
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04875919595360756,
+        "norm_ratio": 0.9949386802506882,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 11,
+        "parameter": "layers.2.self_attn.q_proj.weight",
+        "slice": [
+         1408,
+         1536
+        ],
+        "config_slice": [
+         1408,
+         1536
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.0269584655761719,
+        "norm_ratio": 0.9942879188043775,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 11,
+        "parameter": "layers.2.self_attn.k_proj.weight",
+        "slice": [
+         1408,
+         1536
+        ],
+        "config_slice": [
+         1408,
+         1536
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.0152922868728638,
+        "norm_ratio": 0.9940728561548512,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 11,
+        "parameter": "layers.2.self_attn.v_proj.weight",
+        "slice": [
+         1408,
+         1536
+        ],
+        "config_slice": [
+         1408,
+         1536
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9297114014625549,
+        "norm_ratio": 0.994131190925192,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 11,
+        "parameter": "layers.2.self_attn.o_proj.weight",
+        "slice": [
+         1408,
+         1536
+        ],
+        "config_slice": [
+         1408,
+         1536
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9268360137939453,
+        "norm_ratio": 0.994244789747748,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 11,
+        "parameter": "layers.2.self_attn.q_norm.weight",
+        "slice": [
+         1408,
+         1536
+        ],
+        "config_slice": [
+         1408,
+         1536
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04815957322716713,
+        "norm_ratio": 0.9961760478985162,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 11,
+        "parameter": "layers.2.self_attn.k_norm.weight",
+        "slice": [
+         1408,
+         1536
+        ],
+        "config_slice": [
+         1408,
+         1536
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.0514904260635376,
+        "norm_ratio": 0.9957595930363045,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 12,
+        "parameter": "layers.2.self_attn.q_proj.weight",
+        "slice": [
+         1536,
+         1664
+        ],
+        "config_slice": [
+         1536,
+         1664
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.0186249017715454,
+        "norm_ratio": 0.9926466364638632,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 12,
+        "parameter": "layers.2.self_attn.k_proj.weight",
+        "slice": [
+         1536,
+         1664
+        ],
+        "config_slice": [
+         1536,
+         1664
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.0170841217041016,
+        "norm_ratio": 0.9915863372041402,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 12,
+        "parameter": "layers.2.self_attn.v_proj.weight",
+        "slice": [
+         1536,
+         1664
+        ],
+        "config_slice": [
+         1536,
+         1664
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8989080786705017,
+        "norm_ratio": 0.9962659935768797,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 12,
+        "parameter": "layers.2.self_attn.o_proj.weight",
+        "slice": [
+         1536,
+         1664
+        ],
+        "config_slice": [
+         1536,
+         1664
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7984216809272766,
+        "norm_ratio": 0.9958259733227471,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 12,
+        "parameter": "layers.2.self_attn.q_norm.weight",
+        "slice": [
+         1536,
+         1664
+        ],
+        "config_slice": [
+         1536,
+         1664
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04944917559623718,
+        "norm_ratio": 0.9965308241652827,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 12,
+        "parameter": "layers.2.self_attn.k_norm.weight",
+        "slice": [
+         1536,
+         1664
+        ],
+        "config_slice": [
+         1536,
+         1664
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.0491243451833725,
+        "norm_ratio": 0.996327075742158,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 13,
+        "parameter": "layers.2.self_attn.q_proj.weight",
+        "slice": [
+         1664,
+         1792
+        ],
+        "config_slice": [
+         1664,
+         1792
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.0107520818710327,
+        "norm_ratio": 0.9902743241972617,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 13,
+        "parameter": "layers.2.self_attn.k_proj.weight",
+        "slice": [
+         1664,
+         1792
+        ],
+        "config_slice": [
+         1664,
+         1792
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.0300029516220093,
+        "norm_ratio": 0.9886858762469994,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 13,
+        "parameter": "layers.2.self_attn.v_proj.weight",
+        "slice": [
+         1664,
+         1792
+        ],
+        "config_slice": [
+         1664,
+         1792
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9183467030525208,
+        "norm_ratio": 0.9938867799822634,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 13,
+        "parameter": "layers.2.self_attn.o_proj.weight",
+        "slice": [
+         1664,
+         1792
+        ],
+        "config_slice": [
+         1664,
+         1792
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8431848883628845,
+        "norm_ratio": 0.9938193895584294,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 13,
+        "parameter": "layers.2.self_attn.q_norm.weight",
+        "slice": [
+         1664,
+         1792
+        ],
+        "config_slice": [
+         1664,
+         1792
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04942461475729942,
+        "norm_ratio": 0.9955550816630435,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 13,
+        "parameter": "layers.2.self_attn.k_norm.weight",
+        "slice": [
+         1664,
+         1792
+        ],
+        "config_slice": [
+         1664,
+         1792
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.051292769610881805,
+        "norm_ratio": 0.9962550184704203,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 14,
+        "parameter": "layers.2.self_attn.q_proj.weight",
+        "slice": [
+         1792,
+         1920
+        ],
+        "config_slice": [
+         1792,
+         1920
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.0331724882125854,
+        "norm_ratio": 0.9960134151171903,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 14,
+        "parameter": "layers.2.self_attn.k_proj.weight",
+        "slice": [
+         1792,
+         1920
+        ],
+        "config_slice": [
+         1792,
+         1920
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9673077464103699,
+        "norm_ratio": 0.9958717275758515,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 14,
+        "parameter": "layers.2.self_attn.v_proj.weight",
+        "slice": [
+         1792,
+         1920
+        ],
+        "config_slice": [
+         1792,
+         1920
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9289249181747437,
+        "norm_ratio": 0.9935350669187165,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 14,
+        "parameter": "layers.2.self_attn.o_proj.weight",
+        "slice": [
+         1792,
+         1920
+        ],
+        "config_slice": [
+         1792,
+         1920
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9501722455024719,
+        "norm_ratio": 0.9937043431275537,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 14,
+        "parameter": "layers.2.self_attn.q_norm.weight",
+        "slice": [
+         1792,
+         1920
+        ],
+        "config_slice": [
+         1792,
+         1920
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04333478584885597,
+        "norm_ratio": 0.9969157386757898,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 14,
+        "parameter": "layers.2.self_attn.k_norm.weight",
+        "slice": [
+         1792,
+         1920
+        ],
+        "config_slice": [
+         1792,
+         1920
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.045087531208992004,
+        "norm_ratio": 0.9967532571693289,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 15,
+        "parameter": "layers.2.self_attn.q_proj.weight",
+        "slice": [
+         1920,
+         2048
+        ],
+        "config_slice": [
+         1920,
+         2048
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.0126665830612183,
+        "norm_ratio": 0.9980687564548887,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 15,
+        "parameter": "layers.2.self_attn.k_proj.weight",
+        "slice": [
+         1920,
+         2048
+        ],
+        "config_slice": [
+         1920,
+         2048
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9671894907951355,
+        "norm_ratio": 0.9976593839449535,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 15,
+        "parameter": "layers.2.self_attn.v_proj.weight",
+        "slice": [
+         1920,
+         2048
+        ],
+        "config_slice": [
+         1920,
+         2048
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.831632137298584,
+        "norm_ratio": 1.0036578052731173,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 15,
+        "parameter": "layers.2.self_attn.o_proj.weight",
+        "slice": [
+         1920,
+         2048
+        ],
+        "config_slice": [
+         1920,
+         2048
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8191794157028198,
+        "norm_ratio": 1.003202100594638,
+        "elements": 262144
+       },
+       {
+        "layer": 2,
+        "head": 15,
+        "parameter": "layers.2.self_attn.q_norm.weight",
+        "slice": [
+         1920,
+         2048
+        ],
+        "config_slice": [
+         1920,
+         2048
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04020864516496658,
+        "norm_ratio": 0.9970293293653195,
+        "elements": 128
+       },
+       {
+        "layer": 2,
+        "head": 15,
+        "parameter": "layers.2.self_attn.k_norm.weight",
+        "slice": [
+         1920,
+         2048
+        ],
+        "config_slice": [
+         1920,
+         2048
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.0401180237531662,
+        "norm_ratio": 0.9970419078191172,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 0,
+        "parameter": "layers.3.self_attn.q_proj.weight",
+        "slice": [
+         0,
+         128
+        ],
+        "config_slice": [
+         0,
+         128
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.000077486038208,
+        "norm_ratio": 0.9937801972074947,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 0,
+        "parameter": "layers.3.self_attn.k_proj.weight",
+        "slice": [
+         0,
+         128
+        ],
+        "config_slice": [
+         0,
+         128
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.010450839996338,
+        "norm_ratio": 0.9917845267907646,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 0,
+        "parameter": "layers.3.self_attn.v_proj.weight",
+        "slice": [
+         0,
+         128
+        ],
+        "config_slice": [
+         0,
+         128
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9078555107116699,
+        "norm_ratio": 0.9943211649770491,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 0,
+        "parameter": "layers.3.self_attn.o_proj.weight",
+        "slice": [
+         0,
+         128
+        ],
+        "config_slice": [
+         0,
+         128
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9241165518760681,
+        "norm_ratio": 0.9942154902299135,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 0,
+        "parameter": "layers.3.self_attn.q_norm.weight",
+        "slice": [
+         0,
+         128
+        ],
+        "config_slice": [
+         0,
+         128
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04967060312628746,
+        "norm_ratio": 0.9957426448321648,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 0,
+        "parameter": "layers.3.self_attn.k_norm.weight",
+        "slice": [
+         0,
+         128
+        ],
+        "config_slice": [
+         0,
+         128
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.05146834999322891,
+        "norm_ratio": 0.9957836280604967,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 1,
+        "parameter": "layers.3.self_attn.q_proj.weight",
+        "slice": [
+         128,
+         256
+        ],
+        "config_slice": [
+         128,
+         256
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8689813613891602,
+        "norm_ratio": 0.9951200476177062,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 1,
+        "parameter": "layers.3.self_attn.k_proj.weight",
+        "slice": [
+         128,
+         256
+        ],
+        "config_slice": [
+         128,
+         256
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8588578701019287,
+        "norm_ratio": 0.9949038578991402,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 1,
+        "parameter": "layers.3.self_attn.v_proj.weight",
+        "slice": [
+         128,
+         256
+        ],
+        "config_slice": [
+         128,
+         256
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.865416407585144,
+        "norm_ratio": 0.9945353886361507,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 1,
+        "parameter": "layers.3.self_attn.o_proj.weight",
+        "slice": [
+         128,
+         256
+        ],
+        "config_slice": [
+         128,
+         256
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9174375534057617,
+        "norm_ratio": 0.9944078364142568,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 1,
+        "parameter": "layers.3.self_attn.q_norm.weight",
+        "slice": [
+         128,
+         256
+        ],
+        "config_slice": [
+         128,
+         256
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04752664640545845,
+        "norm_ratio": 0.9962900015005782,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 1,
+        "parameter": "layers.3.self_attn.k_norm.weight",
+        "slice": [
+         128,
+         256
+        ],
+        "config_slice": [
+         128,
+         256
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04975837096571922,
+        "norm_ratio": 0.9961723781845615,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 2,
+        "parameter": "layers.3.self_attn.q_proj.weight",
+        "slice": [
+         256,
+         384
+        ],
+        "config_slice": [
+         256,
+         384
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9244248270988464,
+        "norm_ratio": 0.9992905885219263,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 2,
+        "parameter": "layers.3.self_attn.k_proj.weight",
+        "slice": [
+         256,
+         384
+        ],
+        "config_slice": [
+         256,
+         384
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.865821123123169,
+        "norm_ratio": 0.9985992189489076,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 2,
+        "parameter": "layers.3.self_attn.v_proj.weight",
+        "slice": [
+         256,
+         384
+        ],
+        "config_slice": [
+         256,
+         384
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8057170510292053,
+        "norm_ratio": 0.9979595557559111,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 2,
+        "parameter": "layers.3.self_attn.o_proj.weight",
+        "slice": [
+         256,
+         384
+        ],
+        "config_slice": [
+         256,
+         384
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8952991962432861,
+        "norm_ratio": 0.9980367067795116,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 2,
+        "parameter": "layers.3.self_attn.q_norm.weight",
+        "slice": [
+         256,
+         384
+        ],
+        "config_slice": [
+         256,
+         384
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.03068741224706173,
+        "norm_ratio": 0.9982715363453194,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 2,
+        "parameter": "layers.3.self_attn.k_norm.weight",
+        "slice": [
+         256,
+         384
+        ],
+        "config_slice": [
+         256,
+         384
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.028657712042331696,
+        "norm_ratio": 0.9985395850611481,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 3,
+        "parameter": "layers.3.self_attn.q_proj.weight",
+        "slice": [
+         384,
+         512
+        ],
+        "config_slice": [
+         384,
+         512
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9100451469421387,
+        "norm_ratio": 0.9937895408742536,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 3,
+        "parameter": "layers.3.self_attn.k_proj.weight",
+        "slice": [
+         384,
+         512
+        ],
+        "config_slice": [
+         384,
+         512
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9044740796089172,
+        "norm_ratio": 0.9930684042333824,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 3,
+        "parameter": "layers.3.self_attn.v_proj.weight",
+        "slice": [
+         384,
+         512
+        ],
+        "config_slice": [
+         384,
+         512
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9503576159477234,
+        "norm_ratio": 0.9943537917262639,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 3,
+        "parameter": "layers.3.self_attn.o_proj.weight",
+        "slice": [
+         384,
+         512
+        ],
+        "config_slice": [
+         384,
+         512
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9926003217697144,
+        "norm_ratio": 0.9942805695673187,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 3,
+        "parameter": "layers.3.self_attn.q_norm.weight",
+        "slice": [
+         384,
+         512
+        ],
+        "config_slice": [
+         384,
+         512
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.051824286580085754,
+        "norm_ratio": 0.9959967697083848,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 3,
+        "parameter": "layers.3.self_attn.k_norm.weight",
+        "slice": [
+         384,
+         512
+        ],
+        "config_slice": [
+         384,
+         512
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.054969701915979385,
+        "norm_ratio": 0.995634083200905,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 4,
+        "parameter": "layers.3.self_attn.q_proj.weight",
+        "slice": [
+         512,
+         640
+        ],
+        "config_slice": [
+         512,
+         640
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.0970990657806396,
+        "norm_ratio": 0.9956290498513982,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 4,
+        "parameter": "layers.3.self_attn.k_proj.weight",
+        "slice": [
+         512,
+         640
+        ],
+        "config_slice": [
+         512,
+         640
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.0892369747161865,
+        "norm_ratio": 0.9952155010168013,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 4,
+        "parameter": "layers.3.self_attn.v_proj.weight",
+        "slice": [
+         512,
+         640
+        ],
+        "config_slice": [
+         512,
+         640
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8955604434013367,
+        "norm_ratio": 0.9952085843037934,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 4,
+        "parameter": "layers.3.self_attn.o_proj.weight",
+        "slice": [
+         512,
+         640
+        ],
+        "config_slice": [
+         512,
+         640
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8366765975952148,
+        "norm_ratio": 0.9947094139689102,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 4,
+        "parameter": "layers.3.self_attn.q_norm.weight",
+        "slice": [
+         512,
+         640
+        ],
+        "config_slice": [
+         512,
+         640
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04526027292013168,
+        "norm_ratio": 0.9972420075084446,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 4,
+        "parameter": "layers.3.self_attn.k_norm.weight",
+        "slice": [
+         512,
+         640
+        ],
+        "config_slice": [
+         512,
+         640
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.048326440155506134,
+        "norm_ratio": 0.9968626217446975,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 5,
+        "parameter": "layers.3.self_attn.q_proj.weight",
+        "slice": [
+         640,
+         768
+        ],
+        "config_slice": [
+         640,
+         768
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.5023767948150635,
+        "norm_ratio": 0.9955352074407706,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 5,
+        "parameter": "layers.3.self_attn.k_proj.weight",
+        "slice": [
+         640,
+         768
+        ],
+        "config_slice": [
+         640,
+         768
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.6435350775718689,
+        "norm_ratio": 0.9909950479992298,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 5,
+        "parameter": "layers.3.self_attn.v_proj.weight",
+        "slice": [
+         640,
+         768
+        ],
+        "config_slice": [
+         640,
+         768
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.756056547164917,
+        "norm_ratio": 0.9958362579050738,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 5,
+        "parameter": "layers.3.self_attn.o_proj.weight",
+        "slice": [
+         640,
+         768
+        ],
+        "config_slice": [
+         640,
+         768
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7323437333106995,
+        "norm_ratio": 0.9949944328731309,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 5,
+        "parameter": "layers.3.self_attn.q_norm.weight",
+        "slice": [
+         640,
+         768
+        ],
+        "config_slice": [
+         640,
+         768
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.010855190455913544,
+        "norm_ratio": 0.9988954920643789,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 5,
+        "parameter": "layers.3.self_attn.k_norm.weight",
+        "slice": [
+         640,
+         768
+        ],
+        "config_slice": [
+         640,
+         768
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.010669371113181114,
+        "norm_ratio": 0.9986472347562729,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 6,
+        "parameter": "layers.3.self_attn.q_proj.weight",
+        "slice": [
+         768,
+         896
+        ],
+        "config_slice": [
+         768,
+         896
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.0194313526153564,
+        "norm_ratio": 0.9935648773427076,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 6,
+        "parameter": "layers.3.self_attn.k_proj.weight",
+        "slice": [
+         768,
+         896
+        ],
+        "config_slice": [
+         768,
+         896
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.0038973093032837,
+        "norm_ratio": 0.9921931747590695,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 6,
+        "parameter": "layers.3.self_attn.v_proj.weight",
+        "slice": [
+         768,
+         896
+        ],
+        "config_slice": [
+         768,
+         896
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8684302568435669,
+        "norm_ratio": 0.9912280054691329,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 6,
+        "parameter": "layers.3.self_attn.o_proj.weight",
+        "slice": [
+         768,
+         896
+        ],
+        "config_slice": [
+         768,
+         896
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9388220906257629,
+        "norm_ratio": 0.9909077931834005,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 6,
+        "parameter": "layers.3.self_attn.q_norm.weight",
+        "slice": [
+         768,
+         896
+        ],
+        "config_slice": [
+         768,
+         896
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.0508187972009182,
+        "norm_ratio": 0.9963751397255287,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 6,
+        "parameter": "layers.3.self_attn.k_norm.weight",
+        "slice": [
+         768,
+         896
+        ],
+        "config_slice": [
+         768,
+         896
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.05478436127305031,
+        "norm_ratio": 0.9958907970491958,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 7,
+        "parameter": "layers.3.self_attn.q_proj.weight",
+        "slice": [
+         896,
+         1024
+        ],
+        "config_slice": [
+         896,
+         1024
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9251371026039124,
+        "norm_ratio": 0.9954913258855698,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 7,
+        "parameter": "layers.3.self_attn.k_proj.weight",
+        "slice": [
+         896,
+         1024
+        ],
+        "config_slice": [
+         896,
+         1024
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9249545335769653,
+        "norm_ratio": 0.994379102512744,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 7,
+        "parameter": "layers.3.self_attn.v_proj.weight",
+        "slice": [
+         896,
+         1024
+        ],
+        "config_slice": [
+         896,
+         1024
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.974193274974823,
+        "norm_ratio": 0.9919398914223669,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 7,
+        "parameter": "layers.3.self_attn.o_proj.weight",
+        "slice": [
+         896,
+         1024
+        ],
+        "config_slice": [
+         896,
+         1024
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9709607362747192,
+        "norm_ratio": 0.9924887616248601,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 7,
+        "parameter": "layers.3.self_attn.q_norm.weight",
+        "slice": [
+         896,
+         1024
+        ],
+        "config_slice": [
+         896,
+         1024
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04157234728336334,
+        "norm_ratio": 0.9963548289119918,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 7,
+        "parameter": "layers.3.self_attn.k_norm.weight",
+        "slice": [
+         896,
+         1024
+        ],
+        "config_slice": [
+         896,
+         1024
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.043346863240003586,
+        "norm_ratio": 0.9961046708248867,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 8,
+        "parameter": "layers.3.self_attn.q_proj.weight",
+        "slice": [
+         1024,
+         1152
+        ],
+        "config_slice": [
+         1024,
+         1152
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.0929546356201172,
+        "norm_ratio": 0.9925884898073282,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 8,
+        "parameter": "layers.3.self_attn.k_proj.weight",
+        "slice": [
+         1024,
+         1152
+        ],
+        "config_slice": [
+         1024,
+         1152
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.0871988534927368,
+        "norm_ratio": 0.9915950898820313,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 8,
+        "parameter": "layers.3.self_attn.v_proj.weight",
+        "slice": [
+         1024,
+         1152
+        ],
+        "config_slice": [
+         1024,
+         1152
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9023101925849915,
+        "norm_ratio": 0.9920668022234007,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 8,
+        "parameter": "layers.3.self_attn.o_proj.weight",
+        "slice": [
+         1024,
+         1152
+        ],
+        "config_slice": [
+         1024,
+         1152
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8652345538139343,
+        "norm_ratio": 0.9925586816914964,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 8,
+        "parameter": "layers.3.self_attn.q_norm.weight",
+        "slice": [
+         1024,
+         1152
+        ],
+        "config_slice": [
+         1024,
+         1152
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.05978604778647423,
+        "norm_ratio": 0.9951932066104997,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 8,
+        "parameter": "layers.3.self_attn.k_norm.weight",
+        "slice": [
+         1024,
+         1152
+        ],
+        "config_slice": [
+         1024,
+         1152
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.06394883245229721,
+        "norm_ratio": 0.9945143330030676,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 9,
+        "parameter": "layers.3.self_attn.q_proj.weight",
+        "slice": [
+         1152,
+         1280
+        ],
+        "config_slice": [
+         1152,
+         1280
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9573661088943481,
+        "norm_ratio": 0.9927815734171603,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 9,
+        "parameter": "layers.3.self_attn.k_proj.weight",
+        "slice": [
+         1152,
+         1280
+        ],
+        "config_slice": [
+         1152,
+         1280
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9977717995643616,
+        "norm_ratio": 0.9915658657357916,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 9,
+        "parameter": "layers.3.self_attn.v_proj.weight",
+        "slice": [
+         1152,
+         1280
+        ],
+        "config_slice": [
+         1152,
+         1280
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9316784739494324,
+        "norm_ratio": 0.9939430841801989,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 9,
+        "parameter": "layers.3.self_attn.o_proj.weight",
+        "slice": [
+         1152,
+         1280
+        ],
+        "config_slice": [
+         1152,
+         1280
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9069433808326721,
+        "norm_ratio": 0.9939946036929797,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 9,
+        "parameter": "layers.3.self_attn.q_norm.weight",
+        "slice": [
+         1152,
+         1280
+        ],
+        "config_slice": [
+         1152,
+         1280
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.0539095401763916,
+        "norm_ratio": 0.9949629757962963,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 9,
+        "parameter": "layers.3.self_attn.k_norm.weight",
+        "slice": [
+         1152,
+         1280
+        ],
+        "config_slice": [
+         1152,
+         1280
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.05518973618745804,
+        "norm_ratio": 0.9948135956975117,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 10,
+        "parameter": "layers.3.self_attn.q_proj.weight",
+        "slice": [
+         1280,
+         1408
+        ],
+        "config_slice": [
+         1280,
+         1408
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.049273133277893,
+        "norm_ratio": 0.9951281626291897,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 10,
+        "parameter": "layers.3.self_attn.k_proj.weight",
+        "slice": [
+         1280,
+         1408
+        ],
+        "config_slice": [
+         1280,
+         1408
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.031539797782898,
+        "norm_ratio": 0.9942337264275571,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 10,
+        "parameter": "layers.3.self_attn.v_proj.weight",
+        "slice": [
+         1280,
+         1408
+        ],
+        "config_slice": [
+         1280,
+         1408
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9459980726242065,
+        "norm_ratio": 0.9947485392819218,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 10,
+        "parameter": "layers.3.self_attn.o_proj.weight",
+        "slice": [
+         1280,
+         1408
+        ],
+        "config_slice": [
+         1280,
+         1408
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9982362389564514,
+        "norm_ratio": 0.9948369043246514,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 10,
+        "parameter": "layers.3.self_attn.q_norm.weight",
+        "slice": [
+         1280,
+         1408
+        ],
+        "config_slice": [
+         1280,
+         1408
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.046630218625068665,
+        "norm_ratio": 0.9970537472539682,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 10,
+        "parameter": "layers.3.self_attn.k_norm.weight",
+        "slice": [
+         1280,
+         1408
+        ],
+        "config_slice": [
+         1280,
+         1408
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04393003135919571,
+        "norm_ratio": 0.9970955427621838,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 11,
+        "parameter": "layers.3.self_attn.q_proj.weight",
+        "slice": [
+         1408,
+         1536
+        ],
+        "config_slice": [
+         1408,
+         1536
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9289149045944214,
+        "norm_ratio": 0.9971910018756275,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 11,
+        "parameter": "layers.3.self_attn.k_proj.weight",
+        "slice": [
+         1408,
+         1536
+        ],
+        "config_slice": [
+         1408,
+         1536
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.939868152141571,
+        "norm_ratio": 0.9967400637929192,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 11,
+        "parameter": "layers.3.self_attn.v_proj.weight",
+        "slice": [
+         1408,
+         1536
+        ],
+        "config_slice": [
+         1408,
+         1536
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.7962168455123901,
+        "norm_ratio": 0.9964623273968387,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 11,
+        "parameter": "layers.3.self_attn.o_proj.weight",
+        "slice": [
+         1408,
+         1536
+        ],
+        "config_slice": [
+         1408,
+         1536
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8296884298324585,
+        "norm_ratio": 0.9964325244694644,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 11,
+        "parameter": "layers.3.self_attn.q_norm.weight",
+        "slice": [
+         1408,
+         1536
+        ],
+        "config_slice": [
+         1408,
+         1536
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.024131769314408302,
+        "norm_ratio": 0.9983564410514567,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 11,
+        "parameter": "layers.3.self_attn.k_norm.weight",
+        "slice": [
+         1408,
+         1536
+        ],
+        "config_slice": [
+         1408,
+         1536
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.028682932257652283,
+        "norm_ratio": 0.9980546465316015,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 12,
+        "parameter": "layers.3.self_attn.q_proj.weight",
+        "slice": [
+         1536,
+         1664
+        ],
+        "config_slice": [
+         1536,
+         1664
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9708811044692993,
+        "norm_ratio": 0.9952282291744468,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 12,
+        "parameter": "layers.3.self_attn.k_proj.weight",
+        "slice": [
+         1536,
+         1664
+        ],
+        "config_slice": [
+         1536,
+         1664
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9690206050872803,
+        "norm_ratio": 0.9946826904584126,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 12,
+        "parameter": "layers.3.self_attn.v_proj.weight",
+        "slice": [
+         1536,
+         1664
+        ],
+        "config_slice": [
+         1536,
+         1664
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9100720286369324,
+        "norm_ratio": 0.9943763839569675,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 12,
+        "parameter": "layers.3.self_attn.o_proj.weight",
+        "slice": [
+         1536,
+         1664
+        ],
+        "config_slice": [
+         1536,
+         1664
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9297424554824829,
+        "norm_ratio": 0.9943983105392583,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 12,
+        "parameter": "layers.3.self_attn.q_norm.weight",
+        "slice": [
+         1536,
+         1664
+        ],
+        "config_slice": [
+         1536,
+         1664
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.04941178485751152,
+        "norm_ratio": 0.9970701996417427,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 12,
+        "parameter": "layers.3.self_attn.k_norm.weight",
+        "slice": [
+         1536,
+         1664
+        ],
+        "config_slice": [
+         1536,
+         1664
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.05091482773423195,
+        "norm_ratio": 0.9968494047591737,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 13,
+        "parameter": "layers.3.self_attn.q_proj.weight",
+        "slice": [
+         1664,
+         1792
+        ],
+        "config_slice": [
+         1664,
+         1792
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9974293112754822,
+        "norm_ratio": 0.9927709618707281,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 13,
+        "parameter": "layers.3.self_attn.k_proj.weight",
+        "slice": [
+         1664,
+         1792
+        ],
+        "config_slice": [
+         1664,
+         1792
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9812307953834534,
+        "norm_ratio": 0.9924628651282834,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 13,
+        "parameter": "layers.3.self_attn.v_proj.weight",
+        "slice": [
+         1664,
+         1792
+        ],
+        "config_slice": [
+         1664,
+         1792
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9273144602775574,
+        "norm_ratio": 0.9934612338021794,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 13,
+        "parameter": "layers.3.self_attn.o_proj.weight",
+        "slice": [
+         1664,
+         1792
+        ],
+        "config_slice": [
+         1664,
+         1792
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9725298285484314,
+        "norm_ratio": 0.9937250075492071,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 13,
+        "parameter": "layers.3.self_attn.q_norm.weight",
+        "slice": [
+         1664,
+         1792
+        ],
+        "config_slice": [
+         1664,
+         1792
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.05927402153611183,
+        "norm_ratio": 0.9956328014011172,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 13,
+        "parameter": "layers.3.self_attn.k_norm.weight",
+        "slice": [
+         1664,
+         1792
+        ],
+        "config_slice": [
+         1664,
+         1792
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.05384719371795654,
+        "norm_ratio": 0.9959939057428046,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 14,
+        "parameter": "layers.3.self_attn.q_proj.weight",
+        "slice": [
+         1792,
+         1920
+        ],
+        "config_slice": [
+         1792,
+         1920
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.116811752319336,
+        "norm_ratio": 0.9959313892840577,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 14,
+        "parameter": "layers.3.self_attn.k_proj.weight",
+        "slice": [
+         1792,
+         1920
+        ],
+        "config_slice": [
+         1792,
+         1920
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.1160095930099487,
+        "norm_ratio": 0.9947390330924903,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 14,
+        "parameter": "layers.3.self_attn.v_proj.weight",
+        "slice": [
+         1792,
+         1920
+        ],
+        "config_slice": [
+         1792,
+         1920
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8750496506690979,
+        "norm_ratio": 0.9986399086701176,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 14,
+        "parameter": "layers.3.self_attn.o_proj.weight",
+        "slice": [
+         1792,
+         1920
+        ],
+        "config_slice": [
+         1792,
+         1920
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8613160252571106,
+        "norm_ratio": 0.998403738737617,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 14,
+        "parameter": "layers.3.self_attn.q_norm.weight",
+        "slice": [
+         1792,
+         1920
+        ],
+        "config_slice": [
+         1792,
+         1920
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.05082424730062485,
+        "norm_ratio": 0.996314462993952,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 14,
+        "parameter": "layers.3.self_attn.k_norm.weight",
+        "slice": [
+         1792,
+         1920
+        ],
+        "config_slice": [
+         1792,
+         1920
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.051538147032260895,
+        "norm_ratio": 0.9963720828298186,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 15,
+        "parameter": "layers.3.self_attn.q_proj.weight",
+        "slice": [
+         1920,
+         2048
+        ],
+        "config_slice": [
+         1920,
+         2048
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.0951265096664429,
+        "norm_ratio": 0.994498536709505,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 15,
+        "parameter": "layers.3.self_attn.k_proj.weight",
+        "slice": [
+         1920,
+         2048
+        ],
+        "config_slice": [
+         1920,
+         2048
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 1.0626745223999023,
+        "norm_ratio": 0.9940524006949292,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 15,
+        "parameter": "layers.3.self_attn.v_proj.weight",
+        "slice": [
+         1920,
+         2048
+        ],
+        "config_slice": [
+         1920,
+         2048
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.9052581787109375,
+        "norm_ratio": 0.9953602463429618,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 15,
+        "parameter": "layers.3.self_attn.o_proj.weight",
+        "slice": [
+         1920,
+         2048
+        ],
+        "config_slice": [
+         1920,
+         2048
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.8490990400314331,
+        "norm_ratio": 0.9951546689212255,
+        "elements": 262144
+       },
+       {
+        "layer": 3,
+        "head": 15,
+        "parameter": "layers.3.self_attn.q_norm.weight",
+        "slice": [
+         1920,
+         2048
+        ],
+        "config_slice": [
+         1920,
+         2048
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.056573234498500824,
+        "norm_ratio": 0.9952408644134042,
+        "elements": 128
+       },
+       {
+        "layer": 3,
+        "head": 15,
+        "parameter": "layers.3.self_attn.k_norm.weight",
+        "slice": [
+         1920,
+         2048
+        ],
+        "config_slice": [
+         1920,
+         2048
+        ],
+        "slice_from_config": true,
+        "matches_expected": true,
+        "norm_delta": 0.05368306115269661,
+        "norm_ratio": 0.9955264992019461,
+        "elements": 128
+       }
+      ],
+      "parameters_changed": 384,
+      "elements_changed": 67125248,
+      "sign_flip_receipt": {
+       "rule": "sign(x) = -1 for x < 0, 0 for x == 0, +1 for x > 0; zero counts as its own sign; an element flips when the sign after the write differs from the sign of Instruct's value before it; counted over the slices the run wrote",
+       "per_layer": [
+        {
+         "layer": 0,
+         "heads": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+         ],
+         "q_norm": {
+          "elements": 2048,
+          "flips": 147,
+          "zero_before": 0,
+          "zero_after": 0
+         },
+         "k_norm": {
+          "elements": 2048,
+          "flips": 126,
+          "zero_before": 0,
+          "zero_after": 0
+         }
+        },
+        {
+         "layer": 1,
+         "heads": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+         ],
+         "q_norm": {
+          "elements": 2048,
+          "flips": 59,
+          "zero_before": 0,
+          "zero_after": 0
+         },
+         "k_norm": {
+          "elements": 2048,
+          "flips": 92,
+          "zero_before": 0,
+          "zero_after": 0
+         }
+        },
+        {
+         "layer": 2,
+         "heads": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+         ],
+         "q_norm": {
+          "elements": 2048,
+          "flips": 31,
+          "zero_before": 0,
+          "zero_after": 0
+         },
+         "k_norm": {
+          "elements": 2048,
+          "flips": 54,
+          "zero_before": 0,
+          "zero_after": 0
+         }
+        },
+        {
+         "layer": 3,
+         "heads": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+         ],
+         "q_norm": {
+          "elements": 2048,
+          "flips": 26,
+          "zero_before": 0,
+          "zero_after": 0
+         },
+         "k_norm": {
+          "elements": 2048,
+          "flips": 38,
+          "zero_before": 0,
+          "zero_after": 0
+         }
+        }
+       ],
+       "total_flips": 573,
+       "total_elements": 16384
+      },
+      "norm_ratio_range": {
+       "count": 384,
+       "min": 0.9678374743289023,
+       "max": 1.0111676334981652,
+       "records_without_a_ratio": 0
+      },
+      "self_attn_equals_donor": {
+       "layers": [
+        0,
+        1,
+        2,
+        3
+       ],
+       "parameters_compared": 24,
+       "elements": 67125248,
+       "equal": true,
+       "mismatches": []
+      }
+     }
+    },
+    "coupling_log": {
+     "layers": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "batch": {
+      "ids": [
+       "p92-00",
+       "p92-00",
+       "p92-00",
+       "p92-00",
+       "p92-00",
+       "p92-00",
+       "p92-00",
+       "p92-00",
+       "p92-00",
+       "p92-00",
+       "p92-00",
+       "p92-00",
+       "p92-02",
+       "p92-02",
+       "p92-02",
+       "p92-02",
+       "p92-02",
+       "p92-02",
+       "p92-02",
+       "p92-02",
+       "p92-02",
+       "p92-02",
+       "p92-02",
+       "p92-02",
+       "p92-04",
+       "p92-04",
+       "p92-04",
+       "p92-04",
+       "p92-04",
+       "p92-04",
+       "p92-04",
+       "p92-04",
+       "p92-04",
+       "p92-04",
+       "p92-04",
+       "p92-04",
+       "p92-05",
+       "p92-05",
+       "p92-05",
+       "p92-05",
+       "p92-05",
+       "p92-05",
+       "p92-05",
+       "p92-05",
+       "p92-05",
+       "p92-05",
+       "p92-05",
+       "p92-05"
+      ],
+      "units": [
+       "neuron",
+       "neuron",
+       "neuron",
+       "neuron",
+       "neuron",
+       "neuron",
+       "random",
+       "random",
+       "random",
+       "random",
+       "random",
+       "random",
+       "neuron",
+       "neuron",
+       "neuron",
+       "neuron",
+       "neuron",
+       "neuron",
+       "random",
+       "random",
+       "random",
+       "random",
+       "random",
+       "random",
+       "neuron",
+       "neuron",
+       "neuron",
+       "neuron",
+       "neuron",
+       "neuron",
+       "random",
+       "random",
+       "random",
+       "random",
+       "random",
+       "random",
+       "neuron",
+       "neuron",
+       "neuron",
+       "neuron",
+       "neuron",
+       "neuron",
+       "random",
+       "random",
+       "random",
+       "random",
+       "random",
+       "random"
+      ],
+      "question_indices": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       5,
+       0,
+       1,
+       2,
+       3,
+       4,
+       5,
+       0,
+       1,
+       2,
+       3,
+       4,
+       5,
+       0,
+       1,
+       2,
+       3,
+       4,
+       5,
+       0,
+       1,
+       2,
+       3,
+       4,
+       5,
+       0,
+       1,
+       2,
+       3,
+       4,
+       5,
+       0,
+       1,
+       2,
+       3,
+       4,
+       5,
+       0,
+       1,
+       2,
+       3,
+       4,
+       5
+      ],
+      "batch": 48,
+      "positions": 19
+     }
+    },
+    "reset_receipt": {
+     "role": "checked",
+     "matches_reference": true,
+     "mismatch": null,
+     "reference_path": "results\\part221\\replay-R0.json"
+    },
+    "sign_flip_receipt": {
+     "rule": "sign(x) = -1 for x < 0, 0 for x == 0, +1 for x > 0; zero counts as its own sign; an element flips when the sign after the write differs from the sign of Instruct's value before it; counted over the slices the run wrote",
+     "per_layer": [
+      {
+       "layer": 0,
+       "heads": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+       ],
+       "q_norm": {
+        "elements": 2048,
+        "flips": 147,
+        "zero_before": 0,
+        "zero_after": 0
+       },
+       "k_norm": {
+        "elements": 2048,
+        "flips": 126,
+        "zero_before": 0,
+        "zero_after": 0
+       }
+      },
+      {
+       "layer": 1,
+       "heads": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+       ],
+       "q_norm": {
+        "elements": 2048,
+        "flips": 59,
+        "zero_before": 0,
+        "zero_after": 0
+       },
+       "k_norm": {
+        "elements": 2048,
+        "flips": 92,
+        "zero_before": 0,
+        "zero_after": 0
+       }
+      },
+      {
+       "layer": 2,
+       "heads": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+       ],
+       "q_norm": {
+        "elements": 2048,
+        "flips": 31,
+        "zero_before": 0,
+        "zero_after": 0
+       },
+       "k_norm": {
+        "elements": 2048,
+        "flips": 54,
+        "zero_before": 0,
+        "zero_after": 0
+       }
+      },
+      {
+       "layer": 3,
+       "heads": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+       ],
+       "q_norm": {
+        "elements": 2048,
+        "flips": 26,
+        "zero_before": 0,
+        "zero_after": 0
+       },
+       "k_norm": {
+        "elements": 2048,
+        "flips": 38,
+        "zero_before": 0,
+        "zero_after": 0
+       }
+      }
+     ],
+     "total_flips": 573,
+     "total_elements": 16384
+    },
+    "norm_ratio_range": {
+     "count": 384,
+     "min": 0.9678374743289023,
+     "max": 1.0111676334981652,
+     "records_without_a_ratio": 0
+    },
+    "self_attn_equals_donor": {
+     "layers": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "parameters_compared": 24,
+     "elements": 67125248,
+     "equal": true,
+     "mismatches": []
+    },
+    "kept_head_drift": null,
+    "readable": true
+   }
+  },
+  "r0_vs_part219_identical": {
+   "passes": true,
+   "because": "r0_vs_part219: identical",
+   "detail": {
+    "items": 474,
+    "missing_items": 0,
+    "answer_mismatches": 0,
+    "token_mismatches": 0,
+    "items_without_token_ids": 0,
+    "identical": true,
+    "first_mismatch": []
+   }
+  },
+  "r1_vs_part219_identical": {
+   "passes": true,
+   "because": "r1_vs_part219: identical",
+   "detail": {
+    "items": 474,
+    "missing_items": 0,
+    "answer_mismatches": 0,
+    "token_mismatches": 0,
+    "items_without_token_ids": 0,
+    "identical": true,
+    "first_mismatch": []
+   }
+  },
+  "r13_equals_r1": {
+   "passes": true,
+   "because": "R13 equals R1",
+   "detail": {
+    "items": 474,
+    "missing_items": 0,
+    "answer_mismatches": 0,
+    "token_mismatches": 0,
+    "items_without_token_ids": 0,
+    "identical": true,
+    "first_mismatch": []
+   }
+  },
+  "r13_weight_assertion": {
+   "passes": true,
+   "because": "R13's self_attn equals the donor's exactly",
+   "detail": {
+    "layers": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "parameters_compared": 24,
+    "elements": 67125248,
+    "equal": true,
+    "mismatches": []
+   }
+  },
+  "sign_flip_receipts": {
+   "passes": true,
+   "because": "the sign-flip receipt is present",
+   "detail": {
+    "R13": true
+   }
+  },
+  "reset_receipts": {
+   "passes": true,
+   "because": "the reset receipts hold",
+   "detail": {
+    "R0": {
+     "role": "reference_written",
+     "matches_reference": null,
+     "problem": null
+    },
+    "R1": {
+     "role": "checked",
+     "matches_reference": true,
+     "problem": null
+    },
+    "R13": {
+     "role": "checked",
+     "matches_reference": true,
+     "problem": null
+    }
+   }
+  }
+ },
+ "failures": [],
+ "decision": "continue",
+ "because": "R0 and R1 reproduce Part 219, R13 equals R1, and every receipt holds"
+}
