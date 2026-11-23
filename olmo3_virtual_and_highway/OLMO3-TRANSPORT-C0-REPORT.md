@@ -28,14 +28,17 @@
 
 ---
 
-## 2. Three Mechanistic Discoveries (Post-Hoc Diagnosis of the Pre-Registered Outcomes)
+## 2. Pre-Registered `C0.3` Result & Post-Hoc Mechanistic Explanations (Not Pre-Registered Findings)
 
-Although Stage C0 strictly fails its pre-registered Stage C1 gate, the combination of passing `C0.0` + `C0.3` + all four Holm directional tests alongside clean quantitative failures in `C0.1`, `C0.2`, and `C0.4` yields three sharp, non-obvious mechanistic findings that exploratory `positions="all"` testing did not separate:
+Stage C0 strictly fails its pre-registered Stage C1 gate (`C0.1`, `C0.2`, and `C0.4` fail their registered calibration/null bars despite all four Holm directional nulls rejecting at `p_holm <= 0.0001`). Below we separate the **confirmed pre-registered `C0.3` finding** from two **post-hoc mechanistic explanations** formulated *after* inspecting the C0 verdicts; both explanations are hypotheses to be tested prospectively (not pre-registered conclusions):
 
-### Discovery A — Single-Position MLP vs. Cross-Position Attention Transport (`C0.1` & `C0.2`)
+### Confirmed Pre-Registered Finding — Single-Position `u_t` Contraction (`C0.3` PASS)
+Even at `positions="last"`, raw unembedding directions `u_t` are systematically more contracted than the 32-draw isotropic Jacobian diagonal `v^T J v` (`mean d_t = +0.1026`, 95% BCa CI `[+0.0712, +0.1353]`, one-sided `q05 = +0.0760 > 0`, `p_3 = 3.1e-5`, `15/16` targets on `L18+`, `16/16` at `L27`, `13–16/16` at every layer `L6–L27`). Moreover, the pre-registered `M3` sensitivity check confirms why measuring real `v^T J v` was essential: on `L18+`, real `v^T J v` (`0.694, 0.879, 0.956, 0.970`) exceeds ridge-shrunk `tr(R_L)/d` (`0.511, 0.614, 0.723, 0.836`) by **`+0.2036`**, so comparing `Retention(u_t)` (`0.80`) against `tr(R_L)/d` alone yields `-0.1011` and hides the contraction.
+
+### Post-Hoc Explanation 1 — Single-Position MLP vs. Cross-Position Attention Transport (`C0.1` & `C0.2` Failure)
 As documented in `neuron_lens/transport.py:5`, the frozen R-lens estimates the **offset-summed Jacobian** `J_L = mean_t Σ_{t' >= t} ∂h_final(t') / ∂h_L(t)` ("what an activation makes the model say, here and later"). Exploratory Exp 4B (`run_olmo3_idea2_and_idea4.py:742`) injected at `positions="all"`, allowing earlier token positions `s < T` to broadcast the write forward through downstream attention (`Σ_s α_{T,s} = 1`), yielding `ΣAttn = +3.47/+3.81` (`R_mf`) and `-4.01/-5.96` (`logit_lens`) at `L18/L24` and gap ratio `0.831`.
 
-Stage C0 injected at **`positions="last"` only**, isolating the zero-offset slice `∂h_final(T) / ∂h_L(T)`. Comparing Stage C0's Regime-N 4-term decomposition against exploratory Exp 4B reveals an immediate `10–19×` collapse in `ΣAttn`, while downstream `ΣMLP` remains large and strongly direction-selective:
+Stage C0 injected at **`positions="last"` only**, isolating the zero-offset slice `∂h_final(T) / ∂h_L(T)`. Post-hoc inspection of Stage C0's Regime-N 4-term decomposition against exploratory Exp 4B shows a `10–19×` drop in `ΣAttn`, while downstream `ΣMLP` remains large and direction-selective:
 
 | Layer | Arm | Stage C0 (`positions="last"`) `Direct` | `ΣAttn` | `ΣMLP` | `RMSsh` | `Exact` (`Pred`) | Realized `Ret` med |
 |---:|---|---:|---:|---:|---:|---:|---:|
@@ -52,27 +55,24 @@ Stage C0 injected at **`positions="last"` only**, isolating the zero-offset slic
 | `L27` | `logit_lens` | `+13.57` | `-0.43` | `-1.85` | `-0.05` | `+11.24` (`+10.30`) | `0.834` |
 | `L27` | `direct_matched` | `+8.93` | `-0.27` | `-1.11` | `-0.06` | `+7.50` (`+6.80`) | `0.840` |
 
-Two immediate consequences follow:
-1. Even with cross-position attention shut off, `R_mf` still beats `direct_matched` on **`16/16` unseen targets** at every layer (`p_2 = 1.5e-5`; Regime-D `L18: +3.26 vs +1.80`, `L24: +3.94 vs +2.53`, `L27: +3.97 vs +2.55`), while `direct_matched` and `logit_lens` match to **`0.0193` logits** (`m4` diagnostic) — confirming near-exact perpendicular linearity and isolating a real single-position MLP transport channel (`~28–48%` of the offset-summed lens gap), while showing that the remaining `~52–72%` of `R_out`'s predicted gap lives in cross-position (`t' > t`) attention transport.
-2. Within-arm ranking `Δρ = ρ_pred - ρ_direct` on `L18+` is strongly positive for **`logit_lens` (`+0.2390`: `0.797` vs `0.559`)**, `R_ridge` (`+0.0607`), and `direct_matched` (`+0.0399`), and negative only for `R_mf` (`-0.0539`), where the absent cross-position attention gain caused realized single-position `R_mf` to track `Direct_linear` (`0.696`) more closely than the offset-summed `R_mf` forecast (`0.642`, `frac_err = 0.363`).
+Two post-hoc observations support this explanation (to be tested directly by a registered paired `positions="all"` vs. `"last"` follow-up):
+1. Even at `positions="last"`, `R_mf` beats `direct_matched` on **`16/16` unseen targets** at every layer (`p_2 = 1.5e-5`; Regime-D `L18: +3.26 vs +1.80`, `L24: +3.94 vs +2.53`, `L27: +3.97 vs +2.55`), while `direct_matched` and `logit_lens` match to **`0.0193` logits** (`m4` diagnostic) — suggesting a real single-position MLP channel (`~28–48%` of the offset-summed lens gap), with the remaining `~52–72%` hypothesized to reside in cross-position (`t' > t`) attention transport.
+2. Within-arm ranking `Δρ = ρ_pred - ρ_direct` on `L18+` is positive for **`logit_lens` (`+0.2390`: `0.797` vs `0.559`)**, `R_ridge` (`+0.0607`), and `direct_matched` (`+0.0399`), and negative only for `R_mf` (`-0.0539`), where the absent cross-position attention gain caused realized single-position `R_mf` to track `Direct_linear` (`0.696`) more closely than the offset-summed `R_mf` forecast (`0.642`, `frac_err = 0.363`).
 
-### Discovery B — Confirmed Out-of-Sample `u_t` Contraction via Downstream MLPs (`C0.3` PASS)
-Even at `positions="last"`, raw unembedding directions `u_t` are systematically more contracted than the 32-draw isotropic Jacobian diagonal `v^T J v` (`mean d_t = +0.1026`, 95% BCa CI `[+0.0712, +0.1353]`, `p_3 = 3.1e-5`, `15/16` targets on `L18+`, `16/16` at `L27`, `13–16/16` at every layer `L6–L27`). Moreover, the `M3` sensitivity check confirms why measuring real `v^T J v` was essential: on `L18+`, real `v^T J v` (`0.694, 0.879, 0.956, 0.970`) exceeds ridge-shrunk `tr(R_L)/d` (`0.511, 0.614, 0.723, 0.836`) by **`+0.2036`**, so comparing `Retention(u_t)` (`0.80`) against `tr(R_L)/d` alone would have given `-0.1011` and completely hidden the real contraction.
-
-### Discovery C — `R_mf` Amplifies a Shared Noun Common Mode; `R_ridge` Whitens It Out (`C0.4`)
+### Post-Hoc Explanation 2 — `R_mf` Common-Mode Amplification vs. `R_ridge` Whitening (`C0.4` Failure)
 In Regime D (exact equal `Direct_linear = +3.0`), `R_ridge` outperforms `R_mf` on **`16/16` targets** (`16/16 >= 1.25×`, `geo_mean = 1.777×`, 95% CI `[1.636×, 1.898×]`, `p_4 = 1.5e-5`, `p_4_125 = 1.5e-5`), nearly halving KL (`0.00982` vs `0.01670`) while raising target `dlogit_z` (`+30.64` vs `+24.39`) and achieving `0.118` calibration accuracy in `C0.1b`.
 
-The failure of the `R_mf_cross` null (`cross_mean = 1.235` vs `rand_iso = 0.299`, `191/192 > 2F_mean`) explains **why**:
+Post-hoc inspection of the failed `R_mf_cross` null (`cross_mean = 1.235` vs `rand_iso = 0.299`, `191/192 > 2F_mean`) suggests a concrete geometric mechanism, **with an important scope caveat**: all 16 C0 targets belong to a single lexical class (**consonant-initial, space-prefixed singular concrete nouns**), so this explanation rests on within-class noun geometry and has not been tested across mixed parts of speech:
 - On `L18+`, `R_mf_cross` is **`97.6%` positive** (signed mean **`+1.2257`**, vs `rand_iso = -0.0723`, `41.1%` positive; same-domain wrong targets `+1.4779`, `99.0%` positive).
-- Pairwise off-diagonal cosine among the 16 frozen target write vectors directly exposes the mechanism:
-  - Raw `logit_lens` (`u_t`): mean off-diagonal cosine **`+0.1826`** (`cross = +0.1764`, `same = +0.2076`) — consonant-initial concrete nouns share a common unembedding direction.
-  - **`R_mf = R_L^T u_t` amplifies that common mode** to **`+0.2615` (`L18`) / `+0.2526` (`L24`)** (`cross = +0.2574`), causing every `R_mf(t')` write to boost all other nouns simultaneously.
-  - **`R_ridge = (R_L^T R_L + λI)^{-1} R_L^T u_t` whitens it out by `2.6×`**, reducing off-diagonal cosine to **`+0.1008` (`L18`) / `+0.0953` (`L24`)** (`cross = +0.0943 / +0.0887`).
+- Pairwise off-diagonal cosine among the 16 frozen target write vectors shows:
+  - Raw `logit_lens` (`u_t`): mean off-diagonal cosine **`+0.1826`** (`cross = +0.1764`, `same = +0.2076`) — these 16 consonant-initial singular nouns share a strong common unembedding component.
+  - **`R_mf = R_L^T u_t` amplifies that common mode** to **`+0.2615` (`L18`) / `+0.2526` (`L24`)** (`cross = +0.2574`), plausibly explaining why every `R_mf(t')` write boosts all other nouns simultaneously.
+  - **`R_ridge = (R_L^T R_L + λI)^{-1} R_L^T u_t` whitens it out by `2.6×`**, reducing off-diagonal cosine to **`+0.1008` (`L18`) / `+0.0953` (`L24`)** (`cross = +0.0943 / +0.0887`). Whether `R_ridge_cross` eliminates the `+1.23`-logit cross-domain bleed remains to be tested directly.
 
 ---
 
 ## 3. Next Decisions (Honoring the Failed Stage C1 Gate)
 
-Stage C1 is **held** per the registered gate. Two crisp, low-cost follow-ups are directly motivated by Stage C0's findings (for Council & Elise to weigh in on before any new spend):
-1. **A paired `positions="all"` vs. `positions="last"` check (or single-position zero-offset R-lens `∂h_final(t)/∂h_L(t)`):** Directly tests Discovery A — does `positions="all"` recover the `~0.80+` gap ratio and `10–19×` `ΣAttn` highway predicted by the offset-summed `R_out` lens, while `positions="last"` matches a zero-offset single-position Jacobian?
-2. **`R_ridge` cross-domain readout check:** Stage C0 read `all_16_dlogits` on `R_mf` and `rand_iso` (not `R_ridge`); reading `R_ridge_cross` alongside `R_mf_cross` directly tests Discovery C's prediction that ridge whitening eliminates the `+1.23`-logit shared-noun bleed.
+Stage C1 is **held** per the registered gate. A compact, pre-registered **Stage C0b** follow-up directly tests both post-hoc explanations above before any Stage C1 work or zero-offset R-lens refitting:
+1. **Paired `positions="all"` vs. `positions="last"` test:** Directly tests Post-Hoc Explanation 1 with a pre-registered numeric gap-ratio forecast under `"all"` (anchored on exploratory `0.831`) and a falsifying threshold that refutes the cross-position attention-highway reading if `"all"` fails to recover it.
+2. **`R_ridge_cross` readout arm:** Directly tests Post-Hoc Explanation 2 by reading `all_16_dlogits` on `R_ridge` alongside `R_mf` and `rand_iso` (and checking whether ridge whitening collapses the cross-domain noun bleed toward the `rand_iso` floor).

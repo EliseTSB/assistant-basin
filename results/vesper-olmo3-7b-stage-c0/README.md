@@ -8,7 +8,7 @@
 ## Pre-Registered Verdicts (100% Honest Read)
 
 - **Stage C1 Gate (`C0.0` ∧ `C0.1` ∧ `C0.2` ∧ `C0.3`):** **FAIL** (blocked by `C0.1` and `C0.2`; Stage C1 is **not** launched under the registered gate).
-- **All 4 Holm directional nulls rejected (`p_holm <= 0.0001`), while the pre-registered calibration & null bars exposed two crisp mechanistic discoveries:**
+- **All 4 Holm directional nulls rejected (`p_holm <= 0.0001`); `C0.3` passed, while `C0.1`, `C0.2`, and `C0.4` failed their calibration/null bars:**
 
 | ID | Verdict | Registered Result | Holm `p_raw` (`p_holm`) |
 |---|---|---|---|
@@ -18,10 +18,10 @@
 | **C0.3** | **PASS** | `mean(d_t) = +0.1026` (`15/16` targets positive on `L18+`, `16/16` at `L27`, `BCa q05 = +0.0760 > 0`, 95% CI `[+0.0712, +0.1353]`) | `0.000031` (`0.000061`) |
 | **C0.4** | **FAIL** | Equal-direct efficiency **PASS** (`1.777×`, 95% CI `[1.636×, 1.898×]`, `16/16 >= 1.25×`, `KL = 0.0098` vs `0.0167`), **FAIL** on cross-domain `R_mf_cross` null (`cross_mean = 1.235` vs `rand_iso F_mean = 0.299`, `191/192 > 2F_mean`, `97.6%` positive) | `0.000015` (`0.000061`) |
 
-## Why `C0.1`, `C0.2`, and `C0.4` Failed (Post-Hoc Mechanistic Diagnosis)
-1. **Cross-position attention vs. single-position MLP channel (`C0.1` & `C0.2`):** The frozen R-lens (`neuron_lens/transport.py:5`) estimates the offset-summed Jacobian `mean_t Σ_{t' >= t} ∂h_final(t') / ∂h_L(t)` ("here and later"), which matched exploratory Exp 4B (`positions="all"`, where `R_mf ΣAttn = +3.47/+3.81`, `logit_lens ΣAttn = -4.01/-5.96`, gap ratio `0.831`). Stage C0 injected at `positions="last"` only, isolating the zero-offset slice `∂h_final(T) / ∂h_L(T)`: `ΣAttn` dropped `10–19×` (`+0.34/+0.45` and `-0.21/-0.32`), leaving primarily the same-position MLP channel (`L24: R_mf ΣMLP = +1.58` vs `logit_lens ΣMLP = -1.66`; `L27: +2.13` vs `-1.85`) at `28%–48%` of the full-offset lens gap.
-2. **Confirmed same-position `u_t` contraction (`C0.3` PASS):** Even with cross-position attention shut off, `u_t` is strictly more contracted than isotropic directions `v^T J v` (`+0.1026`, `p = 3.1e-5`, `15/16` targets, `16/16` at `L27`). Real `v^T J v` (`0.694–0.970`) is `+0.204` above ridge-shrunk `tr(R_L)/d` (`0.511–0.836`).
-3. **`R_mf` amplifies the shared noun common mode; `R_ridge` whitens it out (`C0.4`):** Across the 16 unseen singular nouns, raw `u_t` shares mean off-diagonal cosine `+0.183`; `R_mf = R_L^T u_t` amplifies this to `+0.262` (`L18`) / `+0.253` (`L24`), lifting all 12 cross-domain wrong nouns by `+1.226` logits (`97.6%` positive). `R_ridge` whitens off-diagonal cosine down `2.6×` to `+0.101 / +0.095`, yielding its `1.777×` (`16/16`) equal-direct specificity advantage and `0.118` calibration accuracy.
+## Post-Hoc Mechanistic Explanations (Not Pre-Registered Findings)
+1. **Cross-position attention vs. single-position MLP channel (post-hoc explanation of `C0.1` & `C0.2`):** The frozen R-lens (`neuron_lens/transport.py:5`) estimates the offset-summed Jacobian `mean_t Σ_{t' >= t} ∂h_final(t') / ∂h_L(t)` ("here and later"), matching exploratory Exp 4B (`positions="all"`, `R_mf ΣAttn = +3.47/+3.81`, `logit_lens ΣAttn = -4.01/-5.96`, gap ratio `0.831`). Stage C0 injected at `positions="last"` only, isolating `∂h_final(T) / ∂h_L(T)`: `ΣAttn` dropped `10–19×` (`+0.34/+0.45` and `-0.21/-0.32`), leaving primarily the same-position MLP channel (`L24: R_mf ΣMLP = +1.58` vs `logit_lens ΣMLP = -1.66`; `L27: +2.13` vs `-1.85`) at `28%–48%` of the full-offset lens gap.
+2. **Confirmed pre-registered `u_t` contraction (`C0.3` PASS):** Even at `positions="last"`, `u_t` is strictly more contracted than isotropic directions `v^T J v` (`+0.1026`, `p = 3.1e-5`, `15/16` targets, `16/16` at `L27`). Real `v^T J v` (`0.694–0.970`) is `+0.204` above ridge-shrunk `tr(R_L)/d` (`0.511–0.836`).
+3. **`R_mf` common-mode amplification vs. `R_ridge` whitening (post-hoc explanation of `C0.4`; single-class noun caveat):** All 16 C0 targets are consonant-initial, space-prefixed singular concrete nouns whose raw `u_t` share mean off-diagonal cosine `+0.183`. `R_mf = R_L^T u_t` amplifies this to `+0.262` (`L18`) / `+0.253` (`L24`), plausibly explaining the `+1.226`-logit (`97.6%` positive) cross-domain bleed, whereas `R_ridge` whitens off-diagonal cosine down `2.6×` to `+0.101 / +0.095` (yielding its `1.777×` [`16/16`] equal-direct efficiency advantage and `0.118` calibration accuracy). Generalization beyond this single noun class and `R_ridge_cross` itself remain untested.
 
 ## Rescore it yourself (Python 3.10+ standard library only)
 
