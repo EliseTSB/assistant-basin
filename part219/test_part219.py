@@ -1294,3 +1294,16 @@ def test_do_nothing_mode_refuses_when_the_pilot_r0_is_missing(tmp_path):
     args[args.index("--pilot-a1")] = "--do-nothing"
     with pytest.raises(SystemExit, match="R0.jsonl"):
         run219.main(args)
+
+
+def test_do_nothing_check_reports_identity_and_difference(tmp_path):
+    """Added 2026-11-22 at publication: unlabelled do-nothing runs are scored as a token check against R0."""
+    import json as _json
+    from part219 import score219 as _s
+    rows = [{"id": i, "token_ids": [1, 2, i]} for i in range(3)]
+    ref, same, diff = tmp_path / "R0.jsonl", tmp_path / "R0b.jsonl", tmp_path / "R0b-mean.jsonl"
+    for path, data in ((ref, rows), (same, rows), (diff, rows[:2] + [{"id": 2, "token_ids": [9]}])):
+        path.write_text("".join(_json.dumps(r) + "\n" for r in data), encoding="utf-8")
+    assert _s.do_nothing_check(ref, same)["identical_to_R0"] is True
+    bad = _s.do_nothing_check(ref, diff)
+    assert bad["identical_to_R0"] is False and bad["token_mismatches"] == 1
