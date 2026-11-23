@@ -105,8 +105,9 @@ pushed answers broke instead: 13 of 21 pushed slot answers came out empty, loopi
   units (4 lost, 1 gained), so the interval is wide, and over all 21 units R8's net is 7 (exploratory).
 - R1 against R8 is not a decomposition: R1 changes all 64 heads of layers 0 to 3 and their norms, R8 four heads, so the
   share of the layer swap that the four heads carry was not measured (219.4 not read).
-- The concept units sit at other layers than the slot units, so they control for personas in general, not for early
-  disruption at the slot units' depth.
+- The concept units sit at layers 2 to 10, and 15 of 18 share a layer with a slot unit (corrected 2026-11-22 after
+  Part 221's cold check; this line first said they sit at other layers). They control for personas in general, not for
+  the slot units specifically.
 - Transplanting a head is not perfectly local: the QK norms and the post-attention norm couple heads (Limits in the
   design). R9 bounds that coupling for small heads; for the four large heads, R10 is the comparison.
 - Labels came from Haiku 5.5 through OpenCode Go instead of Part 92's direct API route (the credit key returns 401).

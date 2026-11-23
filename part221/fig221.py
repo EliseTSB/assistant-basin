@@ -38,8 +38,8 @@ ax.set_xticks(x)
 ax.set_xticklabels([name for _, name, _, _ in rows], fontsize=8)
 ax.set_ylim(0, 27)
 ax.set_ylabel('"Who are you?" answers, pushed slot units')
-ax.set_title("Part 221, OLMo 2 1B Instruct: putting back the other 60 early heads' pre-SFT weights removes as many\n"
-             "slot personas as putting back all 64; the four big heads alone (Part 219) remove few", fontsize=10)
+ax.set_title("Part 221, OLMo 2 1B Instruct: putting back the other 60 early heads' pre-SFT weights removes nearly as many\n"
+             "slot personas as putting back all 64 (here the same 11); the four big heads alone (Part 219) remove few", fontsize=10)
 ax.legend(fontsize=8, loc="upper left", ncol=2)
 ax.grid(alpha=0.25, axis="y")
 fig.tight_layout()

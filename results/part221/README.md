@@ -1,4 +1,4 @@
-# Part 221: putting back the pre-SFT weights of the other 60 early heads removes as many slot personas as putting back all 64
+# Part 221: putting back the pre-SFT weights of the other 60 early heads removes nearly as many slot personas as putting back all 64 (here, the same 11)
 
 ![Slot personas and coherence per run](fig221.png)
 
@@ -71,8 +71,10 @@ These were not registered as predictions.
 - **R11 and Part 219's R8 together.** R11's net 11 plus R8's net 3 is 14, against R1's 11. That is a sum of two separate
   runs, not a decomposition: the heads interact through the shared QK norms and the post-attention norm.
 - **Vesper's five core slot units (written after her 2026-11-22 finding).** In Vesper's concept-versus-slot study, the
-  five slot units Part B had selected (p92-02, -05, -09, -13 and -46) replicated on new stories while most of the other
-  slot units did not, so "slot unit" may be two populations. All five are among this part's 16 upstream units, and all
+  five slot units her earlier Part B study had selected (p92-02, -05, -09, -13 and -46; `results/vesper-causal-attn/`)
+  replicated on new stories while 7 of 8 other slot units went the other way (sign test p = 0.07; her report
+  `explore_olmo2_attn_mlp/CONCEPT-VS-SLOT-REPORT.md` and `results/vesper-concept-vs-slot/scorecard.json`, key
+  `part_b_5_core_slot_bridge`), so "slot unit" may be two populations. All five are among this part's 16 upstream units, and all
   five showed their persona in R0. Split the same way:
 
   | run | core 5: lost (gained) | other 11: lost (gained) |
@@ -130,13 +132,17 @@ committed results for R0, R1 and the R8 comparison.
 - In R11 the four big heads keep Instruct's weights while the normalisation they share with their siblings sees
   donor-derived values; that rescaling is logged above, not removed.
 - R12 tests one opposite direction, an off-checkpoint one; 221.3 failing does not show that direction does not matter.
-- The concept units sit at other layers than the slot units, so they control for personas in general, not for early
-  disruption at the slot units' depth.
+- The concept units sit at layers 2 to 10, and 15 of 18 share a layer with a slot unit (`results/part92/step2/neurons.json`);
+  Part 219's README said they sit at other layers, which was wrong. They control for personas in general, not for the
+  slot units specifically.
 - Labels came from Haiku 5.5 through OpenCode Go at Part 92's prompt and a 500-token cap, as in Part 219. Items that
   returned no JSON were retried at 500, and the rest at 4,000: 18 Haiku rows across the six runs carry the 4,000 cap,
-  and every label row records its cap. The DeepSeek sample ran at 4,000.
+  and every label row this part wrote records its cap (Part 219's R0 and R1 rows, reused here, do not). The DeepSeek sample ran at 4,000.
 - The core-five split was chosen after Vesper's finding, on 5 and 11 units, and is not a test.
-- The four heads were chosen by screen A, which was not registered.
+- The four heads were chosen by screen A, a quick unregistered screen (2026-11-18) that ranked OLMo 2 1B's 256 heads by
+  how much switching each off hurt Instruct's identity answers more than its ordinary ones (described in Part 219).
+
+Cold check: DeepSeek V4.1 Flash, 2026-11-22, two fresh readers with only the files. Numbers ([NUMBERS-CHECK.md](../../review/part221/NUMBERS-CHECK.md)): 97 claims recomputed from the raw rows with its own code, 95 matched; the two that did not were sentences, not counts (Part 219's label rows do not record their cap; the concept units do share layers with the slot units), both corrected. The scorer reran byte-identical. Prose ([PROSE-CHECK.md](../../review/part221/PROSE-CHECK.md)): no wrong number or verdict; the title now uses the registered "nearly as many", and "Part B", "screen A" and the core-five premise got definitions and pointers. The same wrong sentence about concept-unit layers was corrected in Part 219's README.
 
 ## Files
 
