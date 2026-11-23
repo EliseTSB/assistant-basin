@@ -474,8 +474,15 @@ def run_experiment(
     for L in layers:
         lay = model.model.layers[L]
         cap = {}
-        h1 = lay.mlp.down_proj.register_forward_hook(lambda _m, _a, o: cap.setdefault("pre", o[0, -1].detach().float().norm().item()))
-        h2 = lay.post_feedforward_layernorm.register_forward_hook(lambda _m, _a, o: cap.setdefault("post", o[0, -1].detach().float().norm().item()))
+
+        def _cap_pre(_m, _a, o):
+            cap["pre"] = o[0, -1].detach().float().norm().item()
+
+        def _cap_post(_m, _a, o):
+            cap["post"] = o[0, -1].detach().float().norm().item()
+
+        h1 = lay.mlp.down_proj.register_forward_hook(_cap_pre)
+        h2 = lay.post_feedforward_layernorm.register_forward_hook(_cap_post)
         with torch.inference_mode():
             model(input_ids=who_tf_ids, use_cache=False)
         h1.remove()

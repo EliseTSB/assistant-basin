@@ -160,3 +160,45 @@ def test_exact_4term_highway_telescoping_identity(tiny_olmo3):
     dec_n = exact_highway_decompose(tr_c, tr_n, inject_layer=1, u_target=u_t, target_id=tid, layer_types=layer_types, eps=eps)
     assert dec_n["telescoping_err"] < 1e-4, f"Natural neuron telescoping error: {dec_n['telescoping_err']}"
     assert dec_n["h_recon_l2_err"] < 1e-4
+
+
+def test_run_experiment_smoke_end_to_end(tiny_olmo3):
+    """End-to-end smoke test of `run_experiment()` including calibration, 2A, 2B, generation, and Exp 4."""
+    from run_olmo3_idea2_and_idea4 import run_experiment
+
+    class FakeTok:
+        eos_token_id = 1
+        def encode(self, text, return_tensors=None, add_special_tokens=True):
+            ids = [(sum(ord(c) for c in w) % 100) + 5 for w in text.split()[:8]] or [5]
+            return torch.tensor([ids], dtype=torch.long) if return_tensors == "pt" else ids
+        def decode(self, ids, skip_special_tokens=True):
+            return " ".join(f"t{int(i)}" for i in ids)
+
+    tok = FakeTok()
+    d = tiny_olmo3.config.hidden_size
+    personas = [" pirate", " wizard"]
+    tids = {" pirate": 11, " wizard": 12}
+    layers = {}
+    for L in (1, 2):
+        layers[L] = {
+            "layer": L, "layer_type": tiny_olmo3.config.layer_types[L],
+            "gamma_post_ff": torch.ones(d).half(),
+            "writes": {w: {m: torch.randn(d).half() for m in ("R_ridge", "R_mf", "logit_lens", "random")} for w in personas},
+            "reads": {
+                "concept_S_ridge": {w: torch.randn(d).half() for w in personas},
+                "concept_S_mf": {w: torch.randn(d).half() for w in personas},
+                "slot_S_ridge": torch.randn(d).half(),
+                "slot_S_mf": torch.randn(d).half(),
+            },
+        }
+    bank = {
+        "target_personas": personas, "target_ids": tids, "injection_layers": [1, 2],
+        "layers": layers,
+        "natural_neurons": [{"unit": "L1N0", "layer": 1, "neuron": 0, "kind": "natural_concept", "target": " pirate", "target_id": 11}],
+    }
+    res = run_experiment(tiny_olmo3, tok, bank, device="cpu", max_new_tokens=3, smoke=True)
+    assert res["meta"]["max_telescoping_err"] < 1e-4
+    assert len(res["exp2a_write_geometry"]) > 0
+    assert len(res["exp2b_virtual_neurons"]) > 0
+    assert len(res["exp4_highway_natural"]) == 1
+    assert len(res["exp4_highway_virtual"]) > 0
