@@ -31,6 +31,8 @@ directly (exploratory): under mean-ablation the six unpushed answers stayed ordi
 | 219.5 | Journal Claude (low, 30%): R8's net loss on the 16 upstream units is at least 4 more than R10's. | R8 net 3, R10 net 2, margin 1 | failed |
 | 219.1m | Journal Claude (low, 35%), written after the pilot (Amendment 1): R2m (all four mean-ablated): on the 16 upstream slot units, at least 7 net lose their persona against R0. | R2m's pilot stopping rule fired | not read |
 | 219.2m | Journal Claude (low, 35%), written after the pilot (Amendment 1): R2m: at least 15 of 21 slot answers coherent, at least 13 concept units keep their persona, and the run is not flagged inconclusive. | 8 of 21 coherent, 16 of 18 concept | failed (on the R2m pilot) |
+| 219.A1 | Amendment 1, written after the pilot: R2 to R7 become mean-ablation runs R2m to R7m (full text in PREDICTIONS.md). | record of the change | not tested (a record, not a prediction) |
+| 219.A1b | Amendment 1b: the pos0 receipt cannot differ before the hook, so the before-difference is required at the other positions only. | record of the change | not tested (a record, not a prediction) |
 
 Full registered text: PREDICTIONS.md, Part 219. The gate passed: the kernel check passed, R0 showed 20 of 21 slot
 personas (bar 17), and R1 showed 4 of 21 (bar 5; Part 100 had 3 on the default kernel). Scorecard:
@@ -66,11 +68,14 @@ after the push.
 - **The coupling check (R9) held**: putting back four unimportant early heads moved the 16 upstream units by a net 1,
   within its bar of 2. For heads that small, the side effect on sibling heads through the shared normalisations does
   not move the readout: R9 changed its layers' attention-output scale by at most 0.7%. R8 and R10 changed theirs by up
-  to 12.7% and 11.7%, the four heads being large (`R*.meta.json`, `coupling_log`), so R9 does not bound their coupling;
+  to 12.7% and 11.7%, the four heads being large (the `coupling_log` in each run's meta file), so R9 does not bound their coupling;
   R10 is the comparison for that.
 - **The distance control (R10)** moved the four heads as far as R8 in the opposite direction and lost a net 2 against
   R8's net 3. 219.5 asked for a margin of at least 4 and found 1, so the direction of post-training's change was not
   shown to matter here; with one opposite direction tested, that is not evidence that direction does not matter.
+- **Do-nothing (R0b)**: run through both new hook wrappers with empty head sets, R0b and R0b-mean each matched R0
+  token for token on all 474 rows (run separately with `part219/run219.py --do-nothing` after the main runs, since the stage
+  that held them was cut short by the pilot stops).
 - **Receipts**: every transplanted slice equalled the donor's bytes (R8, R9) or `2 x Instruct - donor` (R10); every
   run's reset replay matched R0 exactly.
 - **Readers**: Part 92's Haiku reader read every run twice, independently. In every run the two passes agreed, item by
@@ -112,10 +117,12 @@ pushed answers broke instead: 13 of 21 pushed slot answers came out empty, loopi
   like, but the labels are not Part 92's exact reader.
 - The four heads were chosen by screen A, which was not registered.
 
+Cold check: DeepSeek V4.1 Flash, 2026-11-22, two fresh readers with only the files. Numbers ([NUMBERS-CHECK.md](../../review/part219/NUMBERS-CHECK.md)): every number in this README recomputed from the raw rows with its own code and agreed; three statements it could not check from the kept files were fixed by keeping the files (`labels-cap4000.json`, the stopped R2m rows) and by separating the read count of broken unpushed answers from the scorer's. Prose ([PROSE-CHECK.md](../../review/part219/PROSE-CHECK.md)): ten overstated sentences and one wrong one (R8's net loss is one more than R10's, not "no more than"), all folded; the title and opening no longer claim an apportionment that 219.4 was written to measure and did not read. The R0b result was added after both checks and carries counts only.
+
 ## Files
 
 - Design and amendments: `PART219-DESIGN.md` (Amendments 1 and 1b at the end).
-- Runs: `R0.jsonl`, `R1.jsonl`, `R2.jsonl`, `R2m.jsonl`, `R8.jsonl` to `R10.jsonl`, each with `.meta.json` (receipts,
+- Runs: `R0.jsonl`, `R0b.jsonl`, `R0b-mean.jsonl`, `R1.jsonl`, `R2.jsonl`, `R2m.jsonl`, `R8.jsonl` to `R10.jsonl`, each with a matching meta file (receipts,
   coupling logs); `head-means.pt` (mean-ablation means); `manifest.json`.
 - Labels: `labels-<run>.jsonl` (pass 1), `labels2-<run>.jsonl` (pass 2), `labels-deepseek-<run>.jsonl` (10% sample);
   label inputs in `label-input/`.
