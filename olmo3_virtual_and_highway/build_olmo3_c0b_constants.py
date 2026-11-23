@@ -262,21 +262,43 @@ def build_constants(
     meas_rmf_s = [b / sm for b, sm in zip(meas_rmf_b, meas_rmf_self)]
     meas_self_ratio = [sr / sm for sr, sm in zip(meas_rr_self, meas_rmf_self)]
 
-    rand_3L: list[float] = []
-    rand_4L: list[float] = []
-    for L_str in ("18", "21", "24", "27"):
-        for draw_list in rec["regime_N"][L_str]["rand_iso"]:
-            for tr in draw_list:
-                vals = [abs(float(x)) for x in tr["all_16_dlogits"]]
-                rand_4L.extend(vals)
-                if L_str in ("18", "24", "27"):
-                    rand_3L.extend(vals)
-    rand_3L.sort()
-    rand_4L.sort()
-    f_mean_3L = fmean(rand_3L)
-    f_p95_3L = exact_quantile_sorted(rand_3L, 0.95)
-    f_mean_4L = fmean(rand_4L)
-    f_p95_4L = exact_quantile_sorted(rand_4L, 0.95)
+    # Exact 512-pair C0.4 construction (32 rand_iso draws x 16 readout targets, averaged over 8 prompts x layers)
+    rand_3L_cells: list[float] = []
+    rand_4L_cells: list[float] = []
+    rand_3L_pairs: list[float] = []
+    rand_4L_pairs: list[float] = []
+    for draw_idx in range(32):
+        for t_idx in range(16):
+            p3, p4 = [], []
+            for L_str in ("18", "21", "24", "27"):
+                for tr in rec["regime_N"][L_str]["rand_iso"][draw_idx]:
+                    v = abs(float(tr["all_16_dlogits"][t_idx]))
+                    p4.append(v)
+                    rand_4L_cells.append(v)
+                    if L_str in ("18", "24", "27"):
+                        p3.append(v)
+                        rand_3L_cells.append(v)
+            rand_3L_pairs.append(fmean(p3))
+            rand_4L_pairs.append(fmean(p4))
+    rand_3L_cells.sort()
+    rand_4L_cells.sort()
+    rand_3L_pairs.sort()
+    rand_4L_pairs.sort()
+    f_mean_3L = fmean(rand_3L_pairs)
+    f_p95_3L_pair = exact_quantile_sorted(rand_3L_pairs, 0.95)
+    f_p95_3L_cell = exact_quantile_sorted(rand_3L_cells, 0.95)
+    f_mean_4L = fmean(rand_4L_pairs)
+    f_p95_4L_pair = exact_quantile_sorted(rand_4L_pairs, 0.95)
+    f_p95_4L_cell = exact_quantile_sorted(rand_4L_cells, 0.95)
+
+    # Deterministically select the 2 Regime-D "last" reproducibility anchor targets
+    # closest to the median of per-target 4L r_last in Stage C0.
+    med_pt_r_last = fmedian(pt_means_c0)
+    ranked_anchor = sorted(
+        zip(t_strs, pt_means_c0),
+        key=lambda kv: (abs(kv[1] - med_pt_r_last), kv[0]),
+    )
+    anchor_targets_2 = [ranked_anchor[0][0], ranked_anchor[1][0]]
 
     # 4. Exploratory Exp 4B per-frame and 4-frame-averaged analogues
     pred_exp4b = {
@@ -421,7 +443,7 @@ def build_constants(
     base_norm_ratio_k1 = base_abs_ratio_k1 * geo_self_ratio
 
     sensitivity_table = []
-    for k_ridge in (1.00, 1.25, 1.50, 1.75, 2.00, round(k_mf_geo, 4)):
+    for k_ridge in (1.00, 1.133, 1.25, 1.50, 1.75, 2.00, round(k_mf_geo, 4)):
         est_rr_b = geo_pred_rr / k_ridge
         est_abs_r = base_abs_ratio_k1 * k_ridge
         est_norm_r = base_norm_ratio_k1 * k_ridge
@@ -433,9 +455,7 @@ def build_constants(
                 "implied_norm_ratio_Rmf_over_Rridge": round(est_norm_r, 4),
                 "implied_ratio_to_F_mean_3L": round(est_rr_b / f_mean_3L, 4),
                 "clears_C0b2a_1p25_point": bool(est_abs_r >= 1.25 and est_norm_r >= 1.25),
-                "clears_C0b2b_noise_floor_point": bool(
-                    est_rr_b <= f_mean_3L + 0.10 and est_rr_b <= 0.50 * fmean(meas_rmf_b)
-                ),
+                "clears_C0b2b_noise_floor_point": bool(est_rr_b <= f_mean_3L + 0.10),
             }
         )
 
@@ -472,10 +492,17 @@ def build_constants(
                     passes += int((ps <= 0.05).sum())
             c0b2a_power[sd_key][f"{true_r:.2f}x"] = round(100.0 * passes / n_mc, 1)
 
-        U0 = rng.normal(0.0, sd, size=(5000, 16))
-        ub = U0.mean(axis=1) + 1.75305 * U0.std(axis=1, ddof=1) / math.sqrt(16)
-        c0b2a_equiv_power_at_1p00[sd_key] = round(100.0 * float((ub < math.log(1.25)).mean()), 1)
+        # Mirror equivalence power at true_r=1.00: BOTH q95(u_abs) < 1.25 AND q95(u_norm) < 1.25
+        U0_abs = rng.normal(0.0, sd, size=(5000, 16))
+        U0_norm = U0_abs + self_shift + rng.normal(0.0, 0.02, size=(5000, 16))
+        ub_abs = U0_abs.mean(axis=1) + 1.75305 * U0_abs.std(axis=1, ddof=1) / math.sqrt(16)
+        ub_norm = U0_norm.mean(axis=1) + 1.75305 * U0_norm.std(axis=1, ddof=1) / math.sqrt(16)
+        c0b2a_equiv_power_at_1p00[sd_key] = round(
+            100.0 * float(((ub_abs < math.log(1.25)) & (ub_norm < math.log(1.25))).mean()), 1
+        )
 
+    # Full C0b.1a conjunction power (pooled [0.65,1.35] & 90% CI in (0.55,1.50),
+    # Bare [0.65,1.35], ChatML [0.65,1.35], |Chat-Bare| <= 0.35, all 4L [0.50,1.50])
     c0b1a_power: dict[str, dict[str, float]] = {}
     for sd in (0.06, 0.10, 0.15):
         sd_key = f"SD_t_{sd:.2f}"
@@ -483,16 +510,34 @@ def build_constants(
         for true_r in (0.45, 0.55, 0.65, 0.75, 0.85, 1.00, 1.25, 1.45, 1.60):
             n_mc = 2000
             t_eff = rng.normal(true_r, sd, size=(n_mc, 16, 1))
-            cells = t_eff + rng.normal(0.0, 0.06, size=(n_mc, 16, 4))
-            meds = np.median(cells.reshape(n_mc, 64), axis=1)
-            se = 1.253 * np.std(cells.mean(axis=2), axis=1, ddof=1) / 4.0
+            l_eff = rng.normal(0.0, 0.05, size=(n_mc, 16, 4))
+            bare = t_eff + l_eff + rng.normal(0.0, 0.04, size=(n_mc, 16, 4))
+            chat = t_eff + l_eff + rng.normal(0.0, 0.04, size=(n_mc, 16, 4))
+            pooled = 0.5 * (bare + chat)
+            meds = np.median(pooled.reshape(n_mc, 64), axis=1)
+            med_b = np.median(bare.reshape(n_mc, 64), axis=1)
+            med_c = np.median(chat.reshape(n_mc, 64), axis=1)
+            se = 1.253 * np.std(pooled.mean(axis=2), axis=1, ddof=1) / 4.0
             lo = meds - 1.645 * se
             hi = meds + 1.645 * se
-            ok = (meds >= 0.65) & (meds <= 1.35) & (lo > 0.55) & (hi < 1.50)
+            per_l = np.median(pooled, axis=1)  # [n_mc, 4]
+            ok = (
+                (meds >= 0.65)
+                & (meds <= 1.35)
+                & (lo > 0.55)
+                & (hi < 1.50)
+                & (med_b >= 0.65)
+                & (med_b <= 1.35)
+                & (med_c >= 0.65)
+                & (med_c <= 1.35)
+                & (np.abs(med_c - med_b) <= 0.35)
+                & (per_l.min(axis=1) >= 0.50)
+                & (per_l.max(axis=1) <= 1.50)
+            )
             c0b1a_power[sd_key][f"{true_r:.2f}"] = round(100.0 * float(ok.mean()), 1)
 
     return {
-        "schema_version": "c0b_constants_v2",
+        "schema_version": "c0b_constants_v3",
         "study": "stage_c0b_olmo3_7b_all_vs_last_and_ridge_whitening",
         "generator_script": "olmo3_virtual_and_highway/build_olmo3_c0b_constants.py",
         "model": "allenai/Olmo-3-7B-Instruct",
@@ -504,7 +549,8 @@ def build_constants(
         "r_lens_sha256": sha256_file(r_lens_path),
         "layers_4L": layers_4,
         "layers_L18_plus_3L": layers_3,
-        "reproducibility_anchor_targets": [" dolphin", " hammer"],
+        "reproducibility_anchor_targets_regime_D": anchor_targets_2,
+        "reproducibility_anchor_selection_rule": "2 targets closest to the median per-target 4L r_last in Stage C0",
         "targets_16": targets,
         "prompts_8": prompts_with_lengths,
         "prompt_length_summary": {
@@ -516,6 +562,7 @@ def build_constants(
         },
         "stage_c0_last_baselines": {
             "pooled_4L_gap_ratio_median": round(fmedian(all_cells_c0), 6),
+            "c0_2_6L_band_reference_median": 0.283674,
             "bare_4L_gap_ratio_median": round(fmedian(bare_cells_c0), 6),
             "chatml_4L_gap_ratio_median": round(fmedian(chat_cells_c0), 6),
             "per_target_4L_gap_ratio_mean": round(fmean(pt_means_c0), 6),
@@ -534,14 +581,17 @@ def build_constants(
                 "logit_lens_self_dlogit_geo_mean": round(geo_mean(meas_ll_self), 6),
                 "geo_self_ratio_Rridge_over_Rmf": round(geo_self_ratio, 6),
                 "rand_iso_3L_F_mean": round(f_mean_3L, 6),
-                "rand_iso_3L_F_p95": round(f_p95_3L, 6),
-                "rand_iso_3L_n_values": len(rand_3L),
+                "rand_iso_3L_F_p95_512pair": round(f_p95_3L_pair, 6),
+                "rand_iso_3L_F_p95_cell_n12288": round(f_p95_3L_cell, 6),
                 "rand_iso_4L_C04_reference_F_mean": round(f_mean_4L, 6),
-                "rand_iso_4L_C04_reference_F_p95": round(f_p95_4L, 6),
+                "rand_iso_4L_C04_reference_F_p95_512pair": round(f_p95_4L_pair, 6),
+                "rand_iso_4L_C04_reference_F_p95_cell_n16384": round(f_p95_4L_cell, 6),
             },
         },
         "exploratory_exp4b_all_analogues": {
-            "note": "Exploratory 4-persona, 3-layer (L12/18/24), 4-frame (3-15 token) point analogue; NOT out-of-sample.",
+            "note": "Exploratory 4-persona, 3-layer (L12/18/24), 4-frame (3-15 token) linear rescale to Direct_linear=3.0 using R_mf - logit_lens (C0b.1a uses R_mf - direct_matched); NOT out-of-sample. C0 unrescaled dose analogue was 0.8308 pooled (WHO_CHAT_TF 0.7979, L12=0.4809).",
+            "c0_unrescaled_four_frame_pooled_median": 0.8308,
+            "c0_unrescaled_WHO_CHAT_TF_L12_median": 0.4809,
             "four_frame_avg_pooled_L12_18_24_gap_ratio_median": round(fmedian(four_fr_pooled), 4),
             "four_frame_avg_per_layer_gap_ratio_median": four_fr_by_L,
             "per_frame_L12_18_24": exp4b_per_frame,
@@ -596,7 +646,11 @@ def main() -> None:
     for row in payload["c0b2_ridge_whitening_anchors_L18_24_27"]["k_ridge_sensitivity_table"]:
         print(" ", row)
     print("delta_tot_guard:", payload["stage_c0_last_baselines"]["c0b1b_delta_tot_guard_5pct"])
-    print("3L rand_iso F_mean / F_p95:", payload["stage_c0_last_baselines"]["regime_N_3L_L18_24_27_measured"]["rand_iso_3L_F_mean"], payload["stage_c0_last_baselines"]["regime_N_3L_L18_24_27_measured"]["rand_iso_3L_F_p95"])
+    print("anchor_targets_2:", payload["reproducibility_anchor_targets_regime_D"])
+    rn_m = payload["stage_c0_last_baselines"]["regime_N_3L_L18_24_27_measured"]
+    print("3L rand_iso F_mean / F_p95_512pair / F_p95_cell:", rn_m["rand_iso_3L_F_mean"], rn_m["rand_iso_3L_F_p95_512pair"], rn_m["rand_iso_3L_F_p95_cell_n12288"])
+    print("4L C0.4 rand_iso F_mean / F_p95_512pair:", rn_m["rand_iso_4L_C04_reference_F_mean"], rn_m["rand_iso_4L_C04_reference_F_p95_512pair"])
+    print("power_simulations:", json.dumps(payload["power_simulations"], indent=2))
 
 
 if __name__ == "__main__":
