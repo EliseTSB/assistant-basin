@@ -1,0 +1,2552 @@
+{
+ "part": 221,
+ "design": "PART221-DESIGN.md v3",
+ "n_slot": 21,
+ "n_concept": 18,
+ "split": {
+  "head_layers": [
+   0,
+   1,
+   2,
+   3
+  ],
+  "deepest_head_layer": 3,
+  "upstream": [
+   "p92-02",
+   "p92-03",
+   "p92-04",
+   "p92-05",
+   "p92-09",
+   "p92-13",
+   "p92-18",
+   "p92-24",
+   "p92-25",
+   "p92-32",
+   "p92-33",
+   "p92-35",
+   "p92-36",
+   "p92-37",
+   "p92-46",
+   "p92-47"
+  ],
+  "downstream": [
+   "p92-07",
+   "p92-10",
+   "p92-20",
+   "p92-42",
+   "p92-50"
+  ],
+  "n_upstream": 16,
+  "n_downstream": 5
+ },
+ "gate": {
+  "passed": true,
+  "failures": [],
+  "checks": {
+   "kernel_check": {
+    "passes": true,
+    "candidate": "results/part219/kernel-check.json",
+    "reference": "results/kernel-reference/allenai-olmo-2-0425-1b-instruct-cpu-float32.json",
+    "failures": []
+   },
+   "r0_slot_persona": {
+    "count": 20,
+    "of": 21,
+    "min": 17,
+    "status": [],
+    "passes": true
+   },
+   "r1_slot_persona": {
+    "count": 4,
+    "of": 21,
+    "max": 5,
+    "status": [],
+    "passes": true
+   },
+   "r0_reproduction": {
+    "passes": true,
+    "detail": {
+     "items": 474,
+     "missing_items": 0,
+     "answer_mismatches": 0,
+     "token_mismatches": 0,
+     "items_without_token_ids": 0,
+     "identical": true,
+     "first_mismatch": []
+    },
+    "reason": null
+   },
+   "r1_reproduction": {
+    "passes": true,
+    "detail": {
+     "items": 474,
+     "missing_items": 0,
+     "answer_mismatches": 0,
+     "token_mismatches": 0,
+     "items_without_token_ids": 0,
+     "identical": true,
+     "first_mismatch": []
+    },
+    "reason": null
+   },
+   "r13_equals_r1": {
+    "passes": true,
+    "detail": {
+     "items": 474,
+     "missing_items": 0,
+     "answer_mismatches": 0,
+     "token_mismatches": 0,
+     "items_without_token_ids": 0,
+     "identical": true,
+     "first_mismatch": []
+    },
+    "reason": null
+   }
+  }
+ },
+ "reproduction": {
+  "r0_vs_part219": {
+   "items": 474,
+   "missing_items": 0,
+   "answer_mismatches": 0,
+   "token_mismatches": 0,
+   "items_without_token_ids": 0,
+   "identical": true,
+   "first_mismatch": []
+  },
+  "r1_vs_part219": {
+   "items": 474,
+   "missing_items": 0,
+   "answer_mismatches": 0,
+   "token_mismatches": 0,
+   "items_without_token_ids": 0,
+   "identical": true,
+   "first_mismatch": []
+  },
+  "r13_vs_r1": {
+   "items": 474,
+   "missing_items": 0,
+   "answer_mismatches": 0,
+   "token_mismatches": 0,
+   "items_without_token_ids": 0,
+   "identical": true,
+   "first_mismatch": []
+  }
+ },
+ "runs": {
+  "R0": {
+   "labels_from": "results/part219",
+   "label_errors": 10,
+   "items_still_missing": 0,
+   "label_errors_pass2": 12,
+   "items_still_missing_pass2": 0,
+   "labelled": true,
+   "two_pass": {
+    "items": 42,
+    "compared": 42,
+    "shows_persona_agree": 42,
+    "coherent_agree": 41,
+    "slot_who_pass1": [
+     20,
+     21
+    ],
+    "slot_who_pass2": [
+     20,
+     21
+    ],
+    "passes": true,
+    "reasons": []
+   },
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    20,
+    21
+   ],
+   "slot_who_coherent": [
+    20,
+    21
+   ],
+   "concept_any": [
+    17,
+    18
+   ],
+   "slot_who_pass2": [
+    20,
+    21
+   ],
+   "deepseek_agreement": {
+    "items": 26,
+    "shows_persona_agree": 25,
+    "coherent_agree": 24,
+    "shows_persona_agreement": 0.9615,
+    "coherent_agreement": 0.9231
+   },
+   "labels_source": "Part 219's labels (R0 reproduces Part 219 token for token)",
+   "upstream_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-09",
+    "p92-13",
+    "p92-18",
+    "p92-24",
+    "p92-25",
+    "p92-32",
+    "p92-33",
+    "p92-35",
+    "p92-36",
+    "p92-37",
+    "p92-46",
+    "p92-47"
+   ],
+   "status": []
+  },
+  "R1": {
+   "labels_from": "results/part219",
+   "label_errors": 13,
+   "items_still_missing": 0,
+   "label_errors_pass2": 2,
+   "items_still_missing_pass2": 0,
+   "labelled": true,
+   "two_pass": {
+    "items": 42,
+    "compared": 42,
+    "shows_persona_agree": 41,
+    "coherent_agree": 39,
+    "slot_who_pass1": [
+     4,
+     21
+    ],
+    "slot_who_pass2": [
+     5,
+     21
+    ],
+    "passes": true,
+    "reasons": []
+   },
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    4,
+    21
+   ],
+   "slot_who_coherent": [
+    16,
+    21
+   ],
+   "concept_any": [
+    14,
+    18
+   ],
+   "slot_who_pass2": [
+    5,
+    21
+   ],
+   "deepseek_agreement": {
+    "items": 26,
+    "shows_persona_agree": 25,
+    "coherent_agree": 25,
+    "shows_persona_agreement": 0.9615,
+    "coherent_agreement": 0.9615
+   },
+   "labels_source": "Part 219's labels (R1 reproduces Part 219 token for token)",
+   "upstream_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-09",
+    "p92-13",
+    "p92-18",
+    "p92-24",
+    "p92-25",
+    "p92-32",
+    "p92-33",
+    "p92-35",
+    "p92-36",
+    "p92-37",
+    "p92-46",
+    "p92-47"
+   ],
+   "status": []
+  },
+  "R13": {
+   "labels_from": "results/part221",
+   "label_errors": 0,
+   "items_still_missing": null,
+   "label_errors_pass2": 0,
+   "items_still_missing_pass2": null,
+   "labelled": false,
+   "two_pass": {
+    "passes": false,
+    "reasons": [
+     "labels for one or both passes are missing"
+    ]
+   },
+   "unpushed_incoherent": null,
+   "inconclusive": null,
+   "slot_who": [
+    0,
+    21
+   ],
+   "slot_who_coherent": [
+    0,
+    21
+   ],
+   "concept_any": [
+    0,
+    18
+   ],
+   "slot_who_pass2": null,
+   "deepseek_agreement": null,
+   "labels_source": "this part's labels",
+   "note": "not labelled: R13 equals R1 token for token, so its rows are read through R1's labels (PART221-DESIGN.md, Method)",
+   "upstream_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-09",
+    "p92-13",
+    "p92-18",
+    "p92-24",
+    "p92-25",
+    "p92-32",
+    "p92-33",
+    "p92-35",
+    "p92-36",
+    "p92-37",
+    "p92-46",
+    "p92-47"
+   ],
+   "status": []
+  },
+  "R11": {
+   "labels_from": "results/part221",
+   "label_errors": 11,
+   "items_still_missing": 0,
+   "label_errors_pass2": 10,
+   "items_still_missing_pass2": 0,
+   "labelled": true,
+   "two_pass": {
+    "items": 42,
+    "compared": 42,
+    "shows_persona_agree": 40,
+    "coherent_agree": 41,
+    "slot_who_pass1": [
+     4,
+     21
+    ],
+    "slot_who_pass2": [
+     6,
+     21
+    ],
+    "passes": true,
+    "reasons": []
+   },
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    4,
+    21
+   ],
+   "slot_who_coherent": [
+    16,
+    21
+   ],
+   "concept_any": [
+    15,
+    18
+   ],
+   "slot_who_pass2": [
+    6,
+    21
+   ],
+   "deepseek_agreement": {
+    "items": 26,
+    "shows_persona_agree": 23,
+    "coherent_agree": 25,
+    "shows_persona_agreement": 0.8846,
+    "coherent_agreement": 0.9615
+   },
+   "labels_source": "this part's labels",
+   "upstream_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-09",
+    "p92-13",
+    "p92-18",
+    "p92-24",
+    "p92-25",
+    "p92-32",
+    "p92-33",
+    "p92-35",
+    "p92-36",
+    "p92-37",
+    "p92-46",
+    "p92-47"
+   ],
+   "status": []
+  },
+  "R12": {
+   "labels_from": "results/part221",
+   "label_errors": 18,
+   "items_still_missing": 0,
+   "label_errors_pass2": 15,
+   "items_still_missing_pass2": 0,
+   "labelled": true,
+   "two_pass": {
+    "items": 42,
+    "compared": 42,
+    "shows_persona_agree": 42,
+    "coherent_agree": 42,
+    "slot_who_pass1": [
+     12,
+     21
+    ],
+    "slot_who_pass2": [
+     12,
+     21
+    ],
+    "passes": true,
+    "reasons": []
+   },
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    12,
+    21
+   ],
+   "slot_who_coherent": [
+    18,
+    21
+   ],
+   "concept_any": [
+    16,
+    18
+   ],
+   "slot_who_pass2": [
+    12,
+    21
+   ],
+   "deepseek_agreement": {
+    "items": 26,
+    "shows_persona_agree": 23,
+    "coherent_agree": 25,
+    "shows_persona_agreement": 0.8846,
+    "coherent_agreement": 0.9615
+   },
+   "labels_source": "this part's labels",
+   "upstream_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-09",
+    "p92-13",
+    "p92-18",
+    "p92-24",
+    "p92-25",
+    "p92-32",
+    "p92-33",
+    "p92-35",
+    "p92-36",
+    "p92-37",
+    "p92-46",
+    "p92-47"
+   ],
+   "status": []
+  },
+  "R14": {
+   "labels_from": "results/part221",
+   "label_errors": 10,
+   "items_still_missing": 0,
+   "label_errors_pass2": 20,
+   "items_still_missing_pass2": 0,
+   "labelled": true,
+   "two_pass": {
+    "items": 42,
+    "compared": 42,
+    "shows_persona_agree": 42,
+    "coherent_agree": 42,
+    "slot_who_pass1": [
+     6,
+     21
+    ],
+    "slot_who_pass2": [
+     6,
+     21
+    ],
+    "passes": true,
+    "reasons": []
+   },
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    6,
+    21
+   ],
+   "slot_who_coherent": [
+    17,
+    21
+   ],
+   "concept_any": [
+    17,
+    18
+   ],
+   "slot_who_pass2": [
+    6,
+    21
+   ],
+   "deepseek_agreement": {
+    "items": 26,
+    "shows_persona_agree": 24,
+    "coherent_agree": 25,
+    "shows_persona_agreement": 0.9231,
+    "coherent_agreement": 0.9615
+   },
+   "labels_source": "this part's labels",
+   "upstream_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-09",
+    "p92-13",
+    "p92-18",
+    "p92-24",
+    "p92-25",
+    "p92-32",
+    "p92-33",
+    "p92-35",
+    "p92-36",
+    "p92-37",
+    "p92-46",
+    "p92-47"
+   ],
+   "status": []
+  },
+  "R15": {
+   "labels_from": "results/part221",
+   "label_errors": 7,
+   "items_still_missing": 0,
+   "label_errors_pass2": 4,
+   "items_still_missing_pass2": 0,
+   "labelled": true,
+   "two_pass": {
+    "items": 42,
+    "compared": 42,
+    "shows_persona_agree": 42,
+    "coherent_agree": 42,
+    "slot_who_pass1": [
+     11,
+     21
+    ],
+    "slot_who_pass2": [
+     11,
+     21
+    ],
+    "passes": true,
+    "reasons": []
+   },
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    11,
+    21
+   ],
+   "slot_who_coherent": [
+    18,
+    21
+   ],
+   "concept_any": [
+    17,
+    18
+   ],
+   "slot_who_pass2": [
+    11,
+    21
+   ],
+   "deepseek_agreement": {
+    "items": 26,
+    "shows_persona_agree": 24,
+    "coherent_agree": 25,
+    "shows_persona_agreement": 0.9231,
+    "coherent_agreement": 0.9615
+   },
+   "labels_source": "this part's labels",
+   "upstream_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-09",
+    "p92-13",
+    "p92-18",
+    "p92-24",
+    "p92-25",
+    "p92-32",
+    "p92-33",
+    "p92-35",
+    "p92-36",
+    "p92-37",
+    "p92-46",
+    "p92-47"
+   ],
+   "status": []
+  },
+  "R16": {
+   "labels_from": "results/part221",
+   "label_errors": 14,
+   "items_still_missing": 0,
+   "label_errors_pass2": 13,
+   "items_still_missing_pass2": 0,
+   "labelled": true,
+   "two_pass": {
+    "items": 42,
+    "compared": 42,
+    "shows_persona_agree": 42,
+    "coherent_agree": 42,
+    "slot_who_pass1": [
+     14,
+     21
+    ],
+    "slot_who_pass2": [
+     14,
+     21
+    ],
+    "passes": true,
+    "reasons": []
+   },
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    14,
+    21
+   ],
+   "slot_who_coherent": [
+    17,
+    21
+   ],
+   "concept_any": [
+    17,
+    18
+   ],
+   "slot_who_pass2": [
+    14,
+    21
+   ],
+   "deepseek_agreement": {
+    "items": 26,
+    "shows_persona_agree": 24,
+    "coherent_agree": 25,
+    "shows_persona_agreement": 0.9231,
+    "coherent_agreement": 0.9615
+   },
+   "labels_source": "this part's labels",
+   "upstream_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-09",
+    "p92-13",
+    "p92-18",
+    "p92-24",
+    "p92-25",
+    "p92-32",
+    "p92-33",
+    "p92-35",
+    "p92-36",
+    "p92-37",
+    "p92-46",
+    "p92-47"
+   ],
+   "status": []
+  },
+  "R17": {
+   "labels_from": "results/part221",
+   "label_errors": 7,
+   "items_still_missing": 0,
+   "label_errors_pass2": 4,
+   "items_still_missing_pass2": 0,
+   "labelled": true,
+   "two_pass": {
+    "items": 42,
+    "compared": 42,
+    "shows_persona_agree": 41,
+    "coherent_agree": 42,
+    "slot_who_pass1": [
+     13,
+     21
+    ],
+    "slot_who_pass2": [
+     12,
+     21
+    ],
+    "passes": true,
+    "reasons": []
+   },
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    13,
+    21
+   ],
+   "slot_who_coherent": [
+    18,
+    21
+   ],
+   "concept_any": [
+    17,
+    18
+   ],
+   "slot_who_pass2": [
+    12,
+    21
+   ],
+   "deepseek_agreement": {
+    "items": 26,
+    "shows_persona_agree": 23,
+    "coherent_agree": 25,
+    "shows_persona_agreement": 0.8846,
+    "coherent_agreement": 0.9615
+   },
+   "labels_source": "this part's labels",
+   "upstream_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-09",
+    "p92-13",
+    "p92-18",
+    "p92-24",
+    "p92-25",
+    "p92-32",
+    "p92-33",
+    "p92-35",
+    "p92-36",
+    "p92-37",
+    "p92-46",
+    "p92-47"
+   ],
+   "status": []
+  }
+ },
+ "nets_upstream_against_R0": {
+  "R1": {
+   "units_paired": 16,
+   "lost": 11,
+   "gained": 0,
+   "net": 11,
+   "lost_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-13",
+    "p92-18",
+    "p92-24",
+    "p92-25",
+    "p92-36",
+    "p92-37",
+    "p92-47"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 0.0009765625
+  },
+  "R11": {
+   "units_paired": 16,
+   "lost": 11,
+   "gained": 0,
+   "net": 11,
+   "lost_units": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-13",
+    "p92-18",
+    "p92-24",
+    "p92-25",
+    "p92-36",
+    "p92-37",
+    "p92-47"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 0.0009765625
+  },
+  "R12": {
+   "units_paired": 16,
+   "lost": 7,
+   "gained": 1,
+   "net": 6,
+   "lost_units": [
+    "p92-02",
+    "p92-05",
+    "p92-13",
+    "p92-18",
+    "p92-35",
+    "p92-36",
+    "p92-47"
+   ],
+   "gained_units": [
+    "p92-32"
+   ],
+   "mcnemar_p": 0.0703125
+  },
+  "R14": {
+   "units_paired": 16,
+   "lost": 9,
+   "gained": 0,
+   "net": 9,
+   "lost_units": [
+    "p92-02",
+    "p92-04",
+    "p92-05",
+    "p92-13",
+    "p92-33",
+    "p92-35",
+    "p92-36",
+    "p92-37",
+    "p92-47"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 0.00390625
+  },
+  "R15": {
+   "units_paired": 16,
+   "lost": 6,
+   "gained": 0,
+   "net": 6,
+   "lost_units": [
+    "p92-02",
+    "p92-04",
+    "p92-05",
+    "p92-13",
+    "p92-18",
+    "p92-36"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 0.03125
+  },
+  "R16": {
+   "units_paired": 16,
+   "lost": 2,
+   "gained": 0,
+   "net": 2,
+   "lost_units": [
+    "p92-05",
+    "p92-47"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 0.5
+  },
+  "R17": {
+   "units_paired": 16,
+   "lost": 3,
+   "gained": 0,
+   "net": 3,
+   "lost_units": [
+    "p92-04",
+    "p92-05",
+    "p92-47"
+   ],
+   "gained_units": [],
+   "mcnemar_p": 0.25
+  }
+ },
+ "coupling": {
+  "R13": {
+   "kept_head_drift": {
+    "kept_heads": [
+     "L0H10",
+     "L1H4",
+     "L2H6",
+     "L3H5"
+    ],
+    "per_layer": [
+     {
+      "layer": 0,
+      "kept_head_drift": {},
+      "rms_relative_change": {
+       "rms_q": -0.0038043642983135242,
+       "rms_k": -0.016587189199672798,
+       "rms_attention_output": -0.02173434936944366
+      }
+     },
+     {
+      "layer": 1,
+      "kept_head_drift": {},
+      "rms_relative_change": {
+       "rms_q": 0.037332114398919036,
+       "rms_k": 0.012966380272730197,
+       "rms_attention_output": -0.18068239147857718
+      }
+     },
+     {
+      "layer": 2,
+      "kept_head_drift": {},
+      "rms_relative_change": {
+       "rms_q": 0.09281935256428972,
+       "rms_k": 0.041923715946013816,
+       "rms_attention_output": -0.13125414726911735
+      }
+     },
+     {
+      "layer": 3,
+      "kept_head_drift": {},
+      "rms_relative_change": {
+       "rms_q": 0.07050806301535062,
+       "rms_k": -0.1387418574955002,
+       "rms_attention_output": -0.17376302347696262
+      }
+     }
+    ],
+    "max_kept_head_drift": null,
+    "max_kept_head_drift_layer": null,
+    "max_abs_rms_attention_output_change": 0.18068239147857718,
+    "max_abs_rms_attention_output_change_layer": 1
+   },
+   "max_kept_head_drift": null,
+   "max_abs_rms_attention_output_change": 0.18068239147857718,
+   "sign_flip_receipt": {
+    "rule": "sign(x) = -1 for x < 0, 0 for x == 0, +1 for x > 0; zero counts as its own sign; an element flips when the sign after the write differs from the sign of Instruct's value before it; counted over the slices the run wrote",
+    "per_layer": [
+     {
+      "layer": 0,
+      "heads": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       5,
+       6,
+       7,
+       8,
+       9,
+       10,
+       11,
+       12,
+       13,
+       14,
+       15
+      ],
+      "q_norm": {
+       "elements": 2048,
+       "flips": 147,
+       "zero_before": 0,
+       "zero_after": 0
+      },
+      "k_norm": {
+       "elements": 2048,
+       "flips": 126,
+       "zero_before": 0,
+       "zero_after": 0
+      }
+     },
+     {
+      "layer": 1,
+      "heads": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       5,
+       6,
+       7,
+       8,
+       9,
+       10,
+       11,
+       12,
+       13,
+       14,
+       15
+      ],
+      "q_norm": {
+       "elements": 2048,
+       "flips": 59,
+       "zero_before": 0,
+       "zero_after": 0
+      },
+      "k_norm": {
+       "elements": 2048,
+       "flips": 92,
+       "zero_before": 0,
+       "zero_after": 0
+      }
+     },
+     {
+      "layer": 2,
+      "heads": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       5,
+       6,
+       7,
+       8,
+       9,
+       10,
+       11,
+       12,
+       13,
+       14,
+       15
+      ],
+      "q_norm": {
+       "elements": 2048,
+       "flips": 31,
+       "zero_before": 0,
+       "zero_after": 0
+      },
+      "k_norm": {
+       "elements": 2048,
+       "flips": 54,
+       "zero_before": 0,
+       "zero_after": 0
+      }
+     },
+     {
+      "layer": 3,
+      "heads": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       5,
+       6,
+       7,
+       8,
+       9,
+       10,
+       11,
+       12,
+       13,
+       14,
+       15
+      ],
+      "q_norm": {
+       "elements": 2048,
+       "flips": 26,
+       "zero_before": 0,
+       "zero_after": 0
+      },
+      "k_norm": {
+       "elements": 2048,
+       "flips": 38,
+       "zero_before": 0,
+       "zero_after": 0
+      }
+     }
+    ],
+    "total_flips": 573,
+    "total_elements": 16384
+   },
+   "norm_ratio_range": {
+    "count": 384,
+    "min": 0.9678374743289023,
+    "max": 1.0111676334981652,
+    "records_without_a_ratio": 0
+   }
+  },
+  "R11": {
+   "kept_head_drift": {
+    "kept_heads": [
+     "L0H10",
+     "L1H4",
+     "L2H6",
+     "L3H5"
+    ],
+    "per_layer": [
+     {
+      "layer": 0,
+      "kept_head_drift": {
+       "L0H10": 0.03124541593636241
+      },
+      "rms_relative_change": {
+       "rms_q": -0.0013450539923814263,
+       "rms_k": -0.014491122291808939,
+       "rms_attention_output": -0.018669528919111063
+      }
+     },
+     {
+      "layer": 1,
+      "kept_head_drift": {
+       "L1H4": 0.2094916848676775
+      },
+      "rms_relative_change": {
+       "rms_q": 0.036160229809960066,
+       "rms_k": 0.014289064801269341,
+       "rms_attention_output": -0.10310559284866685
+      }
+     },
+     {
+      "layer": 2,
+      "kept_head_drift": {
+       "L2H6": 0.12652115923749213
+      },
+      "rms_relative_change": {
+       "rms_q": 0.07076390302103837,
+       "rms_k": 0.026274663753073156,
+       "rms_attention_output": -0.008414097377551675
+      }
+     },
+     {
+      "layer": 3,
+      "kept_head_drift": {
+       "L3H5": 0.18041096405917392
+      },
+      "rms_relative_change": {
+       "rms_q": 0.04274200062008532,
+       "rms_k": -0.14343797544129036,
+       "rms_attention_output": -0.078694120513375
+      }
+     }
+    ],
+    "max_kept_head_drift": 0.2094916848676775,
+    "max_kept_head_drift_layer": 1,
+    "max_abs_rms_attention_output_change": 0.10310559284866685,
+    "max_abs_rms_attention_output_change_layer": 1
+   },
+   "max_kept_head_drift": 0.2094916848676775,
+   "max_abs_rms_attention_output_change": 0.10310559284866685,
+   "sign_flip_receipt": {
+    "rule": "sign(x) = -1 for x < 0, 0 for x == 0, +1 for x > 0; zero counts as its own sign; an element flips when the sign after the write differs from the sign of Instruct's value before it; counted over the slices the run wrote",
+    "per_layer": [
+     {
+      "layer": 0,
+      "heads": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       5,
+       6,
+       7,
+       8,
+       9,
+       11,
+       12,
+       13,
+       14,
+       15
+      ],
+      "q_norm": {
+       "elements": 1920,
+       "flips": 144,
+       "zero_before": 0,
+       "zero_after": 0
+      },
+      "k_norm": {
+       "elements": 1920,
+       "flips": 119,
+       "zero_before": 0,
+       "zero_after": 0
+      }
+     },
+     {
+      "layer": 1,
+      "heads": [
+       0,
+       1,
+       2,
+       3,
+       5,
+       6,
+       7,
+       8,
+       9,
+       10,
+       11,
+       12,
+       13,
+       14,
+       15
+      ],
+      "q_norm": {
+       "elements": 1920,
+       "flips": 53,
+       "zero_before": 0,
+       "zero_after": 0
+      },
+      "k_norm": {
+       "elements": 1920,
+       "flips": 83,
+       "zero_before": 0,
+       "zero_after": 0
+      }
+     },
+     {
+      "layer": 2,
+      "heads": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       5,
+       7,
+       8,
+       9,
+       10,
+       11,
+       12,
+       13,
+       14,
+       15
+      ],
+      "q_norm": {
+       "elements": 1920,
+       "flips": 30,
+       "zero_before": 0,
+       "zero_after": 0
+      },
+      "k_norm": {
+       "elements": 1920,
+       "flips": 51,
+       "zero_before": 0,
+       "zero_after": 0
+      }
+     },
+     {
+      "layer": 3,
+      "heads": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       6,
+       7,
+       8,
+       9,
+       10,
+       11,
+       12,
+       13,
+       14,
+       15
+      ],
+      "q_norm": {
+       "elements": 1920,
+       "flips": 21,
+       "zero_before": 0,
+       "zero_after": 0
+      },
+      "k_norm": {
+       "elements": 1920,
+       "flips": 35,
+       "zero_before": 0,
+       "zero_after": 0
+      }
+     }
+    ],
+    "total_flips": 536,
+    "total_elements": 15360
+   },
+   "norm_ratio_range": {
+    "count": 360,
+    "min": 0.9678374743289023,
+    "max": 1.0111676334981652,
+    "records_without_a_ratio": 0
+   }
+  },
+  "R12": {
+   "kept_head_drift": {
+    "kept_heads": [
+     "L0H10",
+     "L1H4",
+     "L2H6",
+     "L3H5"
+    ],
+    "per_layer": [
+     {
+      "layer": 0,
+      "kept_head_drift": {
+       "L0H10": 0.08687387083726573
+      },
+      "rms_relative_change": {
+       "rms_q": 0.013584503841599939,
+       "rms_k": 0.042858271166664436,
+       "rms_attention_output": 0.008577127673343714
+      }
+     },
+     {
+      "layer": 1,
+      "kept_head_drift": {
+       "L1H4": 0.149974309208229
+      },
+      "rms_relative_change": {
+       "rms_q": 0.011707583604594797,
+       "rms_k": 0.038625061573458686,
+       "rms_attention_output": 0.1186025264793671
+      }
+     },
+     {
+      "layer": 2,
+      "kept_head_drift": {
+       "L2H6": 0.10469770402009416
+      },
+      "rms_relative_change": {
+       "rms_q": -0.027951588085621145,
+       "rms_k": 0.02386650840500389,
+       "rms_attention_output": -0.016477893665001433
+      }
+     },
+     {
+      "layer": 3,
+      "kept_head_drift": {
+       "L3H5": 0.11058510437436786
+      },
+      "rms_relative_change": {
+       "rms_q": -0.002368275534211838,
+       "rms_k": 0.16087555363074657,
+       "rms_attention_output": -0.05611297196381709
+      }
+     }
+    ],
+    "max_kept_head_drift": 0.149974309208229,
+    "max_kept_head_drift_layer": 1,
+    "max_abs_rms_attention_output_change": 0.1186025264793671,
+    "max_abs_rms_attention_output_change_layer": 1
+   },
+   "max_kept_head_drift": 0.149974309208229,
+   "max_abs_rms_attention_output_change": 0.1186025264793671,
+   "sign_flip_receipt": {
+    "rule": "sign(x) = -1 for x < 0, 0 for x == 0, +1 for x > 0; zero counts as its own sign; an element flips when the sign after the write differs from the sign of Instruct's value before it; counted over the slices the run wrote",
+    "per_layer": [
+     {
+      "layer": 0,
+      "heads": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       5,
+       6,
+       7,
+       8,
+       9,
+       11,
+       12,
+       13,
+       14,
+       15
+      ],
+      "q_norm": {
+       "elements": 1920,
+       "flips": 46,
+       "zero_before": 0,
+       "zero_after": 0
+      },
+      "k_norm": {
+       "elements": 1920,
+       "flips": 24,
+       "zero_before": 0,
+       "zero_after": 0
+      }
+     },
+     {
+      "layer": 1,
+      "heads": [
+       0,
+       1,
+       2,
+       3,
+       5,
+       6,
+       7,
+       8,
+       9,
+       10,
+       11,
+       12,
+       13,
+       14,
+       15
+      ],
+      "q_norm": {
+       "elements": 1920,
+       "flips": 17,
+       "zero_before": 0,
+       "zero_after": 0
+      },
+      "k_norm": {
+       "elements": 1920,
+       "flips": 17,
+       "zero_before": 0,
+       "zero_after": 0
+      }
+     },
+     {
+      "layer": 2,
+      "heads": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       5,
+       7,
+       8,
+       9,
+       10,
+       11,
+       12,
+       13,
+       14,
+       15
+      ],
+      "q_norm": {
+       "elements": 1920,
+       "flips": 10,
+       "zero_before": 0,
+       "zero_after": 0
+      },
+      "k_norm": {
+       "elements": 1920,
+       "flips": 4,
+       "zero_before": 0,
+       "zero_after": 0
+      }
+     },
+     {
+      "layer": 3,
+      "heads": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       6,
+       7,
+       8,
+       9,
+       10,
+       11,
+       12,
+       13,
+       14,
+       15
+      ],
+      "q_norm": {
+       "elements": 1920,
+       "flips": 2,
+       "zero_before": 0,
+       "zero_after": 0
+      },
+      "k_norm": {
+       "elements": 1920,
+       "flips": 8,
+       "zero_before": 0,
+       "zero_after": 0
+      }
+     }
+    ],
+    "total_flips": 128,
+    "total_elements": 15360
+   },
+   "norm_ratio_range": {
+    "count": 360,
+    "min": 0.9991035640059426,
+    "max": 1.1021220205828162,
+    "records_without_a_ratio": 0
+   }
+  },
+  "R14": {
+   "kept_head_drift": {
+    "kept_heads": [
+     "L0H10",
+     "L1H4",
+     "L2H6",
+     "L3H5"
+    ],
+    "per_layer": [
+     {
+      "layer": 0,
+      "kept_head_drift": {
+       "L0H10": 0.03124541593636241
+      },
+      "rms_relative_change": {
+       "rms_q": -0.0013450539923814263,
+       "rms_k": -0.014491122291808939,
+       "rms_attention_output": -0.018669528919111063
+      }
+     }
+    ],
+    "max_kept_head_drift": 0.03124541593636241,
+    "max_kept_head_drift_layer": 0,
+    "max_abs_rms_attention_output_change": 0.018669528919111063,
+    "max_abs_rms_attention_output_change_layer": 0
+   },
+   "max_kept_head_drift": 0.03124541593636241,
+   "max_abs_rms_attention_output_change": 0.018669528919111063,
+   "sign_flip_receipt": {
+    "rule": "sign(x) = -1 for x < 0, 0 for x == 0, +1 for x > 0; zero counts as its own sign; an element flips when the sign after the write differs from the sign of Instruct's value before it; counted over the slices the run wrote",
+    "per_layer": [
+     {
+      "layer": 0,
+      "heads": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       5,
+       6,
+       7,
+       8,
+       9,
+       11,
+       12,
+       13,
+       14,
+       15
+      ],
+      "q_norm": {
+       "elements": 1920,
+       "flips": 144,
+       "zero_before": 0,
+       "zero_after": 0
+      },
+      "k_norm": {
+       "elements": 1920,
+       "flips": 119,
+       "zero_before": 0,
+       "zero_after": 0
+      }
+     }
+    ],
+    "total_flips": 263,
+    "total_elements": 3840
+   },
+   "norm_ratio_range": {
+    "count": 90,
+    "min": 0.9678374743289023,
+    "max": 1.0111676334981652,
+    "records_without_a_ratio": 0
+   }
+  },
+  "R15": {
+   "kept_head_drift": {
+    "kept_heads": [
+     "L0H10",
+     "L1H4",
+     "L2H6",
+     "L3H5"
+    ],
+    "per_layer": [
+     {
+      "layer": 1,
+      "kept_head_drift": {
+       "L1H4": 0.01727167264900624
+      },
+      "rms_relative_change": {
+       "rms_q": -0.011661050810304545,
+       "rms_k": -0.01862977704838498,
+       "rms_attention_output": -0.045149381155584284
+      }
+     }
+    ],
+    "max_kept_head_drift": 0.01727167264900624,
+    "max_kept_head_drift_layer": 1,
+    "max_abs_rms_attention_output_change": 0.045149381155584284,
+    "max_abs_rms_attention_output_change_layer": 1
+   },
+   "max_kept_head_drift": 0.01727167264900624,
+   "max_abs_rms_attention_output_change": 0.045149381155584284,
+   "sign_flip_receipt": {
+    "rule": "sign(x) = -1 for x < 0, 0 for x == 0, +1 for x > 0; zero counts as its own sign; an element flips when the sign after the write differs from the sign of Instruct's value before it; counted over the slices the run wrote",
+    "per_layer": [
+     {
+      "layer": 1,
+      "heads": [
+       0,
+       1,
+       2,
+       3,
+       5,
+       6,
+       7,
+       8,
+       9,
+       10,
+       11,
+       12,
+       13,
+       14,
+       15
+      ],
+      "q_norm": {
+       "elements": 1920,
+       "flips": 53,
+       "zero_before": 0,
+       "zero_after": 0
+      },
+      "k_norm": {
+       "elements": 1920,
+       "flips": 83,
+       "zero_before": 0,
+       "zero_after": 0
+      }
+     }
+    ],
+    "total_flips": 136,
+    "total_elements": 3840
+   },
+   "norm_ratio_range": {
+    "count": 90,
+    "min": 0.9881206727568902,
+    "max": 0.9993623358546287,
+    "records_without_a_ratio": 0
+   }
+  },
+  "R16": {
+   "kept_head_drift": {
+    "kept_heads": [
+     "L0H10",
+     "L1H4",
+     "L2H6",
+     "L3H5"
+    ],
+    "per_layer": [
+     {
+      "layer": 2,
+      "kept_head_drift": {
+       "L2H6": 0.019555945369278686
+      },
+      "rms_relative_change": {
+       "rms_q": -0.008137939268966846,
+       "rms_k": -0.02439384169290227,
+       "rms_attention_output": -0.02535000660945453
+      }
+     }
+    ],
+    "max_kept_head_drift": 0.019555945369278686,
+    "max_kept_head_drift_layer": 2,
+    "max_abs_rms_attention_output_change": 0.02535000660945453,
+    "max_abs_rms_attention_output_change_layer": 2
+   },
+   "max_kept_head_drift": 0.019555945369278686,
+   "max_abs_rms_attention_output_change": 0.02535000660945453,
+   "sign_flip_receipt": {
+    "rule": "sign(x) = -1 for x < 0, 0 for x == 0, +1 for x > 0; zero counts as its own sign; an element flips when the sign after the write differs from the sign of Instruct's value before it; counted over the slices the run wrote",
+    "per_layer": [
+     {
+      "layer": 2,
+      "heads": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       5,
+       7,
+       8,
+       9,
+       10,
+       11,
+       12,
+       13,
+       14,
+       15
+      ],
+      "q_norm": {
+       "elements": 1920,
+       "flips": 30,
+       "zero_before": 0,
+       "zero_after": 0
+      },
+      "k_norm": {
+       "elements": 1920,
+       "flips": 51,
+       "zero_before": 0,
+       "zero_after": 0
+      }
+     }
+    ],
+    "total_flips": 81,
+    "total_elements": 3840
+   },
+   "norm_ratio_range": {
+    "count": 90,
+    "min": 0.9877799840213387,
+    "max": 1.0036578052731173,
+    "records_without_a_ratio": 0
+   }
+  },
+  "R17": {
+   "kept_head_drift": {
+    "kept_heads": [
+     "L0H10",
+     "L1H4",
+     "L2H6",
+     "L3H5"
+    ],
+    "per_layer": [
+     {
+      "layer": 3,
+      "kept_head_drift": {
+       "L3H5": 0.02053092971144897
+      },
+      "rms_relative_change": {
+       "rms_q": -0.0045543555674201815,
+       "rms_k": -0.023799752554271626,
+       "rms_attention_output": -0.012832309365949196
+      }
+     }
+    ],
+    "max_kept_head_drift": 0.02053092971144897,
+    "max_kept_head_drift_layer": 3,
+    "max_abs_rms_attention_output_change": 0.012832309365949196,
+    "max_abs_rms_attention_output_change_layer": 3
+   },
+   "max_kept_head_drift": 0.02053092971144897,
+   "max_abs_rms_attention_output_change": 0.012832309365949196,
+   "sign_flip_receipt": {
+    "rule": "sign(x) = -1 for x < 0, 0 for x == 0, +1 for x > 0; zero counts as its own sign; an element flips when the sign after the write differs from the sign of Instruct's value before it; counted over the slices the run wrote",
+    "per_layer": [
+     {
+      "layer": 3,
+      "heads": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       6,
+       7,
+       8,
+       9,
+       10,
+       11,
+       12,
+       13,
+       14,
+       15
+      ],
+      "q_norm": {
+       "elements": 1920,
+       "flips": 21,
+       "zero_before": 0,
+       "zero_after": 0
+      },
+      "k_norm": {
+       "elements": 1920,
+       "flips": 35,
+       "zero_before": 0,
+       "zero_after": 0
+      }
+     }
+    ],
+    "total_flips": 56,
+    "total_elements": 3840
+   },
+   "norm_ratio_range": {
+    "count": 90,
+    "min": 0.9909077931834005,
+    "max": 0.9992905885219263,
+    "records_without_a_ratio": 0
+   }
+  }
+ },
+ "predictions": {
+  "221.1": {
+   "held": true,
+   "detail": {
+    "units_paired": 16,
+    "lost": 11,
+    "gained": 0,
+    "net": 11,
+    "lost_units": [
+     "p92-02",
+     "p92-03",
+     "p92-04",
+     "p92-05",
+     "p92-13",
+     "p92-18",
+     "p92-24",
+     "p92-25",
+     "p92-36",
+     "p92-37",
+     "p92-47"
+    ],
+    "gained_units": [],
+    "mcnemar_p": 0.0009765625
+   },
+   "min_net": 7,
+   "coherence_bar": {
+    "slot_who_coherent": [
+     16,
+     21
+    ],
+    "min_slot_coherent": 15,
+    "concept_any": [
+     15,
+     18
+    ],
+    "min_concept": 13,
+    "inconclusive": false,
+    "held": true
+   },
+   "verdict": "held",
+   "note": "the 16 upstream slot units, net loss against this part's R0, paired with each run's own unpushed answer"
+  },
+  "221.2": {
+   "held": true,
+   "min_margin": 2,
+   "detail": {
+    "R11_net": 11,
+    "R1_net": 11,
+    "required": "R11 net >= R1 net - 2",
+    "excess_over_additive": 0,
+    "R11_lost_units": [
+     "p92-02",
+     "p92-03",
+     "p92-04",
+     "p92-05",
+     "p92-13",
+     "p92-18",
+     "p92-24",
+     "p92-25",
+     "p92-36",
+     "p92-37",
+     "p92-47"
+    ],
+    "R11_gained_units": [],
+    "R1_lost_units": [
+     "p92-02",
+     "p92-03",
+     "p92-04",
+     "p92-05",
+     "p92-13",
+     "p92-18",
+     "p92-24",
+     "p92-25",
+     "p92-36",
+     "p92-37",
+     "p92-47"
+    ],
+    "R1_gained_units": []
+   },
+   "verdict": "held"
+  },
+  "221.3": {
+   "held": false,
+   "alpha": 0.05,
+   "detail": {
+    "units_paired": 16,
+    "only_first": 1,
+    "only_second": 6,
+    "only_first_units": [
+     "p92-35"
+    ],
+    "only_second_units": [
+     "p92-03",
+     "p92-04",
+     "p92-24",
+     "p92-25",
+     "p92-32",
+     "p92-37"
+    ],
+    "mcnemar_p": 0.125
+   },
+   "coherence_bar": {
+    "slot_who_coherent": [
+     18,
+     21
+    ],
+    "min_slot_coherent": 15,
+    "concept_any": [
+     16,
+     18
+    ],
+    "min_concept": 13,
+    "inconclusive": false,
+    "held": true
+   },
+   "direction": {
+    "showing_in_R12_not_R11": 6,
+    "showing_in_R11_not_R12": 1
+   },
+   "unit_lists": {
+    "R11": {
+     "units_paired": 16,
+     "lost": 11,
+     "gained": 0,
+     "net": 11,
+     "lost_units": [
+      "p92-02",
+      "p92-03",
+      "p92-04",
+      "p92-05",
+      "p92-13",
+      "p92-18",
+      "p92-24",
+      "p92-25",
+      "p92-36",
+      "p92-37",
+      "p92-47"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.0009765625
+    },
+    "R12": {
+     "units_paired": 16,
+     "lost": 7,
+     "gained": 1,
+     "net": 6,
+     "lost_units": [
+      "p92-02",
+      "p92-05",
+      "p92-13",
+      "p92-18",
+      "p92-35",
+      "p92-36",
+      "p92-47"
+     ],
+     "gained_units": [
+      "p92-32"
+     ],
+     "mcnemar_p": 0.0703125
+    }
+   },
+   "verdict": "failed",
+   "note": "exact two-sided McNemar on the 16 upstream units; 'R11 losing more' is the R12-only discordant side"
+  }
+ },
+ "exploratory": {
+  "nets_against_R0": {
+   "R1": {
+    "upstream": {
+     "units_paired": 16,
+     "lost": 11,
+     "gained": 0,
+     "net": 11,
+     "lost_units": [
+      "p92-02",
+      "p92-03",
+      "p92-04",
+      "p92-05",
+      "p92-13",
+      "p92-18",
+      "p92-24",
+      "p92-25",
+      "p92-36",
+      "p92-37",
+      "p92-47"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.0009765625
+    },
+    "downstream": {
+     "units_paired": 5,
+     "lost": 5,
+     "gained": 0,
+     "net": 5,
+     "lost_units": [
+      "p92-07",
+      "p92-10",
+      "p92-20",
+      "p92-42",
+      "p92-50"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.0625
+    },
+    "all_21": {
+     "units_paired": 21,
+     "lost": 16,
+     "gained": 0,
+     "net": 16,
+     "lost_units": [
+      "p92-02",
+      "p92-03",
+      "p92-04",
+      "p92-05",
+      "p92-13",
+      "p92-18",
+      "p92-24",
+      "p92-25",
+      "p92-36",
+      "p92-37",
+      "p92-47",
+      "p92-07",
+      "p92-10",
+      "p92-20",
+      "p92-42",
+      "p92-50"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 3.0517578125e-05
+    },
+    "readable": true
+   },
+   "R11": {
+    "upstream": {
+     "units_paired": 16,
+     "lost": 11,
+     "gained": 0,
+     "net": 11,
+     "lost_units": [
+      "p92-02",
+      "p92-03",
+      "p92-04",
+      "p92-05",
+      "p92-13",
+      "p92-18",
+      "p92-24",
+      "p92-25",
+      "p92-36",
+      "p92-37",
+      "p92-47"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.0009765625
+    },
+    "downstream": {
+     "units_paired": 5,
+     "lost": 5,
+     "gained": 0,
+     "net": 5,
+     "lost_units": [
+      "p92-07",
+      "p92-10",
+      "p92-20",
+      "p92-42",
+      "p92-50"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.0625
+    },
+    "all_21": {
+     "units_paired": 21,
+     "lost": 16,
+     "gained": 0,
+     "net": 16,
+     "lost_units": [
+      "p92-02",
+      "p92-03",
+      "p92-04",
+      "p92-05",
+      "p92-13",
+      "p92-18",
+      "p92-24",
+      "p92-25",
+      "p92-36",
+      "p92-37",
+      "p92-47",
+      "p92-07",
+      "p92-10",
+      "p92-20",
+      "p92-42",
+      "p92-50"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 3.0517578125e-05
+    },
+    "readable": true
+   },
+   "R12": {
+    "upstream": {
+     "units_paired": 16,
+     "lost": 7,
+     "gained": 1,
+     "net": 6,
+     "lost_units": [
+      "p92-02",
+      "p92-05",
+      "p92-13",
+      "p92-18",
+      "p92-35",
+      "p92-36",
+      "p92-47"
+     ],
+     "gained_units": [
+      "p92-32"
+     ],
+     "mcnemar_p": 0.0703125
+    },
+    "downstream": {
+     "units_paired": 5,
+     "lost": 2,
+     "gained": 0,
+     "net": 2,
+     "lost_units": [
+      "p92-07",
+      "p92-20"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.5
+    },
+    "all_21": {
+     "units_paired": 21,
+     "lost": 9,
+     "gained": 1,
+     "net": 8,
+     "lost_units": [
+      "p92-02",
+      "p92-05",
+      "p92-13",
+      "p92-18",
+      "p92-35",
+      "p92-36",
+      "p92-47",
+      "p92-07",
+      "p92-20"
+     ],
+     "gained_units": [
+      "p92-32"
+     ],
+     "mcnemar_p": 0.021484375
+    },
+    "readable": true
+   },
+   "R14": {
+    "upstream": {
+     "units_paired": 16,
+     "lost": 9,
+     "gained": 0,
+     "net": 9,
+     "lost_units": [
+      "p92-02",
+      "p92-04",
+      "p92-05",
+      "p92-13",
+      "p92-33",
+      "p92-35",
+      "p92-36",
+      "p92-37",
+      "p92-47"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.00390625
+    },
+    "downstream": {
+     "units_paired": 5,
+     "lost": 5,
+     "gained": 0,
+     "net": 5,
+     "lost_units": [
+      "p92-07",
+      "p92-10",
+      "p92-20",
+      "p92-42",
+      "p92-50"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.0625
+    },
+    "all_21": {
+     "units_paired": 21,
+     "lost": 14,
+     "gained": 0,
+     "net": 14,
+     "lost_units": [
+      "p92-02",
+      "p92-04",
+      "p92-05",
+      "p92-13",
+      "p92-33",
+      "p92-35",
+      "p92-36",
+      "p92-37",
+      "p92-47",
+      "p92-07",
+      "p92-10",
+      "p92-20",
+      "p92-42",
+      "p92-50"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.0001220703125
+    },
+    "readable": true
+   },
+   "R15": {
+    "upstream": {
+     "units_paired": 16,
+     "lost": 6,
+     "gained": 0,
+     "net": 6,
+     "lost_units": [
+      "p92-02",
+      "p92-04",
+      "p92-05",
+      "p92-13",
+      "p92-18",
+      "p92-36"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.03125
+    },
+    "downstream": {
+     "units_paired": 5,
+     "lost": 3,
+     "gained": 0,
+     "net": 3,
+     "lost_units": [
+      "p92-07",
+      "p92-42",
+      "p92-50"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.25
+    },
+    "all_21": {
+     "units_paired": 21,
+     "lost": 9,
+     "gained": 0,
+     "net": 9,
+     "lost_units": [
+      "p92-02",
+      "p92-04",
+      "p92-05",
+      "p92-13",
+      "p92-18",
+      "p92-36",
+      "p92-07",
+      "p92-42",
+      "p92-50"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.00390625
+    },
+    "readable": true
+   },
+   "R16": {
+    "upstream": {
+     "units_paired": 16,
+     "lost": 2,
+     "gained": 0,
+     "net": 2,
+     "lost_units": [
+      "p92-05",
+      "p92-47"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.5
+    },
+    "downstream": {
+     "units_paired": 5,
+     "lost": 4,
+     "gained": 0,
+     "net": 4,
+     "lost_units": [
+      "p92-07",
+      "p92-10",
+      "p92-42",
+      "p92-50"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.125
+    },
+    "all_21": {
+     "units_paired": 21,
+     "lost": 6,
+     "gained": 0,
+     "net": 6,
+     "lost_units": [
+      "p92-05",
+      "p92-47",
+      "p92-07",
+      "p92-10",
+      "p92-42",
+      "p92-50"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.03125
+    },
+    "readable": true
+   },
+   "R17": {
+    "upstream": {
+     "units_paired": 16,
+     "lost": 3,
+     "gained": 0,
+     "net": 3,
+     "lost_units": [
+      "p92-04",
+      "p92-05",
+      "p92-47"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.25
+    },
+    "downstream": {
+     "units_paired": 5,
+     "lost": 4,
+     "gained": 0,
+     "net": 4,
+     "lost_units": [
+      "p92-07",
+      "p92-10",
+      "p92-20",
+      "p92-50"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.125
+    },
+    "all_21": {
+     "units_paired": 21,
+     "lost": 7,
+     "gained": 0,
+     "net": 7,
+     "lost_units": [
+      "p92-04",
+      "p92-05",
+      "p92-47",
+      "p92-07",
+      "p92-10",
+      "p92-20",
+      "p92-50"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.015625
+    },
+    "readable": true
+   }
+  },
+  "R14_to_R17": {
+   "R14": {
+    "readable": true,
+    "status": [],
+    "coherence_bar": {
+     "slot_who_coherent": [
+      17,
+      21
+     ],
+     "min_slot_coherent": 15,
+     "concept_any": [
+      17,
+      18
+     ],
+     "min_concept": 13,
+     "inconclusive": false,
+     "held": true
+    },
+    "below_coherence_bar": false,
+    "net_upstream": {
+     "units_paired": 16,
+     "lost": 9,
+     "gained": 0,
+     "net": 9,
+     "lost_units": [
+      "p92-02",
+      "p92-04",
+      "p92-05",
+      "p92-13",
+      "p92-33",
+      "p92-35",
+      "p92-36",
+      "p92-37",
+      "p92-47"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.00390625
+    },
+    "verdict": "read (exploratory)"
+   },
+   "R15": {
+    "readable": true,
+    "status": [],
+    "coherence_bar": {
+     "slot_who_coherent": [
+      18,
+      21
+     ],
+     "min_slot_coherent": 15,
+     "concept_any": [
+      17,
+      18
+     ],
+     "min_concept": 13,
+     "inconclusive": false,
+     "held": true
+    },
+    "below_coherence_bar": false,
+    "net_upstream": {
+     "units_paired": 16,
+     "lost": 6,
+     "gained": 0,
+     "net": 6,
+     "lost_units": [
+      "p92-02",
+      "p92-04",
+      "p92-05",
+      "p92-13",
+      "p92-18",
+      "p92-36"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.03125
+    },
+    "verdict": "read (exploratory)"
+   },
+   "R16": {
+    "readable": true,
+    "status": [],
+    "coherence_bar": {
+     "slot_who_coherent": [
+      17,
+      21
+     ],
+     "min_slot_coherent": 15,
+     "concept_any": [
+      17,
+      18
+     ],
+     "min_concept": 13,
+     "inconclusive": false,
+     "held": true
+    },
+    "below_coherence_bar": false,
+    "net_upstream": {
+     "units_paired": 16,
+     "lost": 2,
+     "gained": 0,
+     "net": 2,
+     "lost_units": [
+      "p92-05",
+      "p92-47"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.5
+    },
+    "verdict": "read (exploratory)"
+   },
+   "R17": {
+    "readable": true,
+    "status": [],
+    "coherence_bar": {
+     "slot_who_coherent": [
+      18,
+      21
+     ],
+     "min_slot_coherent": 15,
+     "concept_any": [
+      17,
+      18
+     ],
+     "min_concept": 13,
+     "inconclusive": false,
+     "held": true
+    },
+    "below_coherence_bar": false,
+    "net_upstream": {
+     "units_paired": 16,
+     "lost": 3,
+     "gained": 0,
+     "net": 3,
+     "lost_units": [
+      "p92-04",
+      "p92-05",
+      "p92-47"
+     ],
+     "gained_units": [],
+     "mcnemar_p": 0.25
+    },
+    "verdict": "read (exploratory)"
+   }
+  },
+  "R11_R12_overlap": {
+   "lost_both": [
+    "p92-02",
+    "p92-05",
+    "p92-13",
+    "p92-18",
+    "p92-36",
+    "p92-47"
+   ],
+   "lost_only_R11": [
+    "p92-03",
+    "p92-04",
+    "p92-24",
+    "p92-25",
+    "p92-37"
+   ],
+   "lost_only_R12": [
+    "p92-35"
+   ],
+   "gained_both": [],
+   "gained_only_R11": [],
+   "gained_only_R12": [
+    "p92-32"
+   ],
+   "counts": {
+    "lost_both": 6,
+    "lost_only_R11": 5,
+    "lost_only_R12": 1,
+    "gained_both": 0,
+    "gained_only_R11": 0,
+    "gained_only_R12": 1
+   }
+  },
+  "part219": {
+   "available": true,
+   "dir": "results/part219",
+   "R1": {
+    "units_paired": 16,
+    "lost": 11,
+    "gained": 0,
+    "net": 11,
+    "lost_units": [
+     "p92-02",
+     "p92-03",
+     "p92-04",
+     "p92-05",
+     "p92-13",
+     "p92-18",
+     "p92-24",
+     "p92-25",
+     "p92-36",
+     "p92-37",
+     "p92-47"
+    ],
+    "gained_units": [],
+    "mcnemar_p": 0.0009765625
+   },
+   "R8": {
+    "units_paired": 16,
+    "lost": 4,
+    "gained": 1,
+    "net": 3,
+    "lost_units": [
+     "p92-05",
+     "p92-13",
+     "p92-18",
+     "p92-37"
+    ],
+    "gained_units": [
+     "p92-32"
+    ],
+    "mcnemar_p": 0.375
+   }
+  },
+  "R11_plus_part219_R8_against_R1": {
+   "R11_net": 11,
+   "part219_R8_net": 3,
+   "sum": 14,
+   "part219_R1_net": 11,
+   "difference_from_part219_R1": 3,
+   "note": "a sum, not a decomposition: the parts interact through the shared QK and post-attention norms (PART221-DESIGN.md, Limits)"
+  }
+ },
+ "headlines": [
+  "transplanting the other sixty early heads removes nearly as much as the whole band does (at least the band's net loss minus 2), with the four heads' weights left as Instruct's, under an early attention whose normalisation context and other heads changed (R11: largest kept-head pre-norm drift 20.95%, largest |change in rms(attention output)| 10.31%; R12: largest kept-head pre-norm drift 15.00%, largest |change in rms(attention output)| 11.86%), and R12, the one opposite direction tested, removed R11's count within the test's resolution"
+ ]
+}

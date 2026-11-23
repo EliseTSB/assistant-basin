@@ -78,7 +78,7 @@ def score_run(labels_dir: Path, tag: str, ids, slot, concept) -> dict:
     labels_dir = Path(labels_dir)
     pass1, errors1, missing1 = load_labels(labels_dir / f"labels-{tag}.jsonl")
     pass2, errors2, missing2 = load_labels(labels_dir / f"labels2-{tag}.jsonl")
-    entry = {"labels_from": str(labels_dir), "label_errors": errors1, "items_still_missing": missing1,
+    entry = {"labels_from": score219._repo_relative(labels_dir), "label_errors": errors1, "items_still_missing": missing1,
              "label_errors_pass2": errors2, "items_still_missing_pass2": missing2,
              "labelled": bool(pass1),
              "two_pass": score219.two_pass_gate(pass1, pass2, slot) if pass1 and pass2 else
@@ -280,7 +280,7 @@ def part219_nets(part219_dir: Path, upstream) -> dict:
     r0, _e0, _m0 = load_labels(Path(part219_dir) / "labels-R0.jsonl")
     if not r0:
         return {"available": False, "because": f"{Path(part219_dir) / 'labels-R0.jsonl'} is missing or empty"}
-    result = {"available": True, "dir": str(part219_dir)}
+    result = {"available": True, "dir": score219._repo_relative(Path(part219_dir))}
     for tag in ("R1", "R8"):
         lab, _errors, _missing = load_labels(Path(part219_dir) / f"labels-{tag}.jsonl")
         result[tag] = score219.net_against(r0, lab, upstream) if lab else None
