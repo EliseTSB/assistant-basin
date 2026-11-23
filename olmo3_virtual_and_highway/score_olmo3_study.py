@@ -7,6 +7,7 @@ machine (including Gemini Task mode) can reproduce `scorecard.json` and `SCORECA
 from __future__ import annotations
 
 import argparse
+import gzip
 import hashlib
 import json
 import math
@@ -19,6 +20,38 @@ def sha256_file(path: Path) -> str:
     with path.open("rb") as f:
         for chunk in iter(lambda: f.read(1 << 20), b""):
             h.update(chunk)
+    return h.hexdigest()
+
+
+def resolve_json_path(directory: Path, stem_name: str) -> Path:
+    """Resolve `name.json` or `name.json.gz` transparently."""
+    plain = directory / stem_name
+    if plain.exists():
+        return plain
+    gz = directory / (stem_name + ".gz")
+    if gz.exists():
+        return gz
+    raise FileNotFoundError(f"Missing {plain} (and {gz})")
+
+
+def load_json_maybe_gz(path: Path) -> dict:
+    if path.suffix == ".gz":
+        with gzip.open(path, "rt", encoding="utf-8") as f:
+            return json.load(f)
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def sha256_uncompressed(path: Path) -> str:
+    """Hash uncompressed JSON bytes so plain and .json.gz receipts produce identical SHA-256."""
+    h = hashlib.sha256()
+    if path.suffix == ".gz":
+        with gzip.open(path, "rb") as f:
+            for chunk in iter(lambda: f.read(1 << 20), b""):
+                h.update(chunk)
+    else:
+        with path.open("rb") as f:
+            for chunk in iter(lambda: f.read(1 << 20), b""):
+                h.update(chunk)
     return h.hexdigest()
 
 
@@ -75,15 +108,15 @@ def mann_whitney_two_sided_z_p(x: list[float], y: list[float]) -> dict:
 
 
 def score_all(lens_dir: Path, exp_dir: Path) -> dict:
-    fit_meta_p = lens_dir / "fit_meta.json"
-    lens_an_p = lens_dir / "olmo3_lens_analysis.json"
-    census_p = lens_dir / "natural_neuron_census_preview.json"
-    exp_p = exp_dir / "olmo3_idea2_and_idea4_results.json"
+    fit_meta_p = resolve_json_path(lens_dir, "fit_meta.json")
+    lens_an_p = resolve_json_path(lens_dir, "olmo3_lens_analysis.json")
+    census_p = resolve_json_path(lens_dir, "natural_neuron_census_preview.json")
+    exp_p = resolve_json_path(exp_dir, "olmo3_idea2_and_idea4_results.json")
 
-    fit_meta = json.loads(fit_meta_p.read_text())
-    lens_an = json.loads(lens_an_p.read_text())
-    census = json.loads(census_p.read_text())
-    exp = json.loads(exp_p.read_text())
+    fit_meta = load_json_maybe_gz(fit_meta_p)
+    lens_an = load_json_maybe_gz(lens_an_p)
+    census = load_json_maybe_gz(census_p)
+    exp = load_json_maybe_gz(exp_p)
 
     # 1. Lens fit & cross-validation summary
     sh = fit_meta["split_half_fp32"]
@@ -341,10 +374,10 @@ def score_all(lens_dir: Path, exp_dir: Path) -> dict:
     return {
         "schema_version": "olmo3-study-scorecard-v1",
         "inputs_sha256": {
-            "fit_meta.json": sha256_file(fit_meta_p),
-            "olmo3_lens_analysis.json": sha256_file(lens_an_p),
-            "natural_neuron_census_preview.json": sha256_file(census_p),
-            "olmo3_idea2_and_idea4_results.json": sha256_file(exp_p),
+            "fit_meta.json": sha256_uncompressed(fit_meta_p),
+            "olmo3_lens_analysis.json": sha256_uncompressed(lens_an_p),
+            "natural_neuron_census_preview.json": sha256_uncompressed(census_p),
+            "olmo3_idea2_and_idea4_results.json": sha256_uncompressed(exp_p),
             "r_lens.pt": exp["meta"]["lens_provenance"].get("r_lens_sha256"),
             "s_lens.pt": exp["meta"]["lens_provenance"].get("s_lens_sha256"),
         },
