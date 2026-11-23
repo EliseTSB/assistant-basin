@@ -24,6 +24,9 @@ add it to the lessons log at the end, then move it into the list.
   disk.)
 - [ ] **Search the prior art** and record the closest work in `PRIOR-ART.md` and the design. (Part 29: a paper five
   days old had measured most of it.)
+- [ ] **For a design that follows from a result of ours, hand off a Gemini Deep Research survey** (template 1 in
+  `docs/GEMINI-HANDOFFS.md`) and check its key citations at the source before the design cites them. (2026-11-22: it
+  found the OLMo-2-7B transplant paper that made Part 219 a replication, and named Part 221's test.)
 - [ ] **Prefer causal tests across training stages** to activation correlations when the question allows it. OLMo
   publishes every stage.
 
@@ -180,6 +183,8 @@ measured on real rows, and each lever below that applies, taken or declined with
 
 - [ ] Fast-forward main. Commits use the noreply address and the co-author line.
 - [ ] Update the front page's counts by script, and `NEURON-RECORDS.md` and `PRIOR-ART.md` where the part touches them.
+- [ ] Rescore from a fresh clone of public main, then hand off a Gemini Task replication (template 2 in
+  `docs/GEMINI-HANDOFFS.md`) and record its result in that file's table. Fix any instruction it trips on.
 - [ ] Add anything that applies beyond this part to the lessons log.
 
 ## Lessons log
