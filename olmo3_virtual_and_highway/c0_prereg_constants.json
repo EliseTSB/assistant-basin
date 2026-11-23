@@ -110,13 +110,13 @@
   ],
   "layer_geometry": {
     "6": {
-      "N_median": 0.6485,
-      "c_median": 0.2094,
+      "N_median": 0.6513,
+      "c_median": 0.214,
       "c_min": 0.173,
       "c_max": 0.262,
-      "pred_ret_Rmf_median": 2.9947,
-      "pred_ret_dm_median": 0.1358,
-      "pred_gap_D3_median": 8.5554,
+      "pred_ret_Rmf_median": 3.0243,
+      "pred_ret_dm_median": 0.1387,
+      "pred_gap_D3_median": 8.6751,
       "vTRv_32draws_median": 0.1543,
       "trace_R_over_d": 0.155,
       "per_target": [
@@ -345,17 +345,17 @@
           "pred_gain_dm": 0.0264
         }
       ],
-      "pred_ret_Rridge_median": 1.3403,
+      "pred_ret_Rridge_median": 1.3402,
       "lambda_ridge": 0.167217
     },
     "12": {
-      "N_median": 0.8983,
-      "c_median": 0.3036,
+      "N_median": 0.8998,
+      "c_median": 0.3038,
       "c_min": 0.2685,
       "c_max": 0.3724,
-      "pred_ret_Rmf_median": 2.8656,
-      "pred_ret_dm_median": 0.2779,
-      "pred_gap_D3_median": 7.7055,
+      "pred_ret_Rmf_median": 2.8675,
+      "pred_ret_dm_median": 0.2799,
+      "pred_gap_D3_median": 7.7691,
       "vTRv_32draws_median": 0.3127,
       "trace_R_over_d": 0.3141,
       "per_target": [
@@ -588,13 +588,13 @@
       "lambda_ridge": 0.32132
     },
     "15": {
-      "N_median": 1.0241,
-      "c_median": 0.3569,
+      "N_median": 1.0276,
+      "c_median": 0.3572,
       "c_min": 0.3144,
       "c_max": 0.4368,
-      "pred_ret_Rmf_median": 2.8224,
-      "pred_ret_dm_median": 0.3618,
-      "pred_gap_D3_median": 7.2798,
+      "pred_ret_Rmf_median": 2.8333,
+      "pred_ret_dm_median": 0.37,
+      "pred_gap_D3_median": 7.4072,
       "vTRv_32draws_median": 0.4178,
       "trace_R_over_d": 0.4171,
       "per_target": [
@@ -827,13 +827,13 @@
       "lambda_ridge": 0.421587
     },
     "18": {
-      "N_median": 1.068,
-      "c_median": 0.4304,
+      "N_median": 1.0739,
+      "c_median": 0.4324,
       "c_min": 0.3816,
       "c_max": 0.5105,
-      "pred_ret_Rmf_median": 2.4789,
-      "pred_ret_dm_median": 0.4619,
-      "pred_gap_D3_median": 5.9777,
+      "pred_ret_Rmf_median": 2.4817,
+      "pred_ret_dm_median": 0.465,
+      "pred_gap_D3_median": 6.0718,
       "vTRv_32draws_median": 0.5092,
       "trace_R_over_d": 0.5106,
       "per_target": [
@@ -1066,13 +1066,13 @@
       "lambda_ridge": 0.462931
     },
     "21": {
-      "N_median": 1.0942,
-      "c_median": 0.4976,
+      "N_median": 1.0999,
+      "c_median": 0.5,
       "c_min": 0.4494,
       "c_max": 0.5653,
-      "pred_ret_Rmf_median": 2.1971,
-      "pred_ret_dm_median": 0.5501,
-      "pred_gap_D3_median": 5.0158,
+      "pred_ret_Rmf_median": 2.1973,
+      "pred_ret_dm_median": 0.5531,
+      "pred_gap_D3_median": 5.0436,
       "vTRv_32draws_median": 0.6156,
       "trace_R_over_d": 0.6144,
       "per_target": [
@@ -1305,13 +1305,13 @@
       "lambda_ridge": 0.500173
     },
     "24": {
-      "N_median": 1.1199,
-      "c_median": 0.5866,
+      "N_median": 1.1237,
+      "c_median": 0.5872,
       "c_min": 0.5228,
       "c_max": 0.6499,
-      "pred_ret_Rmf_median": 1.8827,
-      "pred_ret_dm_median": 0.659,
-      "pred_gap_D3_median": 3.7973,
+      "pred_ret_Rmf_median": 1.8928,
+      "pred_ret_dm_median": 0.6609,
+      "pred_gap_D3_median": 3.8169,
       "vTRv_32draws_median": 0.7195,
       "trace_R_over_d": 0.7226,
       "per_target": [
@@ -1544,13 +1544,13 @@
       "lambda_ridge": 0.513138
     },
     "27": {
-      "N_median": 1.1554,
-      "c_median": 0.6534,
+      "N_median": 1.1567,
+      "c_median": 0.6543,
       "c_min": 0.5835,
       "c_max": 0.7132,
-      "pred_ret_Rmf_median": 1.7482,
-      "pred_ret_dm_median": 0.7626,
-      "pred_gap_D3_median": 3.0323,
+      "pred_ret_Rmf_median": 1.7582,
+      "pred_ret_dm_median": 0.7662,
+      "pred_gap_D3_median": 3.0362,
       "vTRv_32draws_median": 0.8349,
       "trace_R_over_d": 0.8363,
       "per_target": [
@@ -1953,375 +1953,5 @@
       }
     ]
   },
-  "c05_layer_matched_pairs": [
-    {
-      "pair_id": 1,
-      "layer": 16,
-      "concept": {
-        "unit": "L16N5264",
-        "layer": 16,
-        "neuron": 5264,
-        "target": " dog",
-        "write_z": 15.2,
-        "read_same_z": 7.02,
-        "source": "preview_21",
-        "w_down_norm": 1.5742
-      },
-      "slot": {
-        "unit": "L16N9095",
-        "layer": 16,
-        "neuron": 9095,
-        "target": " mirror",
-        "write_z": 10.0247,
-        "read_same_z": 0.1996,
-        "source": "c0_16",
-        "w_down_norm": 1.6324
-      }
-    },
-    {
-      "pair_id": 2,
-      "layer": 16,
-      "concept": {
-        "unit": "L16N1789",
-        "layer": 16,
-        "neuron": 1789,
-        "target": " chef",
-        "write_z": 8.4,
-        "read_same_z": 6.36,
-        "source": "preview_21",
-        "w_down_norm": 1.4625
-      },
-      "slot": {
-        "unit": "L16N5796",
-        "layer": 16,
-        "neuron": 5796,
-        "target": " mirror",
-        "write_z": 7.6927,
-        "read_same_z": 1.2389,
-        "source": "c0_16",
-        "w_down_norm": 1.5223
-      }
-    },
-    {
-      "pair_id": 3,
-      "layer": 17,
-      "concept": {
-        "unit": "L17N2480",
-        "layer": 17,
-        "neuron": 2480,
-        "target": " painter",
-        "write_z": 7.4889,
-        "read_same_z": 6.6647,
-        "source": "c0_16",
-        "w_down_norm": 1.4687
-      },
-      "slot": {
-        "unit": "L17N9987",
-        "layer": 17,
-        "neuron": 9987,
-        "target": " mirror",
-        "write_z": 7.0785,
-        "read_same_z": 1.1724,
-        "source": "c0_16",
-        "w_down_norm": 1.5528
-      }
-    },
-    {
-      "pair_id": 4,
-      "layer": 19,
-      "concept": {
-        "unit": "L19N4502",
-        "layer": 19,
-        "neuron": 4502,
-        "target": " robot",
-        "write_z": 9.78,
-        "read_same_z": 4.95,
-        "source": "preview_21",
-        "w_down_norm": 1.4555
-      },
-      "slot": {
-        "unit": "L19N2292",
-        "layer": 19,
-        "neuron": 2292,
-        "target": " pilot",
-        "write_z": 7.513,
-        "read_same_z": 0.0762,
-        "source": "c0_16",
-        "w_down_norm": 1.6015
-      }
-    },
-    {
-      "pair_id": 5,
-      "layer": 20,
-      "concept": {
-        "unit": "L20N3060",
-        "layer": 20,
-        "neuron": 3060,
-        "target": " whale",
-        "write_z": 9.4,
-        "read_same_z": 6.56,
-        "source": "preview_21",
-        "w_down_norm": 1.5924
-      },
-      "slot": {
-        "unit": "L20N4468",
-        "layer": 20,
-        "neuron": 4468,
-        "target": " pilot",
-        "write_z": 10.6926,
-        "read_same_z": 1.3608,
-        "source": "c0_16",
-        "w_down_norm": 1.5064
-      }
-    },
-    {
-      "pair_id": 6,
-      "layer": 20,
-      "concept": {
-        "unit": "L20N9371",
-        "layer": 20,
-        "neuron": 9371,
-        "target": " dog",
-        "write_z": 9.05,
-        "read_same_z": 3.59,
-        "source": "preview_21",
-        "w_down_norm": 1.4762
-      },
-      "slot": {
-        "unit": "L20N9381",
-        "layer": 20,
-        "neuron": 9381,
-        "target": " mirror",
-        "write_z": 6.9465,
-        "read_same_z": 1.25,
-        "source": "c0_16",
-        "w_down_norm": 1.5056
-      }
-    },
-    {
-      "pair_id": 7,
-      "layer": 21,
-      "concept": {
-        "unit": "L21N1951",
-        "layer": 21,
-        "neuron": 1951,
-        "target": " dog",
-        "write_z": 10.65,
-        "read_same_z": 4.25,
-        "source": "preview_21",
-        "w_down_norm": 1.5235
-      },
-      "slot": {
-        "unit": "L21N3352",
-        "layer": 21,
-        "neuron": 3352,
-        "target": " mirror",
-        "write_z": 10.0793,
-        "read_same_z": 0.2224,
-        "source": "c0_16",
-        "w_down_norm": 1.5977
-      }
-    },
-    {
-      "pair_id": 8,
-      "layer": 22,
-      "concept": {
-        "unit": "L22N7870",
-        "layer": 22,
-        "neuron": 7870,
-        "target": " chef",
-        "write_z": 8.19,
-        "read_same_z": 4.17,
-        "source": "preview_21",
-        "w_down_norm": 1.5076
-      },
-      "slot": {
-        "unit": "L22N6",
-        "layer": 22,
-        "neuron": 6,
-        "target": " pilot",
-        "write_z": 14.9895,
-        "read_same_z": 1.0908,
-        "source": "c0_16",
-        "w_down_norm": 1.508
-      }
-    },
-    {
-      "pair_id": 9,
-      "layer": 23,
-      "concept": {
-        "unit": "L23N633",
-        "layer": 23,
-        "neuron": 633,
-        "target": " painter",
-        "write_z": 11.9741,
-        "read_same_z": 5.9382,
-        "source": "c0_16",
-        "w_down_norm": 1.5671
-      },
-      "slot": {
-        "unit": "L23N7171",
-        "layer": 23,
-        "neuron": 7171,
-        "target": " harbor",
-        "write_z": 12.9391,
-        "read_same_z": 0.7781,
-        "source": "c0_16",
-        "w_down_norm": 1.5738
-      }
-    },
-    {
-      "pair_id": 10,
-      "layer": 23,
-      "concept": {
-        "unit": "L23N8559",
-        "layer": 23,
-        "neuron": 8559,
-        "target": " knight",
-        "write_z": 11.53,
-        "read_same_z": 4.85,
-        "source": "preview_21",
-        "w_down_norm": 1.5099
-      },
-      "slot": {
-        "unit": "L23N6941",
-        "layer": 23,
-        "neuron": 6941,
-        "target": " AI",
-        "write_z": 12.47,
-        "read_same_z": 1.23,
-        "source": "preview_21",
-        "w_down_norm": 1.5994
-      }
-    },
-    {
-      "pair_id": 11,
-      "layer": 23,
-      "concept": {
-        "unit": "L23N506",
-        "layer": 23,
-        "neuron": 506,
-        "target": " lantern",
-        "write_z": 9.2645,
-        "read_same_z": 5.3752,
-        "source": "c0_16",
-        "w_down_norm": 1.5265
-      },
-      "slot": {
-        "unit": "L23N2266",
-        "layer": 23,
-        "neuron": 2266,
-        "target": " teacher",
-        "write_z": 10.46,
-        "read_same_z": -0.95,
-        "source": "preview_21",
-        "w_down_norm": 1.5078
-      }
-    },
-    {
-      "pair_id": 12,
-      "layer": 23,
-      "concept": {
-        "unit": "L23N4878",
-        "layer": 23,
-        "neuron": 4878,
-        "target": " compass",
-        "write_z": 8.6992,
-        "read_same_z": 3.8034,
-        "source": "c0_16",
-        "w_down_norm": 1.5226
-      },
-      "slot": {
-        "unit": "L23N1136",
-        "layer": 23,
-        "neuron": 1136,
-        "target": " rabbit",
-        "write_z": 8.9928,
-        "read_same_z": -0.394,
-        "source": "c0_16",
-        "w_down_norm": 1.5359
-      }
-    },
-    {
-      "pair_id": 13,
-      "layer": 23,
-      "concept": {
-        "unit": "L23N6598",
-        "layer": 23,
-        "neuron": 6598,
-        "target": " lantern",
-        "write_z": 7.1826,
-        "read_same_z": 3.9633,
-        "source": "c0_16",
-        "w_down_norm": 1.305
-      },
-      "slot": {
-        "unit": "L23N2549",
-        "layer": 23,
-        "neuron": 2549,
-        "target": " rabbit",
-        "write_z": 7.8797,
-        "read_same_z": 0.4645,
-        "source": "c0_16",
-        "w_down_norm": 1.5436
-      }
-    }
-  ],
-  "c05_selection_rule": "Merge L>=15 non-pronoun candidates from natural_neuron_census_preview.json (21 tokens) and the 16 unseen C0 targets (seed=5701 2000-token vocab background; Concept: write_z>6.5 & read_same_z>=3.5; Slot: write_z>6.5 & read_same_z<=1.5), deduplicate by unit keeping max write_z, and pair top-k Concept with top-k Non-Pronoun Slot at each exact shared layer L>=15.",
-  "c05_secondary_all_slot_top6": [
-    {
-      "unit": "L28N2566",
-      "layer": 28,
-      "neuron": 2566,
-      "target": " I",
-      "write_z": 34.81,
-      "read_same_z": 1.21,
-      "w_down_norm": 1.4239
-    },
-    {
-      "unit": "L27N5655",
-      "layer": 27,
-      "neuron": 5655,
-      "target": " I",
-      "write_z": 25.4,
-      "read_same_z": 0.21,
-      "w_down_norm": 1.4322
-    },
-    {
-      "unit": "L25N4074",
-      "layer": 25,
-      "neuron": 4074,
-      "target": " I",
-      "write_z": 24.06,
-      "read_same_z": -0.57,
-      "w_down_norm": 1.5226
-    },
-    {
-      "unit": "L24N4362",
-      "layer": 24,
-      "neuron": 4362,
-      "target": " I",
-      "write_z": 23.5,
-      "read_same_z": 0.48,
-      "w_down_norm": 1.4981
-    },
-    {
-      "unit": "L28N10474",
-      "layer": 28,
-      "neuron": 10474,
-      "target": " me",
-      "write_z": 22.64,
-      "read_same_z": 0.88,
-      "w_down_norm": 1.2338
-    },
-    {
-      "unit": "L26N10833",
-      "layer": 26,
-      "neuron": 10833,
-      "target": " I",
-      "write_z": 22.63,
-      "read_same_z": -1.68,
-      "w_down_norm": 1.5748
-    }
-  ]
+  "median_definition": "standard_median (average of 8th and 9th order statistics for n=16)"
 }
