@@ -197,6 +197,14 @@ def deepseek_agreement(pass1: dict, sample: dict) -> dict | None:
 
 # --- the gate --------------------------------------------------------------------------------------------------
 
+def _repo_relative(path: Path) -> str:
+    """The path as the repo names it, so a scorecard rescored on another machine is byte-identical (2026-11-22)."""
+    try:
+        return Path(path).resolve().relative_to(REPO.resolve()).as_posix()
+    except ValueError:
+        return str(path)
+
+
 def kernel_check(path: Path) -> dict:
     """The design's kernel check: results/part219/kernel-check.json against its CPU float32 reference.
 
@@ -236,7 +244,8 @@ def kernel_check(path: Path) -> dict:
         elif load.get("attn_implementation") != "eager":
             problems.append(
                 f"the record's load.attn_implementation is {load.get('attn_implementation')!r}, not 'eager'")
-    result = {"passes": not problems, "candidate": str(path), "reference": reference_rel, "failures": problems}
+    result = {"passes": not problems, "candidate": _repo_relative(path), "reference": reference_rel,
+              "failures": problems}
     if problems:
         result["reason"] = "; ".join(problems)
     return result
@@ -611,6 +620,20 @@ def build_exploratory(labels: dict, split: dict) -> dict:
 
 # --- the whole scorecard ---------------------------------------------------------------------------------------
 
+DO_NOTHING_TAGS = ("R0b", "R0b-mean")
+
+
+def do_nothing_check(reference: Path, run: Path) -> dict:
+    """Token-for-token comparison of a do-nothing run with R0, row by row in file order."""
+    def rows(path):
+        return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    first, second = rows(reference), rows(run)
+    mismatches = sum(1 for a, b in zip(first, second) if a.get("token_ids") != b.get("token_ids"))
+    mismatches += abs(len(first) - len(second))
+    return {"rows": len(second), "reference_rows": len(first), "token_mismatches": mismatches,
+            "identical_to_R0": mismatches == 0}
+
+
 def build_scorecard(out: Path, kinds_path, neurons_path, kernel_path: Path, head_layers=HEAD_LAYERS) -> dict:
     kind_of = load_kinds(kinds_path)
     run_path = out / "R0.jsonl"
@@ -620,9 +643,15 @@ def build_scorecard(out: Path, kinds_path, neurons_path, kernel_path: Path, head
     split = slot_split(neurons_path, kind_of, head_layers)
     manifest_path = out / "manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_path.exists() else {}
-    runs, labels = {}, {}
+    runs, labels, do_nothing = {}, {}, {}
     for tag in RUN_TAGS:
         if not (out / f"{tag}.jsonl").exists():
+            continue
+        if tag in DO_NOTHING_TAGS and not (out / f"labels-{tag}.jsonl").exists():
+            # The design labels R0b only if it is not bit-identical to R0 (Size); an unlabelled do-nothing run is a
+            # token-for-token check, reported as such rather than as an unreadable run (added 2026-11-22 at
+            # publication, after R0b ran; no verdict changes).
+            do_nothing[tag] = do_nothing_check(out / "R0.jsonl", out / f"{tag}.jsonl")
             continue
         runs[tag] = score_run(out, tag, ids, slot, concept)
         if runs[tag]["labelled"]:
@@ -646,6 +675,7 @@ def build_scorecard(out: Path, kinds_path, neurons_path, kernel_path: Path, head
         "gate": gate,
         "runs": {tag: {**entry, "status": status.get(tag, [])} for tag, entry in runs.items()},
         "nets_upstream_against_R0": nets,
+        "do_nothing": do_nothing,
         "controls": {key: predictions[key]
                      for key in ("R5_rig_check", "R5m_rig_check", "R9_coupling_check") if key in predictions},
         "predictions": {key: value for key, value in predictions.items()
@@ -682,6 +712,10 @@ def markdown(scorecard: dict) -> str:
                      f"{run['slot_who_coherent'][0]}/{run['slot_who_coherent'][1]} | "
                      f"{run['concept_any'][0]}/{run['concept_any'][1]} | {run['inconclusive']} | {gate_text} | "
                      f"{'no' if run['status'] else 'yes'} |")
+    for tag, check in (scorecard.get("do_nothing") or {}).items():
+        lines.append(f"| {tag} | do-nothing check: {'identical to R0' if check['identical_to_R0'] else 'DIFFERS from R0'}"
+                     f" on {check['rows']} rows ({check['token_mismatches']} token mismatches); not labelled |"
+                     " | | | | |")
     pilot = scorecard.get("pilot_verdicts") or {}
     if pilot.get("available"):
         lines += ["", f"## Pilot (Amendment 1): 219.1 and 219.2 as read on {pilot['run']} (zero ablation)", "",

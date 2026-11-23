@@ -45,7 +45,7 @@
   "checks": {
    "kernel_check": {
     "passes": true,
-    "candidate": "/home/elisepc/green/worktrees/ab-part219/results/part219/kernel-check.json",
+    "candidate": "results/part219/kernel-check.json",
     "reference": "results/kernel-reference/allenai-olmo-2-0425-1b-instruct-cpu-float32.json",
     "failures": []
    },
@@ -521,6 +521,20 @@
    ],
    "gained_units": [],
    "mcnemar_p": 0.0001220703125
+  }
+ },
+ "do_nothing": {
+  "R0b": {
+   "rows": 474,
+   "reference_rows": 474,
+   "token_mismatches": 0,
+   "identical_to_R0": true
+  },
+  "R0b-mean": {
+   "rows": 474,
+   "reference_rows": 474,
+   "token_mismatches": 0,
+   "identical_to_R0": true
   }
  },
  "controls": {

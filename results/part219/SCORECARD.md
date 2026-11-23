@@ -3,7 +3,7 @@
 Slot units 21, concept units 18. Upstream 16 (layer >= 3), downstream 5.
 
 ## Gate: passed
-- kernel check: passes (`/home/elisepc/green/worktrees/ab-part219/results/part219/kernel-check.json` against `results/kernel-reference/allenai-olmo-2-0425-1b-instruct-cpu-float32.json`)
+- kernel check: passes (`results/part219/kernel-check.json` against `results/kernel-reference/allenai-olmo-2-0425-1b-instruct-cpu-float32.json`)
 - r0_slot_persona: 20 of 21 (passes)
 - r1_slot_persona: 4 of 21 (passes)
 
@@ -18,6 +18,8 @@ Slot units 21, concept units 18. Upstream 16 (layer >= 3), downstream 5.
 | R9 | 17/21 | 20/21 | 17/18 | False | pass | yes |
 | R10 | 17/21 | 18/21 | 17/18 | False | pass | yes |
 | R2m | 1/21 | 8/21 | 16/18 | False | pass | yes |
+| R0b | do-nothing check: identical to R0 on 474 rows (0 token mismatches); not labelled | | | | | |
+| R0b-mean | do-nothing check: identical to R0 on 474 rows (0 token mismatches); not labelled | | | | | |
 
 ## Pilot (Amendment 1): 219.1 and 219.2 as read on R2 (zero ablation)
 
