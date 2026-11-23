@@ -6,97 +6,113 @@
       "domain": "animals",
       "string": " dolphin",
       "id": 99269,
-      "decoded_piece": " dolphin"
+      "decoded_piece": " dolphin",
+      "u_norm": 1.7032
     },
     {
       "domain": "animals",
       "string": " hawk",
       "id": 76920,
-      "decoded_piece": " hawk"
+      "decoded_piece": " hawk",
+      "u_norm": 1.9463
     },
     {
       "domain": "animals",
       "string": " tiger",
       "id": 52835,
-      "decoded_piece": " tiger"
+      "decoded_piece": " tiger",
+      "u_norm": 1.7097
     },
     {
       "domain": "animals",
       "string": " rabbit",
       "id": 39824,
-      "decoded_piece": " rabbit"
+      "decoded_piece": " rabbit",
+      "u_norm": 1.6788
     },
     {
       "domain": "professions",
       "string": " surgeon",
       "id": 46098,
-      "decoded_piece": " surgeon"
+      "decoded_piece": " surgeon",
+      "u_norm": 1.5935
     },
     {
       "domain": "professions",
       "string": " pilot",
       "id": 18178,
-      "decoded_piece": " pilot"
+      "decoded_piece": " pilot",
+      "u_norm": 1.9077
     },
     {
       "domain": "professions",
       "string": " painter",
       "id": 30581,
-      "decoded_piece": " painter"
+      "decoded_piece": " painter",
+      "u_norm": 1.6342
     },
     {
       "domain": "professions",
       "string": " judge",
       "id": 11913,
-      "decoded_piece": " judge"
+      "decoded_piece": " judge",
+      "u_norm": 1.6077
     },
     {
       "domain": "objects",
       "string": " hammer",
       "id": 24354,
-      "decoded_piece": " hammer"
+      "decoded_piece": " hammer",
+      "u_norm": 1.8393
     },
     {
       "domain": "objects",
       "string": " lantern",
       "id": 74265,
-      "decoded_piece": " lantern"
+      "decoded_piece": " lantern",
+      "u_norm": 1.8051
     },
     {
       "domain": "objects",
       "string": " mirror",
       "id": 18327,
-      "decoded_piece": " mirror"
+      "decoded_piece": " mirror",
+      "u_norm": 1.8541
     },
     {
       "domain": "objects",
       "string": " compass",
       "id": 24653,
-      "decoded_piece": " compass"
+      "decoded_piece": " compass",
+      "u_norm": 1.9408
     },
     {
       "domain": "places",
       "string": " harbor",
       "id": 57511,
-      "decoded_piece": " harbor"
+      "decoded_piece": " harbor",
+      "u_norm": 1.8123
     },
     {
       "domain": "places",
       "string": " canyon",
       "id": 84300,
-      "decoded_piece": " canyon"
+      "decoded_piece": " canyon",
+      "u_norm": 1.73
     },
     {
       "domain": "places",
       "string": " temple",
       "id": 27850,
-      "decoded_piece": " temple"
+      "decoded_piece": " temple",
+      "u_norm": 1.6475
     },
     {
       "domain": "places",
       "string": " castle",
       "id": 33684,
-      "decoded_piece": " castle"
+      "decoded_piece": " castle",
+      "u_norm": 1.6075
     }
   ],
   "layers": [
@@ -1953,5 +1969,124 @@
       }
     ]
   },
-  "median_definition": "standard_median (average of 8th and 9th order statistics for n=16)"
+  "median_definition": "standard_median (average of 8th and 9th order statistics for n=16)",
+  "exploratory_post_mlp_norm_anchors": {
+    "6": {
+      "post_mlp_norm": 2.2427,
+      "dose_075": 1.682,
+      "expected_16target_medians_rc1": {
+        "Direct_Rmf_and_dm": 0.633,
+        "Direct_Rridge": 0.887,
+        "Direct_logit_lens": 2.893,
+        "pred_dlogit_Rmf": 1.922,
+        "pred_dlogit_Rridge": 1.215,
+        "pred_dlogit_dm": 0.087,
+        "pred_dlogit_logit_lens": 0.414
+      }
+    },
+    "12": {
+      "post_mlp_norm": 3.8445,
+      "dose_075": 2.8834,
+      "expected_16target_medians_rc1": {
+        "Direct_Rmf_and_dm": 1.541,
+        "Direct_Rridge": 2.227,
+        "Direct_logit_lens": 4.959,
+        "pred_dlogit_Rmf": 4.561,
+        "pred_dlogit_Rridge": 3.079,
+        "pred_dlogit_dm": 0.433,
+        "pred_dlogit_logit_lens": 1.405
+      }
+    },
+    "18": {
+      "post_mlp_norm": 7.4537,
+      "dose_075": 5.5903,
+      "expected_16target_medians_rc1": {
+        "Direct_Rmf_and_dm": 4.157,
+        "Direct_Rridge": 5.548,
+        "Direct_logit_lens": 9.614,
+        "pred_dlogit_Rmf": 10.442,
+        "pred_dlogit_Rridge": 7.747,
+        "pred_dlogit_dm": 1.996,
+        "pred_dlogit_logit_lens": 4.565
+      }
+    },
+    "24": {
+      "post_mlp_norm": 12.1555,
+      "dose_075": 9.1166,
+      "expected_16target_medians_rc1": {
+        "Direct_Rmf_and_dm": 9.007,
+        "Direct_Rridge": 11.425,
+        "Direct_logit_lens": 15.679,
+        "pred_dlogit_Rmf": 17.95,
+        "pred_dlogit_Rridge": 14.255,
+        "pred_dlogit_dm": 6.258,
+        "pred_dlogit_logit_lens": 10.598
+      }
+    }
+  },
+  "exploratory_grounding_analogues": {
+    "source": "results/vesper-olmo3-7b-exploratory/olmo3_idea2_and_idea4_results.json.gz",
+    "C0_0_2_telescoping_post_norm_n192": {
+      "n": 192,
+      "median": 0.01951,
+      "p95": 0.0561,
+      "max": 0.07605
+    },
+    "C0_0_3_abs_rc_over_ri_minus_1_post_norm_n192": {
+      "n": 192,
+      "median": 0.01603,
+      "p95": 0.05467,
+      "max": 0.08598,
+      "at_Direct_3_0": {
+        "median": 0.0481,
+        "p95": 0.164,
+        "max": 0.2579,
+        "R_mf_n64_p95": 0.1971,
+        "R_mf_n64_max": 0.2579
+      }
+    },
+    "C0_1b_exact_per_persona_L18_L24_median_frac_err": {
+      "n_cells_per_arm": 8,
+      "WHO_CHAT_TF_floor05D": {
+        "R_mf": 0.1172,
+        "R_ridge": 0.181,
+        "logit_lens": 0.3516
+      },
+      "four_frame_avg_raw": {
+        "R_mf": 0.111,
+        "R_ridge": 0.1078,
+        "logit_lens": 0.2479
+      },
+      "four_frame_avg_floor05D": {
+        "R_mf": 0.111,
+        "R_ridge": 0.1078,
+        "logit_lens": 0.2201
+      }
+    },
+    "C0_2a_exact_per_persona_gap_ratio": {
+      "WHO_CHAT_TF_per_layer_median": {
+        "6": 0.4572,
+        "12": 0.4809,
+        "18": 0.7883,
+        "24": 0.9758
+      },
+      "WHO_CHAT_TF_pooled_L12_18_24_median": 0.7979,
+      "four_frame_avg_per_layer_median": {
+        "6": 0.6335,
+        "12": 0.7765,
+        "18": 0.8104,
+        "24": 0.8826
+      },
+      "four_frame_avg_pooled_L12_18_24_median": 0.8308
+    },
+    "C0_4_RegimeN_075x_L18_L24_efficiency_8personas": {
+      "geo_mean_ratio": 1.8062,
+      "sd_log_ratio": 0.087
+    },
+    "C0_4_random_arm_075x_L18_L24_n64": {
+      "n": 64,
+      "mean_abs_dlogit": 0.3381,
+      "p95_abs_dlogit": 0.9062
+    }
+  }
 }
