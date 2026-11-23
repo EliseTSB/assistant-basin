@@ -126,7 +126,13 @@
           "c": 0.173,
           "pred_ret_Rmf": 4.0562,
           "pred_ret_dm": 0.1214,
-          "pred_gap_D3": 11.8046
+          "pred_gap_D3": 11.8046,
+          "pred_ret_Rridge": 1.4541,
+          "cos_u_Rridge": 0.2836,
+          "pred_gain_Rmf": 0.7017,
+          "pred_gain_Rridge": 0.4124,
+          "pred_gain_ll": 0.1214,
+          "pred_gain_dm": 0.021
         },
         {
           "target": " hawk",
@@ -134,7 +140,13 @@
           "c": 0.219,
           "pred_ret_Rmf": 2.8289,
           "pred_ret_dm": 0.1357,
-          "pred_gap_D3": 8.0796
+          "pred_gap_D3": 8.0796,
+          "pred_ret_Rridge": 1.1981,
+          "cos_u_Rridge": 0.3268,
+          "pred_gain_Rmf": 0.6196,
+          "pred_gain_Rridge": 0.3915,
+          "pred_gain_ll": 0.1357,
+          "pred_gain_dm": 0.0297
         },
         {
           "target": " tiger",
@@ -142,7 +154,13 @@
           "c": 0.2001,
           "pred_ret_Rmf": 3.0539,
           "pred_ret_dm": 0.1223,
-          "pred_gap_D3": 8.7948
+          "pred_gap_D3": 8.7948,
+          "pred_ret_Rridge": 1.3237,
+          "cos_u_Rridge": 0.3052,
+          "pred_gain_Rmf": 0.6112,
+          "pred_gain_Rridge": 0.404,
+          "pred_gain_ll": 0.1223,
+          "pred_gain_dm": 0.0245
         },
         {
           "target": " rabbit",
@@ -150,7 +168,13 @@
           "c": 0.1958,
           "pred_ret_Rmf": 3.4709,
           "pred_ret_dm": 0.133,
-          "pred_gap_D3": 10.0136
+          "pred_gap_D3": 10.0136,
+          "pred_ret_Rridge": 1.4852,
+          "cos_u_Rridge": 0.2944,
+          "pred_gain_Rmf": 0.6795,
+          "pred_gain_Rridge": 0.4372,
+          "pred_gain_ll": 0.133,
+          "pred_gain_dm": 0.026
         },
         {
           "target": " surgeon",
@@ -158,7 +182,13 @@
           "c": 0.2065,
           "pred_ret_Rmf": 3.0647,
           "pred_ret_dm": 0.1307,
-          "pred_gap_D3": 8.8018
+          "pred_gap_D3": 8.8018,
+          "pred_ret_Rridge": 1.337,
+          "cos_u_Rridge": 0.3033,
+          "pred_gain_Rmf": 0.633,
+          "pred_gain_Rridge": 0.4055,
+          "pred_gain_ll": 0.1307,
+          "pred_gain_dm": 0.027
         },
         {
           "target": " pilot",
@@ -166,7 +196,13 @@
           "c": 0.2463,
           "pred_ret_Rmf": 2.5861,
           "pred_ret_dm": 0.1568,
-          "pred_gap_D3": 7.2878
+          "pred_gap_D3": 7.2878,
+          "pred_ret_Rridge": 1.2167,
+          "cos_u_Rridge": 0.3451,
+          "pred_gain_Rmf": 0.6369,
+          "pred_gain_Rridge": 0.4199,
+          "pred_gain_ll": 0.1568,
+          "pred_gain_dm": 0.0386
         },
         {
           "target": " painter",
@@ -174,7 +210,13 @@
           "c": 0.2185,
           "pred_ret_Rmf": 2.9947,
           "pred_ret_dm": 0.1429,
-          "pred_gap_D3": 8.5554
+          "pred_gap_D3": 8.5554,
+          "pred_ret_Rridge": 1.4248,
+          "cos_u_Rridge": 0.3021,
+          "pred_gain_Rmf": 0.6542,
+          "pred_gain_Rridge": 0.4305,
+          "pred_gain_ll": 0.1429,
+          "pred_gain_dm": 0.0312
         },
         {
           "target": " judge",
@@ -182,7 +224,13 @@
           "c": 0.2355,
           "pred_ret_Rmf": 2.9092,
           "pred_ret_dm": 0.1613,
-          "pred_gap_D3": 8.2435
+          "pred_gap_D3": 8.2435,
+          "pred_ret_Rridge": 1.3389,
+          "cos_u_Rridge": 0.3278,
+          "pred_gain_Rmf": 0.6851,
+          "pred_gain_Rridge": 0.439,
+          "pred_gain_ll": 0.1613,
+          "pred_gain_dm": 0.038
         },
         {
           "target": " hammer",
@@ -190,7 +238,13 @@
           "c": 0.2094,
           "pred_ret_Rmf": 2.9405,
           "pred_ret_dm": 0.1289,
-          "pred_gap_D3": 8.4348
+          "pred_gap_D3": 8.4348,
+          "pred_ret_Rridge": 1.3065,
+          "cos_u_Rridge": 0.3091,
+          "pred_gain_Rmf": 0.6157,
+          "pred_gain_Rridge": 0.4039,
+          "pred_gain_ll": 0.1289,
+          "pred_gain_dm": 0.027
         },
         {
           "target": " lantern",
@@ -198,7 +252,13 @@
           "c": 0.2069,
           "pred_ret_Rmf": 3.307,
           "pred_ret_dm": 0.1416,
-          "pred_gap_D3": 9.4965
+          "pred_gap_D3": 9.4965,
+          "pred_ret_Rridge": 1.3558,
+          "cos_u_Rridge": 0.3137,
+          "pred_gain_Rmf": 0.6842,
+          "pred_gain_Rridge": 0.4253,
+          "pred_gain_ll": 0.1416,
+          "pred_gain_dm": 0.0293
         },
         {
           "target": " mirror",
@@ -206,7 +266,13 @@
           "c": 0.262,
           "pred_ret_Rmf": 2.4757,
           "pred_ret_dm": 0.1699,
-          "pred_gap_D3": 6.9174
+          "pred_gap_D3": 6.9174,
+          "pred_ret_Rridge": 1.2228,
+          "cos_u_Rridge": 0.3522,
+          "pred_gain_Rmf": 0.6485,
+          "pred_gain_Rridge": 0.4307,
+          "pred_gain_ll": 0.1699,
+          "pred_gain_dm": 0.0445
         },
         {
           "target": " compass",
@@ -214,7 +280,13 @@
           "c": 0.2538,
           "pred_ret_Rmf": 2.3479,
           "pred_ret_dm": 0.1512,
-          "pred_gap_D3": 6.59
+          "pred_gap_D3": 6.59,
+          "pred_ret_Rridge": 1.1335,
+          "cos_u_Rridge": 0.3527,
+          "pred_gain_Rmf": 0.5959,
+          "pred_gain_Rridge": 0.3998,
+          "pred_gain_ll": 0.1512,
+          "pred_gain_dm": 0.0384
         },
         {
           "target": " harbor",
@@ -222,7 +294,13 @@
           "c": 0.2349,
           "pred_ret_Rmf": 3.1645,
           "pred_ret_dm": 0.1746,
-          "pred_gap_D3": 8.9694
+          "pred_gap_D3": 8.9694,
+          "pred_ret_Rridge": 1.4454,
+          "cos_u_Rridge": 0.3148,
+          "pred_gain_Rmf": 0.7434,
+          "pred_gain_Rridge": 0.455,
+          "pred_gain_ll": 0.1746,
+          "pred_gain_dm": 0.041
         },
         {
           "target": " canyon",
@@ -230,7 +308,13 @@
           "c": 0.2052,
           "pred_ret_Rmf": 3.2245,
           "pred_ret_dm": 0.1358,
-          "pred_gap_D3": 9.266
+          "pred_gap_D3": 9.266,
+          "pred_ret_Rridge": 1.4285,
+          "cos_u_Rridge": 0.2878,
+          "pred_gain_Rmf": 0.6617,
+          "pred_gain_Rridge": 0.4111,
+          "pred_gain_ll": 0.1358,
+          "pred_gain_dm": 0.0279
         },
         {
           "target": " temple",
@@ -238,7 +322,13 @@
           "c": 0.2401,
           "pred_ret_Rmf": 2.786,
           "pred_ret_dm": 0.1606,
-          "pred_gap_D3": 7.8762
+          "pred_gap_D3": 7.8762,
+          "pred_ret_Rridge": 1.3416,
+          "cos_u_Rridge": 0.32,
+          "pred_gain_Rmf": 0.669,
+          "pred_gain_Rridge": 0.4293,
+          "pred_gain_ll": 0.1606,
+          "pred_gain_dm": 0.0386
         },
         {
           "target": " castle",
@@ -246,9 +336,17 @@
           "c": 0.2027,
           "pred_ret_Rmf": 3.165,
           "pred_ret_dm": 0.13,
-          "pred_gap_D3": 9.1052
+          "pred_gap_D3": 9.1052,
+          "pred_ret_Rridge": 1.427,
+          "cos_u_Rridge": 0.2961,
+          "pred_gain_Rmf": 0.6414,
+          "pred_gain_Rridge": 0.4226,
+          "pred_gain_ll": 0.13,
+          "pred_gain_dm": 0.0264
         }
-      ]
+      ],
+      "pred_ret_Rridge_median": 1.3403,
+      "lambda_ridge": 0.167217
     },
     "12": {
       "N_median": 0.8983,
@@ -267,7 +365,13 @@
           "c": 0.2685,
           "pred_ret_Rmf": 3.5434,
           "pred_ret_dm": 0.2555,
-          "pred_gap_D3": 9.8639
+          "pred_gap_D3": 9.8639,
+          "pred_ret_Rridge": 1.4566,
+          "cos_u_Rridge": 0.4146,
+          "pred_gain_Rmf": 0.9514,
+          "pred_gain_Rridge": 0.604,
+          "pred_gain_ll": 0.2555,
+          "pred_gain_dm": 0.0686
         },
         {
           "target": " hawk",
@@ -275,7 +379,13 @@
           "c": 0.3252,
           "pred_ret_Rmf": 2.6685,
           "pred_ret_dm": 0.2822,
-          "pred_gap_D3": 7.1587
+          "pred_gap_D3": 7.1587,
+          "pred_ret_Rridge": 1.2646,
+          "cos_u_Rridge": 0.4619,
+          "pred_gain_Rmf": 0.8678,
+          "pred_gain_Rridge": 0.5841,
+          "pred_gain_ll": 0.2822,
+          "pred_gain_dm": 0.0918
         },
         {
           "target": " tiger",
@@ -283,7 +393,13 @@
           "c": 0.2981,
           "pred_ret_Rmf": 2.8656,
           "pred_ret_dm": 0.2547,
-          "pred_gap_D3": 7.8327
+          "pred_gap_D3": 7.8327,
+          "pred_ret_Rridge": 1.35,
+          "cos_u_Rridge": 0.4418,
+          "pred_gain_Rmf": 0.8543,
+          "pred_gain_Rridge": 0.5964,
+          "pred_gain_ll": 0.2547,
+          "pred_gain_dm": 0.0759
         },
         {
           "target": " rabbit",
@@ -291,7 +407,13 @@
           "c": 0.2942,
           "pred_ret_Rmf": 3.2103,
           "pred_ret_dm": 0.2779,
-          "pred_gap_D3": 8.7973
+          "pred_gap_D3": 8.7973,
+          "pred_ret_Rridge": 1.4825,
+          "cos_u_Rridge": 0.4377,
+          "pred_gain_Rmf": 0.9445,
+          "pred_gain_Rridge": 0.6489,
+          "pred_gain_ll": 0.2779,
+          "pred_gain_dm": 0.0818
         },
         {
           "target": " surgeon",
@@ -299,7 +421,13 @@
           "c": 0.2836,
           "pred_ret_Rmf": 3.0971,
           "pred_ret_dm": 0.2491,
-          "pred_gap_D3": 8.5439
+          "pred_gap_D3": 8.5439,
+          "pred_ret_Rridge": 1.441,
+          "cos_u_Rridge": 0.4114,
+          "pred_gain_Rmf": 0.8783,
+          "pred_gain_Rridge": 0.5929,
+          "pred_gain_ll": 0.2491,
+          "pred_gain_dm": 0.0706
         },
         {
           "target": " pilot",
@@ -307,7 +435,13 @@
           "c": 0.3579,
           "pred_ret_Rmf": 2.4587,
           "pred_ret_dm": 0.315,
-          "pred_gap_D3": 6.4309
+          "pred_gap_D3": 6.4309,
+          "pred_ret_Rridge": 1.255,
+          "cos_u_Rridge": 0.496,
+          "pred_gain_Rmf": 0.8801,
+          "pred_gain_Rridge": 0.6224,
+          "pred_gain_ll": 0.315,
+          "pred_gain_dm": 0.1127
         },
         {
           "target": " painter",
@@ -315,7 +449,13 @@
           "c": 0.3036,
           "pred_ret_Rmf": 2.959,
           "pred_ret_dm": 0.2727,
-          "pred_gap_D3": 8.0589
+          "pred_gap_D3": 8.0589,
+          "pred_ret_Rridge": 1.4242,
+          "cos_u_Rridge": 0.4398,
+          "pred_gain_Rmf": 0.8983,
+          "pred_gain_Rridge": 0.6264,
+          "pred_gain_ll": 0.2727,
+          "pred_gain_dm": 0.0828
         },
         {
           "target": " judge",
@@ -323,7 +463,13 @@
           "c": 0.3332,
           "pred_ret_Rmf": 2.8279,
           "pred_ret_dm": 0.3139,
-          "pred_gap_D3": 7.5418
+          "pred_gap_D3": 7.5418,
+          "pred_ret_Rridge": 1.3307,
+          "cos_u_Rridge": 0.4847,
+          "pred_gain_Rmf": 0.9422,
+          "pred_gain_Rridge": 0.645,
+          "pred_gain_ll": 0.3139,
+          "pred_gain_dm": 0.1046
         },
         {
           "target": " hammer",
@@ -331,7 +477,13 @@
           "c": 0.3035,
           "pred_ret_Rmf": 2.8263,
           "pred_ret_dm": 0.2603,
-          "pred_gap_D3": 7.6978
+          "pred_gap_D3": 7.6978,
+          "pred_ret_Rridge": 1.2959,
+          "cos_u_Rridge": 0.4577,
+          "pred_gain_Rmf": 0.8578,
+          "pred_gain_Rridge": 0.5931,
+          "pred_gain_ll": 0.2603,
+          "pred_gain_dm": 0.079
         },
         {
           "target": " lantern",
@@ -339,7 +491,13 @@
           "c": 0.304,
           "pred_ret_Rmf": 3.0513,
           "pred_ret_dm": 0.2819,
-          "pred_gap_D3": 8.3082
+          "pred_gap_D3": 8.3082,
+          "pred_ret_Rridge": 1.3421,
+          "cos_u_Rridge": 0.4579,
+          "pred_gain_Rmf": 0.9274,
+          "pred_gain_Rridge": 0.6146,
+          "pred_gain_ll": 0.2819,
+          "pred_gain_dm": 0.0857
         },
         {
           "target": " mirror",
@@ -347,7 +505,13 @@
           "c": 0.3724,
           "pred_ret_Rmf": 2.4626,
           "pred_ret_dm": 0.3415,
-          "pred_gap_D3": 6.3634
+          "pred_gap_D3": 6.3634,
+          "pred_ret_Rridge": 1.2792,
+          "cos_u_Rridge": 0.5054,
+          "pred_gain_Rmf": 0.9171,
+          "pred_gain_Rridge": 0.6465,
+          "pred_gain_ll": 0.3415,
+          "pred_gain_dm": 0.1272
         },
         {
           "target": " compass",
@@ -355,7 +519,13 @@
           "c": 0.3511,
           "pred_ret_Rmf": 2.3857,
           "pred_ret_dm": 0.2942,
-          "pred_gap_D3": 6.2746
+          "pred_gap_D3": 6.2746,
+          "pred_ret_Rridge": 1.2347,
+          "cos_u_Rridge": 0.4839,
+          "pred_gain_Rmf": 0.8377,
+          "pred_gain_Rridge": 0.5974,
+          "pred_gain_ll": 0.2942,
+          "pred_gain_dm": 0.1033
         },
         {
           "target": " harbor",
@@ -363,7 +533,13 @@
           "c": 0.3484,
           "pred_ret_Rmf": 2.8011,
           "pred_ret_dm": 0.34,
-          "pred_gap_D3": 7.3832
+          "pred_gap_D3": 7.3832,
+          "pred_ret_Rridge": 1.3896,
+          "cos_u_Rridge": 0.4683,
+          "pred_gain_Rmf": 0.9759,
+          "pred_gain_Rridge": 0.6507,
+          "pred_gain_ll": 0.34,
+          "pred_gain_dm": 0.1185
         },
         {
           "target": " canyon",
@@ -371,7 +547,13 @@
           "c": 0.2788,
           "pred_ret_Rmf": 3.2128,
           "pred_ret_dm": 0.2497,
-          "pred_gap_D3": 8.8895
+          "pred_gap_D3": 8.8895,
+          "pred_ret_Rridge": 1.4321,
+          "cos_u_Rridge": 0.4178,
+          "pred_gain_Rmf": 0.8956,
+          "pred_gain_Rridge": 0.5983,
+          "pred_gain_ll": 0.2497,
+          "pred_gain_dm": 0.0696
         },
         {
           "target": " temple",
@@ -379,7 +561,13 @@
           "c": 0.3238,
           "pred_ret_Rmf": 2.8694,
           "pred_ret_dm": 0.3009,
-          "pred_gap_D3": 7.7055
+          "pred_gap_D3": 7.7055,
+          "pred_ret_Rridge": 1.3669,
+          "cos_u_Rridge": 0.4647,
+          "pred_gain_Rmf": 0.9292,
+          "pred_gain_Rridge": 0.6351,
+          "pred_gain_ll": 0.3009,
+          "pred_gain_dm": 0.0974
         },
         {
           "target": " castle",
@@ -387,9 +575,17 @@
           "c": 0.2927,
           "pred_ret_Rmf": 3.0793,
           "pred_ret_dm": 0.2638,
-          "pred_gap_D3": 8.4464
+          "pred_gap_D3": 8.4464,
+          "pred_ret_Rridge": 1.4277,
+          "cos_u_Rridge": 0.4387,
+          "pred_gain_Rmf": 0.9013,
+          "pred_gain_Rridge": 0.6263,
+          "pred_gain_ll": 0.2638,
+          "pred_gain_dm": 0.0772
         }
-      ]
+      ],
+      "pred_ret_Rridge_median": 1.3584,
+      "lambda_ridge": 0.32132
     },
     "15": {
       "N_median": 1.0241,
@@ -408,7 +604,13 @@
           "c": 0.3144,
           "pred_ret_Rmf": 3.2798,
           "pred_ret_dm": 0.3242,
-          "pred_gap_D3": 8.8667
+          "pred_gap_D3": 8.8667,
+          "pred_ret_Rridge": 1.5517,
+          "cos_u_Rridge": 0.4546,
+          "pred_gain_Rmf": 1.0312,
+          "pred_gain_Rridge": 0.7054,
+          "pred_gain_ll": 0.3242,
+          "pred_gain_dm": 0.1019
         },
         {
           "target": " hawk",
@@ -416,7 +618,13 @@
           "c": 0.3888,
           "pred_ret_Rmf": 2.502,
           "pred_ret_dm": 0.3781,
-          "pred_gap_D3": 6.3716
+          "pred_gap_D3": 6.3716,
+          "pred_ret_Rridge": 1.2934,
+          "cos_u_Rridge": 0.5308,
+          "pred_gain_Rmf": 0.9727,
+          "pred_gain_Rridge": 0.6865,
+          "pred_gain_ll": 0.3781,
+          "pred_gain_dm": 0.147
         },
         {
           "target": " tiger",
@@ -424,7 +632,13 @@
           "c": 0.342,
           "pred_ret_Rmf": 2.8442,
           "pred_ret_dm": 0.3327,
-          "pred_gap_D3": 7.5346
+          "pred_gap_D3": 7.5346,
+          "pred_ret_Rridge": 1.4362,
+          "cos_u_Rridge": 0.4888,
+          "pred_gain_Rmf": 0.9727,
+          "pred_gain_Rridge": 0.7019,
+          "pred_gain_ll": 0.3327,
+          "pred_gain_dm": 0.1138
         },
         {
           "target": " rabbit",
@@ -432,7 +646,13 @@
           "c": 0.3569,
           "pred_ret_Rmf": 3.0387,
           "pred_ret_dm": 0.3872,
-          "pred_gap_D3": 7.9546
+          "pred_gap_D3": 7.9546,
+          "pred_ret_Rridge": 1.5418,
+          "cos_u_Rridge": 0.5038,
+          "pred_gain_Rmf": 1.0847,
+          "pred_gain_Rridge": 0.7768,
+          "pred_gain_ll": 0.3872,
+          "pred_gain_dm": 0.1382
         },
         {
           "target": " surgeon",
@@ -440,7 +660,13 @@
           "c": 0.3283,
           "pred_ret_Rmf": 3.0226,
           "pred_ret_dm": 0.3259,
-          "pred_gap_D3": 8.0902
+          "pred_gap_D3": 8.0902,
+          "pred_ret_Rridge": 1.5163,
+          "cos_u_Rridge": 0.4568,
+          "pred_gain_Rmf": 0.9925,
+          "pred_gain_Rridge": 0.6927,
+          "pred_gain_ll": 0.3259,
+          "pred_gain_dm": 0.107
         },
         {
           "target": " pilot",
@@ -448,7 +674,13 @@
           "c": 0.4172,
           "pred_ret_Rmf": 2.4299,
           "pred_ret_dm": 0.4229,
-          "pred_gap_D3": 6.0211
+          "pred_gap_D3": 6.0211,
+          "pred_ret_Rridge": 1.3476,
+          "cos_u_Rridge": 0.5552,
+          "pred_gain_Rmf": 1.0136,
+          "pred_gain_Rridge": 0.7481,
+          "pred_gain_ll": 0.4229,
+          "pred_gain_dm": 0.1764
         },
         {
           "target": " painter",
@@ -456,7 +688,13 @@
           "c": 0.3526,
           "pred_ret_Rmf": 2.9044,
           "pred_ret_dm": 0.3611,
-          "pred_gap_D3": 7.6299
+          "pred_gap_D3": 7.6299,
+          "pred_ret_Rridge": 1.4932,
+          "cos_u_Rridge": 0.4945,
+          "pred_gain_Rmf": 1.0241,
+          "pred_gain_Rridge": 0.7384,
+          "pred_gain_ll": 0.3611,
+          "pred_gain_dm": 0.1273
         },
         {
           "target": " judge",
@@ -464,7 +702,13 @@
           "c": 0.4043,
           "pred_ret_Rmf": 2.644,
           "pred_ret_dm": 0.4322,
-          "pred_gap_D3": 6.6353
+          "pred_gap_D3": 6.6353,
+          "pred_ret_Rridge": 1.4019,
+          "cos_u_Rridge": 0.5458,
+          "pred_gain_Rmf": 1.069,
+          "pred_gain_Rridge": 0.7652,
+          "pred_gain_ll": 0.4322,
+          "pred_gain_dm": 0.1747
         },
         {
           "target": " hammer",
@@ -472,7 +716,13 @@
           "c": 0.3576,
           "pred_ret_Rmf": 2.7823,
           "pred_ret_dm": 0.3557,
-          "pred_gap_D3": 7.2798
+          "pred_gap_D3": 7.2798,
+          "pred_ret_Rridge": 1.3924,
+          "cos_u_Rridge": 0.511,
+          "pred_gain_Rmf": 0.9949,
+          "pred_gain_Rridge": 0.7115,
+          "pred_gain_ll": 0.3557,
+          "pred_gain_dm": 0.1272
         },
         {
           "target": " lantern",
@@ -480,7 +730,13 @@
           "c": 0.3469,
           "pred_ret_Rmf": 2.9805,
           "pred_ret_dm": 0.3587,
-          "pred_gap_D3": 7.8654
+          "pred_gap_D3": 7.8654,
+          "pred_ret_Rridge": 1.4249,
+          "cos_u_Rridge": 0.5102,
+          "pred_gain_Rmf": 1.034,
+          "pred_gain_Rridge": 0.7269,
+          "pred_gain_ll": 0.3587,
+          "pred_gain_dm": 0.1244
         },
         {
           "target": " mirror",
@@ -488,7 +744,13 @@
           "c": 0.4368,
           "pred_ret_Rmf": 2.4234,
           "pred_ret_dm": 0.4623,
-          "pred_gap_D3": 5.8832
+          "pred_gap_D3": 5.8832,
+          "pred_ret_Rridge": 1.3802,
+          "cos_u_Rridge": 0.5601,
+          "pred_gain_Rmf": 1.0585,
+          "pred_gain_Rridge": 0.773,
+          "pred_gain_ll": 0.4623,
+          "pred_gain_dm": 0.2019
         },
         {
           "target": " compass",
@@ -496,7 +758,13 @@
           "c": 0.3886,
           "pred_ret_Rmf": 2.5276,
           "pred_ret_dm": 0.3817,
-          "pred_gap_D3": 6.4378
+          "pred_gap_D3": 6.4378,
+          "pred_ret_Rridge": 1.3508,
+          "cos_u_Rridge": 0.531,
+          "pred_gain_Rmf": 0.9822,
+          "pred_gain_Rridge": 0.7172,
+          "pred_gain_ll": 0.3817,
+          "pred_gain_dm": 0.1483
         },
         {
           "target": " harbor",
@@ -504,7 +772,13 @@
           "c": 0.393,
           "pred_ret_Rmf": 2.6594,
           "pred_ret_dm": 0.4106,
-          "pred_gap_D3": 6.7462
+          "pred_gap_D3": 6.7462,
+          "pred_ret_Rridge": 1.4449,
+          "cos_u_Rridge": 0.5185,
+          "pred_gain_Rmf": 1.045,
+          "pred_gain_Rridge": 0.7492,
+          "pred_gain_ll": 0.4106,
+          "pred_gain_dm": 0.1614
         },
         {
           "target": " canyon",
@@ -512,7 +786,13 @@
           "c": 0.335,
           "pred_ret_Rmf": 2.9929,
           "pred_ret_dm": 0.3359,
-          "pred_gap_D3": 7.9708
+          "pred_gap_D3": 7.9708,
+          "pred_ret_Rridge": 1.47,
+          "cos_u_Rridge": 0.4788,
+          "pred_gain_Rmf": 1.0027,
+          "pred_gain_Rridge": 0.7038,
+          "pred_gain_ll": 0.3359,
+          "pred_gain_dm": 0.1125
         },
         {
           "target": " temple",
@@ -520,7 +800,13 @@
           "c": 0.3753,
           "pred_ret_Rmf": 2.8224,
           "pred_ret_dm": 0.3975,
-          "pred_gap_D3": 7.2746
+          "pred_gap_D3": 7.2746,
+          "pred_ret_Rridge": 1.4224,
+          "cos_u_Rridge": 0.5346,
+          "pred_gain_Rmf": 1.0593,
+          "pred_gain_Rridge": 0.7604,
+          "pred_gain_ll": 0.3975,
+          "pred_gain_dm": 0.1492
         },
         {
           "target": " castle",
@@ -528,9 +814,17 @@
           "c": 0.3504,
           "pred_ret_Rmf": 2.9473,
           "pred_ret_dm": 0.3618,
-          "pred_gap_D3": 7.7566
+          "pred_gap_D3": 7.7566,
+          "pred_ret_Rridge": 1.4789,
+          "cos_u_Rridge": 0.5032,
+          "pred_gain_Rmf": 1.0326,
+          "pred_gain_Rridge": 0.7442,
+          "pred_gain_ll": 0.3618,
+          "pred_gain_dm": 0.1268
         }
-      ]
+      ],
+      "pred_ret_Rridge_median": 1.4305,
+      "lambda_ridge": 0.421587
     },
     "18": {
       "N_median": 1.068,
@@ -549,7 +843,13 @@
           "c": 0.3964,
           "pred_ret_Rmf": 2.6192,
           "pred_ret_dm": 0.4115,
-          "pred_gap_D3": 6.6231
+          "pred_gap_D3": 6.6231,
+          "pred_ret_Rridge": 1.3658,
+          "cos_u_Rridge": 0.5548,
+          "pred_gain_Rmf": 1.0381,
+          "pred_gain_Rridge": 0.7577,
+          "pred_gain_ll": 0.4115,
+          "pred_gain_dm": 0.1631
         },
         {
           "target": " hawk",
@@ -557,7 +857,13 @@
           "c": 0.449,
           "pred_ret_Rmf": 2.2467,
           "pred_ret_dm": 0.453,
-          "pred_gap_D3": 5.3809
+          "pred_gap_D3": 5.3809,
+          "pred_ret_Rridge": 1.2561,
+          "cos_u_Rridge": 0.5938,
+          "pred_gain_Rmf": 1.0088,
+          "pred_gain_Rridge": 0.7458,
+          "pred_gain_ll": 0.453,
+          "pred_gain_dm": 0.2034
         },
         {
           "target": " tiger",
@@ -565,7 +871,13 @@
           "c": 0.4134,
           "pred_ret_Rmf": 2.4789,
           "pred_ret_dm": 0.4237,
-          "pred_gap_D3": 6.1659
+          "pred_gap_D3": 6.1659,
+          "pred_ret_Rridge": 1.3568,
+          "cos_u_Rridge": 0.5625,
+          "pred_gain_Rmf": 1.0248,
+          "pred_gain_Rridge": 0.7632,
+          "pred_gain_ll": 0.4237,
+          "pred_gain_dm": 0.1752
         },
         {
           "target": " rabbit",
@@ -573,7 +885,13 @@
           "c": 0.4344,
           "pred_ret_Rmf": 2.6307,
           "pred_ret_dm": 0.4964,
-          "pred_gap_D3": 6.4031
+          "pred_gap_D3": 6.4031,
+          "pred_ret_Rridge": 1.436,
+          "cos_u_Rridge": 0.5888,
+          "pred_gain_Rmf": 1.1427,
+          "pred_gain_Rridge": 0.8456,
+          "pred_gain_ll": 0.4964,
+          "pred_gain_dm": 0.2156
         },
         {
           "target": " surgeon",
@@ -581,7 +899,13 @@
           "c": 0.3816,
           "pred_ret_Rmf": 2.6758,
           "pred_ret_dm": 0.3897,
-          "pred_gap_D3": 6.8583
+          "pred_gap_D3": 6.8583,
+          "pred_ret_Rridge": 1.3853,
+          "cos_u_Rridge": 0.5372,
+          "pred_gain_Rmf": 1.0211,
+          "pred_gain_Rridge": 0.7442,
+          "pred_gain_ll": 0.3897,
+          "pred_gain_dm": 0.1487
         },
         {
           "target": " pilot",
@@ -589,7 +913,13 @@
           "c": 0.4918,
           "pred_ret_Rmf": 2.1954,
           "pred_ret_dm": 0.531,
-          "pred_gap_D3": 4.9931
+          "pred_gap_D3": 4.9931,
+          "pred_ret_Rridge": 1.2988,
+          "cos_u_Rridge": 0.6297,
+          "pred_gain_Rmf": 1.0797,
+          "pred_gain_Rridge": 0.8179,
+          "pred_gain_ll": 0.531,
+          "pred_gain_dm": 0.2611
         },
         {
           "target": " painter",
@@ -597,7 +927,13 @@
           "c": 0.4304,
           "pred_ret_Rmf": 2.5354,
           "pred_ret_dm": 0.4698,
-          "pred_gap_D3": 6.1968
+          "pred_gap_D3": 6.1968,
+          "pred_ret_Rridge": 1.3902,
+          "cos_u_Rridge": 0.5787,
+          "pred_gain_Rmf": 1.0913,
+          "pred_gain_Rridge": 0.8045,
+          "pred_gain_ll": 0.4698,
+          "pred_gain_dm": 0.2022
         },
         {
           "target": " judge",
@@ -605,7 +941,13 @@
           "c": 0.469,
           "pred_ret_Rmf": 2.3896,
           "pred_ret_dm": 0.5257,
-          "pred_gap_D3": 5.5916
+          "pred_gap_D3": 5.5916,
+          "pred_ret_Rridge": 1.3517,
+          "cos_u_Rridge": 0.613,
+          "pred_gain_Rmf": 1.1208,
+          "pred_gain_Rridge": 0.8285,
+          "pred_gain_ll": 0.5257,
+          "pred_gain_dm": 0.2466
         },
         {
           "target": " hammer",
@@ -613,7 +955,13 @@
           "c": 0.4297,
           "pred_ret_Rmf": 2.4219,
           "pred_ret_dm": 0.4473,
-          "pred_gap_D3": 5.924
+          "pred_gap_D3": 5.924,
+          "pred_ret_Rridge": 1.2911,
+          "cos_u_Rridge": 0.5944,
+          "pred_gain_Rmf": 1.0408,
+          "pred_gain_Rridge": 0.7674,
+          "pred_gain_ll": 0.4473,
+          "pred_gain_dm": 0.1922
         },
         {
           "target": " lantern",
@@ -621,7 +969,13 @@
           "c": 0.418,
           "pred_ret_Rmf": 2.5551,
           "pred_ret_dm": 0.4464,
-          "pred_gap_D3": 6.3261
+          "pred_gap_D3": 6.3261,
+          "pred_ret_Rridge": 1.3487,
+          "cos_u_Rridge": 0.5829,
+          "pred_gain_Rmf": 1.068,
+          "pred_gain_Rridge": 0.7862,
+          "pred_gain_ll": 0.4464,
+          "pred_gain_dm": 0.1866
         },
         {
           "target": " mirror",
@@ -629,7 +983,13 @@
           "c": 0.5105,
           "pred_ret_Rmf": 2.1498,
           "pred_ret_dm": 0.5603,
-          "pred_gap_D3": 4.7682
+          "pred_gap_D3": 4.7682,
+          "pred_ret_Rridge": 1.2884,
+          "cos_u_Rridge": 0.647,
+          "pred_gain_Rmf": 1.0975,
+          "pred_gain_Rridge": 0.8336,
+          "pred_gain_ll": 0.5603,
+          "pred_gain_dm": 0.286
         },
         {
           "target": " compass",
@@ -637,7 +997,13 @@
           "c": 0.4538,
           "pred_ret_Rmf": 2.2735,
           "pred_ret_dm": 0.4682,
-          "pred_gap_D3": 5.4158
+          "pred_gap_D3": 5.4158,
+          "pred_ret_Rridge": 1.2894,
+          "cos_u_Rridge": 0.6022,
+          "pred_gain_Rmf": 1.0317,
+          "pred_gain_Rridge": 0.7765,
+          "pred_gain_ll": 0.4682,
+          "pred_gain_dm": 0.2125
         },
         {
           "target": " harbor",
@@ -645,7 +1011,13 @@
           "c": 0.4522,
           "pred_ret_Rmf": 2.3945,
           "pred_ret_dm": 0.4897,
-          "pred_gap_D3": 5.7144
+          "pred_gap_D3": 5.7144,
+          "pred_ret_Rridge": 1.3579,
+          "cos_u_Rridge": 0.5881,
+          "pred_gain_Rmf": 1.0829,
+          "pred_gain_Rridge": 0.7986,
+          "pred_gain_ll": 0.4897,
+          "pred_gain_dm": 0.2214
         },
         {
           "target": " canyon",
@@ -653,7 +1025,13 @@
           "c": 0.4068,
           "pred_ret_Rmf": 2.5194,
           "pred_ret_dm": 0.4169,
-          "pred_gap_D3": 6.3076
+          "pred_gap_D3": 6.3076,
+          "pred_ret_Rridge": 1.3328,
+          "cos_u_Rridge": 0.5657,
+          "pred_gain_Rmf": 1.0248,
+          "pred_gain_Rridge": 0.7539,
+          "pred_gain_ll": 0.4169,
+          "pred_gain_dm": 0.1696
         },
         {
           "target": " temple",
@@ -661,7 +1039,13 @@
           "c": 0.445,
           "pred_ret_Rmf": 2.4845,
           "pred_ret_dm": 0.4919,
-          "pred_gap_D3": 5.9777
+          "pred_gap_D3": 5.9777,
+          "pred_ret_Rridge": 1.3653,
+          "cos_u_Rridge": 0.6047,
+          "pred_gain_Rmf": 1.1055,
+          "pred_gain_Rridge": 0.8256,
+          "pred_gain_ll": 0.4919,
+          "pred_gain_dm": 0.2189
         },
         {
           "target": " castle",
@@ -669,9 +1053,17 @@
           "c": 0.4244,
           "pred_ret_Rmf": 2.5648,
           "pred_ret_dm": 0.4619,
-          "pred_gap_D3": 6.3085
+          "pred_gap_D3": 6.3085,
+          "pred_ret_Rridge": 1.387,
+          "cos_u_Rridge": 0.5832,
+          "pred_gain_Rmf": 1.0885,
+          "pred_gain_Rridge": 0.8089,
+          "pred_gain_ll": 0.4619,
+          "pred_gain_dm": 0.196
         }
-      ]
+      ],
+      "pred_ret_Rridge_median": 1.3542,
+      "lambda_ridge": 0.462931
     },
     "21": {
       "N_median": 1.0942,
@@ -690,7 +1082,13 @@
           "c": 0.4533,
           "pred_ret_Rmf": 2.3548,
           "pred_ret_dm": 0.4839,
-          "pred_gap_D3": 5.6127
+          "pred_gap_D3": 5.6127,
+          "pred_ret_Rridge": 1.3231,
+          "cos_u_Rridge": 0.6134,
+          "pred_gain_Rmf": 1.0675,
+          "pred_gain_Rridge": 0.8116,
+          "pred_gain_ll": 0.4839,
+          "pred_gain_dm": 0.2194
         },
         {
           "target": " hawk",
@@ -698,7 +1096,13 @@
           "c": 0.5117,
           "pred_ret_Rmf": 2.0338,
           "pred_ret_dm": 0.5326,
-          "pred_gap_D3": 4.5036
+          "pred_gap_D3": 4.5036,
+          "pred_ret_Rridge": 1.2094,
+          "cos_u_Rridge": 0.6637,
+          "pred_gain_Rmf": 1.0408,
+          "pred_gain_Rridge": 0.8026,
+          "pred_gain_ll": 0.5326,
+          "pred_gain_dm": 0.2725
         },
         {
           "target": " tiger",
@@ -706,7 +1110,13 @@
           "c": 0.4802,
           "pred_ret_Rmf": 2.1971,
           "pred_ret_dm": 0.5066,
-          "pred_gap_D3": 5.0715
+          "pred_gap_D3": 5.0715,
+          "pred_ret_Rridge": 1.294,
+          "cos_u_Rridge": 0.6322,
+          "pred_gain_Rmf": 1.055,
+          "pred_gain_Rridge": 0.8181,
+          "pred_gain_ll": 0.5066,
+          "pred_gain_dm": 0.2433
         },
         {
           "target": " rabbit",
@@ -714,7 +1124,13 @@
           "c": 0.5093,
           "pred_ret_Rmf": 2.2961,
           "pred_ret_dm": 0.5957,
-          "pred_gap_D3": 5.1012
+          "pred_gap_D3": 5.1012,
+          "pred_ret_Rridge": 1.3458,
+          "cos_u_Rridge": 0.6688,
+          "pred_gain_Rmf": 1.1695,
+          "pred_gain_Rridge": 0.9001,
+          "pred_gain_ll": 0.5957,
+          "pred_gain_dm": 0.3034
         },
         {
           "target": " surgeon",
@@ -722,7 +1138,13 @@
           "c": 0.4494,
           "pred_ret_Rmf": 2.3301,
           "pred_ret_dm": 0.4706,
-          "pred_gap_D3": 5.5784
+          "pred_gap_D3": 5.5784,
+          "pred_ret_Rridge": 1.2932,
+          "cos_u_Rridge": 0.6172,
+          "pred_gain_Rmf": 1.0472,
+          "pred_gain_Rridge": 0.7981,
+          "pred_gain_ll": 0.4706,
+          "pred_gain_dm": 0.2115
         },
         {
           "target": " pilot",
@@ -730,7 +1152,13 @@
           "c": 0.5578,
           "pred_ret_Rmf": 2.012,
           "pred_ret_dm": 0.6261,
-          "pred_gap_D3": 4.1579
+          "pred_gap_D3": 4.1579,
+          "pred_ret_Rridge": 1.2686,
+          "cos_u_Rridge": 0.6947,
+          "pred_gain_Rmf": 1.1223,
+          "pred_gain_Rridge": 0.8813,
+          "pred_gain_ll": 0.6261,
+          "pred_gain_dm": 0.3492
         },
         {
           "target": " painter",
@@ -738,7 +1166,13 @@
           "c": 0.4879,
           "pred_ret_Rmf": 2.3465,
           "pred_ret_dm": 0.5585,
-          "pred_gap_D3": 5.3641
+          "pred_gap_D3": 5.3641,
+          "pred_ret_Rridge": 1.3569,
+          "cos_u_Rridge": 0.6437,
+          "pred_gain_Rmf": 1.1448,
+          "pred_gain_Rridge": 0.8734,
+          "pred_gain_ll": 0.5585,
+          "pred_gain_dm": 0.2725
         },
         {
           "target": " judge",
@@ -746,7 +1180,13 @@
           "c": 0.5391,
           "pred_ret_Rmf": 2.1675,
           "pred_ret_dm": 0.6299,
-          "pred_gap_D3": 4.6127
+          "pred_gap_D3": 4.6127,
+          "pred_ret_Rridge": 1.3263,
+          "cos_u_Rridge": 0.672,
+          "pred_gain_Rmf": 1.1684,
+          "pred_gain_Rridge": 0.8912,
+          "pred_gain_ll": 0.6299,
+          "pred_gain_dm": 0.3396
         },
         {
           "target": " hammer",
@@ -754,7 +1194,13 @@
           "c": 0.4976,
           "pred_ret_Rmf": 2.158,
           "pred_ret_dm": 0.5343,
-          "pred_gap_D3": 4.8709
+          "pred_gap_D3": 4.8709,
+          "pred_ret_Rridge": 1.2573,
+          "cos_u_Rridge": 0.6609,
+          "pred_gain_Rmf": 1.0738,
+          "pred_gain_Rridge": 0.831,
+          "pred_gain_ll": 0.5343,
+          "pred_gain_dm": 0.2659
         },
         {
           "target": " lantern",
@@ -762,7 +1208,13 @@
           "c": 0.4976,
           "pred_ret_Rmf": 2.2221,
           "pred_ret_dm": 0.5501,
-          "pred_gap_D3": 5.0158
+          "pred_gap_D3": 5.0158,
+          "pred_ret_Rridge": 1.3005,
+          "cos_u_Rridge": 0.6506,
+          "pred_gain_Rmf": 1.1056,
+          "pred_gain_Rridge": 0.846,
+          "pred_gain_ll": 0.5501,
+          "pred_gain_dm": 0.2737
         },
         {
           "target": " mirror",
@@ -770,7 +1222,13 @@
           "c": 0.5653,
           "pred_ret_Rmf": 2.0049,
           "pred_ret_dm": 0.6407,
-          "pred_gap_D3": 4.0926
+          "pred_gap_D3": 4.0926,
+          "pred_ret_Rridge": 1.2533,
+          "cos_u_Rridge": 0.7053,
+          "pred_gain_Rmf": 1.1334,
+          "pred_gain_Rridge": 0.884,
+          "pred_gain_ll": 0.6407,
+          "pred_gain_dm": 0.3622
         },
         {
           "target": " compass",
@@ -778,7 +1236,13 @@
           "c": 0.5322,
           "pred_ret_Rmf": 2.0009,
           "pred_ret_dm": 0.5668,
-          "pred_gap_D3": 4.3025
+          "pred_gap_D3": 4.3025,
+          "pred_ret_Rridge": 1.2349,
+          "cos_u_Rridge": 0.6741,
+          "pred_gain_Rmf": 1.0649,
+          "pred_gain_Rridge": 0.8324,
+          "pred_gain_ll": 0.5668,
+          "pred_gain_dm": 0.3017
         },
         {
           "target": " harbor",
@@ -786,7 +1250,13 @@
           "c": 0.5081,
           "pred_ret_Rmf": 2.1535,
           "pred_ret_dm": 0.556,
-          "pred_gap_D3": 4.7925
+          "pred_gap_D3": 4.7925,
+          "pred_ret_Rridge": 1.2857,
+          "cos_u_Rridge": 0.6639,
+          "pred_gain_Rmf": 1.0942,
+          "pred_gain_Rridge": 0.8536,
+          "pred_gain_ll": 0.556,
+          "pred_gain_dm": 0.2825
         },
         {
           "target": " canyon",
@@ -794,7 +1264,13 @@
           "c": 0.4786,
           "pred_ret_Rmf": 2.1975,
           "pred_ret_dm": 0.5034,
-          "pred_gap_D3": 5.0823
+          "pred_gap_D3": 5.0823,
+          "pred_ret_Rridge": 1.2633,
+          "cos_u_Rridge": 0.6363,
+          "pred_gain_Rmf": 1.0517,
+          "pred_gain_Rridge": 0.8039,
+          "pred_gain_ll": 0.5034,
+          "pred_gain_dm": 0.2409
         },
         {
           "target": " temple",
@@ -802,7 +1278,13 @@
           "c": 0.5024,
           "pred_ret_Rmf": 2.2948,
           "pred_ret_dm": 0.5791,
-          "pred_gap_D3": 5.147
+          "pred_gap_D3": 5.147,
+          "pred_ret_Rridge": 1.3331,
+          "cos_u_Rridge": 0.6683,
+          "pred_gain_Rmf": 1.1528,
+          "pred_gain_Rridge": 0.8909,
+          "pred_gain_ll": 0.5791,
+          "pred_gain_dm": 0.2909
         },
         {
           "target": " castle",
@@ -810,9 +1292,17 @@
           "c": 0.4842,
           "pred_ret_Rmf": 2.3137,
           "pred_ret_dm": 0.5424,
-          "pred_gap_D3": 5.3138
+          "pred_gap_D3": 5.3138,
+          "pred_ret_Rridge": 1.3118,
+          "cos_u_Rridge": 0.6528,
+          "pred_gain_Rmf": 1.1202,
+          "pred_gain_Rridge": 0.8564,
+          "pred_gain_ll": 0.5424,
+          "pred_gain_dm": 0.2626
         }
-      ]
+      ],
+      "pred_ret_Rridge_median": 1.2936,
+      "lambda_ridge": 0.500173
     },
     "24": {
       "N_median": 1.1199,
@@ -831,7 +1321,13 @@
           "c": 0.5228,
           "pred_ret_Rmf": 2.0703,
           "pred_ret_dm": 0.5659,
-          "pred_gap_D3": 4.5134
+          "pred_gap_D3": 4.5134,
+          "pred_ret_Rridge": 1.2217,
+          "cos_u_Rridge": 0.6945,
+          "pred_gain_Rmf": 1.0824,
+          "pred_gain_Rridge": 0.8485,
+          "pred_gain_ll": 0.5659,
+          "pred_gain_dm": 0.2959
         },
         {
           "target": " hawk",
@@ -839,7 +1335,13 @@
           "c": 0.5866,
           "pred_ret_Rmf": 1.7936,
           "pred_ret_dm": 0.6173,
-          "pred_gap_D3": 3.529
+          "pred_gap_D3": 3.529,
+          "pred_ret_Rridge": 1.1517,
+          "cos_u_Rridge": 0.7364,
+          "pred_gain_Rmf": 1.0522,
+          "pred_gain_Rridge": 0.8481,
+          "pred_gain_ll": 0.6173,
+          "pred_gain_dm": 0.3621
         },
         {
           "target": " tiger",
@@ -847,7 +1349,13 @@
           "c": 0.5688,
           "pred_ret_Rmf": 1.8712,
           "pred_ret_dm": 0.6055,
-          "pred_gap_D3": 3.7973
+          "pred_gap_D3": 3.7973,
+          "pred_ret_Rridge": 1.1715,
+          "cos_u_Rridge": 0.7313,
+          "pred_gain_Rmf": 1.0644,
+          "pred_gain_Rridge": 0.8568,
+          "pred_gain_ll": 0.6055,
+          "pred_gain_dm": 0.3444
         },
         {
           "target": " rabbit",
@@ -855,7 +1363,13 @@
           "c": 0.5877,
           "pred_ret_Rmf": 2.019,
           "pred_ret_dm": 0.6973,
-          "pred_gap_D3": 3.9651
+          "pred_gap_D3": 3.9651,
+          "pred_ret_Rridge": 1.2556,
+          "cos_u_Rridge": 0.7474,
+          "pred_gain_Rmf": 1.1865,
+          "pred_gain_Rridge": 0.9384,
+          "pred_gain_ll": 0.6973,
+          "pred_gain_dm": 0.4098
         },
         {
           "target": " surgeon",
@@ -863,7 +1377,13 @@
           "c": 0.5258,
           "pred_ret_Rmf": 2.0462,
           "pred_ret_dm": 0.5656,
-          "pred_gap_D3": 4.4419
+          "pred_gap_D3": 4.4419,
+          "pred_ret_Rridge": 1.2179,
+          "cos_u_Rridge": 0.6964,
+          "pred_gain_Rmf": 1.0758,
+          "pred_gain_Rridge": 0.8481,
+          "pred_gain_ll": 0.5656,
+          "pred_gain_dm": 0.2974
         },
         {
           "target": " pilot",
@@ -871,7 +1391,13 @@
           "c": 0.6472,
           "pred_ret_Rmf": 1.7505,
           "pred_ret_dm": 0.7331,
-          "pred_gap_D3": 3.0522
+          "pred_gap_D3": 3.0522,
+          "pred_ret_Rridge": 1.1997,
+          "cos_u_Rridge": 0.7741,
+          "pred_gain_Rmf": 1.1329,
+          "pred_gain_Rridge": 0.9286,
+          "pred_gain_ll": 0.7331,
+          "pred_gain_dm": 0.4745
         },
         {
           "target": " painter",
@@ -879,7 +1405,13 @@
           "c": 0.5665,
           "pred_ret_Rmf": 2.0656,
           "pred_ret_dm": 0.6629,
-          "pred_gap_D3": 4.2083
+          "pred_gap_D3": 4.2083,
+          "pred_ret_Rridge": 1.2717,
+          "cos_u_Rridge": 0.7282,
+          "pred_gain_Rmf": 1.1702,
+          "pred_gain_Rridge": 0.926,
+          "pred_gain_ll": 0.6629,
+          "pred_gain_dm": 0.3755
         },
         {
           "target": " judge",
@@ -887,7 +1419,13 @@
           "c": 0.6154,
           "pred_ret_Rmf": 1.8827,
           "pred_ret_dm": 0.7131,
-          "pred_gap_D3": 3.509
+          "pred_gap_D3": 3.509,
+          "pred_ret_Rridge": 1.2171,
+          "cos_u_Rridge": 0.7578,
+          "pred_gain_Rmf": 1.1587,
+          "pred_gain_Rridge": 0.9223,
+          "pred_gain_ll": 0.7131,
+          "pred_gain_dm": 0.4388
         },
         {
           "target": " hammer",
@@ -895,7 +1433,13 @@
           "c": 0.5914,
           "pred_ret_Rmf": 1.8482,
           "pred_ret_dm": 0.6464,
-          "pred_gap_D3": 3.6055
+          "pred_gap_D3": 3.6055,
+          "pred_ret_Rridge": 1.1704,
+          "cos_u_Rridge": 0.7511,
+          "pred_gain_Rmf": 1.093,
+          "pred_gain_Rridge": 0.8791,
+          "pred_gain_ll": 0.6464,
+          "pred_gain_dm": 0.3823
         },
         {
           "target": " lantern",
@@ -903,7 +1447,13 @@
           "c": 0.5777,
           "pred_ret_Rmf": 1.9519,
           "pred_ret_dm": 0.6514,
-          "pred_gap_D3": 3.9014
+          "pred_gap_D3": 3.9014,
+          "pred_ret_Rridge": 1.2159,
+          "cos_u_Rridge": 0.7343,
+          "pred_gain_Rmf": 1.1276,
+          "pred_gain_Rridge": 0.8928,
+          "pred_gain_ll": 0.6514,
+          "pred_gain_dm": 0.3763
         },
         {
           "target": " mirror",
@@ -911,7 +1461,13 @@
           "c": 0.6499,
           "pred_ret_Rmf": 1.7753,
           "pred_ret_dm": 0.7498,
-          "pred_gap_D3": 3.0764
+          "pred_gap_D3": 3.0764,
+          "pred_ret_Rridge": 1.2029,
+          "cos_u_Rridge": 0.78,
+          "pred_gain_Rmf": 1.1538,
+          "pred_gain_Rridge": 0.9383,
+          "pred_gain_ll": 0.7498,
+          "pred_gain_dm": 0.4873
         },
         {
           "target": " compass",
@@ -919,7 +1475,13 @@
           "c": 0.6135,
           "pred_ret_Rmf": 1.7801,
           "pred_ret_dm": 0.67,
-          "pred_gap_D3": 3.3302
+          "pred_gap_D3": 3.3302,
+          "pred_ret_Rridge": 1.1697,
+          "cos_u_Rridge": 0.7554,
+          "pred_gain_Rmf": 1.0921,
+          "pred_gain_Rridge": 0.8836,
+          "pred_gain_ll": 0.67,
+          "pred_gain_dm": 0.411
         },
         {
           "target": " harbor",
@@ -927,7 +1489,13 @@
           "c": 0.5885,
           "pred_ret_Rmf": 1.9029,
           "pred_ret_dm": 0.659,
-          "pred_gap_D3": 3.7318
+          "pred_gap_D3": 3.7318,
+          "pred_ret_Rridge": 1.2115,
+          "cos_u_Rridge": 0.7439,
+          "pred_gain_Rmf": 1.1199,
+          "pred_gain_Rridge": 0.9013,
+          "pred_gain_ll": 0.659,
+          "pred_gain_dm": 0.3878
         },
         {
           "target": " canyon",
@@ -935,7 +1503,13 @@
           "c": 0.5657,
           "pred_ret_Rmf": 1.8808,
           "pred_ret_dm": 0.6019,
-          "pred_gap_D3": 3.8366
+          "pred_gap_D3": 3.8366,
+          "pred_ret_Rridge": 1.176,
+          "cos_u_Rridge": 0.7235,
+          "pred_gain_Rmf": 1.064,
+          "pred_gain_Rridge": 0.8509,
+          "pred_gain_ll": 0.6019,
+          "pred_gain_dm": 0.3405
         },
         {
           "target": " temple",
@@ -943,7 +1517,13 @@
           "c": 0.5933,
           "pred_ret_Rmf": 1.9908,
           "pred_ret_dm": 0.7007,
-          "pred_gap_D3": 3.8702
+          "pred_gap_D3": 3.8702,
+          "pred_ret_Rridge": 1.2551,
+          "cos_u_Rridge": 0.7505,
+          "pred_gain_Rmf": 1.1811,
+          "pred_gain_Rridge": 0.9419,
+          "pred_gain_ll": 0.7007,
+          "pred_gain_dm": 0.4157
         },
         {
           "target": " castle",
@@ -951,9 +1531,17 @@
           "c": 0.5718,
           "pred_ret_Rmf": 2.0273,
           "pred_ret_dm": 0.6628,
-          "pred_gap_D3": 4.0935
+          "pred_gap_D3": 4.0935,
+          "pred_ret_Rridge": 1.251,
+          "cos_u_Rridge": 0.735,
+          "pred_gain_Rmf": 1.1592,
+          "pred_gain_Rridge": 0.9195,
+          "pred_gain_ll": 0.6628,
+          "pred_gain_dm": 0.379
         }
-      ]
+      ],
+      "pred_ret_Rridge_median": 1.2137,
+      "lambda_ridge": 0.513138
     },
     "27": {
       "N_median": 1.1554,
@@ -972,7 +1560,13 @@
           "c": 0.6031,
           "pred_ret_Rmf": 1.8339,
           "pred_ret_dm": 0.667,
-          "pred_gap_D3": 3.5006
+          "pred_gap_D3": 3.5006,
+          "pred_ret_Rridge": 1.1484,
+          "cos_u_Rridge": 0.7777,
+          "pred_gain_Rmf": 1.106,
+          "pred_gain_Rridge": 0.8932,
+          "pred_gain_ll": 0.667,
+          "pred_gain_dm": 0.4023
         },
         {
           "target": " hawk",
@@ -980,7 +1574,13 @@
           "c": 0.6462,
           "pred_ret_Rmf": 1.6607,
           "pred_ret_dm": 0.6934,
-          "pred_gap_D3": 2.9018
+          "pred_gap_D3": 2.9018,
+          "pred_ret_Rridge": 1.1018,
+          "cos_u_Rridge": 0.8081,
+          "pred_gain_Rmf": 1.0731,
+          "pred_gain_Rridge": 0.8904,
+          "pred_gain_ll": 0.6934,
+          "pred_gain_dm": 0.4481
         },
         {
           "target": " tiger",
@@ -988,7 +1588,13 @@
           "c": 0.644,
           "pred_ret_Rmf": 1.7159,
           "pred_ret_dm": 0.7117,
-          "pred_gap_D3": 3.0128
+          "pred_gap_D3": 3.0128,
+          "pred_ret_Rridge": 1.1303,
+          "cos_u_Rridge": 0.8084,
+          "pred_gain_Rmf": 1.105,
+          "pred_gain_Rridge": 0.9137,
+          "pred_gain_ll": 0.7117,
+          "pred_gain_dm": 0.4583
         },
         {
           "target": " rabbit",
@@ -996,7 +1602,13 @@
           "c": 0.6585,
           "pred_ret_Rmf": 1.8412,
           "pred_ret_dm": 0.7984,
-          "pred_gap_D3": 3.1283
+          "pred_gap_D3": 3.1283,
+          "pred_ret_Rridge": 1.199,
+          "cos_u_Rridge": 0.8228,
+          "pred_gain_Rmf": 1.2124,
+          "pred_gain_Rridge": 0.9866,
+          "pred_gain_ll": 0.7984,
+          "pred_gain_dm": 0.5257
         },
         {
           "target": " surgeon",
@@ -1004,7 +1616,13 @@
           "c": 0.5835,
           "pred_ret_Rmf": 1.8826,
           "pred_ret_dm": 0.6409,
-          "pred_gap_D3": 3.725
+          "pred_gap_D3": 3.725,
+          "pred_ret_Rridge": 1.163,
+          "cos_u_Rridge": 0.7699,
+          "pred_gain_Rmf": 1.0984,
+          "pred_gain_Rridge": 0.8954,
+          "pred_gain_ll": 0.6409,
+          "pred_gain_dm": 0.374
         },
         {
           "target": " pilot",
@@ -1012,7 +1630,13 @@
           "c": 0.7126,
           "pred_ret_Rmf": 1.625,
           "pred_ret_dm": 0.8252,
-          "pred_gap_D3": 2.3995
+          "pred_gap_D3": 2.3995,
+          "pred_ret_Rridge": 1.1484,
+          "cos_u_Rridge": 0.8481,
+          "pred_gain_Rmf": 1.158,
+          "pred_gain_Rridge": 0.974,
+          "pred_gain_ll": 0.8252,
+          "pred_gain_dm": 0.588
         },
         {
           "target": " painter",
@@ -1020,7 +1644,13 @@
           "c": 0.6471,
           "pred_ret_Rmf": 1.821,
           "pred_ret_dm": 0.7626,
-          "pred_gap_D3": 3.1753
+          "pred_gap_D3": 3.1753,
+          "pred_ret_Rridge": 1.1779,
+          "cos_u_Rridge": 0.8183,
+          "pred_gain_Rmf": 1.1784,
+          "pred_gain_Rridge": 0.9638,
+          "pred_gain_ll": 0.7626,
+          "pred_gain_dm": 0.4935
         },
         {
           "target": " judge",
@@ -1028,7 +1658,13 @@
           "c": 0.688,
           "pred_ret_Rmf": 1.7482,
           "pred_ret_dm": 0.8274,
-          "pred_gap_D3": 2.7622
+          "pred_gap_D3": 2.7622,
+          "pred_ret_Rridge": 1.1906,
+          "cos_u_Rridge": 0.8332,
+          "pred_gain_Rmf": 1.2027,
+          "pred_gain_Rridge": 0.992,
+          "pred_gain_ll": 0.8274,
+          "pred_gain_dm": 0.5693
         },
         {
           "target": " hammer",
@@ -1036,7 +1672,13 @@
           "c": 0.6701,
           "pred_ret_Rmf": 1.6836,
           "pred_ret_dm": 0.7559,
-          "pred_gap_D3": 2.7829
+          "pred_gap_D3": 2.7829,
+          "pred_ret_Rridge": 1.135,
+          "cos_u_Rridge": 0.828,
+          "pred_gain_Rmf": 1.1281,
+          "pred_gain_Rridge": 0.9398,
+          "pred_gain_ll": 0.7559,
+          "pred_gain_dm": 0.5065
         },
         {
           "target": " lantern",
@@ -1044,7 +1686,13 @@
           "c": 0.6534,
           "pred_ret_Rmf": 1.7683,
           "pred_ret_dm": 0.7549,
-          "pred_gap_D3": 3.0402
+          "pred_gap_D3": 3.0402,
+          "pred_ret_Rridge": 1.1563,
+          "cos_u_Rridge": 0.8179,
+          "pred_gain_Rmf": 1.1554,
+          "pred_gain_Rridge": 0.9457,
+          "pred_gain_ll": 0.7549,
+          "pred_gain_dm": 0.4933
         },
         {
           "target": " mirror",
@@ -1052,7 +1700,13 @@
           "c": 0.7132,
           "pred_ret_Rmf": 1.6656,
           "pred_ret_dm": 0.8472,
-          "pred_gap_D3": 2.4552
+          "pred_gap_D3": 2.4552,
+          "pred_ret_Rridge": 1.1591,
+          "cos_u_Rridge": 0.8551,
+          "pred_gain_Rmf": 1.1879,
+          "pred_gain_Rridge": 0.9911,
+          "pred_gain_ll": 0.8472,
+          "pred_gain_dm": 0.6042
         },
         {
           "target": " compass",
@@ -1060,7 +1714,13 @@
           "c": 0.6964,
           "pred_ret_Rmf": 1.61,
           "pred_ret_dm": 0.7808,
-          "pred_gap_D3": 2.4876
+          "pred_gap_D3": 2.4876,
+          "pred_ret_Rridge": 1.1117,
+          "cos_u_Rridge": 0.8417,
+          "pred_gain_Rmf": 1.1212,
+          "pred_gain_Rridge": 0.9357,
+          "pred_gain_ll": 0.7808,
+          "pred_gain_dm": 0.5437
         },
         {
           "target": " harbor",
@@ -1068,7 +1728,13 @@
           "c": 0.6552,
           "pred_ret_Rmf": 1.8235,
           "pred_ret_dm": 0.7828,
-          "pred_gap_D3": 3.1221
+          "pred_gap_D3": 3.1221,
+          "pred_ret_Rridge": 1.182,
+          "cos_u_Rridge": 0.8168,
+          "pred_gain_Rmf": 1.1948,
+          "pred_gain_Rridge": 0.9655,
+          "pred_gain_ll": 0.7828,
+          "pred_gain_dm": 0.5129
         },
         {
           "target": " canyon",
@@ -1076,7 +1742,13 @@
           "c": 0.6445,
           "pred_ret_Rmf": 1.729,
           "pred_ret_dm": 0.7182,
-          "pred_gap_D3": 3.0323
+          "pred_gap_D3": 3.0323,
+          "pred_ret_Rridge": 1.1469,
+          "cos_u_Rridge": 0.8035,
+          "pred_gain_Rmf": 1.1144,
+          "pred_gain_Rridge": 0.9215,
+          "pred_gain_ll": 0.7182,
+          "pred_gain_dm": 0.4629
         },
         {
           "target": " temple",
@@ -1084,7 +1756,13 @@
           "c": 0.6559,
           "pred_ret_Rmf": 1.8379,
           "pred_ret_dm": 0.7906,
-          "pred_gap_D3": 3.1418
+          "pred_gap_D3": 3.1418,
+          "pred_ret_Rridge": 1.2072,
+          "cos_u_Rridge": 0.8236,
+          "pred_gain_Rmf": 1.2055,
+          "pred_gain_Rridge": 0.9943,
+          "pred_gain_ll": 0.7906,
+          "pred_gain_dm": 0.5186
         },
         {
           "target": " castle",
@@ -1092,9 +1770,17 @@
           "c": 0.6397,
           "pred_ret_Rmf": 1.8816,
           "pred_ret_dm": 0.7699,
-          "pred_gap_D3": 3.335
+          "pred_gap_D3": 3.335,
+          "pred_ret_Rridge": 1.2147,
+          "cos_u_Rridge": 0.8132,
+          "pred_gain_Rmf": 1.2036,
+          "pred_gain_Rridge": 0.9878,
+          "pred_gain_ll": 0.7699,
+          "pred_gain_dm": 0.4925
         }
-      ]
+      ],
+      "pred_ret_Rridge_median": 1.1577,
+      "lambda_ridge": 0.528329
     }
   },
   "natural_L15plus": {
@@ -1266,5 +1952,376 @@
         "read_same_z": 0.5
       }
     ]
-  }
+  },
+  "c05_layer_matched_pairs": [
+    {
+      "pair_id": 1,
+      "layer": 16,
+      "concept": {
+        "unit": "L16N5264",
+        "layer": 16,
+        "neuron": 5264,
+        "target": " dog",
+        "write_z": 15.2,
+        "read_same_z": 7.02,
+        "source": "preview_21",
+        "w_down_norm": 1.5742
+      },
+      "slot": {
+        "unit": "L16N9095",
+        "layer": 16,
+        "neuron": 9095,
+        "target": " mirror",
+        "write_z": 10.0247,
+        "read_same_z": 0.1996,
+        "source": "c0_16",
+        "w_down_norm": 1.6324
+      }
+    },
+    {
+      "pair_id": 2,
+      "layer": 16,
+      "concept": {
+        "unit": "L16N1789",
+        "layer": 16,
+        "neuron": 1789,
+        "target": " chef",
+        "write_z": 8.4,
+        "read_same_z": 6.36,
+        "source": "preview_21",
+        "w_down_norm": 1.4625
+      },
+      "slot": {
+        "unit": "L16N5796",
+        "layer": 16,
+        "neuron": 5796,
+        "target": " mirror",
+        "write_z": 7.6927,
+        "read_same_z": 1.2389,
+        "source": "c0_16",
+        "w_down_norm": 1.5223
+      }
+    },
+    {
+      "pair_id": 3,
+      "layer": 17,
+      "concept": {
+        "unit": "L17N2480",
+        "layer": 17,
+        "neuron": 2480,
+        "target": " painter",
+        "write_z": 7.4889,
+        "read_same_z": 6.6647,
+        "source": "c0_16",
+        "w_down_norm": 1.4687
+      },
+      "slot": {
+        "unit": "L17N9987",
+        "layer": 17,
+        "neuron": 9987,
+        "target": " mirror",
+        "write_z": 7.0785,
+        "read_same_z": 1.1724,
+        "source": "c0_16",
+        "w_down_norm": 1.5528
+      }
+    },
+    {
+      "pair_id": 4,
+      "layer": 19,
+      "concept": {
+        "unit": "L19N4502",
+        "layer": 19,
+        "neuron": 4502,
+        "target": " robot",
+        "write_z": 9.78,
+        "read_same_z": 4.95,
+        "source": "preview_21",
+        "w_down_norm": 1.4555
+      },
+      "slot": {
+        "unit": "L19N2292",
+        "layer": 19,
+        "neuron": 2292,
+        "target": " pilot",
+        "write_z": 7.513,
+        "read_same_z": 0.0762,
+        "source": "c0_16",
+        "w_down_norm": 1.6015
+      }
+    },
+    {
+      "pair_id": 5,
+      "layer": 20,
+      "concept": {
+        "unit": "L20N3060",
+        "layer": 20,
+        "neuron": 3060,
+        "target": " whale",
+        "write_z": 9.4,
+        "read_same_z": 6.56,
+        "source": "preview_21",
+        "w_down_norm": 1.5924
+      },
+      "slot": {
+        "unit": "L20N4468",
+        "layer": 20,
+        "neuron": 4468,
+        "target": " pilot",
+        "write_z": 10.6926,
+        "read_same_z": 1.3608,
+        "source": "c0_16",
+        "w_down_norm": 1.5064
+      }
+    },
+    {
+      "pair_id": 6,
+      "layer": 20,
+      "concept": {
+        "unit": "L20N9371",
+        "layer": 20,
+        "neuron": 9371,
+        "target": " dog",
+        "write_z": 9.05,
+        "read_same_z": 3.59,
+        "source": "preview_21",
+        "w_down_norm": 1.4762
+      },
+      "slot": {
+        "unit": "L20N9381",
+        "layer": 20,
+        "neuron": 9381,
+        "target": " mirror",
+        "write_z": 6.9465,
+        "read_same_z": 1.25,
+        "source": "c0_16",
+        "w_down_norm": 1.5056
+      }
+    },
+    {
+      "pair_id": 7,
+      "layer": 21,
+      "concept": {
+        "unit": "L21N1951",
+        "layer": 21,
+        "neuron": 1951,
+        "target": " dog",
+        "write_z": 10.65,
+        "read_same_z": 4.25,
+        "source": "preview_21",
+        "w_down_norm": 1.5235
+      },
+      "slot": {
+        "unit": "L21N3352",
+        "layer": 21,
+        "neuron": 3352,
+        "target": " mirror",
+        "write_z": 10.0793,
+        "read_same_z": 0.2224,
+        "source": "c0_16",
+        "w_down_norm": 1.5977
+      }
+    },
+    {
+      "pair_id": 8,
+      "layer": 22,
+      "concept": {
+        "unit": "L22N7870",
+        "layer": 22,
+        "neuron": 7870,
+        "target": " chef",
+        "write_z": 8.19,
+        "read_same_z": 4.17,
+        "source": "preview_21",
+        "w_down_norm": 1.5076
+      },
+      "slot": {
+        "unit": "L22N6",
+        "layer": 22,
+        "neuron": 6,
+        "target": " pilot",
+        "write_z": 14.9895,
+        "read_same_z": 1.0908,
+        "source": "c0_16",
+        "w_down_norm": 1.508
+      }
+    },
+    {
+      "pair_id": 9,
+      "layer": 23,
+      "concept": {
+        "unit": "L23N633",
+        "layer": 23,
+        "neuron": 633,
+        "target": " painter",
+        "write_z": 11.9741,
+        "read_same_z": 5.9382,
+        "source": "c0_16",
+        "w_down_norm": 1.5671
+      },
+      "slot": {
+        "unit": "L23N7171",
+        "layer": 23,
+        "neuron": 7171,
+        "target": " harbor",
+        "write_z": 12.9391,
+        "read_same_z": 0.7781,
+        "source": "c0_16",
+        "w_down_norm": 1.5738
+      }
+    },
+    {
+      "pair_id": 10,
+      "layer": 23,
+      "concept": {
+        "unit": "L23N8559",
+        "layer": 23,
+        "neuron": 8559,
+        "target": " knight",
+        "write_z": 11.53,
+        "read_same_z": 4.85,
+        "source": "preview_21",
+        "w_down_norm": 1.5099
+      },
+      "slot": {
+        "unit": "L23N6941",
+        "layer": 23,
+        "neuron": 6941,
+        "target": " AI",
+        "write_z": 12.47,
+        "read_same_z": 1.23,
+        "source": "preview_21",
+        "w_down_norm": 1.5994
+      }
+    },
+    {
+      "pair_id": 11,
+      "layer": 23,
+      "concept": {
+        "unit": "L23N506",
+        "layer": 23,
+        "neuron": 506,
+        "target": " lantern",
+        "write_z": 9.2645,
+        "read_same_z": 5.3752,
+        "source": "c0_16",
+        "w_down_norm": 1.5265
+      },
+      "slot": {
+        "unit": "L23N2266",
+        "layer": 23,
+        "neuron": 2266,
+        "target": " teacher",
+        "write_z": 10.46,
+        "read_same_z": -0.95,
+        "source": "preview_21",
+        "w_down_norm": 1.5078
+      }
+    },
+    {
+      "pair_id": 12,
+      "layer": 23,
+      "concept": {
+        "unit": "L23N4878",
+        "layer": 23,
+        "neuron": 4878,
+        "target": " compass",
+        "write_z": 8.6992,
+        "read_same_z": 3.8034,
+        "source": "c0_16",
+        "w_down_norm": 1.5226
+      },
+      "slot": {
+        "unit": "L23N1136",
+        "layer": 23,
+        "neuron": 1136,
+        "target": " rabbit",
+        "write_z": 8.9928,
+        "read_same_z": -0.394,
+        "source": "c0_16",
+        "w_down_norm": 1.5359
+      }
+    },
+    {
+      "pair_id": 13,
+      "layer": 23,
+      "concept": {
+        "unit": "L23N6598",
+        "layer": 23,
+        "neuron": 6598,
+        "target": " lantern",
+        "write_z": 7.1826,
+        "read_same_z": 3.9633,
+        "source": "c0_16",
+        "w_down_norm": 1.305
+      },
+      "slot": {
+        "unit": "L23N2549",
+        "layer": 23,
+        "neuron": 2549,
+        "target": " rabbit",
+        "write_z": 7.8797,
+        "read_same_z": 0.4645,
+        "source": "c0_16",
+        "w_down_norm": 1.5436
+      }
+    }
+  ],
+  "c05_selection_rule": "Merge L>=15 non-pronoun candidates from natural_neuron_census_preview.json (21 tokens) and the 16 unseen C0 targets (seed=5701 2000-token vocab background; Concept: write_z>6.5 & read_same_z>=3.5; Slot: write_z>6.5 & read_same_z<=1.5), deduplicate by unit keeping max write_z, and pair top-k Concept with top-k Non-Pronoun Slot at each exact shared layer L>=15.",
+  "c05_secondary_all_slot_top6": [
+    {
+      "unit": "L28N2566",
+      "layer": 28,
+      "neuron": 2566,
+      "target": " I",
+      "write_z": 34.81,
+      "read_same_z": 1.21,
+      "w_down_norm": 1.4239
+    },
+    {
+      "unit": "L27N5655",
+      "layer": 27,
+      "neuron": 5655,
+      "target": " I",
+      "write_z": 25.4,
+      "read_same_z": 0.21,
+      "w_down_norm": 1.4322
+    },
+    {
+      "unit": "L25N4074",
+      "layer": 25,
+      "neuron": 4074,
+      "target": " I",
+      "write_z": 24.06,
+      "read_same_z": -0.57,
+      "w_down_norm": 1.5226
+    },
+    {
+      "unit": "L24N4362",
+      "layer": 24,
+      "neuron": 4362,
+      "target": " I",
+      "write_z": 23.5,
+      "read_same_z": 0.48,
+      "w_down_norm": 1.4981
+    },
+    {
+      "unit": "L28N10474",
+      "layer": 28,
+      "neuron": 10474,
+      "target": " me",
+      "write_z": 22.64,
+      "read_same_z": 0.88,
+      "w_down_norm": 1.2338
+    },
+    {
+      "unit": "L26N10833",
+      "layer": 26,
+      "neuron": 10833,
+      "target": " I",
+      "write_z": 22.63,
+      "read_same_z": -1.68,
+      "w_down_norm": 1.5748
+    }
+  ]
 }
