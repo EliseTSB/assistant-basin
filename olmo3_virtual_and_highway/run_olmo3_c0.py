@@ -23,6 +23,7 @@ import gzip
 import hashlib
 import json
 import math
+import os
 import time
 from pathlib import Path
 
@@ -109,16 +110,41 @@ def sha256_file(path: Path) -> str:
     return h.hexdigest()
 
 
+def compute_bank_fingerprint(bank: dict) -> str:
+    """Deterministic SHA-256 fingerprint over bank metadata, targets, layers, and all vector tensors."""
+    h = hashlib.sha256()
+    h.update(json.dumps(bank["meta"], sort_keys=True).encode("utf-8"))
+    h.update(json.dumps(bank["targets_16"], sort_keys=True).encode("utf-8"))
+    h.update(json.dumps(bank["layers"], sort_keys=True).encode("utf-8"))
+    h.update(bank["u_vectors"].detach().cpu().contiguous().float().numpy().tobytes())
+    for L in bank["layers"]:
+        lb = bank["layers_bank"][L]
+        for key in ("R_mf", "R_ridge", "logit_lens", "direct_matched", "rand_iso"):
+            h.update(lb[key].detach().cpu().contiguous().float().numpy().tobytes())
+    return h.hexdigest()
+
+
 @contextlib.contextmanager
 def post_norm_last_inject_hook(model, layer: int, w_unit: torch.Tensor, dose: float):
-    """Inject `dose * w_unit` at `post_feedforward_layernorm` output, last position only."""
+    """Inject `dose * w_unit` at `post_feedforward_layernorm` output, last position only.
+
+    Always validates `w_unit` (finite, unit-norm within 1e-3) and executes the exact
+    clone/cast/add path even at `dose == 0.0` so zero-dose shams exercise the real hook path.
+    """
+    w_cpu = w_unit.detach().float()
+    if not bool(torch.isfinite(w_cpu).all().item()):
+        raise ValueError(f"Non-finite write vector passed to post_norm_last_inject_hook at L{layer}")
+    w_nrm = float(w_cpu.norm().item())
+    if abs(w_nrm - 1.0) > 1e-3:
+        raise ValueError(f"Write vector at L{layer} is not unit-norm: ||w||={w_nrm:.6g}")
+    if not math.isfinite(float(dose)):
+        raise ValueError(f"Non-finite dose passed to post_norm_last_inject_hook at L{layer}: {dose}")
+
     lay = model.model.layers[layer]
 
     def _hook(_mod, _args, output):
-        if dose == 0.0:
-            return output
         out = output.clone()
-        delta = (dose * w_unit.to(device=out.device, dtype=torch.float32)).to(out.dtype)
+        delta = (float(dose) * w_unit.to(device=out.device, dtype=torch.float32)).to(out.dtype)
         out[:, -1, :] = out[:, -1, :] + delta
         return out
 
@@ -273,27 +299,45 @@ def decompose_rand_iso_trace(
     dose: float,
     target_ids: list[int],
 ) -> dict:
-    """Score one pooled `rand_iso` draw on all 16 target logits + self Jacobian diagonal `v^T J v`."""
+    """Score one pooled `rand_iso` draw on all 16 target logits + self Jacobian diagonal `v^T J v`,
+    exact 4-term self-projection telescoping error, and exact Registered v1 §2 `CancR_self`."""
     v = v_unit.float()
-    dh_final = intervened["h_final"] - clean["h_final"]
+    h_c = clean["h_final"]
+    h_i = intervened["h_final"]
+    r_c = float(clean["rms_final"])
+    r_i = float(intervened["rms_final"])
+
+    dh_final = h_i - h_c
     v_j_v = float(torch.dot(v, dh_final).item() / dose)
 
+    # Registered 4-term telescoping & CancR_self with `v` as readout vector (L1 + L4)
+    exact_self = float(torch.dot(v, h_i).item() / r_i - torch.dot(v, h_c).item() / r_c)
     dm_L = intervened["mlp"][inject_layer] - clean["mlp"][inject_layer]
-    d_self = float(torch.dot(v, dm_L).item())
-    abs_sum = abs(d_self)
+    direct_self = float(torch.dot(v, dm_L).item() / r_c)
+    sum_attn_self = 0.0
+    sum_mlp_self = 0.0
+    abs_sum = abs(direct_self)
     n_layers = len(clean["attn"])
     for l in range(inject_layer + 1, n_layers):
         da = intervened["attn"][l] - clean["attn"][l]
         dm = intervened["mlp"][l] - clean["mlp"][l]
-        abs_sum += abs(float(torch.dot(v, da).item())) + abs(float(torch.dot(v, dm).item()))
-    net_self = float(torch.dot(v, dh_final).item())
-    canc_r_self = abs_sum / max(abs(net_self), 1e-6)
+        a_val = float(torch.dot(v, da).item() / r_c)
+        m_val = float(torch.dot(v, dm).item() / r_c)
+        sum_attn_self += a_val
+        sum_mlp_self += m_val
+        abs_sum += abs(a_val) + abs(m_val)
+    rmsnorm_shift_self = float(torch.dot(v, h_i).item() * (1.0 / r_i - 1.0 / r_c))
+    abs_sum += abs(rmsnorm_shift_self)
+    recon_self = direct_self + sum_attn_self + sum_mlp_self + rmsnorm_shift_self
+    telescoping_err = abs(exact_self - recon_self)
+    canc_r_self = abs_sum / max(abs(exact_self), 1e-6)
 
     dl = intervened["logits"] - clean["logits"]
     all_16_dlogits = [round(float(dl[tid].item()), 6) for tid in target_ids]
     return {
         "dose": round(float(dose), 6),
         "vJv": round(v_j_v, 6),
+        "telescoping_err": round(telescoping_err, 6),
         "canc_r_self": round(canc_r_self, 4),
         "all_16_dlogits": all_16_dlogits,
     }
@@ -306,6 +350,7 @@ def run_c0(
     out_dir: Path,
     device: str = "cuda",
     smoke: bool = False,
+    bank_file_sha256: str | None = None,
 ) -> dict:
     t0 = time.time()
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -315,8 +360,12 @@ def run_c0(
     prompts = PROMPTS_8[:2] if smoke else PROMPTS_8
     k_dm = 1 if smoke else int(bank["meta"]["k_dm"])
     m_rand = 2 if smoke else int(bank["meta"]["m_rand"])
-    u_vectors = bank["u_vectors"].float()  # [16, d]
+    u_vectors = bank["u_vectors"].float()  # [N_t, d]
     target_ids = [int(t["id"]) for t in targets]
+    target_strings = [t["string"] for t in targets]
+    prompt_ids = [p["id"] for p in prompts]
+    bank_fingerprint = compute_bank_fingerprint(bank)
+    bank_sha = bank_file_sha256 or bank_fingerprint
 
     # Encode all prompts once
     enc_prompts = [
@@ -341,7 +390,7 @@ def run_c0(
         norms = [float(tr["mlp"][L].norm().item()) for tr in clean_traces]
         post_mlp_norms[str(L)] = round(sum(norms) / len(norms), 6)
 
-    # 2. Shared zero-dose shams (7 forwards in full run — one per layer on prompt 0)
+    # 2. Shared zero-dose shams (7 forwards in full run — one per layer on prompt 0, real hook path)
     shams: dict[str, float] = {}
     for L in layers:
         w0 = bank["layers_bank"][L]["R_mf"][0]
@@ -350,29 +399,60 @@ def run_c0(
             fwd_counts["sham"] += 1
         max_diff = float((tr_sham["logits"] - clean_traces[0]["logits"]).abs().max().item())
         shams[str(L)] = max_diff
-        if max_diff != 0.0:
+        if not math.isfinite(max_diff) or max_diff != 0.0:
             raise RuntimeError(f"C0.0.1 SHAM FAILED at L{L}: max |dlogit| = {max_diff}")
 
-    # 3. Layer-by-layer execution with checkpointing
+    # 3. Layer-by-layer execution with provenance-checked checkpointing (H1)
     regime_n_layers: dict[str, dict] = {}
     regime_d_layers: dict[str, dict] = {}
+    sham_movement_check: dict[str, float] = {}
+
     for L in layers:
+        norm_l = post_mlp_norms[str(L)]
+        dose_n = 0.75 * norm_l
+        expected_prov = {
+            "layer": L,
+            "bank_fingerprint": bank_fingerprint,
+            "bank_sha256": bank_sha,
+            "r_lens_sha256": bank["meta"]["r_lens_sha256"],
+            "constants_sha256": bank["meta"]["constants_sha256"],
+            "design_sha256": bank["meta"]["design_sha256"],
+            "prompt_ids": prompt_ids,
+            "target_strings": target_strings,
+            "target_ids": target_ids,
+            "post_mlp_norm": norm_l,
+            "dose_N": round(dose_n, 6),
+            "k_dm": k_dm,
+            "m_rand": m_rand,
+            "smoke": smoke,
+        }
+
         ckpt_path = out_dir / f"ckpt_L{L}.json"
         if ckpt_path.exists():
-            print(f"[L{L}] Resuming from checkpoint {ckpt_path}")
             ck = json.loads(ckpt_path.read_text(encoding="utf-8"))
+            ck_prov = ck.get("provenance")
+            if ck_prov != expected_prov:
+                diffs = {
+                    k: (ck_prov.get(k) if isinstance(ck_prov, dict) else None, v)
+                    for k, v in expected_prov.items()
+                    if not isinstance(ck_prov, dict) or ck_prov.get(k) != v
+                }
+                raise RuntimeError(
+                    f"H1 PROVENANCE REFUSAL: checkpoint {ckpt_path} provenance mismatch: {diffs}"
+                )
+            print(f"[L{L}] Resuming from verified checkpoint {ckpt_path}")
             regime_n_layers[str(L)] = ck["regime_N"]
             regime_d_layers[str(L)] = ck["regime_D"]
+            sham_movement_check[str(L)] = float(ck["sham_movement_max_abs_dlogit"])
             for k in ("regime_N", "regime_D", "regime_D_capped_skipped"):
                 fwd_counts[k] += int(ck["fwd_counts"][k])
             continue
 
         tl0 = time.time()
         lb = bank["layers_bank"][L]
-        norm_l = post_mlp_norms[str(L)]
-        dose_n = 0.75 * norm_l
         cap_d = 3.0 * norm_l
         l_fwds = {"regime_N": 0, "regime_D": 0, "regime_D_capped_skipped": 0}
+        max_rmf_move = 0.0
 
         # --- REGIME N ---
         rn = {
@@ -404,6 +484,7 @@ def run_c0(
                     rec["prompt_id"] = p["id"]
                     if arm == "R_mf":
                         dl_all = tr["logits"] - clean_traces[pi]["logits"]
+                        max_rmf_move = max(max_rmf_move, float(dl_all.abs().max().item()))
                         rec["all_16_dlogits"] = [round(float(dl_all[x].item()), 6) for x in target_ids]
                     rows_p.append(rec)
                 rn[arm][t_str] = rows_p
@@ -425,6 +506,10 @@ def run_c0(
                     rows_p.append(rec)
                 dm_draws_rows.append(rows_p)
             rn["direct_matched"][t_str] = dm_draws_rows
+
+        if not (max_rmf_move > 0.0):
+            raise RuntimeError(f"M2 INJECTION MOVEMENT CHECK FAILED at L{L}: R_mf dose_N produced 0.0 logit delta")
+        sham_movement_check[str(L)] = round(max_rmf_move, 6)
 
         # rand_iso (M=32 pooled draws per layer)
         for m in range(m_rand):
@@ -513,10 +598,17 @@ def run_c0(
                 dm_draws_rows.append(rows_p)
             rd["direct_matched"][t_str] = dm_draws_rows
 
-        # Atomic checkpoint save
-        tmp_ckpt = out_dir / f".ckpt_L{L}.json.tmp"
+        # Atomic per-process checkpoint save with full provenance (H1)
+        tmp_ckpt = out_dir / f".ckpt_L{L}.{os.getpid()}.tmp"
         tmp_ckpt.write_text(
-            json.dumps({"layer": L, "fwd_counts": l_fwds, "regime_N": rn, "regime_D": rd}),
+            json.dumps({
+                "layer": L,
+                "provenance": expected_prov,
+                "sham_movement_max_abs_dlogit": sham_movement_check[str(L)],
+                "fwd_counts": l_fwds,
+                "regime_N": rn,
+                "regime_D": rd,
+            }),
             encoding="utf-8",
         )
         tmp_ckpt.replace(ckpt_path)
@@ -526,7 +618,8 @@ def run_c0(
             fwd_counts[k] += l_fwds[k]
         print(
             f"[L{L}] done in {time.time() - tl0:.1f}s "
-            f"(N={l_fwds['regime_N']}, D={l_fwds['regime_D']}, capped={l_fwds['regime_D_capped_skipped']})",
+            f"(N={l_fwds['regime_N']}, D={l_fwds['regime_D']}, capped={l_fwds['regime_D_capped_skipped']}, "
+            f"R_mf_max_move={sham_movement_check[str(L)]:.3f})",
             flush=True,
         )
 
@@ -538,6 +631,8 @@ def run_c0(
             "smoke": smoke,
             "elapsed_sec": round(time.time() - t0, 2),
             "gpu_name": torch.cuda.get_device_name(0) if torch.cuda.is_available() else "cpu",
+            "bank_sha256": bank_sha,
+            "bank_fingerprint": bank_fingerprint,
             "r_lens_sha256": bank["meta"]["r_lens_sha256"],
             "constants_sha256": bank["meta"]["constants_sha256"],
             "design_sha256": bank["meta"]["design_sha256"],
@@ -553,6 +648,7 @@ def run_c0(
         "prompts_8": prompts,
         "post_mlp_norms": post_mlp_norms,
         "shams": shams,
+        "sham_movement_check": sham_movement_check,
         "regime_N": regime_n_layers,
         "regime_D": regime_d_layers,
     }
@@ -578,6 +674,7 @@ def main() -> None:
 
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
+    bank_sha = sha256_file(args.bank)
     bank = torch.load(str(args.bank), map_location="cpu", weights_only=False)
     print(f"Loading {MODEL_ID}@{MODEL_REV} in bf16 on {args.device} ...", flush=True)
     tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, revision=MODEL_REV)
@@ -588,7 +685,7 @@ def main() -> None:
         device_map=args.device,
     )
     model.eval()
-    run_c0(model, tokenizer, bank, args.out_dir, device=args.device, smoke=args.smoke)
+    run_c0(model, tokenizer, bank, args.out_dir, device=args.device, smoke=args.smoke, bank_file_sha256=bank_sha)
 
 
 if __name__ == "__main__":
