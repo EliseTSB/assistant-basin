@@ -62,7 +62,7 @@ def load_json_maybe_gz(path: Path) -> dict:
 # Pure-stdlib statistics (Registered v1 §2 conventions)
 # ---------------------------------------------------------------------------
 def mean(xs: list[float]) -> float:
-    return sum(xs) / len(xs) if xs else 0.0
+    return math.fsum(xs) / len(xs) if xs else 0.0
 
 
 def median(xs: list[float]) -> float:
@@ -164,11 +164,11 @@ def spearman_rho(xs: list[float], ys: list[float]) -> float:
         return 0.0
     rx = avg_ranks(xs)
     ry = avg_ranks(ys)
-    mx = sum(rx) / n
-    my = sum(ry) / n
-    num = sum((a - mx) * (b - my) for a, b in zip(rx, ry))
-    dx = math.sqrt(sum((a - mx) ** 2 for a in rx))
-    dy = math.sqrt(sum((b - my) ** 2 for b in ry))
+    mx = math.fsum(rx) / n
+    my = math.fsum(ry) / n
+    num = math.fsum((a - mx) * (b - my) for a, b in zip(rx, ry))
+    dx = math.sqrt(math.fsum((a - mx) ** 2 for a in rx))
+    dy = math.sqrt(math.fsum((b - my) ** 2 for b in ry))
     if dx == 0.0 or dy == 0.0:
         return 0.0
     return max(-1.0, min(1.0, num / (dx * dy)))
@@ -178,7 +178,7 @@ def fisher_z_mean(rhos: list[float]) -> float:
     if not rhos:
         return 0.0
     zs = [math.atanh(max(-0.999999, min(0.999999, r))) for r in rhos]
-    return math.tanh(sum(zs) / len(zs))
+    return math.tanh(math.fsum(zs) / len(zs))
 
 
 def exact_sign_flip_p_one_sided(vals: list[float]) -> float:
@@ -189,8 +189,8 @@ def exact_sign_flip_p_one_sided(vals: list[float]) -> float:
     n = len(vals)
     if n == 0:
         return 1.0
-    obs = sum(vals)
-    tol = 1e-12 * max(1.0, sum(abs(x) for x in vals))
+    obs = math.fsum(vals)
+    tol = 1e-12 * max(1.0, math.fsum(abs(x) for x in vals))
     # Start with all signs +1 (code = 0)
     cur = obs
     signs = [1] * n
@@ -244,13 +244,13 @@ def bca_cluster_ci(
 
     # Jackknife acceleration a_hat
     jacks = [float(stat_fn([j for j in range(n_clusters) if j != i])) for i in range(n_clusters)]
-    j_mean = sum(jacks) / n_clusters
+    j_mean = math.fsum(jacks) / n_clusters
     diffs = [j_mean - jv for jv in jacks]
-    denom = sum(d * d for d in diffs)
+    denom = math.fsum(d * d for d in diffs)
     if denom <= 1e-18:
         a_hat = 0.0
     else:
-        a_hat = sum(d * d * d for d in diffs) / (6.0 * (denom ** 1.5))
+        a_hat = math.fsum(d * d * d for d in diffs) / (6.0 * (denom ** 1.5))
 
     out = {"point": round(theta_hat, 6)}
     for al in alphas:
@@ -303,7 +303,7 @@ def kruskal_wallis_h(groups: list[list[float]]) -> dict:
     group_ns = [len(g) for g in groups]
     for r, (_, g_idx) in zip(ranks, all_vals):
         group_rsums[g_idx] += r
-    h_raw = (12.0 / (n * (n + 1))) * sum((rs * rs) / ng for rs, ng in zip(group_rsums, group_ns) if ng > 0) - 3.0 * (n + 1)
+    h_raw = (12.0 / (n * (n + 1))) * math.fsum((rs * rs) / ng for rs, ng in zip(group_rsums, group_ns) if ng > 0) - 3.0 * (n + 1)
     # Tie correction
     s_vals = sorted(vals_only)
     tie_sum = 0
