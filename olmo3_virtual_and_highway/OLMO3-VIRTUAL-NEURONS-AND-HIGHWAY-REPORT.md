@@ -197,5 +197,5 @@ External literature notes (`drops/Transport Lenses & Hybrid Interpretability.md`
 
 ### Council-Converged Next Steps (`open-olmo3-7b-virtual-neurons-2026-11-22`)
 1. **Step 1 (Option D):** Publish this exploratory baseline & stdlib-only scorer after cold-check fixes.
-2. **Step 2 (Stage C0 — Pre-Registered Predictive Transport Benchmark):** The Stage C0 design is a draft under review and is not registered; it will be published here when it is.
+2. **Step 2 (Stage C0 — Pre-Registered Predictive Transport Benchmark):** Registered and run; design in [`OLMO3-TRANSPORT-C0-DESIGN.md`](OLMO3-TRANSPORT-C0-DESIGN.md), results in [`results/vesper-olmo3-7b-stage-c0/`](../results/vesper-olmo3-7b-stage-c0/README.md). The Stage C1 gate failed, so Stage C1 was not run.
 3. **Step 3 (Stage C1, gated on C0):** Discovery/held-out split path/activation-patching of downstream difference signals + same-layer random controls + coherence gate + verified Base → SFT → DPO → Instruct ladder (`embed_tokens` cosines verified `>= +0.9977`).
