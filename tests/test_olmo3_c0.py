@@ -485,6 +485,17 @@ def test_scorer_null_fails_and_gates_block(tmp_path: Path):
     assert sc_sham["verdicts"]["C0.0"] == "FAIL"
     assert sc_sham["verdicts"]["C0.1"] == "BLOCKED_BY_C0.0"
 
+    # M2 follow-up: missing sham_movement_check key must FAIL C0.0.1 (never pass on absence!)
+    r_no_move = _make_synthetic_receipt(mode="pass")
+    del r_no_move["sham_movement_check"]
+    p_nm = tmp_path / "no_move.json"
+    p_nm.write_text(json.dumps(r_no_move), encoding="utf-8")
+    sc_nm = sc0.score_c0(p_nm, CONSTANTS_PATH, DESIGN_PATH, n_boot=50, n_perm=50)
+    assert sc_nm["gate_C0_0"]["C0_0_1_sham"]["movement_check_passed"] is False
+    assert sc_nm["gate_C0_0"]["C0_0_1_sham"]["passed"] is False
+    assert sc_nm["verdicts"]["C0.0"] == "FAIL"
+    assert sc_nm["stage_c1_gate_passed"] is False
+
     p_cap = tmp_path / "cap.json"
     p_cap.write_text(json.dumps(_make_synthetic_receipt(mode="pass", cap_rate_inject=True)), encoding="utf-8")
     sc_cap = sc0.score_c0(p_cap, CONSTANTS_PATH, DESIGN_PATH, n_boot=100, n_perm=100)

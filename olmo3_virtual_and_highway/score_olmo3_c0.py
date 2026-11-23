@@ -620,10 +620,10 @@ def score_c0(
     non_finite_issues = audit_all_traces_finite(receipt)
     all_finite = len(non_finite_issues) == 0
 
-    # C0.0.1: Zero-dose sham + optional movement check (M2)
+    # C0.0.1: Zero-dose sham + required movement check (M2 — fail closed if key is absent)
     sham_vals = {str(L): float(receipt["shams"][str(L)]) for L in layers}
     sham_move = receipt.get("sham_movement_check")
-    move_ok = True if sham_move is None else all(
+    move_ok = isinstance(sham_move, dict) and all(
         str(L) in sham_move and math.isfinite(float(sham_move[str(L)])) and float(sham_move[str(L)]) > 0.0
         for L in layers
     )
