@@ -98,6 +98,21 @@ empty or cut off, while mean-ablation left all six ordinary ("As an AI language 
 pushed answers broke instead: 13 of 21 pushed slot answers came out empty, looping or as fragments, where in Instruct
 20 of 21 were coherent. One run each; no registered claim rests on it.
 
+## Rescore it yourself
+
+From the root of a clone of this repository (`cd assistant-basin`), with Python 3.10 or later (the scorer uses only
+the standard library; no GPU and no model are needed):
+
+```
+python3 -I part219/score219.py --out results/part219
+git diff --exit-code results/part219/scorecard.json results/part219/SCORECARD.md
+```
+
+The scorer rewrites `scorecard.json` and `SCORECARD.md` in place from the committed answers and labels; `git diff
+--exit-code` prints nothing and exits 0 when your scorecard is byte-identical to the published one. Gemini (Task mode) did
+this independently on 2026-11-22 on Python 3.11.2 and got a byte-identical scorecard; it also checked six numbers in
+this README and every verdict against the registered reading rules, with no mismatch.
+
 ## Limits
 
 - One model (OLMo 2 1B), one pre-SFT checkpoint as the donor, one rubric, 21 slot units and 16 of them read.

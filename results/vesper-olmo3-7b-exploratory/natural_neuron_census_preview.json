@@ -1,0 +1,2272 @@
+{
+  "concept": [
+    {
+      "unit": "L16N5264",
+      "layer": 16,
+      "neuron": 5264,
+      "target": " dog",
+      "write_z": 15.2,
+      "read_same_z": 7.02,
+      "read_top3": [
+        [
+          "Dog",
+          8.09
+        ],
+        [
+          " Dog",
+          7.83
+        ],
+        [
+          " Puppy",
+          7.81
+        ]
+      ]
+    },
+    {
+      "unit": "L14N8245",
+      "layer": 14,
+      "neuron": 8245,
+      "target": " cat",
+      "write_z": 11.06,
+      "read_same_z": 6.18,
+      "read_top3": [
+        [
+          " kitten",
+          7.49
+        ],
+        [
+          " kittens",
+          7.07
+        ],
+        [
+          " kitt",
+          6.76
+        ]
+      ]
+    },
+    {
+      "unit": "L23N8559",
+      "layer": 23,
+      "neuron": 8559,
+      "target": " knight",
+      "write_z": 11.53,
+      "read_same_z": 4.85,
+      "read_top3": [
+        [
+          " knights",
+          5.42
+        ],
+        [
+          " knight",
+          4.85
+        ],
+        [
+          " Knights",
+          4.79
+        ]
+      ]
+    },
+    {
+      "unit": "L20N3060",
+      "layer": 20,
+      "neuron": 3060,
+      "target": " whale",
+      "write_z": 9.4,
+      "read_same_z": 6.56,
+      "read_top3": [
+        [
+          "phins",
+          7.02
+        ],
+        [
+          " whales",
+          6.88
+        ],
+        [
+          " whale",
+          6.56
+        ]
+      ]
+    },
+    {
+      "unit": "L21N1951",
+      "layer": 21,
+      "neuron": 1951,
+      "target": " dog",
+      "write_z": 10.65,
+      "read_same_z": 4.25,
+      "read_top3": [
+        [
+          " puppies",
+          5.85
+        ],
+        [
+          " wolves",
+          5.73
+        ],
+        [
+          " puppy",
+          5.61
+        ]
+      ]
+    },
+    {
+      "unit": "L16N1789",
+      "layer": 16,
+      "neuron": 1789,
+      "target": " chef",
+      "write_z": 8.4,
+      "read_same_z": 6.36,
+      "read_top3": [
+        [
+          " gastr",
+          7.81
+        ],
+        [
+          " dishwasher",
+          7.27
+        ],
+        [
+          " Chef",
+          6.78
+        ]
+      ]
+    },
+    {
+      "unit": "L19N4502",
+      "layer": 19,
+      "neuron": 4502,
+      "target": " robot",
+      "write_z": 9.78,
+      "read_same_z": 4.95,
+      "read_top3": [
+        [
+          " robotics",
+          6.85
+        ],
+        [
+          " Robotics",
+          6.25
+        ],
+        [
+          " rospy",
+          5.87
+        ]
+      ]
+    },
+    {
+      "unit": "L14N6540",
+      "layer": 14,
+      "neuron": 6540,
+      "target": " robot",
+      "write_z": 9.77,
+      "read_same_z": 3.98,
+      "read_top3": [
+        [
+          "Robot",
+          5.17
+        ],
+        [
+          " Robot",
+          5.1
+        ],
+        [
+          " robotics",
+          4.99
+        ]
+      ]
+    },
+    {
+      "unit": "L5N6875",
+      "layer": 5,
+      "neuron": 6875,
+      "target": " librarian",
+      "write_z": 6.8,
+      "read_same_z": 6.36,
+      "read_top3": [
+        [
+          " libr",
+          6.79
+        ],
+        [
+          " librarian",
+          6.36
+        ],
+        [
+          " Bibli",
+          6.01
+        ]
+      ]
+    },
+    {
+      "unit": "L14N3959",
+      "layer": 14,
+      "neuron": 3959,
+      "target": " dragon",
+      "write_z": 7.93,
+      "read_same_z": 5.18,
+      "read_top3": [
+        [
+          "\ufffd",
+          6.18
+        ],
+        [
+          " rept",
+          6.17
+        ],
+        [
+          "snake",
+          6.1
+        ]
+      ]
+    },
+    {
+      "unit": "L20N9371",
+      "layer": 20,
+      "neuron": 9371,
+      "target": " dog",
+      "write_z": 9.05,
+      "read_same_z": 3.59,
+      "read_top3": [
+        [
+          " Veter",
+          5.75
+        ],
+        [
+          " puppies",
+          5.11
+        ],
+        [
+          " puppy",
+          4.95
+        ]
+      ]
+    },
+    {
+      "unit": "L4N6633",
+      "layer": 4,
+      "neuron": 6633,
+      "target": " teacher",
+      "write_z": 7.54,
+      "read_same_z": 5.09,
+      "read_top3": [
+        [
+          " ense",
+          7.91
+        ],
+        [
+          " Teach",
+          7.58
+        ],
+        [
+          " educator",
+          6.84
+        ]
+      ]
+    },
+    {
+      "unit": "L13N9972",
+      "layer": 13,
+      "neuron": 9972,
+      "target": " teacher",
+      "write_z": 8.43,
+      "read_same_z": 4.17,
+      "read_top3": [
+        [
+          " \ufffd",
+          5.77
+        ],
+        [
+          " educ",
+          5.72
+        ],
+        [
+          " homeschool",
+          5.67
+        ]
+      ]
+    },
+    {
+      "unit": "L22N7870",
+      "layer": 22,
+      "neuron": 7870,
+      "target": " chef",
+      "write_z": 8.19,
+      "read_same_z": 4.17,
+      "read_top3": [
+        [
+          " cookbook",
+          4.8
+        ],
+        [
+          " culinary",
+          4.76
+        ],
+        [
+          " gastr",
+          4.63
+        ]
+      ]
+    }
+  ],
+  "slot": [
+    {
+      "unit": "L28N2566",
+      "layer": 28,
+      "neuron": 2566,
+      "target": " I",
+      "write_z": 34.81,
+      "read_same_z": 1.21,
+      "read_top3": [
+        [
+          ">Hello",
+          4.35
+        ],
+        [
+          "\u201cOh",
+          3.19
+        ],
+        [
+          "gmail",
+          3.18
+        ]
+      ]
+    },
+    {
+      "unit": "L27N5655",
+      "layer": 27,
+      "neuron": 5655,
+      "target": " I",
+      "write_z": 25.4,
+      "read_same_z": 0.21,
+      "read_top3": [
+        [
+          " suede",
+          3.82
+        ],
+        [
+          ".getElementsByClassName",
+          3.63
+        ],
+        [
+          " swagger",
+          3.6
+        ]
+      ]
+    },
+    {
+      "unit": "L25N4074",
+      "layer": 25,
+      "neuron": 4074,
+      "target": " I",
+      "write_z": 24.06,
+      "read_same_z": -0.57,
+      "read_top3": [
+        [
+          " Hmm",
+          5.1
+        ],
+        [
+          "Hmm",
+          4.81
+        ],
+        [
+          "Anyway",
+          4.51
+        ]
+      ]
+    },
+    {
+      "unit": "L24N4362",
+      "layer": 24,
+      "neuron": 4362,
+      "target": " I",
+      "write_z": 23.5,
+      "read_same_z": 0.48,
+      "read_top3": [
+        [
+          " Garc",
+          3.77
+        ],
+        [
+          " hern",
+          3.77
+        ],
+        [
+          "(dst",
+          3.31
+        ]
+      ]
+    },
+    {
+      "unit": "L28N10474",
+      "layer": 28,
+      "neuron": 10474,
+      "target": " me",
+      "write_z": 22.64,
+      "read_same_z": 0.88,
+      "read_top3": [
+        [
+          " \ufffd",
+          2.2
+        ],
+        [
+          " glorious",
+          2.15
+        ],
+        [
+          " \u043f\u0440\u043e",
+          1.87
+        ]
+      ]
+    },
+    {
+      "unit": "L26N10833",
+      "layer": 26,
+      "neuron": 10833,
+      "target": " I",
+      "write_z": 22.63,
+      "read_same_z": -1.68,
+      "read_top3": [
+        [
+          " Pioneer",
+          2.77
+        ],
+        [
+          " renegot",
+          2.6
+        ],
+        [
+          " disen",
+          2.58
+        ]
+      ]
+    },
+    {
+      "unit": "L25N1816",
+      "layer": 25,
+      "neuron": 1816,
+      "target": " me",
+      "write_z": 22.16,
+      "read_same_z": 0.31,
+      "read_top3": [
+        [
+          " richt",
+          3.73
+        ],
+        [
+          " Lyme",
+          3.44
+        ],
+        [
+          "_WARNINGS",
+          3.19
+        ]
+      ]
+    },
+    {
+      "unit": "L27N5029",
+      "layer": 27,
+      "neuron": 5029,
+      "target": " dog",
+      "write_z": 19.53,
+      "read_same_z": 0.9,
+      "read_top3": [
+        [
+          " veggies",
+          2.38
+        ],
+        [
+          " fluffy",
+          2.34
+        ],
+        [
+          " chiropr",
+          2.24
+        ]
+      ]
+    },
+    {
+      "unit": "L24N8867",
+      "layer": 24,
+      "neuron": 8867,
+      "target": " me",
+      "write_z": 17.67,
+      "read_same_z": 0.65,
+      "read_top3": [
+        [
+          " Donetsk",
+          3.37
+        ],
+        [
+          " storyt",
+          3.24
+        ],
+        [
+          " sabot",
+          3.21
+        ]
+      ]
+    },
+    {
+      "unit": "L27N5029",
+      "layer": 27,
+      "neuron": 5029,
+      "target": " cat",
+      "write_z": 17.4,
+      "read_same_z": 0.55,
+      "read_top3": [
+        [
+          " veggies",
+          2.38
+        ],
+        [
+          " fluffy",
+          2.34
+        ],
+        [
+          " chiropr",
+          2.24
+        ]
+      ]
+    },
+    {
+      "unit": "L27N10448",
+      "layer": 27,
+      "neuron": 10448,
+      "target": " doctor",
+      "write_z": 15.28,
+      "read_same_z": -0.37,
+      "read_top3": [
+        [
+          " doctoral",
+          3.81
+        ],
+        [
+          " interdisciplinary",
+          3.77
+        ],
+        [
+          " Electoral",
+          3.65
+        ]
+      ]
+    },
+    {
+      "unit": "L26N3854",
+      "layer": 26,
+      "neuron": 3854,
+      "target": " assistant",
+      "write_z": 14.77,
+      "read_same_z": -0.41,
+      "read_top3": [
+        [
+          " carc",
+          2.57
+        ],
+        [
+          "\"fmt",
+          2.55
+        ],
+        [
+          " Ingen",
+          2.42
+        ]
+      ]
+    },
+    {
+      "unit": "L22N2368",
+      "layer": 22,
+      "neuron": 2368,
+      "target": " me",
+      "write_z": 13.75,
+      "read_same_z": -0.32,
+      "read_top3": [
+        [
+          " boto",
+          4.01
+        ],
+        [
+          " dumpsters",
+          3.88
+        ],
+        [
+          " Cabr",
+          3.87
+        ]
+      ]
+    },
+    {
+      "unit": "L22N2368",
+      "layer": 22,
+      "neuron": 2368,
+      "target": " I",
+      "write_z": 12.84,
+      "read_same_z": -0.6,
+      "read_top3": [
+        [
+          " boto",
+          4.01
+        ],
+        [
+          " dumpsters",
+          3.88
+        ],
+        [
+          " Cabr",
+          3.87
+        ]
+      ]
+    },
+    {
+      "unit": "L23N6941",
+      "layer": 23,
+      "neuron": 6941,
+      "target": " AI",
+      "write_z": 12.47,
+      "read_same_z": 1.23,
+      "read_top3": [
+        [
+          " impactful",
+          3.55
+        ],
+        [
+          " dumpsters",
+          3.32
+        ],
+        [
+          "&utm",
+          3.21
+        ]
+      ]
+    },
+    {
+      "unit": "L26N7642",
+      "layer": 26,
+      "neuron": 7642,
+      "target": " king",
+      "write_z": 12.35,
+      "read_same_z": 0.48,
+      "read_top3": [
+        [
+          " invalidated",
+          3.99
+        ],
+        [
+          " flawless",
+          3.91
+        ],
+        [
+          " glorious",
+          3.86
+        ]
+      ]
+    },
+    {
+      "unit": "L26N7642",
+      "layer": 26,
+      "neuron": 7642,
+      "target": " queen",
+      "write_z": 12.19,
+      "read_same_z": 1.19,
+      "read_top3": [
+        [
+          " invalidated",
+          3.99
+        ],
+        [
+          " flawless",
+          3.91
+        ],
+        [
+          " glorious",
+          3.86
+        ]
+      ]
+    },
+    {
+      "unit": "L28N4480",
+      "layer": 28,
+      "neuron": 4480,
+      "target": " teacher",
+      "write_z": 12.05,
+      "read_same_z": 0.5,
+      "read_top3": [
+        [
+          "(Debug",
+          2.25
+        ],
+        [
+          " hoodie",
+          1.88
+        ],
+        [
+          " \ubb38",
+          1.85
+        ]
+      ]
+    },
+    {
+      "unit": "L28N5324",
+      "layer": 28,
+      "neuron": 5324,
+      "target": " king",
+      "write_z": 11.91,
+      "read_same_z": 0.1,
+      "read_top3": [
+        [
+          " useState",
+          2.98
+        ],
+        [
+          "JUnit",
+          2.71
+        ],
+        [
+          " MLB",
+          2.67
+        ]
+      ]
+    },
+    {
+      "unit": "L27N3665",
+      "layer": 27,
+      "neuron": 3665,
+      "target": " me",
+      "write_z": 11.54,
+      "read_same_z": -0.53,
+      "read_top3": [
+        [
+          " lombok",
+          3.22
+        ],
+        [
+          "isbn",
+          3.04
+        ],
+        [
+          " tul",
+          2.99
+        ]
+      ]
+    },
+    {
+      "unit": "L28N1181",
+      "layer": 28,
+      "neuron": 1181,
+      "target": " dog",
+      "write_z": 11.4,
+      "read_same_z": -0.06,
+      "read_top3": [
+        [
+          " LoginForm",
+          1.23
+        ],
+        [
+          " satin",
+          1.21
+        ],
+        [
+          " onActivityResult",
+          1.16
+        ]
+      ]
+    },
+    {
+      "unit": "L28N4212",
+      "layer": 28,
+      "neuron": 4212,
+      "target": " owl",
+      "write_z": 10.5,
+      "read_same_z": -0.41,
+      "read_top3": [
+        [
+          " \ub9ac",
+          1.89
+        ],
+        [
+          " petite",
+          1.82
+        ],
+        [
+          " remot",
+          1.8
+        ]
+      ]
+    },
+    {
+      "unit": "L20N3448",
+      "layer": 20,
+      "neuron": 3448,
+      "target": " me",
+      "write_z": 10.49,
+      "read_same_z": 1.12,
+      "read_top3": [
+        [
+          "typeparam",
+          4.05
+        ],
+        [
+          "\")))",
+          3.99
+        ],
+        [
+          ".DataAnnotations",
+          3.85
+        ]
+      ]
+    },
+    {
+      "unit": "L23N2266",
+      "layer": 23,
+      "neuron": 2266,
+      "target": " teacher",
+      "write_z": 10.46,
+      "read_same_z": -0.95,
+      "read_top3": [
+        [
+          " underage",
+          3.99
+        ],
+        [
+          " adolescents",
+          3.77
+        ],
+        [
+          " hamm",
+          3.57
+        ]
+      ]
+    },
+    {
+      "unit": "L16N184",
+      "layer": 16,
+      "neuron": 184,
+      "target": " me",
+      "write_z": 9.9,
+      "read_same_z": 0.96,
+      "read_top3": [
+        [
+          " arom",
+          3.17
+        ],
+        [
+          " Pret",
+          3.13
+        ],
+        [
+          "\u5728\u7ebf",
+          3.12
+        ]
+      ]
+    },
+    {
+      "unit": "L23N624",
+      "layer": 23,
+      "neuron": 624,
+      "target": " I",
+      "write_z": 9.63,
+      "read_same_z": -0.45,
+      "read_top3": [
+        [
+          " Trev",
+          3.57
+        ],
+        [
+          " Gros",
+          3.54
+        ],
+        [
+          ".fastjson",
+          3.47
+        ]
+      ]
+    },
+    {
+      "unit": "L21N4778",
+      "layer": 21,
+      "neuron": 4778,
+      "target": " teacher",
+      "write_z": 9.16,
+      "read_same_z": 0.23,
+      "read_top3": [
+        [
+          " Supern",
+          2.13
+        ],
+        [
+          "atsby",
+          1.88
+        ],
+        [
+          " zk",
+          1.85
+        ]
+      ]
+    },
+    {
+      "unit": "L18N3345",
+      "layer": 18,
+      "neuron": 3345,
+      "target": " me",
+      "write_z": 9.14,
+      "read_same_z": 0.14,
+      "read_top3": [
+        [
+          " volleyball",
+          4.37
+        ],
+        [
+          " jasmine",
+          3.91
+        ],
+        [
+          " Volley",
+          3.65
+        ]
+      ]
+    },
+    {
+      "unit": "L21N3",
+      "layer": 21,
+      "neuron": 3,
+      "target": " me",
+      "write_z": 9.13,
+      "read_same_z": 0.96,
+      "read_top3": [
+        [
+          "\u6211\u4eec",
+          1.75
+        ],
+        [
+          " wir",
+          1.72
+        ],
+        [
+          "-Allow",
+          1.66
+        ]
+      ]
+    },
+    {
+      "unit": "L13N1549",
+      "layer": 13,
+      "neuron": 1549,
+      "target": " I",
+      "write_z": 9.08,
+      "read_same_z": -3.73,
+      "read_top3": [
+        [
+          " Lia",
+          4.49
+        ],
+        [
+          "\\Service",
+          4.31
+        ],
+        [
+          ".connected",
+          3.99
+        ]
+      ]
+    },
+    {
+      "unit": "L25N9755",
+      "layer": 25,
+      "neuron": 9755,
+      "target": " queen",
+      "write_z": 9.05,
+      "read_same_z": -0.08,
+      "read_top3": [
+        [
+          ".debian",
+          2.41
+        ],
+        [
+          "sqlite",
+          2.4
+        ],
+        [
+          " \u0635",
+          2.37
+        ]
+      ]
+    },
+    {
+      "unit": "L17N2444",
+      "layer": 17,
+      "neuron": 2444,
+      "target": " me",
+      "write_z": 8.96,
+      "read_same_z": -0.05,
+      "read_top3": [
+        [
+          "Personally",
+          4.56
+        ],
+        [
+          " Personally",
+          4.52
+        ],
+        [
+          ".SelectedItem",
+          3.95
+        ]
+      ]
+    },
+    {
+      "unit": "L24N3284",
+      "layer": 24,
+      "neuron": 3284,
+      "target": " cat",
+      "write_z": 8.78,
+      "read_same_z": -0.07,
+      "read_top3": [
+        [
+          " SwiftUI",
+          3.69
+        ],
+        [
+          " Accordingly",
+          3.65
+        ],
+        [
+          ".Character",
+          3.39
+        ]
+      ]
+    },
+    {
+      "unit": "L21N10634",
+      "layer": 21,
+      "neuron": 10634,
+      "target": " I",
+      "write_z": 8.76,
+      "read_same_z": 0.56,
+      "read_top3": [
+        [
+          " Schro",
+          3.3
+        ],
+        [
+          " obst",
+          3.25
+        ],
+        [
+          " cps",
+          3.19
+        ]
+      ]
+    },
+    {
+      "unit": "L19N10018",
+      "layer": 19,
+      "neuron": 10018,
+      "target": " me",
+      "write_z": 8.67,
+      "read_same_z": -1.43,
+      "read_top3": [
+        [
+          " Ezek",
+          3.56
+        ],
+        [
+          " Trou",
+          3.54
+        ],
+        [
+          "Cou",
+          3.48
+        ]
+      ]
+    },
+    {
+      "unit": "L6N6011",
+      "layer": 6,
+      "neuron": 6011,
+      "target": " I",
+      "write_z": 8.64,
+      "read_same_z": -0.1,
+      "read_top3": [
+        [
+          " \u00e7",
+          3.24
+        ],
+        [
+          " unfore",
+          3.23
+        ],
+        [
+          " \u043a\u0430\u0436\u0434",
+          3.23
+        ]
+      ]
+    },
+    {
+      "unit": "L9N765",
+      "layer": 9,
+      "neuron": 765,
+      "target": " I",
+      "write_z": 8.6,
+      "read_same_z": -2.1,
+      "read_top3": [
+        [
+          "\\Service",
+          4.41
+        ],
+        [
+          "&utm",
+          4.29
+        ],
+        [
+          " Kem",
+          4.08
+        ]
+      ]
+    },
+    {
+      "unit": "L6N6011",
+      "layer": 6,
+      "neuron": 6011,
+      "target": " me",
+      "write_z": 8.59,
+      "read_same_z": 0.44,
+      "read_top3": [
+        [
+          " \u00e7",
+          3.24
+        ],
+        [
+          " unfore",
+          3.23
+        ],
+        [
+          " \u043a\u0430\u0436\u0434",
+          3.23
+        ]
+      ]
+    },
+    {
+      "unit": "L28N2020",
+      "layer": 28,
+      "neuron": 2020,
+      "target": " AI",
+      "write_z": 8.47,
+      "read_same_z": 0.63,
+      "read_top3": [
+        [
+          ".iso",
+          1.75
+        ],
+        [
+          " unmist",
+          1.7
+        ],
+        [
+          " ergonomic",
+          1.64
+        ]
+      ]
+    },
+    {
+      "unit": "L15N2839",
+      "layer": 15,
+      "neuron": 2839,
+      "target": " AI",
+      "write_z": 8.43,
+      "read_same_z": 0.63,
+      "read_top3": [
+        [
+          "_reviews",
+          3.43
+        ],
+        [
+          "\"],\"",
+          3.43
+        ],
+        [
+          " maiden",
+          3.35
+        ]
+      ]
+    },
+    {
+      "unit": "L8N9307",
+      "layer": 8,
+      "neuron": 9307,
+      "target": " I",
+      "write_z": 8.35,
+      "read_same_z": -3.79,
+      "read_top3": [
+        [
+          ".we",
+          4.43
+        ],
+        [
+          "Nous",
+          4.27
+        ],
+        [
+          ">We",
+          4.02
+        ]
+      ]
+    },
+    {
+      "unit": "L25N7640",
+      "layer": 25,
+      "neuron": 7640,
+      "target": " cat",
+      "write_z": 8.19,
+      "read_same_z": -0.85,
+      "read_top3": [
+        [
+          " \u00ce",
+          3.5
+        ],
+        [
+          " SIMD",
+          3.37
+        ],
+        [
+          "\u00ce",
+          3.25
+        ]
+      ]
+    },
+    {
+      "unit": "L26N3220",
+      "layer": 26,
+      "neuron": 3220,
+      "target": " fox",
+      "write_z": 8.14,
+      "read_same_z": 0.84,
+      "read_top3": [
+        [
+          " Blanch",
+          2.24
+        ],
+        [
+          "\ufffd",
+          2.22
+        ],
+        [
+          " p\u00e4",
+          2.18
+        ]
+      ]
+    },
+    {
+      "unit": "L5N7286",
+      "layer": 5,
+      "neuron": 7286,
+      "target": " I",
+      "write_z": 8.08,
+      "read_same_z": 0.96,
+      "read_top3": [
+        [
+          " tengo",
+          4.94
+        ],
+        [
+          " puedo",
+          4.77
+        ],
+        [
+          " IW",
+          4.57
+        ]
+      ]
+    },
+    {
+      "unit": "L25N3328",
+      "layer": 25,
+      "neuron": 3328,
+      "target": " assistant",
+      "write_z": 7.94,
+      "read_same_z": -0.06,
+      "read_top3": [
+        [
+          " LGBT",
+          3.44
+        ],
+        [
+          " Melania",
+          3.31
+        ],
+        [
+          " impover",
+          3.31
+        ]
+      ]
+    },
+    {
+      "unit": "L25N9372",
+      "layer": 25,
+      "neuron": 9372,
+      "target": " pirate",
+      "write_z": 7.89,
+      "read_same_z": 1.16,
+      "read_top3": [
+        [
+          " Sail",
+          2.53
+        ],
+        [
+          "utenant",
+          2.38
+        ],
+        [
+          " lieutenant",
+          2.31
+        ]
+      ]
+    },
+    {
+      "unit": "L18N885",
+      "layer": 18,
+      "neuron": 885,
+      "target": " chef",
+      "write_z": 7.85,
+      "read_same_z": 1.45,
+      "read_top3": [
+        [
+          " Erf",
+          3.66
+        ],
+        [
+          " piv",
+          3.63
+        ],
+        [
+          " Cristina",
+          3.06
+        ]
+      ]
+    },
+    {
+      "unit": "L28N9314",
+      "layer": 28,
+      "neuron": 9314,
+      "target": " robot",
+      "write_z": 7.83,
+      "read_same_z": 0.07,
+      "read_top3": [
+        [
+          " \ufffd",
+          1.84
+        ],
+        [
+          "_fore",
+          1.78
+        ],
+        [
+          " \ufffd",
+          1.72
+        ]
+      ]
+    },
+    {
+      "unit": "L28N584",
+      "layer": 28,
+      "neuron": 584,
+      "target": " queen",
+      "write_z": 7.77,
+      "read_same_z": 0.65,
+      "read_top3": [
+        [
+          " yummy",
+          4.23
+        ],
+        [
+          "(null",
+          3.74
+        ],
+        [
+          "(\"${",
+          3.6
+        ]
+      ]
+    },
+    {
+      "unit": "L28N1181",
+      "layer": 28,
+      "neuron": 1181,
+      "target": " cat",
+      "write_z": 7.62,
+      "read_same_z": -0.16,
+      "read_top3": [
+        [
+          " LoginForm",
+          1.23
+        ],
+        [
+          " satin",
+          1.21
+        ],
+        [
+          " onActivityResult",
+          1.16
+        ]
+      ]
+    },
+    {
+      "unit": "L21N8445",
+      "layer": 21,
+      "neuron": 8445,
+      "target": " assistant",
+      "write_z": 7.57,
+      "read_same_z": 0.32,
+      "read_top3": [
+        [
+          "\ufeffnamespace",
+          3.73
+        ],
+        [
+          ".setBackgroundResource",
+          3.4
+        ],
+        [
+          "\u624b\u673a\u53f7",
+          3.24
+        ]
+      ]
+    },
+    {
+      "unit": "L17N9554",
+      "layer": 17,
+      "neuron": 9554,
+      "target": " I",
+      "write_z": 7.53,
+      "read_same_z": -0.04,
+      "read_top3": [
+        [
+          "(correct",
+          2.87
+        ],
+        [
+          "ocrisy",
+          2.49
+        ],
+        [
+          " Cristiano",
+          2.4
+        ]
+      ]
+    },
+    {
+      "unit": "L23N10067",
+      "layer": 23,
+      "neuron": 10067,
+      "target": " me",
+      "write_z": 7.44,
+      "read_same_z": -0.21,
+      "read_top3": [
+        [
+          " slug",
+          3.87
+        ],
+        [
+          " serialVersionUID",
+          3.59
+        ],
+        [
+          " punitive",
+          3.43
+        ]
+      ]
+    },
+    {
+      "unit": "L27N1256",
+      "layer": 27,
+      "neuron": 1256,
+      "target": " AI",
+      "write_z": 7.38,
+      "read_same_z": 0.34,
+      "read_top3": [
+        [
+          "cstring",
+          3.38
+        ],
+        [
+          "/compiler",
+          2.94
+        ],
+        [
+          " forg",
+          2.91
+        ]
+      ]
+    },
+    {
+      "unit": "L15N4835",
+      "layer": 15,
+      "neuron": 4835,
+      "target": " I",
+      "write_z": 7.37,
+      "read_same_z": 0.68,
+      "read_top3": [
+        [
+          "(\\\"",
+          2.93
+        ],
+        [
+          " \"{\\\"",
+          2.66
+        ],
+        [
+          "byss",
+          2.42
+        ]
+      ]
+    },
+    {
+      "unit": "L22N1477",
+      "layer": 22,
+      "neuron": 1477,
+      "target": " assistant",
+      "write_z": 7.35,
+      "read_same_z": 0.27,
+      "read_top3": [
+        [
+          " interpol",
+          3.65
+        ],
+        [
+          " fantast",
+          3.58
+        ],
+        [
+          "orgetown",
+          3.44
+        ]
+      ]
+    },
+    {
+      "unit": "L7N8888",
+      "layer": 7,
+      "neuron": 8888,
+      "target": " I",
+      "write_z": 7.34,
+      "read_same_z": -0.17,
+      "read_top3": [
+        [
+          " tamb",
+          3.97
+        ],
+        [
+          " aggi",
+          3.88
+        ],
+        [
+          " dismay",
+          3.7
+        ]
+      ]
+    },
+    {
+      "unit": "L25N152",
+      "layer": 25,
+      "neuron": 152,
+      "target": " librarian",
+      "write_z": 7.26,
+      "read_same_z": 0.47,
+      "read_top3": [
+        [
+          " \u043f\u0440\u043e",
+          1.98
+        ],
+        [
+          "_city",
+          1.96
+        ],
+        [
+          " humano",
+          1.93
+        ]
+      ]
+    },
+    {
+      "unit": "L8N9307",
+      "layer": 8,
+      "neuron": 9307,
+      "target": " me",
+      "write_z": 7.25,
+      "read_same_z": -3.97,
+      "read_top3": [
+        [
+          ".we",
+          4.43
+        ],
+        [
+          "Nous",
+          4.27
+        ],
+        [
+          ">We",
+          4.02
+        ]
+      ]
+    },
+    {
+      "unit": "L25N3514",
+      "layer": 25,
+      "neuron": 3514,
+      "target": " dog",
+      "write_z": 7.22,
+      "read_same_z": -0.47,
+      "read_top3": [
+        [
+          " Buddh",
+          3.68
+        ],
+        [
+          " exhilar",
+          3.58
+        ],
+        [
+          "Advertis",
+          3.46
+        ]
+      ]
+    },
+    {
+      "unit": "L5N4422",
+      "layer": 5,
+      "neuron": 4422,
+      "target": " me",
+      "write_z": 7.19,
+      "read_same_z": -2.03,
+      "read_top3": [
+        [
+          "Kyle",
+          4.05
+        ],
+        [
+          "\ufeffusing",
+          4.03
+        ],
+        [
+          "asca",
+          3.98
+        ]
+      ]
+    },
+    {
+      "unit": "L0N5068",
+      "layer": 0,
+      "neuron": 5068,
+      "target": " I",
+      "write_z": 7.15,
+      "read_same_z": 0.35,
+      "read_top3": [
+        [
+          "longitude",
+          3.37
+        ],
+        [
+          " Redistributions",
+          3.33
+        ],
+        [
+          "Slides",
+          3.26
+        ]
+      ]
+    },
+    {
+      "unit": "L9N10532",
+      "layer": 9,
+      "neuron": 10532,
+      "target": " me",
+      "write_z": 7.14,
+      "read_same_z": -2.58,
+      "read_top3": [
+        [
+          "\ufffd",
+          3.84
+        ],
+        [
+          " \ubc18",
+          3.71
+        ],
+        [
+          " pr\u00f3p",
+          3.52
+        ]
+      ]
+    },
+    {
+      "unit": "L15N2839",
+      "layer": 15,
+      "neuron": 2839,
+      "target": " robot",
+      "write_z": 7.14,
+      "read_same_z": 0.95,
+      "read_top3": [
+        [
+          "_reviews",
+          3.43
+        ],
+        [
+          "\"],\"",
+          3.43
+        ],
+        [
+          " maiden",
+          3.35
+        ]
+      ]
+    },
+    {
+      "unit": "L18N4864",
+      "layer": 18,
+      "neuron": 4864,
+      "target": " AI",
+      "write_z": 7.05,
+      "read_same_z": 1.22,
+      "read_top3": [
+        [
+          " futuristic",
+          5.45
+        ],
+        [
+          " fut",
+          4.12
+        ],
+        [
+          " irres",
+          4.0
+        ]
+      ]
+    },
+    {
+      "unit": "L28N10748",
+      "layer": 28,
+      "neuron": 10748,
+      "target": " knight",
+      "write_z": 7.05,
+      "read_same_z": 0.15,
+      "read_top3": [
+        [
+          "\ufffd",
+          1.34
+        ],
+        [
+          " Hung",
+          1.28
+        ],
+        [
+          " wom",
+          1.24
+        ]
+      ]
+    },
+    {
+      "unit": "L21N3146",
+      "layer": 21,
+      "neuron": 3146,
+      "target": " queen",
+      "write_z": 7.0,
+      "read_same_z": 0.68,
+      "read_top3": [
+        [
+          " hubby",
+          2.9
+        ],
+        [
+          " Jeb",
+          2.71
+        ],
+        [
+          " guit",
+          2.56
+        ]
+      ]
+    },
+    {
+      "unit": "L27N8058",
+      "layer": 27,
+      "neuron": 8058,
+      "target": " chef",
+      "write_z": 6.99,
+      "read_same_z": -0.16,
+      "read_top3": [
+        [
+          " f\u00e5",
+          2.14
+        ],
+        [
+          " \ufffd",
+          1.94
+        ],
+        [
+          " \uadf8",
+          1.92
+        ]
+      ]
+    },
+    {
+      "unit": "L19N3336",
+      "layer": 19,
+      "neuron": 3336,
+      "target": " I",
+      "write_z": 6.98,
+      "read_same_z": 0.38,
+      "read_top3": [
+        [
+          " tad",
+          4.99
+        ],
+        [
+          "_________________\n\n",
+          4.51
+        ],
+        [
+          " PROT",
+          4.06
+        ]
+      ]
+    },
+    {
+      "unit": "L16N184",
+      "layer": 16,
+      "neuron": 184,
+      "target": " I",
+      "write_z": 6.95,
+      "read_same_z": 0.81,
+      "read_top3": [
+        [
+          " arom",
+          3.17
+        ],
+        [
+          " Pret",
+          3.13
+        ],
+        [
+          "\u5728\u7ebf",
+          3.12
+        ]
+      ]
+    },
+    {
+      "unit": "L23N1604",
+      "layer": 23,
+      "neuron": 1604,
+      "target": " assistant",
+      "write_z": 6.81,
+      "read_same_z": 0.1,
+      "read_top3": [
+        [
+          "/fr",
+          2.92
+        ],
+        [
+          " Treasurer",
+          2.87
+        ],
+        [
+          " treasurer",
+          2.73
+        ]
+      ]
+    },
+    {
+      "unit": "L20N2066",
+      "layer": 20,
+      "neuron": 2066,
+      "target": " I",
+      "write_z": 6.79,
+      "read_same_z": 0.04,
+      "read_top3": [
+        [
+          " painfully",
+          3.01
+        ],
+        [
+          ".Toast",
+          2.85
+        ],
+        [
+          " Capt",
+          2.82
+        ]
+      ]
+    },
+    {
+      "unit": "L27N347",
+      "layer": 27,
+      "neuron": 347,
+      "target": " robot",
+      "write_z": 6.77,
+      "read_same_z": 0.87,
+      "read_top3": [
+        [
+          "((_",
+          3.71
+        ],
+        [
+          " ([[",
+          3.25
+        ],
+        [
+          "([[",
+          3.22
+        ]
+      ]
+    },
+    {
+      "unit": "L25N11000",
+      "layer": 25,
+      "neuron": 11000,
+      "target": " teacher",
+      "write_z": 6.73,
+      "read_same_z": 0.97,
+      "read_top3": [
+        [
+          "Haz",
+          2.94
+        ],
+        [
+          " Haz",
+          2.78
+        ],
+        [
+          " Chap",
+          2.75
+        ]
+      ]
+    },
+    {
+      "unit": "L27N7462",
+      "layer": 27,
+      "neuron": 7462,
+      "target": " wizard",
+      "write_z": 6.72,
+      "read_same_z": 1.12,
+      "read_top3": [
+        [
+          " disob",
+          2.84
+        ],
+        [
+          "Hell",
+          2.74
+        ],
+        [
+          " Johannes",
+          2.74
+        ]
+      ]
+    },
+    {
+      "unit": "L23N10797",
+      "layer": 23,
+      "neuron": 10797,
+      "target": " doctor",
+      "write_z": 6.71,
+      "read_same_z": 0.4,
+      "read_top3": [
+        [
+          "ertation",
+          3.94
+        ],
+        [
+          " dissert",
+          3.7
+        ],
+        [
+          "SSERT",
+          3.52
+        ]
+      ]
+    },
+    {
+      "unit": "L12N6378",
+      "layer": 12,
+      "neuron": 6378,
+      "target": " I",
+      "write_z": 6.7,
+      "read_same_z": -0.38,
+      "read_top3": [
+        [
+          "\ufffd",
+          3.74
+        ],
+        [
+          "-Disposition",
+          3.02
+        ],
+        [
+          ".HashMap",
+          2.99
+        ]
+      ]
+    },
+    {
+      "unit": "L24N4357",
+      "layer": 24,
+      "neuron": 4357,
+      "target": " queen",
+      "write_z": 6.67,
+      "read_same_z": 0.53,
+      "read_top3": [
+        [
+          " \ucd5c",
+          2.2
+        ],
+        [
+          " rotten",
+          2.17
+        ],
+        [
+          " \u043f\u0440",
+          1.98
+        ]
+      ]
+    },
+    {
+      "unit": "L28N1996",
+      "layer": 28,
+      "neuron": 1996,
+      "target": " whale",
+      "write_z": 6.64,
+      "read_same_z": 0.2,
+      "read_top3": [
+        [
+          " Ritch",
+          2.55
+        ],
+        [
+          " \u2193",
+          2.53
+        ],
+        [
+          " \u043f\u0440\u043e",
+          2.53
+        ]
+      ]
+    },
+    {
+      "unit": "L24N5004",
+      "layer": 24,
+      "neuron": 5004,
+      "target": " dog",
+      "write_z": 6.58,
+      "read_same_z": 0.33,
+      "read_top3": [
+        [
+          " irrit",
+          3.35
+        ],
+        [
+          "']))",
+          3.29
+        ],
+        [
+          "_OK",
+          3.26
+        ]
+      ]
+    },
+    {
+      "unit": "L15N4835",
+      "layer": 15,
+      "neuron": 4835,
+      "target": " me",
+      "write_z": 6.57,
+      "read_same_z": 0.77,
+      "read_top3": [
+        [
+          "(\\\"",
+          2.93
+        ],
+        [
+          " \"{\\\"",
+          2.66
+        ],
+        [
+          "byss",
+          2.42
+        ]
+      ]
+    },
+    {
+      "unit": "L19N6151",
+      "layer": 19,
+      "neuron": 6151,
+      "target": " assistant",
+      "write_z": 6.57,
+      "read_same_z": 1.17,
+      "read_top3": [
+        [
+          " pulumi",
+          3.89
+        ],
+        [
+          " Pompeo",
+          3.59
+        ],
+        [
+          " \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442",
+          3.56
+        ]
+      ]
+    },
+    {
+      "unit": "L18N8444",
+      "layer": 18,
+      "neuron": 8444,
+      "target": " I",
+      "write_z": 6.55,
+      "read_same_z": 0.45,
+      "read_top3": [
+        [
+          " Wow",
+          4.44
+        ],
+        [
+          "Wow",
+          4.32
+        ],
+        [
+          " WTF",
+          4.05
+        ]
+      ]
+    },
+    {
+      "unit": "L26N7322",
+      "layer": 26,
+      "neuron": 7322,
+      "target": " baker",
+      "write_z": 6.55,
+      "read_same_z": 0.64,
+      "read_top3": [
+        [
+          " ensl",
+          3.06
+        ],
+        [
+          "\u7f16",
+          2.94
+        ],
+        [
+          " Silk",
+          2.91
+        ]
+      ]
+    },
+    {
+      "unit": "L26N1888",
+      "layer": 26,
+      "neuron": 1888,
+      "target": " cat",
+      "write_z": 6.54,
+      "read_same_z": 0.14,
+      "read_top3": [
+        [
+          " sque",
+          3.35
+        ],
+        [
+          "hamster",
+          3.24
+        ],
+        [
+          "umph",
+          3.2
+        ]
+      ]
+    },
+    {
+      "unit": "L8N9435",
+      "layer": 8,
+      "neuron": 9435,
+      "target": " teacher",
+      "write_z": 6.53,
+      "read_same_z": 0.88,
+      "read_top3": [
+        [
+          "#endif",
+          4.03
+        ],
+        [
+          "Digite",
+          3.71
+        ],
+        [
+          ".listen",
+          3.66
+        ]
+      ]
+    },
+    {
+      "unit": "L25N3339",
+      "layer": 25,
+      "neuron": 3339,
+      "target": " king",
+      "write_z": 6.53,
+      "read_same_z": -0.3,
+      "read_top3": [
+        [
+          " mpi",
+          3.65
+        ],
+        [
+          " lineback",
+          3.51
+        ],
+        [
+          " calam",
+          3.5
+        ]
+      ]
+    },
+    {
+      "unit": "L16N2898",
+      "layer": 16,
+      "neuron": 2898,
+      "target": " AI",
+      "write_z": 6.52,
+      "read_same_z": 0.81,
+      "read_top3": [
+        [
+          " conting",
+          3.66
+        ],
+        [
+          " informat",
+          3.6
+        ],
+        [
+          "/compiler",
+          3.58
+        ]
+      ]
+    },
+    {
+      "unit": "L26N8655",
+      "layer": 26,
+      "neuron": 8655,
+      "target": " me",
+      "write_z": 6.52,
+      "read_same_z": -0.64,
+      "read_top3": [
+        [
+          "thag",
+          3.62
+        ],
+        [
+          "Toe",
+          3.34
+        ],
+        [
+          " ruth",
+          3.3
+        ]
+      ]
+    }
+  ]
+}
