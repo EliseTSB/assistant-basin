@@ -275,12 +275,14 @@ def _vjp(m: _LayerMap, G: torch.Tensor, mid_seed: torch.Tensor | None = None, ro
 
 def _maps(model):
     """The model family's ``(linearize, jvp, vjp)``: Qwen3 here, Gemma 4 in ``neuron_lens.gemma4``,
-    OLMo 2 in ``neuron_lens.olmo2``."""
-    from neuron_lens import gemma4, olmo2
+    OLMo 2 in ``neuron_lens.olmo2``, OLMo 3 in ``neuron_lens.olmo3``."""
+    from neuron_lens import gemma4, olmo2, olmo3
     if gemma4.is_gemma4(model):
         return gemma4.linearize, gemma4.jvp, gemma4.vjp
     if olmo2.is_olmo2(model):
         return olmo2.linearize, olmo2.jvp, olmo2.vjp
+    if olmo3.is_olmo3(model):
+        return olmo3.linearize, olmo3.jvp, olmo3.vjp
     return _linearize, _jvp, _vjp
 
 
