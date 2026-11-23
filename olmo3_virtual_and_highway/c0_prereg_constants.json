@@ -1,0 +1,1270 @@
+{
+  "model": "allenai/Olmo-3-7B-Instruct",
+  "revision": "6e5971d9eba42665f5bd5a0fcf047f299ce1dccc",
+  "targets_16": [
+    {
+      "domain": "animals",
+      "string": " dolphin",
+      "id": 99269,
+      "decoded_piece": " dolphin"
+    },
+    {
+      "domain": "animals",
+      "string": " hawk",
+      "id": 76920,
+      "decoded_piece": " hawk"
+    },
+    {
+      "domain": "animals",
+      "string": " tiger",
+      "id": 52835,
+      "decoded_piece": " tiger"
+    },
+    {
+      "domain": "animals",
+      "string": " rabbit",
+      "id": 39824,
+      "decoded_piece": " rabbit"
+    },
+    {
+      "domain": "professions",
+      "string": " surgeon",
+      "id": 46098,
+      "decoded_piece": " surgeon"
+    },
+    {
+      "domain": "professions",
+      "string": " pilot",
+      "id": 18178,
+      "decoded_piece": " pilot"
+    },
+    {
+      "domain": "professions",
+      "string": " painter",
+      "id": 30581,
+      "decoded_piece": " painter"
+    },
+    {
+      "domain": "professions",
+      "string": " judge",
+      "id": 11913,
+      "decoded_piece": " judge"
+    },
+    {
+      "domain": "objects",
+      "string": " hammer",
+      "id": 24354,
+      "decoded_piece": " hammer"
+    },
+    {
+      "domain": "objects",
+      "string": " lantern",
+      "id": 74265,
+      "decoded_piece": " lantern"
+    },
+    {
+      "domain": "objects",
+      "string": " mirror",
+      "id": 18327,
+      "decoded_piece": " mirror"
+    },
+    {
+      "domain": "objects",
+      "string": " compass",
+      "id": 24653,
+      "decoded_piece": " compass"
+    },
+    {
+      "domain": "places",
+      "string": " harbor",
+      "id": 57511,
+      "decoded_piece": " harbor"
+    },
+    {
+      "domain": "places",
+      "string": " canyon",
+      "id": 84300,
+      "decoded_piece": " canyon"
+    },
+    {
+      "domain": "places",
+      "string": " temple",
+      "id": 27850,
+      "decoded_piece": " temple"
+    },
+    {
+      "domain": "places",
+      "string": " castle",
+      "id": 33684,
+      "decoded_piece": " castle"
+    }
+  ],
+  "layers": [
+    6,
+    12,
+    15,
+    18,
+    21,
+    24,
+    27
+  ],
+  "layer_geometry": {
+    "6": {
+      "N_median": 0.6485,
+      "c_median": 0.2094,
+      "c_min": 0.173,
+      "c_max": 0.262,
+      "pred_ret_Rmf_median": 2.9947,
+      "pred_ret_dm_median": 0.1358,
+      "pred_gap_D3_median": 8.5554,
+      "vTRv_32draws_median": 0.1543,
+      "trace_R_over_d": 0.155,
+      "per_target": [
+        {
+          "target": " dolphin",
+          "N": 0.7017,
+          "c": 0.173,
+          "pred_ret_Rmf": 4.0562,
+          "pred_ret_dm": 0.1214,
+          "pred_gap_D3": 11.8046
+        },
+        {
+          "target": " hawk",
+          "N": 0.6196,
+          "c": 0.219,
+          "pred_ret_Rmf": 2.8289,
+          "pred_ret_dm": 0.1357,
+          "pred_gap_D3": 8.0796
+        },
+        {
+          "target": " tiger",
+          "N": 0.6112,
+          "c": 0.2001,
+          "pred_ret_Rmf": 3.0539,
+          "pred_ret_dm": 0.1223,
+          "pred_gap_D3": 8.7948
+        },
+        {
+          "target": " rabbit",
+          "N": 0.6795,
+          "c": 0.1958,
+          "pred_ret_Rmf": 3.4709,
+          "pred_ret_dm": 0.133,
+          "pred_gap_D3": 10.0136
+        },
+        {
+          "target": " surgeon",
+          "N": 0.633,
+          "c": 0.2065,
+          "pred_ret_Rmf": 3.0647,
+          "pred_ret_dm": 0.1307,
+          "pred_gap_D3": 8.8018
+        },
+        {
+          "target": " pilot",
+          "N": 0.6369,
+          "c": 0.2463,
+          "pred_ret_Rmf": 2.5861,
+          "pred_ret_dm": 0.1568,
+          "pred_gap_D3": 7.2878
+        },
+        {
+          "target": " painter",
+          "N": 0.6542,
+          "c": 0.2185,
+          "pred_ret_Rmf": 2.9947,
+          "pred_ret_dm": 0.1429,
+          "pred_gap_D3": 8.5554
+        },
+        {
+          "target": " judge",
+          "N": 0.6851,
+          "c": 0.2355,
+          "pred_ret_Rmf": 2.9092,
+          "pred_ret_dm": 0.1613,
+          "pred_gap_D3": 8.2435
+        },
+        {
+          "target": " hammer",
+          "N": 0.6157,
+          "c": 0.2094,
+          "pred_ret_Rmf": 2.9405,
+          "pred_ret_dm": 0.1289,
+          "pred_gap_D3": 8.4348
+        },
+        {
+          "target": " lantern",
+          "N": 0.6842,
+          "c": 0.2069,
+          "pred_ret_Rmf": 3.307,
+          "pred_ret_dm": 0.1416,
+          "pred_gap_D3": 9.4965
+        },
+        {
+          "target": " mirror",
+          "N": 0.6485,
+          "c": 0.262,
+          "pred_ret_Rmf": 2.4757,
+          "pred_ret_dm": 0.1699,
+          "pred_gap_D3": 6.9174
+        },
+        {
+          "target": " compass",
+          "N": 0.5959,
+          "c": 0.2538,
+          "pred_ret_Rmf": 2.3479,
+          "pred_ret_dm": 0.1512,
+          "pred_gap_D3": 6.59
+        },
+        {
+          "target": " harbor",
+          "N": 0.7434,
+          "c": 0.2349,
+          "pred_ret_Rmf": 3.1645,
+          "pred_ret_dm": 0.1746,
+          "pred_gap_D3": 8.9694
+        },
+        {
+          "target": " canyon",
+          "N": 0.6617,
+          "c": 0.2052,
+          "pred_ret_Rmf": 3.2245,
+          "pred_ret_dm": 0.1358,
+          "pred_gap_D3": 9.266
+        },
+        {
+          "target": " temple",
+          "N": 0.669,
+          "c": 0.2401,
+          "pred_ret_Rmf": 2.786,
+          "pred_ret_dm": 0.1606,
+          "pred_gap_D3": 7.8762
+        },
+        {
+          "target": " castle",
+          "N": 0.6414,
+          "c": 0.2027,
+          "pred_ret_Rmf": 3.165,
+          "pred_ret_dm": 0.13,
+          "pred_gap_D3": 9.1052
+        }
+      ]
+    },
+    "12": {
+      "N_median": 0.8983,
+      "c_median": 0.3036,
+      "c_min": 0.2685,
+      "c_max": 0.3724,
+      "pred_ret_Rmf_median": 2.8656,
+      "pred_ret_dm_median": 0.2779,
+      "pred_gap_D3_median": 7.7055,
+      "vTRv_32draws_median": 0.3127,
+      "trace_R_over_d": 0.3141,
+      "per_target": [
+        {
+          "target": " dolphin",
+          "N": 0.9514,
+          "c": 0.2685,
+          "pred_ret_Rmf": 3.5434,
+          "pred_ret_dm": 0.2555,
+          "pred_gap_D3": 9.8639
+        },
+        {
+          "target": " hawk",
+          "N": 0.8678,
+          "c": 0.3252,
+          "pred_ret_Rmf": 2.6685,
+          "pred_ret_dm": 0.2822,
+          "pred_gap_D3": 7.1587
+        },
+        {
+          "target": " tiger",
+          "N": 0.8543,
+          "c": 0.2981,
+          "pred_ret_Rmf": 2.8656,
+          "pred_ret_dm": 0.2547,
+          "pred_gap_D3": 7.8327
+        },
+        {
+          "target": " rabbit",
+          "N": 0.9445,
+          "c": 0.2942,
+          "pred_ret_Rmf": 3.2103,
+          "pred_ret_dm": 0.2779,
+          "pred_gap_D3": 8.7973
+        },
+        {
+          "target": " surgeon",
+          "N": 0.8783,
+          "c": 0.2836,
+          "pred_ret_Rmf": 3.0971,
+          "pred_ret_dm": 0.2491,
+          "pred_gap_D3": 8.5439
+        },
+        {
+          "target": " pilot",
+          "N": 0.8801,
+          "c": 0.3579,
+          "pred_ret_Rmf": 2.4587,
+          "pred_ret_dm": 0.315,
+          "pred_gap_D3": 6.4309
+        },
+        {
+          "target": " painter",
+          "N": 0.8983,
+          "c": 0.3036,
+          "pred_ret_Rmf": 2.959,
+          "pred_ret_dm": 0.2727,
+          "pred_gap_D3": 8.0589
+        },
+        {
+          "target": " judge",
+          "N": 0.9422,
+          "c": 0.3332,
+          "pred_ret_Rmf": 2.8279,
+          "pred_ret_dm": 0.3139,
+          "pred_gap_D3": 7.5418
+        },
+        {
+          "target": " hammer",
+          "N": 0.8578,
+          "c": 0.3035,
+          "pred_ret_Rmf": 2.8263,
+          "pred_ret_dm": 0.2603,
+          "pred_gap_D3": 7.6978
+        },
+        {
+          "target": " lantern",
+          "N": 0.9274,
+          "c": 0.304,
+          "pred_ret_Rmf": 3.0513,
+          "pred_ret_dm": 0.2819,
+          "pred_gap_D3": 8.3082
+        },
+        {
+          "target": " mirror",
+          "N": 0.9171,
+          "c": 0.3724,
+          "pred_ret_Rmf": 2.4626,
+          "pred_ret_dm": 0.3415,
+          "pred_gap_D3": 6.3634
+        },
+        {
+          "target": " compass",
+          "N": 0.8377,
+          "c": 0.3511,
+          "pred_ret_Rmf": 2.3857,
+          "pred_ret_dm": 0.2942,
+          "pred_gap_D3": 6.2746
+        },
+        {
+          "target": " harbor",
+          "N": 0.9759,
+          "c": 0.3484,
+          "pred_ret_Rmf": 2.8011,
+          "pred_ret_dm": 0.34,
+          "pred_gap_D3": 7.3832
+        },
+        {
+          "target": " canyon",
+          "N": 0.8956,
+          "c": 0.2788,
+          "pred_ret_Rmf": 3.2128,
+          "pred_ret_dm": 0.2497,
+          "pred_gap_D3": 8.8895
+        },
+        {
+          "target": " temple",
+          "N": 0.9292,
+          "c": 0.3238,
+          "pred_ret_Rmf": 2.8694,
+          "pred_ret_dm": 0.3009,
+          "pred_gap_D3": 7.7055
+        },
+        {
+          "target": " castle",
+          "N": 0.9013,
+          "c": 0.2927,
+          "pred_ret_Rmf": 3.0793,
+          "pred_ret_dm": 0.2638,
+          "pred_gap_D3": 8.4464
+        }
+      ]
+    },
+    "15": {
+      "N_median": 1.0241,
+      "c_median": 0.3569,
+      "c_min": 0.3144,
+      "c_max": 0.4368,
+      "pred_ret_Rmf_median": 2.8224,
+      "pred_ret_dm_median": 0.3618,
+      "pred_gap_D3_median": 7.2798,
+      "vTRv_32draws_median": 0.4178,
+      "trace_R_over_d": 0.4171,
+      "per_target": [
+        {
+          "target": " dolphin",
+          "N": 1.0312,
+          "c": 0.3144,
+          "pred_ret_Rmf": 3.2798,
+          "pred_ret_dm": 0.3242,
+          "pred_gap_D3": 8.8667
+        },
+        {
+          "target": " hawk",
+          "N": 0.9727,
+          "c": 0.3888,
+          "pred_ret_Rmf": 2.502,
+          "pred_ret_dm": 0.3781,
+          "pred_gap_D3": 6.3716
+        },
+        {
+          "target": " tiger",
+          "N": 0.9727,
+          "c": 0.342,
+          "pred_ret_Rmf": 2.8442,
+          "pred_ret_dm": 0.3327,
+          "pred_gap_D3": 7.5346
+        },
+        {
+          "target": " rabbit",
+          "N": 1.0847,
+          "c": 0.3569,
+          "pred_ret_Rmf": 3.0387,
+          "pred_ret_dm": 0.3872,
+          "pred_gap_D3": 7.9546
+        },
+        {
+          "target": " surgeon",
+          "N": 0.9925,
+          "c": 0.3283,
+          "pred_ret_Rmf": 3.0226,
+          "pred_ret_dm": 0.3259,
+          "pred_gap_D3": 8.0902
+        },
+        {
+          "target": " pilot",
+          "N": 1.0136,
+          "c": 0.4172,
+          "pred_ret_Rmf": 2.4299,
+          "pred_ret_dm": 0.4229,
+          "pred_gap_D3": 6.0211
+        },
+        {
+          "target": " painter",
+          "N": 1.0241,
+          "c": 0.3526,
+          "pred_ret_Rmf": 2.9044,
+          "pred_ret_dm": 0.3611,
+          "pred_gap_D3": 7.6299
+        },
+        {
+          "target": " judge",
+          "N": 1.069,
+          "c": 0.4043,
+          "pred_ret_Rmf": 2.644,
+          "pred_ret_dm": 0.4322,
+          "pred_gap_D3": 6.6353
+        },
+        {
+          "target": " hammer",
+          "N": 0.9949,
+          "c": 0.3576,
+          "pred_ret_Rmf": 2.7823,
+          "pred_ret_dm": 0.3557,
+          "pred_gap_D3": 7.2798
+        },
+        {
+          "target": " lantern",
+          "N": 1.034,
+          "c": 0.3469,
+          "pred_ret_Rmf": 2.9805,
+          "pred_ret_dm": 0.3587,
+          "pred_gap_D3": 7.8654
+        },
+        {
+          "target": " mirror",
+          "N": 1.0585,
+          "c": 0.4368,
+          "pred_ret_Rmf": 2.4234,
+          "pred_ret_dm": 0.4623,
+          "pred_gap_D3": 5.8832
+        },
+        {
+          "target": " compass",
+          "N": 0.9822,
+          "c": 0.3886,
+          "pred_ret_Rmf": 2.5276,
+          "pred_ret_dm": 0.3817,
+          "pred_gap_D3": 6.4378
+        },
+        {
+          "target": " harbor",
+          "N": 1.045,
+          "c": 0.393,
+          "pred_ret_Rmf": 2.6594,
+          "pred_ret_dm": 0.4106,
+          "pred_gap_D3": 6.7462
+        },
+        {
+          "target": " canyon",
+          "N": 1.0027,
+          "c": 0.335,
+          "pred_ret_Rmf": 2.9929,
+          "pred_ret_dm": 0.3359,
+          "pred_gap_D3": 7.9708
+        },
+        {
+          "target": " temple",
+          "N": 1.0593,
+          "c": 0.3753,
+          "pred_ret_Rmf": 2.8224,
+          "pred_ret_dm": 0.3975,
+          "pred_gap_D3": 7.2746
+        },
+        {
+          "target": " castle",
+          "N": 1.0326,
+          "c": 0.3504,
+          "pred_ret_Rmf": 2.9473,
+          "pred_ret_dm": 0.3618,
+          "pred_gap_D3": 7.7566
+        }
+      ]
+    },
+    "18": {
+      "N_median": 1.068,
+      "c_median": 0.4304,
+      "c_min": 0.3816,
+      "c_max": 0.5105,
+      "pred_ret_Rmf_median": 2.4789,
+      "pred_ret_dm_median": 0.4619,
+      "pred_gap_D3_median": 5.9777,
+      "vTRv_32draws_median": 0.5092,
+      "trace_R_over_d": 0.5106,
+      "per_target": [
+        {
+          "target": " dolphin",
+          "N": 1.0381,
+          "c": 0.3964,
+          "pred_ret_Rmf": 2.6192,
+          "pred_ret_dm": 0.4115,
+          "pred_gap_D3": 6.6231
+        },
+        {
+          "target": " hawk",
+          "N": 1.0088,
+          "c": 0.449,
+          "pred_ret_Rmf": 2.2467,
+          "pred_ret_dm": 0.453,
+          "pred_gap_D3": 5.3809
+        },
+        {
+          "target": " tiger",
+          "N": 1.0248,
+          "c": 0.4134,
+          "pred_ret_Rmf": 2.4789,
+          "pred_ret_dm": 0.4237,
+          "pred_gap_D3": 6.1659
+        },
+        {
+          "target": " rabbit",
+          "N": 1.1427,
+          "c": 0.4344,
+          "pred_ret_Rmf": 2.6307,
+          "pred_ret_dm": 0.4964,
+          "pred_gap_D3": 6.4031
+        },
+        {
+          "target": " surgeon",
+          "N": 1.0211,
+          "c": 0.3816,
+          "pred_ret_Rmf": 2.6758,
+          "pred_ret_dm": 0.3897,
+          "pred_gap_D3": 6.8583
+        },
+        {
+          "target": " pilot",
+          "N": 1.0797,
+          "c": 0.4918,
+          "pred_ret_Rmf": 2.1954,
+          "pred_ret_dm": 0.531,
+          "pred_gap_D3": 4.9931
+        },
+        {
+          "target": " painter",
+          "N": 1.0913,
+          "c": 0.4304,
+          "pred_ret_Rmf": 2.5354,
+          "pred_ret_dm": 0.4698,
+          "pred_gap_D3": 6.1968
+        },
+        {
+          "target": " judge",
+          "N": 1.1208,
+          "c": 0.469,
+          "pred_ret_Rmf": 2.3896,
+          "pred_ret_dm": 0.5257,
+          "pred_gap_D3": 5.5916
+        },
+        {
+          "target": " hammer",
+          "N": 1.0408,
+          "c": 0.4297,
+          "pred_ret_Rmf": 2.4219,
+          "pred_ret_dm": 0.4473,
+          "pred_gap_D3": 5.924
+        },
+        {
+          "target": " lantern",
+          "N": 1.068,
+          "c": 0.418,
+          "pred_ret_Rmf": 2.5551,
+          "pred_ret_dm": 0.4464,
+          "pred_gap_D3": 6.3261
+        },
+        {
+          "target": " mirror",
+          "N": 1.0975,
+          "c": 0.5105,
+          "pred_ret_Rmf": 2.1498,
+          "pred_ret_dm": 0.5603,
+          "pred_gap_D3": 4.7682
+        },
+        {
+          "target": " compass",
+          "N": 1.0317,
+          "c": 0.4538,
+          "pred_ret_Rmf": 2.2735,
+          "pred_ret_dm": 0.4682,
+          "pred_gap_D3": 5.4158
+        },
+        {
+          "target": " harbor",
+          "N": 1.0829,
+          "c": 0.4522,
+          "pred_ret_Rmf": 2.3945,
+          "pred_ret_dm": 0.4897,
+          "pred_gap_D3": 5.7144
+        },
+        {
+          "target": " canyon",
+          "N": 1.0248,
+          "c": 0.4068,
+          "pred_ret_Rmf": 2.5194,
+          "pred_ret_dm": 0.4169,
+          "pred_gap_D3": 6.3076
+        },
+        {
+          "target": " temple",
+          "N": 1.1055,
+          "c": 0.445,
+          "pred_ret_Rmf": 2.4845,
+          "pred_ret_dm": 0.4919,
+          "pred_gap_D3": 5.9777
+        },
+        {
+          "target": " castle",
+          "N": 1.0885,
+          "c": 0.4244,
+          "pred_ret_Rmf": 2.5648,
+          "pred_ret_dm": 0.4619,
+          "pred_gap_D3": 6.3085
+        }
+      ]
+    },
+    "21": {
+      "N_median": 1.0942,
+      "c_median": 0.4976,
+      "c_min": 0.4494,
+      "c_max": 0.5653,
+      "pred_ret_Rmf_median": 2.1971,
+      "pred_ret_dm_median": 0.5501,
+      "pred_gap_D3_median": 5.0158,
+      "vTRv_32draws_median": 0.6156,
+      "trace_R_over_d": 0.6144,
+      "per_target": [
+        {
+          "target": " dolphin",
+          "N": 1.0675,
+          "c": 0.4533,
+          "pred_ret_Rmf": 2.3548,
+          "pred_ret_dm": 0.4839,
+          "pred_gap_D3": 5.6127
+        },
+        {
+          "target": " hawk",
+          "N": 1.0408,
+          "c": 0.5117,
+          "pred_ret_Rmf": 2.0338,
+          "pred_ret_dm": 0.5326,
+          "pred_gap_D3": 4.5036
+        },
+        {
+          "target": " tiger",
+          "N": 1.055,
+          "c": 0.4802,
+          "pred_ret_Rmf": 2.1971,
+          "pred_ret_dm": 0.5066,
+          "pred_gap_D3": 5.0715
+        },
+        {
+          "target": " rabbit",
+          "N": 1.1695,
+          "c": 0.5093,
+          "pred_ret_Rmf": 2.2961,
+          "pred_ret_dm": 0.5957,
+          "pred_gap_D3": 5.1012
+        },
+        {
+          "target": " surgeon",
+          "N": 1.0472,
+          "c": 0.4494,
+          "pred_ret_Rmf": 2.3301,
+          "pred_ret_dm": 0.4706,
+          "pred_gap_D3": 5.5784
+        },
+        {
+          "target": " pilot",
+          "N": 1.1223,
+          "c": 0.5578,
+          "pred_ret_Rmf": 2.012,
+          "pred_ret_dm": 0.6261,
+          "pred_gap_D3": 4.1579
+        },
+        {
+          "target": " painter",
+          "N": 1.1448,
+          "c": 0.4879,
+          "pred_ret_Rmf": 2.3465,
+          "pred_ret_dm": 0.5585,
+          "pred_gap_D3": 5.3641
+        },
+        {
+          "target": " judge",
+          "N": 1.1684,
+          "c": 0.5391,
+          "pred_ret_Rmf": 2.1675,
+          "pred_ret_dm": 0.6299,
+          "pred_gap_D3": 4.6127
+        },
+        {
+          "target": " hammer",
+          "N": 1.0738,
+          "c": 0.4976,
+          "pred_ret_Rmf": 2.158,
+          "pred_ret_dm": 0.5343,
+          "pred_gap_D3": 4.8709
+        },
+        {
+          "target": " lantern",
+          "N": 1.1056,
+          "c": 0.4976,
+          "pred_ret_Rmf": 2.2221,
+          "pred_ret_dm": 0.5501,
+          "pred_gap_D3": 5.0158
+        },
+        {
+          "target": " mirror",
+          "N": 1.1334,
+          "c": 0.5653,
+          "pred_ret_Rmf": 2.0049,
+          "pred_ret_dm": 0.6407,
+          "pred_gap_D3": 4.0926
+        },
+        {
+          "target": " compass",
+          "N": 1.0649,
+          "c": 0.5322,
+          "pred_ret_Rmf": 2.0009,
+          "pred_ret_dm": 0.5668,
+          "pred_gap_D3": 4.3025
+        },
+        {
+          "target": " harbor",
+          "N": 1.0942,
+          "c": 0.5081,
+          "pred_ret_Rmf": 2.1535,
+          "pred_ret_dm": 0.556,
+          "pred_gap_D3": 4.7925
+        },
+        {
+          "target": " canyon",
+          "N": 1.0517,
+          "c": 0.4786,
+          "pred_ret_Rmf": 2.1975,
+          "pred_ret_dm": 0.5034,
+          "pred_gap_D3": 5.0823
+        },
+        {
+          "target": " temple",
+          "N": 1.1528,
+          "c": 0.5024,
+          "pred_ret_Rmf": 2.2948,
+          "pred_ret_dm": 0.5791,
+          "pred_gap_D3": 5.147
+        },
+        {
+          "target": " castle",
+          "N": 1.1202,
+          "c": 0.4842,
+          "pred_ret_Rmf": 2.3137,
+          "pred_ret_dm": 0.5424,
+          "pred_gap_D3": 5.3138
+        }
+      ]
+    },
+    "24": {
+      "N_median": 1.1199,
+      "c_median": 0.5866,
+      "c_min": 0.5228,
+      "c_max": 0.6499,
+      "pred_ret_Rmf_median": 1.8827,
+      "pred_ret_dm_median": 0.659,
+      "pred_gap_D3_median": 3.7973,
+      "vTRv_32draws_median": 0.7195,
+      "trace_R_over_d": 0.7226,
+      "per_target": [
+        {
+          "target": " dolphin",
+          "N": 1.0824,
+          "c": 0.5228,
+          "pred_ret_Rmf": 2.0703,
+          "pred_ret_dm": 0.5659,
+          "pred_gap_D3": 4.5134
+        },
+        {
+          "target": " hawk",
+          "N": 1.0522,
+          "c": 0.5866,
+          "pred_ret_Rmf": 1.7936,
+          "pred_ret_dm": 0.6173,
+          "pred_gap_D3": 3.529
+        },
+        {
+          "target": " tiger",
+          "N": 1.0644,
+          "c": 0.5688,
+          "pred_ret_Rmf": 1.8712,
+          "pred_ret_dm": 0.6055,
+          "pred_gap_D3": 3.7973
+        },
+        {
+          "target": " rabbit",
+          "N": 1.1865,
+          "c": 0.5877,
+          "pred_ret_Rmf": 2.019,
+          "pred_ret_dm": 0.6973,
+          "pred_gap_D3": 3.9651
+        },
+        {
+          "target": " surgeon",
+          "N": 1.0758,
+          "c": 0.5258,
+          "pred_ret_Rmf": 2.0462,
+          "pred_ret_dm": 0.5656,
+          "pred_gap_D3": 4.4419
+        },
+        {
+          "target": " pilot",
+          "N": 1.1329,
+          "c": 0.6472,
+          "pred_ret_Rmf": 1.7505,
+          "pred_ret_dm": 0.7331,
+          "pred_gap_D3": 3.0522
+        },
+        {
+          "target": " painter",
+          "N": 1.1702,
+          "c": 0.5665,
+          "pred_ret_Rmf": 2.0656,
+          "pred_ret_dm": 0.6629,
+          "pred_gap_D3": 4.2083
+        },
+        {
+          "target": " judge",
+          "N": 1.1587,
+          "c": 0.6154,
+          "pred_ret_Rmf": 1.8827,
+          "pred_ret_dm": 0.7131,
+          "pred_gap_D3": 3.509
+        },
+        {
+          "target": " hammer",
+          "N": 1.093,
+          "c": 0.5914,
+          "pred_ret_Rmf": 1.8482,
+          "pred_ret_dm": 0.6464,
+          "pred_gap_D3": 3.6055
+        },
+        {
+          "target": " lantern",
+          "N": 1.1276,
+          "c": 0.5777,
+          "pred_ret_Rmf": 1.9519,
+          "pred_ret_dm": 0.6514,
+          "pred_gap_D3": 3.9014
+        },
+        {
+          "target": " mirror",
+          "N": 1.1538,
+          "c": 0.6499,
+          "pred_ret_Rmf": 1.7753,
+          "pred_ret_dm": 0.7498,
+          "pred_gap_D3": 3.0764
+        },
+        {
+          "target": " compass",
+          "N": 1.0921,
+          "c": 0.6135,
+          "pred_ret_Rmf": 1.7801,
+          "pred_ret_dm": 0.67,
+          "pred_gap_D3": 3.3302
+        },
+        {
+          "target": " harbor",
+          "N": 1.1199,
+          "c": 0.5885,
+          "pred_ret_Rmf": 1.9029,
+          "pred_ret_dm": 0.659,
+          "pred_gap_D3": 3.7318
+        },
+        {
+          "target": " canyon",
+          "N": 1.064,
+          "c": 0.5657,
+          "pred_ret_Rmf": 1.8808,
+          "pred_ret_dm": 0.6019,
+          "pred_gap_D3": 3.8366
+        },
+        {
+          "target": " temple",
+          "N": 1.1811,
+          "c": 0.5933,
+          "pred_ret_Rmf": 1.9908,
+          "pred_ret_dm": 0.7007,
+          "pred_gap_D3": 3.8702
+        },
+        {
+          "target": " castle",
+          "N": 1.1592,
+          "c": 0.5718,
+          "pred_ret_Rmf": 2.0273,
+          "pred_ret_dm": 0.6628,
+          "pred_gap_D3": 4.0935
+        }
+      ]
+    },
+    "27": {
+      "N_median": 1.1554,
+      "c_median": 0.6534,
+      "c_min": 0.5835,
+      "c_max": 0.7132,
+      "pred_ret_Rmf_median": 1.7482,
+      "pred_ret_dm_median": 0.7626,
+      "pred_gap_D3_median": 3.0323,
+      "vTRv_32draws_median": 0.8349,
+      "trace_R_over_d": 0.8363,
+      "per_target": [
+        {
+          "target": " dolphin",
+          "N": 1.106,
+          "c": 0.6031,
+          "pred_ret_Rmf": 1.8339,
+          "pred_ret_dm": 0.667,
+          "pred_gap_D3": 3.5006
+        },
+        {
+          "target": " hawk",
+          "N": 1.0731,
+          "c": 0.6462,
+          "pred_ret_Rmf": 1.6607,
+          "pred_ret_dm": 0.6934,
+          "pred_gap_D3": 2.9018
+        },
+        {
+          "target": " tiger",
+          "N": 1.105,
+          "c": 0.644,
+          "pred_ret_Rmf": 1.7159,
+          "pred_ret_dm": 0.7117,
+          "pred_gap_D3": 3.0128
+        },
+        {
+          "target": " rabbit",
+          "N": 1.2124,
+          "c": 0.6585,
+          "pred_ret_Rmf": 1.8412,
+          "pred_ret_dm": 0.7984,
+          "pred_gap_D3": 3.1283
+        },
+        {
+          "target": " surgeon",
+          "N": 1.0984,
+          "c": 0.5835,
+          "pred_ret_Rmf": 1.8826,
+          "pred_ret_dm": 0.6409,
+          "pred_gap_D3": 3.725
+        },
+        {
+          "target": " pilot",
+          "N": 1.158,
+          "c": 0.7126,
+          "pred_ret_Rmf": 1.625,
+          "pred_ret_dm": 0.8252,
+          "pred_gap_D3": 2.3995
+        },
+        {
+          "target": " painter",
+          "N": 1.1784,
+          "c": 0.6471,
+          "pred_ret_Rmf": 1.821,
+          "pred_ret_dm": 0.7626,
+          "pred_gap_D3": 3.1753
+        },
+        {
+          "target": " judge",
+          "N": 1.2027,
+          "c": 0.688,
+          "pred_ret_Rmf": 1.7482,
+          "pred_ret_dm": 0.8274,
+          "pred_gap_D3": 2.7622
+        },
+        {
+          "target": " hammer",
+          "N": 1.1281,
+          "c": 0.6701,
+          "pred_ret_Rmf": 1.6836,
+          "pred_ret_dm": 0.7559,
+          "pred_gap_D3": 2.7829
+        },
+        {
+          "target": " lantern",
+          "N": 1.1554,
+          "c": 0.6534,
+          "pred_ret_Rmf": 1.7683,
+          "pred_ret_dm": 0.7549,
+          "pred_gap_D3": 3.0402
+        },
+        {
+          "target": " mirror",
+          "N": 1.1879,
+          "c": 0.7132,
+          "pred_ret_Rmf": 1.6656,
+          "pred_ret_dm": 0.8472,
+          "pred_gap_D3": 2.4552
+        },
+        {
+          "target": " compass",
+          "N": 1.1212,
+          "c": 0.6964,
+          "pred_ret_Rmf": 1.61,
+          "pred_ret_dm": 0.7808,
+          "pred_gap_D3": 2.4876
+        },
+        {
+          "target": " harbor",
+          "N": 1.1948,
+          "c": 0.6552,
+          "pred_ret_Rmf": 1.8235,
+          "pred_ret_dm": 0.7828,
+          "pred_gap_D3": 3.1221
+        },
+        {
+          "target": " canyon",
+          "N": 1.1144,
+          "c": 0.6445,
+          "pred_ret_Rmf": 1.729,
+          "pred_ret_dm": 0.7182,
+          "pred_gap_D3": 3.0323
+        },
+        {
+          "target": " temple",
+          "N": 1.2055,
+          "c": 0.6559,
+          "pred_ret_Rmf": 1.8379,
+          "pred_ret_dm": 0.7906,
+          "pred_gap_D3": 3.1418
+        },
+        {
+          "target": " castle",
+          "N": 1.2036,
+          "c": 0.6397,
+          "pred_ret_Rmf": 1.8816,
+          "pred_ret_dm": 0.7699,
+          "pred_gap_D3": 3.335
+        }
+      ]
+    }
+  },
+  "natural_L15plus": {
+    "concept_top6": [
+      {
+        "unit": "L16N5264",
+        "layer": 16,
+        "neuron": 5264,
+        "target": " dog",
+        "target_id": 5679,
+        "write_z": 15.2,
+        "read_same_z": 7.02
+      },
+      {
+        "unit": "L23N8559",
+        "layer": 23,
+        "neuron": 8559,
+        "target": " knight",
+        "target_id": 47709,
+        "write_z": 11.53,
+        "read_same_z": 4.85
+      },
+      {
+        "unit": "L21N1951",
+        "layer": 21,
+        "neuron": 1951,
+        "target": " dog",
+        "target_id": 5679,
+        "write_z": 10.65,
+        "read_same_z": 4.25
+      },
+      {
+        "unit": "L19N4502",
+        "layer": 19,
+        "neuron": 4502,
+        "target": " robot",
+        "target_id": 12585,
+        "write_z": 9.78,
+        "read_same_z": 4.95
+      },
+      {
+        "unit": "L20N3060",
+        "layer": 20,
+        "neuron": 3060,
+        "target": " whale",
+        "target_id": 51119,
+        "write_z": 9.4,
+        "read_same_z": 6.56
+      },
+      {
+        "unit": "L20N9371",
+        "layer": 20,
+        "neuron": 9371,
+        "target": " dog",
+        "target_id": 5679,
+        "write_z": 9.05,
+        "read_same_z": 3.59
+      }
+    ],
+    "slot_top6_all": [
+      {
+        "unit": "L28N2566",
+        "layer": 28,
+        "neuron": 2566,
+        "target": " I",
+        "target_id": 358,
+        "write_z": 34.81,
+        "read_same_z": 1.21
+      },
+      {
+        "unit": "L27N5655",
+        "layer": 27,
+        "neuron": 5655,
+        "target": " I",
+        "target_id": 358,
+        "write_z": 25.4,
+        "read_same_z": 0.21
+      },
+      {
+        "unit": "L25N4074",
+        "layer": 25,
+        "neuron": 4074,
+        "target": " I",
+        "target_id": 358,
+        "write_z": 24.06,
+        "read_same_z": -0.57
+      },
+      {
+        "unit": "L24N4362",
+        "layer": 24,
+        "neuron": 4362,
+        "target": " I",
+        "target_id": 358,
+        "write_z": 23.5,
+        "read_same_z": 0.48
+      },
+      {
+        "unit": "L28N10474",
+        "layer": 28,
+        "neuron": 10474,
+        "target": " me",
+        "target_id": 757,
+        "write_z": 22.64,
+        "read_same_z": 0.88
+      },
+      {
+        "unit": "L26N10833",
+        "layer": 26,
+        "neuron": 10833,
+        "target": " I",
+        "target_id": 358,
+        "write_z": 22.63,
+        "read_same_z": -1.68
+      }
+    ],
+    "slot_top6_non_pronoun": [
+      {
+        "unit": "L27N5029",
+        "layer": 27,
+        "neuron": 5029,
+        "target": " dog",
+        "target_id": 5679,
+        "write_z": 19.53,
+        "read_same_z": 0.9
+      },
+      {
+        "unit": "L27N10448",
+        "layer": 27,
+        "neuron": 10448,
+        "target": " doctor",
+        "target_id": 10896,
+        "write_z": 15.28,
+        "read_same_z": -0.37
+      },
+      {
+        "unit": "L26N3854",
+        "layer": 26,
+        "neuron": 3854,
+        "target": " assistant",
+        "target_id": 18328,
+        "write_z": 14.77,
+        "read_same_z": -0.41
+      },
+      {
+        "unit": "L23N6941",
+        "layer": 23,
+        "neuron": 6941,
+        "target": " AI",
+        "target_id": 15592,
+        "write_z": 12.47,
+        "read_same_z": 1.23
+      },
+      {
+        "unit": "L26N7642",
+        "layer": 26,
+        "neuron": 7642,
+        "target": " king",
+        "target_id": 11734,
+        "write_z": 12.35,
+        "read_same_z": 0.48
+      },
+      {
+        "unit": "L28N4480",
+        "layer": 28,
+        "neuron": 4480,
+        "target": " teacher",
+        "target_id": 11326,
+        "write_z": 12.05,
+        "read_same_z": 0.5
+      }
+    ]
+  }
+}
