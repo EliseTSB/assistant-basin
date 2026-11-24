@@ -283,15 +283,19 @@ differs, it governs.
    - `moved`: supported, and **at least 3 distinct prompts** have an eligible item answering `other_maker` (refusals and
      denials excluded).
    - `led by X`: the most frequent `other_maker` family over that direction's eligible items (ties: not led).
-   - 218.6's paired bootstrap resamples **prompts**, not items, over the prompts with at least one eligible item at both
-     SFT and DPO (each draw carries both of a prompt's items); the intersection must have at least 25 prompts.
+   - 218.6's paired bootstrap resamples **prompts**, not items. A prompt enters when at least one opening is eligible at
+     both SFT and DPO, and it contributes only the opening(s) eligible at both, so SFT and DPO always compare the same
+     items (paired-item intersection, clustered by prompt; Vesper #16). The intersection must have at least 25 prompts.
 7. **Dose scale.** The median residual-output norm per layer is taken over the 88 item prompts' positions (position 0
    excluded), opening tokens included.
 8. **Pilot.** Instruct, layer 5, the v3 fine ladder (d ∈ {0.15, 0.20, 0.25, 0.30, 0.40, 0.50, 0.75, 1.0, 1.5}), all 40
    directions plus the zero row: 9 × 88 × 41 = 32,472 generations, plus the no-hook null. Then a **gate-only pass on SFT
-   and DPO**: layer 5, d = 0.5, 88 items × 41 rows each (7,216 generations), read for eligibility only. Stop rule: if any
-   model fails the gate, or no rung of the Instruct pilot reaches 36 of 40 supported directions, the main run waits.
-   The trim rule is unchanged.
+   and DPO**: layer 5, each item as a batch of **41 zero-push rows** (the hook installed, adding zero), so the batch shape
+   matches and **no pushed SFT or DPO answer exists before the main run** (Vesper #16): 88 × 41 × 2 = 7,216 generations,
+   read for eligibility only. Pilot total 39,688 generations; at the v3 pilot's 7.9 rows/s that is at most about 84
+   minutes (about 2.7 Colab units at the measured 1.94 units an hour), and the 41-row batch should be faster per row.
+   Stop rule: if any model fails the gate, or no rung of the Instruct pilot reaches 36 of 40 supported directions, the
+   main run waits. The trim rule is unchanged. The main run's own zero rows decide eligibility for every verdict.
 9. **Size.** Main run: 3 models × 2 layers × 7 doses × 88 items × 41 rows = 151,536 generations, plus no-hook nulls
    (3 × 88 × 41 × 2 = 21,648). The v3 pilot ran 4,356 rows in 554 s (`run.json` `wall_seconds`; about 7.9 rows/s at an
    11-row batch on the L4); the v4 pilot measures the 41-row rate before the main run, and Elise is asked first if the
@@ -307,8 +311,11 @@ differs, it governs.
 
 The eight predictions above stand **with their text and confidences as registered**, read on the v4 instrument (items,
 openings, NEW44C, the new gate). They are not revised after the pilot's pushed readout or the dev screen; both are
-disclosed above so a reader can weigh them. Vesper's two priors (218.7, 218.8) stand unless she changes them before
-registration of this amendment, in which case her new values are added beside the old with the date.
+disclosed above so a reader can weigh them. Vesper kept her two priors (218.7 at 25%, 218.8 at 45%) unchanged after
+reading this amendment (council #16).
+
+Review: Vesper, DESIGN PASS on 6d3ec443 with two tightenings (218.6's item rule; the zero-push gate pass), both folded
+here (council `vesper-part218-design-2026-11-21` #16).
 
 ### Limits added
 
