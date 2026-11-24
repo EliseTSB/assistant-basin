@@ -550,6 +550,10 @@ def validate_registered_c0b_receipt(receipt: dict, c0b_const: dict) -> None:
         raise ValueError("Registered Stage C0b structure/parameter check failed: " + "; ".join(errors[:12]))
 
 
+def _r6(val: float | None) -> float | None:
+    return None if val is None else round(val, 6)
+
+
 def audit_regime_n_arm_liveness(receipt: dict) -> list[str]:
     """Fail closed against dead/zeroed Regime-N arms (R_mf, R_ridge, logit_lens)."""
     issues: list[str] = []
@@ -581,6 +585,48 @@ def audit_regime_n_arm_liveness(receipt: dict) -> list[str]:
                     issues.append(f"{reg_name}.{arm}.{ts}.mean_self_dlogit<=0 ({m_self})")
                     if len(issues) >= 20:
                         return issues
+    return issues
+
+
+def audit_regime_d_arm_liveness(receipt: dict) -> list[str]:
+    """Fail closed against dead/zeroed Regime-D arms (especially subtracted `direct_matched`).
+
+    Allows an individual live row whose direct+attn+mlp happens to cancel to exact_dlogit==0.0 in bf16
+    (as observed once on real Stage C0 L12 direct_matched ' harbor' with kl=0.104, sum_mlp=-2.694),
+    while failing closed if (a) any non-capped row shows zero movement (kl==0 or exact=attn=mlp=0) or
+    (b) any (regime, L, arm, target) cell with retained rows has all exact_dlogit == 0.0.
+    """
+    issues: list[str] = []
+    t_strs = [t["string"] for t in receipt["targets_16"]]
+    reg_specs = (
+        ("regime_D_all", ("R_mf", "logit_lens", "direct_matched"), t_strs),
+        ("regime_D_last_anchor", ("R_mf", "direct_matched"), EXPECTED_ANCHOR_TARGETS),
+    )
+    for reg_name, arms, target_list in reg_specs:
+        for L in LAYERS_4L:
+            ls = str(L)
+            blk = receipt[reg_name][ls]
+            for arm in arms:
+                for ts in target_list:
+                    item = blk[arm][ts]
+                    rows = [r for d in item for r in d] if arm == "direct_matched" else item
+                    retained_abs_ex: list[float] = []
+                    for idx, r in enumerate(rows):
+                        if r.get("capped", False):
+                            continue
+                        ex = abs(float(r["exact_dlogit"]))
+                        sa = abs(float(r["sum_attn"]))
+                        sm = abs(float(r["sum_mlp"]))
+                        kv = float(r["kl"])
+                        retained_abs_ex.append(ex)
+                        if not (math.isfinite(kv) and kv > 0.0) or max(ex, sa, sm) == 0.0:
+                            issues.append(f"{reg_name}.L{L}.{arm}.{ts}[{idx}].dead_row")
+                            if len(issues) >= 20:
+                                return issues
+                    if retained_abs_ex and max(retained_abs_ex) == 0.0:
+                        issues.append(f"{reg_name}.L{L}.{arm}.{ts}.all_exact_dlogit_zero")
+                        if len(issues) >= 20:
+                            return issues
     return issues
 
 
@@ -811,8 +857,12 @@ def score_c0b(
         )
         for mode in ("last", "all")
     )
-    dead_arm_issues = audit_regime_n_arm_liveness(receipt)
-    arm_liveness_ok = len(dead_arm_issues) == 0
+    dead_n_arm_issues = audit_regime_n_arm_liveness(receipt)
+    dead_d_arm_issues = audit_regime_d_arm_liveness(receipt)
+    regime_n_liveness_ok = len(dead_n_arm_issues) == 0
+    regime_d_liveness_ok = len(dead_d_arm_issues) == 0
+    arm_liveness_ok = regime_n_liveness_ok and regime_d_liveness_ok
+    dead_arm_issues = (dead_n_arm_issues + dead_d_arm_issues)[:20]
     c0b_0_1_pass = (
         all(math.isfinite(v) and v == 0.0 for v in sham_last.values())
         and all(math.isfinite(v) and v == 0.0 for v in sham_all.values())
@@ -938,54 +988,10 @@ def score_c0b(
             if n_b < 3 or n_c < 3:
                 capped_cell_failures.append(f"L{L}.{ts}:bare={n_b}/4,chat={n_c}/4")
 
-    if all_finite and len(fde_errs) > 0:
-        fde_p95 = quantile(fde_errs, 0.95)
-        fde_p999 = quantile(fde_errs, 0.999)
-        fde_max = max(fde_errs)
-        c0b_0_3_pass = (
-            (max_cap_rate <= 0.02)
-            and (len(capped_cell_failures) == 0)
-            and (fde_p95 <= 0.30)
-            and (fde_p999 <= 0.45)
-        )
-        fmt_d_diag = {
-            "fde_bare_p95": round(quantile(fde_bare, 0.95), 6),
-            "fde_bare_max": round(max(fde_bare), 6),
-            "fde_chatml_p95": round(quantile(fde_chat, 0.95), 6),
-            "fde_chatml_max": round(max(fde_chat), 6),
-            "kl_bare_median": round(median(kl_bare), 6),
-            "kl_bare_p95": round(quantile(kl_bare, 0.95), 6),
-            "kl_chatml_median": round(median(kl_chat), 6),
-            "kl_chatml_p95": round(quantile(kl_chat, 0.95), 6),
-        }
-    else:
-        fde_p95 = fde_p999 = fde_max = None
-        fmt_d_diag = {}
-        c0b_0_3_pass = False
-
-    # C0b.0.4a: Global frozen SHA-256 provenance
-    prov_checks = {
-        "r_lens": meta.get("r_lens_sha256") == EXPECTED_R_LENS_SHA256,
-        "c0_constants_meta": meta.get("c0_constants_sha256") == EXPECTED_C0_CONSTANTS_SHA256,
-        "c0_constants_disk": c0_const_sha == EXPECTED_C0_CONSTANTS_SHA256,
-        "c0b_constants_meta": meta.get("c0b_constants_sha256") == EXPECTED_C0B_CONSTANTS_SHA256,
-        "c0b_constants_disk": c0b_const_sha == EXPECTED_C0B_CONSTANTS_SHA256,
-        "bank_meta": meta.get("bank_sha256") == EXPECTED_C0_BANK_SHA256,
-        "c0_receipt_meta": meta.get("c0_receipt_uncompressed_sha256") == EXPECTED_C0_RECEIPT_UNCOMP_SHA256,
-        "c0_receipt_disk": c0_rec_uncomp_sha == EXPECTED_C0_RECEIPT_UNCOMP_SHA256,
-        "design_meta": meta.get("c0b_design_sha256") == EXPECTED_C0B_DESIGN_SHA256,
-        "design_disk": design_checked and not design_missing and design_sha == EXPECTED_C0B_DESIGN_SHA256,
-    }
-    c0b_0_4a_pass = bool(strict_provenance and all(prov_checks.values()))
-
-    c0b_0_global_passed = all_finite and c0b_0_1_pass and c0b_0_2_pass and c0b_0_3_pass and c0b_0_4a_pass
-
-    # C0b.0.4b: Receipt-pairing drift check (gates C0b.1b ONLY; never voids live-to-live C0b.2)
-    # (i) 320 live Regime-D "last" full-pair anchor traces (" lantern", " judge") vs c0_receipt
-    #     Using the registered frozen capped-cell rule: drop prompt from BOTH live & C0 if capped;
-    #     require >= 3/4 Bare and >= 3/4 ChatML retained per (L, anchor_target) cell.
-    anc_gap_diffs: dict[str, float] = {}
-    anc_attn_diffs: dict[str, float] = {}
+    # Pre-check anchor prompt retention (registered Gate C0b.0.3 >= 3/4 Bare & >= 3/4 ChatML per (L, anchor) cell)
+    # and paired anchor diffs for Gate C0b.0.4b.
+    anc_gap_diffs: dict[str, float | None] = {}
+    anc_attn_diffs: dict[str, float | None] = {}
     anc_capped_prompts = 0
     anc_cell_failures: list[str] = []
     for ts in EXPECTED_ANCHOR_TARGETS:
@@ -1017,7 +1023,9 @@ def score_c0b(
             n_ab = sum(1 for pi in keep_anc if pi in bare_idxs)
             n_ac = sum(1 for pi in keep_anc if pi in chat_idxs)
             if n_ab < 3 or n_ac < 3:
-                anc_cell_failures.append(f"L{L}.{ts}:bare={n_ab}/4,chat={n_ac}/4")
+                msg = f"anchor.L{L}.{ts}:bare={n_ab}/4,chat={n_ac}/4"
+                anc_cell_failures.append(msg)
+                capped_cell_failures.append(msg)
         anc_gap_diffs[ts] = round(abs(mean(live_gaps) - mean(c0_gaps)), 6) if live_gaps else None
         anc_attn_diffs[ts] = round(abs(mean(live_attns) - mean(c0_attns)), 6) if live_attns else None
 
@@ -1026,6 +1034,49 @@ def score_c0b(
     max_anc_gap_diff = max(valid_gd) if len(valid_gd) == len(EXPECTED_ANCHOR_TARGETS) else None
     max_anc_attn_diff = max(valid_ad) if len(valid_ad) == len(EXPECTED_ANCHOR_TARGETS) else None
 
+    if all_finite and len(fde_errs) > 0:
+        fde_p95 = quantile(fde_errs, 0.95)
+        fde_p999 = quantile(fde_errs, 0.999)
+        fde_max = max(fde_errs)
+        c0b_0_3_pass = (
+            (max_cap_rate <= 0.02)
+            and (len(capped_cell_failures) == 0)
+            and (fde_p95 <= 0.30)
+            and (fde_p999 <= 0.45)
+        )
+        fmt_d_diag = {
+            "fde_bare_p95": round(quantile(fde_bare, 0.95), 6) if fde_bare else None,
+            "fde_bare_max": round(max(fde_bare), 6) if fde_bare else None,
+            "fde_chatml_p95": round(quantile(fde_chat, 0.95), 6) if fde_chat else None,
+            "fde_chatml_max": round(max(fde_chat), 6) if fde_chat else None,
+            "kl_bare_median": round(median(kl_bare), 6) if kl_bare else None,
+            "kl_bare_p95": round(quantile(kl_bare, 0.95), 6) if kl_bare else None,
+            "kl_chatml_median": round(median(kl_chat), 6) if kl_chat else None,
+            "kl_chatml_p95": round(quantile(kl_chat, 0.95), 6) if kl_chat else None,
+        }
+    else:
+        fde_p95 = fde_p999 = fde_max = None
+        fmt_d_diag = {}
+        c0b_0_3_pass = False
+
+    # C0b.0.4a: Global frozen SHA-256 provenance
+    prov_checks = {
+        "r_lens": meta.get("r_lens_sha256") == EXPECTED_R_LENS_SHA256,
+        "c0_constants_meta": meta.get("c0_constants_sha256") == EXPECTED_C0_CONSTANTS_SHA256,
+        "c0_constants_disk": c0_const_sha == EXPECTED_C0_CONSTANTS_SHA256,
+        "c0b_constants_meta": meta.get("c0b_constants_sha256") == EXPECTED_C0B_CONSTANTS_SHA256,
+        "c0b_constants_disk": c0b_const_sha == EXPECTED_C0B_CONSTANTS_SHA256,
+        "bank_meta": meta.get("bank_sha256") == EXPECTED_C0_BANK_SHA256,
+        "c0_receipt_meta": meta.get("c0_receipt_uncompressed_sha256") == EXPECTED_C0_RECEIPT_UNCOMP_SHA256,
+        "c0_receipt_disk": c0_rec_uncomp_sha == EXPECTED_C0_RECEIPT_UNCOMP_SHA256,
+        "design_meta": meta.get("c0b_design_sha256") == EXPECTED_C0B_DESIGN_SHA256,
+        "design_disk": design_checked and not design_missing and design_sha == EXPECTED_C0B_DESIGN_SHA256,
+    }
+    c0b_0_4a_pass = bool(strict_provenance and all(prov_checks.values()))
+
+    c0b_0_global_passed = all_finite and c0b_0_1_pass and c0b_0_2_pass and c0b_0_3_pass and c0b_0_4a_pass
+
+    # C0b.0.4b: Receipt-pairing drift check (gates C0b.1b ONLY; never voids live-to-live C0b.2)
     # (ii) All 384 live R_mf Regime-N "last" traces (5,760 off-target cells) vs c0_receipt
     live_rmf_n_stats = compute_regime_n_bleed_stats(receipt["regime_N_last"], "R_mf", t_strs, t_domains, LAYERS_3L)
     c0_rmf_n_stats = compute_regime_n_bleed_stats(c0_receipt["regime_N"], "R_mf", t_strs, t_domains, LAYERS_3L)
@@ -1069,17 +1120,18 @@ def score_c0b(
             "last": sham_last,
             "all": sham_all,
             "movement_check_passed": move_ok,
-            "regime_n_arm_liveness_passed": arm_liveness_ok,
+            "regime_n_arm_liveness_passed": regime_n_liveness_ok,
+            "regime_d_arm_liveness_passed": regime_d_liveness_ok,
             "dead_arm_issues_sample": dead_arm_issues,
         },
         "C0b_0_2_telescoping": {
             "passed": c0b_0_2_pass,
             "n_traces": len(all_tel),
             "expected_n_traces": expected_tel_n,
-            "median": round(tel_med, 6),
-            "p95": round(tel_p95, 6),
-            "p99_9": round(tel_p999, 6),
-            "max": round(tel_max, 6),
+            "median": _r6(tel_med),
+            "p95": _r6(tel_p95),
+            "p99_9": _r6(tel_p999),
+            "max": _r6(tel_max),
             "by_format": tel_fmt_diag,
         },
         "C0b_0_3_cap_and_denom": {
@@ -1088,9 +1140,9 @@ def score_c0b(
             "cap_hit_rate_by_layer_arm": cap_rates,
             "capped_cell_failures": capped_cell_failures,
             "n_retained_traces": len(fde_errs),
-            "fde_err_p95": round(fde_p95, 6),
-            "fde_err_p99_9": round(fde_p999, 6),
-            "fde_err_max": round(fde_max, 6),
+            "fde_err_p95": _r6(fde_p95),
+            "fde_err_p99_9": _r6(fde_p999),
+            "fde_err_max": _r6(fde_max),
             "by_format": fmt_d_diag,
         },
         "C0b_0_4a_global_provenance": {
@@ -1108,9 +1160,9 @@ def score_c0b(
             "anchor_targets": EXPECTED_ANCHOR_TARGETS,
             "anchor_capped_prompts": anc_capped_prompts,
             "anchor_cell_failures": anc_cell_failures,
-            "max_anchor_gap_diff": round(max_anc_gap_diff, 6),
+            "max_anchor_gap_diff": _r6(max_anc_gap_diff),
             "anchor_gap_diff_by_target": anc_gap_diffs,
-            "max_anchor_attn_gap_diff": round(max_anc_attn_diff, 6),
+            "max_anchor_attn_gap_diff": _r6(max_anc_attn_diff),
             "anchor_attn_gap_diff_by_target": anc_attn_diffs,
             "n_offtarget_cells_checked": n_offtarget_cells,
             "max_R_mf_B_cross_diff": round(max_b_cross_diff, 6),

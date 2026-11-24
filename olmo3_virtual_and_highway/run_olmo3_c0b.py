@@ -206,6 +206,16 @@ def _run_regime_d_block(
                             clean_traces[pi], tr, L, u_t, tid, dose_d, geom[arm_pr_keys[arm]], w,
                             clean_probs[pi][0], clean_probs[pi][1],
                         )
+                        if (
+                            float(rec["kl"]) == 0.0
+                            and abs(float(rec["exact_dlogit"])) == 0.0
+                            and abs(float(rec["sum_attn"])) == 0.0
+                            and abs(float(rec["sum_mlp"])) == 0.0
+                        ):
+                            raise RuntimeError(
+                                f"DEAD ARM CHECK FAILED: Regime D ({positions}) L{L} direct_matched[{t_str!r}] "
+                                f"draw {k} prompt {p['id']} produced zero movement"
+                            )
                         rec["prompt_id"] = p["id"]
                         rec["capped"] = False
                         rows_p.append(rec)
@@ -234,6 +244,16 @@ def _run_regime_d_block(
                         clean_traces[pi], tr, L, u_t, tid, dose_d, geom[arm_pr_keys[arm]], w,
                         clean_probs[pi][0], clean_probs[pi][1],
                     )
+                    if (
+                        float(rec["kl"]) == 0.0
+                        and abs(float(rec["exact_dlogit"])) == 0.0
+                        and abs(float(rec["sum_attn"])) == 0.0
+                        and abs(float(rec["sum_mlp"])) == 0.0
+                    ):
+                        raise RuntimeError(
+                            f"DEAD ARM CHECK FAILED: Regime D ({positions}) L{L} {arm}[{t_str!r}] "
+                            f"prompt {p['id']} produced zero movement"
+                        )
                     rec["prompt_id"] = p["id"]
                     rec["capped"] = False
                     if arm == "R_mf":
