@@ -1,0 +1,123 @@
+{
+ "per_cell": {
+  "SFT | (none)": {
+   "no_maker": 25,
+   "self": 17,
+   "other_maker:OpenAI": 2,
+   "n": 44
+  },
+  "SFT | I was created by": {
+   "self": 40,
+   "refusal:OpenAI": 3,
+   "other_maker:OpenAI": 1,
+   "n": 44
+  },
+  "SFT | I was developed by": {
+   "self": 43,
+   "no_maker": 1,
+   "n": 44
+  },
+  "SFT | I was built by": {
+   "self": 36,
+   "no_maker": 6,
+   "refusal:OpenAI": 2,
+   "n": 44
+  },
+  "SFT | My creators are": {
+   "no_maker": 37,
+   "other_maker:OpenAI": 2,
+   "broken": 1,
+   "self": 3,
+   "refusal:OpenAI": 1,
+   "n": 44
+  },
+  "DPO | (none)": {
+   "no_maker": 29,
+   "refusal:OpenAI": 2,
+   "self": 11,
+   "other_maker:OpenAI": 2,
+   "n": 44
+  },
+  "DPO | I was created by": {
+   "self": 35,
+   "refusal:OpenAI": 2,
+   "no_maker": 4,
+   "other_maker:OpenAI": 2,
+   "other_maker:Google": 1,
+   "n": 44
+  },
+  "DPO | I was developed by": {
+   "self": 37,
+   "no_maker": 6,
+   "other_maker:Google": 1,
+   "n": 44
+  },
+  "DPO | I was built by": {
+   "self": 35,
+   "no_maker": 8,
+   "other_maker:Google": 1,
+   "n": 44
+  },
+  "DPO | My creators are": {
+   "no_maker": 40,
+   "other_maker:OpenAI": 1,
+   "self": 2,
+   "refusal:OpenAI": 1,
+   "n": 44
+  },
+  "Instruct | (none)": {
+   "no_maker": 27,
+   "refusal:OpenAI": 2,
+   "self": 12,
+   "other_maker:OpenAI": 3,
+   "n": 44
+  },
+  "Instruct | I was created by": {
+   "no_maker": 8,
+   "self": 27,
+   "refusal:OpenAI": 4,
+   "other_maker:OpenAI": 4,
+   "other_maker:Google": 1,
+   "n": 44
+  },
+  "Instruct | I was developed by": {
+   "self": 36,
+   "no_maker": 8,
+   "n": 44
+  },
+  "Instruct | I was built by": {
+   "self": 32,
+   "no_maker": 10,
+   "refusal:OpenAI": 1,
+   "other_maker:OpenAI": 1,
+   "n": 44
+  },
+  "Instruct | My creators are": {
+   "no_maker": 39,
+   "self": 2,
+   "other_maker:OpenAI": 3,
+   "n": 44
+  }
+ },
+ "rotated": {
+  "SFT": {
+   "self": 31,
+   "no_maker": 12,
+   "refusal": 1,
+   "n": 44
+  },
+  "DPO": {
+   "self": 26,
+   "no_maker": 17,
+   "other_maker": 1,
+   "n": 44
+  },
+  "Instruct": {
+   "no_maker": 18,
+   "self": 23,
+   "refusal": 1,
+   "other_maker": 2,
+   "n": 44
+  }
+ }
+}

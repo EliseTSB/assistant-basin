@@ -1,0 +1,142 @@
+{
+ "part": 218,
+ "mode": "pilot",
+ "model_key": "Instruct",
+ "repo": "allenai/OLMo-2-0425-1B-Instruct",
+ "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+ "tiny": false,
+ "pins": {
+  "SFT": {
+   "repo": "allenai/OLMo-2-0425-1B-SFT",
+   "revision": "0d85a3d037876ce6ac7d4311d994400fc66ac27f"
+  },
+  "DPO": {
+   "repo": "allenai/OLMo-2-0425-1B-DPO",
+   "revision": "c4b0485961ab24c2433b090f3b922f0913a9290f"
+  },
+  "Instruct": {
+   "repo": "allenai/OLMo-2-0425-1B-Instruct",
+   "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e"
+  }
+ },
+ "versions": {
+  "torch": "2.14.1+cu130",
+  "transformers": "5.22.1",
+  "python": "3.13.16"
+ },
+ "device": "cuda",
+ "device_name": "NVIDIA L4",
+ "dtype": "bfloat16",
+ "attn_implementation": "sdpa",
+ "hidden_size": 2048,
+ "n_decoder_layers": 16,
+ "layers": [
+  5
+ ],
+ "doses": [
+  0.15,
+  0.2,
+  0.25,
+  0.3,
+  0.4,
+  0.5,
+  0.75,
+  1.0,
+  1.5
+ ],
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "n_directions": 10,
+ "n_rows_per_batch": 11,
+ "n_prompts": 44,
+ "max_new_tokens": 48,
+ "tokenizer": {
+  "pad_token": "<|pad|>",
+  "pad_token_id": 100277,
+  "eos_token": "<|endoftext|>",
+  "eos_token_id": 100257,
+  "unk_token": "<|endoftext|>",
+  "unk_token_id": 100257,
+  "generate_pad_token_id": 100277,
+  "unk_is_eos": true,
+  "sample_prompt_tokens": 16,
+  "sample_prompt_decodes": true
+ },
+ "directions": {
+  "path": "/content/out218/directions.pt",
+  "sha256": "c6b7b00017786035c0e777c44ff580b266bb335d1ef07d18599a9c94c630cc6f",
+  "shape": [
+   20,
+   2048
+  ],
+  "created_this_run": true
+ },
+ "medians": {
+  "5": 10.517081260681152
+ },
+ "rows_planned": 4356,
+ "batches_planned": 396,
+ "rows_written": 4356,
+ "batches_written": 396,
+ "batches_resumed": 0,
+ "status": "complete",
+ "null": {
+  "start": {
+   "prompts": 44,
+   "expected_prompts": 44,
+   "all_prompts_ran": true,
+   "unhooked": true
+  },
+  "end": {
+   "prompts": 44,
+   "expected_prompts": 44,
+   "all_prompts_ran": true,
+   "vs_start": {
+    "comparisons": 44,
+    "ids_matched": 44,
+    "logits_matched": 44,
+    "all_ok": true,
+    "max_abs_logit_diff": 0.0
+   },
+   "vs_hooked_zero": {
+    "comparisons": 44,
+    "ids_matched": 44,
+    "logits_matched": 44,
+    "all_ok": true,
+    "max_abs_logit_diff": 0.0,
+    "logits_unavailable_prompts": 0
+   }
+  },
+  "hooked_zero_vs_start": {
+   "comparisons": 396,
+   "ids_matched": 396,
+   "logits_matched": 396,
+   "all_ok": true,
+   "max_abs_logit_diff": 0.0
+  },
+  "all_ok": true
+ },
+ "push_check": {
+  "pushed_rows": 10,
+  "pushed_delta_abs_max": 0.140625,
+  "zero_delta_abs_max": 0.0,
+  "zero_row_exact": true,
+  "input_zero_row_abs_max": 0.0,
+  "input_pushed_row_norm_min": 1.5775620937347412,
+  "hidden_shape": [
+   11,
+   16,
+   2048
+  ]
+ },
+ "started_at": 1795553397.6520143,
+ "finished_at": 1795553951.9242976,
+ "wall_seconds": 554.2722833156586,
+ "hooks_after_generation": 0,
+ "batches_complete": 396
+}

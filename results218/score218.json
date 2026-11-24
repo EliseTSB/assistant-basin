@@ -1,0 +1,2400 @@
+{
+ "part": 218,
+ "run_dir": "/home/elisepc/green/worktrees/ab-part218/results218",
+ "models": {
+  "SFT": null,
+  "DPO": null,
+  "Instruct": null
+ },
+ "pilot": {
+  "layers": [
+   5
+  ],
+  "doses": [
+   0.15,
+   0.2,
+   0.25,
+   0.3,
+   0.4,
+   0.5,
+   0.75,
+   1.0,
+   1.5
+  ],
+  "n_prompts": 44,
+  "n_directions_expected": 10,
+  "read_min_supported": 9,
+  "gate": {
+   "eligible": 10,
+   "prompts": 44,
+   "minimum": 30,
+   "passed": false,
+   "rule": "at least 30 of 44 prompts eligible (unpushed self)"
+  },
+  "eligible_prompts": [
+   3,
+   6,
+   12,
+   24,
+   32,
+   34,
+   39,
+   40,
+   41,
+   42
+  ],
+  "unpushed": {
+   "0": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "1": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "2": {
+    "state": "refusal",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "refusal": 9
+    },
+    "eligible": false
+   },
+   "3": {
+    "state": "self",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "self": 9
+    },
+    "eligible": true
+   },
+   "4": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "5": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "6": {
+    "state": "self",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "self": 9
+    },
+    "eligible": true
+   },
+   "7": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "8": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "9": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "10": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "11": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "12": {
+    "state": "self",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "self": 9
+    },
+    "eligible": true
+   },
+   "13": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "14": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "15": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "16": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "17": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "18": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "19": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "20": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "21": {
+    "state": "other_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "other_maker": 9
+    },
+    "eligible": false
+   },
+   "22": {
+    "state": "refusal",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "refusal": 9
+    },
+    "eligible": false
+   },
+   "23": {
+    "state": "other_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "other_maker": 9
+    },
+    "eligible": false
+   },
+   "24": {
+    "state": "self",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "self": 9
+    },
+    "eligible": true
+   },
+   "25": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "26": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "27": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "28": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "29": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "30": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "31": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "32": {
+    "state": "self",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "self": 9
+    },
+    "eligible": true
+   },
+   "33": {
+    "state": "other_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "other_maker": 9
+    },
+    "eligible": false
+   },
+   "34": {
+    "state": "self",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "self": 9
+    },
+    "eligible": true
+   },
+   "35": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "36": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   },
+   "37": {
+    "state": "other_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "other_maker": 9
+    },
+    "eligible": false
+   },
+   "38": {
+    "state": "other_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "other_maker": 9
+    },
+    "eligible": false
+   },
+   "39": {
+    "state": "self",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "self": 9
+    },
+    "eligible": true
+   },
+   "40": {
+    "state": "self",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "self": 9
+    },
+    "eligible": true
+   },
+   "41": {
+    "state": "self",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "self": 9
+    },
+    "eligible": true
+   },
+   "42": {
+    "state": "self",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "self": 9
+    },
+    "eligible": true
+   },
+   "43": {
+    "state": "no_maker",
+    "unanimous": true,
+    "complete": true,
+    "n_zero_rows": 9,
+    "expected_zero_rows": 9,
+    "counts": {
+     "no_maker": 9
+    },
+    "eligible": false
+   }
+  },
+  "slices": {
+   "5": {
+    "0.15": {
+     "layer": 5,
+     "dose": 0.15,
+     "n_eligible": 10,
+     "n_directions": 10,
+     "broken_allowed": 1,
+     "n_answers": 100,
+     "supported": 10,
+     "moved": 1,
+     "led_counts": {
+      "OpenAI": 1
+     },
+     "not_led": 0,
+     "leading_family": "OpenAI",
+     "leading_share": 1.0,
+     "leading_p_value": 0.1,
+     "other_maker_counts": {
+      "OpenAI": 8
+     },
+     "refusal_counts": {
+      "OpenAI": 3
+     },
+     "distinct_strings_by_family": {
+      "OpenAI": 8
+     },
+     "led_distinct_strings": {
+      "OpenAI": 3
+     },
+     "median_length_tokens": 48.0,
+     "median_length_words": 39.0,
+     "cap_fraction": 0.87,
+     "per_direction": {
+      "seed0+": {
+       "supported": true,
+       "moved": true,
+       "led": "OpenAI",
+       "broken": 0,
+       "states": {
+        "refusal": 1,
+        "other_maker": 3,
+        "self": 6
+       },
+       "other_maker": {
+        "OpenAI": 3
+       }
+      },
+      "seed0-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "self": 6,
+        "no_maker": 4
+       },
+       "other_maker": {}
+      },
+      "seed1+": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "refusal": 1,
+        "no_maker": 3,
+        "self": 6
+       },
+       "other_maker": {}
+      },
+      "seed1-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "self": 7,
+        "no_maker": 3
+       },
+       "other_maker": {}
+      },
+      "seed2+": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "self": 7,
+        "other_maker": 2,
+        "no_maker": 1
+       },
+       "other_maker": {
+        "OpenAI": 2
+       }
+      },
+      "seed2-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "other_maker": 2,
+        "no_maker": 1,
+        "self": 7
+       },
+       "other_maker": {
+        "OpenAI": 2
+       }
+      },
+      "seed3+": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "self": 7,
+        "no_maker": 3
+       },
+       "other_maker": {}
+      },
+      "seed3-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "self": 8,
+        "no_maker": 2
+       },
+       "other_maker": {}
+      },
+      "seed4+": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "self": 6,
+        "no_maker": 3,
+        "other_maker": 1
+       },
+       "other_maker": {
+        "OpenAI": 1
+       }
+      },
+      "seed4-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "refusal": 1,
+        "no_maker": 1,
+        "self": 8
+       },
+       "other_maker": {}
+      }
+     }
+    },
+    "0.2": {
+     "layer": 5,
+     "dose": 0.2,
+     "n_eligible": 10,
+     "n_directions": 10,
+     "broken_allowed": 1,
+     "n_answers": 100,
+     "supported": 10,
+     "moved": 2,
+     "led_counts": {
+      "OpenAI": 2
+     },
+     "not_led": 0,
+     "leading_family": "OpenAI",
+     "leading_share": 1.0,
+     "leading_p_value": 0.010000000000000002,
+     "other_maker_counts": {
+      "OpenAI": 11,
+      "Google": 1
+     },
+     "refusal_counts": {
+      "OpenAI": 3
+     },
+     "distinct_strings_by_family": {
+      "OpenAI": 11,
+      "Google": 1
+     },
+     "led_distinct_strings": {
+      "OpenAI": 7
+     },
+     "median_length_tokens": 48.0,
+     "median_length_words": 40.0,
+     "cap_fraction": 0.9,
+     "per_direction": {
+      "seed0+": {
+       "supported": true,
+       "moved": true,
+       "led": "OpenAI",
+       "broken": 0,
+       "states": {
+        "other_maker": 4,
+        "self": 6
+       },
+       "other_maker": {
+        "OpenAI": 4
+       }
+      },
+      "seed0-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "self": 5,
+        "no_maker": 5
+       },
+       "other_maker": {}
+      },
+      "seed1+": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "refusal": 1,
+        "no_maker": 2,
+        "other_maker": 1,
+        "self": 6
+       },
+       "other_maker": {
+        "Google": 1
+       }
+      },
+      "seed1-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "self": 5,
+        "no_maker": 4,
+        "other_maker": 1
+       },
+       "other_maker": {
+        "OpenAI": 1
+       }
+      },
+      "seed2+": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "self": 7,
+        "other_maker": 2,
+        "no_maker": 1
+       },
+       "other_maker": {
+        "OpenAI": 2
+       }
+      },
+      "seed2-": {
+       "supported": true,
+       "moved": true,
+       "led": "OpenAI",
+       "broken": 0,
+       "states": {
+        "other_maker": 3,
+        "no_maker": 1,
+        "self": 6
+       },
+       "other_maker": {
+        "OpenAI": 3
+       }
+      },
+      "seed3+": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "self": 6,
+        "no_maker": 4
+       },
+       "other_maker": {}
+      },
+      "seed3-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "refusal": 1,
+        "no_maker": 2,
+        "self": 6,
+        "other_maker": 1
+       },
+       "other_maker": {
+        "OpenAI": 1
+       }
+      },
+      "seed4+": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "self": 6,
+        "no_maker": 4
+       },
+       "other_maker": {}
+      },
+      "seed4-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "refusal": 1,
+        "self": 7,
+        "no_maker": 2
+       },
+       "other_maker": {}
+      }
+     }
+    },
+    "0.25": {
+     "layer": 5,
+     "dose": 0.25,
+     "n_eligible": 10,
+     "n_directions": 10,
+     "broken_allowed": 1,
+     "n_answers": 100,
+     "supported": 10,
+     "moved": 4,
+     "led_counts": {
+      "OpenAI": 4
+     },
+     "not_led": 0,
+     "leading_family": "OpenAI",
+     "leading_share": 1.0,
+     "leading_p_value": 0.00010000000000000002,
+     "other_maker_counts": {
+      "OpenAI": 17,
+      "Google": 2
+     },
+     "refusal_counts": {
+      "OpenAI": 2
+     },
+     "distinct_strings_by_family": {
+      "OpenAI": 17,
+      "Google": 2
+     },
+     "led_distinct_strings": {
+      "OpenAI": 13
+     },
+     "median_length_tokens": 48.0,
+     "median_length_words": 40.5,
+     "cap_fraction": 0.93,
+     "per_direction": {
+      "seed0+": {
+       "supported": true,
+       "moved": true,
+       "led": "OpenAI",
+       "broken": 0,
+       "states": {
+        "other_maker": 5,
+        "self": 5
+       },
+       "other_maker": {
+        "OpenAI": 5
+       }
+      },
+      "seed0-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "self": 3,
+        "no_maker": 6,
+        "other_maker": 1
+       },
+       "other_maker": {
+        "Google": 1
+       }
+      },
+      "seed1+": {
+       "supported": true,
+       "moved": true,
+       "led": "OpenAI",
+       "broken": 0,
+       "states": {
+        "refusal": 1,
+        "no_maker": 3,
+        "other_maker": 3,
+        "self": 3
+       },
+       "other_maker": {
+        "OpenAI": 3
+       }
+      },
+      "seed1-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "other_maker": 1,
+        "no_maker": 5,
+        "self": 4
+       },
+       "other_maker": {
+        "OpenAI": 1
+       }
+      },
+      "seed2+": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "self": 7,
+        "no_maker": 2,
+        "other_maker": 1
+       },
+       "other_maker": {
+        "OpenAI": 1
+       }
+      },
+      "seed2-": {
+       "supported": true,
+       "moved": true,
+       "led": "OpenAI",
+       "broken": 0,
+       "states": {
+        "other_maker": 3,
+        "no_maker": 1,
+        "self": 6
+       },
+       "other_maker": {
+        "OpenAI": 3
+       }
+      },
+      "seed3+": {
+       "supported": true,
+       "moved": true,
+       "led": "OpenAI",
+       "broken": 1,
+       "states": {
+        "other_maker": 3,
+        "no_maker": 3,
+        "self": 3,
+        "broken": 1
+       },
+       "other_maker": {
+        "OpenAI": 2,
+        "Google": 1
+       }
+      },
+      "seed3-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "refusal": 1,
+        "no_maker": 1,
+        "other_maker": 2,
+        "self": 6
+       },
+       "other_maker": {
+        "OpenAI": 2
+       }
+      },
+      "seed4+": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "self": 5,
+        "no_maker": 5
+       },
+       "other_maker": {}
+      },
+      "seed4-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "self": 7,
+        "no_maker": 3
+       },
+       "other_maker": {}
+      }
+     }
+    },
+    "0.3": {
+     "layer": 5,
+     "dose": 0.3,
+     "n_eligible": 10,
+     "n_directions": 10,
+     "broken_allowed": 1,
+     "n_answers": 100,
+     "supported": 10,
+     "moved": 5,
+     "led_counts": {
+      "OpenAI": 4,
+      "Google": 1
+     },
+     "not_led": 0,
+     "leading_family": "OpenAI",
+     "leading_share": 0.8,
+     "leading_p_value": 0.0004600000000000001,
+     "other_maker_counts": {
+      "OpenAI": 18,
+      "Google": 4
+     },
+     "refusal_counts": {
+      "OpenAI": 4
+     },
+     "distinct_strings_by_family": {
+      "OpenAI": 18,
+      "Google": 4
+     },
+     "led_distinct_strings": {
+      "OpenAI": 16,
+      "Google": 2
+     },
+     "median_length_tokens": 48.0,
+     "median_length_words": 40.0,
+     "cap_fraction": 0.93,
+     "per_direction": {
+      "seed0+": {
+       "supported": true,
+       "moved": true,
+       "led": "OpenAI",
+       "broken": 0,
+       "states": {
+        "other_maker": 6,
+        "self": 4
+       },
+       "other_maker": {
+        "OpenAI": 6
+       }
+      },
+      "seed0-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "self": 3,
+        "no_maker": 7
+       },
+       "other_maker": {}
+      },
+      "seed1+": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "refusal": 1,
+        "self": 4,
+        "no_maker": 5
+       },
+       "other_maker": {}
+      },
+      "seed1-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "other_maker": 1,
+        "no_maker": 4,
+        "self": 5
+       },
+       "other_maker": {
+        "OpenAI": 1
+       }
+      },
+      "seed2+": {
+       "supported": true,
+       "moved": true,
+       "led": "OpenAI",
+       "broken": 0,
+       "states": {
+        "refusal": 2,
+        "other_maker": 3,
+        "self": 4,
+        "no_maker": 1
+       },
+       "other_maker": {
+        "OpenAI": 2,
+        "Google": 1
+       }
+      },
+      "seed2-": {
+       "supported": true,
+       "moved": true,
+       "led": "OpenAI",
+       "broken": 0,
+       "states": {
+        "other_maker": 6,
+        "no_maker": 1,
+        "self": 3
+       },
+       "other_maker": {
+        "OpenAI": 5,
+        "Google": 1
+       }
+      },
+      "seed3+": {
+       "supported": true,
+       "moved": true,
+       "led": "Google",
+       "broken": 0,
+       "states": {
+        "other_maker": 3,
+        "no_maker": 4,
+        "self": 3
+       },
+       "other_maker": {
+        "OpenAI": 1,
+        "Google": 2
+       }
+      },
+      "seed3-": {
+       "supported": true,
+       "moved": true,
+       "led": "OpenAI",
+       "broken": 0,
+       "states": {
+        "refusal": 1,
+        "self": 5,
+        "other_maker": 3,
+        "no_maker": 1
+       },
+       "other_maker": {
+        "OpenAI": 3
+       }
+      },
+      "seed4+": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "self": 3,
+        "no_maker": 7
+       },
+       "other_maker": {}
+      },
+      "seed4-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 1,
+       "states": {
+        "self": 6,
+        "no_maker": 3,
+        "broken": 1
+       },
+       "other_maker": {}
+      }
+     }
+    },
+    "0.4": {
+     "layer": 5,
+     "dose": 0.4,
+     "n_eligible": 10,
+     "n_directions": 10,
+     "broken_allowed": 1,
+     "n_answers": 100,
+     "supported": 10,
+     "moved": 6,
+     "led_counts": {
+      "OpenAI": 5,
+      "Google": 1
+     },
+     "not_led": 0,
+     "leading_family": "OpenAI",
+     "leading_share": 0.8333333333333334,
+     "leading_p_value": 5.500000000000001e-05,
+     "other_maker_counts": {
+      "OpenAI": 20,
+      "Google": 6,
+      "Meta": 1
+     },
+     "refusal_counts": {
+      "OpenAI": 1
+     },
+     "distinct_strings_by_family": {
+      "OpenAI": 20,
+      "Google": 6,
+      "Meta": 1
+     },
+     "led_distinct_strings": {
+      "OpenAI": 16,
+      "Google": 3
+     },
+     "median_length_tokens": 48.0,
+     "median_length_words": 41.0,
+     "cap_fraction": 0.84,
+     "per_direction": {
+      "seed0+": {
+       "supported": true,
+       "moved": true,
+       "led": "OpenAI",
+       "broken": 0,
+       "states": {
+        "other_maker": 3,
+        "no_maker": 3,
+        "self": 4
+       },
+       "other_maker": {
+        "OpenAI": 3
+       }
+      },
+      "seed0-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "no_maker": 9,
+        "other_maker": 1
+       },
+       "other_maker": {
+        "Google": 1
+       }
+      },
+      "seed1+": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 1,
+       "states": {
+        "no_maker": 7,
+        "broken": 1,
+        "self": 1,
+        "other_maker": 1
+       },
+       "other_maker": {
+        "OpenAI": 1
+       }
+      },
+      "seed1-": {
+       "supported": true,
+       "moved": true,
+       "led": "OpenAI",
+       "broken": 0,
+       "states": {
+        "other_maker": 3,
+        "no_maker": 4,
+        "self": 2,
+        "refusal": 1
+       },
+       "other_maker": {
+        "OpenAI": 3
+       }
+      },
+      "seed2+": {
+       "supported": true,
+       "moved": true,
+       "led": "OpenAI",
+       "broken": 0,
+       "states": {
+        "other_maker": 3,
+        "no_maker": 5,
+        "self": 2
+       },
+       "other_maker": {
+        "Google": 1,
+        "OpenAI": 2
+       }
+      },
+      "seed2-": {
+       "supported": true,
+       "moved": true,
+       "led": "OpenAI",
+       "broken": 0,
+       "states": {
+        "other_maker": 3,
+        "self": 2,
+        "no_maker": 5
+       },
+       "other_maker": {
+        "OpenAI": 3
+       }
+      },
+      "seed3+": {
+       "supported": true,
+       "moved": true,
+       "led": "Google",
+       "broken": 0,
+       "states": {
+        "other_maker": 5,
+        "no_maker": 4,
+        "self": 1
+       },
+       "other_maker": {
+        "OpenAI": 2,
+        "Google": 3
+       }
+      },
+      "seed3-": {
+       "supported": true,
+       "moved": true,
+       "led": "OpenAI",
+       "broken": 0,
+       "states": {
+        "other_maker": 5,
+        "self": 5
+       },
+       "other_maker": {
+        "OpenAI": 5
+       }
+      },
+      "seed4+": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "other_maker": 2,
+        "no_maker": 7,
+        "self": 1
+       },
+       "other_maker": {
+        "OpenAI": 1,
+        "Google": 1
+       }
+      },
+      "seed4-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "self": 5,
+        "other_maker": 1,
+        "no_maker": 4
+       },
+       "other_maker": {
+        "Meta": 1
+       }
+      }
+     }
+    },
+    "0.5": {
+     "layer": 5,
+     "dose": 0.5,
+     "n_eligible": 10,
+     "n_directions": 10,
+     "broken_allowed": 1,
+     "n_answers": 100,
+     "supported": 10,
+     "moved": 3,
+     "led_counts": {
+      "Google": 1,
+      "OpenAI": 1
+     },
+     "not_led": 1,
+     "leading_family": null,
+     "leading_share": null,
+     "leading_p_value": null,
+     "other_maker_counts": {
+      "OpenAI": 13,
+      "Google": 8
+     },
+     "refusal_counts": {
+      "OpenAI": 1
+     },
+     "distinct_strings_by_family": {
+      "OpenAI": 13,
+      "Google": 8
+     },
+     "led_distinct_strings": {
+      "Google": 3,
+      "OpenAI": 3
+     },
+     "median_length_tokens": 48.0,
+     "median_length_words": 41.0,
+     "cap_fraction": 0.73,
+     "per_direction": {
+      "seed0+": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "other_maker": 2,
+        "no_maker": 8
+       },
+       "other_maker": {
+        "OpenAI": 2
+       }
+      },
+      "seed0-": {
+       "supported": true,
+       "moved": true,
+       "led": "Google",
+       "broken": 1,
+       "states": {
+        "no_maker": 6,
+        "broken": 1,
+        "other_maker": 3
+       },
+       "other_maker": {
+        "Google": 3
+       }
+      },
+      "seed1+": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "other_maker": 1,
+        "no_maker": 8,
+        "self": 1
+       },
+       "other_maker": {
+        "OpenAI": 1
+       }
+      },
+      "seed1-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "other_maker": 2,
+        "no_maker": 6,
+        "self": 2
+       },
+       "other_maker": {
+        "OpenAI": 2
+       }
+      },
+      "seed2+": {
+       "supported": true,
+       "moved": true,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "other_maker": 4,
+        "no_maker": 5,
+        "refusal": 1
+       },
+       "other_maker": {
+        "Google": 2,
+        "OpenAI": 2
+       }
+      },
+      "seed2-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "no_maker": 7,
+        "self": 2,
+        "other_maker": 1
+       },
+       "other_maker": {
+        "OpenAI": 1
+       }
+      },
+      "seed3+": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "no_maker": 8,
+        "other_maker": 2
+       },
+       "other_maker": {
+        "Google": 2
+       }
+      },
+      "seed3-": {
+       "supported": true,
+       "moved": true,
+       "led": "OpenAI",
+       "broken": 0,
+       "states": {
+        "other_maker": 4,
+        "no_maker": 4,
+        "self": 2
+       },
+       "other_maker": {
+        "OpenAI": 3,
+        "Google": 1
+       }
+      },
+      "seed4+": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "no_maker": 6,
+        "self": 2,
+        "other_maker": 2
+       },
+       "other_maker": {
+        "OpenAI": 2
+       }
+      },
+      "seed4-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "no_maker": 8,
+        "self": 2
+       },
+       "other_maker": {}
+      }
+     }
+    },
+    "0.75": {
+     "layer": 5,
+     "dose": 0.75,
+     "n_eligible": 10,
+     "n_directions": 10,
+     "broken_allowed": 1,
+     "n_answers": 100,
+     "supported": 7,
+     "moved": 0,
+     "led_counts": {},
+     "not_led": 0,
+     "leading_family": null,
+     "leading_share": null,
+     "leading_p_value": null,
+     "other_maker_counts": {
+      "Google": 3,
+      "OpenAI": 1
+     },
+     "refusal_counts": {},
+     "distinct_strings_by_family": {
+      "Google": 3,
+      "OpenAI": 1
+     },
+     "led_distinct_strings": {},
+     "median_length_tokens": 48.0,
+     "median_length_words": 39.0,
+     "cap_fraction": 0.68,
+     "per_direction": {
+      "seed0+": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "no_maker": 10
+       },
+       "other_maker": {}
+      },
+      "seed0-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 1,
+       "states": {
+        "no_maker": 9,
+        "broken": 1
+       },
+       "other_maker": {}
+      },
+      "seed1+": {
+       "supported": false,
+       "moved": false,
+       "led": null,
+       "broken": 2,
+       "states": {
+        "broken": 2,
+        "no_maker": 7,
+        "other_maker": 1
+       },
+       "other_maker": {
+        "OpenAI": 1
+       }
+      },
+      "seed1-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 1,
+       "states": {
+        "no_maker": 7,
+        "self": 1,
+        "other_maker": 1,
+        "broken": 1
+       },
+       "other_maker": {
+        "Google": 1
+       }
+      },
+      "seed2+": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 1,
+       "states": {
+        "other_maker": 1,
+        "no_maker": 8,
+        "broken": 1
+       },
+       "other_maker": {
+        "Google": 1
+       }
+      },
+      "seed2-": {
+       "supported": false,
+       "moved": false,
+       "led": null,
+       "broken": 2,
+       "states": {
+        "broken": 2,
+        "no_maker": 8
+       },
+       "other_maker": {}
+      },
+      "seed3+": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "no_maker": 10
+       },
+       "other_maker": {}
+      },
+      "seed3-": {
+       "supported": false,
+       "moved": false,
+       "led": null,
+       "broken": 3,
+       "states": {
+        "broken": 3,
+        "no_maker": 6,
+        "other_maker": 1
+       },
+       "other_maker": {
+        "Google": 1
+       }
+      },
+      "seed4+": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "no_maker": 9,
+        "self": 1
+       },
+       "other_maker": {}
+      },
+      "seed4-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 1,
+       "states": {
+        "no_maker": 9,
+        "broken": 1
+       },
+       "other_maker": {}
+      }
+     }
+    },
+    "1.0": {
+     "layer": 5,
+     "dose": 1.0,
+     "n_eligible": 10,
+     "n_directions": 10,
+     "broken_allowed": 1,
+     "n_answers": 100,
+     "supported": 4,
+     "moved": 0,
+     "led_counts": {},
+     "not_led": 0,
+     "leading_family": null,
+     "leading_share": null,
+     "leading_p_value": null,
+     "other_maker_counts": {
+      "OpenAI": 1
+     },
+     "refusal_counts": {},
+     "distinct_strings_by_family": {
+      "OpenAI": 1
+     },
+     "led_distinct_strings": {},
+     "median_length_tokens": 48.0,
+     "median_length_words": 38.0,
+     "cap_fraction": 0.61,
+     "per_direction": {
+      "seed0+": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "no_maker": 10
+       },
+       "other_maker": {}
+      },
+      "seed0-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 1,
+       "states": {
+        "no_maker": 9,
+        "broken": 1
+       },
+       "other_maker": {}
+      },
+      "seed1+": {
+       "supported": false,
+       "moved": false,
+       "led": null,
+       "broken": 4,
+       "states": {
+        "no_maker": 6,
+        "broken": 4
+       },
+       "other_maker": {}
+      },
+      "seed1-": {
+       "supported": false,
+       "moved": false,
+       "led": null,
+       "broken": 2,
+       "states": {
+        "broken": 2,
+        "no_maker": 8
+       },
+       "other_maker": {}
+      },
+      "seed2+": {
+       "supported": false,
+       "moved": false,
+       "led": null,
+       "broken": 4,
+       "states": {
+        "no_maker": 6,
+        "broken": 4
+       },
+       "other_maker": {}
+      },
+      "seed2-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "no_maker": 10
+       },
+       "other_maker": {}
+      },
+      "seed3+": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 0,
+       "states": {
+        "no_maker": 9,
+        "other_maker": 1
+       },
+       "other_maker": {
+        "OpenAI": 1
+       }
+      },
+      "seed3-": {
+       "supported": false,
+       "moved": false,
+       "led": null,
+       "broken": 4,
+       "states": {
+        "broken": 4,
+        "no_maker": 6
+       },
+       "other_maker": {}
+      },
+      "seed4+": {
+       "supported": false,
+       "moved": false,
+       "led": null,
+       "broken": 5,
+       "states": {
+        "no_maker": 5,
+        "broken": 5
+       },
+       "other_maker": {}
+      },
+      "seed4-": {
+       "supported": false,
+       "moved": false,
+       "led": null,
+       "broken": 2,
+       "states": {
+        "no_maker": 8,
+        "broken": 2
+       },
+       "other_maker": {}
+      }
+     }
+    },
+    "1.5": {
+     "layer": 5,
+     "dose": 1.5,
+     "n_eligible": 10,
+     "n_directions": 10,
+     "broken_allowed": 1,
+     "n_answers": 100,
+     "supported": 1,
+     "moved": 0,
+     "led_counts": {},
+     "not_led": 0,
+     "leading_family": null,
+     "leading_share": null,
+     "leading_p_value": null,
+     "other_maker_counts": {},
+     "refusal_counts": {},
+     "distinct_strings_by_family": {},
+     "led_distinct_strings": {},
+     "median_length_tokens": 48.0,
+     "median_length_words": 38.0,
+     "cap_fraction": 0.84,
+     "per_direction": {
+      "seed0+": {
+       "supported": false,
+       "moved": false,
+       "led": null,
+       "broken": 8,
+       "states": {
+        "broken": 8,
+        "no_maker": 2
+       },
+       "other_maker": {}
+      },
+      "seed0-": {
+       "supported": true,
+       "moved": false,
+       "led": null,
+       "broken": 1,
+       "states": {
+        "no_maker": 9,
+        "broken": 1
+       },
+       "other_maker": {}
+      },
+      "seed1+": {
+       "supported": false,
+       "moved": false,
+       "led": null,
+       "broken": 3,
+       "states": {
+        "no_maker": 7,
+        "broken": 3
+       },
+       "other_maker": {}
+      },
+      "seed1-": {
+       "supported": false,
+       "moved": false,
+       "led": null,
+       "broken": 4,
+       "states": {
+        "no_maker": 6,
+        "broken": 4
+       },
+       "other_maker": {}
+      },
+      "seed2+": {
+       "supported": false,
+       "moved": false,
+       "led": null,
+       "broken": 7,
+       "states": {
+        "broken": 7,
+        "no_maker": 3
+       },
+       "other_maker": {}
+      },
+      "seed2-": {
+       "supported": false,
+       "moved": false,
+       "led": null,
+       "broken": 3,
+       "states": {
+        "broken": 3,
+        "no_maker": 7
+       },
+       "other_maker": {}
+      },
+      "seed3+": {
+       "supported": false,
+       "moved": false,
+       "led": null,
+       "broken": 8,
+       "states": {
+        "broken": 8,
+        "no_maker": 2
+       },
+       "other_maker": {}
+      },
+      "seed3-": {
+       "supported": false,
+       "moved": false,
+       "led": null,
+       "broken": 6,
+       "states": {
+        "broken": 6,
+        "no_maker": 4
+       },
+       "other_maker": {}
+      },
+      "seed4+": {
+       "supported": false,
+       "moved": false,
+       "led": null,
+       "broken": 8,
+       "states": {
+        "broken": 8,
+        "no_maker": 2
+       },
+       "other_maker": {}
+      },
+      "seed4-": {
+       "supported": false,
+       "moved": false,
+       "led": null,
+       "broken": 4,
+       "states": {
+        "broken": 4,
+        "no_maker": 6
+       },
+       "other_maker": {}
+      }
+     }
+    }
+   }
+  },
+  "read_rungs": {
+   "5": 0.5
+  },
+  "read_rung_stats": {
+   "5": {
+    "layer": 5,
+    "dose": 0.5,
+    "n_eligible": 10,
+    "n_directions": 10,
+    "broken_allowed": 1,
+    "n_answers": 100,
+    "supported": 10,
+    "moved": 3,
+    "led_counts": {
+     "Google": 1,
+     "OpenAI": 1
+    },
+    "not_led": 1,
+    "leading_family": null,
+    "leading_share": null,
+    "leading_p_value": null,
+    "other_maker_counts": {
+     "OpenAI": 13,
+     "Google": 8
+    },
+    "refusal_counts": {
+     "OpenAI": 1
+    },
+    "distinct_strings_by_family": {
+     "OpenAI": 13,
+     "Google": 8
+    },
+    "led_distinct_strings": {
+     "Google": 3,
+     "OpenAI": 3
+    },
+    "median_length_tokens": 48.0,
+    "median_length_words": 41.0,
+    "cap_fraction": 0.73,
+    "per_direction": {
+     "seed0+": {
+      "supported": true,
+      "moved": false,
+      "led": null,
+      "broken": 0,
+      "states": {
+       "other_maker": 2,
+       "no_maker": 8
+      },
+      "other_maker": {
+       "OpenAI": 2
+      }
+     },
+     "seed0-": {
+      "supported": true,
+      "moved": true,
+      "led": "Google",
+      "broken": 1,
+      "states": {
+       "no_maker": 6,
+       "broken": 1,
+       "other_maker": 3
+      },
+      "other_maker": {
+       "Google": 3
+      }
+     },
+     "seed1+": {
+      "supported": true,
+      "moved": false,
+      "led": null,
+      "broken": 0,
+      "states": {
+       "other_maker": 1,
+       "no_maker": 8,
+       "self": 1
+      },
+      "other_maker": {
+       "OpenAI": 1
+      }
+     },
+     "seed1-": {
+      "supported": true,
+      "moved": false,
+      "led": null,
+      "broken": 0,
+      "states": {
+       "other_maker": 2,
+       "no_maker": 6,
+       "self": 2
+      },
+      "other_maker": {
+       "OpenAI": 2
+      }
+     },
+     "seed2+": {
+      "supported": true,
+      "moved": true,
+      "led": null,
+      "broken": 0,
+      "states": {
+       "other_maker": 4,
+       "no_maker": 5,
+       "refusal": 1
+      },
+      "other_maker": {
+       "Google": 2,
+       "OpenAI": 2
+      }
+     },
+     "seed2-": {
+      "supported": true,
+      "moved": false,
+      "led": null,
+      "broken": 0,
+      "states": {
+       "no_maker": 7,
+       "self": 2,
+       "other_maker": 1
+      },
+      "other_maker": {
+       "OpenAI": 1
+      }
+     },
+     "seed3+": {
+      "supported": true,
+      "moved": false,
+      "led": null,
+      "broken": 0,
+      "states": {
+       "no_maker": 8,
+       "other_maker": 2
+      },
+      "other_maker": {
+       "Google": 2
+      }
+     },
+     "seed3-": {
+      "supported": true,
+      "moved": true,
+      "led": "OpenAI",
+      "broken": 0,
+      "states": {
+       "other_maker": 4,
+       "no_maker": 4,
+       "self": 2
+      },
+      "other_maker": {
+       "OpenAI": 3,
+       "Google": 1
+      }
+     },
+     "seed4+": {
+      "supported": true,
+      "moved": false,
+      "led": null,
+      "broken": 0,
+      "states": {
+       "no_maker": 6,
+       "self": 2,
+       "other_maker": 2
+      },
+      "other_maker": {
+       "OpenAI": 2
+      }
+     },
+     "seed4-": {
+      "supported": true,
+      "moved": false,
+      "led": null,
+      "broken": 0,
+      "states": {
+       "no_maker": 8,
+       "self": 2
+      },
+      "other_maker": {}
+     }
+    }
+   }
+  },
+  "zero_row_identity": {
+   "prompts": 44,
+   "batches_per_prompt": 9,
+   "identical_prompts": 44,
+   "incomplete_prompts": 0,
+   "ok": true
+  },
+  "null": {
+   "start": {
+    "prompts": 44,
+    "expected_prompts": 44,
+    "all_prompts_ran": true,
+    "unhooked": true
+   },
+   "end": {
+    "prompts": 44,
+    "expected_prompts": 44,
+    "all_prompts_ran": true,
+    "vs_start": {
+     "comparisons": 44,
+     "ids_matched": 44,
+     "logits_matched": 44,
+     "all_ok": true,
+     "max_abs_logit_diff": 0.0
+    },
+    "vs_hooked_zero": {
+     "comparisons": 44,
+     "ids_matched": 44,
+     "logits_matched": 44,
+     "all_ok": true,
+     "max_abs_logit_diff": 0.0,
+     "logits_unavailable_prompts": 0
+    }
+   },
+   "hooked_zero_vs_start": {
+    "comparisons": 396,
+    "ids_matched": 396,
+    "logits_matched": 396,
+    "all_ok": true,
+    "max_abs_logit_diff": 0.0
+   },
+   "all_ok": true
+  },
+  "run_status": "complete",
+  "rows_written": 4356,
+  "rows_planned": 4356,
+  "refusals_by_family_overall": {
+   "OpenAI": 61,
+   "Microsoft": 2
+  },
+  "median_length_tokens": 48.0,
+  "median_length_words": 40.0,
+  "cap_fraction": 0.8090909090909091,
+  "answers": 3960,
+  "stop_rule": {
+   "triggered": true,
+   "reasons": [
+    "fewer than 30 prompts eligible (10)"
+   ],
+   "rung_reached": true,
+   "rule": "stop if fewer than 30 prompts are eligible, or if no rung reaches 9 of 10 supported directions"
+  },
+  "trim_rule": {
+   "rule": "drop Method-ladder rungs above the first rung where more than half the answers are broken, keeping the one rung above it; the read-rung rule is unchanged",
+   "layers": [
+    5
+   ],
+   "doses_visited": [
+    0.15,
+    0.2,
+    0.25,
+    0.3,
+    0.4,
+    0.5,
+    0.75,
+    1.0,
+    1.5
+   ],
+   "broken_fraction_by_method_rung": {
+    "0.25": 0.015909090909090907,
+    "0.5": 0.029545454545454545,
+    "0.75": 0.10227272727272728,
+    "1.0": 0.21136363636363636,
+    "1.5": 0.5136363636363637
+   },
+   "counts_by_method_rung": {
+    "0.25": {
+     "broken": 7,
+     "answers": 440
+    },
+    "0.5": {
+     "broken": 13,
+     "answers": 440
+    },
+    "0.75": {
+     "broken": 45,
+     "answers": 440
+    },
+    "1.0": {
+     "broken": 93,
+     "answers": 440
+    },
+    "1.5": {
+     "broken": 226,
+     "answers": 440
+    }
+   },
+   "first_broken_rung": 1.5,
+   "kept_ladder": [
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.5,
+    2.0
+   ],
+   "dropped_ladder": [
+    3.0
+   ],
+   "undetermined_rungs": [
+    2.0,
+    3.0
+   ],
+   "all_pilot_rungs_broken_fraction": {
+    "0.15": 0.006818181818181818,
+    "0.2": 0.004545454545454545,
+    "0.25": 0.015909090909090907,
+    "0.3": 0.004545454545454545,
+    "0.4": 0.011363636363636364,
+    "0.5": 0.029545454545454545,
+    "0.75": 0.10227272727272728,
+    "1.0": 0.21136363636363636,
+    "1.5": 0.5136363636363637
+   },
+   "note": "rungs the pilot did not visit cannot be trimmed from the pilot; they are listed as undetermined"
+  }
+ },
+ "predictions": {
+  "218.1": {
+   "verdict": "not read",
+   "reason": "no answers for Instruct",
+   "confidence": "low (35%)",
+   "author": "Journal Claude",
+   "text": "Instruct: at the read rung of at least one layer, at least 5 directions are moved and at least 60% of the moved directions are led by OpenAI (refusal-template answers excluded)."
+  },
+  "218.2": {
+   "verdict": "not read",
+   "reason": "no answers for SFT",
+   "confidence": "low (35%)",
+   "author": "Journal Claude",
+   "text": "SFT: the same as 218.1."
+  },
+  "218.3": {
+   "verdict": "not read",
+   "reason": "no answers for Instruct",
+   "confidence": "medium (60%)",
+   "author": "Journal Claude",
+   "text": "Instruct: at every layer whose read rung has at least 5 moved directions, Google leads at most 1 in 5 of them (at most floor(moved / 5)). Not read when no layer has 5 moved (F6)."
+  },
+  "218.4": {
+   "verdict": "not read",
+   "reason": "no answers for SFT, DPO, Instruct",
+   "confidence": "medium (65%)",
+   "author": "Journal Claude",
+   "text": "Each of SFT, DPO and Instruct passes the gate (at least 30 of 44 prompts eligible)."
+  },
+  "218.5": {
+   "verdict": "not read",
+   "reason": "no answers for SFT, DPO, Instruct",
+   "confidence": "high (85%)",
+   "author": "Journal Claude",
+   "text": "For each model, the zero row is identical across all 14 batches on at least 42 of 44 prompts, and the no-hook null matches bit for bit at the start and the end."
+  },
+  "218.6": {
+   "verdict": "not read",
+   "reason": "no answers for SFT, DPO",
+   "confidence": "low (30%)",
+   "author": "Journal Claude",
+   "text": "Stage shift: pooling both layers' read rungs, the share of other_maker answers (on eligible prompts, refusals excluded) naming Alibaba or Microsoft is at least 10 points higher at DPO than at SFT, with a paired bootstrap (10,000 draws) over the intersection of prompts eligible at both SFT and DPO whose 95% interval excludes 0; the intersection must have at least 25 prompts. Not read if either model has fewer than 20 other_maker answers pooled."
+  },
+  "218.7": {
+   "verdict": "not read",
+   "reason": "no answers for Instruct",
+   "confidence": "low (25%)",
+   "author": "Vesper",
+   "text": "The same prediction as 218.1."
+  },
+  "218.8": {
+   "verdict": "not read",
+   "reason": "no answers for SFT, DPO, Instruct",
+   "confidence": "low (45%)",
+   "author": "Vesper",
+   "text": "The same prediction as 218.4."
+  }
+ },
+ "gold": {
+  "rows": 87,
+  "matched": 87,
+  "ok": true,
+  "rule_version": "218-v2",
+  "mismatches": []
+ },
+ "binomial_tests": [],
+ "audit": {
+  "per_model": {
+   "SFT": {
+    "available": false,
+    "reason": "no answers"
+   },
+   "DPO": {
+    "available": false,
+    "reason": "no answers"
+   },
+   "Instruct": {
+    "available": false,
+    "reason": "no answers"
+   }
+  },
+  "sample_size": 0
+ },
+ "constants": {
+  "gate_min_eligible": 30,
+  "n_prompts": 44,
+  "read_rung_min": 36,
+  "read_rung_min_pilot": 9,
+  "moved_min": 3,
+  "broken_fraction": 0.1,
+  "bootstrap_draws": 10000,
+  "bootstrap_seed": 218,
+  "intersection_min": 25,
+  "other_maker_min": 20,
+  "shift_min": 0.1,
+  "rule_version": "218-v2"
+ }
+}
