@@ -664,3 +664,25 @@ def test_deliberate_break_of_a_copy_turns_the_moved_check_red(tmp_path):
     with pytest.raises(AssertionError):
         _check_moved_threshold(broken)
     _check_moved_threshold(score218)
+
+
+def test_registered_thresholds_match_the_design():
+    """Added by Claude at review (2026-11-24): a copy with READ_RUNG_MIN = 35
+    passed all 24 tests, because the read-rung tests pass the threshold in as an
+    argument. Every number below is quoted from DESIGN.md (registered SHA
+    7d0c6509...), so changing one without an amendment turns this red."""
+    assert score218.GATE_MIN_ELIGIBLE == 30            # gate: 30 of 44 eligible
+    assert score218.DESIGN_N_PROMPTS == 44
+    assert score218.READ_RUNG_MIN == 36                 # 36 of 40 supported
+    assert score218.READ_RUNG_MIN_PILOT == 9            # pilot: 9 of 10
+    assert score218.N_DIRECTIONS == 40 and score218.N_DIRECTIONS_PILOT == 10
+    assert score218.MOVED_MIN == 3                      # at least 3 other_maker
+    assert score218.BROKEN_FRACTION == 0.10             # broken on at most 10%
+    assert score218.FULL_ZERO_BATCHES == 14             # 218.5: all 14 batches
+    assert score218.BOOTSTRAP_DRAWS == 10_000 and score218.BOOTSTRAP_SEED == 218
+    assert score218.INTERSECTION_MIN == 25              # 218.6 not read below 25
+    assert score218.OTHER_MAKER_MIN == 20               # 218.6 not read below 20
+    assert score218.SHIFT_MIN == 0.10                   # 218.6: at least 10 points
+    assert set(score218.SHIFT_FAMILIES) == {'Alibaba', 'Microsoft'}
+    assert tuple(score218.LADDER) == (0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0)
+    assert tuple(score218.PILOT_DOSES) == (0.15, 0.20, 0.25, 0.30, 0.40, 0.50, 0.75, 1.0, 1.5)

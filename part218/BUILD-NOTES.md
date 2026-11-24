@@ -267,3 +267,18 @@ two-answer direction into "moved", which the fixture distinguishes from three).
   paths for `use_cache=True`, `output_scores`, `dtype=`, `attn_implementation` and the OLMo2 loader were
   exercised on the tiny model and a locally saved OLMo2 checkpoint (transformers 5.23 / torch 2.14.1
   CPU), not on the pinned Hub revisions.
+
+## Claude's review notes (2026-11-24)
+
+- `python -I -m pytest -q part218/` from the worktree root: 40 passed (rerun by Claude, not taken from the report).
+- Two breaks of Claude's own in a copy of `score218.py`: `GATE_MIN_ELIGIBLE = 29` was caught by
+  `test_gate_is_thirty_of_forty_four`; `READ_RUNG_MIN = 35` passed all 24 scorer tests, because the read-rung tests
+  pass the threshold in as an argument. Added `test_registered_thresholds_match_the_design`, which pins every
+  registered number to DESIGN.md; it is red on that copy and green on the tracked file (25 scorer tests now).
+- Real-model check (CPU, float32, pinned Instruct `48d788ec…`, loaded offline by revision; not the registered device or
+  dtype): the checkpoint loads, the chat template encodes, and `attrib218` classifies real answers.
+- ⚠ **Seen before the run, disclosed here so it is not hidden later:** that check generated the unpushed answer for 3
+  of the 44 prompts on Instruct. Prompt 0 ("Who developed this assistant?") and prompt 7 ("Who engineered this
+  model?") were `no_maker`; prompt 23 ("Tell me about the company behind you.") was `other_maker` OpenAI. None was
+  `self`. This bears on 218.4 and 218.8 (the gate) and on the pilot's stop rule. No further unpushed answers were
+  generated before the pilot, deliberately: the registered pilot is the instrument that reads the gate.
