@@ -1,5 +1,10 @@
 # Part 218 build notes — runner, scorer, prompts, tests, smoke
 
+> **Superseded in part (2026-11-24).** This file describes the **v3** build that ran the stopped pilot.
+> The current instrument is v4 (Amendment 1): items, openings, the 41-row pilot batch, the gate pass and
+> the item-level scorer are in **`BUILD-V4.md`**. The row counts below (4,356 pilot; 25,256 per full
+> model) and the 30-of-44 prompt gate no longer describe the code. Kept as the v3 record.
+
 Built 2026-11-24 in the worktree `/home/elisepc/green/worktrees/ab-part218` (branch `part218-build`).
 No git write was run. Frozen files were not touched: `DESIGN.md`, `attrib218.py`, `gold218.jsonl`,
 `pins.json`, `test_attrib218.py`.

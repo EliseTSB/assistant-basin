@@ -1,35 +1,46 @@
 #!/usr/bin/env python3
-"""Part 218 runner: random residual pushes on OLMo 2 1B SFT / DPO / Instruct.
+"""Part 218 v4 runner: random residual pushes on OLMo 2 1B SFT / DPO / Instruct.
 
-Spec: `part218/DESIGN.md` (v3, frozen; Procedure v1).  One self-contained script:
-it imports torch, transformers and the standard library only.  The 44 prompts sit
-beside it in `prompts218.json` (a copy of Part 173's frozen NEW44B; a test keeps
-them equal), so the whole `part218/` folder plus that file runs on a Colab VM.
+Spec: `part218/DESIGN.md` (v3 frozen) plus **Amendment 1** at the end, which
+governs where it differs.  One self-contained script: it imports torch,
+transformers and the standard library only.  The 44 held-out prompts NEW44C sit
+beside it in `prompts218-v4.json`, so the whole `part218/` folder plus that file
+runs on a Colab VM.
 
-Colab (from the folder that holds `part218/`):
+Colab (from the folder that holds `part218/`, one shared --out root):
 
     python part218/run218.py --mode pilot --out /content/out218
+    python part218/run218.py --mode gate --model SFT --out /content/out218
+    python part218/run218.py --mode gate --model DPO --out /content/out218
     python part218/run218.py --mode full --model SFT      --out /content/out218
     python part218/run218.py --mode full --model DPO      --out /content/out218
     python part218/run218.py --mode full --model Instruct --out /content/out218
 
 Output layout (one shared `directions.pt` at the root, reused byte for byte):
 
-    <out>/directions.pt           20 unit Gaussian vectors, float32 CPU
-    <out>/pilot/answers.jsonl     one line per generated row
-    <out>/pilot/run.json          pins, versions, medians, counts, null checks
-    <out>/SFT|DPO|Instruct/...    the same, per full-mode model
+    <out>/directions.pt          20 unit Gaussian vectors, float32 CPU
+    <out>/pilot/answers.jsonl    one line per generated row (Instruct, layer 5)
+    <out>/gate/SFT|DPO/...       the zero-push gate pass (layer 5)
+    <out>/SFT|DPO|Instruct/...   the main run
 
 Every mode is resumable: a batch is skipped when all of its rows are already in
-`answers.jsonl`, keyed by (model, layer, dose, prompt_index) and row id.
+`answers.jsonl`, keyed by (model, layer, dose, item_index) and row id.
 
-Design points that live in this file (DESIGN.md Method / Controls):
-  * one batch = one prompt x (40 pushed rows + 1 zero row); no padding;
+v4 (Amendment 1) design points that live in this file:
+  * 44 prompts x 2 openings = 88 items; item_index = 2 * prompt_index +
+    opening_index, fixed order 0..87;
+  * the model input is the chat template's generation prompt plus the opening
+    with NO trailing space; the answer text is `opening + continuation`
+    (skip_special_tokens=True, unstripped);
+  * one batch = one item x 41 rows: 40 pushed directions (seeds 0-19, both
+    signs) plus the zero row, in the pilot and the main run alike;
   * push = d x the model's own median residual-output norm at that layer over
-    the 44 prompts' positions, position 0 excluded, added to the decoder
-    layer's output at every position;
-  * the no-hook null is rerun at the start and the end of every model's run,
-    and every hooked batch's zero row is compared with the start null;
+    the 88 items' positions, position 0 excluded, opening tokens included,
+    added to the decoder layer's output at every position;
+  * `--mode gate` records 41 zero-push rows per item for SFT and DPO (the hook
+    installed, adding exactly zero); it never builds a pushed vector;
+  * the no-hook null is rerun at the start and the end of every pushed run, and
+    every hooked batch's zero row is compared with the start null;
   * a null mismatch stops the model and is written to `run.json`: never a
     silent pass.
 """
@@ -46,8 +57,12 @@ from pathlib import Path
 import torch
 
 HERE = Path(__file__).resolve().parent
-PROMPTS_PATH = HERE / 'prompts218.json'
+PROMPTS_PATH = HERE / 'prompts218-v4.json'
 PINS_PATH = HERE / 'pins.json'
+
+# Amendment 1, item 2: the two maker-slot openings, appended with no trailing
+# space.  The model generates the leading space of the continuation.
+OPENINGS = ('I was developed by', 'I was built by')
 
 # The three full-mode checkpoints.  Full 40-hex revisions, the same as
 # part218/pins.json and DESIGN.md (the 12-hex prefixes in the design each
@@ -63,33 +78,68 @@ MODELS = {
 
 # Method ladder (DESIGN.md, Dose).
 LADDER = (0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0)
-# Pilot ladder, fixed before the pilot (DESIGN.md, Size).
+# Pilot ladder, fixed before the pilot (DESIGN.md, Size; Amendment 1 item 8).
 PILOT_DOSES = (0.15, 0.20, 0.25, 0.30, 0.40, 0.50, 0.75, 1.0, 1.5)
 PILOT_LAYER = 5
-PILOT_SEEDS = (0, 1, 2, 3, 4)          # ten directions with both signs
 FULL_LAYERS = (5, 10)                  # of 16
 FULL_SEEDS = tuple(range(20))          # forty directions with both signs
+PILOT_SEEDS = FULL_SEEDS               # Amendment 1 item 3: 40 + zero = 41
 N_DRAWS = 20                           # the directions file always holds 20
 MAX_NEW = 48
 N_PROMPTS = 44
+N_OPENINGS = 2
+N_ITEMS = N_PROMPTS * N_OPENINGS       # 88
+ROWS_PER_BATCH = 2 * len(FULL_SEEDS) + 1   # 41, pinned by Amendment 1
+GATE_LAYER = 5
+GATE_MODELS = ('SFT', 'DPO')
 
 ZERO_ROW = {'seed': None, 'sign': 0, 'direction_id': 'zero'}
 
 
 # ---------------------------------------------------------------------------
-# Small pure helpers (unit-tested without a model)
+# Items (Amendment 1, items 1 and 3)
 # ---------------------------------------------------------------------------
 
 def load_prompts(path: Path | str = PROMPTS_PATH) -> list[str]:
-    """Read prompts218.json and check its shape."""
+    """Read prompts218-v4.json and check its shape."""
     prompts = json.loads(Path(path).read_text(encoding='utf-8'))
     if not isinstance(prompts, list) or len(prompts) != N_PROMPTS:
         raise SystemExit(f'{path}: expected a list of {N_PROMPTS} prompts, '
                          f'got {type(prompts).__name__} of {len(prompts)}')
     if not all(isinstance(q, str) and q.strip() for q in prompts):
         raise SystemExit(f'{path}: every prompt must be a non-empty string')
+    if len(set(prompts)) != N_PROMPTS:
+        raise SystemExit(f'{path}: the {N_PROMPTS} prompts must be distinct')
     return prompts
 
+
+def item_spec(prompt_index: int, opening_index: int) -> dict:
+    """One item: a prompt asked with one opening.  Fixed index 2p + o."""
+    if not 0 <= opening_index < N_OPENINGS:
+        raise ValueError(f'opening_index {opening_index} outside 0..{N_OPENINGS - 1}')
+    return {
+        'item_index': int(2 * prompt_index + opening_index),
+        'prompt_index': int(prompt_index),
+        'opening_index': int(opening_index),
+        'opening': OPENINGS[opening_index],
+    }
+
+
+def items(n_prompts: int = N_PROMPTS) -> list[dict]:
+    """Every (prompt, opening) pair in the fixed item order 0..87."""
+    return [item_spec(prompt_index, opening_index)
+            for prompt_index in range(n_prompts)
+            for opening_index in range(N_OPENINGS)]
+
+
+def answer_text(opening: str, continuation: str) -> str:
+    """Amendment 1 item 2: `text = opening + continuation` exactly."""
+    return opening + continuation
+
+
+# ---------------------------------------------------------------------------
+# Small pure helpers (unit-tested without a model)
+# ---------------------------------------------------------------------------
 
 def pins() -> dict:
     """The checkpoint pins, from pins.json (MODELS is the fallback)."""
@@ -176,15 +226,31 @@ def dose_vectors(directions: torch.Tensor, seeds, dose: float,
     return torch.stack(rows)
 
 
+def gate_vectors(hidden: int, rows: int = ROWS_PER_BATCH) -> torch.Tensor:
+    """The gate pass's batch rows: `rows` zero vectors, exactly zero.
+
+    Amendment 1 item 8 / the gate-only pass: the hook is installed and adds
+    zero for every row, so no pushed SFT or DPO answer exists before the main
+    run.  This function is the only vector source the gate pass uses.
+    """
+    return torch.zeros(int(rows), int(hidden), dtype=torch.float32)
+
+
 def row_key(record: dict) -> tuple:
     return (record['model'], int(record['layer']), float(record['dose']),
-            int(record['prompt_index']), record['direction_id'])
+            int(record['item_index']), record['row_id'])
 
 
-def planned_rows(mode: str, layers, doses, n_prompts: int = N_PROMPTS) -> int:
-    """Rows the design plans for one run of this mode (pushed + zero)."""
-    seeds = PILOT_SEEDS if mode == 'pilot' else FULL_SEEDS
-    return len(layers) * len(doses) * n_prompts * n_rows(seeds)
+def gate_row_ids(rows: int = ROWS_PER_BATCH) -> list[str]:
+    return [f'zero{index:02d}' for index in range(int(rows))]
+
+
+def planned_rows(mode: str, layers, doses,
+                 n_items: int = N_ITEMS) -> int:
+    """Rows the design plans for one run of this mode."""
+    if mode == 'gate':
+        return len(layers) * len(doses) * n_items * ROWS_PER_BATCH
+    return len(layers) * len(doses) * n_items * n_rows(FULL_SEEDS)
 
 
 def find_decoder_layers(model):
@@ -228,14 +294,23 @@ def build_prompt(tok, question: str) -> str:
             messages, tokenize=False, add_generation_prompt=True)
 
 
-def encode_prompt(tok, question: str) -> torch.Tensor:
-    """tokenize=False, then encode (transformers 5.20+ returns an encoding
-    object from the tokenizing form, so the text is encoded here)."""
-    text = build_prompt(tok, question)
+def item_text(tok, question: str, opening: str) -> str:
+    """Amendment 1 item 2: the generation prompt plus the opening, no space."""
+    return build_prompt(tok, question) + opening
+
+
+def encode_item(tok, question: str, opening: str) -> torch.Tensor:
+    """Encode one item: `build_prompt(...) + opening`, add_special_tokens=False."""
+    text = item_text(tok, question, opening)
     ids = tok(text, add_special_tokens=False, return_tensors='pt')['input_ids']
     if ids.numel() == 0:
         raise SystemExit('chat template produced an empty prompt')
     return ids[0]
+
+
+def encode_prompt(tok, question: str) -> torch.Tensor:
+    """v3 helper kept for callers that only need the bare generation prompt."""
+    return encode_item(tok, question, '')
 
 
 def load_model(model_key: str, device, dtype, attn_implementation=None):
@@ -323,14 +398,19 @@ def generate_batch(model, batch: torch.Tensor, max_new: int, pad_id: int):
 
 def parse_row(tok, sequence: torch.Tensor, prompt_len: int, max_new: int,
               pad_id: int, eos_id: int | None = None) -> dict:
-    """Trim one generated row to its real tokens and decode it."""
+    """Trim one generated row to its real tokens and decode the continuation.
+
+    Amendment 1 item 2: the continuation is decoded with
+    skip_special_tokens=True and kept exactly as decoded (no strip); the answer
+    text is `opening + continuation`, built by `answer_text`.
+    """
     generated = sequence[prompt_len:].tolist()
     while generated and generated[-1] == pad_id:
         generated.pop()
-    text = tok.decode(generated, skip_special_tokens=True).strip()
+    continuation = tok.decode(generated, skip_special_tokens=True)
     return {
         'token_ids': generated,
-        'text': text,
+        'continuation': continuation,
         'n_new_tokens': len(generated),
         'max_new_tokens': int(max_new),
         # An answer that ends on EOS exactly at the cap ended naturally
@@ -376,8 +456,12 @@ def make_push_hook(layer, vecs: torch.Tensor, probe: dict | None = None):
     return layer.register_forward_hook(hook), state
 
 
-def median_norms(model, layers, prompt_ids, chosen, device) -> dict:
-    """Median residual-output norm per layer, over all prompts, position 0 out."""
+def median_norms(model, layers, item_ids, chosen, device) -> dict:
+    """Median residual-output norm per layer, over all item prompts' positions.
+
+    Amendment 1 item 7: the 88 item prompts (opening tokens included), position
+    0 excluded, one median per layer.
+    """
     store = {int(layer): [] for layer in chosen}
     handles = []
     for layer in chosen:
@@ -387,7 +471,7 @@ def median_norms(model, layers, prompt_ids, chosen, device) -> dict:
                 hidden[0, 1:].float().norm(dim=-1).cpu())
         handles.append(layers[int(layer)].register_forward_hook(hook))
     try:
-        for ids in prompt_ids:
+        for ids in item_ids:
             batch = ids.unsqueeze(0).to(device)
             model(input_ids=batch, use_cache=False)
     finally:
@@ -430,7 +514,7 @@ def write_answers(path: Path, rows: dict) -> None:
     """Rewrite a compacted answers.jsonl (used after a partial batch crash)."""
     ordered = sorted(rows.values(),
                      key=lambda r: (int(r['layer']), float(r['dose']),
-                                    int(r['prompt_index']),
+                                    int(r['item_index']),
                                     int(r.get('row_index', 0))))
     tmp = path.with_suffix(path.suffix + '.tmp')
     with tmp.open('w', encoding='utf-8') as handle:
@@ -445,8 +529,8 @@ def completed_batches(rows: dict, required_ids: list[str]) -> set:
     done: dict = {}
     for record in rows.values():
         key = (record['model'], int(record['layer']), float(record['dose']),
-               int(record['prompt_index']))
-        done.setdefault(key, set()).add(record['direction_id'])
+               int(record['item_index']))
+        done.setdefault(key, set()).add(record['row_id'])
     return {key for key, ids in done.items() if need <= ids}
 
 
@@ -454,29 +538,40 @@ def completed_batches(rows: dict, required_ids: list[str]) -> set:
 # No-hook null
 # ---------------------------------------------------------------------------
 
-def null_pass(model, prompt_ids, rows_per_batch: int, device, max_new: int,
+def last_row_logits(scores: torch.Tensor) -> torch.Tensor:
+    """One row of first-step logits, copied off its batch buffer.
+
+    `scores[-1]` is a view into the full [rows, vocab] score tensor.  Keeping
+    the view alive kept the whole batch buffer (41 x 100352 floats) per item;
+    at v4's 88 items that is about 1.4 GB per saved set.  The clone keeps only
+    the row, which is all the null comparison reads.
+    """
+    return scores[-1].detach().to('cpu').clone()
+
+
+def null_pass(model, item_ids, rows_per_batch: int, device, max_new: int,
               pad_id: int, label: str) -> list[dict]:
-    """Per prompt, one unhooked batch of the same shape; keep the zero slot.
+    """Per item, one unhooked batch of the same shape; keep the zero slot.
 
     The slot is the last row: the zero row of the hooked batch it will be
-    compared with.  All rows in this batch are the same prompt, so the last
-    row is the model's plain answer at this batch shape.
+    compared with.  All rows in this batch are the same item, so the last row
+    is the model's plain answer at this batch shape.
     """
     results = []
     started = time.time()
-    for prompt_index, ids in enumerate(prompt_ids):
+    for item_index, ids in enumerate(item_ids):
         batch = ids.repeat(rows_per_batch, 1).to(device)
         sequences, scores0 = generate_batch(model, batch, max_new, pad_id)
         generated = sequences[-1, ids.numel():].tolist()
         while generated and generated[-1] == pad_id:
             generated.pop()
         results.append({
-            'prompt_index': prompt_index,
+            'item_index': item_index,
             'token_ids': generated,
-            'logits': scores0[-1].detach().to('cpu'),
+            'logits': last_row_logits(scores0),
         })
-        print(f'null-{label} {prompt_index + 1}/{len(prompt_ids)} '
-              f'p{prompt_index} {time.time() - started:.1f}s', flush=True)
+        print(f'null-{label} {item_index + 1}/{len(item_ids)} '
+              f'i{item_index} {time.time() - started:.1f}s', flush=True)
     return results
 
 
@@ -494,12 +589,12 @@ def compare_null(reference: dict, token_ids, logits) -> dict:
 
 
 def null_summary(results: list[dict], expected: int) -> dict:
-    return {'prompts': len(results), 'expected_prompts': expected,
-            'all_prompts_ran': len(results) == expected}
+    return {'items': len(results), 'expected_items': expected,
+            'all_items_ran': len(results) == expected}
 
 
 def merge_comparisons(comparisons: list[dict]) -> dict:
-    """Aggregate per-prompt comparison dicts for run.json."""
+    """Aggregate per-item comparison dicts for run.json."""
     n = len(comparisons)
     ids = sum(1 for c in comparisons if c['ids_ok'])
     logits = sum(1 for c in comparisons if c['logits_ok'])
@@ -529,89 +624,241 @@ def version_report() -> dict:
 
 
 # ---------------------------------------------------------------------------
-# The run
+# The gate-only pass (Amendment 1 item 8; no pushed row may be generated)
 # ---------------------------------------------------------------------------
 
-def run(args) -> int:
-    mode = args.mode
-    if mode == 'pilot':
-        model_key = 'Instruct'
-        layers_wanted = (PILOT_LAYER,)
-        doses = tuple(PILOT_DOSES)
-        seeds = PILOT_SEEDS
-        run_name = 'pilot'
-        if args.model and args.model != 'Instruct':
-            raise SystemExit('the pilot is Instruct only (DESIGN.md, Size)')
-        if args.doses:
-            raise SystemExit('the pilot ladder is fixed (DESIGN.md, Size)')
-    else:
-        if not args.model:
-            raise SystemExit('--mode full needs --model {SFT,DPO,Instruct}')
-        model_key = args.model
-        layers_wanted = tuple(FULL_LAYERS)
-        doses = tuple(args.doses) if args.doses else tuple(LADDER)
-        seeds = FULL_SEEDS
-        run_name = model_key
-
-    prompts = load_prompts()
-    out_dir = Path(args.out)
-    run_dir = out_dir / run_name
-    run_dir.mkdir(parents=True, exist_ok=True)
+def run_gate_pass(args, model_key: str, run_dir: Path, tok, model, layers,
+                  hidden: int, item_specs: list[dict], item_ids: list[torch.Tensor],
+                  pad_id: int, repo: str, revision: str, tiny: bool,
+                  pin_table: dict, started_at: float) -> int:
+    """One batch per item: 41 zero-push rows, the hook installed adding zero."""
     answers_path = run_dir / 'answers.jsonl'
     run_json_path = run_dir / 'run.json'
+    layer = GATE_LAYER
+    batch_rows = ROWS_PER_BATCH
+    required_ids = gate_row_ids(batch_rows)
+    vecs_cpu = gate_vectors(hidden, batch_rows)
+    if float(vecs_cpu.abs().max()) != 0.0:
+        raise SystemExit('gate vectors are not exactly zero')
 
-    device = torch.device(args.device)
-    dtype = {'float32': torch.float32, 'bfloat16': torch.bfloat16,
-             'float16': torch.float16}[args.dtype]
-    pin_table = pins()
-    if args.tiny:
-        repo, revision = str(Path(args.tiny).resolve()), 'tiny-random'
-        print(f'loading a tiny random model from {repo}', flush=True)
-        tok, model = load_tiny(repo, device, dtype)
-        tiny = True
-    else:
-        repo, revision = pin_table[model_key]['repo'], pin_table[model_key]['revision']
-        print(f'loading {repo}@{revision[:12]} on {device} ({args.dtype})',
-              flush=True)
-        tok, model = load_model(model_key, device, dtype,
-                                args.attn_implementation)
-        tiny = False
+    tok_report = tokenizer_report(tok, pad_id)
+    sample_ids = item_ids[0]
+    tok_report['sample_prompt_tokens'] = int(sample_ids.numel())
+    tok_report['sample_prompt_decodes'] = bool(
+        tok.decode(sample_ids, skip_special_tokens=True).strip())
 
-    layers = find_decoder_layers(model)
-    if len(layers) <= max(layers_wanted):
-        raise SystemExit(f'model has {len(layers)} decoder layers; '
-                         f'layers {layers_wanted} do not all exist')
-    hidden = int(model.get_input_embeddings().weight.shape[1])
-    attn_impl = getattr(model.config, '_attn_implementation', None)
+    meta = {
+        'part': 218,
+        'mode': 'gate',
+        'model_key': model_key,
+        'repo': repo,
+        'revision': revision,
+        'tiny': tiny,
+        'pins': pin_table,
+        'versions': version_report(),
+        'device': str(args.device),
+        'device_name': (torch.cuda.get_device_name(0)
+                        if torch.device(args.device).type == 'cuda' else None),
+        'dtype': args.dtype,
+        'attn_implementation': getattr(model.config, '_attn_implementation', None),
+        'hidden_size': hidden,
+        'n_decoder_layers': len(layers),
+        'layers': [int(layer)],
+        'doses': [0.0],
+        'seeds': [],
+        'n_directions': 0,
+        'n_rows_per_batch': batch_rows,
+        'n_prompts': len(load_prompts()),
+        'n_items': len(item_specs),
+        'openings': list(OPENINGS),
+        'zero_rows_per_item': int(batch_rows),
+        'max_new_tokens': int(args.max_new),
+        'tokenizer': tok_report,
+        'medians': {},
+        'gate': {
+            'zero_push': True,
+            'rows_per_batch': int(batch_rows),
+            'vec_abs_max': float(vecs_cpu.abs().max()),
+            'no_nonzero_push': True,
+            'probe_ran': False,
+        },
+        'rows_planned': planned_rows('gate', (layer,), (0.0,), len(item_specs)),
+        'batches_planned': len(item_specs),
+        'rows_written': 0,
+        'batches_written': 0,
+        'batches_resumed': 0,
+        'status': 'running',
+        'null': {'skipped': 'the gate pass records zero-push rows only'},
+        'push_check': {},
+        'started_at': started_at,
+        'finished_at': None,
+        'wall_seconds': None,
+    }
 
-    pad_id = tok.pad_token_id if tok.pad_token_id is not None else tok.eos_token_id
-    if pad_id is None:
-        raise SystemExit('tokenizer has neither pad_token_id nor eos_token_id')
+    rows, bad_lines = read_answers(answers_path)
+    line_count = (sum(1 for _ in answers_path.open(encoding='utf-8'))
+                  if answers_path.exists() else 0)
+    if bad_lines or len(rows) != line_count:
+        write_answers(answers_path, rows)
+        print(f'compacted answers.jsonl: {len(rows)} rows, '
+              f'{bad_lines} bad line(s) dropped', flush=True)
+    done = completed_batches(rows, required_ids)
+    print(f'{len(rows)} rows on disk, {len(done)} batch(es) complete',
+          flush=True)
 
-    # One prompt through the tokenizer, decoded back: the pad/eos check.
-    sample_ids = encode_prompt(tok, prompts[0])
-    sample_text = tok.decode(sample_ids, skip_special_tokens=True)
+    stopped = False
+    batch_number = 0
+    batches_written = 0
+    batches_resumed = 0
+    pushed_written = 0
+    probe: dict = {}
+    push_started = time.time()
+    vecs = vecs_cpu.to(torch.device(args.device))
+
+    with answers_path.open('a', encoding='utf-8') as sink:
+        for spec, ids in zip(item_specs, item_ids):
+            batch_number += 1
+            key = (model_key, int(layer), 0.0, int(spec['item_index']))
+            if key in done:
+                batches_resumed += 1
+                print(f'gate {model_key} {batch_number}/{len(item_specs)} '
+                      f'i{spec["item_index"]} resumed', flush=True)
+                continue
+            batch = ids.repeat(batch_rows, 1).to(torch.device(args.device))
+            use_probe = None if probe else {}
+            handle, state = make_push_hook(layers[int(layer)], vecs, use_probe)
+            try:
+                sequences, _scores0 = generate_batch(model, batch,
+                                                     args.max_new, pad_id)
+            finally:
+                handle.remove()
+            if use_probe is not None:
+                probe = use_probe
+                meta['push_check'] = probe
+                meta['gate']['hook_calls'] = int(state['calls'])
+                meta['gate']['probe_ran'] = True
+                meta['gate']['pushed_delta_abs_max'] = float(
+                    probe['pushed_delta_abs_max'])
+                meta['gate']['no_nonzero_push'] = bool(
+                    probe['pushed_delta_abs_max'] == 0.0
+                    and probe['zero_delta_abs_max'] == 0.0)
+                if not meta['gate']['no_nonzero_push']:
+                    raise SystemExit(
+                        'gate pass added a nonzero push; refusing to continue')
+            prompt_len = int(ids.numel())
+            for row_index in range(batch_rows):
+                parsed = parse_row(tok, sequences[row_index], prompt_len,
+                                   args.max_new, pad_id, eos_id=tok.eos_token_id)
+                record = {
+                    'mode': 'gate',
+                    'model': model_key,
+                    'repo': repo,
+                    'revision': revision,
+                    'layer': int(layer),
+                    'dose': 0.0,
+                    'seed': None,
+                    'sign': 0,
+                    'direction_id': 'zero',
+                    'row_id': required_ids[row_index],
+                    'prompt_index': int(spec['prompt_index']),
+                    'opening_index': int(spec['opening_index']),
+                    'opening': spec['opening'],
+                    'item_index': int(spec['item_index']),
+                    'row_index': int(row_index),
+                    'token_ids': parsed['token_ids'],
+                    'continuation': parsed['continuation'],
+                    'text': answer_text(spec['opening'], parsed['continuation']),
+                    'n_new_tokens': parsed['n_new_tokens'],
+                    'max_new_tokens': parsed['max_new_tokens'],
+                    'hit_cap': parsed['hit_cap'],
+                }
+                sink.write(json.dumps(record, ensure_ascii=False) + '\n')
+                pushed_written += 1
+            sink.flush()
+            batches_written += 1
+            meta['rows_written'] = len(rows) + pushed_written
+            meta['batches_written'] = batches_written
+            if batches_written % 10 == 0:
+                write_json(run_json_path, meta)
+            elapsed = time.time() - push_started
+            rate = pushed_written / elapsed if elapsed > 0 else 0.0
+            print(f'gate {model_key} {batch_number}/{len(item_specs)} '
+                  f'i{spec["item_index"]} '
+                  f'rows {meta["rows_written"]}/{meta["rows_planned"]} '
+                  f'{elapsed:.0f}s {rate:.1f} rows/s', flush=True)
+
+    hooks_left = count_layer_hooks(layers)
+    meta['hooks_after_generation'] = hooks_left
+    if hooks_left:
+        stopped = True
+        meta['status'] = 'stopped_hooks_left'
+        print(f'{hooks_left} hook(s) still attached after generation', flush=True)
+
+    rows_final, bad_final = read_answers(answers_path)
+    lines_final = (sum(1 for _ in answers_path.open(encoding='utf-8'))
+                   if answers_path.exists() else 0)
+    if bad_final or len(rows_final) != lines_final:
+        write_answers(answers_path, rows_final)
+    meta['rows_written'] = len(rows_final)
+    meta['batches_written'] = batches_written
+    meta['batches_resumed'] = batches_resumed
+    meta['batches_complete'] = len(completed_batches(rows_final, required_ids))
+    if meta['batches_complete'] != meta['batches_planned']:
+        stopped = True
+        if meta['status'] == 'running':
+            meta['status'] = 'incomplete'
+        meta['incomplete_reason'] = (
+            f"{meta['batches_complete']} of {meta['batches_planned']} batches "
+            f"complete after the loop")
+    meta['finished_at'] = time.time()
+    meta['wall_seconds'] = meta['finished_at'] - started_at
+    if not stopped and meta['status'] == 'running':
+        meta['status'] = 'complete'
+    write_json(run_json_path, meta)
+    print(f'gate {model_key}: {meta["status"]}; rows '
+          f'{meta["rows_written"]}/{meta["rows_planned"]}; zero push '
+          f'{meta["gate"]["no_nonzero_push"]}', flush=True)
+    return 0 if meta['status'] == 'complete' else 3
+
+
+# ---------------------------------------------------------------------------
+# The pushed run (pilot and full; pilot and main share the 41-row batch)
+# ---------------------------------------------------------------------------
+
+def run_pushed_pass(args, mode: str, model_key: str, run_dir: Path, tok, model,
+                    layers, hidden: int, item_specs: list[dict],
+                    item_ids: list[torch.Tensor], layers_wanted, doses, seeds,
+                    pad_id: int, repo: str, revision: str, tiny: bool,
+                    pin_table: dict, started_at: float) -> int:
+    answers_path = run_dir / 'answers.jsonl'
+    run_json_path = run_dir / 'run.json'
+    out_dir = run_dir.parent
+
+    rows_per_batch = n_rows(seeds)
+    if rows_per_batch != ROWS_PER_BATCH:
+        raise SystemExit('Amendment 1 pins the batch at 41 rows; '
+                         f'got {rows_per_batch}')
+    specs = direction_specs(seeds)
+    required_ids = [spec['direction_id'] for spec in specs] + ['zero']
+
+    sample_ids = item_ids[0]
     tok_report = tokenizer_report(tok, pad_id)
     tok_report['sample_prompt_tokens'] = int(sample_ids.numel())
-    tok_report['sample_prompt_decodes'] = bool(sample_text.strip())
+    tok_report['sample_prompt_decodes'] = bool(
+        tok.decode(sample_ids, skip_special_tokens=True).strip())
 
-    # Directions: one shared file, drawn once at the model's hidden size.
     directions, directions_sha, directions_created = load_or_create_directions(
         out_dir / 'directions.pt', hidden)
     print(f'directions {tuple(directions.shape)} sha256 {directions_sha[:16]} '
           f'({"created" if directions_created else "reused"})', flush=True)
 
-    prompt_ids = [encode_prompt(tok, question) for question in prompts]
-    rows_per_batch = n_rows(seeds)
-    specs = direction_specs(seeds)
-    required_ids = [spec['direction_id'] for spec in specs] + ['zero']
-
-    print('median residual norms: 44 prompts x '
+    print(f'median residual norms: {len(item_ids)} item prompts x '
           f'{len(layers_wanted)} layer(s)', flush=True)
-    medians = median_norms(model, layers, prompt_ids, layers_wanted, device)
+    medians = median_norms(model, layers, item_ids, layers_wanted,
+                           torch.device(args.device))
     print(f'medians {medians}', flush=True)
 
-    started_at = time.time()
+    zero_rows_per_item = len(layers_wanted) * len(doses)
     meta = {
         'part': 218,
         'mode': mode,
@@ -621,11 +868,11 @@ def run(args) -> int:
         'tiny': tiny,
         'pins': pin_table,
         'versions': version_report(),
-        'device': str(device),
+        'device': str(args.device),
         'device_name': (torch.cuda.get_device_name(0)
-                        if device.type == 'cuda' else None),
+                        if torch.device(args.device).type == 'cuda' else None),
         'dtype': args.dtype,
-        'attn_implementation': attn_impl,
+        'attn_implementation': getattr(model.config, '_attn_implementation', None),
         'hidden_size': hidden,
         'n_decoder_layers': len(layers),
         'layers': [int(layer) for layer in layers_wanted],
@@ -633,7 +880,10 @@ def run(args) -> int:
         'seeds': [int(seed) for seed in seeds],
         'n_directions': len(specs),
         'n_rows_per_batch': rows_per_batch,
-        'n_prompts': len(prompts),
+        'n_prompts': N_PROMPTS,
+        'n_items': len(item_specs),
+        'openings': list(OPENINGS),
+        'zero_rows_per_item': int(zero_rows_per_item),
         'max_new_tokens': int(args.max_new),
         'tokenizer': tok_report,
         'directions': {
@@ -643,8 +893,9 @@ def run(args) -> int:
             'created_this_run': bool(directions_created),
         },
         'medians': medians,
-        'rows_planned': planned_rows(mode, layers_wanted, doses, len(prompts)),
-        'batches_planned': len(layers_wanted) * len(doses) * len(prompts),
+        'rows_planned': planned_rows(mode, layers_wanted, doses,
+                                     len(item_specs)),
+        'batches_planned': len(layers_wanted) * len(doses) * len(item_specs),
         'rows_written': 0,
         'batches_written': 0,
         'batches_resumed': 0,
@@ -661,8 +912,6 @@ def run(args) -> int:
     line_count = (sum(1 for _ in answers_path.open(encoding='utf-8'))
                   if answers_path.exists() else 0)
     if bad_lines or len(rows) != line_count:
-        # A crash mid-batch leaves a partial line or duplicate row ids.  Keep
-        # the last record per row and rewrite, so this run resumes cleanly.
         write_answers(answers_path, rows)
         print(f'compacted answers.jsonl: {len(rows)} rows, '
               f'{bad_lines} bad line(s) dropped', flush=True)
@@ -670,9 +919,6 @@ def run(args) -> int:
     print(f'{len(rows)} rows on disk, {len(done)} batch(es) complete',
           flush=True)
 
-    # A resumed process keeps the null and push records of the process that
-    # generated the rows: it cannot re-check hooked zero rows it did not
-    # generate.
     previous_null = None
     previous_push = None
     if run_json_path.exists():
@@ -689,9 +935,10 @@ def run(args) -> int:
 
     # --- no-hook null at the start -------------------------------------
     print('no-hook null at the start', flush=True)
-    null_start = null_pass(model, prompt_ids, rows_per_batch, device,
-                           args.max_new, pad_id, 'start')
-    meta['null']['start'] = null_summary(null_start, len(prompts))
+    null_start = null_pass(model, item_ids, rows_per_batch,
+                           torch.device(args.device), args.max_new, pad_id,
+                           'start')
+    meta['null']['start'] = null_summary(null_start, len(item_ids))
     meta['null']['start']['unhooked'] = True
     write_json(run_json_path, meta)
 
@@ -713,17 +960,18 @@ def run(args) -> int:
                                         medians[str(layer)])
                 if not torch.isfinite(vecs_cpu).all():
                     raise SystemExit('non-finite dose vector')
-                vecs = vecs_cpu.to(device)
-                for prompt_index, ids in enumerate(prompt_ids):
+                vecs = vecs_cpu.to(torch.device(args.device))
+                for spec, ids in zip(item_specs, item_ids):
                     batch_number += 1
-                    key = (model_key, int(layer), float(dose), int(prompt_index))
+                    key = (model_key, int(layer), float(dose),
+                           int(spec['item_index']))
                     if key in done:
                         batches_resumed += 1
-                        print(f'{run_name} {batch_number}/{total_batches} '
-                              f'L{layer} d{dose:g} p{prompt_index} resumed',
+                        print(f'{model_key} {batch_number}/{total_batches} '
+                              f'L{layer} d{dose:g} i{spec["item_index"]} resumed',
                               flush=True)
                         continue
-                    batch = ids.repeat(rows_per_batch, 1).to(device)
+                    batch = ids.repeat(rows_per_batch, 1).to(torch.device(args.device))
                     use_probe = None if probe else {}
                     handle, _state = make_push_hook(
                         layers[int(layer)], vecs, use_probe)
@@ -736,9 +984,10 @@ def run(args) -> int:
                         probe = use_probe
                         meta['push_check'] = probe
                     prompt_len = int(ids.numel())
-                    for row_index, spec in enumerate(specs + [ZERO_ROW]):
+                    for row_index, row_spec in enumerate(specs + [ZERO_ROW]):
                         parsed = parse_row(tok, sequences[row_index], prompt_len,
-                                           args.max_new, pad_id, eos_id=tok.eos_token_id)
+                                           args.max_new, pad_id,
+                                           eos_id=tok.eos_token_id)
                         record = {
                             'mode': mode,
                             'model': model_key,
@@ -746,13 +995,19 @@ def run(args) -> int:
                             'revision': revision,
                             'layer': int(layer),
                             'dose': float(dose),
-                            'seed': spec['seed'],
-                            'sign': spec['sign'],
-                            'direction_id': spec['direction_id'],
-                            'prompt_index': int(prompt_index),
+                            'seed': row_spec['seed'],
+                            'sign': row_spec['sign'],
+                            'direction_id': row_spec['direction_id'],
+                            'row_id': row_spec['direction_id'],
+                            'prompt_index': int(spec['prompt_index']),
+                            'opening_index': int(spec['opening_index']),
+                            'opening': spec['opening'],
+                            'item_index': int(spec['item_index']),
                             'row_index': int(row_index),
                             'token_ids': parsed['token_ids'],
-                            'text': parsed['text'],
+                            'continuation': parsed['continuation'],
+                            'text': answer_text(spec['opening'],
+                                                parsed['continuation']),
                             'n_new_tokens': parsed['n_new_tokens'],
                             'max_new_tokens': parsed['max_new_tokens'],
                             'hit_cap': parsed['hit_cap'],
@@ -763,14 +1018,17 @@ def run(args) -> int:
 
                     zero = parse_row(tok, sequences[-1], prompt_len,
                                      args.max_new, pad_id, eos_id=tok.eos_token_id)
-                    zero_logits = scores0[-1].detach().to('cpu')
-                    comparison = compare_null(null_start[prompt_index],
+                    zero_logits = last_row_logits(scores0)
+                    item_index = int(spec['item_index'])
+                    comparison = compare_null(null_start[item_index],
                                               zero['token_ids'], zero_logits)
-                    comparison['prompt_index'] = int(prompt_index)
+                    comparison['item_index'] = item_index
+                    comparison['prompt_index'] = int(spec['prompt_index'])
+                    comparison['opening_index'] = int(spec['opening_index'])
                     comparison['layer'] = int(layer)
                     comparison['dose'] = float(dose)
                     hooked_zero_vs_start.append(comparison)
-                    last_zero[int(prompt_index)] = {
+                    last_zero[item_index] = {
                         'token_ids': zero['token_ids'],
                         'logits': zero_logits,
                     }
@@ -781,15 +1039,15 @@ def run(args) -> int:
                         write_json(run_json_path, meta)
                     elapsed = time.time() - push_started
                     rate = pushed_written / elapsed if elapsed > 0 else 0.0
-                    print(f'{run_name} {batch_number}/{total_batches} '
-                          f'L{layer} d{dose:g} p{prompt_index} '
+                    print(f'{model_key} {batch_number}/{total_batches} '
+                          f'L{layer} d{dose:g} i{item_index} '
                           f'rows {meta["rows_written"]}/{meta["rows_planned"]} '
                           f'{elapsed:.0f}s {rate:.1f} rows/s', flush=True)
                     if not comparison['ids_ok'] or not comparison['logits_ok']:
                         stopped = True
                         meta['status'] = 'stopped_null_mismatch'
                         print(f'NO-HOOK NULL MISMATCH at L{layer} d{dose:g} '
-                              f'p{prompt_index}: {comparison}', flush=True)
+                              f'i{item_index}: {comparison}', flush=True)
                         break
                 if stopped:
                     break
@@ -805,8 +1063,8 @@ def run(args) -> int:
         print(f'{hooks_left} hook(s) still attached after generation', flush=True)
 
     print('no-hook null at the end', flush=True)
-    null_end = null_pass(model, prompt_ids, rows_per_batch, device,
-                         args.max_new, pad_id, 'end')
+    null_end = null_pass(model, item_ids, rows_per_batch,
+                         torch.device(args.device), args.max_new, pad_id, 'end')
 
     # End null against the start null (model determinism) ...
     end_vs_start = [compare_null(null_start[i], null_end[i]['token_ids'],
@@ -816,15 +1074,15 @@ def run(args) -> int:
     end_vs_hooked = []
     no_logits = 0
     for result in null_end:
-        prompt_index = result['prompt_index']
-        if prompt_index in last_zero:
-            reference = last_zero[prompt_index]
+        item_index = result['item_index']
+        if item_index in last_zero:
+            reference = last_zero[item_index]
             end_vs_hooked.append(compare_null(
                 reference, result['token_ids'], result['logits']))
         else:
             stored_zero = [r for r in rows.values()
                            if r['model'] == model_key
-                           and int(r['prompt_index']) == prompt_index
+                           and int(r['item_index']) == item_index
                            and r['direction_id'] == 'zero']
             if stored_zero:
                 reference = {'token_ids': stored_zero[-1]['token_ids'],
@@ -836,10 +1094,10 @@ def run(args) -> int:
                 comparison['ids_only'] = True
                 no_logits += 1
                 end_vs_hooked.append(comparison)
-    meta['null']['end'] = null_summary(null_end, len(prompts))
+    meta['null']['end'] = null_summary(null_end, len(item_ids))
     meta['null']['end']['vs_start'] = merge_comparisons(end_vs_start)
     meta['null']['end']['vs_hooked_zero'] = merge_comparisons(end_vs_hooked)
-    meta['null']['end']['vs_hooked_zero']['logits_unavailable_prompts'] = no_logits
+    meta['null']['end']['vs_hooked_zero']['logits_unavailable_items'] = no_logits
     meta['null']['hooked_zero_vs_start'] = merge_comparisons(
         hooked_zero_vs_start)
     if previous_null is not None:
@@ -878,9 +1136,9 @@ def run(args) -> int:
         if hooked_end['comparisons'] != len(null_end):
             null_ok = False
             hooked_end['reason'] = (
-                f"only {hooked_end['comparisons']} of {len(null_end)} prompts "
+                f"only {hooked_end['comparisons']} of {len(null_end)} items "
                 f"had a hooked zero row to compare the end null with")
-        elif hooked_end['logits_unavailable_prompts'] == 0:
+        elif hooked_end['logits_unavailable_items'] == 0:
             null_ok = null_ok and hooked_end['all_ok']
     else:
         null_ok = False
@@ -919,11 +1177,95 @@ def run(args) -> int:
         meta['status'] = 'complete'
     write_json(run_json_path, meta)
 
-    print(f'{run_name}: {meta["status"]}; rows {meta["rows_written"]}/'
+    print(f'{model_key}: {meta["status"]}; rows {meta["rows_written"]}/'
           f'{meta["rows_planned"]}; batches written {batches_written}, '
           f'resumed {batches_resumed}; null all_ok={meta["null"]["all_ok"]}',
           flush=True)
     return 0 if meta['status'] == 'complete' else 3
+
+
+# ---------------------------------------------------------------------------
+# The run
+# ---------------------------------------------------------------------------
+
+def run(args) -> int:
+    mode = args.mode
+    if mode == 'pilot':
+        model_key = 'Instruct'
+        layers_wanted = (PILOT_LAYER,)
+        doses = tuple(PILOT_DOSES)
+        seeds = PILOT_SEEDS
+        run_name = 'pilot'
+        if args.model and args.model != 'Instruct':
+            raise SystemExit('the pilot is Instruct only (Amendment 1 item 8)')
+        if args.doses:
+            raise SystemExit('the pilot ladder is fixed (Amendment 1 item 8)')
+    elif mode == 'gate':
+        if args.model not in GATE_MODELS:
+            raise SystemExit('--mode gate needs --model SFT or --model DPO '
+                             '(Amendment 1 item 8)')
+        model_key = args.model
+        layers_wanted = (GATE_LAYER,)
+        doses = (0.0,)
+        seeds = ()
+        run_name = None
+        if args.doses:
+            raise SystemExit('the gate pass has no dose ladder')
+    else:
+        if not args.model:
+            raise SystemExit('--mode full needs --model {SFT,DPO,Instruct}')
+        model_key = args.model
+        layers_wanted = tuple(FULL_LAYERS)
+        doses = tuple(args.doses) if args.doses else tuple(LADDER)
+        seeds = FULL_SEEDS
+        run_name = model_key
+
+    prompts = load_prompts()
+    out_dir = Path(args.out)
+    run_dir = (out_dir / 'gate' / model_key if mode == 'gate'
+               else out_dir / run_name)
+    run_dir.mkdir(parents=True, exist_ok=True)
+
+    device = torch.device(args.device)
+    dtype = {'float32': torch.float32, 'bfloat16': torch.bfloat16,
+             'float16': torch.float16}[args.dtype]
+    pin_table = pins()
+    if args.tiny:
+        repo, revision = str(Path(args.tiny).resolve()), 'tiny-random'
+        print(f'loading a tiny random model from {repo}', flush=True)
+        tok, model = load_tiny(repo, device, dtype)
+        tiny = True
+    else:
+        repo, revision = pin_table[model_key]['repo'], pin_table[model_key]['revision']
+        print(f'loading {repo}@{revision[:12]} on {device} ({args.dtype})',
+              flush=True)
+        tok, model = load_model(model_key, device, dtype,
+                                args.attn_implementation)
+        tiny = False
+
+    layers = find_decoder_layers(model)
+    if len(layers) <= max(layers_wanted):
+        raise SystemExit(f'model has {len(layers)} decoder layers; '
+                         f'layers {layers_wanted} do not all exist')
+    hidden = int(model.get_input_embeddings().weight.shape[1])
+
+    pad_id = tok.pad_token_id if tok.pad_token_id is not None else tok.eos_token_id
+    if pad_id is None:
+        raise SystemExit('tokenizer has neither pad_token_id nor eos_token_id')
+
+    item_specs = items(len(prompts))
+    item_ids = [encode_item(tok, prompts[spec['prompt_index']],
+                            spec['opening']) for spec in item_specs]
+    started_at = time.time()
+
+    if mode == 'gate':
+        return run_gate_pass(args, model_key, run_dir, tok, model, layers,
+                             hidden, item_specs, item_ids, pad_id, repo,
+                             revision, tiny, pin_table, started_at)
+    return run_pushed_pass(args, mode, model_key, run_dir, tok, model, layers,
+                           hidden, item_specs, item_ids, layers_wanted, doses,
+                           seeds, pad_id, repo, revision, tiny, pin_table,
+                           started_at)
 
 
 # ---------------------------------------------------------------------------
@@ -968,13 +1310,22 @@ def selftest(args) -> int:
     assert torch.equal(directions[0], -(-directions[0]))
     seeds = PILOT_SEEDS
     specs = direction_specs(seeds)
-    assert len(specs) == 10 and specs[0]['direction_id'] == 'seed0+'
+    assert len(specs) == 40 and specs[0]['direction_id'] == 'seed0+'
     assert specs[1]['direction_id'] == 'seed0-'
-    assert planned_rows('pilot', (PILOT_LAYER,), PILOT_DOSES) == 4356
-    assert planned_rows('full', FULL_LAYERS, LADDER) == 25256
+    assert n_rows(seeds) == ROWS_PER_BATCH == 41
+    assert len(items()) == N_ITEMS == 88
+    assert [s['item_index'] for s in items()] == list(range(88))
+    assert items()[1]['opening'] == OPENINGS[1]
+    assert items()[2] == {'item_index': 2, 'prompt_index': 1,
+                          'opening_index': 0, 'opening': OPENINGS[0]}
+    assert answer_text(OPENINGS[0], ' Ai2.') == 'I was developed by Ai2.'
+    assert planned_rows('pilot', (PILOT_LAYER,), PILOT_DOSES) == 32472
+    assert planned_rows('full', FULL_LAYERS, LADDER) == 50512
+    assert planned_rows('gate', (GATE_LAYER,), (0.0,)) == 3608
+    assert float(gate_vectors(hidden).abs().max()) == 0.0
 
     # Hook arithmetic on a real forward pass.
-    ids = encode_prompt(tok, 'Who built you?')
+    ids = encode_item(tok, 'Who built you?', OPENINGS[0])
     batch = ids.repeat(3, 1)
     vecs = dose_vectors(directions, (0,), dose=50.0,
                         median_norm=1.0)          # rows 0,1 pushed; row 2 zero
@@ -993,7 +1344,7 @@ def selftest(args) -> int:
     assert not torch.equal(plain[0], pushed[0]), \
         'a large push must change a pushed row'
     assert count_layer_hooks(layers) == 0, 'the hook must be removed'
-    print('selftest ok: directions, doses, hooks, planned counts')
+    print('selftest ok: items, directions, doses, hooks, planned counts')
     return 0
 
 
@@ -1018,7 +1369,7 @@ def parse_doses(text: str) -> tuple[float, ...]:
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument('--mode', choices=('pilot', 'full'))
+    parser.add_argument('--mode', choices=('pilot', 'gate', 'full'))
     parser.add_argument('--model', choices=tuple(MODELS))
     parser.add_argument('--out', default='results218',
                         help='root for directions.pt and <run>/answers.jsonl')
