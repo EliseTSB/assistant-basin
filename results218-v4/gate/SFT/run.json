@@ -1,0 +1,99 @@
+{
+ "part": 218,
+ "mode": "gate",
+ "model_key": "SFT",
+ "repo": "allenai/OLMo-2-0425-1B-SFT",
+ "revision": "0d85a3d037876ce6ac7d4311d994400fc66ac27f",
+ "tiny": false,
+ "pins": {
+  "SFT": {
+   "repo": "allenai/OLMo-2-0425-1B-SFT",
+   "revision": "0d85a3d037876ce6ac7d4311d994400fc66ac27f"
+  },
+  "DPO": {
+   "repo": "allenai/OLMo-2-0425-1B-DPO",
+   "revision": "c4b0485961ab24c2433b090f3b922f0913a9290f"
+  },
+  "Instruct": {
+   "repo": "allenai/OLMo-2-0425-1B-Instruct",
+   "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e"
+  }
+ },
+ "versions": {
+  "torch": "2.14.1+cu130",
+  "transformers": "5.22.1",
+  "python": "3.13.16"
+ },
+ "device": "cuda",
+ "device_name": "NVIDIA L4",
+ "dtype": "bfloat16",
+ "attn_implementation": "sdpa",
+ "hidden_size": 2048,
+ "n_decoder_layers": 16,
+ "layers": [
+  5
+ ],
+ "doses": [
+  0.0
+ ],
+ "seeds": [],
+ "n_directions": 0,
+ "n_rows_per_batch": 41,
+ "n_prompts": 44,
+ "n_items": 88,
+ "openings": [
+  "I was developed by",
+  "I was built by"
+ ],
+ "zero_rows_per_item": 41,
+ "max_new_tokens": 48,
+ "tokenizer": {
+  "pad_token": "<|pad|>",
+  "pad_token_id": 100277,
+  "eos_token": "<|endoftext|>",
+  "eos_token_id": 100257,
+  "unk_token": "<|endoftext|>",
+  "unk_token_id": 100257,
+  "generate_pad_token_id": 100277,
+  "unk_is_eos": true,
+  "sample_prompt_tokens": 19,
+  "sample_prompt_decodes": true
+ },
+ "medians": {},
+ "gate": {
+  "zero_push": true,
+  "rows_per_batch": 41,
+  "vec_abs_max": 0.0,
+  "no_nonzero_push": true,
+  "probe_ran": true,
+  "hook_calls": 48,
+  "pushed_delta_abs_max": 0.0
+ },
+ "rows_planned": 3608,
+ "batches_planned": 88,
+ "rows_written": 3608,
+ "batches_written": 88,
+ "batches_resumed": 0,
+ "status": "complete",
+ "null": {
+  "skipped": "the gate pass records zero-push rows only"
+ },
+ "push_check": {
+  "pushed_rows": 40,
+  "pushed_delta_abs_max": 0.0,
+  "zero_delta_abs_max": 0.0,
+  "zero_row_exact": true,
+  "input_zero_row_abs_max": 0.0,
+  "input_pushed_row_norm_min": 0.0,
+  "hidden_shape": [
+   41,
+   19,
+   2048
+  ]
+ },
+ "started_at": 1795561166.9395435,
+ "finished_at": 1795561266.2133994,
+ "wall_seconds": 99.27385592460632,
+ "hooks_after_generation": 0,
+ "batches_complete": 88
+}

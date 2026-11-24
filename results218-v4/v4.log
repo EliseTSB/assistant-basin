@@ -1,0 +1,1169 @@
+2.14.1+cu130 5.22.1 NVIDIA L4
+loading allenai/OLMo-2-0425-1B-Instruct@48d788eca847 on cuda (bfloat16)
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 6163.64it/s]
+directions (20, 2048) sha256 c6b7b00017786035 (created)
+median residual norms: 88 item prompts x 1 layer(s)
+medians {'5': 10.764666557312012}
+0 rows on disk, 0 batch(es) complete
+no-hook null at the start
+null-start 1/88 i0 1.4s
+null-start 2/88 i1 2.7s
+null-start 3/88 i2 3.9s
+null-start 4/88 i3 5.2s
+null-start 5/88 i4 6.4s
+null-start 6/88 i5 7.6s
+null-start 7/88 i6 8.7s
+null-start 8/88 i7 10.0s
+null-start 9/88 i8 11.2s
+null-start 10/88 i9 12.4s
+null-start 11/88 i10 13.7s
+null-start 12/88 i11 14.9s
+null-start 13/88 i12 16.2s
+null-start 14/88 i13 17.5s
+null-start 15/88 i14 18.8s
+null-start 16/88 i15 20.0s
+null-start 17/88 i16 21.3s
+null-start 18/88 i17 22.6s
+null-start 19/88 i18 23.7s
+null-start 20/88 i19 25.0s
+null-start 21/88 i20 26.2s
+null-start 22/88 i21 27.2s
+null-start 23/88 i22 28.4s
+null-start 24/88 i23 29.7s
+null-start 25/88 i24 30.8s
+null-start 26/88 i25 32.1s
+null-start 27/88 i26 33.3s
+null-start 28/88 i27 34.6s
+null-start 29/88 i28 35.8s
+null-start 30/88 i29 37.1s
+null-start 31/88 i30 38.3s
+null-start 32/88 i31 39.5s
+null-start 33/88 i32 40.8s
+null-start 34/88 i33 41.9s
+null-start 35/88 i34 43.1s
+null-start 36/88 i35 44.4s
+null-start 37/88 i36 45.6s
+null-start 38/88 i37 46.9s
+null-start 39/88 i38 48.0s
+null-start 40/88 i39 49.2s
+null-start 41/88 i40 50.3s
+null-start 42/88 i41 51.0s
+null-start 43/88 i42 52.2s
+null-start 44/88 i43 53.5s
+null-start 45/88 i44 54.7s
+null-start 46/88 i45 56.0s
+null-start 47/88 i46 57.1s
+null-start 48/88 i47 58.4s
+null-start 49/88 i48 59.4s
+null-start 50/88 i49 60.7s
+null-start 51/88 i50 61.9s
+null-start 52/88 i51 63.2s
+null-start 53/88 i52 64.4s
+null-start 54/88 i53 65.7s
+null-start 55/88 i54 66.9s
+null-start 56/88 i55 68.2s
+null-start 57/88 i56 69.5s
+null-start 58/88 i57 70.7s
+null-start 59/88 i58 71.9s
+null-start 60/88 i59 73.1s
+null-start 61/88 i60 74.4s
+null-start 62/88 i61 75.6s
+null-start 63/88 i62 76.9s
+null-start 64/88 i63 78.1s
+null-start 65/88 i64 79.4s
+null-start 66/88 i65 80.6s
+null-start 67/88 i66 81.9s
+null-start 68/88 i67 83.1s
+null-start 69/88 i68 84.2s
+null-start 70/88 i69 85.3s
+null-start 71/88 i70 86.4s
+null-start 72/88 i71 87.5s
+null-start 73/88 i72 88.7s
+null-start 74/88 i73 90.0s
+null-start 75/88 i74 91.2s
+null-start 76/88 i75 92.4s
+null-start 77/88 i76 93.7s
+null-start 78/88 i77 95.0s
+null-start 79/88 i78 96.0s
+null-start 80/88 i79 97.3s
+null-start 81/88 i80 98.3s
+null-start 82/88 i81 99.6s
+null-start 83/88 i82 100.8s
+null-start 84/88 i83 102.1s
+null-start 85/88 i84 103.1s
+null-start 86/88 i85 104.4s
+null-start 87/88 i86 105.6s
+null-start 88/88 i87 106.8s
+Instruct 1/792 L5 d0.15 i0 rows 41/32472 1s 32.1 rows/s
+Instruct 2/792 L5 d0.15 i1 rows 82/32472 3s 32.7 rows/s
+Instruct 3/792 L5 d0.15 i2 rows 123/32472 4s 32.8 rows/s
+Instruct 4/792 L5 d0.15 i3 rows 164/32472 5s 32.8 rows/s
+Instruct 5/792 L5 d0.15 i4 rows 205/32472 6s 32.8 rows/s
+Instruct 6/792 L5 d0.15 i5 rows 246/32472 7s 32.9 rows/s
+Instruct 7/792 L5 d0.15 i6 rows 287/32472 9s 32.9 rows/s
+Instruct 8/792 L5 d0.15 i7 rows 328/32472 10s 32.9 rows/s
+Instruct 9/792 L5 d0.15 i8 rows 369/32472 11s 32.9 rows/s
+Instruct 10/792 L5 d0.15 i9 rows 410/32472 12s 32.9 rows/s
+Instruct 11/792 L5 d0.15 i10 rows 451/32472 14s 33.0 rows/s
+Instruct 12/792 L5 d0.15 i11 rows 492/32472 15s 33.0 rows/s
+Instruct 13/792 L5 d0.15 i12 rows 533/32472 16s 33.0 rows/s
+Instruct 14/792 L5 d0.15 i13 rows 574/32472 17s 32.9 rows/s
+Instruct 15/792 L5 d0.15 i14 rows 615/32472 19s 32.9 rows/s
+Instruct 16/792 L5 d0.15 i15 rows 656/32472 20s 32.9 rows/s
+Instruct 17/792 L5 d0.15 i16 rows 697/32472 21s 32.9 rows/s
+Instruct 18/792 L5 d0.15 i17 rows 738/32472 22s 32.9 rows/s
+Instruct 19/792 L5 d0.15 i18 rows 779/32472 24s 32.9 rows/s
+Instruct 20/792 L5 d0.15 i19 rows 820/32472 25s 32.9 rows/s
+Instruct 21/792 L5 d0.15 i20 rows 861/32472 26s 32.9 rows/s
+Instruct 22/792 L5 d0.15 i21 rows 902/32472 27s 32.9 rows/s
+Instruct 23/792 L5 d0.15 i22 rows 943/32472 29s 32.9 rows/s
+Instruct 24/792 L5 d0.15 i23 rows 984/32472 30s 32.9 rows/s
+Instruct 25/792 L5 d0.15 i24 rows 1025/32472 31s 32.9 rows/s
+Instruct 26/792 L5 d0.15 i25 rows 1066/32472 32s 32.9 rows/s
+Instruct 27/792 L5 d0.15 i26 rows 1107/32472 34s 32.9 rows/s
+Instruct 28/792 L5 d0.15 i27 rows 1148/32472 35s 32.9 rows/s
+Instruct 29/792 L5 d0.15 i28 rows 1189/32472 36s 32.9 rows/s
+Instruct 30/792 L5 d0.15 i29 rows 1230/32472 37s 32.9 rows/s
+Instruct 31/792 L5 d0.15 i30 rows 1271/32472 39s 32.9 rows/s
+Instruct 32/792 L5 d0.15 i31 rows 1312/32472 40s 32.9 rows/s
+Instruct 33/792 L5 d0.15 i32 rows 1353/32472 41s 32.9 rows/s
+Instruct 34/792 L5 d0.15 i33 rows 1394/32472 42s 32.8 rows/s
+Instruct 35/792 L5 d0.15 i34 rows 1435/32472 44s 32.8 rows/s
+Instruct 36/792 L5 d0.15 i35 rows 1476/32472 45s 32.8 rows/s
+Instruct 37/792 L5 d0.15 i36 rows 1517/32472 46s 32.8 rows/s
+Instruct 38/792 L5 d0.15 i37 rows 1558/32472 47s 32.8 rows/s
+Instruct 39/792 L5 d0.15 i38 rows 1599/32472 49s 32.8 rows/s
+Instruct 40/792 L5 d0.15 i39 rows 1640/32472 50s 32.8 rows/s
+Instruct 41/792 L5 d0.15 i40 rows 1681/32472 51s 32.8 rows/s
+Instruct 42/792 L5 d0.15 i41 rows 1722/32472 53s 32.8 rows/s
+Instruct 43/792 L5 d0.15 i42 rows 1763/32472 54s 32.8 rows/s
+Instruct 44/792 L5 d0.15 i43 rows 1804/32472 55s 32.8 rows/s
+Instruct 45/792 L5 d0.15 i44 rows 1845/32472 56s 32.8 rows/s
+Instruct 46/792 L5 d0.15 i45 rows 1886/32472 58s 32.8 rows/s
+Instruct 47/792 L5 d0.15 i46 rows 1927/32472 59s 32.8 rows/s
+Instruct 48/792 L5 d0.15 i47 rows 1968/32472 60s 32.8 rows/s
+Instruct 49/792 L5 d0.15 i48 rows 2009/32472 61s 32.8 rows/s
+Instruct 50/792 L5 d0.15 i49 rows 2050/32472 63s 32.8 rows/s
+Instruct 51/792 L5 d0.15 i50 rows 2091/32472 64s 32.8 rows/s
+Instruct 52/792 L5 d0.15 i51 rows 2132/32472 65s 32.8 rows/s
+Instruct 53/792 L5 d0.15 i52 rows 2173/32472 66s 32.8 rows/s
+Instruct 54/792 L5 d0.15 i53 rows 2214/32472 68s 32.8 rows/s
+Instruct 55/792 L5 d0.15 i54 rows 2255/32472 69s 32.7 rows/s
+Instruct 56/792 L5 d0.15 i55 rows 2296/32472 70s 32.7 rows/s
+Instruct 57/792 L5 d0.15 i56 rows 2337/32472 71s 32.7 rows/s
+Instruct 58/792 L5 d0.15 i57 rows 2378/32472 73s 32.7 rows/s
+Instruct 59/792 L5 d0.15 i58 rows 2419/32472 74s 32.7 rows/s
+Instruct 60/792 L5 d0.15 i59 rows 2460/32472 75s 32.7 rows/s
+Instruct 61/792 L5 d0.15 i60 rows 2501/32472 76s 32.7 rows/s
+Instruct 62/792 L5 d0.15 i61 rows 2542/32472 78s 32.7 rows/s
+Instruct 63/792 L5 d0.15 i62 rows 2583/32472 79s 32.7 rows/s
+Instruct 64/792 L5 d0.15 i63 rows 2624/32472 80s 32.7 rows/s
+Instruct 65/792 L5 d0.15 i64 rows 2665/32472 81s 32.7 rows/s
+Instruct 66/792 L5 d0.15 i65 rows 2706/32472 83s 32.7 rows/s
+Instruct 67/792 L5 d0.15 i66 rows 2747/32472 84s 32.7 rows/s
+Instruct 68/792 L5 d0.15 i67 rows 2788/32472 85s 32.8 rows/s
+Instruct 69/792 L5 d0.15 i68 rows 2829/32472 86s 32.8 rows/s
+Instruct 70/792 L5 d0.15 i69 rows 2870/32472 88s 32.8 rows/s
+Instruct 71/792 L5 d0.15 i70 rows 2911/32472 89s 32.8 rows/s
+Instruct 72/792 L5 d0.15 i71 rows 2952/32472 90s 32.8 rows/s
+Instruct 73/792 L5 d0.15 i72 rows 2993/32472 91s 32.8 rows/s
+Instruct 74/792 L5 d0.15 i73 rows 3034/32472 93s 32.8 rows/s
+Instruct 75/792 L5 d0.15 i74 rows 3075/32472 94s 32.8 rows/s
+Instruct 76/792 L5 d0.15 i75 rows 3116/32472 95s 32.8 rows/s
+Instruct 77/792 L5 d0.15 i76 rows 3157/32472 96s 32.8 rows/s
+Instruct 78/792 L5 d0.15 i77 rows 3198/32472 98s 32.8 rows/s
+Instruct 79/792 L5 d0.15 i78 rows 3239/32472 99s 32.8 rows/s
+Instruct 80/792 L5 d0.15 i79 rows 3280/32472 100s 32.8 rows/s
+Instruct 81/792 L5 d0.15 i80 rows 3321/32472 101s 32.8 rows/s
+Instruct 82/792 L5 d0.15 i81 rows 3362/32472 103s 32.8 rows/s
+Instruct 83/792 L5 d0.15 i82 rows 3403/32472 104s 32.8 rows/s
+Instruct 84/792 L5 d0.15 i83 rows 3444/32472 105s 32.8 rows/s
+Instruct 85/792 L5 d0.15 i84 rows 3485/32472 106s 32.8 rows/s
+Instruct 86/792 L5 d0.15 i85 rows 3526/32472 107s 32.8 rows/s
+Instruct 87/792 L5 d0.15 i86 rows 3567/32472 109s 32.8 rows/s
+Instruct 88/792 L5 d0.15 i87 rows 3608/32472 110s 32.8 rows/s
+Instruct 89/792 L5 d0.2 i0 rows 3649/32472 111s 32.8 rows/s
+Instruct 90/792 L5 d0.2 i1 rows 3690/32472 112s 32.8 rows/s
+Instruct 91/792 L5 d0.2 i2 rows 3731/32472 114s 32.8 rows/s
+Instruct 92/792 L5 d0.2 i3 rows 3772/32472 115s 32.8 rows/s
+Instruct 93/792 L5 d0.2 i4 rows 3813/32472 116s 32.8 rows/s
+Instruct 94/792 L5 d0.2 i5 rows 3854/32472 117s 32.8 rows/s
+Instruct 95/792 L5 d0.2 i6 rows 3895/32472 119s 32.8 rows/s
+Instruct 96/792 L5 d0.2 i7 rows 3936/32472 120s 32.8 rows/s
+Instruct 97/792 L5 d0.2 i8 rows 3977/32472 121s 32.8 rows/s
+Instruct 98/792 L5 d0.2 i9 rows 4018/32472 122s 32.8 rows/s
+Instruct 99/792 L5 d0.2 i10 rows 4059/32472 124s 32.8 rows/s
+Instruct 100/792 L5 d0.2 i11 rows 4100/32472 125s 32.8 rows/s
+Instruct 101/792 L5 d0.2 i12 rows 4141/32472 126s 32.8 rows/s
+Instruct 102/792 L5 d0.2 i13 rows 4182/32472 127s 32.8 rows/s
+Instruct 103/792 L5 d0.2 i14 rows 4223/32472 129s 32.8 rows/s
+Instruct 104/792 L5 d0.2 i15 rows 4264/32472 130s 32.8 rows/s
+Instruct 105/792 L5 d0.2 i16 rows 4305/32472 131s 32.8 rows/s
+Instruct 106/792 L5 d0.2 i17 rows 4346/32472 132s 32.8 rows/s
+Instruct 107/792 L5 d0.2 i18 rows 4387/32472 134s 32.8 rows/s
+Instruct 108/792 L5 d0.2 i19 rows 4428/32472 135s 32.8 rows/s
+Instruct 109/792 L5 d0.2 i20 rows 4469/32472 136s 32.8 rows/s
+Instruct 110/792 L5 d0.2 i21 rows 4510/32472 137s 32.8 rows/s
+Instruct 111/792 L5 d0.2 i22 rows 4551/32472 139s 32.8 rows/s
+Instruct 112/792 L5 d0.2 i23 rows 4592/32472 140s 32.8 rows/s
+Instruct 113/792 L5 d0.2 i24 rows 4633/32472 141s 32.8 rows/s
+Instruct 114/792 L5 d0.2 i25 rows 4674/32472 142s 32.8 rows/s
+Instruct 115/792 L5 d0.2 i26 rows 4715/32472 144s 32.8 rows/s
+Instruct 116/792 L5 d0.2 i27 rows 4756/32472 145s 32.8 rows/s
+Instruct 117/792 L5 d0.2 i28 rows 4797/32472 146s 32.8 rows/s
+Instruct 118/792 L5 d0.2 i29 rows 4838/32472 147s 32.8 rows/s
+Instruct 119/792 L5 d0.2 i30 rows 4879/32472 149s 32.8 rows/s
+Instruct 120/792 L5 d0.2 i31 rows 4920/32472 150s 32.8 rows/s
+Instruct 121/792 L5 d0.2 i32 rows 4961/32472 151s 32.8 rows/s
+Instruct 122/792 L5 d0.2 i33 rows 5002/32472 152s 32.8 rows/s
+Instruct 123/792 L5 d0.2 i34 rows 5043/32472 154s 32.8 rows/s
+Instruct 124/792 L5 d0.2 i35 rows 5084/32472 155s 32.8 rows/s
+Instruct 125/792 L5 d0.2 i36 rows 5125/32472 156s 32.8 rows/s
+Instruct 126/792 L5 d0.2 i37 rows 5166/32472 157s 32.8 rows/s
+Instruct 127/792 L5 d0.2 i38 rows 5207/32472 159s 32.8 rows/s
+Instruct 128/792 L5 d0.2 i39 rows 5248/32472 160s 32.8 rows/s
+Instruct 129/792 L5 d0.2 i40 rows 5289/32472 161s 32.8 rows/s
+Instruct 130/792 L5 d0.2 i41 rows 5330/32472 163s 32.8 rows/s
+Instruct 131/792 L5 d0.2 i42 rows 5371/32472 164s 32.8 rows/s
+Instruct 132/792 L5 d0.2 i43 rows 5412/32472 165s 32.8 rows/s
+Instruct 133/792 L5 d0.2 i44 rows 5453/32472 166s 32.8 rows/s
+Instruct 134/792 L5 d0.2 i45 rows 5494/32472 168s 32.8 rows/s
+Instruct 135/792 L5 d0.2 i46 rows 5535/32472 169s 32.8 rows/s
+Instruct 136/792 L5 d0.2 i47 rows 5576/32472 170s 32.8 rows/s
+Instruct 137/792 L5 d0.2 i48 rows 5617/32472 171s 32.8 rows/s
+Instruct 138/792 L5 d0.2 i49 rows 5658/32472 173s 32.8 rows/s
+Instruct 139/792 L5 d0.2 i50 rows 5699/32472 174s 32.8 rows/s
+Instruct 140/792 L5 d0.2 i51 rows 5740/32472 175s 32.8 rows/s
+Instruct 141/792 L5 d0.2 i52 rows 5781/32472 176s 32.8 rows/s
+Instruct 142/792 L5 d0.2 i53 rows 5822/32472 178s 32.8 rows/s
+Instruct 143/792 L5 d0.2 i54 rows 5863/32472 179s 32.8 rows/s
+Instruct 144/792 L5 d0.2 i55 rows 5904/32472 180s 32.8 rows/s
+Instruct 145/792 L5 d0.2 i56 rows 5945/32472 181s 32.8 rows/s
+Instruct 146/792 L5 d0.2 i57 rows 5986/32472 183s 32.8 rows/s
+Instruct 147/792 L5 d0.2 i58 rows 6027/32472 184s 32.8 rows/s
+Instruct 148/792 L5 d0.2 i59 rows 6068/32472 185s 32.8 rows/s
+Instruct 149/792 L5 d0.2 i60 rows 6109/32472 186s 32.8 rows/s
+Instruct 150/792 L5 d0.2 i61 rows 6150/32472 188s 32.8 rows/s
+Instruct 151/792 L5 d0.2 i62 rows 6191/32472 189s 32.8 rows/s
+Instruct 152/792 L5 d0.2 i63 rows 6232/32472 190s 32.8 rows/s
+Instruct 153/792 L5 d0.2 i64 rows 6273/32472 191s 32.8 rows/s
+Instruct 154/792 L5 d0.2 i65 rows 6314/32472 193s 32.8 rows/s
+Instruct 155/792 L5 d0.2 i66 rows 6355/32472 194s 32.8 rows/s
+Instruct 156/792 L5 d0.2 i67 rows 6396/32472 195s 32.8 rows/s
+Instruct 157/792 L5 d0.2 i68 rows 6437/32472 196s 32.8 rows/s
+Instruct 158/792 L5 d0.2 i69 rows 6478/32472 198s 32.8 rows/s
+Instruct 159/792 L5 d0.2 i70 rows 6519/32472 199s 32.8 rows/s
+Instruct 160/792 L5 d0.2 i71 rows 6560/32472 200s 32.8 rows/s
+Instruct 161/792 L5 d0.2 i72 rows 6601/32472 201s 32.8 rows/s
+Instruct 162/792 L5 d0.2 i73 rows 6642/32472 203s 32.8 rows/s
+Instruct 163/792 L5 d0.2 i74 rows 6683/32472 204s 32.8 rows/s
+Instruct 164/792 L5 d0.2 i75 rows 6724/32472 205s 32.8 rows/s
+Instruct 165/792 L5 d0.2 i76 rows 6765/32472 206s 32.8 rows/s
+Instruct 166/792 L5 d0.2 i77 rows 6806/32472 208s 32.8 rows/s
+Instruct 167/792 L5 d0.2 i78 rows 6847/32472 209s 32.8 rows/s
+Instruct 168/792 L5 d0.2 i79 rows 6888/32472 210s 32.8 rows/s
+Instruct 169/792 L5 d0.2 i80 rows 6929/32472 211s 32.8 rows/s
+Instruct 170/792 L5 d0.2 i81 rows 6970/32472 213s 32.8 rows/s
+Instruct 171/792 L5 d0.2 i82 rows 7011/32472 214s 32.8 rows/s
+Instruct 172/792 L5 d0.2 i83 rows 7052/32472 215s 32.8 rows/s
+Instruct 173/792 L5 d0.2 i84 rows 7093/32472 216s 32.8 rows/s
+Instruct 174/792 L5 d0.2 i85 rows 7134/32472 218s 32.8 rows/s
+Instruct 175/792 L5 d0.2 i86 rows 7175/32472 219s 32.8 rows/s
+Instruct 176/792 L5 d0.2 i87 rows 7216/32472 220s 32.8 rows/s
+Instruct 177/792 L5 d0.25 i0 rows 7257/32472 221s 32.8 rows/s
+Instruct 178/792 L5 d0.25 i1 rows 7298/32472 223s 32.8 rows/s
+Instruct 179/792 L5 d0.25 i2 rows 7339/32472 224s 32.8 rows/s
+Instruct 180/792 L5 d0.25 i3 rows 7380/32472 225s 32.8 rows/s
+Instruct 181/792 L5 d0.25 i4 rows 7421/32472 226s 32.8 rows/s
+Instruct 182/792 L5 d0.25 i5 rows 7462/32472 228s 32.8 rows/s
+Instruct 183/792 L5 d0.25 i6 rows 7503/32472 229s 32.8 rows/s
+Instruct 184/792 L5 d0.25 i7 rows 7544/32472 230s 32.8 rows/s
+Instruct 185/792 L5 d0.25 i8 rows 7585/32472 231s 32.8 rows/s
+Instruct 186/792 L5 d0.25 i9 rows 7626/32472 233s 32.8 rows/s
+Instruct 187/792 L5 d0.25 i10 rows 7667/32472 234s 32.8 rows/s
+Instruct 188/792 L5 d0.25 i11 rows 7708/32472 235s 32.8 rows/s
+Instruct 189/792 L5 d0.25 i12 rows 7749/32472 236s 32.8 rows/s
+Instruct 190/792 L5 d0.25 i13 rows 7790/32472 238s 32.8 rows/s
+Instruct 191/792 L5 d0.25 i14 rows 7831/32472 239s 32.8 rows/s
+Instruct 192/792 L5 d0.25 i15 rows 7872/32472 240s 32.8 rows/s
+Instruct 193/792 L5 d0.25 i16 rows 7913/32472 242s 32.8 rows/s
+Instruct 194/792 L5 d0.25 i17 rows 7954/32472 243s 32.8 rows/s
+Instruct 195/792 L5 d0.25 i18 rows 7995/32472 244s 32.8 rows/s
+Instruct 196/792 L5 d0.25 i19 rows 8036/32472 245s 32.8 rows/s
+Instruct 197/792 L5 d0.25 i20 rows 8077/32472 247s 32.8 rows/s
+Instruct 198/792 L5 d0.25 i21 rows 8118/32472 248s 32.8 rows/s
+Instruct 199/792 L5 d0.25 i22 rows 8159/32472 249s 32.8 rows/s
+Instruct 200/792 L5 d0.25 i23 rows 8200/32472 250s 32.8 rows/s
+Instruct 201/792 L5 d0.25 i24 rows 8241/32472 252s 32.7 rows/s
+Instruct 202/792 L5 d0.25 i25 rows 8282/32472 253s 32.8 rows/s
+Instruct 203/792 L5 d0.25 i26 rows 8323/32472 254s 32.8 rows/s
+Instruct 204/792 L5 d0.25 i27 rows 8364/32472 255s 32.8 rows/s
+Instruct 205/792 L5 d0.25 i28 rows 8405/32472 257s 32.8 rows/s
+Instruct 206/792 L5 d0.25 i29 rows 8446/32472 258s 32.7 rows/s
+Instruct 207/792 L5 d0.25 i30 rows 8487/32472 259s 32.7 rows/s
+Instruct 208/792 L5 d0.25 i31 rows 8528/32472 260s 32.8 rows/s
+Instruct 209/792 L5 d0.25 i32 rows 8569/32472 262s 32.8 rows/s
+Instruct 210/792 L5 d0.25 i33 rows 8610/32472 263s 32.7 rows/s
+Instruct 211/792 L5 d0.25 i34 rows 8651/32472 264s 32.7 rows/s
+Instruct 212/792 L5 d0.25 i35 rows 8692/32472 265s 32.7 rows/s
+Instruct 213/792 L5 d0.25 i36 rows 8733/32472 267s 32.7 rows/s
+Instruct 214/792 L5 d0.25 i37 rows 8774/32472 268s 32.7 rows/s
+Instruct 215/792 L5 d0.25 i38 rows 8815/32472 269s 32.7 rows/s
+Instruct 216/792 L5 d0.25 i39 rows 8856/32472 270s 32.7 rows/s
+Instruct 217/792 L5 d0.25 i40 rows 8897/32472 272s 32.7 rows/s
+Instruct 218/792 L5 d0.25 i41 rows 8938/32472 273s 32.7 rows/s
+Instruct 219/792 L5 d0.25 i42 rows 8979/32472 274s 32.7 rows/s
+Instruct 220/792 L5 d0.25 i43 rows 9020/32472 276s 32.7 rows/s
+Instruct 221/792 L5 d0.25 i44 rows 9061/32472 277s 32.7 rows/s
+Instruct 222/792 L5 d0.25 i45 rows 9102/32472 278s 32.7 rows/s
+Instruct 223/792 L5 d0.25 i46 rows 9143/32472 279s 32.7 rows/s
+Instruct 224/792 L5 d0.25 i47 rows 9184/32472 281s 32.7 rows/s
+Instruct 225/792 L5 d0.25 i48 rows 9225/32472 282s 32.7 rows/s
+Instruct 226/792 L5 d0.25 i49 rows 9266/32472 283s 32.7 rows/s
+Instruct 227/792 L5 d0.25 i50 rows 9307/32472 284s 32.7 rows/s
+Instruct 228/792 L5 d0.25 i51 rows 9348/32472 286s 32.7 rows/s
+Instruct 229/792 L5 d0.25 i52 rows 9389/32472 287s 32.7 rows/s
+Instruct 230/792 L5 d0.25 i53 rows 9430/32472 288s 32.7 rows/s
+Instruct 231/792 L5 d0.25 i54 rows 9471/32472 289s 32.7 rows/s
+Instruct 232/792 L5 d0.25 i55 rows 9512/32472 291s 32.7 rows/s
+Instruct 233/792 L5 d0.25 i56 rows 9553/32472 292s 32.7 rows/s
+Instruct 234/792 L5 d0.25 i57 rows 9594/32472 293s 32.7 rows/s
+Instruct 235/792 L5 d0.25 i58 rows 9635/32472 294s 32.7 rows/s
+Instruct 236/792 L5 d0.25 i59 rows 9676/32472 296s 32.7 rows/s
+Instruct 237/792 L5 d0.25 i60 rows 9717/32472 297s 32.7 rows/s
+Instruct 238/792 L5 d0.25 i61 rows 9758/32472 298s 32.7 rows/s
+Instruct 239/792 L5 d0.25 i62 rows 9799/32472 299s 32.7 rows/s
+Instruct 240/792 L5 d0.25 i63 rows 9840/32472 301s 32.7 rows/s
+Instruct 241/792 L5 d0.25 i64 rows 9881/32472 302s 32.7 rows/s
+Instruct 242/792 L5 d0.25 i65 rows 9922/32472 303s 32.7 rows/s
+Instruct 243/792 L5 d0.25 i66 rows 9963/32472 304s 32.7 rows/s
+Instruct 244/792 L5 d0.25 i67 rows 10004/32472 306s 32.7 rows/s
+Instruct 245/792 L5 d0.25 i68 rows 10045/32472 307s 32.7 rows/s
+Instruct 246/792 L5 d0.25 i69 rows 10086/32472 308s 32.7 rows/s
+Instruct 247/792 L5 d0.25 i70 rows 10127/32472 309s 32.7 rows/s
+Instruct 248/792 L5 d0.25 i71 rows 10168/32472 311s 32.7 rows/s
+Instruct 249/792 L5 d0.25 i72 rows 10209/32472 312s 32.7 rows/s
+Instruct 250/792 L5 d0.25 i73 rows 10250/32472 313s 32.7 rows/s
+Instruct 251/792 L5 d0.25 i74 rows 10291/32472 314s 32.7 rows/s
+Instruct 252/792 L5 d0.25 i75 rows 10332/32472 316s 32.7 rows/s
+Instruct 253/792 L5 d0.25 i76 rows 10373/32472 317s 32.7 rows/s
+Instruct 254/792 L5 d0.25 i77 rows 10414/32472 318s 32.7 rows/s
+Instruct 255/792 L5 d0.25 i78 rows 10455/32472 319s 32.7 rows/s
+Instruct 256/792 L5 d0.25 i79 rows 10496/32472 321s 32.7 rows/s
+Instruct 257/792 L5 d0.25 i80 rows 10537/32472 322s 32.7 rows/s
+Instruct 258/792 L5 d0.25 i81 rows 10578/32472 323s 32.7 rows/s
+Instruct 259/792 L5 d0.25 i82 rows 10619/32472 324s 32.7 rows/s
+Instruct 260/792 L5 d0.25 i83 rows 10660/32472 326s 32.7 rows/s
+Instruct 261/792 L5 d0.25 i84 rows 10701/32472 327s 32.7 rows/s
+Instruct 262/792 L5 d0.25 i85 rows 10742/32472 328s 32.7 rows/s
+Instruct 263/792 L5 d0.25 i86 rows 10783/32472 329s 32.7 rows/s
+Instruct 264/792 L5 d0.25 i87 rows 10824/32472 331s 32.7 rows/s
+Instruct 265/792 L5 d0.3 i0 rows 10865/32472 332s 32.7 rows/s
+Instruct 266/792 L5 d0.3 i1 rows 10906/32472 333s 32.7 rows/s
+Instruct 267/792 L5 d0.3 i2 rows 10947/32472 334s 32.7 rows/s
+Instruct 268/792 L5 d0.3 i3 rows 10988/32472 336s 32.7 rows/s
+Instruct 269/792 L5 d0.3 i4 rows 11029/32472 337s 32.7 rows/s
+Instruct 270/792 L5 d0.3 i5 rows 11070/32472 338s 32.7 rows/s
+Instruct 271/792 L5 d0.3 i6 rows 11111/32472 339s 32.7 rows/s
+Instruct 272/792 L5 d0.3 i7 rows 11152/32472 341s 32.7 rows/s
+Instruct 273/792 L5 d0.3 i8 rows 11193/32472 342s 32.7 rows/s
+Instruct 274/792 L5 d0.3 i9 rows 11234/32472 343s 32.7 rows/s
+Instruct 275/792 L5 d0.3 i10 rows 11275/32472 344s 32.7 rows/s
+Instruct 276/792 L5 d0.3 i11 rows 11316/32472 346s 32.7 rows/s
+Instruct 277/792 L5 d0.3 i12 rows 11357/32472 347s 32.7 rows/s
+Instruct 278/792 L5 d0.3 i13 rows 11398/32472 348s 32.7 rows/s
+Instruct 279/792 L5 d0.3 i14 rows 11439/32472 349s 32.7 rows/s
+Instruct 280/792 L5 d0.3 i15 rows 11480/32472 351s 32.7 rows/s
+Instruct 281/792 L5 d0.3 i16 rows 11521/32472 352s 32.7 rows/s
+Instruct 282/792 L5 d0.3 i17 rows 11562/32472 353s 32.7 rows/s
+Instruct 283/792 L5 d0.3 i18 rows 11603/32472 354s 32.7 rows/s
+Instruct 284/792 L5 d0.3 i19 rows 11644/32472 356s 32.7 rows/s
+Instruct 285/792 L5 d0.3 i20 rows 11685/32472 357s 32.7 rows/s
+Instruct 286/792 L5 d0.3 i21 rows 11726/32472 358s 32.7 rows/s
+Instruct 287/792 L5 d0.3 i22 rows 11767/32472 359s 32.7 rows/s
+Instruct 288/792 L5 d0.3 i23 rows 11808/32472 361s 32.7 rows/s
+Instruct 289/792 L5 d0.3 i24 rows 11849/32472 362s 32.7 rows/s
+Instruct 290/792 L5 d0.3 i25 rows 11890/32472 363s 32.8 rows/s
+Instruct 291/792 L5 d0.3 i26 rows 11931/32472 364s 32.8 rows/s
+Instruct 292/792 L5 d0.3 i27 rows 11972/32472 366s 32.8 rows/s
+Instruct 293/792 L5 d0.3 i28 rows 12013/32472 367s 32.7 rows/s
+Instruct 294/792 L5 d0.3 i29 rows 12054/32472 368s 32.7 rows/s
+Instruct 295/792 L5 d0.3 i30 rows 12095/32472 369s 32.7 rows/s
+Instruct 296/792 L5 d0.3 i31 rows 12136/32472 371s 32.8 rows/s
+Instruct 297/792 L5 d0.3 i32 rows 12177/32472 372s 32.7 rows/s
+Instruct 298/792 L5 d0.3 i33 rows 12218/32472 373s 32.7 rows/s
+Instruct 299/792 L5 d0.3 i34 rows 12259/32472 374s 32.7 rows/s
+Instruct 300/792 L5 d0.3 i35 rows 12300/32472 376s 32.7 rows/s
+Instruct 301/792 L5 d0.3 i36 rows 12341/32472 377s 32.7 rows/s
+Instruct 302/792 L5 d0.3 i37 rows 12382/32472 378s 32.7 rows/s
+Instruct 303/792 L5 d0.3 i38 rows 12423/32472 379s 32.7 rows/s
+Instruct 304/792 L5 d0.3 i39 rows 12464/32472 381s 32.7 rows/s
+Instruct 305/792 L5 d0.3 i40 rows 12505/32472 382s 32.7 rows/s
+Instruct 306/792 L5 d0.3 i41 rows 12546/32472 383s 32.7 rows/s
+Instruct 307/792 L5 d0.3 i42 rows 12587/32472 384s 32.7 rows/s
+Instruct 308/792 L5 d0.3 i43 rows 12628/32472 386s 32.7 rows/s
+Instruct 309/792 L5 d0.3 i44 rows 12669/32472 387s 32.7 rows/s
+Instruct 310/792 L5 d0.3 i45 rows 12710/32472 388s 32.7 rows/s
+Instruct 311/792 L5 d0.3 i46 rows 12751/32472 389s 32.7 rows/s
+Instruct 312/792 L5 d0.3 i47 rows 12792/32472 391s 32.7 rows/s
+Instruct 313/792 L5 d0.3 i48 rows 12833/32472 392s 32.7 rows/s
+Instruct 314/792 L5 d0.3 i49 rows 12874/32472 393s 32.7 rows/s
+Instruct 315/792 L5 d0.3 i50 rows 12915/32472 394s 32.7 rows/s
+Instruct 316/792 L5 d0.3 i51 rows 12956/32472 396s 32.7 rows/s
+Instruct 317/792 L5 d0.3 i52 rows 12997/32472 397s 32.7 rows/s
+Instruct 318/792 L5 d0.3 i53 rows 13038/32472 398s 32.7 rows/s
+Instruct 319/792 L5 d0.3 i54 rows 13079/32472 399s 32.7 rows/s
+Instruct 320/792 L5 d0.3 i55 rows 13120/32472 401s 32.7 rows/s
+Instruct 321/792 L5 d0.3 i56 rows 13161/32472 402s 32.7 rows/s
+Instruct 322/792 L5 d0.3 i57 rows 13202/32472 403s 32.7 rows/s
+Instruct 323/792 L5 d0.3 i58 rows 13243/32472 405s 32.7 rows/s
+Instruct 324/792 L5 d0.3 i59 rows 13284/32472 406s 32.7 rows/s
+Instruct 325/792 L5 d0.3 i60 rows 13325/32472 407s 32.7 rows/s
+Instruct 326/792 L5 d0.3 i61 rows 13366/32472 408s 32.7 rows/s
+Instruct 327/792 L5 d0.3 i62 rows 13407/32472 409s 32.7 rows/s
+Instruct 328/792 L5 d0.3 i63 rows 13448/32472 411s 32.7 rows/s
+Instruct 329/792 L5 d0.3 i64 rows 13489/32472 412s 32.7 rows/s
+Instruct 330/792 L5 d0.3 i65 rows 13530/32472 413s 32.7 rows/s
+Instruct 331/792 L5 d0.3 i66 rows 13571/32472 415s 32.7 rows/s
+Instruct 332/792 L5 d0.3 i67 rows 13612/32472 416s 32.7 rows/s
+Instruct 333/792 L5 d0.3 i68 rows 13653/32472 417s 32.7 rows/s
+Instruct 334/792 L5 d0.3 i69 rows 13694/32472 418s 32.7 rows/s
+Instruct 335/792 L5 d0.3 i70 rows 13735/32472 420s 32.7 rows/s
+Instruct 336/792 L5 d0.3 i71 rows 13776/32472 421s 32.7 rows/s
+Instruct 337/792 L5 d0.3 i72 rows 13817/32472 422s 32.7 rows/s
+Instruct 338/792 L5 d0.3 i73 rows 13858/32472 423s 32.7 rows/s
+Instruct 339/792 L5 d0.3 i74 rows 13899/32472 424s 32.7 rows/s
+Instruct 340/792 L5 d0.3 i75 rows 13940/32472 426s 32.7 rows/s
+Instruct 341/792 L5 d0.3 i76 rows 13981/32472 427s 32.7 rows/s
+Instruct 342/792 L5 d0.3 i77 rows 14022/32472 428s 32.7 rows/s
+Instruct 343/792 L5 d0.3 i78 rows 14063/32472 430s 32.7 rows/s
+Instruct 344/792 L5 d0.3 i79 rows 14104/32472 431s 32.7 rows/s
+Instruct 345/792 L5 d0.3 i80 rows 14145/32472 432s 32.7 rows/s
+Instruct 346/792 L5 d0.3 i81 rows 14186/32472 433s 32.7 rows/s
+Instruct 347/792 L5 d0.3 i82 rows 14227/32472 435s 32.7 rows/s
+Instruct 348/792 L5 d0.3 i83 rows 14268/32472 436s 32.7 rows/s
+Instruct 349/792 L5 d0.3 i84 rows 14309/32472 437s 32.7 rows/s
+Instruct 350/792 L5 d0.3 i85 rows 14350/32472 438s 32.7 rows/s
+Instruct 351/792 L5 d0.3 i86 rows 14391/32472 440s 32.7 rows/s
+Instruct 352/792 L5 d0.3 i87 rows 14432/32472 441s 32.7 rows/s
+Instruct 353/792 L5 d0.4 i0 rows 14473/32472 442s 32.7 rows/s
+Instruct 354/792 L5 d0.4 i1 rows 14514/32472 443s 32.7 rows/s
+Instruct 355/792 L5 d0.4 i2 rows 14555/32472 445s 32.7 rows/s
+Instruct 356/792 L5 d0.4 i3 rows 14596/32472 446s 32.7 rows/s
+Instruct 357/792 L5 d0.4 i4 rows 14637/32472 447s 32.7 rows/s
+Instruct 358/792 L5 d0.4 i5 rows 14678/32472 448s 32.7 rows/s
+Instruct 359/792 L5 d0.4 i6 rows 14719/32472 449s 32.7 rows/s
+Instruct 360/792 L5 d0.4 i7 rows 14760/32472 451s 32.7 rows/s
+Instruct 361/792 L5 d0.4 i8 rows 14801/32472 452s 32.7 rows/s
+Instruct 362/792 L5 d0.4 i9 rows 14842/32472 453s 32.7 rows/s
+Instruct 363/792 L5 d0.4 i10 rows 14883/32472 454s 32.8 rows/s
+Instruct 364/792 L5 d0.4 i11 rows 14924/32472 456s 32.8 rows/s
+Instruct 365/792 L5 d0.4 i12 rows 14965/32472 457s 32.8 rows/s
+Instruct 366/792 L5 d0.4 i13 rows 15006/32472 458s 32.8 rows/s
+Instruct 367/792 L5 d0.4 i14 rows 15047/32472 459s 32.8 rows/s
+Instruct 368/792 L5 d0.4 i15 rows 15088/32472 461s 32.8 rows/s
+Instruct 369/792 L5 d0.4 i16 rows 15129/32472 462s 32.8 rows/s
+Instruct 370/792 L5 d0.4 i17 rows 15170/32472 463s 32.8 rows/s
+Instruct 371/792 L5 d0.4 i18 rows 15211/32472 464s 32.8 rows/s
+Instruct 372/792 L5 d0.4 i19 rows 15252/32472 466s 32.8 rows/s
+Instruct 373/792 L5 d0.4 i20 rows 15293/32472 467s 32.8 rows/s
+Instruct 374/792 L5 d0.4 i21 rows 15334/32472 468s 32.8 rows/s
+Instruct 375/792 L5 d0.4 i22 rows 15375/32472 469s 32.8 rows/s
+Instruct 376/792 L5 d0.4 i23 rows 15416/32472 471s 32.8 rows/s
+Instruct 377/792 L5 d0.4 i24 rows 15457/32472 472s 32.8 rows/s
+Instruct 378/792 L5 d0.4 i25 rows 15498/32472 473s 32.8 rows/s
+Instruct 379/792 L5 d0.4 i26 rows 15539/32472 474s 32.8 rows/s
+Instruct 380/792 L5 d0.4 i27 rows 15580/32472 476s 32.8 rows/s
+Instruct 381/792 L5 d0.4 i28 rows 15621/32472 477s 32.8 rows/s
+Instruct 382/792 L5 d0.4 i29 rows 15662/32472 478s 32.8 rows/s
+Instruct 383/792 L5 d0.4 i30 rows 15703/32472 479s 32.8 rows/s
+Instruct 384/792 L5 d0.4 i31 rows 15744/32472 481s 32.8 rows/s
+Instruct 385/792 L5 d0.4 i32 rows 15785/32472 482s 32.8 rows/s
+Instruct 386/792 L5 d0.4 i33 rows 15826/32472 483s 32.8 rows/s
+Instruct 387/792 L5 d0.4 i34 rows 15867/32472 484s 32.8 rows/s
+Instruct 388/792 L5 d0.4 i35 rows 15908/32472 486s 32.8 rows/s
+Instruct 389/792 L5 d0.4 i36 rows 15949/32472 487s 32.8 rows/s
+Instruct 390/792 L5 d0.4 i37 rows 15990/32472 488s 32.8 rows/s
+Instruct 391/792 L5 d0.4 i38 rows 16031/32472 489s 32.8 rows/s
+Instruct 392/792 L5 d0.4 i39 rows 16072/32472 491s 32.8 rows/s
+Instruct 393/792 L5 d0.4 i40 rows 16113/32472 492s 32.8 rows/s
+Instruct 394/792 L5 d0.4 i41 rows 16154/32472 493s 32.8 rows/s
+Instruct 395/792 L5 d0.4 i42 rows 16195/32472 494s 32.8 rows/s
+Instruct 396/792 L5 d0.4 i43 rows 16236/32472 496s 32.8 rows/s
+Instruct 397/792 L5 d0.4 i44 rows 16277/32472 497s 32.8 rows/s
+Instruct 398/792 L5 d0.4 i45 rows 16318/32472 498s 32.8 rows/s
+Instruct 399/792 L5 d0.4 i46 rows 16359/32472 499s 32.8 rows/s
+Instruct 400/792 L5 d0.4 i47 rows 16400/32472 501s 32.8 rows/s
+Instruct 401/792 L5 d0.4 i48 rows 16441/32472 502s 32.8 rows/s
+Instruct 402/792 L5 d0.4 i49 rows 16482/32472 503s 32.8 rows/s
+Instruct 403/792 L5 d0.4 i50 rows 16523/32472 504s 32.8 rows/s
+Instruct 404/792 L5 d0.4 i51 rows 16564/32472 506s 32.8 rows/s
+Instruct 405/792 L5 d0.4 i52 rows 16605/32472 507s 32.8 rows/s
+Instruct 406/792 L5 d0.4 i53 rows 16646/32472 508s 32.8 rows/s
+Instruct 407/792 L5 d0.4 i54 rows 16687/32472 510s 32.8 rows/s
+Instruct 408/792 L5 d0.4 i55 rows 16728/32472 511s 32.8 rows/s
+Instruct 409/792 L5 d0.4 i56 rows 16769/32472 512s 32.8 rows/s
+Instruct 410/792 L5 d0.4 i57 rows 16810/32472 513s 32.8 rows/s
+Instruct 411/792 L5 d0.4 i58 rows 16851/32472 514s 32.8 rows/s
+Instruct 412/792 L5 d0.4 i59 rows 16892/32472 516s 32.8 rows/s
+Instruct 413/792 L5 d0.4 i60 rows 16933/32472 517s 32.8 rows/s
+Instruct 414/792 L5 d0.4 i61 rows 16974/32472 518s 32.8 rows/s
+Instruct 415/792 L5 d0.4 i62 rows 17015/32472 519s 32.8 rows/s
+Instruct 416/792 L5 d0.4 i63 rows 17056/32472 521s 32.8 rows/s
+Instruct 417/792 L5 d0.4 i64 rows 17097/32472 522s 32.8 rows/s
+Instruct 418/792 L5 d0.4 i65 rows 17138/32472 523s 32.8 rows/s
+Instruct 419/792 L5 d0.4 i66 rows 17179/32472 524s 32.8 rows/s
+Instruct 420/792 L5 d0.4 i67 rows 17220/32472 526s 32.8 rows/s
+Instruct 421/792 L5 d0.4 i68 rows 17261/32472 527s 32.8 rows/s
+Instruct 422/792 L5 d0.4 i69 rows 17302/32472 528s 32.8 rows/s
+Instruct 423/792 L5 d0.4 i70 rows 17343/32472 529s 32.8 rows/s
+Instruct 424/792 L5 d0.4 i71 rows 17384/32472 531s 32.8 rows/s
+Instruct 425/792 L5 d0.4 i72 rows 17425/32472 532s 32.8 rows/s
+Instruct 426/792 L5 d0.4 i73 rows 17466/32472 533s 32.8 rows/s
+Instruct 427/792 L5 d0.4 i74 rows 17507/32472 534s 32.8 rows/s
+Instruct 428/792 L5 d0.4 i75 rows 17548/32472 536s 32.8 rows/s
+Instruct 429/792 L5 d0.4 i76 rows 17589/32472 537s 32.8 rows/s
+Instruct 430/792 L5 d0.4 i77 rows 17630/32472 538s 32.8 rows/s
+Instruct 431/792 L5 d0.4 i78 rows 17671/32472 539s 32.8 rows/s
+Instruct 432/792 L5 d0.4 i79 rows 17712/32472 541s 32.8 rows/s
+Instruct 433/792 L5 d0.4 i80 rows 17753/32472 542s 32.8 rows/s
+Instruct 434/792 L5 d0.4 i81 rows 17794/32472 543s 32.8 rows/s
+Instruct 435/792 L5 d0.4 i82 rows 17835/32472 544s 32.8 rows/s
+Instruct 436/792 L5 d0.4 i83 rows 17876/32472 546s 32.8 rows/s
+Instruct 437/792 L5 d0.4 i84 rows 17917/32472 547s 32.8 rows/s
+Instruct 438/792 L5 d0.4 i85 rows 17958/32472 548s 32.8 rows/s
+Instruct 439/792 L5 d0.4 i86 rows 17999/32472 549s 32.8 rows/s
+Instruct 440/792 L5 d0.4 i87 rows 18040/32472 551s 32.8 rows/s
+Instruct 441/792 L5 d0.5 i0 rows 18081/32472 552s 32.8 rows/s
+Instruct 442/792 L5 d0.5 i1 rows 18122/32472 553s 32.8 rows/s
+Instruct 443/792 L5 d0.5 i2 rows 18163/32472 554s 32.8 rows/s
+Instruct 444/792 L5 d0.5 i3 rows 18204/32472 556s 32.8 rows/s
+Instruct 445/792 L5 d0.5 i4 rows 18245/32472 557s 32.8 rows/s
+Instruct 446/792 L5 d0.5 i5 rows 18286/32472 558s 32.8 rows/s
+Instruct 447/792 L5 d0.5 i6 rows 18327/32472 559s 32.8 rows/s
+Instruct 448/792 L5 d0.5 i7 rows 18368/32472 561s 32.8 rows/s
+Instruct 449/792 L5 d0.5 i8 rows 18409/32472 562s 32.8 rows/s
+Instruct 450/792 L5 d0.5 i9 rows 18450/32472 563s 32.8 rows/s
+Instruct 451/792 L5 d0.5 i10 rows 18491/32472 564s 32.8 rows/s
+Instruct 452/792 L5 d0.5 i11 rows 18532/32472 566s 32.8 rows/s
+Instruct 453/792 L5 d0.5 i12 rows 18573/32472 567s 32.8 rows/s
+Instruct 454/792 L5 d0.5 i13 rows 18614/32472 568s 32.8 rows/s
+Instruct 455/792 L5 d0.5 i14 rows 18655/32472 569s 32.8 rows/s
+Instruct 456/792 L5 d0.5 i15 rows 18696/32472 571s 32.8 rows/s
+Instruct 457/792 L5 d0.5 i16 rows 18737/32472 572s 32.8 rows/s
+Instruct 458/792 L5 d0.5 i17 rows 18778/32472 573s 32.8 rows/s
+Instruct 459/792 L5 d0.5 i18 rows 18819/32472 574s 32.8 rows/s
+Instruct 460/792 L5 d0.5 i19 rows 18860/32472 576s 32.8 rows/s
+Instruct 461/792 L5 d0.5 i20 rows 18901/32472 577s 32.8 rows/s
+Instruct 462/792 L5 d0.5 i21 rows 18942/32472 578s 32.8 rows/s
+Instruct 463/792 L5 d0.5 i22 rows 18983/32472 579s 32.8 rows/s
+Instruct 464/792 L5 d0.5 i23 rows 19024/32472 581s 32.8 rows/s
+Instruct 465/792 L5 d0.5 i24 rows 19065/32472 582s 32.8 rows/s
+Instruct 466/792 L5 d0.5 i25 rows 19106/32472 583s 32.8 rows/s
+Instruct 467/792 L5 d0.5 i26 rows 19147/32472 584s 32.8 rows/s
+Instruct 468/792 L5 d0.5 i27 rows 19188/32472 586s 32.8 rows/s
+Instruct 469/792 L5 d0.5 i28 rows 19229/32472 587s 32.8 rows/s
+Instruct 470/792 L5 d0.5 i29 rows 19270/32472 588s 32.8 rows/s
+Instruct 471/792 L5 d0.5 i30 rows 19311/32472 589s 32.8 rows/s
+Instruct 472/792 L5 d0.5 i31 rows 19352/32472 591s 32.8 rows/s
+Instruct 473/792 L5 d0.5 i32 rows 19393/32472 592s 32.8 rows/s
+Instruct 474/792 L5 d0.5 i33 rows 19434/32472 593s 32.8 rows/s
+Instruct 475/792 L5 d0.5 i34 rows 19475/32472 594s 32.8 rows/s
+Instruct 476/792 L5 d0.5 i35 rows 19516/32472 596s 32.8 rows/s
+Instruct 477/792 L5 d0.5 i36 rows 19557/32472 597s 32.8 rows/s
+Instruct 478/792 L5 d0.5 i37 rows 19598/32472 598s 32.8 rows/s
+Instruct 479/792 L5 d0.5 i38 rows 19639/32472 599s 32.8 rows/s
+Instruct 480/792 L5 d0.5 i39 rows 19680/32472 601s 32.8 rows/s
+Instruct 481/792 L5 d0.5 i40 rows 19721/32472 602s 32.8 rows/s
+Instruct 482/792 L5 d0.5 i41 rows 19762/32472 603s 32.8 rows/s
+Instruct 483/792 L5 d0.5 i42 rows 19803/32472 605s 32.8 rows/s
+Instruct 484/792 L5 d0.5 i43 rows 19844/32472 606s 32.8 rows/s
+Instruct 485/792 L5 d0.5 i44 rows 19885/32472 607s 32.8 rows/s
+Instruct 486/792 L5 d0.5 i45 rows 19926/32472 608s 32.8 rows/s
+Instruct 487/792 L5 d0.5 i46 rows 19967/32472 610s 32.8 rows/s
+Instruct 488/792 L5 d0.5 i47 rows 20008/32472 611s 32.8 rows/s
+Instruct 489/792 L5 d0.5 i48 rows 20049/32472 612s 32.8 rows/s
+Instruct 490/792 L5 d0.5 i49 rows 20090/32472 613s 32.8 rows/s
+Instruct 491/792 L5 d0.5 i50 rows 20131/32472 615s 32.8 rows/s
+Instruct 492/792 L5 d0.5 i51 rows 20172/32472 616s 32.8 rows/s
+Instruct 493/792 L5 d0.5 i52 rows 20213/32472 617s 32.8 rows/s
+Instruct 494/792 L5 d0.5 i53 rows 20254/32472 618s 32.8 rows/s
+Instruct 495/792 L5 d0.5 i54 rows 20295/32472 620s 32.8 rows/s
+Instruct 496/792 L5 d0.5 i55 rows 20336/32472 621s 32.8 rows/s
+Instruct 497/792 L5 d0.5 i56 rows 20377/32472 622s 32.8 rows/s
+Instruct 498/792 L5 d0.5 i57 rows 20418/32472 623s 32.7 rows/s
+Instruct 499/792 L5 d0.5 i58 rows 20459/32472 625s 32.7 rows/s
+Instruct 500/792 L5 d0.5 i59 rows 20500/32472 626s 32.7 rows/s
+Instruct 501/792 L5 d0.5 i60 rows 20541/32472 627s 32.7 rows/s
+Instruct 502/792 L5 d0.5 i61 rows 20582/32472 628s 32.7 rows/s
+Instruct 503/792 L5 d0.5 i62 rows 20623/32472 630s 32.7 rows/s
+Instruct 504/792 L5 d0.5 i63 rows 20664/32472 631s 32.7 rows/s
+Instruct 505/792 L5 d0.5 i64 rows 20705/32472 632s 32.7 rows/s
+Instruct 506/792 L5 d0.5 i65 rows 20746/32472 634s 32.7 rows/s
+Instruct 507/792 L5 d0.5 i66 rows 20787/32472 635s 32.7 rows/s
+Instruct 508/792 L5 d0.5 i67 rows 20828/32472 636s 32.7 rows/s
+Instruct 509/792 L5 d0.5 i68 rows 20869/32472 637s 32.7 rows/s
+Instruct 510/792 L5 d0.5 i69 rows 20910/32472 639s 32.7 rows/s
+Instruct 511/792 L5 d0.5 i70 rows 20951/32472 640s 32.7 rows/s
+Instruct 512/792 L5 d0.5 i71 rows 20992/32472 641s 32.7 rows/s
+Instruct 513/792 L5 d0.5 i72 rows 21033/32472 642s 32.7 rows/s
+Instruct 514/792 L5 d0.5 i73 rows 21074/32472 644s 32.7 rows/s
+Instruct 515/792 L5 d0.5 i74 rows 21115/32472 645s 32.7 rows/s
+Instruct 516/792 L5 d0.5 i75 rows 21156/32472 646s 32.7 rows/s
+Instruct 517/792 L5 d0.5 i76 rows 21197/32472 647s 32.7 rows/s
+Instruct 518/792 L5 d0.5 i77 rows 21238/32472 649s 32.7 rows/s
+Instruct 519/792 L5 d0.5 i78 rows 21279/32472 650s 32.7 rows/s
+Instruct 520/792 L5 d0.5 i79 rows 21320/32472 651s 32.7 rows/s
+Instruct 521/792 L5 d0.5 i80 rows 21361/32472 652s 32.7 rows/s
+Instruct 522/792 L5 d0.5 i81 rows 21402/32472 654s 32.7 rows/s
+Instruct 523/792 L5 d0.5 i82 rows 21443/32472 655s 32.7 rows/s
+Instruct 524/792 L5 d0.5 i83 rows 21484/32472 656s 32.7 rows/s
+Instruct 525/792 L5 d0.5 i84 rows 21525/32472 657s 32.7 rows/s
+Instruct 526/792 L5 d0.5 i85 rows 21566/32472 659s 32.7 rows/s
+Instruct 527/792 L5 d0.5 i86 rows 21607/32472 660s 32.7 rows/s
+Instruct 528/792 L5 d0.5 i87 rows 21648/32472 661s 32.7 rows/s
+Instruct 529/792 L5 d0.75 i0 rows 21689/32472 662s 32.7 rows/s
+Instruct 530/792 L5 d0.75 i1 rows 21730/32472 664s 32.7 rows/s
+Instruct 531/792 L5 d0.75 i2 rows 21771/32472 665s 32.7 rows/s
+Instruct 532/792 L5 d0.75 i3 rows 21812/32472 666s 32.7 rows/s
+Instruct 533/792 L5 d0.75 i4 rows 21853/32472 667s 32.7 rows/s
+Instruct 534/792 L5 d0.75 i5 rows 21894/32472 669s 32.7 rows/s
+Instruct 535/792 L5 d0.75 i6 rows 21935/32472 670s 32.7 rows/s
+Instruct 536/792 L5 d0.75 i7 rows 21976/32472 671s 32.7 rows/s
+Instruct 537/792 L5 d0.75 i8 rows 22017/32472 672s 32.7 rows/s
+Instruct 538/792 L5 d0.75 i9 rows 22058/32472 674s 32.7 rows/s
+Instruct 539/792 L5 d0.75 i10 rows 22099/32472 675s 32.7 rows/s
+Instruct 540/792 L5 d0.75 i11 rows 22140/32472 676s 32.7 rows/s
+Instruct 541/792 L5 d0.75 i12 rows 22181/32472 677s 32.7 rows/s
+Instruct 542/792 L5 d0.75 i13 rows 22222/32472 679s 32.7 rows/s
+Instruct 543/792 L5 d0.75 i14 rows 22263/32472 680s 32.7 rows/s
+Instruct 544/792 L5 d0.75 i15 rows 22304/32472 681s 32.7 rows/s
+Instruct 545/792 L5 d0.75 i16 rows 22345/32472 683s 32.7 rows/s
+Instruct 546/792 L5 d0.75 i17 rows 22386/32472 684s 32.7 rows/s
+Instruct 547/792 L5 d0.75 i18 rows 22427/32472 685s 32.7 rows/s
+Instruct 548/792 L5 d0.75 i19 rows 22468/32472 686s 32.7 rows/s
+Instruct 549/792 L5 d0.75 i20 rows 22509/32472 688s 32.7 rows/s
+Instruct 550/792 L5 d0.75 i21 rows 22550/32472 689s 32.7 rows/s
+Instruct 551/792 L5 d0.75 i22 rows 22591/32472 690s 32.7 rows/s
+Instruct 552/792 L5 d0.75 i23 rows 22632/32472 691s 32.7 rows/s
+Instruct 553/792 L5 d0.75 i24 rows 22673/32472 693s 32.7 rows/s
+Instruct 554/792 L5 d0.75 i25 rows 22714/32472 694s 32.7 rows/s
+Instruct 555/792 L5 d0.75 i26 rows 22755/32472 695s 32.7 rows/s
+Instruct 556/792 L5 d0.75 i27 rows 22796/32472 696s 32.7 rows/s
+Instruct 557/792 L5 d0.75 i28 rows 22837/32472 698s 32.7 rows/s
+Instruct 558/792 L5 d0.75 i29 rows 22878/32472 699s 32.7 rows/s
+Instruct 559/792 L5 d0.75 i30 rows 22919/32472 700s 32.7 rows/s
+Instruct 560/792 L5 d0.75 i31 rows 22960/32472 701s 32.7 rows/s
+Instruct 561/792 L5 d0.75 i32 rows 23001/32472 703s 32.7 rows/s
+Instruct 562/792 L5 d0.75 i33 rows 23042/32472 704s 32.7 rows/s
+Instruct 563/792 L5 d0.75 i34 rows 23083/32472 705s 32.7 rows/s
+Instruct 564/792 L5 d0.75 i35 rows 23124/32472 706s 32.7 rows/s
+Instruct 565/792 L5 d0.75 i36 rows 23165/32472 708s 32.7 rows/s
+Instruct 566/792 L5 d0.75 i37 rows 23206/32472 709s 32.7 rows/s
+Instruct 567/792 L5 d0.75 i38 rows 23247/32472 710s 32.7 rows/s
+Instruct 568/792 L5 d0.75 i39 rows 23288/32472 711s 32.7 rows/s
+Instruct 569/792 L5 d0.75 i40 rows 23329/32472 713s 32.7 rows/s
+Instruct 570/792 L5 d0.75 i41 rows 23370/32472 714s 32.7 rows/s
+Instruct 571/792 L5 d0.75 i42 rows 23411/32472 715s 32.7 rows/s
+Instruct 572/792 L5 d0.75 i43 rows 23452/32472 716s 32.7 rows/s
+Instruct 573/792 L5 d0.75 i44 rows 23493/32472 718s 32.7 rows/s
+Instruct 574/792 L5 d0.75 i45 rows 23534/32472 719s 32.7 rows/s
+Instruct 575/792 L5 d0.75 i46 rows 23575/32472 720s 32.7 rows/s
+Instruct 576/792 L5 d0.75 i47 rows 23616/32472 721s 32.7 rows/s
+Instruct 577/792 L5 d0.75 i48 rows 23657/32472 723s 32.7 rows/s
+Instruct 578/792 L5 d0.75 i49 rows 23698/32472 724s 32.7 rows/s
+Instruct 579/792 L5 d0.75 i50 rows 23739/32472 725s 32.7 rows/s
+Instruct 580/792 L5 d0.75 i51 rows 23780/32472 726s 32.7 rows/s
+Instruct 581/792 L5 d0.75 i52 rows 23821/32472 728s 32.7 rows/s
+Instruct 582/792 L5 d0.75 i53 rows 23862/32472 729s 32.7 rows/s
+Instruct 583/792 L5 d0.75 i54 rows 23903/32472 730s 32.7 rows/s
+Instruct 584/792 L5 d0.75 i55 rows 23944/32472 731s 32.7 rows/s
+Instruct 585/792 L5 d0.75 i56 rows 23985/32472 733s 32.7 rows/s
+Instruct 586/792 L5 d0.75 i57 rows 24026/32472 734s 32.7 rows/s
+Instruct 587/792 L5 d0.75 i58 rows 24067/32472 735s 32.7 rows/s
+Instruct 588/792 L5 d0.75 i59 rows 24108/32472 736s 32.7 rows/s
+Instruct 589/792 L5 d0.75 i60 rows 24149/32472 738s 32.7 rows/s
+Instruct 590/792 L5 d0.75 i61 rows 24190/32472 739s 32.7 rows/s
+Instruct 591/792 L5 d0.75 i62 rows 24231/32472 740s 32.7 rows/s
+Instruct 592/792 L5 d0.75 i63 rows 24272/32472 741s 32.7 rows/s
+Instruct 593/792 L5 d0.75 i64 rows 24313/32472 743s 32.7 rows/s
+Instruct 594/792 L5 d0.75 i65 rows 24354/32472 744s 32.7 rows/s
+Instruct 595/792 L5 d0.75 i66 rows 24395/32472 745s 32.7 rows/s
+Instruct 596/792 L5 d0.75 i67 rows 24436/32472 746s 32.7 rows/s
+Instruct 597/792 L5 d0.75 i68 rows 24477/32472 748s 32.7 rows/s
+Instruct 598/792 L5 d0.75 i69 rows 24518/32472 749s 32.7 rows/s
+Instruct 599/792 L5 d0.75 i70 rows 24559/32472 750s 32.7 rows/s
+Instruct 600/792 L5 d0.75 i71 rows 24600/32472 751s 32.7 rows/s
+Instruct 601/792 L5 d0.75 i72 rows 24641/32472 753s 32.7 rows/s
+Instruct 602/792 L5 d0.75 i73 rows 24682/32472 754s 32.7 rows/s
+Instruct 603/792 L5 d0.75 i74 rows 24723/32472 755s 32.7 rows/s
+Instruct 604/792 L5 d0.75 i75 rows 24764/32472 756s 32.7 rows/s
+Instruct 605/792 L5 d0.75 i76 rows 24805/32472 758s 32.7 rows/s
+Instruct 606/792 L5 d0.75 i77 rows 24846/32472 759s 32.7 rows/s
+Instruct 607/792 L5 d0.75 i78 rows 24887/32472 760s 32.7 rows/s
+Instruct 608/792 L5 d0.75 i79 rows 24928/32472 761s 32.7 rows/s
+Instruct 609/792 L5 d0.75 i80 rows 24969/32472 763s 32.7 rows/s
+Instruct 610/792 L5 d0.75 i81 rows 25010/32472 764s 32.7 rows/s
+Instruct 611/792 L5 d0.75 i82 rows 25051/32472 765s 32.7 rows/s
+Instruct 612/792 L5 d0.75 i83 rows 25092/32472 766s 32.7 rows/s
+Instruct 613/792 L5 d0.75 i84 rows 25133/32472 768s 32.7 rows/s
+Instruct 614/792 L5 d0.75 i85 rows 25174/32472 769s 32.7 rows/s
+Instruct 615/792 L5 d0.75 i86 rows 25215/32472 770s 32.7 rows/s
+Instruct 616/792 L5 d0.75 i87 rows 25256/32472 771s 32.7 rows/s
+Instruct 617/792 L5 d1 i0 rows 25297/32472 773s 32.7 rows/s
+Instruct 618/792 L5 d1 i1 rows 25338/32472 774s 32.7 rows/s
+Instruct 619/792 L5 d1 i2 rows 25379/32472 775s 32.7 rows/s
+Instruct 620/792 L5 d1 i3 rows 25420/32472 776s 32.7 rows/s
+Instruct 621/792 L5 d1 i4 rows 25461/32472 778s 32.7 rows/s
+Instruct 622/792 L5 d1 i5 rows 25502/32472 779s 32.7 rows/s
+Instruct 623/792 L5 d1 i6 rows 25543/32472 780s 32.7 rows/s
+Instruct 624/792 L5 d1 i7 rows 25584/32472 781s 32.7 rows/s
+Instruct 625/792 L5 d1 i8 rows 25625/32472 783s 32.7 rows/s
+Instruct 626/792 L5 d1 i9 rows 25666/32472 784s 32.7 rows/s
+Instruct 627/792 L5 d1 i10 rows 25707/32472 785s 32.7 rows/s
+Instruct 628/792 L5 d1 i11 rows 25748/32472 786s 32.7 rows/s
+Instruct 629/792 L5 d1 i12 rows 25789/32472 788s 32.7 rows/s
+Instruct 630/792 L5 d1 i13 rows 25830/32472 789s 32.7 rows/s
+Instruct 631/792 L5 d1 i14 rows 25871/32472 790s 32.7 rows/s
+Instruct 632/792 L5 d1 i15 rows 25912/32472 791s 32.7 rows/s
+Instruct 633/792 L5 d1 i16 rows 25953/32472 793s 32.7 rows/s
+Instruct 634/792 L5 d1 i17 rows 25994/32472 794s 32.7 rows/s
+Instruct 635/792 L5 d1 i18 rows 26035/32472 795s 32.7 rows/s
+Instruct 636/792 L5 d1 i19 rows 26076/32472 796s 32.7 rows/s
+Instruct 637/792 L5 d1 i20 rows 26117/32472 798s 32.7 rows/s
+Instruct 638/792 L5 d1 i21 rows 26158/32472 799s 32.7 rows/s
+Instruct 639/792 L5 d1 i22 rows 26199/32472 800s 32.7 rows/s
+Instruct 640/792 L5 d1 i23 rows 26240/32472 801s 32.7 rows/s
+Instruct 641/792 L5 d1 i24 rows 26281/32472 803s 32.7 rows/s
+Instruct 642/792 L5 d1 i25 rows 26322/32472 804s 32.7 rows/s
+Instruct 643/792 L5 d1 i26 rows 26363/32472 805s 32.7 rows/s
+Instruct 644/792 L5 d1 i27 rows 26404/32472 806s 32.7 rows/s
+Instruct 645/792 L5 d1 i28 rows 26445/32472 808s 32.7 rows/s
+Instruct 646/792 L5 d1 i29 rows 26486/32472 809s 32.7 rows/s
+Instruct 647/792 L5 d1 i30 rows 26527/32472 810s 32.7 rows/s
+Instruct 648/792 L5 d1 i31 rows 26568/32472 812s 32.7 rows/s
+Instruct 649/792 L5 d1 i32 rows 26609/32472 813s 32.7 rows/s
+Instruct 650/792 L5 d1 i33 rows 26650/32472 814s 32.7 rows/s
+Instruct 651/792 L5 d1 i34 rows 26691/32472 815s 32.7 rows/s
+Instruct 652/792 L5 d1 i35 rows 26732/32472 817s 32.7 rows/s
+Instruct 653/792 L5 d1 i36 rows 26773/32472 818s 32.7 rows/s
+Instruct 654/792 L5 d1 i37 rows 26814/32472 819s 32.7 rows/s
+Instruct 655/792 L5 d1 i38 rows 26855/32472 820s 32.7 rows/s
+Instruct 656/792 L5 d1 i39 rows 26896/32472 822s 32.7 rows/s
+Instruct 657/792 L5 d1 i40 rows 26937/32472 823s 32.7 rows/s
+Instruct 658/792 L5 d1 i41 rows 26978/32472 824s 32.7 rows/s
+Instruct 659/792 L5 d1 i42 rows 27019/32472 825s 32.7 rows/s
+Instruct 660/792 L5 d1 i43 rows 27060/32472 827s 32.7 rows/s
+Instruct 661/792 L5 d1 i44 rows 27101/32472 828s 32.7 rows/s
+Instruct 662/792 L5 d1 i45 rows 27142/32472 829s 32.7 rows/s
+Instruct 663/792 L5 d1 i46 rows 27183/32472 830s 32.7 rows/s
+Instruct 664/792 L5 d1 i47 rows 27224/32472 832s 32.7 rows/s
+Instruct 665/792 L5 d1 i48 rows 27265/32472 833s 32.7 rows/s
+Instruct 666/792 L5 d1 i49 rows 27306/32472 834s 32.7 rows/s
+Instruct 667/792 L5 d1 i50 rows 27347/32472 835s 32.7 rows/s
+Instruct 668/792 L5 d1 i51 rows 27388/32472 837s 32.7 rows/s
+Instruct 669/792 L5 d1 i52 rows 27429/32472 838s 32.7 rows/s
+Instruct 670/792 L5 d1 i53 rows 27470/32472 839s 32.7 rows/s
+Instruct 671/792 L5 d1 i54 rows 27511/32472 840s 32.7 rows/s
+Instruct 672/792 L5 d1 i55 rows 27552/32472 842s 32.7 rows/s
+Instruct 673/792 L5 d1 i56 rows 27593/32472 843s 32.7 rows/s
+Instruct 674/792 L5 d1 i57 rows 27634/32472 844s 32.7 rows/s
+Instruct 675/792 L5 d1 i58 rows 27675/32472 845s 32.7 rows/s
+Instruct 676/792 L5 d1 i59 rows 27716/32472 847s 32.7 rows/s
+Instruct 677/792 L5 d1 i60 rows 27757/32472 848s 32.7 rows/s
+Instruct 678/792 L5 d1 i61 rows 27798/32472 849s 32.7 rows/s
+Instruct 679/792 L5 d1 i62 rows 27839/32472 850s 32.7 rows/s
+Instruct 680/792 L5 d1 i63 rows 27880/32472 852s 32.7 rows/s
+Instruct 681/792 L5 d1 i64 rows 27921/32472 853s 32.7 rows/s
+Instruct 682/792 L5 d1 i65 rows 27962/32472 854s 32.7 rows/s
+Instruct 683/792 L5 d1 i66 rows 28003/32472 855s 32.7 rows/s
+Instruct 684/792 L5 d1 i67 rows 28044/32472 857s 32.7 rows/s
+Instruct 685/792 L5 d1 i68 rows 28085/32472 858s 32.7 rows/s
+Instruct 686/792 L5 d1 i69 rows 28126/32472 859s 32.7 rows/s
+Instruct 687/792 L5 d1 i70 rows 28167/32472 860s 32.7 rows/s
+Instruct 688/792 L5 d1 i71 rows 28208/32472 862s 32.7 rows/s
+Instruct 689/792 L5 d1 i72 rows 28249/32472 863s 32.7 rows/s
+Instruct 690/792 L5 d1 i73 rows 28290/32472 864s 32.7 rows/s
+Instruct 691/792 L5 d1 i74 rows 28331/32472 865s 32.7 rows/s
+Instruct 692/792 L5 d1 i75 rows 28372/32472 867s 32.7 rows/s
+Instruct 693/792 L5 d1 i76 rows 28413/32472 868s 32.7 rows/s
+Instruct 694/792 L5 d1 i77 rows 28454/32472 869s 32.7 rows/s
+Instruct 695/792 L5 d1 i78 rows 28495/32472 870s 32.7 rows/s
+Instruct 696/792 L5 d1 i79 rows 28536/32472 872s 32.7 rows/s
+Instruct 697/792 L5 d1 i80 rows 28577/32472 873s 32.7 rows/s
+Instruct 698/792 L5 d1 i81 rows 28618/32472 874s 32.7 rows/s
+Instruct 699/792 L5 d1 i82 rows 28659/32472 875s 32.7 rows/s
+Instruct 700/792 L5 d1 i83 rows 28700/32472 877s 32.7 rows/s
+Instruct 701/792 L5 d1 i84 rows 28741/32472 878s 32.7 rows/s
+Instruct 702/792 L5 d1 i85 rows 28782/32472 879s 32.7 rows/s
+Instruct 703/792 L5 d1 i86 rows 28823/32472 880s 32.7 rows/s
+Instruct 704/792 L5 d1 i87 rows 28864/32472 882s 32.7 rows/s
+Instruct 705/792 L5 d1.5 i0 rows 28905/32472 883s 32.7 rows/s
+Instruct 706/792 L5 d1.5 i1 rows 28946/32472 884s 32.7 rows/s
+Instruct 707/792 L5 d1.5 i2 rows 28987/32472 885s 32.7 rows/s
+Instruct 708/792 L5 d1.5 i3 rows 29028/32472 886s 32.7 rows/s
+Instruct 709/792 L5 d1.5 i4 rows 29069/32472 888s 32.7 rows/s
+Instruct 710/792 L5 d1.5 i5 rows 29110/32472 889s 32.7 rows/s
+Instruct 711/792 L5 d1.5 i6 rows 29151/32472 890s 32.7 rows/s
+Instruct 712/792 L5 d1.5 i7 rows 29192/32472 891s 32.7 rows/s
+Instruct 713/792 L5 d1.5 i8 rows 29233/32472 893s 32.7 rows/s
+Instruct 714/792 L5 d1.5 i9 rows 29274/32472 894s 32.7 rows/s
+Instruct 715/792 L5 d1.5 i10 rows 29315/32472 895s 32.7 rows/s
+Instruct 716/792 L5 d1.5 i11 rows 29356/32472 896s 32.7 rows/s
+Instruct 717/792 L5 d1.5 i12 rows 29397/32472 898s 32.7 rows/s
+Instruct 718/792 L5 d1.5 i13 rows 29438/32472 899s 32.7 rows/s
+Instruct 719/792 L5 d1.5 i14 rows 29479/32472 900s 32.7 rows/s
+Instruct 720/792 L5 d1.5 i15 rows 29520/32472 901s 32.7 rows/s
+Instruct 721/792 L5 d1.5 i16 rows 29561/32472 903s 32.7 rows/s
+Instruct 722/792 L5 d1.5 i17 rows 29602/32472 904s 32.7 rows/s
+Instruct 723/792 L5 d1.5 i18 rows 29643/32472 905s 32.7 rows/s
+Instruct 724/792 L5 d1.5 i19 rows 29684/32472 906s 32.7 rows/s
+Instruct 725/792 L5 d1.5 i20 rows 29725/32472 908s 32.7 rows/s
+Instruct 726/792 L5 d1.5 i21 rows 29766/32472 909s 32.7 rows/s
+Instruct 727/792 L5 d1.5 i22 rows 29807/32472 910s 32.7 rows/s
+Instruct 728/792 L5 d1.5 i23 rows 29848/32472 911s 32.7 rows/s
+Instruct 729/792 L5 d1.5 i24 rows 29889/32472 913s 32.7 rows/s
+Instruct 730/792 L5 d1.5 i25 rows 29930/32472 914s 32.7 rows/s
+Instruct 731/792 L5 d1.5 i26 rows 29971/32472 915s 32.7 rows/s
+Instruct 732/792 L5 d1.5 i27 rows 30012/32472 916s 32.7 rows/s
+Instruct 733/792 L5 d1.5 i28 rows 30053/32472 918s 32.7 rows/s
+Instruct 734/792 L5 d1.5 i29 rows 30094/32472 919s 32.7 rows/s
+Instruct 735/792 L5 d1.5 i30 rows 30135/32472 920s 32.7 rows/s
+Instruct 736/792 L5 d1.5 i31 rows 30176/32472 921s 32.7 rows/s
+Instruct 737/792 L5 d1.5 i32 rows 30217/32472 923s 32.7 rows/s
+Instruct 738/792 L5 d1.5 i33 rows 30258/32472 924s 32.7 rows/s
+Instruct 739/792 L5 d1.5 i34 rows 30299/32472 925s 32.7 rows/s
+Instruct 740/792 L5 d1.5 i35 rows 30340/32472 926s 32.7 rows/s
+Instruct 741/792 L5 d1.5 i36 rows 30381/32472 928s 32.7 rows/s
+Instruct 742/792 L5 d1.5 i37 rows 30422/32472 929s 32.7 rows/s
+Instruct 743/792 L5 d1.5 i38 rows 30463/32472 930s 32.7 rows/s
+Instruct 744/792 L5 d1.5 i39 rows 30504/32472 932s 32.7 rows/s
+Instruct 745/792 L5 d1.5 i40 rows 30545/32472 933s 32.7 rows/s
+Instruct 746/792 L5 d1.5 i41 rows 30586/32472 934s 32.7 rows/s
+Instruct 747/792 L5 d1.5 i42 rows 30627/32472 935s 32.7 rows/s
+Instruct 748/792 L5 d1.5 i43 rows 30668/32472 937s 32.7 rows/s
+Instruct 749/792 L5 d1.5 i44 rows 30709/32472 938s 32.7 rows/s
+Instruct 750/792 L5 d1.5 i45 rows 30750/32472 939s 32.7 rows/s
+Instruct 751/792 L5 d1.5 i46 rows 30791/32472 940s 32.7 rows/s
+Instruct 752/792 L5 d1.5 i47 rows 30832/32472 942s 32.7 rows/s
+Instruct 753/792 L5 d1.5 i48 rows 30873/32472 943s 32.7 rows/s
+Instruct 754/792 L5 d1.5 i49 rows 30914/32472 944s 32.7 rows/s
+Instruct 755/792 L5 d1.5 i50 rows 30955/32472 945s 32.7 rows/s
+Instruct 756/792 L5 d1.5 i51 rows 30996/32472 947s 32.7 rows/s
+Instruct 757/792 L5 d1.5 i52 rows 31037/32472 948s 32.7 rows/s
+Instruct 758/792 L5 d1.5 i53 rows 31078/32472 949s 32.7 rows/s
+Instruct 759/792 L5 d1.5 i54 rows 31119/32472 950s 32.7 rows/s
+Instruct 760/792 L5 d1.5 i55 rows 31160/32472 952s 32.7 rows/s
+Instruct 761/792 L5 d1.5 i56 rows 31201/32472 953s 32.7 rows/s
+Instruct 762/792 L5 d1.5 i57 rows 31242/32472 954s 32.7 rows/s
+Instruct 763/792 L5 d1.5 i58 rows 31283/32472 955s 32.7 rows/s
+Instruct 764/792 L5 d1.5 i59 rows 31324/32472 956s 32.7 rows/s
+Instruct 765/792 L5 d1.5 i60 rows 31365/32472 958s 32.7 rows/s
+Instruct 766/792 L5 d1.5 i61 rows 31406/32472 959s 32.7 rows/s
+Instruct 767/792 L5 d1.5 i62 rows 31447/32472 960s 32.7 rows/s
+Instruct 768/792 L5 d1.5 i63 rows 31488/32472 962s 32.7 rows/s
+Instruct 769/792 L5 d1.5 i64 rows 31529/32472 963s 32.7 rows/s
+Instruct 770/792 L5 d1.5 i65 rows 31570/32472 964s 32.7 rows/s
+Instruct 771/792 L5 d1.5 i66 rows 31611/32472 965s 32.7 rows/s
+Instruct 772/792 L5 d1.5 i67 rows 31652/32472 967s 32.7 rows/s
+Instruct 773/792 L5 d1.5 i68 rows 31693/32472 968s 32.7 rows/s
+Instruct 774/792 L5 d1.5 i69 rows 31734/32472 969s 32.7 rows/s
+Instruct 775/792 L5 d1.5 i70 rows 31775/32472 970s 32.7 rows/s
+Instruct 776/792 L5 d1.5 i71 rows 31816/32472 972s 32.7 rows/s
+Instruct 777/792 L5 d1.5 i72 rows 31857/32472 973s 32.7 rows/s
+Instruct 778/792 L5 d1.5 i73 rows 31898/32472 974s 32.7 rows/s
+Instruct 779/792 L5 d1.5 i74 rows 31939/32472 975s 32.7 rows/s
+Instruct 780/792 L5 d1.5 i75 rows 31980/32472 976s 32.7 rows/s
+Instruct 781/792 L5 d1.5 i76 rows 32021/32472 978s 32.7 rows/s
+Instruct 782/792 L5 d1.5 i77 rows 32062/32472 979s 32.7 rows/s
+Instruct 783/792 L5 d1.5 i78 rows 32103/32472 980s 32.7 rows/s
+Instruct 784/792 L5 d1.5 i79 rows 32144/32472 981s 32.8 rows/s
+Instruct 785/792 L5 d1.5 i80 rows 32185/32472 983s 32.8 rows/s
+Instruct 786/792 L5 d1.5 i81 rows 32226/32472 984s 32.8 rows/s
+Instruct 787/792 L5 d1.5 i82 rows 32267/32472 985s 32.8 rows/s
+Instruct 788/792 L5 d1.5 i83 rows 32308/32472 986s 32.8 rows/s
+Instruct 789/792 L5 d1.5 i84 rows 32349/32472 988s 32.7 rows/s
+Instruct 790/792 L5 d1.5 i85 rows 32390/32472 989s 32.7 rows/s
+Instruct 791/792 L5 d1.5 i86 rows 32431/32472 990s 32.7 rows/s
+Instruct 792/792 L5 d1.5 i87 rows 32472/32472 991s 32.8 rows/s
+no-hook null at the end
+null-end 1/88 i0 1.2s
+null-end 2/88 i1 2.5s
+null-end 3/88 i2 3.7s
+null-end 4/88 i3 4.9s
+null-end 5/88 i4 6.1s
+null-end 6/88 i5 7.3s
+null-end 7/88 i6 8.3s
+null-end 8/88 i7 9.6s
+null-end 9/88 i8 10.8s
+null-end 10/88 i9 12.0s
+null-end 11/88 i10 13.3s
+null-end 12/88 i11 14.5s
+null-end 13/88 i12 15.8s
+null-end 14/88 i13 17.0s
+null-end 15/88 i14 18.3s
+null-end 16/88 i15 19.5s
+null-end 17/88 i16 20.8s
+null-end 18/88 i17 22.0s
+null-end 19/88 i18 23.2s
+null-end 20/88 i19 24.4s
+null-end 21/88 i20 25.6s
+null-end 22/88 i21 26.6s
+null-end 23/88 i22 27.8s
+null-end 24/88 i23 29.1s
+null-end 25/88 i24 30.2s
+null-end 26/88 i25 31.4s
+null-end 27/88 i26 32.7s
+null-end 28/88 i27 33.9s
+null-end 29/88 i28 35.1s
+null-end 30/88 i29 36.4s
+null-end 31/88 i30 37.6s
+null-end 32/88 i31 38.8s
+null-end 33/88 i32 40.0s
+null-end 34/88 i33 41.1s
+null-end 35/88 i34 42.3s
+null-end 36/88 i35 43.6s
+null-end 37/88 i36 44.8s
+null-end 38/88 i37 46.1s
+null-end 39/88 i38 47.2s
+null-end 40/88 i39 48.4s
+null-end 41/88 i40 49.5s
+null-end 42/88 i41 50.2s
+null-end 43/88 i42 51.4s
+null-end 44/88 i43 52.7s
+null-end 45/88 i44 53.9s
+null-end 46/88 i45 55.2s
+null-end 47/88 i46 56.3s
+null-end 48/88 i47 57.5s
+null-end 49/88 i48 58.6s
+null-end 50/88 i49 59.9s
+null-end 51/88 i50 61.1s
+null-end 52/88 i51 62.4s
+null-end 53/88 i52 63.6s
+null-end 54/88 i53 64.8s
+null-end 55/88 i54 66.1s
+null-end 56/88 i55 67.4s
+null-end 57/88 i56 68.6s
+null-end 58/88 i57 69.9s
+null-end 59/88 i58 71.1s
+null-end 60/88 i59 72.3s
+null-end 61/88 i60 73.5s
+null-end 62/88 i61 74.7s
+null-end 63/88 i62 76.0s
+null-end 64/88 i63 77.2s
+null-end 65/88 i64 78.5s
+null-end 66/88 i65 79.7s
+null-end 67/88 i66 81.0s
+null-end 68/88 i67 82.2s
+null-end 69/88 i68 83.3s
+null-end 70/88 i69 84.4s
+null-end 71/88 i70 85.5s
+null-end 72/88 i71 86.5s
+null-end 73/88 i72 87.8s
+null-end 74/88 i73 89.0s
+null-end 75/88 i74 90.3s
+null-end 76/88 i75 91.5s
+null-end 77/88 i76 92.7s
+null-end 78/88 i77 94.0s
+null-end 79/88 i78 95.1s
+null-end 80/88 i79 96.3s
+null-end 81/88 i80 97.4s
+null-end 82/88 i81 98.7s
+null-end 83/88 i82 99.9s
+null-end 84/88 i83 101.2s
+null-end 85/88 i84 102.2s
+null-end 86/88 i85 103.5s
+null-end 87/88 i86 104.8s
+null-end 88/88 i87 106.1s
+Instruct: complete; rows 32472/32472; batches written 792, resumed 0; null all_ok=True
+PILOT EXIT 0
+loading allenai/OLMo-2-0425-1B-SFT@0d85a3d03787 on cuda (bfloat16)
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 17968.13it/s]
+0 rows on disk, 0 batch(es) complete
+gate SFT 1/88 i0 rows 41/3608 2s 23.5 rows/s
+gate SFT 2/88 i1 rows 82/3608 4s 23.1 rows/s
+gate SFT 3/88 i2 rows 123/3608 5s 26.2 rows/s
+gate SFT 4/88 i3 rows 164/3608 6s 29.5 rows/s
+gate SFT 5/88 i4 rows 205/3608 7s 30.1 rows/s
+gate SFT 6/88 i5 rows 246/3608 8s 30.6 rows/s
+gate SFT 7/88 i6 rows 287/3608 9s 31.5 rows/s
+gate SFT 8/88 i7 rows 328/3608 10s 31.8 rows/s
+gate SFT 9/88 i8 rows 369/3608 11s 32.4 rows/s
+gate SFT 10/88 i9 rows 410/3608 13s 32.6 rows/s
+gate SFT 11/88 i10 rows 451/3608 14s 32.7 rows/s
+gate SFT 12/88 i11 rows 492/3608 15s 32.7 rows/s
+gate SFT 13/88 i12 rows 533/3608 16s 33.1 rows/s
+gate SFT 14/88 i13 rows 574/3608 17s 33.0 rows/s
+gate SFT 15/88 i14 rows 615/3608 19s 33.1 rows/s
+gate SFT 16/88 i15 rows 656/3608 20s 33.1 rows/s
+gate SFT 17/88 i16 rows 697/3608 21s 33.1 rows/s
+gate SFT 18/88 i17 rows 738/3608 22s 33.4 rows/s
+gate SFT 19/88 i18 rows 779/3608 23s 33.4 rows/s
+gate SFT 20/88 i19 rows 820/3608 25s 33.4 rows/s
+gate SFT 21/88 i20 rows 861/3608 26s 33.4 rows/s
+gate SFT 22/88 i21 rows 902/3608 27s 33.4 rows/s
+gate SFT 23/88 i22 rows 943/3608 28s 33.4 rows/s
+gate SFT 24/88 i23 rows 984/3608 29s 33.4 rows/s
+gate SFT 25/88 i24 rows 1025/3608 30s 33.6 rows/s
+gate SFT 26/88 i25 rows 1066/3608 32s 33.8 rows/s
+gate SFT 27/88 i26 rows 1107/3608 33s 33.8 rows/s
+gate SFT 28/88 i27 rows 1148/3608 34s 33.8 rows/s
+gate SFT 29/88 i28 rows 1189/3608 35s 33.8 rows/s
+gate SFT 30/88 i29 rows 1230/3608 36s 33.8 rows/s
+gate SFT 31/88 i30 rows 1271/3608 37s 34.1 rows/s
+gate SFT 32/88 i31 rows 1312/3608 38s 34.2 rows/s
+gate SFT 33/88 i32 rows 1353/3608 39s 34.7 rows/s
+gate SFT 34/88 i33 rows 1394/3608 40s 34.8 rows/s
+gate SFT 35/88 i34 rows 1435/3608 41s 34.9 rows/s
+gate SFT 36/88 i35 rows 1476/3608 42s 34.9 rows/s
+gate SFT 37/88 i36 rows 1517/3608 43s 35.1 rows/s
+gate SFT 38/88 i37 rows 1558/3608 44s 35.1 rows/s
+gate SFT 39/88 i38 rows 1599/3608 45s 35.2 rows/s
+gate SFT 40/88 i39 rows 1640/3608 47s 35.2 rows/s
+gate SFT 41/88 i40 rows 1681/3608 48s 35.2 rows/s
+gate SFT 42/88 i41 rows 1722/3608 49s 35.4 rows/s
+gate SFT 43/88 i42 rows 1763/3608 50s 35.3 rows/s
+gate SFT 44/88 i43 rows 1804/3608 51s 35.3 rows/s
+gate SFT 45/88 i44 rows 1845/3608 52s 35.4 rows/s
+gate SFT 46/88 i45 rows 1886/3608 53s 35.3 rows/s
+gate SFT 47/88 i46 rows 1927/3608 54s 35.4 rows/s
+gate SFT 48/88 i47 rows 1968/3608 56s 35.3 rows/s
+gate SFT 49/88 i48 rows 2009/3608 57s 35.5 rows/s
+gate SFT 50/88 i49 rows 2050/3608 58s 35.4 rows/s
+gate SFT 51/88 i50 rows 2091/3608 59s 35.5 rows/s
+gate SFT 52/88 i51 rows 2132/3608 60s 35.4 rows/s
+gate SFT 53/88 i52 rows 2173/3608 61s 35.5 rows/s
+gate SFT 54/88 i53 rows 2214/3608 63s 35.4 rows/s
+gate SFT 55/88 i54 rows 2255/3608 63s 35.6 rows/s
+gate SFT 56/88 i55 rows 2296/3608 65s 35.5 rows/s
+gate SFT 57/88 i56 rows 2337/3608 66s 35.5 rows/s
+gate SFT 58/88 i57 rows 2378/3608 67s 35.4 rows/s
+gate SFT 59/88 i58 rows 2419/3608 68s 35.5 rows/s
+gate SFT 60/88 i59 rows 2460/3608 69s 35.5 rows/s
+gate SFT 61/88 i60 rows 2501/3608 70s 35.5 rows/s
+gate SFT 62/88 i61 rows 2542/3608 71s 35.6 rows/s
+gate SFT 63/88 i62 rows 2583/3608 73s 35.6 rows/s
+gate SFT 64/88 i63 rows 2624/3608 74s 35.5 rows/s
+gate SFT 65/88 i64 rows 2665/3608 75s 35.6 rows/s
+gate SFT 66/88 i65 rows 2706/3608 75s 36.1 rows/s
+gate SFT 67/88 i66 rows 2747/3608 76s 36.0 rows/s
+gate SFT 68/88 i67 rows 2788/3608 77s 36.1 rows/s
+gate SFT 69/88 i68 rows 2829/3608 78s 36.4 rows/s
+gate SFT 70/88 i69 rows 2870/3608 79s 36.4 rows/s
+gate SFT 71/88 i70 rows 2911/3608 80s 36.4 rows/s
+gate SFT 72/88 i71 rows 2952/3608 81s 36.5 rows/s
+gate SFT 73/88 i72 rows 2993/3608 82s 36.7 rows/s
+gate SFT 74/88 i73 rows 3034/3608 83s 36.6 rows/s
+gate SFT 75/88 i74 rows 3075/3608 84s 36.6 rows/s
+gate SFT 76/88 i75 rows 3116/3608 85s 36.6 rows/s
+gate SFT 77/88 i76 rows 3157/3608 86s 36.5 rows/s
+gate SFT 78/88 i77 rows 3198/3608 88s 36.5 rows/s
+gate SFT 79/88 i78 rows 3239/3608 89s 36.6 rows/s
+gate SFT 80/88 i79 rows 3280/3608 90s 36.5 rows/s
+gate SFT 81/88 i80 rows 3321/3608 91s 36.6 rows/s
+gate SFT 82/88 i81 rows 3362/3608 92s 36.5 rows/s
+gate SFT 83/88 i82 rows 3403/3608 93s 36.5 rows/s
+gate SFT 84/88 i83 rows 3444/3608 94s 36.5 rows/s
+gate SFT 85/88 i84 rows 3485/3608 96s 36.5 rows/s
+gate SFT 86/88 i85 rows 3526/3608 97s 36.4 rows/s
+gate SFT 87/88 i86 rows 3567/3608 98s 36.4 rows/s
+gate SFT 88/88 i87 rows 3608/3608 99s 36.4 rows/s
+gate SFT: complete; rows 3608/3608; zero push True
+GATE SFT EXIT 0
+loading allenai/OLMo-2-0425-1B-DPO@c4b0485961ab on cuda (bfloat16)
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 19857.19it/s]
+0 rows on disk, 0 batch(es) complete
+gate DPO 1/88 i0 rows 41/3608 2s 23.5 rows/s
+gate DPO 2/88 i1 rows 82/3608 4s 21.8 rows/s
+gate DPO 3/88 i2 rows 123/3608 5s 23.6 rows/s
+gate DPO 4/88 i3 rows 164/3608 7s 25.0 rows/s
+gate DPO 5/88 i4 rows 205/3608 8s 26.4 rows/s
+gate DPO 6/88 i5 rows 246/3608 9s 27.3 rows/s
+gate DPO 7/88 i6 rows 287/3608 10s 28.5 rows/s
+gate DPO 8/88 i7 rows 328/3608 11s 29.0 rows/s
+gate DPO 9/88 i8 rows 369/3608 13s 29.5 rows/s
+gate DPO 10/88 i9 rows 410/3608 14s 29.9 rows/s
+gate DPO 11/88 i10 rows 451/3608 15s 30.2 rows/s
+gate DPO 12/88 i11 rows 492/3608 16s 30.4 rows/s
+gate DPO 13/88 i12 rows 533/3608 17s 30.6 rows/s
+gate DPO 14/88 i13 rows 574/3608 19s 30.8 rows/s
+gate DPO 15/88 i14 rows 615/3608 20s 30.9 rows/s
+gate DPO 16/88 i15 rows 656/3608 21s 31.1 rows/s
+gate DPO 17/88 i16 rows 697/3608 22s 31.2 rows/s
+gate DPO 18/88 i17 rows 738/3608 24s 31.3 rows/s
+gate DPO 19/88 i18 rows 779/3608 25s 31.5 rows/s
+gate DPO 20/88 i19 rows 820/3608 26s 31.6 rows/s
+gate DPO 21/88 i20 rows 861/3608 27s 31.7 rows/s
+gate DPO 22/88 i21 rows 902/3608 28s 31.8 rows/s
+gate DPO 23/88 i22 rows 943/3608 30s 31.8 rows/s
+gate DPO 24/88 i23 rows 984/3608 31s 31.8 rows/s
+gate DPO 25/88 i24 rows 1025/3608 32s 32.1 rows/s
+gate DPO 26/88 i25 rows 1066/3608 33s 32.1 rows/s
+gate DPO 27/88 i26 rows 1107/3608 34s 32.2 rows/s
+gate DPO 28/88 i27 rows 1148/3608 36s 32.2 rows/s
+gate DPO 29/88 i28 rows 1189/3608 37s 32.3 rows/s
+gate DPO 30/88 i29 rows 1230/3608 38s 32.3 rows/s
+gate DPO 31/88 i30 rows 1271/3608 39s 32.3 rows/s
+gate DPO 32/88 i31 rows 1312/3608 40s 32.4 rows/s
+gate DPO 33/88 i32 rows 1353/3608 42s 32.4 rows/s
+gate DPO 34/88 i33 rows 1394/3608 43s 32.4 rows/s
+gate DPO 35/88 i34 rows 1435/3608 44s 32.5 rows/s
+gate DPO 36/88 i35 rows 1476/3608 45s 32.5 rows/s
+gate DPO 37/88 i36 rows 1517/3608 47s 32.5 rows/s
+gate DPO 38/88 i37 rows 1558/3608 48s 32.5 rows/s
+gate DPO 39/88 i38 rows 1599/3608 49s 32.6 rows/s
+gate DPO 40/88 i39 rows 1640/3608 50s 32.6 rows/s
+gate DPO 41/88 i40 rows 1681/3608 52s 32.6 rows/s
+gate DPO 42/88 i41 rows 1722/3608 53s 32.7 rows/s
+gate DPO 43/88 i42 rows 1763/3608 54s 32.8 rows/s
+gate DPO 44/88 i43 rows 1804/3608 55s 32.8 rows/s
+gate DPO 45/88 i44 rows 1845/3608 56s 32.9 rows/s
+gate DPO 46/88 i45 rows 1886/3608 57s 33.0 rows/s
+gate DPO 47/88 i46 rows 1927/3608 58s 33.1 rows/s
+gate DPO 48/88 i47 rows 1968/3608 60s 33.1 rows/s
+gate DPO 49/88 i48 rows 2009/3608 61s 33.1 rows/s
+gate DPO 50/88 i49 rows 2050/3608 62s 33.1 rows/s
+gate DPO 51/88 i50 rows 2091/3608 63s 33.1 rows/s
+gate DPO 52/88 i51 rows 2132/3608 64s 33.1 rows/s
+gate DPO 53/88 i52 rows 2173/3608 66s 33.2 rows/s
+gate DPO 54/88 i53 rows 2214/3608 67s 33.2 rows/s
+gate DPO 55/88 i54 rows 2255/3608 68s 33.2 rows/s
+gate DPO 56/88 i55 rows 2296/3608 69s 33.2 rows/s
+gate DPO 57/88 i56 rows 2337/3608 70s 33.2 rows/s
+gate DPO 58/88 i57 rows 2378/3608 72s 33.2 rows/s
+gate DPO 59/88 i58 rows 2419/3608 73s 33.2 rows/s
+gate DPO 60/88 i59 rows 2460/3608 74s 33.2 rows/s
+gate DPO 61/88 i60 rows 2501/3608 75s 33.2 rows/s
+gate DPO 62/88 i61 rows 2542/3608 77s 33.2 rows/s
+gate DPO 63/88 i62 rows 2583/3608 78s 33.2 rows/s
+gate DPO 64/88 i63 rows 2624/3608 79s 33.2 rows/s
+gate DPO 65/88 i64 rows 2665/3608 80s 33.2 rows/s
+gate DPO 66/88 i65 rows 2706/3608 81s 33.2 rows/s
+gate DPO 67/88 i66 rows 2747/3608 83s 33.2 rows/s
+gate DPO 68/88 i67 rows 2788/3608 84s 33.2 rows/s
+gate DPO 69/88 i68 rows 2829/3608 85s 33.3 rows/s
+gate DPO 70/88 i69 rows 2870/3608 86s 33.3 rows/s
+gate DPO 71/88 i70 rows 2911/3608 87s 33.4 rows/s
+gate DPO 72/88 i71 rows 2952/3608 88s 33.4 rows/s
+gate DPO 73/88 i72 rows 2993/3608 90s 33.4 rows/s
+gate DPO 74/88 i73 rows 3034/3608 91s 33.4 rows/s
+gate DPO 75/88 i74 rows 3075/3608 92s 33.4 rows/s
+gate DPO 76/88 i75 rows 3116/3608 93s 33.4 rows/s
+gate DPO 77/88 i76 rows 3157/3608 94s 33.4 rows/s
+gate DPO 78/88 i77 rows 3198/3608 96s 33.4 rows/s
+gate DPO 79/88 i78 rows 3239/3608 97s 33.5 rows/s
+gate DPO 80/88 i79 rows 3280/3608 98s 33.5 rows/s
+gate DPO 81/88 i80 rows 3321/3608 99s 33.5 rows/s
+gate DPO 82/88 i81 rows 3362/3608 100s 33.5 rows/s
+gate DPO 83/88 i82 rows 3403/3608 101s 33.5 rows/s
+gate DPO 84/88 i83 rows 3444/3608 103s 33.5 rows/s
+gate DPO 85/88 i84 rows 3485/3608 104s 33.5 rows/s
+gate DPO 86/88 i85 rows 3526/3608 105s 33.5 rows/s
+gate DPO 87/88 i86 rows 3567/3608 106s 33.5 rows/s
+gate DPO 88/88 i87 rows 3608/3608 108s 33.5 rows/s
+gate DPO: complete; rows 3608/3608; zero push True
+GATE DPO EXIT 0
+V4 CHAIN END
