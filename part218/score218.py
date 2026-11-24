@@ -203,7 +203,28 @@ def load_run_dir(run_dir: Path) -> dict:
                 'meta': load_meta(model_dir / 'run.json')}
         else:
             out['models'][key] = None
+    _refuse_pre_v4(out)
     return out
+
+
+def _refuse_pre_v4(loaded: dict) -> None:
+    """Review fold (DS r1 F2): a v3 run dir (11-row batches, rows without item_index) must be refused, not
+    rescored as v4 items. item_of's fallback stays for hand-built test fixtures only."""
+    parts = []
+    if loaded.get('pilot'):
+        parts.append(('pilot', loaded['pilot']))
+    parts += [(f'gate/{k}', v) for k, v in (loaded.get('gate') or {}).items() if v]
+    parts += [(k, v) for k, v in (loaded.get('models') or {}).items() if v]
+    for name, part in parts:
+        meta = part.get('meta') or {}
+        rows = meta.get('n_rows_per_batch')
+        if rows is not None and int(rows) != ROWS_PER_BATCH:
+            raise SystemExit(f'{name}: run.json records {rows}-row batches, not {ROWS_PER_BATCH}: '
+                             'not a v4 run directory')
+        legacy = sum(1 for record in (part.get('records') or {}).values()
+                     if 'item_index' not in record)
+        if legacy:
+            raise SystemExit(f'{name}: {legacy} row(s) without item_index: not a v4 run directory')
 
 
 def classify_text(text: str, cache: dict) -> tuple[str, str | None]:
@@ -583,6 +604,8 @@ def zero_row_identity(records: dict, meta: dict) -> dict:
             incomplete += 1
             continue
         n_expected = expected if expected is not None else len(rows)
+        if len(rows) < n_expected:
+            incomplete += 1   # review fold (DS r1 F4): a short item is incomplete too
         if len(rows) >= n_expected and len(set(rows.values())) == 1:
             identical += 1
     return {'items': total,
@@ -841,6 +864,11 @@ def pilot_stop_rule(analysis: dict,
                 f'{key} gate pass fails ({gate["eligible_items"]} of '
                 f'{gate["items"]} items; per opening {gate["per_opening"]}, '
                 f'minimum {GATE_MIN_PER_OPENING})')
+        push = gate_analysis.get('gate_push') or {}
+        if push.get('no_nonzero_push') is not True:
+            # Review fold (GLM r1 F1): the zero push must have been measured, not assumed.
+            reasons.append(f'{key} gate pass has no measured zero push '
+                           f'(no_nonzero_push={push.get("no_nonzero_push")!r})')
     rung_reached = any(stats is not None
                        for stats in analysis['read_rung_stats'].values())
     if not rung_reached:
@@ -943,6 +971,9 @@ def _void_reason(analysis: dict) -> str | None:
     status = str(analysis.get('run_status') or '')
     if status.startswith('stopped'):
         return f'run status {status}: the design voids this model\'s results'
+    if status in ('running', 'incomplete'):
+        # Review fold (DS r1 F5): an interrupted or unfinished run has no end-of-run null; not read.
+        return f'run status {status}: the run did not finish, so its results are not read'
     null = analysis.get('null') or {}
     if 'all_ok' in null and null['all_ok'] is False:
         return 'the no-hook null failed: the design voids this model\'s results'
@@ -1503,7 +1534,8 @@ def print_table(score: dict) -> None:
                          if row['all_identical_rows'])
             all_self = sum(1 for row in analysis['per_item'].values()
                            if row['all_self'])
-            print(f"  {key}: L{analysis['layers'][0]} "
+            layer_label = analysis['layers'][0] if analysis.get('layers') else '?'
+            print(f"  {key}: L{layer_label} "
                   f"{gate['eligible_items']}/{gate['items']} eligible, "
                   f"per opening {gate['per_opening']}, passed={gate['passed']}; "
                   f"{all_id}/{analysis['n_items']} items all-identical, "

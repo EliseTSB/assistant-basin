@@ -176,3 +176,24 @@ return codes and output tails. Result: **22/22 red**.
 None. No real OLMo checkpoint was loaded and no real answer was generated; the only model runs are the
 tiny random model in the smoke, on CPU. Git was not written. The real pilot still needs a GPU/Colab run,
 and the gate passes must exist before the pilot's stop rule can read false.
+
+## Review fold (Journal Claude, 2026-11-24)
+
+Two cold reviews of 82ad07d2, both SHIP-WITH-FIXES: GLM 5.3 (`Journal/reviews/cheap-part218-v4-build-2026-11-24-glm53-r1.md`)
+and DeepSeek V4.1 Flash (`Journal/reviews/cheap-part218-v4-build-2026-11-24-ds-r1.md`). Folded:
+
+- DS F1 (MEDIUM): `read_answers` refuses a row without `item_index` (a v3 row) instead of dropping it as a bad line,
+  so a v4 run can no longer compact registered v3 evidence away; a torn, unparseable line is still dropped. The
+  default `--out` is now `results218-v4`, never the v3 pilot's `results218`.
+- DS F2: the scorer's `load_run_dir` refuses a run dir whose `run.json` records a batch other than 41 rows or whose
+  rows lack `item_index`; `item_of`'s fallback stays for hand-built test fixtures only.
+- GLM F1 / DS F3: the gate pass's `no_nonzero_push` starts as `None` (unmeasured); a rerun that generates nothing
+  carries the previous run's measured probe forward, marked `from_previous_run`. The pilot stop rule now also
+  stops when a gate pass's zero push was never measured.
+- DS F4: `zero_row_identity` counts a short item (fewer batches than expected) as incomplete.
+- DS F5 (pre-existing, folded because the gate pass makes partial runs likelier): a run whose status is `running`
+  or `incomplete` is voided, so its predictions are not read.
+- GLM F2: the scorer's gate-pass print no longer tracebacks on an empty gate dir.
+- DS F6 (no lock on a shared run dir): not folded; the documented procedure runs one process per `--out`.
+
+Suite: 62 passed. Each fold broken once in a copy turned its test red (`build-v4/sabotage_folds.txt`).

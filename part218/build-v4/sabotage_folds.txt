@@ -1,0 +1,10 @@
+ok
+RED   run218.py: test_read_answers_refuses_pre_v4_rows_but_drops_a_torn_line | control: 1 passed in 0.66s | broken: 1 failed in 0.67s
+RED   run218.py: test_default_out_is_a_v4_root_not_the_v3_pilot | control: 1 passed in 0.65s | broken: 1 failed in 0.69s
+RED   run218.py: test_tiny_model_end_to_end_smoke_pilot_gate_and_full | control: 1 passed in 97.51s (0:01:37) | broken: 1 failed in 94.76s (0:01:34)
+RED   score218.py: test_the_scorer_refuses_a_pre_v4_run_dir | control: 1 passed in 0.07s | broken: 1 failed in 0.08s
+RED   score218.py: test_zero_row_identity_counts_a_short_item_as_incomplete | control: 1 passed in 0.06s | broken: 1 failed in 0.08s
+RED   score218.py: test_a_run_that_did_not_finish_is_not_read | control: 1 passed in 0.06s | broken: 1 failed in 0.07s
+RED   score218.py: test_pilot_stop_rule_reads_all_three_gates_and_the_36_of_40_rung | control: 1 passed in 0.06s | broken: 1 failed in 0.07s
+
+[exited with code 0]

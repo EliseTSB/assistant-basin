@@ -485,6 +485,9 @@ def test_tiny_model_end_to_end_smoke_pilot_gate_and_full(tmp_path):
              ['--mode', 'gate', '--model', 'SFT'] + common, tmp_path)
     _run_cli(HERE / 'run218.py',
              ['--mode', 'gate', '--model', 'DPO'] + common, tmp_path)
+    # Review fold (GLM r1 F1 / DS r1 F3): a rerun of a complete gate pass keeps the measured probe.
+    _run_cli(HERE / 'run218.py',
+             ['--mode', 'gate', '--model', 'SFT'] + common, tmp_path)
     _run_cli(HERE / 'run218.py',
              ['--mode', 'full', '--model', 'Instruct',
               '--doses', '0.25,1.0'] + common, tmp_path)
@@ -497,6 +500,10 @@ def test_tiny_model_end_to_end_smoke_pilot_gate_and_full(tmp_path):
         encoding='utf-8'))
     gate_dpo = json.loads((out / 'gate' / 'DPO' / 'run.json').read_text(
         encoding='utf-8'))
+    assert gate_sft['gate']['probe_ran'] is True
+    assert gate_sft['gate']['no_nonzero_push'] is True
+    assert gate_sft['gate'].get('from_previous_run') is True
+    assert gate_dpo['gate']['probe_ran'] is True and gate_dpo['gate']['no_nonzero_push'] is True
     full = json.loads((out / 'Instruct' / 'run.json').read_text(encoding='utf-8'))
     assert pilot['null']['hooked_zero_vs_start']['this_process']['comparisons'] == 0
     assert 'previous run.json record' in pilot['null']['hooked_zero_vs_start'].get('reason', '')
@@ -620,3 +627,34 @@ def test_hit_cap_excludes_an_answer_ending_on_eos_at_the_cap():
     assert at_cap_eos['hit_cap'] is False and at_cap_eos['n_new_tokens'] == 4
     assert at_cap_word['hit_cap'] is True
     assert short['hit_cap'] is False and short['n_new_tokens'] == 2
+
+
+def test_read_answers_refuses_pre_v4_rows_but_drops_a_torn_line(tmp_path):
+    """Review fold (DS r1 F1): a v3 row (no item_index) is refused, never compacted away; a torn
+    (unparseable) line is still dropped as a bad line so a crashed batch regenerates."""
+    path = tmp_path / 'answers.jsonl'
+    v3_row = {'model': 'Instruct', 'layer': 5, 'dose': 0.5, 'prompt_index': 3,
+              'direction_id': 'zero', 'row_id': 'zero', 'text': 'x'}
+    path.write_text(json.dumps(v3_row) + '\n', encoding='utf-8')
+    with pytest.raises(SystemExit) as caught:
+        run218.read_answers(path)
+    assert 'pre-v4' in str(caught.value)
+    path.write_text('{"model": "Instruct", "layer": 5, "do\n', encoding='utf-8')
+    rows, bad = run218.read_answers(path)
+    assert rows == {} and bad == 1
+
+
+def test_default_out_is_a_v4_root_not_the_v3_pilot(monkeypatch):
+    """Review fold (DS r1 F1): the default --out must never be the registered v3 results218."""
+    import argparse
+    captured = {}
+    real_parse = argparse.ArgumentParser.parse_args
+
+    def spy(self, *args, **kwargs):
+        ns = real_parse(self, ['--mode', 'pilot'])
+        captured['out'] = ns.out
+        raise SystemExit(0)
+    monkeypatch.setattr(argparse.ArgumentParser, 'parse_args', spy)
+    with pytest.raises(SystemExit):
+        run218.main([])
+    assert captured['out'] == 'results218-v4'

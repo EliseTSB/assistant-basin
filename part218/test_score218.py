@@ -139,6 +139,7 @@ def fake_analysis(*, gate=True, rungs=None, stats=None, eligible=None,
         'null': {'all_ok': null_ok},
         'run_status': 'complete',
         'read_min_supported': 36,
+        'gate_push': {'no_nonzero_push': True, 'probe_ran': True},
         '_records': records or {},
     }
 
@@ -755,6 +756,14 @@ def test_pilot_stop_rule_reads_all_three_gates_and_the_36_of_40_rung():
     assert any('no gate pass recorded for SFT' in reason
                for reason in stop['reasons'])
 
+    # Review fold (GLM r1 F1): a gate pass whose zero push was never measured stops the run.
+    unmeasured = fake_analysis(gate=True)
+    unmeasured['gate_push'] = {'no_nonzero_push': None, 'probe_ran': False}
+    stop = score218.pilot_stop_rule(pilot_ok, {'SFT': unmeasured, 'DPO': dpo_gate})
+    assert stop['triggered'] is True
+    assert any('SFT gate pass has no measured zero push' in reason
+               for reason in stop['reasons'])
+
 
 # ---------------------------------------------------------------------------
 # End to end on a written run dir
@@ -905,3 +914,43 @@ def test_a_voided_run_is_not_read():
         assert score218.prediction_218_3(None, None, voided)['verdict'] == 'not read'
         assert score218.prediction_218_4(clean, clean, voided)['verdict'] == 'not read'
     assert score218.prediction_218_5(clean, clean, null_failed)['verdict'] == 'failed'
+
+
+def test_zero_row_identity_counts_a_short_item_as_incomplete():
+    """Review fold (DS r1 F4): an item missing one of its 14 batches is incomplete, not complete."""
+    records = {}
+    for item in range(88):
+        for layer in (5, 10):
+            for dose in score218.LADDER:
+                if item == 0 and layer == 5 and dose == 0.25:
+                    continue
+                row = record('Instruct', layer, dose, 'zero', item // 2, SELF,
+                             opening_index=item % 2, token_ids=[7, 8, 9])
+                records[score218.row_key(row)] = row
+    result = score218.zero_row_identity(
+        records, {'layers': [5, 10], 'doses': list(score218.LADDER), 'n_items': 88})
+    assert result['incomplete_items'] == 1
+    assert result['identical_items'] == 87
+
+
+def test_a_run_that_did_not_finish_is_not_read():
+    """Review fold (DS r1 F5): status running or incomplete has no end-of-run null; not read."""
+    for status in ('running', 'incomplete'):
+        unfinished = fake_analysis()
+        unfinished['run_status'] = status
+        assert score218.prediction_218_1(None, None, unfinished)['verdict'] == 'not read'
+        assert score218.prediction_218_3(None, None, unfinished)['verdict'] == 'not read'
+
+
+def test_the_scorer_refuses_a_pre_v4_run_dir(tmp_path):
+    """Review fold (DS r1 F2): a v3 run dir is refused, not rescored as v4 items."""
+    pilot = tmp_path / 'pilot'
+    pilot.mkdir()
+    v3_row = {'mode': 'pilot', 'model': 'Instruct', 'layer': 5, 'dose': 0.5, 'seed': None,
+              'sign': 0, 'direction_id': 'zero', 'prompt_index': 3, 'row_index': 10,
+              'token_ids': [1], 'text': 'I was created by Ai2.'}
+    (pilot / 'answers.jsonl').write_text(json.dumps(v3_row) + '\n', encoding='utf-8')
+    (pilot / 'run.json').write_text(json.dumps({'n_rows_per_batch': 11}), encoding='utf-8')
+    with pytest.raises(SystemExit) as caught:
+        score218.load_run_dir(tmp_path)
+    assert 'not a v4 run directory' in str(caught.value)

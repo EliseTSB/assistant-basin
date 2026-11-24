@@ -493,6 +493,7 @@ def read_answers(path: Path) -> tuple[dict, int]:
     """
     rows: dict = {}
     bad = 0
+    legacy = 0
     if not path.exists():
         return rows, bad
     with path.open(encoding='utf-8') as handle:
@@ -502,11 +503,23 @@ def read_answers(path: Path) -> tuple[dict, int]:
                 continue
             try:
                 record = json.loads(line)
+            except json.JSONDecodeError:
+                bad += 1
+                continue
+            # Review fold (DS r1 F1): a parsed row without item_index is a pre-v4 (v3) row, not a torn
+            # write. Dropping it as a bad line would let the compaction below erase registered v3 evidence.
+            if isinstance(record, dict) and 'item_index' not in record:
+                legacy += 1
+                continue
+            try:
                 key = row_key(record)
-            except (json.JSONDecodeError, KeyError, TypeError, ValueError):
+            except (KeyError, TypeError, ValueError):
                 bad += 1
                 continue
             rows[key] = record
+    if legacy:
+        raise SystemExit(f'{path} holds {legacy} pre-v4 row(s) (no item_index); '
+                         'this is not a v4 run directory. Use a fresh --out.')
     return rows, bad
 
 
@@ -679,7 +692,7 @@ def run_gate_pass(args, model_key: str, run_dir: Path, tok, model, layers,
             'zero_push': True,
             'rows_per_batch': int(batch_rows),
             'vec_abs_max': float(vecs_cpu.abs().max()),
-            'no_nonzero_push': True,
+            'no_nonzero_push': None,   # unmeasured until a probe runs (review fold GLM F1 / DS F3)
             'probe_ran': False,
         },
         'rows_planned': planned_rows('gate', (layer,), (0.0,), len(item_specs)),
@@ -800,6 +813,21 @@ def run_gate_pass(args, model_key: str, run_dir: Path, tok, model, layers,
     if bad_final or len(rows_final) != lines_final:
         write_answers(answers_path, rows_final)
     meta['rows_written'] = len(rows_final)
+    if not meta['gate']['probe_ran']:
+        # Review fold (GLM F1 / DS F3): a rerun that generated nothing keeps the previous run's measured
+        # zero-push probe, marked as carried forward; with no measurement anywhere it stays None.
+        previous_gate = {}
+        if run_json_path.exists():
+            try:
+                previous_gate = (json.loads(run_json_path.read_text(encoding='utf-8'))
+                                 .get('gate') or {})
+            except (json.JSONDecodeError, OSError):
+                previous_gate = {}
+        if previous_gate.get('probe_ran'):
+            for field in ('probe_ran', 'no_nonzero_push', 'pushed_delta_abs_max', 'hook_calls'):
+                if field in previous_gate:
+                    meta['gate'][field] = previous_gate[field]
+            meta['gate']['from_previous_run'] = True
     meta['batches_written'] = batches_written
     meta['batches_resumed'] = batches_resumed
     meta['batches_complete'] = len(completed_batches(rows_final, required_ids))
@@ -1371,7 +1399,7 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument('--mode', choices=('pilot', 'gate', 'full'))
     parser.add_argument('--model', choices=tuple(MODELS))
-    parser.add_argument('--out', default='results218',
+    parser.add_argument('--out', default='results218-v4',
                         help='root for directions.pt and <run>/answers.jsonl')
     parser.add_argument('--device', default='cuda' if torch.cuda.is_available()
                         else 'cpu')
