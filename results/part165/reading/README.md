@@ -8,6 +8,14 @@ measures; capture 0.0 and site 0.0038 relative error, against a threshold of <= 
 The whole job took 8 min 51 s by the Arc's log; the `seconds` field in `reading.json`
 (119 s) stops earlier.
 
+**Note added 2026-11-23 (kernel).** Part 165's generated answers were rerun on the eager attention kernel as
+[Part 210](../../../part210/README.md), after Part 178 found the Arc's default SDPA kernel decoding Qwen3.5 wrongly
+past about 64 cached keys. Four of the six verdicts repeat; 165.1 fails (n+ breaks 1.84 times as often as full,
+against a bar of 2 and a published 2.70, a result inside the batch-shape floor), and 165.5 is not read. This reading
+reads a different run: the effect run is one forward pass per row, not the generated answers, and Part 210 did not
+rerun it, so the numbers here remain the published effect run's. Whether the effect pass itself would move on eager is
+not measured. (Suggested by Orchestrator, 2026-11-23.)
+
 ## What was asked
 
 Part 165 measured, at equal realized write norm, a first-step KL of 0.734 for `n+`
