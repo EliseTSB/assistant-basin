@@ -40,6 +40,53 @@ LAYERS_4L = [12, 18, 24, 27]
 LAYERS_3L = [18, 24, 27]
 ANCHOR_TARGETS_REGIME_D = [" lantern", " judge"]
 
+EXPECTED_R_LENS_SHA256 = "ceef21fc90b17aafa5625f23ab2c1f35be7b2f8b735847cb89bfd2a438caa955"
+EXPECTED_C0_CONSTANTS_SHA256 = "3be64ef80f12d34fc59d7e561d5617dd96ecb605649d5f64e1a98bd974acbe98"
+EXPECTED_C0B_CONSTANTS_SHA256 = "4596f012bb862aec81a0b07a478223ef02dab8bab3706c4f7902c860958a0f2e"
+EXPECTED_C0_BANK_SHA256 = "ab7e04caaf74d4725ed88596da3c39f9303d5e55d7114bbbef1a5500b025ab5f"
+EXPECTED_C0_RECEIPT_UNCOMP_SHA256 = "fe7883be37ecf0b7a0a694fc1dd035215d05c27c297cc0959ef23f379258fb1c"
+EXPECTED_C0B_DESIGN_SHA256 = "8b3efeaeba3febbcc0e9715840a79bea6d6bc29986f7bf21a89cf6080d61a994"
+
+
+def verify_preflight_provenance(
+    bank_path: Path,
+    c0b_constants_path: Path,
+    c0_receipt_path: Path,
+    design_path: Path,
+    bank_meta: dict | None = None,
+) -> dict[str, str]:
+    """Fail-closed preflight before loading weights: verify all frozen inputs exist & match pinned SHA-256s."""
+    for label, p in (
+        ("--bank", bank_path),
+        ("--c0b-constants", c0b_constants_path),
+        ("--c0-receipt", c0_receipt_path),
+        ("--design", design_path),
+    ):
+        if not p.exists():
+            raise FileNotFoundError(f"Preflight failed: missing required {label} file: {p}")
+
+    hashes = {
+        "bank_sha256": sha256_file(bank_path),
+        "c0b_constants_sha256": sha256_file(c0b_constants_path),
+        "c0_receipt_uncompressed_sha256": sha256_uncompressed(c0_receipt_path),
+        "c0b_design_sha256": sha256_file(design_path),
+    }
+    expected = {
+        "bank_sha256": EXPECTED_C0_BANK_SHA256,
+        "c0b_constants_sha256": EXPECTED_C0B_CONSTANTS_SHA256,
+        "c0_receipt_uncompressed_sha256": EXPECTED_C0_RECEIPT_UNCOMP_SHA256,
+        "c0b_design_sha256": EXPECTED_C0B_DESIGN_SHA256,
+    }
+    mismatches = {k: (hashes[k], expected[k]) for k in expected if hashes[k] != expected[k]}
+    if bank_meta is not None:
+        if bank_meta.get("r_lens_sha256") != EXPECTED_R_LENS_SHA256:
+            mismatches["r_lens_sha256"] = (bank_meta.get("r_lens_sha256"), EXPECTED_R_LENS_SHA256)
+        if bank_meta.get("constants_sha256") != EXPECTED_C0_CONSTANTS_SHA256:
+            mismatches["c0_constants_sha256"] = (bank_meta.get("constants_sha256"), EXPECTED_C0_CONSTANTS_SHA256)
+    if mismatches:
+        raise ValueError(f"Preflight SHA-256 mismatch (refusing to load model / run GPU): {mismatches}")
+    return hashes
+
 
 def sha256_uncompressed(path: Path) -> str:
     h = hashlib.sha256()
@@ -248,7 +295,18 @@ def _run_regime_n_block(
                 )
                 rec["prompt_id"] = p["id"]
                 dl_all = tr["logits"] - clean_traces[pi]["logits"]
-                rec["all_16_dlogits"] = [round(float(dl_all[x].item()), 6) for x in target_ids]
+                all16 = [round(float(dl_all[x].item()), 6) for x in target_ids]
+                rec["all_16_dlogits"] = all16
+                if abs(float(rec["exact_dlogit"])) == 0.0:
+                    raise RuntimeError(
+                        f"DEAD ARM CHECK FAILED: Regime N ({positions}) L{L} {arm}[{t_str!r}] prompt {p['id']} "
+                        f"produced exact_dlogit == 0.0"
+                    )
+                if len(all16) > 1 and max(abs(v) for j, v in enumerate(all16) if j != ti) == 0.0:
+                    raise RuntimeError(
+                        f"DEAD ARM CHECK FAILED: Regime N ({positions}) L{L} {arm}[{t_str!r}] prompt {p['id']} "
+                        f"produced all-zero off-target all_16_dlogits"
+                    )
                 rows_p.append(rec)
             rn[arm][t_str] = rows_p
     return rn
@@ -366,6 +424,12 @@ def run_c0b(
             "study": "stage_c0b_olmo3_7b_all_vs_last_and_ridge_whitening",
             "layer": L,
             "in_3L": in_3l,
+            "model_id": MODEL_ID,
+            "model_rev": MODEL_REV,
+            "bank_model": bank["meta"]["model"],
+            "bank_revision": bank["meta"]["revision"],
+            "device": str(device),
+            "torch_version": torch.__version__,
             "bank_fingerprint": bank_fingerprint,
             "bank_sha256": bank_sha,
             "r_lens_sha256": bank["meta"]["r_lens_sha256"],
@@ -561,10 +625,18 @@ def main() -> None:
     ap.add_argument("--smoke", action="store_true")
     args = ap.parse_args()
 
+    bank = torch.load(str(args.bank), map_location="cpu", weights_only=False)
+    if args.smoke:
+        bank_sha = sha256_file(args.bank)
+    else:
+        preflight = verify_preflight_provenance(
+            args.bank, args.c0b_constants, args.c0_receipt, args.design, bank_meta=bank["meta"]
+        )
+        bank_sha = preflight["bank_sha256"]
+        print(f"Preflight provenance OK (all 6 pinned SHA-256 hashes verified).", flush=True)
+
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
-    bank_sha = sha256_file(args.bank)
-    bank = torch.load(str(args.bank), map_location="cpu", weights_only=False)
     print(f"Loading {MODEL_ID}@{MODEL_REV} in bf16 on {args.device} ...", flush=True)
     tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, revision=MODEL_REV)
     model = AutoModelForCausalLM.from_pretrained(

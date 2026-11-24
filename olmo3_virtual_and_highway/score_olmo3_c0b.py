@@ -268,12 +268,72 @@ def ols_slope(xs: list[float], ys: list[float]) -> float:
 # ---------------------------------------------------------------------------
 # Registered schema, axes, and finiteness validation
 # ---------------------------------------------------------------------------
+def validate_c0_reference_receipt(c0_receipt: dict, c0b_const: dict) -> None:
+    """Validate required Stage C0 reference receipt structure on load (never raise raw KeyError)."""
+    errors: list[str] = []
+    if not isinstance(c0_receipt, dict):
+        raise ValueError("C0 reference receipt must be a JSON object")
+    for req_key in ("regime_D", "regime_N", "targets_16", "prompts_8"):
+        if req_key not in c0_receipt:
+            errors.append(f"C0 reference receipt missing top-level key {req_key!r}")
+    if errors:
+        raise ValueError("C0 reference receipt structure check failed: " + "; ".join(errors))
+
+    exp_targets = c0b_const["targets_16"]
+    c0_targets = c0_receipt["targets_16"]
+    if [(t.get("string"), t.get("id"), t.get("domain")) for t in c0_targets] != [
+        (t["string"], t["id"], t["domain"]) for t in exp_targets
+    ]:
+        errors.append("C0 reference targets_16 do not match c0b_prereg_constants.json")
+    exp_prompts = c0b_const["prompts_8"]
+    c0_prompts = c0_receipt["prompts_8"]
+    if [(p.get("id"), p.get("format"), p.get("style"), p.get("text")) for p in c0_prompts] != [
+        (p["id"], p["format"], p["style"], p["text"]) for p in exp_prompts
+    ]:
+        errors.append("C0 reference prompts_8 do not match c0b_prereg_constants.json")
+
+    t_strs = [t["string"] for t in exp_targets]
+    for L in LAYERS_4L:
+        ls = str(L)
+        if ls not in c0_receipt["regime_D"]:
+            errors.append(f"C0 reference missing regime_D[{L}]")
+            continue
+        blk = c0_receipt["regime_D"][ls]
+        for arm in ("R_mf", "direct_matched"):
+            if arm not in blk:
+                errors.append(f"C0 reference regime_D[{L}] missing arm {arm}")
+                continue
+            for ts in t_strs:
+                if ts not in blk[arm]:
+                    errors.append(f"C0 reference regime_D[{L}].{arm} missing {ts!r}")
+    for L in LAYERS_3L:
+        ls = str(L)
+        if ls not in c0_receipt["regime_N"]:
+            errors.append(f"C0 reference missing regime_N[{L}]")
+            continue
+        blk = c0_receipt["regime_N"][ls]
+        if "R_mf" not in blk:
+            errors.append(f"C0 reference regime_N[{L}] missing arm R_mf")
+        else:
+            for ts in t_strs:
+                if ts not in blk["R_mf"] or len(blk["R_mf"][ts]) != EXPECTED_N_PROMPTS:
+                    errors.append(f"C0 reference regime_N[{L}].R_mf[{ts!r}] invalid")
+                elif any(len(r.get("all_16_dlogits", [])) != EXPECTED_N_TARGETS for r in blk["R_mf"][ts]):
+                    errors.append(f"C0 reference regime_N[{L}].R_mf[{ts!r}] missing all_16_dlogits[16]")
+    if errors:
+        raise ValueError("C0 reference receipt structure check failed: " + "; ".join(errors[:10]))
+
+
 def validate_registered_c0b_receipt(receipt: dict, c0b_const: dict) -> None:
-    """Hard-refuse any receipt violating registered Stage C0b axes or parameters."""
+    """Hard-refuse any receipt violating registered Stage C0b axes, order, or forward-count invariants."""
     errors: list[str] = []
     meta = receipt.get("meta", {})
     if meta.get("smoke", False):
         errors.append("meta.smoke is True (smoke receipts cannot be scored as registered Stage C0b)")
+    if meta.get("model") != c0b_const["model"]:
+        errors.append(f"meta.model mismatch: got {meta.get('model')!r}, expected {c0b_const['model']!r}")
+    if meta.get("revision") != c0b_const["revision"]:
+        errors.append(f"meta.revision mismatch: got {meta.get('revision')!r}, expected {c0b_const['revision']!r}")
 
     if [int(L) for L in receipt.get("layers_4L", [])] != LAYERS_4L:
         errors.append(f"layers_4L mismatch: got {receipt.get('layers_4L')}, expected {LAYERS_4L}")
@@ -289,25 +349,31 @@ def validate_registered_c0b_receipt(receipt: dict, c0b_const: dict) -> None:
     exp_targets = c0b_const["targets_16"]
     if len(targets) != EXPECTED_N_TARGETS:
         errors.append(f"target count mismatch: got {len(targets)}, expected {EXPECTED_N_TARGETS}")
-    elif [t["string"] for t in targets] != [t["string"] for t in exp_targets] or [
-        int(t["id"]) for t in targets
-    ] != [int(t["id"]) for t in exp_targets]:
-        errors.append("targets_16 do not match registered c0b_prereg_constants.json")
+    elif [(t.get("string"), int(t.get("id", -1)), t.get("domain")) for t in targets] != [
+        (t["string"], int(t["id"]), t["domain"]) for t in exp_targets
+    ]:
+        errors.append("targets_16 strings/ids/domains do not match registered c0b_prereg_constants.json")
 
     prompts = receipt.get("prompts_8", [])
     exp_prompts = c0b_const["prompts_8"]
     if len(prompts) != EXPECTED_N_PROMPTS:
         errors.append(f"prompt count mismatch: got {len(prompts)}, expected {EXPECTED_N_PROMPTS}")
-    elif [p["id"] for p in prompts] != [p["id"] for p in exp_prompts]:
-        errors.append("prompts_8 ids do not match registered c0b_prereg_constants.json")
+    else:
+        for pi, (got_p, exp_p) in enumerate(zip(prompts, exp_prompts)):
+            for k in ("id", "format", "style", "text"):
+                if got_p.get(k) != exp_p[k]:
+                    errors.append(f"prompts_8[{pi}].{k} mismatch: got {got_p.get(k)!r}, expected {exp_p[k]!r}")
+            if "n_tokens" in got_p and int(got_p["n_tokens"]) != int(exp_p["n_tokens"]):
+                errors.append(f"prompts_8[{pi}].n_tokens mismatch: got {got_p['n_tokens']}, expected {exp_p['n_tokens']}")
 
     if int(meta.get("k_dm", -1)) != EXPECTED_K_DM:
         errors.append(f"meta.k_dm mismatch: got {meta.get('k_dm')}, expected {EXPECTED_K_DM}")
 
     if errors:
-        raise ValueError("Registered Stage C0b schema/axes check failed: " + "; ".join(errors))
+        raise ValueError("Registered Stage C0b schema/axes check failed: " + "; ".join(errors[:12]))
 
     t_strs = [t["string"] for t in targets]
+    exp_pids = [p["id"] for p in exp_prompts]
     post_norms = receipt.get("post_mlp_norms", {})
     shams = receipt.get("shams", {})
     rd_all = receipt.get("regime_D_all", {})
@@ -322,6 +388,14 @@ def validate_registered_c0b_receipt(receipt: dict, c0b_const: dict) -> None:
             for L in LAYERS_4L:
                 if str(L) not in shams[mode]:
                     errors.append(f"missing shams[{mode!r}][L{L}]")
+
+    actual_d_all_capped = 0
+    actual_d_anc_capped = 0
+
+    def _check_prompt_ids(rows: list[dict], ctx: str) -> None:
+        for pi, r in enumerate(rows):
+            if r.get("prompt_id") != exp_pids[pi]:
+                errors.append(f"{ctx}[{pi}].prompt_id={r.get('prompt_id')!r} != expected {exp_pids[pi]!r}")
 
     for L in LAYERS_4L:
         ls = str(L)
@@ -341,6 +415,9 @@ def validate_registered_c0b_receipt(receipt: dict, c0b_const: dict) -> None:
                 errors.append(f"regime_D_all[{L}].positions != 'all'")
             if abs(float(blk.get("target_direct_linear", float("nan"))) - 3.0) > 1e-9:
                 errors.append(f"regime_D_all[{L}].target_direct_linear != 3.0")
+            cap_val = float(blk.get("dose_cap", float("nan")))
+            if not math.isfinite(cap_val) or abs(cap_val - 3.0 * norm_l) > 1e-4:
+                errors.append(f"regime_D_all[{L}].dose_cap={cap_val} != 3*norm={3.0 * norm_l:.6f}")
             for arm in ("R_mf", "logit_lens", "direct_matched"):
                 if arm not in blk:
                     errors.append(f"regime_D_all[{L}] missing arm {arm}")
@@ -353,8 +430,16 @@ def validate_registered_c0b_receipt(receipt: dict, c0b_const: dict) -> None:
                     if arm == "direct_matched":
                         if len(item) != EXPECTED_K_DM or any(len(d) != EXPECTED_N_PROMPTS for d in item):
                             errors.append(f"regime_D_all[{L}].direct_matched[{ts!r}] shape != (4,8)")
-                    elif len(item) != EXPECTED_N_PROMPTS:
-                        errors.append(f"regime_D_all[{L}].{arm}[{ts!r}] len != 8")
+                        else:
+                            for k, d in enumerate(item):
+                                _check_prompt_ids(d, f"regime_D_all.L{L}.dm.{ts}[{k}]")
+                                actual_d_all_capped += sum(1 for r in d if r.get("capped", False))
+                    else:
+                        if len(item) != EXPECTED_N_PROMPTS:
+                            errors.append(f"regime_D_all[{L}].{arm}[{ts!r}] len != 8")
+                        else:
+                            _check_prompt_ids(item, f"regime_D_all.L{L}.{arm}.{ts}")
+                            actual_d_all_capped += sum(1 for r in item if r.get("capped", False))
 
         # Regime D "last" full-pair anchor
         if ls not in rd_anc:
@@ -365,6 +450,9 @@ def validate_registered_c0b_receipt(receipt: dict, c0b_const: dict) -> None:
                 errors.append(f"regime_D_last_anchor[{L}].positions != 'last'")
             if abs(float(blk.get("target_direct_linear", float("nan"))) - 3.0) > 1e-9:
                 errors.append(f"regime_D_last_anchor[{L}].target_direct_linear != 3.0")
+            cap_val = float(blk.get("dose_cap", float("nan")))
+            if not math.isfinite(cap_val) or abs(cap_val - 3.0 * norm_l) > 1e-4:
+                errors.append(f"regime_D_last_anchor[{L}].dose_cap={cap_val} != 3*norm={3.0 * norm_l:.6f}")
             for arm in ("R_mf", "direct_matched"):
                 if arm not in blk:
                     errors.append(f"regime_D_last_anchor[{L}] missing arm {arm}")
@@ -377,8 +465,16 @@ def validate_registered_c0b_receipt(receipt: dict, c0b_const: dict) -> None:
                     if arm == "direct_matched":
                         if len(item) != EXPECTED_K_DM or any(len(d) != EXPECTED_N_PROMPTS for d in item):
                             errors.append(f"regime_D_last_anchor[{L}].direct_matched[{ts!r}] shape != (4,8)")
-                    elif len(item) != EXPECTED_N_PROMPTS:
-                        errors.append(f"regime_D_last_anchor[{L}].{arm}[{ts!r}] len != 8")
+                        else:
+                            for k, d in enumerate(item):
+                                _check_prompt_ids(d, f"regime_D_last_anchor.L{L}.dm.{ts}[{k}]")
+                                actual_d_anc_capped += sum(1 for r in d if r.get("capped", False))
+                    else:
+                        if len(item) != EXPECTED_N_PROMPTS:
+                            errors.append(f"regime_D_last_anchor[{L}].{arm}[{ts!r}] len != 8")
+                        else:
+                            _check_prompt_ids(item, f"regime_D_last_anchor.L{L}.{arm}.{ts}")
+                            actual_d_anc_capped += sum(1 for r in item if r.get("capped", False))
 
     for L in LAYERS_3L:
         ls = str(L)
@@ -407,11 +503,85 @@ def validate_registered_c0b_receipt(receipt: dict, c0b_const: dict) -> None:
                     item = blk[arm][ts]
                     if len(item) != EXPECTED_N_PROMPTS:
                         errors.append(f"{reg_name}[{L}].{arm}[{ts!r}] len != 8")
-                    elif any(len(r.get("all_16_dlogits", [])) != EXPECTED_N_TARGETS for r in item):
-                        errors.append(f"{reg_name}[{L}].{arm}[{ts!r}] missing all_16_dlogits[16]")
+                    else:
+                        _check_prompt_ids(item, f"{reg_name}.L{L}.{arm}.{ts}")
+                        if any(len(r.get("all_16_dlogits", [])) != EXPECTED_N_TARGETS for r in item):
+                            errors.append(f"{reg_name}[{L}].{arm}[{ts!r}] missing all_16_dlogits[16]")
+
+    # Exact forward-count accounting
+    fc = meta.get("forward_counts")
+    if not isinstance(fc, dict):
+        errors.append("meta.forward_counts missing or not a dict")
+    else:
+        if fc.get("clean") != 8:
+            errors.append(f"forward_counts.clean={fc.get('clean')} != 8")
+        if fc.get("sham") != 8:
+            errors.append(f"forward_counts.sham={fc.get('sham')} != 8")
+        if fc.get("regime_D_all_capped_skipped") != actual_d_all_capped:
+            errors.append(
+                f"forward_counts.regime_D_all_capped_skipped={fc.get('regime_D_all_capped_skipped')} "
+                f"!= actual capped {actual_d_all_capped}"
+            )
+        if int(fc.get("regime_D_all", -1)) + actual_d_all_capped != 3072:
+            errors.append(f"forward_counts.regime_D_all + capped != 3072")
+        if fc.get("regime_D_last_anchor_capped_skipped") != actual_d_anc_capped:
+            errors.append(
+                f"forward_counts.regime_D_last_anchor_capped_skipped={fc.get('regime_D_last_anchor_capped_skipped')} "
+                f"!= actual capped {actual_d_anc_capped}"
+            )
+        if int(fc.get("regime_D_last_anchor", -1)) + actual_d_anc_capped != 320:
+            errors.append(f"forward_counts.regime_D_last_anchor + capped != 320")
+        if fc.get("regime_N_last") != 1152:
+            errors.append(f"forward_counts.regime_N_last={fc.get('regime_N_last')} != 1152")
+        if fc.get("regime_N_all") != 768:
+            errors.append(f"forward_counts.regime_N_all={fc.get('regime_N_all')} != 768")
+        exp_tot = (
+            int(fc.get("clean", 0))
+            + int(fc.get("sham", 0))
+            + int(fc.get("regime_D_all", 0))
+            + int(fc.get("regime_D_last_anchor", 0))
+            + int(fc.get("regime_N_last", 0))
+            + int(fc.get("regime_N_all", 0))
+        )
+        if meta.get("total_forwards_executed") != exp_tot:
+            errors.append(f"meta.total_forwards_executed={meta.get('total_forwards_executed')} != {exp_tot}")
 
     if errors:
         raise ValueError("Registered Stage C0b structure/parameter check failed: " + "; ".join(errors[:12]))
+
+
+def audit_regime_n_arm_liveness(receipt: dict) -> list[str]:
+    """Fail closed against dead/zeroed Regime-N arms (R_mf, R_ridge, logit_lens)."""
+    issues: list[str] = []
+    t_strs = [t["string"] for t in receipt["targets_16"]]
+    for reg_name, arms in (
+        ("regime_N_last", ("R_mf", "R_ridge", "logit_lens")),
+        ("regime_N_all", ("R_mf", "R_ridge")),
+    ):
+        for arm in arms:
+            per_t_self: dict[str, list[float]] = {ts: [] for ts in t_strs}
+            for L in LAYERS_3L:
+                ls = str(L)
+                for ti, ts in enumerate(t_strs):
+                    for pi, r in enumerate(receipt[reg_name][ls][arm][ts]):
+                        ex = float(r["exact_dlogit"])
+                        per_t_self[ts].append(ex)
+                        if not math.isfinite(ex) or abs(ex) == 0.0:
+                            issues.append(f"{reg_name}.L{L}.{arm}.{ts}[{pi}].exact_dlogit==0")
+                            if len(issues) >= 20:
+                                return issues
+                        off = [abs(float(v)) for j, v in enumerate(r["all_16_dlogits"]) if j != ti]
+                        if not off or max(off) == 0.0:
+                            issues.append(f"{reg_name}.L{L}.{arm}.{ts}[{pi}].offtarget_all_zero")
+                            if len(issues) >= 20:
+                                return issues
+            for ts in t_strs:
+                m_self = mean(per_t_self[ts])
+                if not (math.isfinite(m_self) and m_self > 0.0):
+                    issues.append(f"{reg_name}.{arm}.{ts}.mean_self_dlogit<=0 ({m_self})")
+                    if len(issues) >= 20:
+                        return issues
+    return issues
 
 
 def audit_all_c0b_traces_finite(receipt: dict) -> list[str]:
@@ -555,7 +725,8 @@ def score_c0b(
     c0_const = json.loads(c0_constants_path.read_text(encoding="utf-8"))
     c0_receipt = load_json_maybe_gz(c0_receipt_path)
 
-    # Hard-refuse truncated / smoke / parameter-mismatched receipts
+    # Hard-refuse truncated / smoke / parameter-mismatched receipts & invalid C0 reference
+    validate_c0_reference_receipt(c0_receipt, c0b_const)
     validate_registered_c0b_receipt(receipt, c0b_const)
 
     c0b_const_sha = sha256_file(c0b_constants_path)
@@ -583,6 +754,7 @@ def score_c0b(
     chat_idxs = [i for i, p in enumerate(prompts) if p["format"] == "chatml"]
     narr_idxs = [i for i, p in enumerate(prompts) if p["style"] == "narrative"]
     anal_idxs = [i for i, p in enumerate(prompts) if p["style"] == "analytical"]
+    meta = receipt["meta"]
 
     # Frozen pred_gap_D3 map from c0_prereg_constants.json
     pred_gap_map: dict[tuple[int, str], float] = {}
@@ -593,10 +765,39 @@ def score_c0b(
     # =========================================================================
     # GATE C0b.0 (Global Clauses 1-4a + C0b.1b-only Drift Clause 4b)
     # =========================================================================
+    # Audit finiteness FIRST and return blocked scorecard immediately before touching trace fields
     non_finite_issues = audit_all_c0b_traces_finite(receipt)
     all_finite = len(non_finite_issues) == 0
+    if not all_finite:
+        gate_c0b_0 = {
+            "global_passed": False,
+            "all_traces_finite": False,
+            "non_finite_issues_sample": non_finite_issues,
+            "C0b_0_1_sham": {"passed": False, "blocked_reason": "non_finite_traces"},
+            "C0b_0_2_telescoping": {"passed": False, "blocked_reason": "non_finite_traces"},
+            "C0b_0_3_cap_and_denom": {"passed": False, "blocked_reason": "non_finite_traces"},
+            "C0b_0_4a_global_provenance": {"passed": False, "blocked_reason": "non_finite_traces"},
+            "C0b_0_4b_c0b1b_receipt_drift": {"passed": False, "blocked_reason": "non_finite_traces"},
+        }
+        return {
+            "schema_version": "stage_c0b_scorecard_v1",
+            "meta": meta,
+            "verdicts": {
+                "C0b.0_global": "FAIL",
+                "C0b.0.4b_drift": "BLOCKED_BY_C0b.0",
+                "C0b.1a": "BLOCKED_BY_C0b.0",
+                "C0b.1b": "BLOCKED_BY_C0b.0",
+                "C0b.2a": "BLOCKED_BY_C0b.0",
+                "C0b.2b": "BLOCKED_BY_C0b.0",
+            },
+            "gate_C0b_0": gate_c0b_0,
+            "C0b_1a": {"verdict": "BLOCKED_BY_C0b.0"},
+            "C0b_1b": {"verdict": "BLOCKED_BY_C0b.0"},
+            "C0b_2a": {"verdict": "BLOCKED_BY_C0b.0"},
+            "C0b_2b": {"verdict": "BLOCKED_BY_C0b.0"},
+        }
 
-    # C0b.0.1: Zero-dose shams (4L x 2 modes) + required movement checks (4L x 2 modes)
+    # C0b.0.1: Zero-dose shams (4L x 2 modes) + required movement checks + Regime-N arm liveness
     sham_last = {str(L): float(receipt["shams"]["last"][str(L)]) for L in LAYERS_4L}
     sham_all = {str(L): float(receipt["shams"]["all"][str(L)]) for L in LAYERS_4L}
     sham_move = receipt.get("sham_movement_check")
@@ -610,10 +811,13 @@ def score_c0b(
         )
         for mode in ("last", "all")
     )
+    dead_arm_issues = audit_regime_n_arm_liveness(receipt)
+    arm_liveness_ok = len(dead_arm_issues) == 0
     c0b_0_1_pass = (
         all(math.isfinite(v) and v == 0.0 for v in sham_last.values())
         and all(math.isfinite(v) and v == 0.0 for v in sham_all.values())
         and move_ok
+        and arm_liveness_ok
     )
 
     # C0b.0.2: Quantile telescoping across ALL retained intervened traces (5,312 - capped)
@@ -760,7 +964,6 @@ def score_c0b(
         c0b_0_3_pass = False
 
     # C0b.0.4a: Global frozen SHA-256 provenance
-    meta = receipt["meta"]
     prov_checks = {
         "r_lens": meta.get("r_lens_sha256") == EXPECTED_R_LENS_SHA256,
         "c0_constants_meta": meta.get("c0_constants_sha256") == EXPECTED_C0_CONSTANTS_SHA256,
@@ -777,41 +980,14 @@ def score_c0b(
 
     c0b_0_global_passed = all_finite and c0b_0_1_pass and c0b_0_2_pass and c0b_0_3_pass and c0b_0_4a_pass
 
-    # If any non-finite traces exist, return fail-closed blocked scorecard immediately
-    if not all_finite:
-        gate_c0b_0 = {
-            "global_passed": False,
-            "all_traces_finite": False,
-            "non_finite_issues_sample": non_finite_issues,
-            "C0b_0_1_sham": {"passed": c0b_0_1_pass, "last": sham_last, "all": sham_all, "movement_check_passed": move_ok},
-            "C0b_0_2_telescoping": {"passed": False, "n_traces": len(all_tel), "expected_n_traces": expected_tel_n},
-            "C0b_0_3_cap_and_denom": {"passed": False, "max_cap_hit_rate": round(max_cap_rate, 6)},
-            "C0b_0_4a_global_provenance": {"passed": c0b_0_4a_pass, "checks": prov_checks},
-            "C0b_0_4b_c0b1b_receipt_drift": {"passed": False, "blocked_reason": "non_finite_traces"},
-        }
-        return {
-            "schema_version": "stage_c0b_scorecard_v1",
-            "meta": meta,
-            "verdicts": {
-                "C0b.0_global": "FAIL",
-                "C0b.0.4b_drift": "BLOCKED_BY_C0b.0",
-                "C0b.1a": "BLOCKED_BY_C0b.0",
-                "C0b.1b": "BLOCKED_BY_C0b.0",
-                "C0b.2a": "BLOCKED_BY_C0b.0",
-                "C0b.2b": "BLOCKED_BY_C0b.0",
-            },
-            "gate_C0b_0": gate_c0b_0,
-            "C0b_1a": {"verdict": "BLOCKED_BY_C0b.0"},
-            "C0b_1b": {"verdict": "BLOCKED_BY_C0b.0"},
-            "C0b_2a": {"verdict": "BLOCKED_BY_C0b.0"},
-            "C0b_2b": {"verdict": "BLOCKED_BY_C0b.0"},
-        }
-
     # C0b.0.4b: Receipt-pairing drift check (gates C0b.1b ONLY; never voids live-to-live C0b.2)
     # (i) 320 live Regime-D "last" full-pair anchor traces (" lantern", " judge") vs c0_receipt
+    #     Using the registered frozen capped-cell rule: drop prompt from BOTH live & C0 if capped;
+    #     require >= 3/4 Bare and >= 3/4 ChatML retained per (L, anchor_target) cell.
     anc_gap_diffs: dict[str, float] = {}
     anc_attn_diffs: dict[str, float] = {}
-    anc_capped = 0
+    anc_capped_prompts = 0
+    anc_cell_failures: list[str] = []
     for ts in EXPECTED_ANCHOR_TARGETS:
         live_gaps, c0_gaps = [], []
         live_attns, c0_attns = [], []
@@ -819,23 +995,36 @@ def score_c0b(
             ls = str(L)
             live_blk = receipt["regime_D_last_anchor"][ls]
             c0_blk = c0_receipt["regime_D"][ls]
+            keep_anc: list[int] = []
             for pi in range(EXPECTED_N_PROMPTS):
                 lr = live_blk["R_mf"][ts][pi]
                 ldms = [live_blk["direct_matched"][ts][k][pi] for k in range(EXPECTED_K_DM)]
-                if lr.get("capped", False) or any(d.get("capped", False) for d in ldms):
-                    anc_capped += 1
-                    continue
                 cr = c0_blk["R_mf"][ts][pi]
                 cdms = [c0_blk["direct_matched"][ts][k][pi] for k in range(EXPECTED_K_DM)]
+                if (
+                    lr.get("capped", False)
+                    or any(d.get("capped", False) for d in ldms)
+                    or cr.get("capped", False)
+                    or any(d.get("capped", False) for d in cdms)
+                ):
+                    anc_capped_prompts += 1
+                    continue
+                keep_anc.append(pi)
                 live_gaps.append(float(lr["exact_dlogit"]) - mean([float(d["exact_dlogit"]) for d in ldms]))
                 c0_gaps.append(float(cr["exact_dlogit"]) - mean([float(d["exact_dlogit"]) for d in cdms]))
                 live_attns.append(float(lr["sum_attn"]) - mean([float(d["sum_attn"]) for d in ldms]))
                 c0_attns.append(float(cr["sum_attn"]) - mean([float(d["sum_attn"]) for d in cdms]))
-        anc_gap_diffs[ts] = round(abs(mean(live_gaps) - mean(c0_gaps)), 6) if live_gaps else float("inf")
-        anc_attn_diffs[ts] = round(abs(mean(live_attns) - mean(c0_attns)), 6) if live_attns else float("inf")
+            n_ab = sum(1 for pi in keep_anc if pi in bare_idxs)
+            n_ac = sum(1 for pi in keep_anc if pi in chat_idxs)
+            if n_ab < 3 or n_ac < 3:
+                anc_cell_failures.append(f"L{L}.{ts}:bare={n_ab}/4,chat={n_ac}/4")
+        anc_gap_diffs[ts] = round(abs(mean(live_gaps) - mean(c0_gaps)), 6) if live_gaps else None
+        anc_attn_diffs[ts] = round(abs(mean(live_attns) - mean(c0_attns)), 6) if live_attns else None
 
-    max_anc_gap_diff = max(anc_gap_diffs.values())
-    max_anc_attn_diff = max(anc_attn_diffs.values())
+    valid_gd = [v for v in anc_gap_diffs.values() if v is not None]
+    valid_ad = [v for v in anc_attn_diffs.values() if v is not None]
+    max_anc_gap_diff = max(valid_gd) if len(valid_gd) == len(EXPECTED_ANCHOR_TARGETS) else None
+    max_anc_attn_diff = max(valid_ad) if len(valid_ad) == len(EXPECTED_ANCHOR_TARGETS) else None
 
     # (ii) All 384 live R_mf Regime-N "last" traces (5,760 off-target cells) vs c0_receipt
     live_rmf_n_stats = compute_regime_n_bleed_stats(receipt["regime_N_last"], "R_mf", t_strs, t_domains, LAYERS_3L)
@@ -864,9 +1053,9 @@ def score_c0b(
                             max_offtarget_cell_diff = diff
 
     c0b_0_4b_pass = (
-        (anc_capped == 0)
-        and (max_anc_gap_diff <= 0.05)
-        and (max_anc_attn_diff <= 0.05)
+        (len(anc_cell_failures) == 0)
+        and (max_anc_gap_diff is not None and max_anc_gap_diff <= 0.05)
+        and (max_anc_attn_diff is not None and max_anc_attn_diff <= 0.05)
         and (max_b_cross_diff <= 0.02)
         and (max_offtarget_cell_diff <= 0.07)
     )
@@ -880,6 +1069,8 @@ def score_c0b(
             "last": sham_last,
             "all": sham_all,
             "movement_check_passed": move_ok,
+            "regime_n_arm_liveness_passed": arm_liveness_ok,
+            "dead_arm_issues_sample": dead_arm_issues,
         },
         "C0b_0_2_telescoping": {
             "passed": c0b_0_2_pass,
@@ -915,7 +1106,8 @@ def score_c0b(
         "C0b_0_4b_c0b1b_receipt_drift": {
             "passed": c0b_0_4b_pass,
             "anchor_targets": EXPECTED_ANCHOR_TARGETS,
-            "anchor_capped_count": anc_capped,
+            "anchor_capped_prompts": anc_capped_prompts,
+            "anchor_cell_failures": anc_cell_failures,
             "max_anchor_gap_diff": round(max_anc_gap_diff, 6),
             "anchor_gap_diff_by_target": anc_gap_diffs,
             "max_anchor_attn_gap_diff": round(max_anc_attn_diff, 6),
@@ -926,6 +1118,26 @@ def score_c0b(
             "max_R_mf_all16_cell_diff": round(max_all16_cell_diff, 6),
         },
     }
+
+    # Fail closed immediately when Global Gate C0b.0 (1-4a) fails (prevents empty-cell crashes & honors gate rule)
+    if not c0b_0_global_passed:
+        return {
+            "schema_version": "stage_c0b_scorecard_v1",
+            "meta": meta,
+            "verdicts": {
+                "C0b.0_global": "FAIL",
+                "C0b.0.4b_drift": "BLOCKED_BY_C0b.0",
+                "C0b.1a": "BLOCKED_BY_C0b.0",
+                "C0b.1b": "BLOCKED_BY_C0b.0",
+                "C0b.2a": "BLOCKED_BY_C0b.0",
+                "C0b.2b": "BLOCKED_BY_C0b.0",
+            },
+            "gate_C0b_0": gate_c0b_0,
+            "C0b_1a": {"verdict": "BLOCKED_BY_C0b.0"},
+            "C0b_1b": {"verdict": "BLOCKED_BY_C0b.0"},
+            "C0b_2a": {"verdict": "BLOCKED_BY_C0b.0"},
+            "C0b_2b": {"verdict": "BLOCKED_BY_C0b.0"},
+        }
 
     # =========================================================================
     # C0b.1a: Two-sided R_out calibration under positions="all"

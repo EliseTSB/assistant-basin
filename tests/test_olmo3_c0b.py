@@ -1,4 +1,4 @@
-"""Unit, integration, fail-closed, and stdlib-determinism tests for Stage C0b."""
+"""Unit, integration, boundary/mutation-killing, fail-closed, and stdlib-determinism tests for Stage C0b."""
 from __future__ import annotations
 
 import ast
@@ -20,6 +20,7 @@ from olmo3_virtual_and_highway.run_olmo3_c0b import (
     LAYERS_4L,
     post_norm_inject_hook,
     run_c0b,
+    verify_preflight_provenance,
 )
 from olmo3_virtual_and_highway.score_olmo3_c0b import (
     EXPECTED_C0B_CONSTANTS_SHA256,
@@ -99,7 +100,6 @@ class _MockOlmo3Model(nn.Module):
 
 class _MockTokenizer:
     def encode(self, text: str, return_tensors: str = "pt", add_special_tokens: bool = False):
-        # Deterministic 6-token sequence so causal cross-position attention is active
         ids = [(sum(ord(c) for c in w) % 60) + 1 for w in text.split()[:6]]
         while len(ids) < 6:
             ids.append(3)
@@ -159,17 +159,28 @@ def _make_mock_bank(d: int = 16) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# 1. Runner tests: all vs last telescoping, shams, hook validation, provenance resume
+# 1. Runner tests: telescoping, shams, hook validation, preflight, provenance
 # ---------------------------------------------------------------------------
-def test_runner_all_vs_last_telescoping_and_checkpoint_refusal(tmp_path: Path):
+def test_runner_all_vs_last_telescoping_preflight_and_checkpoint_refusal(tmp_path: Path):
     model = _MockOlmo3Model(n_layers=20, d=16, vocab=64)
     model.eval()
     tok = _MockTokenizer()
     bank = _make_mock_bank(d=16)
-    # Match model lm_head rows to bank u_vectors so exact_dlogit == recon_dlogit
     with torch.no_grad():
         for i, t in enumerate(bank["targets_16"]):
             model.lm_head.weight[t["id"]] = bank["u_vectors"][i] * model.model.norm.weight
+
+    # Preflight refuses missing file or wrong hash BEFORE loading weights
+    with pytest.raises(FileNotFoundError):
+        verify_preflight_provenance(
+            tmp_path / "missing.pt", C0B_CONST_PATH, C0_RECEIPT_PATH, C0B_DESIGN_PATH
+        )
+    bad_design = tmp_path / "bad_design.md"
+    bad_design.write_text("tampered\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="SHA-256 mismatch"):
+        verify_preflight_provenance(
+            C0B_CONST_PATH, C0B_CONST_PATH, C0_RECEIPT_PATH, bad_design
+        )
 
     # Hook validation checks
     with pytest.raises(ValueError):
@@ -180,60 +191,47 @@ def test_runner_all_vs_last_telescoping_and_checkpoint_refusal(tmp_path: Path):
             pass
 
     rec = run_c0b(
-        model,
-        tok,
-        bank,
-        tmp_path / "run1",
-        device="cpu",
-        smoke=True,
-        bank_file_sha256="deadbeef",
+        model, tok, bank, tmp_path / "run1", device="cpu", smoke=True, bank_file_sha256="deadbeef"
     )
-    # Exact shams == 0.0 on both modes & both layers
     for mode in ("last", "all"):
         for L in ("12", "18"):
             assert rec["shams"][mode][L] == 0.0
             assert rec["sham_movement_check"][mode][L] > 0.0
 
-    # Exact 4-term telescoping holds under BOTH "all" and "last" on multi-token causal attn!
     t_all = rec["regime_D_all"]["12"]["R_mf"][" dolphin"][0]
     t_last = rec["regime_D_last_anchor"]["12"]["R_mf"][" dolphin"][0]
     assert t_all["telescoping_err"] < 1e-4
     assert t_last["telescoping_err"] < 1e-4
-    # Multi-token causal attention makes sum_attn strictly different between "all" and "last"!
     assert abs(t_all["sum_attn"] - t_last["sum_attn"]) > 1e-4
 
     # Verified checkpoint resume succeeds cleanly
     rec2 = run_c0b(
-        model,
-        tok,
-        bank,
-        tmp_path / "run1",
-        device="cpu",
-        smoke=True,
-        bank_file_sha256="deadbeef",
+        model, tok, bank, tmp_path / "run1", device="cpu", smoke=True, bank_file_sha256="deadbeef"
     )
     assert rec2["meta"]["total_forwards_executed"] == rec["meta"]["total_forwards_executed"]
 
-    # Mutated bank_file_sha256 triggers hard provenance refusal!
+    # Mutated bank_file_sha256 or device triggers hard provenance refusal
     with pytest.raises(RuntimeError, match="PROVENANCE REFUSAL"):
         run_c0b(
-            model,
-            tok,
-            bank,
-            tmp_path / "run1",
-            device="cpu",
-            smoke=True,
-            bank_file_sha256="mutated_sha",
+            model, tok, bank, tmp_path / "run1", device="cpu", smoke=True, bank_file_sha256="mutated_sha"
+        )
+    bank_mut = copy.deepcopy(bank)
+    bank_mut["meta"]["model"] = "wrong-model"
+    with pytest.raises(RuntimeError, match="PROVENANCE REFUSAL"):
+        run_c0b(
+            model, tok, bank_mut, tmp_path / "run1", device="cpu", smoke=True, bank_file_sha256="deadbeef"
         )
 
 
 # ---------------------------------------------------------------------------
-# Helper: construct a full, realistic registered Stage C0b synthetic receipt
-# paired seamlessly with the REAL published c0_receipt.json.gz!
+# Helper: construct a full registered Stage C0b synthetic receipt
 # ---------------------------------------------------------------------------
 def _make_full_synthetic_c0b_receipt(
     r_all_by_layer_fmt: dict[tuple[int, str], float] | None = None,
+    r_all_target_offsets: list[float] | None = None,
+    attn_share_by_target: list[float] | None = None,
     attn_share_target: float = 0.80,
+    ridge_scale_by_target: list[float] | None = None,
     ridge_scale_vs_rmf: float = 0.25,
     ridge_self_mult: float = 1.0812,
     drift_n_offtarget: float = 0.0,
@@ -241,7 +239,6 @@ def _make_full_synthetic_c0b_receipt(
     with gzip.open(C0_RECEIPT_PATH, "rt", encoding="utf-8") as f:
         c0_rec = json.load(f)
     c0_const = json.loads(C0_CONST_PATH.read_text(encoding="utf-8"))
-    c0b_const = json.loads(C0B_CONST_PATH.read_text(encoding="utf-8"))
 
     targets = c0_rec["targets_16"]
     t_strs = [t["string"] for t in targets]
@@ -254,6 +251,12 @@ def _make_full_synthetic_c0b_receipt(
 
     if r_all_by_layer_fmt is None:
         r_all_by_layer_fmt = {(L, fmt): 0.90 for L in LAYERS_4L for fmt in ("bare", "chatml")}
+    if r_all_target_offsets is None:
+        r_all_target_offsets = [0.002 * (ti - 7.5) for ti in range(16)]
+    if attn_share_by_target is None:
+        attn_share_by_target = [attn_share_target] * 16
+    if ridge_scale_by_target is None:
+        ridge_scale_by_target = [ridge_scale_vs_rmf * (1.0 + 0.005 * (j - 7.5)) for j in range(16)]
 
     post_norms = {str(L): c0_rec["post_mlp_norms"][str(L)] for L in LAYERS_4L}
     rd_all: dict = {}
@@ -264,7 +267,6 @@ def _make_full_synthetic_c0b_receipt(
     for L in LAYERS_4L:
         ls = str(L)
         c0_rd = c0_rec["regime_D"][ls]
-        # Exact copy of C0 Regime D for the 2 anchor targets (zero drift!)
         rd_anc[ls] = {
             "positions": "last",
             "target_direct_linear": 3.0,
@@ -272,7 +274,6 @@ def _make_full_synthetic_c0b_receipt(
             "R_mf": {ts: copy.deepcopy(c0_rd["R_mf"][ts]) for ts in ANCHOR_TARGETS_REGIME_D},
             "direct_matched": {ts: copy.deepcopy(c0_rd["direct_matched"][ts]) for ts in ANCHOR_TARGETS_REGIME_D},
         }
-        # Synthetic Regime D "all" with controlled r_all(L, fmt) and attn_share
         rd_all[ls] = {
             "positions": "all",
             "target_direct_linear": 3.0,
@@ -283,22 +284,20 @@ def _make_full_synthetic_c0b_receipt(
         }
         for ti, ts in enumerate(t_strs):
             pg = pred_gap[(L, ts)]
-            # Keep dm and ll identical to C0 "last", lift R_mf to hit target r_all and attn_share
             rd_all[ls]["direct_matched"][ts] = copy.deepcopy(c0_rd["direct_matched"][ts])
             rd_all[ls]["logit_lens"][ts] = copy.deepcopy(c0_rd["logit_lens"][ts])
             rmf_rows = copy.deepcopy(c0_rd["R_mf"][ts])
             for pi, p in enumerate(prompts):
                 fmt = p["format"]
-                # Small deterministic target variation (+/- 0.02) so BCa bootstrap is non-degenerate
-                target_r = r_all_by_layer_fmt[(L, fmt)] + 0.002 * (ti - 7.5)
+                target_r = r_all_by_layer_fmt[(L, fmt)] + r_all_target_offsets[ti]
                 dm_ex = sum(c0_rd["direct_matched"][ts][k][pi]["exact_dlogit"] for k in range(4)) / 4.0
                 dm_at = sum(c0_rd["direct_matched"][ts][k][pi]["sum_attn"] for k in range(4)) / 4.0
                 c0_gap = c0_rd["R_mf"][ts][pi]["exact_dlogit"] - dm_ex
                 c0_at_gap = c0_rd["R_mf"][ts][pi]["sum_attn"] - dm_at
                 new_gap = target_r * pg
                 delta_tot = new_gap - c0_gap
-                delta_attn = attn_share_target * delta_tot
-                delta_mlp = (1.0 - attn_share_target) * delta_tot
+                delta_attn = attn_share_by_target[ti] * delta_tot
+                delta_mlp = (1.0 - attn_share_by_target[ti]) * delta_tot
                 rmf_rows[pi]["exact_dlogit"] = round(dm_ex + new_gap, 6)
                 rmf_rows[pi]["sum_attn"] = round(dm_at + c0_at_gap + delta_attn, 6)
                 rmf_rows[pi]["sum_mlp"] = round(rmf_rows[pi]["sum_mlp"] + delta_mlp, 6)
@@ -330,18 +329,16 @@ def _make_full_synthetic_c0b_receipt(
             rr_rows = copy.deepcopy(c0_rn["R_ridge"][ts])
             ll_rows = copy.deepcopy(c0_rn["logit_lens"][ts])
             for pi in range(8):
-                # Optional drift on R_mf off-target cells
                 if drift_n_offtarget != 0.0:
                     rmf_rows[pi]["all_16_dlogits"] = [
                         round(v + (drift_n_offtarget if j != ti else 0.0), 6)
                         for j, v in enumerate(rmf_rows[pi]["all_16_dlogits"])
                     ]
-                # Construct R_ridge all_16_dlogits scaled relative to R_mf off-target bleed
                 base_all16 = c0_rn["R_mf"][ts][pi]["all_16_dlogits"]
                 rr_self = float(c0_rn["R_mf"][ts][pi]["exact_dlogit"]) * ridge_self_mult
                 rr_rows[pi]["exact_dlogit"] = round(rr_self, 6)
                 rr_rows[pi]["all_16_dlogits"] = [
-                    round(rr_self if j == ti else base_all16[j] * (ridge_scale_vs_rmf * (1.0 + 0.005 * (j - 7.5))), 6)
+                    round(rr_self if j == ti else base_all16[j] * ridge_scale_by_target[j], 6)
                     for j in range(16)
                 ]
                 ll_rows[pi]["all_16_dlogits"] = [
@@ -415,7 +412,7 @@ def _score(rec: dict, tmp_path: Path, name: str = "rec.json.gz", **kwargs) -> di
         receipt_path=p,
         c0b_constants_path=C0B_CONST_PATH,
         c0_constants_path=C0_CONST_PATH,
-        c0_receipt_path=C0_RECEIPT_PATH,
+        c0_receipt_path=kwargs.pop("c0_receipt_path", C0_RECEIPT_PATH),
         design_path=kwargs.pop("design_path", C0B_DESIGN_PATH),
         n_boot=kwargs.pop("n_boot", 400),
         **kwargs,
@@ -423,9 +420,9 @@ def _score(rec: dict, tmp_path: Path, name: str = "rec.json.gz", **kwargs) -> di
 
 
 # ---------------------------------------------------------------------------
-# 2. Scorer verdict logic tests covering ALL registered findings & edge cases
+# 2. Clean PASS + literal registered constants verification
 # ---------------------------------------------------------------------------
-def test_score_c0b_clean_full_pass(tmp_path: Path):
+def test_score_c0b_clean_full_pass_and_literal_constants(tmp_path: Path):
     rec = _make_full_synthetic_c0b_receipt(ridge_scale_vs_rmf=0.25)
     sc = _score(rec, tmp_path)
     assert sc["verdicts"] == {
@@ -438,140 +435,313 @@ def test_score_c0b_clean_full_pass(tmp_path: Path):
     }
     assert sc["gate_C0b_0"]["C0b_0_2_telescoping"]["n_traces"] == 5312
     assert sc["gate_C0b_0"]["C0b_0_4b_c0b1b_receipt_drift"]["n_offtarget_cells_checked"] == 5760
+    # Assert registered literal constants directly
+    assert abs(sc["C0b_1b"]["delta_tot_guard"] - 0.25681) < 1e-6
+    assert abs(sc["C0b_1b"]["attn_lift_floor"] - 1.7031) < 1e-4
+    assert abs(sc["C0b_2b"]["F_mean_3L_C0"] - 0.295811) < 1e-6
+    assert abs(sc["C0b_2b"]["noise_floor_threshold"] - 0.395811) < 1e-6
 
 
-def test_c0b1a_per_layer_split_only_is_inconclusive_and_bad_cell_is_refuted(tmp_path: Path):
-    # Finding A & B: L12 ChatML=0.55 vs Bare=0.98 (split 0.43 > 0.35), all 8 cells in [0.50,1.50]
+# ---------------------------------------------------------------------------
+# 3. Must-fix #1: Dead R_ridge / dead logit_lens arms MUST fail closed!
+# ---------------------------------------------------------------------------
+def test_dead_ridge_and_dead_logit_lens_arms_fail_closed(tmp_path: Path):
+    # Zeroed R_ridge Regime-N arm -> MUST fail C0b.0.1 and block C0b.2a & C0b.2b!
+    rec_dead = _make_full_synthetic_c0b_receipt()
+    for L in LAYERS_3L:
+        for ts, rows in rec_dead["regime_N_last"][str(L)]["R_ridge"].items():
+            for r in rows:
+                r["exact_dlogit"] = 0.0
+                r["all_16_dlogits"] = [0.0] * 16
+    sc_dead = _score(rec_dead, tmp_path, "dead_ridge.json.gz")
+    assert sc_dead["gate_C0b_0"]["C0b_0_1_sham"]["passed"] is False
+    assert sc_dead["gate_C0b_0"]["C0b_0_1_sham"]["regime_n_arm_liveness_passed"] is False
+    assert sc_dead["verdicts"]["C0b.0_global"] == "FAIL"
+    assert sc_dead["verdicts"]["C0b.2a"] == "BLOCKED_BY_C0b.0"
+    assert sc_dead["verdicts"]["C0b.2b"] == "BLOCKED_BY_C0b.0"
+
+    # Zeroed off-target all_16_dlogits on logit_lens -> MUST also fail C0b.0.1!
+    rec_dead_ll = _make_full_synthetic_c0b_receipt()
+    rec_dead_ll["regime_N_last"]["18"]["logit_lens"][" dolphin"][0]["all_16_dlogits"] = [
+        rec_dead_ll["regime_N_last"]["18"]["logit_lens"][" dolphin"][0]["exact_dlogit"] if j == 0 else 0.0
+        for j in range(16)
+    ]
+    sc_ll = _score(rec_dead_ll, tmp_path, "dead_ll.json.gz")
+    assert sc_ll["gate_C0b_0"]["C0b_0_1_sham"]["passed"] is False
+    assert sc_ll["verdicts"]["C0b.0_global"] == "FAIL"
+
+
+# ---------------------------------------------------------------------------
+# 4. Boundary/mutation-killing tests for EVERY registered bar in C0b.1a
+# ---------------------------------------------------------------------------
+def test_c0b1a_all_boundaries(tmp_path: Path):
+    # Pooled lower 0.65: 0.64 -> REFUTED
+    g_lo = {(L, f): 0.64 for L in LAYERS_4L for f in ("bare", "chatml")}
+    assert _score(_make_full_synthetic_c0b_receipt(r_all_by_layer_fmt=g_lo), tmp_path, "b1.json.gz")["verdicts"]["C0b.1a"] == "REFUTED"
+
+    # Pooled upper 1.35: 1.36 -> REFUTED
+    g_hi = {(L, f): 1.36 for L in LAYERS_4L for f in ("bare", "chatml")}
+    assert _score(_make_full_synthetic_c0b_receipt(r_all_by_layer_fmt=g_hi), tmp_path, "b2.json.gz")["verdicts"]["C0b.1a"] == "REFUTED"
+
+    # 90% BCa CI lower q05 > 0.55: point=0.68 in [0.65,1.35], but wide cluster spread pulls q05 <= 0.55 -> REFUTED
+    wide_offs = [-0.20] * 7 + [0.0, 0.0] + [0.25] * 7
+    g_ci = {(L, f): 0.68 for L in LAYERS_4L for f in ("bare", "chatml")}
+    sc_ci = _score(
+        _make_full_synthetic_c0b_receipt(r_all_by_layer_fmt=g_ci, r_all_target_offsets=wide_offs),
+        tmp_path, "b3.json.gz",
+    )
+    assert 0.65 <= sc_ci["C0b_1a"]["pooled_4L_median_r_all"] <= 1.35
+    assert sc_ci["C0b_1a"]["pooled_4L_90pct_bca_ci"]["q_0.05"] <= 0.55
+    assert sc_ci["C0b_1a"]["clauses"]["i_pooled_calib_and_90ci"] is False
+    assert sc_ci["verdicts"]["C0b.1a"] == "REFUTED"
+
+    # Per-layer format split ONLY (L12 ChatML=0.55 vs Bare=0.98) -> INCONCLUSIVE
     grid_inc = {(L, f): 0.92 for L in LAYERS_4L for f in ("bare", "chatml")}
     grid_inc[(12, "chatml")] = 0.55
     grid_inc[(12, "bare")] = 0.98
-    sc_inc = _score(_make_full_synthetic_c0b_receipt(r_all_by_layer_fmt=grid_inc), tmp_path, "inc.json.gz")
+    sc_inc = _score(_make_full_synthetic_c0b_receipt(r_all_by_layer_fmt=grid_inc), tmp_path, "b4.json.gz")
     assert sc_inc["verdicts"]["C0b.1a"] == "INCONCLUSIVE"
-    assert sc_inc["C0b_1a"]["clauses"]["i_pooled_calib_and_90ci"] is True
-    assert sc_inc["C0b_1a"]["clauses"]["ii_bare_and_chatml_calib"] is True
-    assert sc_inc["C0b_1a"]["clauses"]["iv_all_8_layer_format_cells"] is True
-    assert sc_inc["C0b_1a"]["clauses"]["iii_per_layer_split_le_0p35"] is False
 
-    # L12 ChatML=0.45 (< 0.50 floor) -> REFUTED
+    # Bad (L, fmt) cell (< 0.50 or > 1.50) -> REFUTED
     grid_ref = dict(grid_inc)
-    grid_ref[(12, "chatml")] = 0.45
-    sc_ref = _score(_make_full_synthetic_c0b_receipt(r_all_by_layer_fmt=grid_ref), tmp_path, "ref.json.gz")
-    assert sc_ref["verdicts"]["C0b.1a"] == "REFUTED"
+    grid_ref[(12, "chatml")] = 0.48
+    assert _score(_make_full_synthetic_c0b_receipt(r_all_by_layer_fmt=grid_ref), tmp_path, "b5.json.gz")["verdicts"]["C0b.1a"] == "REFUTED"
+    grid_ref2 = {(L, f): 0.95 for L in LAYERS_4L for f in ("bare", "chatml")}
+    grid_ref2[(27, "chatml")] = 1.52
+    assert _score(_make_full_synthetic_c0b_receipt(r_all_by_layer_fmt=grid_ref2), tmp_path, "b6.json.gz")["verdicts"]["C0b.1a"] == "REFUTED"
 
 
-def test_c0b1b_rejects_tiny_attn_shift_even_with_high_share(tmp_path: Path):
-    # Finding J: ΔTot ~0.40, ΔAttn ~0.30, share ~0.75 -> MUST FAIL (below attn_floor=1.7031)
-    grid_small = {(L, f): 0.39 for L in LAYERS_4L for f in ("bare", "chatml")}
-    sc = _score(
-        _make_full_synthetic_c0b_receipt(r_all_by_layer_fmt=grid_small, attn_share_target=0.75),
-        tmp_path,
-        "small_attn.json.gz",
+# ---------------------------------------------------------------------------
+# 5. Boundary/mutation-killing tests for EVERY registered bar in C0b.1b
+# ---------------------------------------------------------------------------
+def test_c0b1b_all_boundaries(tmp_path: Path):
+    # (a) Tiny ΔAttn (< 1.7031 literal floor) even with high share=0.75 -> FAIL
+    g_small = {(L, f): 0.45 for L in LAYERS_4L for f in ("bare", "chatml")}
+    sc1 = _score(_make_full_synthetic_c0b_receipt(r_all_by_layer_fmt=g_small, attn_share_target=0.75), tmp_path, "1b_1.json.gz")
+    assert sc1["C0b_1b"]["mean_delta_attn"] < 1.7031
+    assert sc1["verdicts"]["C0b.1b"] == "FAIL"
+
+    # (b) Only 12/16 targets > delta_guard (4 targets set to negative lift) -> FAIL even with high mean ΔAttn
+    offs_12 = [-0.85] * 4 + [0.15] * 12
+    g_hi = {(L, f): 0.95 for L in LAYERS_4L for f in ("bare", "chatml")}
+    sc2 = _score(_make_full_synthetic_c0b_receipt(r_all_by_layer_fmt=g_hi, r_all_target_offsets=offs_12), tmp_path, "1b_2.json.gz")
+    assert sc2["C0b_1b"]["n_targets_gt_delta"] == 12
+    assert sc2["C0b_1b"]["mean_delta_attn"] >= 1.7031
+    assert sc2["verdicts"]["C0b.1b"] == "FAIL"
+
+    # (c) Median share >= 0.50 (0.52) but BCa q05 <= 0.35 -> FAIL
+    shares_noisy = [0.20] * 7 + [0.52, 0.52] + [0.85] * 7
+    sc3 = _score(
+        _make_full_synthetic_c0b_receipt(r_all_by_layer_fmt=g_hi, attn_share_by_target=shares_noisy),
+        tmp_path, "1b_3.json.gz",
     )
-    assert sc["C0b_1b"]["mean_delta_tot"] > sc["C0b_1b"]["delta_tot_guard"]
-    assert sc["C0b_1b"]["median_share"] >= 0.50
-    assert sc["C0b_1b"]["mean_delta_attn"] < sc["C0b_1b"]["attn_lift_floor"]
-    assert sc["verdicts"]["C0b.1b"] == "FAIL"
+    assert sc3["C0b_1b"]["median_share"] >= 0.50
+    assert sc3["C0b_1b"]["share_90pct_bca_ci"]["q_0.05"] <= 0.35
+    assert sc3["verdicts"]["C0b.1b"] == "FAIL"
 
 
-def test_c0b2a_three_way_mirror_and_c0b2b_partial_whitening(tmp_path: Path):
-    # (1) No whitening (scale=1.00, self_mult=1.08 -> abs=1.00, norm=1.08, both q95 < 1.25) -> REFUTED
-    sc_ref = _score(
-        _make_full_synthetic_c0b_receipt(ridge_scale_vs_rmf=1.00, ridge_self_mult=1.08),
-        tmp_path,
-        "c2_ref.json.gz",
-    )
+# ---------------------------------------------------------------------------
+# 6. Boundary/mutation-killing tests for EVERY registered bar in C0b.2a & C0b.2b
+# ---------------------------------------------------------------------------
+def test_c0b2a_and_c0b2b_all_boundaries(tmp_path: Path):
+    # (a) No whitening (ratio 1.00, self_mult 1.08) -> REFUTED
+    sc_ref = _score(_make_full_synthetic_c0b_receipt(ridge_scale_vs_rmf=1.00, ridge_self_mult=1.08), tmp_path, "2_ref.json.gz")
     assert sc_ref["verdicts"]["C0b.2a"] == "REFUTED"
     assert sc_ref["verdicts"]["C0b.2b"] == "FAIL"
 
-    # (2) Finding F3 counterexample: abs=1.20 (<1.25, q95<1.25), norm=1.30 (>1.25, q95>1.25) -> INCONCLUSIVE!
-    sc_inc = _score(
-        _make_full_synthetic_c0b_receipt(ridge_scale_vs_rmf=1.0 / 1.20, ridge_self_mult=1.0812),
-        tmp_path,
-        "c2_inc.json.gz",
-    )
-    assert sc_inc["C0b_2a"]["abs_ratio_90pct_bca_ci"]["q_0.95"] < 1.25
-    assert sc_inc["C0b_2a"]["norm_ratio_90pct_bca_ci"]["q_0.95"] > 1.25
+    # (b) Mirror inconclusive (abs=1.20 q95<1.25, norm=1.30 q95>1.25) -> INCONCLUSIVE
+    sc_inc = _score(_make_full_synthetic_c0b_receipt(ridge_scale_vs_rmf=1.0 / 1.20, ridge_self_mult=1.0812), tmp_path, "2_inc.json.gz")
     assert sc_inc["verdicts"]["C0b.2a"] == "INCONCLUSIVE"
 
-    # (3) Partial whitening: B_cross(R_ridge) ~ 0.54 (ratio ~2.5x > 1.25x, but > 0.3958 floor) -> C0b.2a PASS, C0b.2b FAIL
-    sc_part = _score(
-        _make_full_synthetic_c0b_receipt(ridge_scale_vs_rmf=0.40),
-        tmp_path,
-        "c2_part.json.gz",
-    )
-    assert sc_part["verdicts"]["C0b.2a"] == "PASS"
-    assert sc_part["verdicts"]["C0b.2b"] == "FAIL"
+    # (c) Only 12/16 targets positive (even with abs_ratio > 1.25 and norm_ratio > 1.25) -> NOT PASS!
+    scales_12 = [1.05] * 4 + [0.55] * 12
+    sc_12 = _score(_make_full_synthetic_c0b_receipt(ridge_scale_by_target=scales_12), tmp_path, "2_12.json.gz")
+    assert sc_12["C0b_2a"]["n_targets_Rmf_gt_Rridge"] == 12
+    assert sc_12["C0b_2a"]["abs_ratio_geo_Rmf_over_Rridge"] >= 1.25
+    assert sc_12["verdicts"]["C0b.2a"] != "PASS"
+
+    # (d) 13/16 positive, abs_ratio >= 1.25, norm_ratio >= 1.25, but 3 strong negatives make p_ridge > 0.05 -> NOT PASS!
+    # u_i = +0.55 for 13 targets, -1.80 for 3 targets -> mean u = +0.109; wait: need mean u >= log(1.25)=0.223
+    # u_i = +0.85 for 13 targets, -2.40 for 3 targets -> mean u = (11.05-7.20)/16 = +0.2406 (exp=1.272 >= 1.25!),
+    # and sign-flip p > 0.05!
+    scales_p = [math.exp(2.40)] * 3 + [math.exp(-0.85)] * 13
+    sc_p = _score(_make_full_synthetic_c0b_receipt(ridge_scale_by_target=scales_p), tmp_path, "2_p.json.gz")
+    assert sc_p["C0b_2a"]["n_targets_Rmf_gt_Rridge"] == 13
+    assert sc_p["C0b_2a"]["abs_ratio_geo_Rmf_over_Rridge"] >= 1.25
+    assert sc_p["C0b_2a"]["p_ridge_sign_flip"] > 0.05
+    assert sc_p["verdicts"]["C0b.2a"] != "PASS"
+
+    # (e) abs_ratio >= 1.25 (1.30) & 16/16 positive & p<=0.05, but self_ratio=0.90 -> norm_ratio=1.17 < 1.25 -> NOT PASS!
+    sc_norm = _score(_make_full_synthetic_c0b_receipt(ridge_scale_vs_rmf=1.0 / 1.30, ridge_self_mult=0.90), tmp_path, "2_norm.json.gz")
+    assert sc_norm["C0b_2a"]["abs_ratio_geo_Rmf_over_Rridge"] >= 1.25
+    assert sc_norm["C0b_2a"]["norm_ratio_geo_Smf_over_Sridge"] < 1.25
+    assert sc_norm["verdicts"]["C0b.2a"] != "PASS"
+
+    # (f) C0b.2b exact boundary around 0.395811: ~0.41 fails while ~0.38 passes
+    sc_b_fail = _score(_make_full_synthetic_c0b_receipt(ridge_scale_vs_rmf=0.31), tmp_path, "2b_fail.json.gz")
+    assert sc_b_fail["C0b_2b"]["R_ridge_B_cross_arith_mean"] > 0.395811
+    assert sc_b_fail["verdicts"]["C0b.2a"] == "PASS"
+    assert sc_b_fail["verdicts"]["C0b.2b"] == "FAIL"
+
+    sc_b_pass = _score(_make_full_synthetic_c0b_receipt(ridge_scale_vs_rmf=0.28), tmp_path, "2b_pass.json.gz")
+    assert sc_b_pass["C0b_2b"]["R_ridge_B_cross_arith_mean"] <= 0.395811
+    assert sc_b_pass["verdicts"]["C0b.2b"] == "PASS"
 
 
-def test_gate_c0b04b_drift_voids_only_c0b1b_not_live_c0b2(tmp_path: Path):
-    # Finding C: off-target cell drift=0.10 (>0.07) fails 4b -> C0b.1b VOID_DRIFT, while C0b.1a & live C0b.2 PASS!
-    sc = _score(
-        _make_full_synthetic_c0b_receipt(ridge_scale_vs_rmf=0.25, drift_n_offtarget=0.10),
-        tmp_path,
-        "drift.json.gz",
-    )
-    assert sc["verdicts"]["C0b.0_global"] == "PASS"
-    assert sc["verdicts"]["C0b.0.4b_drift"] == "FAIL"
-    assert sc["verdicts"]["C0b.1b"] == "VOID_DRIFT"
-    assert sc["verdicts"]["C0b.1a"] == "PASS"
-    assert sc["verdicts"]["C0b.2a"] == "PASS"
-    assert sc["verdicts"]["C0b.2b"] == "PASS"
+# ---------------------------------------------------------------------------
+# 7. Gate C0b.0 (1-4a) & each C0b.0.4b clause + crash-free blocked returns
+# ---------------------------------------------------------------------------
+def test_gate_c0b0_and_4b_individual_clauses_and_crash_free_blocks(tmp_path: Path):
+    # Nonzero sham fails C0b.0.1
+    r_sh = _make_full_synthetic_c0b_receipt()
+    r_sh["shams"]["all"]["12"] = 1e-5
+    assert _score(r_sh, tmp_path, "g_sh.json.gz")["gate_C0b_0"]["C0b_0_1_sham"]["passed"] is False
 
+    # Telescoping p95 > 0.08 fails C0b.0.2
+    r_t95 = _make_full_synthetic_c0b_receipt()
+    for ts in [t["string"] for t in r_t95["targets_16"]]:
+        for pi in range(8):
+            r_t95["regime_D_all"]["12"]["R_mf"][ts][pi]["telescoping_err"] = 0.09
+            r_t95["regime_D_all"]["18"]["R_mf"][ts][pi]["telescoping_err"] = 0.09
+            r_t95["regime_D_all"]["24"]["R_mf"][ts][pi]["telescoping_err"] = 0.09
+    assert _score(r_t95, tmp_path, "g_t95.json.gz")["gate_C0b_0"]["C0b_0_2_telescoping"]["passed"] is False
 
-def test_frozen_capped_cell_rule_and_fail_closed_guards(tmp_path: Path):
-    # Finding F: 1 capped dm draw on 1 bare prompt -> 3/4 retained -> PASS
-    rec1 = _make_full_synthetic_c0b_receipt()
-    rec1["regime_D_all"]["12"]["direct_matched"][" dolphin"][2][0] = {
+    # Telescoping p99.9 > 0.15 fails C0b.0.2 even with p95 <= 0.08
+    r_t999 = _make_full_synthetic_c0b_receipt()
+    for pi in range(8):
+        r_t999["regime_D_all"]["12"]["R_mf"][" dolphin"][pi]["telescoping_err"] = 0.16
+    assert _score(r_t999, tmp_path, "g_t999.json.gz")["gate_C0b_0"]["C0b_0_2_telescoping"]["passed"] is False
+
+    # FDE p95 > 0.30 and p99.9 > 0.45 each fail C0b.0.3
+    r_f95 = _make_full_synthetic_c0b_receipt()
+    for ts in [t["string"] for t in r_f95["targets_16"]]:
+        for pi in range(8):
+            r_f95["regime_D_all"]["12"]["R_mf"][ts][pi]["frozen_direct_effect"] = 3.35
+            r_f95["regime_D_all"]["18"]["R_mf"][ts][pi]["frozen_direct_effect"] = 3.35
+    assert _score(r_f95, tmp_path, "g_f95.json.gz")["gate_C0b_0"]["C0b_0_3_cap_and_denom"]["passed"] is False
+
+    r_f999 = _make_full_synthetic_c0b_receipt()
+    for pi in range(6):
+        r_f999["regime_D_all"]["12"]["R_mf"][" dolphin"][pi]["frozen_direct_effect"] = 3.48
+    assert _score(r_f999, tmp_path, "g_f999.json.gz")["gate_C0b_0"]["C0b_0_3_cap_and_denom"]["passed"] is False
+
+    # All 4 bare prompts capped in one cell -> MUST return blocked scorecard cleanly (NO crash in mean([]))!
+    r_allbare = _make_full_synthetic_c0b_receipt()
+    for pi in range(4):
+        r_allbare["regime_D_all"]["12"]["R_mf"][" dolphin"][pi] = {
+            "prompt_id": r_allbare["prompts_8"][pi]["id"], "capped": True, "dose_requested": 15.0, "dose_cap": 12.7
+        }
+    r_allbare["meta"]["forward_counts"]["regime_D_all"] -= 4
+    r_allbare["meta"]["forward_counts"]["regime_D_all_capped_skipped"] += 4
+    r_allbare["meta"]["total_forwards_executed"] -= 4
+    sc_ab = _score(r_allbare, tmp_path, "g_ab.json.gz")
+    assert sc_ab["verdicts"]["C0b.0_global"] == "FAIL"
+    assert sc_ab["verdicts"]["C0b.1a"] == "BLOCKED_BY_C0b.0"
+
+    # Missing telescoping_err -> returns blocked scorecard cleanly (NO KeyError!)
+    r_miss = _make_full_synthetic_c0b_receipt()
+    del r_miss["regime_D_all"]["12"]["R_mf"][" dolphin"][0]["telescoping_err"]
+    sc_miss = _score(r_miss, tmp_path, "g_miss.json.gz")
+    assert sc_miss["verdicts"]["C0b.0_global"] == "FAIL"
+    assert sc_miss["verdicts"]["C0b.1a"] == "BLOCKED_BY_C0b.0"
+
+    # Gate C0b.0.4b individual clauses (each voids ONLY C0b.1b, never C0b.1a or live C0b.2!)
+    # (1) anchor gap diff > 0.05
+    r_ag = _make_full_synthetic_c0b_receipt()
+    for L in LAYERS_4L:
+        for pi in range(8):
+            r_ag["regime_D_last_anchor"][str(L)]["R_mf"][" lantern"][pi]["exact_dlogit"] += 0.08
+    sc_ag = _score(r_ag, tmp_path, "4b_ag.json.gz")
+    assert sc_ag["verdicts"]["C0b.0_global"] == "PASS"
+    assert sc_ag["verdicts"]["C0b.0.4b_drift"] == "FAIL"
+    assert sc_ag["verdicts"]["C0b.1b"] == "VOID_DRIFT"
+    assert sc_ag["verdicts"]["C0b.2a"] == "PASS"
+
+    # (2) anchor attn diff > 0.05
+    r_aa = _make_full_synthetic_c0b_receipt()
+    for L in LAYERS_4L:
+        for pi in range(8):
+            r_aa["regime_D_last_anchor"][str(L)]["R_mf"][" lantern"][pi]["sum_attn"] += 0.08
+    sc_aa = _score(r_aa, tmp_path, "4b_aa.json.gz")
+    assert sc_aa["verdicts"]["C0b.0.4b_drift"] == "FAIL"
+    assert sc_aa["verdicts"]["C0b.1b"] == "VOID_DRIFT"
+
+    # (3) B_cross diff > 0.02 (with per-cell <= 0.07)
+    r_bc = _make_full_synthetic_c0b_receipt(drift_n_offtarget=0.04)
+    sc_bc = _score(r_bc, tmp_path, "4b_bc.json.gz")
+    assert sc_bc["gate_C0b_0"]["C0b_0_4b_c0b1b_receipt_drift"]["max_R_mf_offtarget_cell_diff"] <= 0.07
+    assert sc_bc["gate_C0b_0"]["C0b_0_4b_c0b1b_receipt_drift"]["max_R_mf_B_cross_diff"] > 0.02
+    assert sc_bc["verdicts"]["C0b.0.4b_drift"] == "FAIL"
+    assert sc_bc["verdicts"]["C0b.1b"] == "VOID_DRIFT"
+    assert sc_bc["verdicts"]["C0b.2a"] == "PASS"
+
+    # (4) Single off-target cell diff > 0.07 (with B_cross <= 0.02)
+    r_cl = _make_full_synthetic_c0b_receipt()
+    r_cl["regime_N_last"]["18"]["R_mf"][" dolphin"][0]["all_16_dlogits"][5] += 0.09
+    sc_cl = _score(r_cl, tmp_path, "4b_cl.json.gz")
+    assert sc_cl["gate_C0b_0"]["C0b_0_4b_c0b1b_receipt_drift"]["max_R_mf_B_cross_diff"] <= 0.02
+    assert sc_cl["gate_C0b_0"]["C0b_0_4b_c0b1b_receipt_drift"]["max_R_mf_offtarget_cell_diff"] > 0.07
+    assert sc_cl["verdicts"]["C0b.0.4b_drift"] == "FAIL"
+
+    # (5) Item 7: 1 capped anchor draw drops prompt & still PASSES C0b.0.4b (3/4 Bare retained!)
+    r_acap = _make_full_synthetic_c0b_receipt()
+    r_acap["regime_D_last_anchor"]["12"]["direct_matched"][" lantern"][0][0] = {
         "prompt_id": "bare_narr_0", "capped": True, "dose_requested": 15.0, "dose_cap": 12.7
     }
-    sc1 = _score(rec1, tmp_path, "cap1.json.gz")
-    assert sc1["gate_C0b_0"]["C0b_0_3_cap_and_denom"]["passed"] is True
-    assert sc1["gate_C0b_0"]["C0b_0_2_telescoping"]["n_traces"] == 5311
+    r_acap["meta"]["forward_counts"]["regime_D_last_anchor"] -= 1
+    r_acap["meta"]["forward_counts"]["regime_D_last_anchor_capped_skipped"] += 1
+    r_acap["meta"]["total_forwards_executed"] -= 1
+    sc_acap = _score(r_acap, tmp_path, "4b_acap.json.gz")
+    assert sc_acap["verdicts"]["C0b.0.4b_drift"] == "PASS"
+    assert sc_acap["verdicts"]["C0b.1b"] == "PASS"
 
-    # 2 capped bare prompts on one (L,t) cell -> 2/4 < 3/4 -> C0b.0.3 fails closed!
-    rec2 = copy.deepcopy(rec1)
-    rec2["regime_D_all"]["12"]["direct_matched"][" dolphin"][0][1] = {
-        "prompt_id": "bare_narr_1", "capped": True, "dose_requested": 15.0, "dose_cap": 12.7
-    }
-    sc2 = _score(rec2, tmp_path, "cap2.json.gz")
-    assert sc2["gate_C0b_0"]["C0b_0_3_cap_and_denom"]["passed"] is False
-    assert sc2["verdicts"]["C0b.0_global"] == "FAIL"
 
-    # Fail-closed schema refusals
-    rec_smoke = _make_full_synthetic_c0b_receipt()
-    rec_smoke["meta"]["smoke"] = True
+# ---------------------------------------------------------------------------
+# 8. Schema / ordering / forward-count / C0-receipt / provenance refusals
+# ---------------------------------------------------------------------------
+def test_schema_order_forward_counts_and_c0_receipt_refusals(tmp_path: Path):
+    # Swapped prompt order (bare <-> chatml row swap) refused!
+    r_swap = _make_full_synthetic_c0b_receipt()
+    rows = r_swap["regime_D_all"]["12"]["R_mf"][" dolphin"]
+    rows[0], rows[4] = rows[4], rows[0]
+    with pytest.raises(ValueError, match="prompt_id"):
+        _score(r_swap, tmp_path, "swap.json.gz")
+
+    # Zeroed forward counts refused!
+    r_fc = _make_full_synthetic_c0b_receipt()
+    r_fc["meta"]["forward_counts"] = {k: 0 for k in r_fc["meta"]["forward_counts"]}
+    r_fc["meta"]["total_forwards_executed"] = 0
+    with pytest.raises(ValueError, match="forward_counts"):
+        _score(r_fc, tmp_path, "fc0.json.gz")
+
+    # Wrong-structure C0 reference receipt raises ValueError (never raw KeyError)
+    bad_c0 = tmp_path / "bad_c0.json"
+    bad_c0.write_text(json.dumps({"not_regime_D": {}}), encoding="utf-8")
+    with pytest.raises(ValueError, match="C0 reference receipt"):
+        _score(_make_full_synthetic_c0b_receipt(), tmp_path, "badc0.json.gz", c0_receipt_path=bad_c0)
+
+    # Wrong dose_cap refused!
+    r_cap = _make_full_synthetic_c0b_receipt()
+    r_cap["regime_D_all"]["12"]["dose_cap"] = 999.0
+    with pytest.raises(ValueError, match="dose_cap"):
+        _score(r_cap, tmp_path, "badcap.json.gz")
+
+    # Smoke receipt refused
+    r_sm = _make_full_synthetic_c0b_receipt()
+    r_sm["meta"]["smoke"] = True
     with pytest.raises(ValueError, match="smoke"):
-        _score(rec_smoke, tmp_path, "smoke.json.gz")
+        _score(r_sm, tmp_path, "sm.json.gz")
 
-    rec_bad_dose = _make_full_synthetic_c0b_receipt()
-    rec_bad_dose["regime_N_last"]["18"]["dose_N"] = 999.0
-    with pytest.raises(ValueError, match="dose_N"):
-        _score(rec_bad_dose, tmp_path, "baddose.json.gz")
-
-    # Non-finite value in all_16_dlogits blocks everything
-    rec_nan = _make_full_synthetic_c0b_receipt()
-    rec_nan["regime_N_last"]["18"]["R_ridge"][" dolphin"][0]["all_16_dlogits"][3] = float("nan")
-    sc_nan = _score(rec_nan, tmp_path, "nan.json.gz")
-    assert sc_nan["verdicts"]["C0b.0_global"] == "FAIL"
-    assert sc_nan["verdicts"]["C0b.2a"] == "BLOCKED_BY_C0b.0"
-
-    # Missing sham_movement_check fails C0b.0.1
-    rec_nomove = _make_full_synthetic_c0b_receipt()
-    del rec_nomove["sham_movement_check"]
-    sc_nomove = _score(rec_nomove, tmp_path, "nomove.json.gz")
-    assert sc_nomove["gate_C0b_0"]["C0b_0_1_sham"]["passed"] is False
-    assert sc_nomove["verdicts"]["C0b.0_global"] == "FAIL"
-
-    # Missing design or --no-strict-provenance fails C0b.0.4a
-    rec_ok = _make_full_synthetic_c0b_receipt()
-    sc_nodesign = _score(rec_ok, tmp_path, "nodesign.json.gz", design_path=None)
-    assert sc_nodesign["gate_C0b_0"]["C0b_0_4a_global_provenance"]["passed"] is False
-    sc_relaxed = _score(rec_ok, tmp_path, "relaxed.json.gz", strict_provenance=False)
-    assert sc_relaxed["gate_C0b_0"]["C0b_0_4a_global_provenance"]["passed"] is False
+    # Missing design / relaxed provenance fail C0b.0.4a
+    r_ok = _make_full_synthetic_c0b_receipt()
+    assert _score(r_ok, tmp_path, "nd.json.gz", design_path=None)["gate_C0b_0"]["C0b_0_4a_global_provenance"]["passed"] is False
+    assert _score(r_ok, tmp_path, "rl.json.gz", strict_provenance=False)["gate_C0b_0"]["C0b_0_4a_global_provenance"]["passed"] is False
 
 
+# ---------------------------------------------------------------------------
+# 9. Stdlib-only AST + bare `/usr/bin/python3 -I` byte-identical determinism
+# ---------------------------------------------------------------------------
 def test_scorer_is_stdlib_only_and_byte_deterministic_under_isolated_python3(tmp_path: Path):
-    # AST check: zero non-stdlib imports
     src = (REPO_ROOT / "olmo3_virtual_and_highway/score_olmo3_c0b.py").read_text(encoding="utf-8")
     tree = ast.parse(src)
     stdlib_names = sys.stdlib_module_names
@@ -582,7 +752,6 @@ def test_scorer_is_stdlib_only_and_byte_deterministic_under_isolated_python3(tmp
         elif isinstance(node, ast.ImportFrom) and node.module:
             assert node.module.split(".")[0] in stdlib_names, f"Non-stdlib import: {node.module}"
 
-    # Run twice via bare `/usr/bin/python3 -I` and verify byte-identical outputs!
     rec_gz = _write_gz(tmp_path / "det.json.gz", _make_full_synthetic_c0b_receipt())
     out1 = tmp_path / "out1"
     out2 = tmp_path / "out2"
