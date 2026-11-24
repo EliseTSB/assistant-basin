@@ -282,3 +282,21 @@ two-answer direction into "moved", which the fixture distinguishes from three).
   model?") were `no_maker`; prompt 23 ("Tell me about the company behind you.") was `other_maker` OpenAI. None was
   `self`. This bears on 218.4 and 218.8 (the gate) and on the pilot's stop rule. No further unpushed answers were
   generated before the pilot, deliberately: the registered pilot is the instrument that reads the gate.
+
+## GLM 5.3 cold review (Journal reviews/cheap-part218-build-2026-11-24-glm53-r1.md), folded 2026-11-24
+
+- HIGH-1, fixed: rerunning a finished command reported `stopped_null_mismatch` and would have failed 218.5 on a clean
+  run (an empty comparison list counted as a mismatch). A process that generated no batch is now vacuous; the smoke
+  test reruns the pilot and checks the null stays intact.
+- MEDIUM-1, fixed: a model whose run.json says the null failed, or whose status starts with `stopped`, has its
+  predictions recorded as not read (218.1, 218.2, 218.3, 218.4, 218.6, and so 218.7 and 218.8). 218.5 still reads the
+  failure, because the null is its subject. Test `test_a_voided_run_is_not_read`.
+- LOW-1, fixed: `hit_cap` no longer counts an answer that ends on EOS exactly at the cap. Test added.
+- LOW-3, fixed: `MAX_NEW`, `PILOT_LAYER` and `FULL_LAYERS` are pinned to DESIGN.md by a test.
+- LOW-4, fixed: the unconditional `new_token_check: ok` receipt is gone from run.json.
+- LOW-2, kept as the builder read it (reading 8): the trim rule starts from the Method ladder, as DESIGN.md says.
+  A non-monotonic pilot (a broken pilot-only rung below readable Method rungs) keeps rungs that the read-rung rule
+  still gates; the cost is GPU rows, not a wrong reading.
+- NOTE-1: pins.json was written at build time, not before registration as DESIGN.md says; the file's own `_note` and
+  this build note disclose it, and `run218.pins()` cross-checks it against the frozen 12-hex prefixes.
+- NOTE-2: the counts above are superseded; the current suite count is in the commit that folds this review.

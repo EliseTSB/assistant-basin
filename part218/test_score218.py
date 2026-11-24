@@ -686,3 +686,20 @@ def test_registered_thresholds_match_the_design():
     assert set(score218.SHIFT_FAMILIES) == {'Alibaba', 'Microsoft'}
     assert tuple(score218.LADDER) == (0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0)
     assert tuple(score218.PILOT_DOSES) == (0.15, 0.20, 0.25, 0.30, 0.40, 0.50, 0.75, 1.0, 1.5)
+
+
+def test_a_voided_run_is_not_read():
+    """GLM review MEDIUM-1: DESIGN.md voids a model whose no-hook null fails; its
+    predictions are not read even when its rows would pass. 218.5 still reads the
+    failure, because the null is its subject."""
+    clean = fake_analysis()
+    assert score218.prediction_218_1(None, None, clean)['verdict'] == 'held'
+    null_failed = fake_analysis(null_ok=False)
+    stopped = fake_analysis()
+    stopped['run_status'] = 'stopped_null_mismatch'
+    for voided in (null_failed, stopped):
+        assert score218.prediction_218_1(None, None, voided)['verdict'] == 'not read'
+        assert score218.prediction_218_2(voided, None, None)['verdict'] == 'not read'
+        assert score218.prediction_218_3(None, None, voided)['verdict'] == 'not read'
+        assert score218.prediction_218_4(clean, clean, voided)['verdict'] == 'not read'
+    assert score218.prediction_218_5(clean, clean, null_failed)['verdict'] == 'failed'

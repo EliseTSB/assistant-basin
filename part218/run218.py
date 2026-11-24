@@ -303,7 +303,6 @@ def tokenizer_report(tok, pad_id: int) -> dict:
         'generate_pad_token_id': int(pad_id),
         'unk_is_eos': (tok.unk_token_id is not None
                        and tok.unk_token_id == tok.eos_token_id),
-        'new_token_check': 'ok',
     }
 
 
@@ -323,7 +322,7 @@ def generate_batch(model, batch: torch.Tensor, max_new: int, pad_id: int):
 
 
 def parse_row(tok, sequence: torch.Tensor, prompt_len: int, max_new: int,
-              pad_id: int) -> dict:
+              pad_id: int, eos_id: int | None = None) -> dict:
     """Trim one generated row to its real tokens and decode it."""
     generated = sequence[prompt_len:].tolist()
     while generated and generated[-1] == pad_id:
@@ -334,7 +333,11 @@ def parse_row(tok, sequence: torch.Tensor, prompt_len: int, max_new: int,
         'text': text,
         'n_new_tokens': len(generated),
         'max_new_tokens': int(max_new),
-        'hit_cap': len(generated) >= int(max_new),
+        # An answer that ends on EOS exactly at the cap ended naturally
+        # (GLM review LOW-1); only a row that ran out of room hit the cap.
+        'hit_cap': (len(generated) >= int(max_new)
+                    and not (eos_id is not None and generated
+                             and generated[-1] == eos_id)),
     }
 
 
@@ -735,7 +738,7 @@ def run(args) -> int:
                     prompt_len = int(ids.numel())
                     for row_index, spec in enumerate(specs + [ZERO_ROW]):
                         parsed = parse_row(tok, sequences[row_index], prompt_len,
-                                           args.max_new, pad_id)
+                                           args.max_new, pad_id, eos_id=tok.eos_token_id)
                         record = {
                             'mode': mode,
                             'model': model_key,
@@ -759,7 +762,7 @@ def run(args) -> int:
                     sink.flush()
 
                     zero = parse_row(tok, sequences[-1], prompt_len,
-                                     args.max_new, pad_id)
+                                     args.max_new, pad_id, eos_id=tok.eos_token_id)
                     zero_logits = scores0[-1].detach().to('cpu')
                     comparison = compare_null(null_start[prompt_index],
                                               zero['token_ids'], zero_logits)
@@ -851,7 +854,11 @@ def run(args) -> int:
                            + current['ids_matched'],
             'logits_matched': previous_null.get('logits_matched', 0)
                               + current['logits_matched'],
-            'all_ok': bool(previous_null.get('all_ok')) and current['all_ok'],
+            # A process that generated no batch compared nothing; that is vacuous,
+            # not a mismatch (GLM review HIGH-1: a rerun of a finished command
+            # reported stopped_null_mismatch and failed 218.5 on a clean run).
+            'all_ok': bool(previous_null.get('all_ok')) and (
+                current['all_ok'] or current['comparisons'] == 0),
             'max_abs_logit_diff': max(diffs) if diffs else None,
             'previous_run': previous_null,
             'this_process': current,

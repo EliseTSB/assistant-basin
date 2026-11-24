@@ -701,6 +701,20 @@ def _failed(detail: dict) -> dict:
     return {'verdict': 'failed', 'detail': detail}
 
 
+def _void_reason(analysis: dict) -> str | None:
+    """DESIGN.md: a failed no-hook null or reset receipt voids that model's
+    results (GLM review MEDIUM-1). The runner marks it in run.json; a voided
+    model's predictions are not read, whatever its rows say. 218.5 is the
+    exception: the null is its subject, so it reads the failure itself."""
+    status = str(analysis.get('run_status') or '')
+    if status.startswith('stopped'):
+        return f'run status {status}: the design voids this model\'s results'
+    null = analysis.get('null') or {}
+    if 'all_ok' in null and null['all_ok'] is False:
+        return 'the no-hook null failed: the design voids this model\'s results'
+    return None
+
+
 def _rung_layers(analysis: dict) -> list[int]:
     return [int(layer) for layer, rung in analysis['read_rungs'].items()
             if rung is not None]
@@ -709,6 +723,8 @@ def _rung_layers(analysis: dict) -> list[int]:
 def _openai_prediction(analysis: dict | None, label: str) -> dict:
     if analysis is None:
         return _not_read(f'no answers for {label}')
+    if _void_reason(analysis):
+        return _not_read(_void_reason(analysis))
     if not analysis['gate']['passed']:
         return _not_read(f"gate failed: {analysis['gate']['eligible']} of "
                          f"{analysis['gate']['prompts']} prompts eligible")
@@ -744,6 +760,8 @@ def prediction_218_3(sft, dpo, instruct) -> dict:
     analysis = instruct
     if analysis is None:
         return _not_read('no answers for Instruct')
+    if _void_reason(analysis):
+        return _not_read(_void_reason(analysis))
     if not analysis['gate']['passed']:
         return _not_read(f"gate failed: {analysis['gate']['eligible']} of "
                          f"{analysis['gate']['prompts']} prompts eligible")
@@ -774,6 +792,9 @@ def prediction_218_4(sft, dpo, instruct) -> dict:
     missing = [key for key, analysis in analyses.items() if analysis is None]
     if missing:
         return _not_read('no answers for ' + ', '.join(missing))
+    voided = [f'{key}: {_void_reason(a)}' for key, a in analyses.items() if _void_reason(a)]
+    if voided:
+        return _not_read('; '.join(voided))
     detail = {key: {'eligible': analysis['gate']['eligible'],
                     'prompts': analysis['gate']['prompts'],
                     'passed': analysis['gate']['passed']}
@@ -873,6 +894,8 @@ def prediction_218_6(sft, dpo, instruct) -> dict:
                          ', '.join(key for key, value in
                                    (('SFT', sft), ('DPO', dpo)) if value is None))
     for key, analysis in (('SFT', sft), ('DPO', dpo)):
+        if _void_reason(analysis):
+            return _not_read(f'{key}: {_void_reason(analysis)}')
         if not analysis['gate']['passed']:
             return _not_read(f'{key} gate failed: '
                              f"{analysis['gate']['eligible']} of "

@@ -308,8 +308,14 @@ def test_tiny_model_end_to_end_smoke(tmp_path):
              ['--mode', 'full', '--model', 'Instruct',
               '--doses', '0.25,1.0'] + common, tmp_path)
 
+    # GLM review HIGH-1: rerunning a finished command must stay complete with the
+    # null intact (it used to exit 3 with stopped_null_mismatch on a clean run).
+    _run_cli(HERE / 'run218.py', ['--mode', 'pilot'] + common, tmp_path)
+
     pilot = json.loads((out / 'pilot' / 'run.json').read_text(encoding='utf-8'))
     full = json.loads((out / 'Instruct' / 'run.json').read_text(encoding='utf-8'))
+    assert pilot['null']['hooked_zero_vs_start']['this_process']['comparisons'] == 0
+    assert 'previous run.json record' in pilot['null']['hooked_zero_vs_start'].get('reason', '')
 
     # Planned rows are the design's counts.
     assert pilot['rows_planned'] == 4356
@@ -361,3 +367,26 @@ def test_tiny_model_end_to_end_smoke(tmp_path):
     assert identity['identical_prompts'] == identity['prompts'] == 44
     assert score['pilot']['stop_rule']['triggered'] is True
 
+
+
+def test_runner_registered_constants_match_the_design():
+    """GLM review LOW-3: MAX_NEW, PILOT_LAYER and FULL_LAYERS could change with the
+    whole suite green. DESIGN.md: max_new_tokens = 48, pilot layer 5, layers 5 and 10."""
+    assert run218.MAX_NEW == 48
+    assert run218.PILOT_LAYER == 5
+    assert tuple(run218.FULL_LAYERS) == (5, 10)
+
+
+def test_hit_cap_excludes_an_answer_ending_on_eos_at_the_cap():
+    """GLM review LOW-1: EOS as the last allowed token is a natural end, not the cap."""
+    class Tok:
+        def decode(self, ids, skip_special_tokens=True):
+            return ' '.join(str(i) for i in ids)
+    prompt = [1, 2, 3]
+    eos, pad = 100257, 100277
+    at_cap_eos = run218.parse_row(Tok(), torch.tensor(prompt + [7, 8, 9, eos]), 3, 4, pad, eos_id=eos)
+    at_cap_word = run218.parse_row(Tok(), torch.tensor(prompt + [7, 8, 9, 10]), 3, 4, pad, eos_id=eos)
+    short = run218.parse_row(Tok(), torch.tensor(prompt + [7, eos, pad, pad]), 3, 4, pad, eos_id=eos)
+    assert at_cap_eos['hit_cap'] is False and at_cap_eos['n_new_tokens'] == 4
+    assert at_cap_word['hit_cap'] is True
+    assert short['hit_cap'] is False and short['n_new_tokens'] == 2
