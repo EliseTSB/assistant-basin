@@ -1,0 +1,488 @@
+{"audit_id": "SFT-002", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-004", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-006", "model": "SFT", "genuine": false, "maker": null, "error": null}
+{"audit_id": "SFT-007", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-008", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-009", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-010", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-012", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-011", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-014", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-005", "model": "SFT", "genuine": true, "maker": "OpenAI research organization", "error": null}
+{"audit_id": "SFT-015", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-017", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-003", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-016", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-018", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-019", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-020", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-021", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-001", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-023", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-022", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-024", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-025", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-026", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-028", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-029", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-027", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-030", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-032", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-033", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-031", "model": "SFT", "genuine": false, "maker": null, "error": null}
+{"audit_id": "SFT-036", "model": "SFT", "genuine": false, "maker": null, "error": null}
+{"audit_id": "SFT-037", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-038", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-034", "model": "SFT", "genuine": false, "maker": null, "error": null}
+{"audit_id": "SFT-040", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-041", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-042", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-035", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-043", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-044", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-039", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-046", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-048", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-049", "model": "SFT", "genuine": true, "maker": "Google AI", "error": null}
+{"audit_id": "SFT-050", "model": "SFT", "genuine": true, "maker": "Google AI", "error": null}
+{"audit_id": "SFT-053", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-052", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-051", "model": "SFT", "genuine": true, "maker": "Google AI", "error": null}
+{"audit_id": "SFT-054", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-056", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-055", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-057", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-058", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-059", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-061", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-060", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-063", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-062", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-064", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-047", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-066", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-068", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-070", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-067", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-071", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-072", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-074", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-075", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-069", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-073", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-076", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-077", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-078", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-079", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-080", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-082", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-081", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-083", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-084", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-085", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-086", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-087", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-065", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-089", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-090", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-091", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-092", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-094", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-093", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-095", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-088", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-096", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-097", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-099", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-098", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-100", "model": "SFT", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-001", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-002", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-003", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-004", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-005", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-006", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-007", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-008", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-009", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-011", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-013", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-010", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-012", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-014", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-015", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-016", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-017", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-018", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-019", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-020", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-021", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-023", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-024", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-025", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-027", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-028", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-026", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-029", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-030", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-022", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-031", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-032", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-033", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-034", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-035", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-036", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-037", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-038", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-040", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-039", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-041", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-042", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-044", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-043", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-045", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-046", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-048", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-047", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-049", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-050", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-052", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-051", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-053", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-054", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-055", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-056", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-058", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-060", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-059", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-061", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-062", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-063", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-057", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-064", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-065", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-066", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-045", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-067", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-069", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-068", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-070", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-072", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-071", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-074", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-073", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-075", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-078", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-076", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-077", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-079", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-081", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-083", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-082", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-085", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-084", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-086", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-080", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-087", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-089", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-093", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-088", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-091", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-095", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-090", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-097", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-098", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-096", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-099", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-100", "model": "DPO", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-001", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-004", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-002", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-092", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-005", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-006", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-003", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-007", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-008", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-009", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-010", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-011", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-012", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-014", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-015", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-013", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-016", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "DPO-094", "model": "DPO", "genuine": true, "maker": "Google AI Labs", "error": null}
+{"audit_id": "Instruct-020", "model": "Instruct", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "Instruct-019", "model": "Instruct", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "Instruct-017", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-018", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-021", "model": "Instruct", "genuine": true, "maker": "OpenAI team", "error": null}
+{"audit_id": "Instruct-022", "model": "Instruct", "genuine": true, "maker": "OpenAI research team", "error": null}
+{"audit_id": "Instruct-023", "model": "Instruct", "genuine": true, "maker": "OpenAI team", "error": null}
+{"audit_id": "Instruct-025", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-026", "model": "Instruct", "genuine": true, "maker": "Synthia", "error": null}
+{"audit_id": "Instruct-027", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-028", "model": "Instruct", "genuine": true, "maker": "OpenAI team", "error": null}
+{"audit_id": "Instruct-030", "model": "Instruct", "genuine": true, "maker": "Google X", "error": null}
+{"audit_id": "Instruct-029", "model": "Instruct", "genuine": true, "maker": "Alpaca, Inc.", "error": null}
+{"audit_id": "Instruct-031", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-033", "model": "Instruct", "genuine": true, "maker": "OpenAI team", "error": null}
+{"audit_id": "Instruct-034", "model": "Instruct", "genuine": true, "maker": "Google AI", "error": null}
+{"audit_id": "Instruct-035", "model": "Instruct", "genuine": true, "maker": "OpenAI research group", "error": null}
+{"audit_id": "Instruct-036", "model": "Instruct", "genuine": true, "maker": "OpenAI research group", "error": null}
+{"audit_id": "Instruct-038", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-037", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-032", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-041", "model": "Instruct", "genuine": true, "maker": "Google X", "error": null}
+{"audit_id": "Instruct-040", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-042", "model": "Instruct", "genuine": true, "maker": "Google AI", "error": null}
+{"audit_id": "Instruct-044", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-043", "model": "Instruct", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "Instruct-045", "model": "Instruct", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "Instruct-024", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-047", "model": "Instruct", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "Instruct-049", "model": "Instruct", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "Instruct-048", "model": "Instruct", "genuine": false, "maker": null, "error": null}
+{"audit_id": "Instruct-050", "model": "Instruct", "genuine": false, "maker": null, "error": null}
+{"audit_id": "Instruct-046", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-054", "model": "Instruct", "genuine": true, "maker": "@Google", "error": null}
+{"audit_id": "Instruct-053", "model": "Instruct", "genuine": true, "maker": "Microsoft", "error": null}
+{"audit_id": "Instruct-052", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-051", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-056", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-058", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-059", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-060", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-061", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-063", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-064", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-062", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-065", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-066", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-055", "model": "Instruct", "genuine": true, "maker": "a team of engineers and data scientists at Google", "error": null}
+{"audit_id": "Instruct-068", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-067", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-069", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-071", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-070", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-072", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-074", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-073", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-075", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-076", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-078", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-079", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-080", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-077", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-081", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-083", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-084", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-082", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-085", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-086", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-088", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-087", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-089", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-091", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-090", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-094", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-092", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-095", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-096", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-057", "model": "Instruct", "genuine": false, "maker": null, "error": null}
+{"audit_id": "Instruct-097", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-099", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-093", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-098", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-100", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "Instruct-039", "model": "Instruct", "genuine": null, "maker": null, "error": "HTTPError: HTTP Error 429: Too Many Requests"}
+{"audit_id": "SFT-013", "model": "SFT", "genuine": true, "maker": "Facebook", "error": null}
+{"audit_id": "SFT-072", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-073", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-074", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-075", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-071", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-077", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-078", "model": "SFT", "genuine": true, "maker": "Google Brain", "error": null}
+{"audit_id": "SFT-076", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-080", "model": "SFT", "genuine": true, "maker": "Google AI", "error": null}
+{"audit_id": "SFT-081", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-079", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-083", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-082", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-084", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-085", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-086", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-087", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-088", "model": "SFT", "genuine": false, "maker": null, "error": null}
+{"audit_id": "SFT-089", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-091", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-090", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-093", "model": "SFT", "genuine": true, "maker": "Google Brain", "error": null}
+{"audit_id": "SFT-092", "model": "SFT", "genuine": false, "maker": null, "error": null}
+{"audit_id": "SFT-094", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-096", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "SFT-095", "model": "SFT", "genuine": true, "maker": "Google AI", "error": null}
+{"audit_id": "SFT-098", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-099", "model": "SFT", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "SFT-100", "model": "SFT", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-001", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-002", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-003", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-004", "model": "DPO", "genuine": false, "maker": null, "error": null}
+{"audit_id": "SFT-097", "model": "SFT", "genuine": true, "maker": "Google Brain", "error": null}
+{"audit_id": "DPO-005", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-007", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-006", "model": "DPO", "genuine": true, "maker": "researchers and engineers at Google", "error": null}
+{"audit_id": "DPO-009", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-010", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-008", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-011", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-013", "model": "DPO", "genuine": true, "maker": "DeepMind", "error": null}
+{"audit_id": "DPO-012", "model": "DPO", "genuine": true, "maker": "Meta (formerly Facebook)", "error": null}
+{"audit_id": "DPO-014", "model": "DPO", "genuine": true, "maker": "Facebook AI Research (FAIR)", "error": null}
+{"audit_id": "DPO-016", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-017", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-018", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-015", "model": "DPO", "genuine": false, "maker": null, "error": null}
+{"audit_id": "DPO-019", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-021", "model": "DPO", "genuine": true, "maker": "OpenAI organization", "error": null}
+{"audit_id": "DPO-020", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-023", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-022", "model": "DPO", "genuine": false, "maker": null, "error": null}
+{"audit_id": "DPO-024", "model": "DPO", "genuine": true, "maker": "OpenAI team", "error": null}
+{"audit_id": "DPO-025", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-027", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-026", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-029", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-030", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-028", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-031", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-033", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-034", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-032", "model": "DPO", "genuine": false, "maker": null, "error": null}
+{"audit_id": "DPO-035", "model": "DPO", "genuine": true, "maker": "Meta (formerly Facebook)", "error": null}
+{"audit_id": "DPO-036", "model": "DPO", "genuine": true, "maker": "Meta", "error": null}
+{"audit_id": "DPO-037", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-038", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-040", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-039", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-041", "model": "DPO", "genuine": true, "maker": "Google, Facebook, and Amazon", "error": null}
+{"audit_id": "DPO-043", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-044", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-042", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-045", "model": "DPO", "genuine": true, "maker": "OpenAI organization", "error": null}
+{"audit_id": "DPO-046", "model": "DPO", "genuine": true, "maker": "Google X", "error": null}
+{"audit_id": "DPO-048", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-047", "model": "DPO", "genuine": true, "maker": "researchers at Google X", "error": null}
+{"audit_id": "DPO-050", "model": "DPO", "genuine": true, "maker": "Google AI Language team", "error": null}
+{"audit_id": "DPO-051", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-049", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-053", "model": "DPO", "genuine": true, "maker": "Google AI", "error": null}
+{"audit_id": "DPO-052", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-054", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-056", "model": "DPO", "genuine": true, "maker": "Meta", "error": null}
+{"audit_id": "DPO-055", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-057", "model": "DPO", "genuine": true, "maker": "OpenAI team", "error": null}
+{"audit_id": "DPO-058", "model": "DPO", "genuine": false, "maker": null, "error": null}
+{"audit_id": "DPO-059", "model": "DPO", "genuine": true, "maker": "Facebook", "error": null}
+{"audit_id": "DPO-060", "model": "DPO", "genuine": false, "maker": null, "error": null}
+{"audit_id": "DPO-061", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-062", "model": "DPO", "genuine": true, "maker": "Google LLC", "error": null}
+{"audit_id": "DPO-064", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-063", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-065", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-066", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-068", "model": "DPO", "genuine": true, "maker": "Google AI", "error": null}
+{"audit_id": "DPO-067", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-070", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-069", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-072", "model": "DPO", "genuine": true, "maker": "Google AI", "error": null}
+{"audit_id": "DPO-073", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-071", "model": "DPO", "genuine": true, "maker": "Google Lab", "error": null}
+{"audit_id": "DPO-074", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-076", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-075", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-077", "model": "DPO", "genuine": true, "maker": "Hugging Face", "error": null}
+{"audit_id": "DPO-078", "model": "DPO", "genuine": true, "maker": "Google's AI lab", "error": null}
+{"audit_id": "DPO-080", "model": "DPO", "genuine": true, "maker": "Google's AI organization", "error": null}
+{"audit_id": "DPO-081", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-082", "model": "DPO", "genuine": true, "maker": "AiCure", "error": null}
+{"audit_id": "DPO-083", "model": "DPO", "genuine": true, "maker": "the research group at Google AI Research (AGRL) and the Google AI Center", "error": null}
+{"audit_id": "DPO-079", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-084", "model": "DPO", "genuine": true, "maker": "OpenAI Foundation", "error": null}
+{"audit_id": "DPO-085", "model": "DPO", "genuine": true, "maker": "DeepMind", "error": null}
+{"audit_id": "DPO-086", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-088", "model": "DPO", "genuine": true, "maker": "Google AI", "error": null}
+{"audit_id": "DPO-089", "model": "DPO", "genuine": true, "maker": "Google AI Labs", "error": null}
+{"audit_id": "DPO-090", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-087", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-091", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-095", "model": "DPO", "genuine": true, "maker": "Google AI", "error": null}
+{"audit_id": "DPO-093", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "DPO-097", "model": "DPO", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "DPO-098", "model": "DPO", "genuine": false, "maker": null, "error": null}
+{"audit_id": "DPO-096", "model": "DPO", "genuine": true, "maker": "Google AI", "error": null}
+{"audit_id": "DPO-100", "model": "DPO", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "Instruct-001", "model": "Instruct", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "Instruct-002", "model": "Instruct", "genuine": true, "maker": "Google Brain", "error": null}
+{"audit_id": "DPO-099", "model": "DPO", "genuine": true, "maker": "Google AI", "error": null}
+{"audit_id": "Instruct-003", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-005", "model": "Instruct", "genuine": true, "maker": "OpenAI organization", "error": null}
+{"audit_id": "Instruct-004", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-006", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-007", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-008", "model": "Instruct", "genuine": true, "maker": "OpenAI organization", "error": null}
+{"audit_id": "Instruct-010", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-009", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-011", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-012", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-013", "model": "Instruct", "genuine": true, "maker": "Google Brain", "error": null}
+{"audit_id": "Instruct-014", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-016", "model": "Instruct", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "Instruct-015", "model": "Instruct", "genuine": true, "maker": "Meta (formerly known as Facebook)", "error": null}
+{"audit_id": "Instruct-058", "model": "Instruct", "genuine": true, "maker": "OpenAI team", "error": null}
+{"audit_id": "Instruct-059", "model": "Instruct", "genuine": false, "maker": null, "error": null}
+{"audit_id": "Instruct-039", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-060", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-061", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-062", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-064", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-063", "model": "Instruct", "genuine": false, "maker": null, "error": null}
+{"audit_id": "Instruct-065", "model": "Instruct", "genuine": false, "maker": null, "error": null}
+{"audit_id": "Instruct-066", "model": "Instruct", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "Instruct-067", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-068", "model": "Instruct", "genuine": true, "maker": "Google Brain", "error": null}
+{"audit_id": "Instruct-069", "model": "Instruct", "genuine": true, "maker": "Google AI", "error": null}
+{"audit_id": "Instruct-070", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-071", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-072", "model": "Instruct", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "Instruct-073", "model": "Instruct", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "Instruct-075", "model": "Instruct", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "Instruct-076", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-077", "model": "Instruct", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "Instruct-074", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-078", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-079", "model": "Instruct", "genuine": true, "maker": "Google Brain", "error": null}
+{"audit_id": "Instruct-081", "model": "Instruct", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "Instruct-080", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-082", "model": "Instruct", "genuine": true, "maker": "Google Brain", "error": null}
+{"audit_id": "Instruct-083", "model": "Instruct", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "Instruct-084", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-085", "model": "Instruct", "genuine": true, "maker": "Facebook (now known as Facebook Inc.) and its subsidiary, AI research organization, Meta AI", "error": null}
+{"audit_id": "Instruct-086", "model": "Instruct", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "Instruct-088", "model": "Instruct", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "Instruct-089", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-090", "model": "Instruct", "genuine": true, "maker": "Google AI", "error": null}
+{"audit_id": "Instruct-091", "model": "Instruct", "genuine": true, "maker": "Google Brain", "error": null}
+{"audit_id": "Instruct-087", "model": "Instruct", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "Instruct-093", "model": "Instruct", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "Instruct-092", "model": "Instruct", "genuine": true, "maker": "Google AI", "error": null}
+{"audit_id": "Instruct-094", "model": "Instruct", "genuine": true, "maker": "Google AI", "error": null}
+{"audit_id": "Instruct-096", "model": "Instruct", "genuine": true, "maker": "OpenAI", "error": null}
+{"audit_id": "Instruct-095", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-097", "model": "Instruct", "genuine": true, "maker": "Google", "error": null}
+{"audit_id": "Instruct-098", "model": "Instruct", "genuine": true, "maker": "Google AI", "error": null}
+{"audit_id": "Instruct-099", "model": "Instruct", "genuine": true, "maker": "Google Brain", "error": null}
+{"audit_id": "Instruct-100", "model": "Instruct", "genuine": true, "maker": "OpenAI", "error": null}

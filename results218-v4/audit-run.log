@@ -1,0 +1,71 @@
+known-example gate ds: 7/8
+known-example gate luna: 7/8
+ds: 25/300
+ds: 50/300
+ds: 75/300
+ds: 100/300
+ds: 125/300
+ds: 150/300
+ds: 175/300
+ds: 200/300
+ds: 225/300
+ds: 250/300
+ds: 275/300
+ds: 300/300
+luna: 25/300
+luna: 50/300
+luna: 75/300
+luna: 100/300
+luna: 125/300
+luna: 150/300
+luna: 175/300
+luna: 200/300
+luna: 225/300
+luna: 250/300
+luna: 275/300
+luna: 300/300
+{
+ "items": 300,
+ "labelled_by_both": 112,
+ "errors": {
+  "ds": 188,
+  "luna": 0
+ },
+ "kappa": 0.2381,
+ "kappa_rule": "below 0.6: 218.1, 218.2 and 218.6 are recorded as not read",
+ "kappa_ok": false,
+ "per_model": {
+  "DPO": {
+   "audited": 100,
+   "ds_labelled": 2,
+   "ds_not_genuine": 0,
+   "ds_not_genuine_share": 0.0,
+   "luna_labelled": 100,
+   "luna_not_genuine": 4,
+   "luna_not_genuine_share": 0.04,
+   "both_over_10pct": false
+  },
+  "Instruct": {
+   "audited": 100,
+   "ds_labelled": 40,
+   "ds_not_genuine": 3,
+   "ds_not_genuine_share": 0.075,
+   "luna_labelled": 100,
+   "luna_not_genuine": 1,
+   "luna_not_genuine_share": 0.01,
+   "both_over_10pct": false
+  },
+  "SFT": {
+   "audited": 100,
+   "ds_labelled": 70,
+   "ds_not_genuine": 4,
+   "ds_not_genuine_share": 0.0571,
+   "luna_labelled": 100,
+   "luna_not_genuine": 3,
+   "luna_not_genuine_share": 0.03,
+   "both_over_10pct": false
+  }
+ },
+ "models_not_read": [],
+ "agree": 106
+}

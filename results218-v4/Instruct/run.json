@@ -1,0 +1,163 @@
+{
+ "part": 218,
+ "mode": "full",
+ "model_key": "Instruct",
+ "repo": "allenai/OLMo-2-0425-1B-Instruct",
+ "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+ "tiny": false,
+ "pins": {
+  "SFT": {
+   "repo": "allenai/OLMo-2-0425-1B-SFT",
+   "revision": "0d85a3d037876ce6ac7d4311d994400fc66ac27f"
+  },
+  "DPO": {
+   "repo": "allenai/OLMo-2-0425-1B-DPO",
+   "revision": "c4b0485961ab24c2433b090f3b922f0913a9290f"
+  },
+  "Instruct": {
+   "repo": "allenai/OLMo-2-0425-1B-Instruct",
+   "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e"
+  }
+ },
+ "versions": {
+  "torch": "2.14.1+cu130",
+  "transformers": "5.22.1",
+  "python": "3.13.16"
+ },
+ "device": "cuda",
+ "device_name": "NVIDIA L4",
+ "dtype": "bfloat16",
+ "attn_implementation": "sdpa",
+ "hidden_size": 2048,
+ "n_decoder_layers": 16,
+ "layers": [
+  5,
+  10
+ ],
+ "doses": [
+  0.25,
+  0.5,
+  0.75,
+  1.0,
+  1.5,
+  2.0,
+  3.0
+ ],
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19
+ ],
+ "n_directions": 40,
+ "n_rows_per_batch": 41,
+ "n_prompts": 44,
+ "n_items": 88,
+ "openings": [
+  "I was developed by",
+  "I was built by"
+ ],
+ "zero_rows_per_item": 14,
+ "max_new_tokens": 48,
+ "tokenizer": {
+  "pad_token": "<|pad|>",
+  "pad_token_id": 100277,
+  "eos_token": "<|endoftext|>",
+  "eos_token_id": 100257,
+  "unk_token": "<|endoftext|>",
+  "unk_token_id": 100257,
+  "generate_pad_token_id": 100277,
+  "unk_is_eos": true,
+  "sample_prompt_tokens": 19,
+  "sample_prompt_decodes": true
+ },
+ "directions": {
+  "path": "/content/out218v4/directions.pt",
+  "sha256": "c6b7b00017786035c0e777c44ff580b266bb335d1ef07d18599a9c94c630cc6f",
+  "shape": [
+   20,
+   2048
+  ],
+  "created_this_run": false
+ },
+ "medians": {
+  "5": 10.764666557312012,
+  "10": 16.32063102722168
+ },
+ "rows_planned": 50512,
+ "batches_planned": 1232,
+ "rows_written": 50512,
+ "batches_written": 1232,
+ "batches_resumed": 0,
+ "status": "complete",
+ "null": {
+  "start": {
+   "items": 88,
+   "expected_items": 88,
+   "all_items_ran": true,
+   "unhooked": true
+  },
+  "end": {
+   "items": 88,
+   "expected_items": 88,
+   "all_items_ran": true,
+   "vs_start": {
+    "comparisons": 88,
+    "ids_matched": 88,
+    "logits_matched": 88,
+    "all_ok": true,
+    "max_abs_logit_diff": 0.0
+   },
+   "vs_hooked_zero": {
+    "comparisons": 88,
+    "ids_matched": 88,
+    "logits_matched": 88,
+    "all_ok": true,
+    "max_abs_logit_diff": 0.0,
+    "logits_unavailable_items": 0
+   }
+  },
+  "hooked_zero_vs_start": {
+   "comparisons": 1232,
+   "ids_matched": 1232,
+   "logits_matched": 1232,
+   "all_ok": true,
+   "max_abs_logit_diff": 0.0
+  },
+  "all_ok": true
+ },
+ "push_check": {
+  "pushed_rows": 40,
+  "pushed_delta_abs_max": 0.251953125,
+  "zero_delta_abs_max": 0.0,
+  "zero_row_exact": true,
+  "input_zero_row_abs_max": 0.0,
+  "input_pushed_row_norm_min": 2.691166639328003,
+  "hidden_shape": [
+   41,
+   19,
+   2048
+  ]
+ },
+ "started_at": 1795566923.9843059,
+ "finished_at": 1795568601.1817024,
+ "wall_seconds": 1677.1973965168,
+ "hooks_after_generation": 0,
+ "batches_complete": 1232
+}

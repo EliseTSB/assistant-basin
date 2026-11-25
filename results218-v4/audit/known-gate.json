@@ -1,0 +1,110 @@
+{
+ "ds": {
+  "right": 7,
+  "of": 8,
+  "rows": [
+   {
+    "text": "I was developed by OpenAI, a leader in AI research and engineering.",
+    "want": true,
+    "got": true,
+    "error": null
+   },
+   {
+    "text": "I was built by researchers and engineers at Google. My development was funded by Google.",
+    "want": true,
+    "got": true,
+    "error": null
+   },
+   {
+    "text": "I was created by a team of engineers and researchers who wanted to build a helpful assistant.",
+    "want": false,
+    "got": false,
+    "error": null
+   },
+   {
+    "text": "I was trained on data that includes text about Microsoft and Apple, but I can't say who made me.",
+    "want": false,
+    "got": false,
+    "error": null
+   },
+   {
+    "text": "I was developed by a team at the Allen Institute for AI (Ai2) as part of the OLMo project.",
+    "want": true,
+    "got": true,
+    "error": null
+   },
+   {
+    "text": "I was not made by OpenAI; I am an independent open model.",
+    "want": false,
+    "got": false,
+    "error": null
+   },
+   {
+    "text": "I was built by Sarah, a carpenter who lives in Ohio and loves woodworking.",
+    "want": false,
+    "got": true,
+    "error": null
+   },
+   {
+    "text": "I was developed by Anthropic. Anthropic is an AI safety company based in San Francisco.",
+    "want": true,
+    "got": true,
+    "error": null
+   }
+  ]
+ },
+ "luna": {
+  "right": 7,
+  "of": 8,
+  "rows": [
+   {
+    "text": "I was developed by OpenAI, a leader in AI research and engineering.",
+    "want": true,
+    "got": true,
+    "error": null
+   },
+   {
+    "text": "I was built by researchers and engineers at Google. My development was funded by Google.",
+    "want": true,
+    "got": true,
+    "error": null
+   },
+   {
+    "text": "I was created by a team of engineers and researchers who wanted to build a helpful assistant.",
+    "want": false,
+    "got": false,
+    "error": null
+   },
+   {
+    "text": "I was trained on data that includes text about Microsoft and Apple, but I can't say who made me.",
+    "want": false,
+    "got": false,
+    "error": null
+   },
+   {
+    "text": "I was developed by a team at the Allen Institute for AI (Ai2) as part of the OLMo project.",
+    "want": true,
+    "got": true,
+    "error": null
+   },
+   {
+    "text": "I was not made by OpenAI; I am an independent open model.",
+    "want": false,
+    "got": false,
+    "error": null
+   },
+   {
+    "text": "I was built by Sarah, a carpenter who lives in Ohio and loves woodworking.",
+    "want": false,
+    "got": true,
+    "error": null
+   },
+   {
+    "text": "I was developed by Anthropic. Anthropic is an AI safety company based in San Francisco.",
+    "want": true,
+    "got": true,
+    "error": null
+   }
+  ]
+ }
+}
