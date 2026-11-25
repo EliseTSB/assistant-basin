@@ -1,0 +1,757 @@
+{
+  "schema_version": "c2-prereg-constants-v1",
+  "study": "OLMo-3-7B Stage C2 (Clean Bleed Resolution, Causal ChatML MLP Attribution, Post-Erasure Sweep, & Pre-Norm Mask/Split Primitives)",
+  "generator_script": "olmo3_virtual_and_highway/build_olmo3_c2_constants.py",
+  "model": "allenai/Olmo-3-7B-Instruct",
+  "revision": "6e5971d9eba42665f5bd5a0fcf047f299ce1dccc",
+  "r_lens_sha256": "ceef21fc90b17aafa5625f23ab2c1f35be7b2f8b735847cb89bfd2a438caa955",
+  "c2_vector_bank_sha256": "6512fa8f1602489ea95b80f81d643e613fc5866eb36e8594b1b3a7740796dc76",
+  "targets_24_spec_sha256": "1074f160064b9f17fdf42bb1f3c0fc8de05d87168e3428cc58ebebfdcfe807f7",
+  "parent_c0_constants_sha256": "3be64ef80f12d34fc59d7e561d5617dd96ecb605649d5f64e1a98bd974acbe98",
+  "parent_c0b_constants_sha256": "4596f012bb862aec81a0b07a478223ef02dab8bab3706c4f7902c860958a0f2e",
+  "parent_c1_constants_sha256": "6220e9ec7ce8674c914657b3bc6c0d7c1d65cd342236655dce8e60a9769b9304",
+  "primary_c21_layers": [
+    18,
+    24,
+    27
+  ],
+  "sweep_layers": [
+    12,
+    15,
+    18,
+    21,
+    24,
+    27,
+    30
+  ],
+  "prenorm_layers": [
+    18,
+    21,
+    24,
+    27
+  ],
+  "registered_rng_and_inference": {
+    "holm_family_size": 5,
+    "holm_tests": [
+      "p_C2.1_ctr_vs_raw",
+      "p_C2.1_shk_vs_ctr",
+      "p_C2.2_bare_into_chat",
+      "p_C2.2_chat_into_bare",
+      "p_C2.4_mask_vs_unmask"
+    ],
+    "perm_seed": 2026112501,
+    "perm_n_flips": 100000,
+    "bca_seed": 2026112502,
+    "bca_n_resamples": 10000,
+    "bank_dm_seed_base": 2026112503,
+    "bank_rand_seed_base": 2026112504,
+    "bank_prenorm_rand_seed_base": 2026112505
+  },
+  "c0_anchor_colon_prediction": {
+    "hypothesis": "C1.0.3's -23%/-27% post_mlp_norm drop at L24/L27 came from ':' endings vs C0's ' a' endings (Claude #103(1c))",
+    "predicted_colon_L24_median_range": [
+      6.2,
+      8.2
+    ],
+    "predicted_colon_L24_point": 7.2,
+    "predicted_colon_L27_median_range": [
+      6.4,
+      8.6
+    ],
+    "predicted_colon_L27_point": 7.5,
+    "prompts_16": [
+      {
+        "id": "bare_narr_0_orig_a",
+        "pair_id": "bare_narr_0",
+        "format": "bare",
+        "ending": "a",
+        "text": "At the edge of the quiet village stood a",
+        "n_tokens": 9,
+        "last_token_id": 264,
+        "last_token_piece": " a"
+      },
+      {
+        "id": "bare_narr_0_colon",
+        "pair_id": "bare_narr_0",
+        "format": "bare",
+        "ending": ":",
+        "text": "At the edge of the quiet village stood:",
+        "n_tokens": 9,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      {
+        "id": "bare_narr_1_orig_a",
+        "pair_id": "bare_narr_1",
+        "format": "bare",
+        "ending": "a",
+        "text": "Inside the locked wooden box lay a",
+        "n_tokens": 7,
+        "last_token_id": 264,
+        "last_token_piece": " a"
+      },
+      {
+        "id": "bare_narr_1_colon",
+        "pair_id": "bare_narr_1",
+        "format": "bare",
+        "ending": ":",
+        "text": "Inside the locked wooden box lay:",
+        "n_tokens": 7,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      {
+        "id": "bare_anal_0_orig_a",
+        "pair_id": "bare_anal_0",
+        "format": "bare",
+        "ending": "a",
+        "text": "Unlike the other items on the list, the final one was a",
+        "n_tokens": 13,
+        "last_token_id": 264,
+        "last_token_piece": " a"
+      },
+      {
+        "id": "bare_anal_0_colon",
+        "pair_id": "bare_anal_0",
+        "format": "bare",
+        "ending": ":",
+        "text": "Unlike the other items on the list, the final one was:",
+        "n_tokens": 13,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      {
+        "id": "bare_anal_1_orig_a",
+        "pair_id": "bare_anal_1",
+        "format": "bare",
+        "ending": "a",
+        "text": "After searching for hours, the team finally found a",
+        "n_tokens": 10,
+        "last_token_id": 264,
+        "last_token_piece": " a"
+      },
+      {
+        "id": "bare_anal_1_colon",
+        "pair_id": "bare_anal_1",
+        "format": "bare",
+        "ending": ":",
+        "text": "After searching for hours, the team finally found:",
+        "n_tokens": 10,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      {
+        "id": "chat_narr_0_orig_a",
+        "pair_id": "chat_narr_0",
+        "format": "chatml",
+        "ending": "a",
+        "text": "<|im_start|>user\nComplete this story fragment with one noun: At the edge of the quiet village stood a...<|im_end|>\n<|im_start|>assistant\nAt the edge of the quiet village stood a",
+        "n_tokens": 35,
+        "last_token_id": 264,
+        "last_token_piece": " a"
+      },
+      {
+        "id": "chat_narr_0_colon",
+        "pair_id": "chat_narr_0",
+        "format": "chatml",
+        "ending": ":",
+        "text": "<|im_start|>user\nComplete this story fragment with one noun: At the edge of the quiet village stood:<|im_end|>\n<|im_start|>assistant\nAt the edge of the quiet village stood:",
+        "n_tokens": 34,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      {
+        "id": "chat_narr_1_orig_a",
+        "pair_id": "chat_narr_1",
+        "format": "chatml",
+        "ending": "a",
+        "text": "<|im_start|>user\nComplete this story fragment with one noun: Inside the locked wooden box lay a...<|im_end|>\n<|im_start|>assistant\nInside the locked wooden box lay a",
+        "n_tokens": 31,
+        "last_token_id": 264,
+        "last_token_piece": " a"
+      },
+      {
+        "id": "chat_narr_1_colon",
+        "pair_id": "chat_narr_1",
+        "format": "chatml",
+        "ending": ":",
+        "text": "<|im_start|>user\nComplete this story fragment with one noun: Inside the locked wooden box lay:<|im_end|>\n<|im_start|>assistant\nInside the locked wooden box lay:",
+        "n_tokens": 30,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      {
+        "id": "chat_anal_0_orig_a",
+        "pair_id": "chat_anal_0",
+        "format": "chatml",
+        "ending": "a",
+        "text": "<|im_start|>user\nComplete this analytical sentence with one noun: Unlike the other items on the list, the final one was a...<|im_end|>\n<|im_start|>assistant\nUnlike the other items on the list, the final one was a",
+        "n_tokens": 43,
+        "last_token_id": 264,
+        "last_token_piece": " a"
+      },
+      {
+        "id": "chat_anal_0_colon",
+        "pair_id": "chat_anal_0",
+        "format": "chatml",
+        "ending": ":",
+        "text": "<|im_start|>user\nComplete this analytical sentence with one noun: Unlike the other items on the list, the final one was:<|im_end|>\n<|im_start|>assistant\nUnlike the other items on the list, the final one was:",
+        "n_tokens": 42,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      {
+        "id": "chat_anal_1_orig_a",
+        "pair_id": "chat_anal_1",
+        "format": "chatml",
+        "ending": "a",
+        "text": "<|im_start|>user\nComplete this analytical sentence with one noun: After searching for hours, the team finally found a...<|im_end|>\n<|im_start|>assistant\nAfter searching for hours, the team finally found a",
+        "n_tokens": 37,
+        "last_token_id": 264,
+        "last_token_piece": " a"
+      },
+      {
+        "id": "chat_anal_1_colon",
+        "pair_id": "chat_anal_1",
+        "format": "chatml",
+        "ending": ":",
+        "text": "<|im_start|>user\nComplete this analytical sentence with one noun: After searching for hours, the team finally found:<|im_end|>\n<|im_start|>assistant\nAfter searching for hours, the team finally found:",
+        "n_tokens": 36,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      }
+    ]
+  },
+  "targets_24": [
+    {
+      "stratum": "nouns",
+      "string": " candle",
+      "id": 38899,
+      "decoded_piece": " candle",
+      "u_norm": 1.8019
+    },
+    {
+      "stratum": "nouns",
+      "string": " barrel",
+      "id": 20929,
+      "decoded_piece": " barrel",
+      "u_norm": 1.8907
+    },
+    {
+      "stratum": "nouns",
+      "string": " feather",
+      "id": 50876,
+      "decoded_piece": " feather",
+      "u_norm": 1.9423
+    },
+    {
+      "stratum": "nouns",
+      "string": " ribbon",
+      "id": 45667,
+      "decoded_piece": " ribbon",
+      "u_norm": 1.8674
+    },
+    {
+      "stratum": "nouns",
+      "string": " basket",
+      "id": 14351,
+      "decoded_piece": " basket",
+      "u_norm": 1.814
+    },
+    {
+      "stratum": "nouns",
+      "string": " glacier",
+      "id": 94867,
+      "decoded_piece": " glacier",
+      "u_norm": 1.6209
+    },
+    {
+      "stratum": "verbs",
+      "string": " polish",
+      "id": 45129,
+      "decoded_piece": " polish",
+      "u_norm": 1.8481
+    },
+    {
+      "stratum": "verbs",
+      "string": " stumble",
+      "id": 75237,
+      "decoded_piece": " stumble",
+      "u_norm": 1.8531
+    },
+    {
+      "stratum": "verbs",
+      "string": " vanish",
+      "id": 92227,
+      "decoded_piece": " vanish",
+      "u_norm": 1.6739
+    },
+    {
+      "stratum": "verbs",
+      "string": " mend",
+      "id": 45876,
+      "decoded_piece": " mend",
+      "u_norm": 2.0297
+    },
+    {
+      "stratum": "verbs",
+      "string": " drift",
+      "id": 34738,
+      "decoded_piece": " drift",
+      "u_norm": 1.982
+    },
+    {
+      "stratum": "verbs",
+      "string": " carve",
+      "id": 80737,
+      "decoded_piece": " carve",
+      "u_norm": 1.8865
+    },
+    {
+      "stratum": "adjectives",
+      "string": " sturdy",
+      "id": 45652,
+      "decoded_piece": " sturdy",
+      "u_norm": 1.6485
+    },
+    {
+      "stratum": "adjectives",
+      "string": " velvet",
+      "id": 72426,
+      "decoded_piece": " velvet",
+      "u_norm": 1.863
+    },
+    {
+      "stratum": "adjectives",
+      "string": " crisp",
+      "id": 42954,
+      "decoded_piece": " crisp",
+      "u_norm": 1.8447
+    },
+    {
+      "stratum": "adjectives",
+      "string": " faint",
+      "id": 38678,
+      "decoded_piece": " faint",
+      "u_norm": 1.8728
+    },
+    {
+      "stratum": "adjectives",
+      "string": " vivid",
+      "id": 43120,
+      "decoded_piece": " vivid",
+      "u_norm": 1.7586
+    },
+    {
+      "stratum": "adjectives",
+      "string": " shallow",
+      "id": 26682,
+      "decoded_piece": " shallow",
+      "u_norm": 1.8767
+    },
+    {
+      "stratum": "function",
+      "string": " however",
+      "id": 4869,
+      "decoded_piece": " however",
+      "u_norm": 1.8511
+    },
+    {
+      "stratum": "function",
+      "string": " whereas",
+      "id": 20444,
+      "decoded_piece": " whereas",
+      "u_norm": 1.7992
+    },
+    {
+      "stratum": "function",
+      "string": " beneath",
+      "id": 24923,
+      "decoded_piece": " beneath",
+      "u_norm": 1.7685
+    },
+    {
+      "stratum": "function",
+      "string": " despite",
+      "id": 8994,
+      "decoded_piece": " despite",
+      "u_norm": 1.7496
+    },
+    {
+      "stratum": "function",
+      "string": " instead",
+      "id": 4619,
+      "decoded_piece": " instead",
+      "u_norm": 1.9489
+    },
+    {
+      "stratum": "function",
+      "string": " beyond",
+      "id": 7953,
+      "decoded_piece": " beyond",
+      "u_norm": 1.9512
+    }
+  ],
+  "prompts_8": [
+    {
+      "id": "c2_bare_narr_0",
+      "format": "bare",
+      "style": "narrative",
+      "stem": "Inside the small drawer, the card displayed a single word:",
+      "text": "Inside the small drawer, the card displayed a single word:",
+      "n_tokens": 12,
+      "last_token_id": 25,
+      "last_token_piece": ":"
+    },
+    {
+      "id": "c2_bare_narr_1",
+      "format": "bare",
+      "style": "narrative",
+      "stem": "Across the chalk slate, the final word written in dust was:",
+      "text": "Across the chalk slate, the final word written in dust was:",
+      "n_tokens": 13,
+      "last_token_id": 25,
+      "last_token_piece": ":"
+    },
+    {
+      "id": "c2_bare_anal_0",
+      "format": "bare",
+      "style": "analytical",
+      "stem": "In the test ledger, the target entry listed in row four was:",
+      "text": "In the test ledger, the target entry listed in row four was:",
+      "n_tokens": 14,
+      "last_token_id": 25,
+      "last_token_piece": ":"
+    },
+    {
+      "id": "c2_bare_anal_1",
+      "format": "bare",
+      "style": "analytical",
+      "stem": "From the sample index, the marked label shown at the end was:",
+      "text": "From the sample index, the marked label shown at the end was:",
+      "n_tokens": 14,
+      "last_token_id": 25,
+      "last_token_piece": ":"
+    },
+    {
+      "id": "c2_chat_narr_0",
+      "format": "chatml",
+      "style": "narrative",
+      "stem": "Inside the small drawer, the card displayed a single word:",
+      "text": "<|im_start|>user\nContinue this line with one word: Inside the small drawer, the card displayed a single word:<|im_end|>\n<|im_start|>assistant\nInside the small drawer, the card displayed a single word:",
+      "n_tokens": 39,
+      "last_token_id": 25,
+      "last_token_piece": ":"
+    },
+    {
+      "id": "c2_chat_narr_1",
+      "format": "chatml",
+      "style": "narrative",
+      "stem": "Across the chalk slate, the final word written in dust was:",
+      "text": "<|im_start|>user\nContinue this line with one word: Across the chalk slate, the final word written in dust was:<|im_end|>\n<|im_start|>assistant\nAcross the chalk slate, the final word written in dust was:",
+      "n_tokens": 41,
+      "last_token_id": 25,
+      "last_token_piece": ":"
+    },
+    {
+      "id": "c2_chat_anal_0",
+      "format": "chatml",
+      "style": "analytical",
+      "stem": "In the test ledger, the target entry listed in row four was:",
+      "text": "<|im_start|>user\nContinue this line with one word: In the test ledger, the target entry listed in row four was:<|im_end|>\n<|im_start|>assistant\nIn the test ledger, the target entry listed in row four was:",
+      "n_tokens": 43,
+      "last_token_id": 25,
+      "last_token_piece": ":"
+    },
+    {
+      "id": "c2_chat_anal_1",
+      "format": "chatml",
+      "style": "analytical",
+      "stem": "From the sample index, the marked label shown at the end was:",
+      "text": "<|im_start|>user\nContinue this line with one word: From the sample index, the marked label shown at the end was:<|im_end|>\n<|im_start|>assistant\nFrom the sample index, the marked label shown at the end was:",
+      "n_tokens": 43,
+      "last_token_id": 25,
+      "last_token_piece": ":"
+    }
+  ],
+  "prompt_length_summary": {
+    "bare_min": 12,
+    "bare_max": 14,
+    "bare_mean": 13.25,
+    "chatml_min": 39,
+    "chatml_max": 43,
+    "chatml_mean": 41.5,
+    "chatml_to_bare_mean_ratio": 3.132
+  },
+  "unembed_pairwise_cosine": {
+    "raw_u": {
+      "within_pos": 0.1621,
+      "cross_pos": 0.1208,
+      "open_x_func": 0.0905,
+      "func_x_func": 0.1362,
+      "noun_x_noun": 0.1849
+    },
+    "centered_u_minus_mu": {
+      "within_pos": 0.088,
+      "cross_pos": 0.0474,
+      "open_x_func": 0.0601,
+      "func_x_func": 0.1812,
+      "noun_x_noun": 0.0511
+    },
+    "shrink_0.1_whitened": {
+      "within_pos": 0.031,
+      "cross_pos": 0.003,
+      "open_x_func": 0.0025,
+      "func_x_func": 0.0585,
+      "noun_x_noun": 0.0199
+    }
+  },
+  "layer_geometry": {
+    "12": {
+      "role": "sweep_layer",
+      "lambda_ridge": 0.32132,
+      "trace_R_over_d": 0.3141
+    },
+    "15": {
+      "role": "sweep_layer",
+      "lambda_ridge": 0.421587,
+      "trace_R_over_d": 0.4171
+    },
+    "18": {
+      "role": "primary_C2.1_and_sweep",
+      "lambda_ridge": 0.462931,
+      "trace_R_over_d": 0.5106,
+      "frozen_unit_gain_bleed_24": {
+        "R_mf": {
+          "diag_unit_gain_mean": 1.9944,
+          "cross_abs_over_diag": 0.2232,
+          "cross_signed_over_diag": 0.2232,
+          "same_over_cross": 1.1923,
+          "offdiag_rank1_svd_share": 0.9359
+        },
+        "R_ridge_raw": {
+          "diag_unit_gain_mean": 1.4831,
+          "cross_abs_over_diag": 0.1102,
+          "cross_signed_over_diag": 0.1102,
+          "same_over_cross": 1.2916,
+          "offdiag_rank1_svd_share": 0.912
+        },
+        "R_ridge_centered": {
+          "diag_unit_gain_mean": 1.3439,
+          "cross_abs_over_diag": 0.0195,
+          "cross_signed_over_diag": -0.008,
+          "same_over_cross": 1.7886,
+          "offdiag_rank1_svd_share": 0.3898
+        },
+        "R_ridge_shrink": {
+          "diag_unit_gain_mean": 1.3484,
+          "cross_abs_over_diag": 0.0158,
+          "cross_signed_over_diag": 0.003,
+          "same_over_cross": 2.275,
+          "offdiag_rank1_svd_share": 0.2732
+        },
+        "logit_lens": {
+          "diag_unit_gain_mean": 0.9381,
+          "cross_abs_over_diag": 0.0349,
+          "cross_signed_over_diag": 0.0262,
+          "same_over_cross": 1.4863,
+          "offdiag_rank1_svd_share": 0.51
+        }
+      }
+    },
+    "21": {
+      "role": "sweep_layer",
+      "lambda_ridge": 0.500173,
+      "trace_R_over_d": 0.6144
+    },
+    "24": {
+      "role": "primary_C2.1_and_sweep",
+      "lambda_ridge": 0.513138,
+      "trace_R_over_d": 0.7226,
+      "frozen_unit_gain_bleed_24": {
+        "R_mf": {
+          "diag_unit_gain_mean": 2.0309,
+          "cross_abs_over_diag": 0.2242,
+          "cross_signed_over_diag": 0.2242,
+          "same_over_cross": 1.1635,
+          "offdiag_rank1_svd_share": 0.944
+        },
+        "R_ridge_raw": {
+          "diag_unit_gain_mean": 1.6272,
+          "cross_abs_over_diag": 0.101,
+          "cross_signed_over_diag": 0.101,
+          "same_over_cross": 1.3241,
+          "offdiag_rank1_svd_share": 0.9088
+        },
+        "R_ridge_centered": {
+          "diag_unit_gain_mean": 1.4874,
+          "cross_abs_over_diag": 0.0171,
+          "cross_signed_over_diag": -0.0072,
+          "same_over_cross": 2.1489,
+          "offdiag_rank1_svd_share": 0.3722
+        },
+        "R_ridge_shrink": {
+          "diag_unit_gain_mean": 1.4876,
+          "cross_abs_over_diag": 0.0135,
+          "cross_signed_over_diag": 0.0021,
+          "same_over_cross": 2.6988,
+          "offdiag_rank1_svd_share": 0.2565
+        },
+        "logit_lens": {
+          "diag_unit_gain_mean": 1.2383,
+          "cross_abs_over_diag": 0.0249,
+          "cross_signed_over_diag": 0.0192,
+          "same_over_cross": 2.0792,
+          "offdiag_rank1_svd_share": 0.4649
+        }
+      }
+    },
+    "27": {
+      "role": "primary_C2.1_and_sweep",
+      "lambda_ridge": 0.528329,
+      "trace_R_over_d": 0.8363,
+      "frozen_unit_gain_bleed_24": {
+        "R_mf": {
+          "diag_unit_gain_mean": 2.0466,
+          "cross_abs_over_diag": 0.2574,
+          "cross_signed_over_diag": 0.2574,
+          "same_over_cross": 1.134,
+          "offdiag_rank1_svd_share": 0.95
+        },
+        "R_ridge_raw": {
+          "diag_unit_gain_mean": 1.6898,
+          "cross_abs_over_diag": 0.1012,
+          "cross_signed_over_diag": 0.1012,
+          "same_over_cross": 1.3384,
+          "offdiag_rank1_svd_share": 0.9107
+        },
+        "R_ridge_centered": {
+          "diag_unit_gain_mean": 1.5402,
+          "cross_abs_over_diag": 0.0171,
+          "cross_signed_over_diag": -0.0082,
+          "same_over_cross": 2.1243,
+          "offdiag_rank1_svd_share": 0.3819
+        },
+        "R_ridge_shrink": {
+          "diag_unit_gain_mean": 1.5412,
+          "cross_abs_over_diag": 0.013,
+          "cross_signed_over_diag": 0.0013,
+          "same_over_cross": 2.7815,
+          "offdiag_rank1_svd_share": 0.261
+        },
+        "logit_lens": {
+          "diag_unit_gain_mean": 1.3777,
+          "cross_abs_over_diag": 0.0222,
+          "cross_signed_over_diag": 0.0166,
+          "same_over_cross": 2.3057,
+          "offdiag_rank1_svd_share": 0.4455
+        }
+      }
+    },
+    "30": {
+      "role": "sweep_layer",
+      "lambda_ridge": 0.50819,
+      "trace_R_over_d": 0.969
+    }
+  },
+  "prenorm_gamma_mask_geometry": {
+    "18": {
+      "ff": {
+        "gamma_rms": 0.13145,
+        "gamma_min_abs": 0.000893,
+        "drop_k": 4,
+        "unmasked_deliverable_frac": 0.3368,
+        "unmasked_worst_blowup": 7.18,
+        "masked_deliverable_frac": 0.9893,
+        "masked_worst_blowup": 1.02,
+        "masked_cos_ret": 0.99948
+      },
+      "attn": {
+        "gamma_rms": 0.10403,
+        "gamma_min_abs": 0.000496,
+        "drop_k": 16,
+        "unmasked_deliverable_frac": 0.2199,
+        "unmasked_worst_blowup": 12.35,
+        "masked_deliverable_frac": 0.9923,
+        "masked_worst_blowup": 1.01,
+        "masked_cos_ret": 0.99801
+      }
+    },
+    "21": {
+      "ff": {
+        "gamma_rms": 0.15959,
+        "gamma_min_abs": 0.000254,
+        "drop_k": 4,
+        "unmasked_deliverable_frac": 0.2453,
+        "unmasked_worst_blowup": 21.84,
+        "masked_deliverable_frac": 0.9921,
+        "masked_worst_blowup": 1.02,
+        "masked_cos_ret": 0.99955
+      },
+      "attn": {
+        "gamma_rms": 0.10986,
+        "gamma_min_abs": 0.000441,
+        "drop_k": 16,
+        "unmasked_deliverable_frac": 0.3167,
+        "unmasked_worst_blowup": 9.26,
+        "masked_deliverable_frac": 0.9966,
+        "masked_worst_blowup": 1.01,
+        "masked_cos_ret": 0.99804
+      }
+    },
+    "24": {
+      "ff": {
+        "gamma_rms": 0.1905,
+        "gamma_min_abs": 0.001564,
+        "drop_k": 4,
+        "unmasked_deliverable_frac": 0.4936,
+        "unmasked_worst_blowup": 5.93,
+        "masked_deliverable_frac": 0.9885,
+        "masked_worst_blowup": 1.03,
+        "masked_cos_ret": 0.99944
+      },
+      "attn": {
+        "gamma_rms": 0.16435,
+        "gamma_min_abs": 0.008362,
+        "drop_k": 16,
+        "unmasked_deliverable_frac": 0.7538,
+        "unmasked_worst_blowup": 1.51,
+        "masked_deliverable_frac": 0.9943,
+        "masked_worst_blowup": 1.02,
+        "masked_cos_ret": 0.99778
+      }
+    },
+    "27": {
+      "ff": {
+        "gamma_rms": 0.23585,
+        "gamma_min_abs": 0.000148,
+        "drop_k": 4,
+        "unmasked_deliverable_frac": 0.1289,
+        "unmasked_worst_blowup": 35.36,
+        "masked_deliverable_frac": 0.9858,
+        "masked_worst_blowup": 1.04,
+        "masked_cos_ret": 0.99951
+      },
+      "attn": {
+        "gamma_rms": 0.1703,
+        "gamma_min_abs": 0.000381,
+        "drop_k": 16,
+        "unmasked_deliverable_frac": 0.21,
+        "unmasked_worst_blowup": 16.66,
+        "masked_deliverable_frac": 0.996,
+        "masked_worst_blowup": 1.01,
+        "masked_cos_ret": 0.99817
+      }
+    }
+  },
+  "planned_budget": {
+    "clean_and_shams_and_c0_colon": 38,
+    "block1_C2_1_bleed_3L_5arms_24x8": 2880,
+    "block2_C2_2_bidirectional_mlp_patching_L19_31": 1536,
+    "block2b_C2_3_sweep_7L_ll_and_rand32": 3136,
+    "block3_C2_4_prenorm_ablation_2doses": 1536,
+    "total_planned_short_fwds": 9126,
+    "estimated_runtime_L4_or_A100_min": "8-14",
+    "estimated_cost_CU": "0.45-1.10"
+  }
+}
