@@ -122,6 +122,18 @@ Three OLMo 2 1B checkpoints (SFT, DPO, Instruct) at the Hub revisions in `part21
 - Refusals are counted separately and never as identity claims: OpenAI-family refusals are the commonest at every stage (97, 138 and 159 of 49,280 answers), and they do not enter the OpenAI led counts, so an answer that only refuses is not a moved direction.
 - 218.6's Alibaba-or-Microsoft counts are 1 and 26 answers; its interval excludes 0 but its point estimate, 3.4 points, is a third of the registered 10-point bar, and its verdict is not read.
 
+## Rescore it yourself
+
+From the repository root, with any Python 3.10 or later and only the standard library (no model, no GPU):
+
+```
+python3 -I part218/score218.py --run-dir results218-v4
+python3 -I part218/audit218_2x2.py --run-dir results218-v4
+git diff --exit-code results218-v4/
+```
+
+The first command rewrites `results218-v4/score218.json` and the audit sample `results218-v4/audit218.jsonl` from the committed answers; the second rewrites `results218-v4/audit/disagreements.md` from the two readers' committed labels. Check that each command exits 0 before reading the diff: a scorer that fails before writing leaves `git diff` empty too. The readers themselves (`part218/audit218_label.py`) call DeepSeek V4.1 Flash and Luna and need API keys, so they are not part of the rescore; their kappa of 0.577 follows from the 2x2 in `disagreements.md` (289 of 300 agree; DeepSeek calls 281 answers genuine and Luna 292). The scorecard records repo-relative paths since 2026-11-24; at publication it carried absolute local paths, and no number changed.
+
 ## Files
 
 - Design and amendments: `part218/DESIGN.md` (Amendment 1 at the end); registered text: `PREDICTIONS.md`, Part 218.

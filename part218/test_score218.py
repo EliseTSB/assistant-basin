@@ -954,3 +954,11 @@ def test_the_scorer_refuses_a_pre_v4_run_dir(tmp_path):
     with pytest.raises(SystemExit) as caught:
         score218.load_run_dir(tmp_path)
     assert 'not a v4 run directory' in str(caught.value)
+
+
+def test_scorecard_paths_are_repo_relative(tmp_path):
+    # A rescore in any clone must write the same bytes (2026-11-24): paths inside the repo are recorded relative to it.
+    inside = score218.HERE.parent / 'results218-v4'
+    assert score218._repo_path(inside) == 'results218-v4'
+    assert score218._repo_path(score218.PROMPTS_PATH) == 'part218/prompts218-v4.json'
+    assert score218._repo_path(tmp_path) == str(tmp_path.resolve())

@@ -1,7 +1,7 @@
 {
  "part": 218,
  "instrument": "v4 (Amendment 1)",
- "run_dir": "/home/elisepc/green/worktrees/ab-part218/results218-v4",
+ "run_dir": "results218-v4",
  "models": {
   "SFT": {
    "layers": [
@@ -49705,7 +49705,7 @@
   "mismatches": []
  },
  "prompts": {
-  "path": "/home/elisepc/green/worktrees/ab-part218/part218/prompts218-v4.json",
+  "path": "part218/prompts218-v4.json",
   "sha256": "d84ff8497a182896bdbf6a6c3c1aaa659df4c3902f98bd2364673df7c58097f2",
   "expected_sha256": "d84ff8497a182896bdbf6a6c3c1aaa659df4c3902f98bd2364673df7c58097f2"
  },

@@ -182,10 +182,20 @@ def load_meta(path: Path) -> dict:
     return {}
 
 
+def _repo_path(p) -> str:
+    """A path inside the repository as repo-relative POSIX text, so a rescore in any clone writes the same bytes
+    (added 2026-11-24 after publishing: the scorecard had carried absolute local paths; no number depends on it)."""
+    p = Path(p).resolve()
+    try:
+        return p.relative_to(HERE.parent.resolve()).as_posix()
+    except ValueError:
+        return str(p)
+
+
 def load_run_dir(run_dir: Path) -> dict:
     run_dir = Path(run_dir)
     out = {'pilot': None, 'gate': {}, 'models': {},
-           'run_dir': str(run_dir.resolve())}
+           'run_dir': _repo_path(run_dir)}
     pilot_dir = run_dir / 'pilot'
     if (pilot_dir / 'answers.jsonl').exists():
         out['pilot'] = {'records': load_answers(pilot_dir / 'answers.jsonl'),
@@ -1462,7 +1472,7 @@ def build_score(run: dict) -> tuple[dict, list[dict]]:
         'pilot': public(pilot_analysis),
         'predictions': predictions,
         'gold': gold,
-        'prompts': {'path': str(PROMPTS_PATH), 'sha256': prompts_sha256(),
+        'prompts': {'path': _repo_path(PROMPTS_PATH), 'sha256': prompts_sha256(),
                     'expected_sha256': PROMPTS_SHA256},
         'binomial_tests': binomial_tests,
         'audit': {'per_model': audit_meta, 'sample_size': len(sample)},
