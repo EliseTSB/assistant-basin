@@ -382,7 +382,7 @@ def verdict_rows(lines, pred_id):
     return out
 
 
-def publish(repo, pid, legacy_ok=False):
+def publish(repo, pid, legacy_ok=False, results=None):
     r = Report(f"part_check publish {pid} ({repo})")
     design = find_design(repo, pid)
     v1 = design is not None and re.search(r"^Procedure: v1\b", "\n".join(
@@ -391,7 +391,9 @@ def publish(repo, pid, legacy_ok=False):
         r.check(legacy_ok, "legacy part; checks skipped by --legacy-ok",
                 "the design has no 'Procedure: v1' line (an older part publishes only with --legacy-ok)")
         return r
-    rdir = repo / "results" / f"part{pid.lower()}"
+    # results/partNN is the layout; --results names another folder for a part whose runner wrote elsewhere
+    # (Part 218 writes results218-v4/ at the top level; its public runner defaults there, so the folder stays).
+    rdir = repo / results if results else repo / "results" / f"part{pid.lower()}"
     readme = rdir / "README.md"
     if not r.check(readme.exists(), f"{readme.relative_to(repo)} exists", f"no {readme.relative_to(repo)} "
                    "(start from templates/RESULTS-README.md)"):
@@ -458,6 +460,7 @@ def main(argv=None):
     ap.add_argument("--repo", default=str(Path(__file__).resolve().parent.parent))
     ap.add_argument("--no-fetch", action="store_true")
     ap.add_argument("--legacy-ok", action="store_true")
+    ap.add_argument("--results", help="publish: the results folder, relative to the repo, when it is not results/partNN")
     ap.add_argument("--reference", help="kernel: the CPU float32 record from tools/kernel_reference.py")
     ap.add_argument("--candidate", help="kernel: the record decoded on the device and kernel under test")
     ap.add_argument("--min-margin", type=float, default=DEFAULT_MIN_MARGIN,
@@ -481,7 +484,7 @@ def main(argv=None):
         print(f"part id must look like 115 or 109b, not {a.part!r}", file=sys.stderr)
         return 2
     rep = prelaunch(repo, a.part, fetch=not a.no_fetch, legacy_ok=a.legacy_ok, min_margin=a.min_margin) \
-        if a.stage == "prelaunch" else publish(repo, a.part, legacy_ok=a.legacy_ok)
+        if a.stage == "prelaunch" else publish(repo, a.part, legacy_ok=a.legacy_ok, results=a.results)
     rep.print()
     return 1 if rep.failed else 0
 

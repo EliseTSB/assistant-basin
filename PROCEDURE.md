@@ -341,3 +341,7 @@ beyond one part.
   estimate into a letter component |mean(e x s)| and a consistency component |mean(e)| before reading an overlap
   (`part205/letter205.py`), and gate a stage on P(consistent) above chance.
 - 2026-11-19 (Part 212): the pilot was launched without `score212.py`, which it imports inside its stopping rule at the run's last step, and earlier the same day `part66` needed `part25`. `tools/launch_arc.py` now refuses a copied file's import of a repo module that is neither in `--copy` nor in the job folder, and warns when the job folder's copy differs from the repo (the stale-shadow trap). A replay over 243 past launches found many runs importing modules they never copied, which worked only because an older copy sat in the job folder.
+- 2026-11-24 (Part 218): a runner that writes outside `results/partNN` (Part 218's top-level `results218-v4/`, its
+  public runner's default) left the publish check and `tools/parts_rows.py` blind to a finished part. `part_check
+  publish NN --results <dir>` names the folder, and `parts_rows.py` now also finds top-level `resultsNN/` and
+  `resultsNN-*/` folders. A new part should still write under `results/partNN/`.

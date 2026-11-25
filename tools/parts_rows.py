@@ -251,14 +251,24 @@ def code_for(pid: str) -> str:
     return "unknown"
 
 
+def top_results(pid: str) -> list:
+    # Part 218's runner writes top-level results218/ (the stopped v3 pilot) and results218-v4/ (the run); its
+    # public runner defaults there, so those folders stay where they are rather than moving under results/.
+    return sorted(p for p in ROOT.glob(f"results{pid}*") if p.is_dir() and
+                  (p.name == f"results{pid}" or p.name.startswith(f"results{pid}-")))
+
+
 def results_for(pid: str) -> str:
     folder = ROOT / "results" / f"part{pid}"
-    return f"`results/part{pid}/`" if folder.is_dir() else "unknown"
+    if folder.is_dir():
+        return f"`results/part{pid}/`"
+    tops = top_results(pid)
+    return "; ".join(f"`{p.name}/`" for p in tops) if tops else "unknown"
 
 
 def status_for(pid: str, section: dict | None) -> str:
     folder = ROOT / "results" / f"part{pid}"
-    if (folder / "README.md").is_file():
+    if (folder / "README.md").is_file() or any((p / "README.md").is_file() for p in top_results(pid)):
         return "done"
     # Part 180 writes its result to results/part180/v5/RESULT.md, with no
     # README; the run is finished ("the both-head assay is PARKED").

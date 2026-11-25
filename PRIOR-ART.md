@@ -1079,3 +1079,25 @@ Verified 2026-11-20 that none of the six papers below is currently cited in `PRI
   over forced-choice answers found the option letter driving the choice before SFT, and why a forced-choice readout
   now needs a gate showing the model picks by content. Their head ablation is a template for testing whether the
   letter-commitment heads compete with what a forced-choice part is trying to read. Not designed.
+
+## 2026-11-24, Anthropic Fellows: returning to the neuron basis (sent by Elise; the sentences below read at the two pages through a fetch agent, quoted where marked; appendices not read, no code or data found)
+
+- **Shone and Dunlap, [Returning to the Neuron Basis for Interpretability, Part 1: Answering Three Objections](https://alignment.anthropic.com/2026/neuron-basis-theory/)**
+  and **[Part 2: Using Neurons For Safety Applications](https://alignment.anthropic.com/2026/neuron-basis-applications/)**
+  (Anthropic Fellows, 2026-11-23). They read each neuron by what it writes: its output vector (its column of the down
+  projection), through the J-lens's token directions. Part 1, on Llama-3.1-8B-Instruct, Qwen3-8B, Qwen3-14B and
+  OLMo-3-32B: a neuron "will contribute two unrelated concepts at once in about 1% or fewer of the cases we sampled";
+  an output vector moved to another layer still raises its word over a same-size random direction at 90 to 98%
+  (indirect) and 93 to 99.6% (direct) of concept-layer pairs before the last tenth of depth. Part 2, over six
+  open-weight models including OLMo-2-7B, uses neurons for label-free probes, steering, finding hidden behaviours in
+  finetunes and checking unlearning, and reports that "finetuning raises the activation of neurons whose output
+  vectors already add the trained behavior": a neuron's activation change correlates with its base output vector's
+  alignment to the behaviour more than for at least 98.5% of 200 random directions. **Bears on our parts:** the
+  closest outside work to our reading of a neuron by its write (Part 71's L27 N3325 writing Google through the
+  unembedding; Part 92's concept and slot neurons). Their finetuning result is our training-stage question asked
+  from the other end: in Part 92 OLMo 2 1B's slot neurons start showing their persona mostly at DPO while their
+  down-projection columns, the output vectors, barely move (median cosine 0.9950 from the mid-training end to
+  Instruct, `results/part92/README-steps2-3.md`), and theirs says finetuning turns up the firing of units whose base
+  writes already fit. Their models are 7B and up, with no stage
+  series; following one unit's write and firing across OLMo's base, SFT, DPO and Instruct checkpoints is still ours.
+  Not designed.

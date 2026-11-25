@@ -610,3 +610,12 @@ def test_missing_model_id_is_not_a_missing_path():
     for tok in ("results/part999", "part209/AMENDMENT-9", "results/part209/r1r3-x.json", "cold/REPORT.md",
                 "midtrain-end/records.jsonl", "tools/X1"):
         assert not pc.looks_like_model_id(tok), tok
+
+
+def test_publish_results_folder_override(repo):
+    # A part whose runner writes outside results/partNN (Part 218: results218-v4/) names its folder with --results.
+    write_results(repo, README.replace("results/part900/", "results900-v2/"))
+    sh("git", "mv", "results/part900", "results900-v2", cwd=repo)
+    sh("git", "commit", "-q", "-m", "move", cwd=repo)
+    assert any("results/part900/README.md" in f for f in pc.publish(repo, "900").failed)
+    assert pc.publish(repo, "900", results="results900-v2").failed == []
