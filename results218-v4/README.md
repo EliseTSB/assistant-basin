@@ -124,7 +124,17 @@ Three OLMo 2 1B checkpoints (SFT, DPO, Instruct) at the Hub revisions in `part21
 
 ## Rescore it yourself
 
-From the repository root, with any Python 3.10 or later and only the standard library (no model, no GPU):
+The whole repository is several GB, so check out only this part's two folders (about 220 MB; the scorer imports
+nothing from other folders):
+
+```
+git clone --filter=blob:none --no-checkout https://github.com/EliseTSB/assistant-basin.git
+cd assistant-basin
+git sparse-checkout set part218 results218-v4
+git checkout main
+```
+
+Then, from the repository root, with any Python 3.10 or later and only the standard library (no model, no GPU):
 
 ```
 python3 -I part218/score218.py --run-dir results218-v4

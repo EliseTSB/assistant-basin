@@ -21,6 +21,10 @@ Run the README's "Rescore it yourself" commands yourself from a fresh clone of p
 could not be rescored from public files when first tried: an arrays file was never published, and a scorer read
 inputs from the GPU job folder. A replication that fails on our own fresh clone wastes the window.
 
+Since 2026-11-24 the "Rescore it yourself" section opens with a sparse checkout naming every folder its scorer
+imports, and the fresh-clone check above runs in exactly that sparse clone: Gemini Task's container has about 1 GB
+of disk and a 3.9 GB `/tmp`, and a full clone of the repository no longer fits (Part 218's first handoff).
+
 Gate the diff on the scorer's exit code in that check too. On 2026-11-23 a sparse clone of Part 221 printed a
 clean `git diff` while the scorer had died on a missing import, because files that were never rewritten look unchanged.
 
@@ -63,12 +67,13 @@ change, push or post anything anywhere; this is read-only checking.
 
 **Steps:**
 
-1. Clone the repository (`git clone https://github.com/EliseTSB/assistant-basin.git`) and `cd assistant-basin`.
-2. Open `results/partNNN/README.md` and find the section "Rescore it yourself".
+1. Open `results/partNNN/README.md` on GitHub and find the section "Rescore it yourself". The whole repository is
+   several GB, so clone it with that section's sparse-checkout commands, which check out only the folders the
+   rescore needs, and `cd assistant-basin`.
+2. Keep that README open for the steps below.
 3. Use any Python 3.10 or later (the command may be `python3` on your machine); the scorer needs only the standard
    library.
-4. Run that section's commands exactly, from the repository root, in a full clone (not sparse: scorers import code
-   from other part folders). First check that the scorer itself exits 0: if it fails before writing, `git diff` also
+4. Run that section's commands exactly, from the repository root of that sparse clone. First check that the scorer itself exits 0: if it fails before writing, `git diff` also
    prints nothing. `git diff --exit-code` then prints nothing and exits 0 if your scorecard is byte-identical.
 5. Report: whether `git diff --exit-code` printed nothing and exited 0, and if not, the differences; the exact commands
    and any errors with their full text; your Python version; any step that was unclear, wrong or missing.
@@ -88,3 +93,4 @@ you think caused it.
 | 2026-11-22 | Deep Research | Part 219 follow-up | 13 of 13 checked citations real; named the 60-head complement test (became Part 221) |
 | 2026-11-22 | Task | Vesper's concept-vs-slot study | Byte-identical on Python 3.11; caught a double-rounded number |
 | 2026-11-22 | Task | Part 219 | Byte-identical on Python 3.11; six of six numbers matched; caught `python` vs `python3` and a missing `cd` |
+| 2026-11-24 | Task | Part 218 | Clone failed: the repository outgrew its disk (1.1 GB, `/tmp` 3.9 GB), so no rescore; a read-only audit matched six of six numbers and eight of eight verdicts. Its one README finding was wrong (`audit-summary.json` does carry `agree: 289`). Sparse-checkout steps added to the README and this template |
