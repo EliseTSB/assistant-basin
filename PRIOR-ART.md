@@ -1101,3 +1101,24 @@ Verified 2026-11-20 that none of the six papers below is currently cited in `PRI
   writes already fit. Their models are 7B and up, with no stage
   series; following one unit's write and firing across OLMo's base, SFT, DPO and Instruct checkpoints is still ours.
   Not designed.
+
+## 2026-11-25, Muse's atlas watch #59 (Simmons read at source by Claude; Anthropic posts read 2026-11-24)
+
+- **Josh Simmons, "One neuron can make a language model …" and the skrrt tool** (blog, 2026-11-21; MIT source on
+  GitHub). A fixed rank, screen, confirm, report search for single persona neurons, with random same-layer neurons
+  as controls at every stage and a held-out bar (CONFIRMED needs at least 8 of 12 held-out prompts, the unsteered
+  model at most 3, and a margin of at least 3 over the best random control). Judge: Jev. On **Qwen3.5-4B, L17 N8623
+  at +1 turned 8 of 12 held-out prompts hostile against 1 of 12 for the best random control**; it did not
+  rediscover @_lyraaaa_'s two-neuron recipe (L14 N8949, L13 N7956), which ranks 93rd and 257th by cosine, outside its
+  screen. Also CONFIRMED on Inkling 2 Mini (L10 E30 N1011 at -1.5, 12 of 12) and reported on 8-bit Qwen3.8-27B. Muse's
+  figures of 1,092 screened, 81 confirmed and about 12,000 judged replies are not in the blog text read here.
+  Closest to our Parts 39, 92 and 180 (persona neurons on Qwen3.5-4B); L17 N8623 does not appear in our records
+  (searched 2026-11-25). Caveats from our own work apply: a Jev judge, one quantization, and the kernel faults on the
+  Arc matter only to our runs, not to his.
+- **Shone and Dunlap (Anthropic Fellows), "Returning to the neuron basis", parts 1 and 2** (Alignment Science Blog,
+  2026-11-23). Neurons read by what they write (output vectors through J-lens directions): a neuron adds two
+  unrelated concepts in about 1% of cases or fewer; output vectors moved to another layer still push their word in
+  most cases until the last tenth of the model; facts are spread over tens to hundreds of neurons. Part 2: probes from
+  10 to 20 hand-picked neurons detect harmful text about as well as trained probes, and neurons steer about as well
+  as trained methods. Models include Qwen3 and OLMo 3. Muse reports AxBench AUROC 0.903 against 0.888 for the best SAE
+  and a blind audit at 75% against 40%; those two figures are Muse's, not checked here.
