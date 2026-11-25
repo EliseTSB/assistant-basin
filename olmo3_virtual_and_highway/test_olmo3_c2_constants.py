@@ -47,7 +47,7 @@ class TestStageC2ConstantsV3(unittest.TestCase):
                 cls.bank[k] = f.get_tensor(k)
 
     def test_schema_splits_and_zero_overlap_with_c0_c1_personas(self) -> None:
-        self.assertEqual(self.c2["schema_version"], "c2-prereg-constants-v3")
+        self.assertEqual(self.c2["schema_version"], "c2-prereg-constants-v4")
         c2_words = {t["string"] for t in self.c2["targets_24"]}
         c0_words = {t["string"] for t in self.c0["targets_16"]}
         c1_words = {t["string"] for t in self.c1["targets_24"]}

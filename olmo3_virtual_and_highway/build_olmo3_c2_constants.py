@@ -81,10 +81,11 @@ C1_LOGIT_LENS_SUM_MLP_PROVENANCE = {
     "L27": {"median_open_18": -1.0024, "median_func_6": -1.0707, "gap_open_minus_func": 0.0683},
 }
 
-# Unified C2.0.3 linearity ceiling rates (M6: derived identically from C1 registered rates via math.ceil(rate * N))
-C203_RATE_RMSN_GT_20PCT = 0.0015
-C203_RATE_RMSN_GT_12PCT = 0.0150
-C203_RATE_FDE_GT_045 = 0.0070
+# Exact C1 registered counts over N=1,728 (F4: exact ceil(count * N / 1728) eliminates rounding drift!)
+C1_REG_N = 1728
+C1_REG_COUNT_RMSN_GT_20PCT = 2
+C1_REG_COUNT_RMSN_GT_12PCT = 26
+C1_REG_COUNT_FDE_GT_045 = 12
 
 # Fresh 24-target mixed-POS bank (0 overlap with C0, C1, or personas).
 # Split deterministically per stratum: first 4 = primary_16, last 2 = heldout_8 (M2).
@@ -380,7 +381,7 @@ def simulate_c2_power(seed: int = POWER_SIM_SEED) -> dict[str, Any]:
 
     # Exact 2^12 = 4096 sign-flip matrix for C2.2 exact one-sided p on d_i(0.50)
     signs_12 = ((np.arange(4096)[:, None] >> np.arange(12)[None, :]) & 1) * 2 - 1  # [4096, 12]
-    alpha_step1 = 0.05 / 8.0  # 0.00625
+    alpha_step1 = 0.05 / 7.0  # 0.007143 (m=7 Holm family; C2.4b moved to descriptive estimation per F3)
 
     # 1. C2.2 Full Conjunction (N=12 pairs; simulated with realistic gap ~ Normal(0.60, 0.12) matching C1 L18)
     c22_power: dict[str, Any] = {}
@@ -448,7 +449,7 @@ def simulate_c2_power(seed: int = POWER_SIM_SEED) -> dict[str, Any]:
             }
         c24c_power[f"sd_{sd:.2f}"] = {"effective_equiv_margin_approx": eff_margin, "grid": row}
 
-    # 3. C2.4b m70a30 vs ff (N=24, aligned strictly to registered Holm alpha/8 = 0.00625 -> t >= 2.74 at df=23, m8)
+    # 3. C2.4b m70a30 vs ff (descriptive estimation sensitivity grid, F3; shown at nominal alpha=0.05 one-sided t>=1.71)
     c24b_power: dict[str, Any] = {}
     for sd_log in (0.06, 0.10, 0.15):
         row = {}
@@ -457,16 +458,16 @@ def simulate_c2_power(seed: int = POWER_SIM_SEED) -> dict[str, Any]:
             x = rng.normal(math.log(true_ratio), sd_log, size=(n_sim, 24))
             m = x.mean(axis=1)
             se = x.std(axis=1, ddof=1) / math.sqrt(24)
-            t_stat = m / np.maximum(se, 1e-12)
-            ok = (np.exp(m) >= 1.10) & ((m - 1.7139 * se) > 0.0) & (t_stat >= 2.74)
+            ok = (np.exp(m) >= 1.10) & ((m - 1.7139 * se) > 0.0)
             row[f"ratio_{true_ratio:.2f}"] = round(float(ok.mean()), 4)
         c24b_power[f"sd_log_{sd_log:.2f}"] = row
 
     return {
         "seed": seed,
-        "C2.2_full_conjunction_N12_pairs": c22_power,
+        "sd_provenance_note": "Sensitivity grids (not empirically derived from C1); C2.1 rows 1-4 and C2.4a row 7 are not separately power-simulated (F5).",
+        "C2.2_full_conjunction_N12_pairs_Holm7": c22_power,
         "C2.4c_K3_median_TOST_3way_N24": c24c_power,
-        "C2.4b_m70a30_vs_ff_Holm8_N24": c24b_power,
+        "C2.4b_m70a30_descriptive_sensitivity_N24": c24b_power,
     }
 
 
@@ -776,7 +777,7 @@ def main() -> None:
     out_bank = args.out_bank
     out_bank.parent.mkdir(parents=True, exist_ok=True)
     bank_meta = {
-        "study": "OLMo-3-7B Stage C2 v3",
+        "study": "OLMo-3-7B Stage C2 v4",
         "model": MODEL_ID,
         "revision": MODEL_REV,
         "r_lens_sha256": r_sha,
@@ -869,7 +870,8 @@ def main() -> None:
         "estimated_cost_CU": "0.45-1.05",
     }
 
-    # Unified 8-test reject-the-null Holm-Bonferroni family (B5: equivalence claims moved to separate Gates!)
+    # Unified 7-test reject-the-null Holm-Bonferroni family (B5 & F3: C2.4b moved to descriptive estimation;
+    # equivalence & calibration gates live in registered_gates_outside_holm!)
     holm_tests = [
         "p_C2.1_ctr_vs_raw",
         "p_C2.1_shk_vs_ctr",
@@ -878,36 +880,53 @@ def main() -> None:
         "p_C2.2_bare_into_chat",
         "p_C2.2_chat_into_bare",
         "p_C2.4a_mask_vs_unmask",
-        "p_C2.4b_m70a30_vs_ff",
     ]
     holm_stepdown = [round(0.05 / (len(holm_tests) + 1 - k), 6) for k in range(1, len(holm_tests) + 1)]
 
-    # M6: Unified math.ceil(rate * N) C2.0.3 ceilings for BOTH Regime-N and Regime-D!
+    # F1: Formal on-model definitions for every symbol referenced in Holm rows 1-7 (verified by stdlib suite!)
+    holm_symbol_definitions = {
+        "Delta_logit_a(j; i, L, p)": "logit_int(j) - logit_clean(j) on token j when injecting arm a's unit write for source target i at layer L, positions='last', dose=0.75*pmn[L] on prompt p",
+        "diag_a(i)": "Equal-weight layer mean over L in {18, 24, 27} of diag_a(i, L) = mean_{p in 8}[Delta_logit_a(i; i, L, p)]",
+        "diag_shk": "diag_a(i) for arm a = R_ridge_shrink",
+        "diag_raw": "diag_a(i) for arm a = R_ridge_raw",
+        "ho_cross_a(i)": "Strictly ABSOLUTE ratio-of-means: equal-weight layer mean over L in {18, 24, 27} of (mean_{p in 8, j in heldout_8: strata(j)!=strata(i)} |Delta_logit_a(j; i, L, p)|) / max(|diag_a(i, L)|, 0.25), floored below by 1e-6 before log. Guard rule: if >2 of 16 primary_16 sources have |diag_a(i, L)| <= 0.25 in any arm, fail closed as C2.1=DEGENERATE_DIAG.",
+        "ho_cross_raw": "ho_cross_a(i) for arm a = R_ridge_raw",
+        "ho_cross_ctr": "ho_cross_a(i) for arm a = R_ridge_centered",
+        "ho_cross_shk": "ho_cross_a(i) for arm a = R_ridge_shrink",
+        "ho_cross_ll": "ho_cross_a(i) for arm a = logit_lens",
+        "same_over_cross_a": "Ratio of means over 24 targets: mean_i[mean_{L}(mean_{p, j!=i, same_stratum}|Delta_logit_a| / max(|diag_a(i,L)|,0.25))] / mean_i[mean_{L}(mean_{p, diff_stratum}|Delta_logit_a| / max(|diag_a(i,L)|,0.25))]",
+        "d_i(0.50)": "Denominator-free paired closure margin on stem pair i in {1..12}: s * [(M(ctrl, i) - M(patched, i)) - 0.50 * (M(ctrl, i) - M(ref, i))], where s = sign(G_gap)",
+        "Delta_logit_masked": "Prompt-and-dose-averaged exact target logit shift Delta_logit(t) for L24.prenorm_ff_masked at matched pre-norm write norm (pooled 0.50x & 1.25x live pmn)",
+        "Delta_logit_unmasked": "Prompt-and-dose-averaged exact target logit shift Delta_logit(t) for L24.prenorm_ff_unmasked at exact same pre-norm write norm as masked (pooled 0.50x & 1.25x live pmn)",
+    }
+
+    # F4: Exact math.ceil(C1_count * N / 1728) derivation for BOTH Regime-N and Regime-D!
     n_reg_n = n_b1
     n_reg_d = 3 * len(C2_2_TARGET_INDICES) * len(c22_triples) * 2  # 864 unpatched C2.2 traces
     c203_gates = {
-        "derivation_rule": "Exact math.ceil(rate * N) applied uniformly to BOTH Regime-N and Regime-D using C1 registered rates (0.15% >20% shrink, 1.50% >12% shrink, 0.70% |fde_err|>0.45)",
-        "rate_rmsn_gt_20pct": C203_RATE_RMSN_GT_20PCT,
-        "rate_rmsn_gt_12pct": C203_RATE_RMSN_GT_12PCT,
-        "rate_fde_gt_045": C203_RATE_FDE_GT_045,
+        "derivation_rule": "Exact math.ceil(c1_count * N / 1728) applied uniformly to BOTH Regime-N and Regime-D from C1 registered counts (2/1728 >20% shrink, 26/1728 >12% shrink, 12/1728 |fde_err|>0.45)",
+        "c1_base_N": C1_REG_N,
+        "c1_count_rmsn_gt_20pct": C1_REG_COUNT_RMSN_GT_20PCT,
+        "c1_count_rmsn_gt_12pct": C1_REG_COUNT_RMSN_GT_12PCT,
+        "c1_count_fde_gt_045": C1_REG_COUNT_FDE_GT_045,
         "regime_N_C21_population_N": n_reg_n,
         "regime_N_max_capped": 0,
-        "regime_N_max_rmsn_gt_20pct": math.ceil(C203_RATE_RMSN_GT_20PCT * n_reg_n),
-        "regime_N_max_rmsn_gt_12pct": math.ceil(C203_RATE_RMSN_GT_12PCT * n_reg_n),
+        "regime_N_max_rmsn_gt_20pct": math.ceil(C1_REG_COUNT_RMSN_GT_20PCT * n_reg_n / C1_REG_N),
+        "regime_N_max_rmsn_gt_12pct": math.ceil(C1_REG_COUNT_RMSN_GT_12PCT * n_reg_n / C1_REG_N),
         "regime_D_C22_unpatched_population_N": n_reg_d,
         "regime_D_max_capped": 0,
-        "regime_D_max_rmsn_gt_20pct": math.ceil(C203_RATE_RMSN_GT_20PCT * n_reg_d),
-        "regime_D_max_rmsn_gt_12pct": math.ceil(C203_RATE_RMSN_GT_12PCT * n_reg_d),
+        "regime_D_max_rmsn_gt_20pct": math.ceil(C1_REG_COUNT_RMSN_GT_20PCT * n_reg_d / C1_REG_N),
+        "regime_D_max_rmsn_gt_12pct": math.ceil(C1_REG_COUNT_RMSN_GT_12PCT * n_reg_d / C1_REG_N),
         "regime_D_fde_p95_max": 0.30,
-        "regime_D_max_fde_gt_045": math.ceil(C203_RATE_FDE_GT_045 * n_reg_d),
+        "regime_D_max_fde_gt_045": math.ceil(C1_REG_COUNT_FDE_GT_045 * n_reg_d / C1_REG_N),
     }
 
     l24_ratio_pt = round(C1_RECEIPT_PMN["24"] / C0_RECEIPT_PMN["24"], 4)
     l27_ratio_pt = round(C1_RECEIPT_PMN["27"] / C0_RECEIPT_PMN["27"], 4)
 
     doc = {
-        "schema_version": "c2-prereg-constants-v3",
-        "study": "OLMo-3-7B Stage C2 v3 (Held-Out Lens->Model Whitening Transfer, Pure ChatML-Template Causal MLP Patching, Post-Erasure Sweep, & Pre-Norm Mask/Split/Additivity)",
+        "schema_version": "c2-prereg-constants-v4",
+        "study": "OLMo-3-7B Stage C2 v4 (Held-Out Whitening Arm Comparison & Frozen-Lens Calibration, Pure ChatML-Template Causal MLP Patching, Post-Erasure Sweep, & Pre-Norm Mask/Additivity)",
         "generator_script": "olmo3_virtual_and_highway/build_olmo3_c2_constants.py",
         "model": MODEL_ID,
         "revision": MODEL_REV,
@@ -922,17 +941,28 @@ def main() -> None:
         "prenorm_layers": PRENORM_LAYERS,
         "c22_target_indices_12": C2_2_TARGET_INDICES,
         "c22_l18_frozen_pred_ret": c22_l18_pred_ret,
+        "holm_symbol_definitions": holm_symbol_definitions,
         "registered_rng_and_inference": {
             "holm_family_size": len(holm_tests),
             "holm_tests": holm_tests,
             "holm_alpha_stepdown": holm_stepdown,
-            "holm_stop_rule": "sort ascending p_(1)..p_(8); reject k while p_(k) <= 0.05/(9-k); stop at first failure (all 8 tests are one-sided reject-the-null; equivalence gates live separately)",
-            "equivalence_gates_outside_holm": ["EQ-C2.2_negative_controls_and_shape", "EQ-C2.4c_K3_median_additivity_TOST"],
+            "holm_stop_rule": "sort ascending p_(1)..p_(7); reject k while p_(k) <= 0.05/(8-k); stop at first failure (all 7 tests are one-sided reject-the-null; equivalence & calibration gates live separately; C2.4b is descriptive estimation per F3)",
+            "registered_gates_outside_holm": [
+                "CAL-C2.1_absolute_lens_transfer_and_mu_U_mechanism",
+                "EQ-C2.2_negative_controls_and_shape",
+                "EQ-C2.4c_K3_median_additivity_TOST",
+            ],
+            "secondary_descriptive_readouts": [
+                "C2.1_five_arm_ordering",
+                "C2.4a_unmasked_postmatched_nonlinear_saturation",
+                "C2.4b_m70a30_high_dose_estimation_and_packing_contrast",
+                "C2.4c_1.25x_high_dose_interaction_calibration",
+            ],
             "perm_rng": "Python stdlib random.Random(perm_seed)",
             "perm_seed": PERM_SEED,
-            "perm_rule_16_primary_targets": "Exact enumeration over all 2^16 = 65,536 sign flips (p_min = 1/65536 = 0.000015)",
+            "perm_rule_16_primary_targets": "Exact enumeration over all 2^16 = 65,536 sign flips (p_min = 1/65536 = 0.000015); per-prompt breakdowns reported alongside (F6)",
             "perm_n_flips_24_targets": 100000,
-            "perm_rule_12_stem_pairs": "Exact one-sided enumeration over all 2^12 = 4,096 sign flips on d_i(0.50) (12/12 -> p=0.000244, 11/12 -> p=0.003174 < alpha/8=0.00625)",
+            "perm_rule_12_stem_pairs": "Exact one-sided enumeration over all 2^12 = 4,096 sign flips on d_i(0.50) (12/12 -> p=0.000244, 11/12 -> p=0.003174 < alpha/7=0.007143)",
             "layer_aggregation": "Equal-weight mean over L in {18, 24, 27} per target before target-level inference",
             "bca_rng": "Python stdlib random.Random(bca_seed)",
             "bca_seed": BCA_SEED,

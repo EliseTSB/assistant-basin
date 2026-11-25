@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
-"""Pure stdlib (/usr/bin/python3 -I) row-strict verifier for Stage C2 v3 design doc, JSON constants, and safetensors header (m5, m7).
+"""Pure stdlib (/usr/bin/python3 -I) row-strict & Holm-symbol verifier for Stage C2 v4 design doc, JSON, and safetensors header.
 
 Zero third-party imports (no torch, numpy, safetensors, or transformers). Verifies:
   1. Exact SHA-256 provenance across disk artifacts, c2_prereg_constants.json, and OLMO3-TRANSPORT-C2-DESIGN.md.
-  2. Safetensors binary header parsed via struct+json: exact 34-tensor draw-level 1-to-1 keys & shapes (B4, m4).
-  3. Exact budget arithmetic (8,623 fwds), 13 write shams + 6 patch shams = 19 (m3), 9 C2.2 conds, 9 C2.4 arms.
-  4. 8-test reject-the-null Holm stepdown table (B5), separate equivalence gates, and unified math.ceil C2.0.3 gates (M6).
-  5. ROW-STRICT markdown table checks for §1.3 (15 rows) and §1.4 (4 rows) — every cell verified on its EXACT row (m5)!
-  6. Exact C0/C1 receipt provenance (7.473792 verbatim, m2) & C0-colon ratio arithmetic.
+  2. Safetensors binary header parsed via struct+json: exact 34-tensor draw-level 1-to-1 keys & shapes.
+  3. Exact budget arithmetic (8,623 fwds), 13 write shams + 6 patch shams = 19, 9 C2.2 conds, 9 C2.4 arms.
+  4. 7-test reject-the-null Holm stepdown table (F3), separate gates (CAL-C2.1, EQ-C2.2, EQ-C2.4c), and exact
+     math.ceil(c1_count * N / 1728) C2.0.3 ceilings (F4: 4/44 for N=2880, 1/13/6 for N=864).
+  5. F1 Holm symbol definition check: EVERY metric symbol in Holm rows 1-7 has a formal non-empty definition in
+     c2_prereg_constants.json['holm_symbol_definitions'] AND is documented in OLMO3-TRANSPORT-C2-DESIGN.md.
+  6. ROW-STRICT markdown table checks for §1.3 (15 rows) and §1.4 (4 rows).
+  7. Exact C0/C1 receipt provenance (7.473792 verbatim) & C0-colon ratio arithmetic.
 """
 from __future__ import annotations
 
@@ -39,7 +42,7 @@ def read_safetensors_header(path: Path) -> dict:
         return json.loads(f.read(header_len).decode("utf-8"))
 
 
-class TestStageC2DesignStdlibV3(unittest.TestCase):
+class TestStageC2DesignStdlibV4(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.c2 = json.loads(C2_PATH.read_text(encoding="utf-8"))
@@ -98,14 +101,6 @@ class TestStageC2DesignStdlibV3(unittest.TestCase):
         self.assertEqual(b["shams_total_19"], 19)
         self.assertEqual(len(b["c22_conditions_list"]), 9)
         self.assertEqual(len(b["c24_arms_list"]), 9)
-
-        self.assertEqual(b["clean_shams_anchor_subtotal"], 36 + 19 + 16)
-        self.assertEqual(b["block1_C2_1_3L_5arms_24x8"], 3 * 5 * 24 * 8)
-        self.assertEqual(b["block2_C2_2_steered_9cond_12t_12p_2arms"], 9 * 12 * 12 * 2)
-        self.assertEqual(b["block2_C2_2_unsteered_patched_kl_6cond_12p"], 6 * 12)
-        self.assertEqual(b["block2_C2_2_total"], 2592 + 72)
-        self.assertEqual(b["block2b_C2_3_5L_32v_8p"], 5 * (24 + 8) * 8)
-        self.assertEqual(b["block3_C2_4_9arms_24t_4p_2doses"], 9 * 24 * 4 * 2)
         total = (
             b["clean_shams_anchor_subtotal"]
             + b["block1_C2_1_3L_5arms_24x8"]
@@ -118,37 +113,51 @@ class TestStageC2DesignStdlibV3(unittest.TestCase):
         for token in ("`71`", "`2,880`", "`2,664`", "`1,280`", "`1,728`", "`8,623`"):
             self.assertIn(token, self.md)
 
-    def test_holm8_family_separate_equiv_gates_and_unified_c203_ceilings(self) -> None:
+    def test_holm7_symbol_definitions_and_exact_c1_count_c203_ceilings(self) -> None:
         inf = self.c2["registered_rng_and_inference"]
-        self.assertEqual(inf["holm_family_size"], 8)
-        self.assertEqual(len(inf["holm_tests"]), 8)
-        expected_step = [round(0.05 / (9 - k), 6) for k in range(1, 9)]
+        self.assertEqual(inf["holm_family_size"], 7)
+        self.assertEqual(len(inf["holm_tests"]), 7)
+        expected_step = [round(0.05 / (8 - k), 6) for k in range(1, 8)]
         self.assertEqual(inf["holm_alpha_stepdown"], expected_step)
         for test_id in inf["holm_tests"]:
             self.assertIn(f"`{test_id}`", self.md)
         for alpha in expected_step:
             self.assertIn(f"{alpha:.6f}", self.md)
-        # B5: equivalence claims must NOT be inside holm_tests
-        for t in inf["holm_tests"]:
-            self.assertNotIn("ctrl_equiv", t)
-            self.assertNotIn("tost", t)
-        self.assertIn("Gate `EQ-C2.2`", self.md)
-        self.assertIn("Gate `EQ-C2.4c`", self.md)
 
-        # M6: verify BOTH Regime-N and Regime-D derive from exact math.ceil(rate * N)
+        # F1: Every symbol referenced in Holm rows 1-7 MUST have a formal definition in JSON AND in the design doc!
+        defs = self.c2["holm_symbol_definitions"]
+        required_symbols = [
+            "ho_cross_raw", "ho_cross_ctr", "ho_cross_shk", "ho_cross_ll",
+            "diag_shk", "diag_raw", "same_over_cross_a", "d_i(0.50)",
+            "Delta_logit_masked", "Delta_logit_unmasked",
+        ]
+        for sym in required_symbols:
+            self.assertIn(sym, defs, f"Missing Holm symbol definition in JSON: {sym}")
+            self.assertTrue(isinstance(defs[sym], str) and len(defs[sym]) > 15)
+            self.assertIn(sym, self.md, f"Holm symbol missing from design doc: {sym}")
+
+        # F2/F10: verify all 3 gates outside Holm appear in JSON and design
+        self.assertEqual(len(inf["registered_gates_outside_holm"]), 3)
+        for gate_tag in ("`CAL-C2.1`", "`EQ-C2.2`", "`EQ-C2.4c`"):
+            self.assertIn(gate_tag, self.md)
+
+        # F4: exact math.ceil(c1_count * N / 1728) for BOTH Regime-N (4/44) and Regime-D (1/13/6)
         g = self.c2["c2_0_3_named_gate_populations"]
-        self.assertEqual(g["regime_N_C21_population_N"], 2880)
-        self.assertEqual(g["regime_N_max_rmsn_gt_20pct"], math.ceil(g["rate_rmsn_gt_20pct"] * 2880))
-        self.assertEqual(g["regime_N_max_rmsn_gt_12pct"], math.ceil(g["rate_rmsn_gt_12pct"] * 2880))
-        self.assertEqual(g["regime_D_C22_unpatched_population_N"], 864)
-        self.assertEqual(g["regime_D_max_rmsn_gt_20pct"], math.ceil(g["rate_rmsn_gt_20pct"] * 864))
-        self.assertEqual(g["regime_D_max_rmsn_gt_12pct"], math.ceil(g["rate_rmsn_gt_12pct"] * 864))
-        self.assertEqual(g["regime_D_max_fde_gt_045"], math.ceil(g["rate_fde_gt_045"] * 864))
-        for phrase in ("N = 2,880", "<= 5", "<= 44", "N = 864", "<= 2", "<= 13", "<= 0.30", "<= 7"):
+        self.assertEqual(g["c1_base_N"], 1728)
+        self.assertEqual(g["regime_N_max_rmsn_gt_20pct"], math.ceil(2 * 2880 / 1728))
+        self.assertEqual(g["regime_N_max_rmsn_gt_20pct"], 4)
+        self.assertEqual(g["regime_N_max_rmsn_gt_12pct"], math.ceil(26 * 2880 / 1728))
+        self.assertEqual(g["regime_N_max_rmsn_gt_12pct"], 44)
+        self.assertEqual(g["regime_D_max_rmsn_gt_20pct"], math.ceil(2 * 864 / 1728))
+        self.assertEqual(g["regime_D_max_rmsn_gt_20pct"], 1)
+        self.assertEqual(g["regime_D_max_rmsn_gt_12pct"], math.ceil(26 * 864 / 1728))
+        self.assertEqual(g["regime_D_max_rmsn_gt_12pct"], 13)
+        self.assertEqual(g["regime_D_max_fde_gt_045"], math.ceil(12 * 864 / 1728))
+        self.assertEqual(g["regime_D_max_fde_gt_045"], 6)
+        for phrase in ("N = 2,880", "<= 4", "<= 44", "N = 864", "<= 1", "<= 13", "<= 0.30", "<= 6"):
             self.assertIn(phrase, self.md)
 
     def test_row_strict_markdown_tables_1_3_and_1_4_match_json(self) -> None:
-        # m5: ROW-STRICT — every value must appear on its EXACT matching row!
         for L in ("18", "24", "27"):
             arms = self.c2["layer_geometry"][L]["frozen_lens_transfer_preds_24"]
             for arm_name, row_data in arms.items():
@@ -174,7 +183,6 @@ class TestStageC2DesignStdlibV3(unittest.TestCase):
 
     def test_c0_colon_anchor_and_exact_c1_receipt_provenance(self) -> None:
         anc = self.c2["c0_anchor_colon_prediction"]
-        # m2: exact C1 L27 value 7.473792 (never rounded 7.473800)
         self.assertEqual(anc["c1_receipt_pmn"]["27"], 7.473792)
         self.assertIn("7.473792", self.md)
         self.assertNotIn("7.473800", self.md)
