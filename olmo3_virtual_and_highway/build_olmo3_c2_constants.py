@@ -1,18 +1,24 @@
 #!/usr/bin/env python3
-"""build_olmo3_c2_constants.py — Deterministic 0-CU pre-registration & vector-bank builder for OLMo 3 7B Stage C2 (v2).
+"""build_olmo3_c2_constants.py — Deterministic 0-CU pre-registration & vector-bank builder for OLMo 3 7B Stage C2 (v3).
 
-Folds ALL Round-1 cold design review findings (B1-B5, M1-M7, m1-m9):
-  - B1: Explicit symmetric suffix-alignment assertion between ChatML / LongBare / ShortBare prompts.
-  - B2 & M5: 8 independent stem pairs (8 ShortBare ~12-14 tok, 8 LongBare ~39-43 tok matched to ChatML +-2 tok,
-    8 ChatML ~39-43 tok); matched absolute dose rule; Monte-Carlo power simulations at N=8 pairs & N=24 targets.
-  - B3 & B4: Complete 11-arm C2.4 enumeration (K_PRENORM_RAND_DRAWS=1, every frozen tensor used in budget),
-    explicit bars for mask_vs_unmask, m70a30 (direction/saturation), and K=3 TOST additivity equivalence.
-  - B5: Named trace populations and exact integer count thresholds for C2.0.3.
-  - M1-M3, M6-M7: Same-site rand_iso L19-L31 control, 16-fit/8-held-out target evaluation split, direct
-    cos(v1(M_off), mu_U_proj) mechanism baseline, 9-test Holm stepdown table, 1.15x shrink-vs-centered bar,
-    explicit C2.3 post-erasure decision threshold.
-  - m1-m9: Ratio-based C0-colon anchor prediction against in-run orig_a with C0 receipt provenance,
-    18 enumerated shams, full 5-arm §1.3 table, split §1.4 eff/cos columns.
+Folds ALL Round-2 cold design review findings (REVIEW-design-ds-r2.md / #115: B1-B6, M1-M10, m1-m8):
+  - B1/B2: Explicit r_all, pred_ret_L18, signed closure (pooled ratio + denominator-free paired d_i(0.50)),
+           and recipient-matched Regime-D dose (3.0 * r_c(recipient) / (u_t . w_Rmf), cap 3.0 * pmn[18]).
+  - B3: Identical-instruction, zero-stem-duplication LongBare vs ChatML pairs (exact 0-token length diff on 12/12!).
+  - B4/B6/M10: N=12 independent stem pairs (2^12=4,096 exact one-sided sign flips for H0: closure <= 0.50;
+               11/12 positive p=0.003174 < alpha/8=0.00625), 90% paired BCa CI subset [0.55, 1.50] + point in [0.75, 1.30],
+               full-conjunction Monte-Carlo power table including 0.70 and 0.75 rows.
+  - B5: Separate 8-test reject-the-null Holm-Bonferroni family (m=8, alpha/(9-k)) from Equivalence & Control Gates
+        (EQ-C2.2 negative controls + shape/KL bar; EQ-C2.4c K=3 median TOST with 3-way power & n_floored <= 2).
+  - M1/M2/m6: Primary C2.1 tests evaluated on heldout_16x8 (N=16 primary_16 sources -> heldout_8 cross-stratum receivers),
+              adding p_C2.1_shk_vs_ll vs free logit_lens baseline and 90% BCa q05 >= 1.05x on same/cross ratio.
+  - M3/M4/M5/m4: Zero unread forwards (8,623 total); 100% draw-level 1-to-1 bank (34 tensors); C2.4b double-contrast
+                 generic packing control (R_target / R_pack_rand >= 1.05x); C2.4a matched pre-norm + postmatched arm.
+  - M6: Unified math.ceil(rate * N) derivation for BOTH Regime-N (N=2,880) and Regime-D (N=864) C2.0.3 ceilings.
+  - M7: Added ctrl_self_attenuated_L19_31 control + numeric open-vs-func & clean-KL bars.
+  - M8: Exact ΣMLP definition + pinned C1 receipt provenance (block2a_regime_N_last logit_lens).
+  - M9: Three-way C2.4c power table (P_additive, P_non_additive, P_inconclusive) + median(rel_int) + n_floored <= 2.
+  - m1-m8: Exact C1 L27 pmn 7.473792; 13 write shams + 6 patch shams = 19; LongBare+ChatML in C2.1/C2.3; aligned C2.4b sim.
 """
 from __future__ import annotations
 
@@ -44,10 +50,10 @@ MODEL_ID = "allenai/Olmo-3-7B-Instruct"
 MODEL_REV = "6e5971d9eba42665f5bd5a0fcf047f299ce1dccc"
 
 PRIMARY_C21_LAYERS = [18, 24, 27]
-SWEEP_LAYERS = [12, 15, 18, 21, 24, 27, 30]
-PRENORM_LAYERS = [21, 24, 27]  # K=3 post-erasure C2.4 layers (L24 primary single/m70a30, L21/24/27 K=3)
+SWEEP_LAYERS = [18, 21, 24, 27, 30]   # Exact 5 layers read by C2.3 decision rule (M3)
+PRENORM_LAYERS = [21, 24, 27]         # K=3 post-erasure C2.4 layers
 
-# Deterministic RNG seeds (C2 v2 family)
+# Deterministic RNG seeds (C2 v3 family)
 PERM_SEED = 2026112501
 BCA_SEED = 2026112502
 BANK_DM_SEED_BASE = 2026112503
@@ -55,16 +61,30 @@ BANK_RAND_SEED_BASE = 2026112504
 BANK_PRENORM_RAND_SEED_BASE = 2026112505
 POWER_SIM_SEED = 2026112506
 
-K_DM_DRAWS = 2
-M_RAND_ISO_DRAWS = 32
-K_PRENORM_RAND_DRAWS = 1  # Exactly 1 masked random control draw per target/layer (matches B4 budget 1-to-1)
+K_DM_DRAWS = 1              # Draw-level 1-to-1 with C2.2 runner (m4)
+M_RAND_ISO_DRAWS = 8        # Read by C2.3 ret_rand(L) noise-floor bar (M3)
+K_PRENORM_RAND_DRAWS = 1    # Read by C2.4b M4 generic-packing control (L24 ff & attn only)
 GAMMA_DROP_FF = 4
 GAMMA_DROP_ATTN = 16
 COV_SHRINK_ALPHA = 0.1
 
-# Exact C0 and C1 receipt post_mlp_norms (provenance pinned — NOT c0_prereg_constants Exp 4B 12.1555!)
+# Exact C0 and C1 receipt post_mlp_norms (m2: C1 L27 is 7.473792 verbatim from c1_receipt.json.gz)
 C0_RECEIPT_PMN = {"24": 9.325704, "27": 10.237432}
-C1_RECEIPT_PMN = {"24": 7.210327, "27": 7.473800}
+C1_RECEIPT_PMN = {"24": 7.210327, "27": 7.473792}
+
+# Exact C1 logit_lens sum_mlp provenance for C2.3 thresholds (M8, results/vesper-olmo3-7b-stage-c1/c1_receipt.json.gz)
+C1_LOGIT_LENS_SUM_MLP_PROVENANCE = {
+    "source_file": "results/vesper-olmo3-7b-stage-c1/c1_receipt.json.gz",
+    "source_key": "block2a_regime_N_last[L]['logit_lens'][target][prompt]['sum_mlp']",
+    "L18": {"median_open_18": -3.0791, "median_func_6": -1.1021, "gap_open_minus_func": -1.9770},
+    "L24": {"median_open_18": -0.7432, "median_func_6": -1.1016, "gap_open_minus_func": 0.3584},
+    "L27": {"median_open_18": -1.0024, "median_func_6": -1.0707, "gap_open_minus_func": 0.0683},
+}
+
+# Unified C2.0.3 linearity ceiling rates (M6: derived identically from C1 registered rates via math.ceil(rate * N))
+C203_RATE_RMSN_GT_20PCT = 0.0015
+C203_RATE_RMSN_GT_12PCT = 0.0150
+C203_RATE_FDE_GT_045 = 0.0070
 
 # Fresh 24-target mixed-POS bank (0 overlap with C0, C1, or personas).
 # Split deterministically per stratum: first 4 = primary_16, last 2 = heldout_8 (M2).
@@ -97,54 +117,23 @@ TARGETS_24_C2_SPEC: list[tuple[str, str, str]] = [
 
 # Balanced 12-target subset for C2.2 causal patching (first 3 of each stratum: 9 open-class + 3 function)
 C2_2_TARGET_INDICES = [0, 1, 2, 6, 7, 8, 12, 13, 14, 18, 19, 20]
-
 PERSONA_WORDS = {" pirate", " librarian", " wizard", " robot", " owl", " fox", " whale", " baker"}
 
-# 8 independent stem pairs (B2 & M5): each has a ShortBare (~12-14 tok), a LongBare (~39-43 tok, neutral prose prefix
-# ending with the EXACT same stem tokens), and a ChatML (~39-43 tok, ending with the EXACT same stem tokens).
-# NOTE: Every suffix ends after a newline ("\n" + stem) in BOTH ChatML and LongBare so BPE tokenization of the
-# trailing stem tokens is guaranteed bit-for-bit identical across LongBare and ChatML!
-C2_STEM_SPECS: list[tuple[str, str, str, str]] = [
-    (
-        "narr_0", "narrative",
-        "Inside the small drawer, the card displayed a single word:",
-        "The wooden desk sat near the north window all afternoon while rain tapped on the glass pane outside and the clerk sorted old letters slowly.\n",
-    ),
-    (
-        "narr_1", "narrative",
-        "Across the chalk slate, the final word written in dust was:",
-        "An empty classroom stayed quiet after the evening bell rang at dusk, with wooden benches aligned in neat rows beside tall shelves of old faded notebooks.\n",
-    ),
-    (
-        "narr_2", "narrative",
-        "Under the brass lantern, the folded slip named one word:",
-        "Along the quiet stone hallway, soft footsteps faded toward the courtyard gate while a cool evening breeze moved through the arched doorway and heavy curtains.\n",
-    ),
-    (
-        "narr_3", "narrative",
-        "Beside the iron key, the stamped wooden tag showed one word:",
-        "Near the harbor pier, ropes creaked softly against weathered timber posts as fog rolled over the calm water before sunrise reached the roof.\n",
-    ),
-    (
-        "anal_0", "analytical",
-        "In the test ledger, the target entry listed in row four was:",
-        "During the annual winter audit of regional warehouse inventory records, each catalog sheet was verified carefully by two clerks before being filed into the metal cabinet.\n",
-    ),
-    (
-        "anal_1", "analytical",
-        "From the sample index, the marked label shown at the end was:",
-        "After reviewing all quarterly log files stored in the central archive room, the senior analyst summarized the remaining entries clearly in a printed concise reference table.\n",
-    ),
-    (
-        "anal_2", "analytical",
-        "On the control sheet, the verified item printed in box two was:",
-        "Before closing the main laboratory binder at the end of the evening shift, the lead technician cross-checked every serial stamp and noted the last code clearly.\n",
-    ),
-    (
-        "anal_3", "analytical",
-        "Within the draft manual, the underlined term at the end was:",
-        "Following the standard annual revision procedure for printed technical manuals, the senior copy editor carefully inspected each numbered appendix page and confirmed the top header line.\n",
-    ),
+# 12 independent stem triples (B3 & B4: identical instruction + context clause, ZERO stem duplication in ChatML,
+# exact 0-token length difference between LongBare and ChatML, bit-identical trailing stem suffix on 12/12!).
+C2_STEM_SPECS_12: list[tuple[str, str, str, str]] = [
+    ("narr_0", "narrative", "Inside the small drawer, the card displayed a single word:", "The wooden desk stood beside the north window while steady rain tapped softly on the glass."),
+    ("narr_1", "narrative", "Across the chalk slate, the final word written in dust was:", "An empty classroom stayed silent after the evening bell rang along the dim corridor."),
+    ("narr_2", "narrative", "Under the brass lantern, the folded slip named one word:", "Footsteps faded down the stone hallway as cool air moved through the open archway."),
+    ("narr_3", "narrative", "Beside the iron key, the stamped wooden tag showed one word:", "Near the quiet harbor pier, heavy ropes creaked against weathered timber posts before sunrise."),
+    ("narr_4", "narrative", "Above the oak mantel, the framed note held a single word:", "Embers settled low inside the stone hearth while a tall clock ticked steadily nearby."),
+    ("narr_5", "narrative", "Within the leather pouch, the small brass coin bore one word:", "Dry leaves crossed the gravel lane outside the brick wall as clouds gathered overhead."),
+    ("anal_0", "analytical", "In the test ledger, the target entry listed in row four was:", "During the annual warehouse audit, two clerks checked each printed catalog sheet carefully."),
+    ("anal_1", "analytical", "From the sample index, the marked label shown at the end was:", "After reviewing the quarterly archive logs, the analyst prepared a brief reference table."),
+    ("anal_2", "analytical", "On the control sheet, the verified item printed in box two was:", "Before closing the laboratory binder for the night, the technician logged each serial code."),
+    ("anal_3", "analytical", "Within the draft manual, the underlined term at the end was:", "Following the standard revision checklist, the editor inspected every numbered appendix page."),
+    ("anal_4", "analytical", "In the audit summary, the flagged token in column three was:", "Prior to archiving the monthly sensor records, the engineer verified each calibration table."),
+    ("anal_5", "analytical", "From the coding chart, the final symbol on line six was:", "While updating the municipal transit schedule, the planner checked every route timetable."),
 ]
 
 
@@ -196,39 +185,53 @@ def resolve_hf_snapshot(model_dir: str | None) -> Path:
     return Path(snapshot_download(MODEL_ID, revision=MODEL_REV, local_files_only=True))
 
 
-def build_c2_prompts_all(tok: Any) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+def build_c2_prompts_all(tok: Any, target_words_lower: list[str]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Build:
-    - prompts_8_c21: first 4 ShortBare + first 4 ChatML (for C2.1 / C2.3, matching C1's 8-prompt layout)
-    - c22_stem_pairs_8: ALL 8 triples (ShortBare, LongBare, ChatML) with exact verified suffix token alignment (B1, B2, M5).
+    - prompts_8_c21: 4 LongBare + 4 ChatML (narr_0, narr_1, anal_0, anal_1) — matched length (m7)!
+    - c22_stem_pairs_12: ALL 12 triples (ShortBare, LongBare, ChatML) with identical instruction/context,
+      ZERO stem duplication (B3), exact suffix token identity (B1), and max |T_long - T_chat| <= 1 (B2/B4).
     """
     triples: list[dict[str, Any]] = []
     prompts_8_c21: list[dict[str, Any]] = []
 
-    for idx, (sid, style, stem, long_prefix) in enumerate(C2_STEM_SPECS):
+    for idx, (sid, style, stem, ctx) in enumerate(C2_STEM_SPECS_12):
+        # Verify zero target substring overlap
+        combined_lower = (stem + " " + ctx).lower()
+        for tw in target_words_lower:
+            assert tw not in combined_lower, f"Target {tw!r} appears inside prompt {sid}"
+
         short_text = stem
-        long_text = long_prefix + stem
-        chat_text = (
-            f"<|im_start|>user\nContinue this line with one word: {stem}<|im_end|>\n"
-            f"<|im_start|>assistant\n{stem}"
+        long_text = (
+            f"User instruction: Complete the final line below with one fitting word. "
+            f"Context: {ctx}\nAssistant final response:\n{stem}"
         )
+        chat_text = (
+            f"<|im_start|>user\nComplete the final line below with one fitting word. "
+            f"Context: {ctx}<|im_end|>\n<|im_start|>assistant\n{stem}"
+        )
+        # B3 assertion: stem appears EXACTLY ONCE in every format (zero in-context stem duplication!)
+        assert short_text.count(stem) == 1
+        assert long_text.count(stem) == 1
+        assert chat_text.count(stem) == 1
+
         ids_short = tok.encode(short_text, add_special_tokens=False)
         ids_long = tok.encode(long_text, add_special_tokens=False)
         ids_chat = tok.encode(chat_text, add_special_tokens=False)
         t_s, t_l, t_c = len(ids_short), len(ids_long), len(ids_chat)
 
-        # B1 strict suffix-identity assertion: trailing T_short tokens of BOTH LongBare and ChatML
-        # MUST be token-for-token identical to ShortBare!
-        assert ids_long[-t_s:] == ids_short, f"Suffix mismatch LongBare vs ShortBare on {sid}: {ids_long[-t_s:]} vs {ids_short}"
-        assert ids_chat[-t_s:] == ids_short, f"Suffix mismatch ChatML vs ShortBare on {sid}: {ids_chat[-t_s:]} vs {ids_short}"
+        # B1 strict suffix-identity assertion
+        assert ids_long[-t_s:] == ids_short, f"Suffix mismatch LongBare vs ShortBare on {sid}"
+        assert ids_chat[-t_s:] == ids_short, f"Suffix mismatch ChatML vs ShortBare on {sid}"
         assert tok.decode([ids_short[-1]]) == ":", f"Expected ':' ending on {sid}"
-        # Length match check: LongBare within +-2 tokens of ChatML (B2)
-        assert abs(t_l - t_c) <= 2, f"Length mismatch LongBare ({t_l}) vs ChatML ({t_c}) on {sid}"
+        # B2 strict matched-length check
+        assert abs(t_l - t_c) <= 1, f"Length mismatch LongBare ({t_l}) vs ChatML ({t_c}) on {sid}"
 
         triples.append({
             "pair_idx": idx,
             "stem_id": sid,
             "style": style,
             "stem": stem,
+            "context_clause": ctx,
             "suffix_len": t_s,
             "short_bare": {
                 "id": f"c2_shortbare_{sid}", "format": "short_bare", "text": short_text,
@@ -247,14 +250,14 @@ def build_c2_prompts_all(tok: Any) -> tuple[list[dict[str, Any]], list[dict[str,
             "long_minus_chat_tokens": t_l - t_c,
         })
 
-    # For C2.1 / C2.3 (8 prompts): 2 narr + 2 anal ShortBare + 2 narr + 2 anal ChatML (indices 0,1,4,5)
-    c21_indices = [0, 1, 4, 5]
+    # C2.1 / C2.3 (8 prompts): 4 LongBare + 4 ChatML on narr_0, narr_1, anal_0, anal_1 (matched length, m7!)
+    c21_indices = [0, 1, 6, 7]
     for i in c21_indices:
-        sb = triples[i]["short_bare"]
+        lb = triples[i]["long_bare"]
         prompts_8_c21.append({
-            "id": f"c2_bare_{triples[i]['stem_id']}", "format": "bare", "style": triples[i]["style"],
-            "stem": triples[i]["stem"], "text": sb["text"], "n_tokens": sb["n_tokens"],
-            "last_token_id": sb["last_token_id"], "last_token_piece": sb["last_token_piece"],
+            "id": lb["id"], "format": "long_bare", "style": triples[i]["style"],
+            "stem": triples[i]["stem"], "text": lb["text"], "n_tokens": lb["n_tokens"],
+            "last_token_id": lb["last_token_id"], "last_token_piece": lb["last_token_piece"],
         })
     for i in c21_indices:
         ch = triples[i]["chatml"]
@@ -298,29 +301,25 @@ def orthonormal_basis(vecs: list[torch.Tensor]) -> list[torch.Tensor]:
     return basis
 
 
-def make_direct_matched_draws(
-    u_hat: torch.Tensor, w_rmf: torch.Tensor, w_rridge: torch.Tensor,
-    c: float, k_draws: int, seed_base: int,
+def make_direct_matched_single(
+    u_hat: torch.Tensor, w_rmf: torch.Tensor, w_rridge: torch.Tensor, c: float, seed: int,
 ) -> torch.Tensor:
     basis = orthonormal_basis([u_hat, w_rmf, w_rridge])
     d = u_hat.shape[0]
     s = math.sqrt(max(1.0 - c * c, 0.0))
     u_hat_d = u_hat.double()
-    draws = []
-    for k in range(k_draws):
-        g = torch.Generator(device="cpu")
-        g.manual_seed(seed_base + k)
-        z = torch.randn(d, generator=g, dtype=torch.float64)
-        for _ in range(2):
-            for b in basis:
-                z = z - torch.dot(z, b) * b
-        z_perp = z / z.norm().clamp_min(1e-12)
-        w = c * u_hat_d + s * z_perp
-        w = w / w.norm().clamp_min(1e-12)
-        assert abs(float(w.norm().item()) - 1.0) < 1e-6
-        assert abs(float(torch.dot(w, u_hat_d).item()) - c) < 1e-5
-        draws.append(w.float())
-    return torch.stack(draws, dim=0)
+    g = torch.Generator(device="cpu")
+    g.manual_seed(seed)
+    z = torch.randn(d, generator=g, dtype=torch.float64)
+    for _ in range(2):
+        for b in basis:
+            z = z - torch.dot(z, b) * b
+    z_perp = z / z.norm().clamp_min(1e-12)
+    w = c * u_hat_d + s * z_perp
+    w = w / w.norm().clamp_min(1e-12)
+    assert abs(float(w.norm().item()) - 1.0) < 1e-6
+    assert abs(float(torch.dot(w, u_hat_d).item()) - c) < 1e-5
+    return w.float()
 
 
 def make_rand_iso_draws(d: int, m_draws: int, seed: int) -> torch.Tensor:
@@ -331,17 +330,17 @@ def make_rand_iso_draws(d: int, m_draws: int, seed: int) -> torch.Tensor:
     return v.float()
 
 
-def make_masked_rand_draws(mask_01: torch.Tensor, n_targets: int, k_draws: int, seed_base: int) -> torch.Tensor:
+def make_masked_rand_single(mask_01: torch.Tensor, n_targets: int, seed_base: int) -> torch.Tensor:
     d = mask_01.shape[0]
     mask_d = mask_01.double()
     rows = []
     for ti in range(n_targets):
         g = torch.Generator(device="cpu")
         g.manual_seed(seed_base + ti * 17)
-        v = torch.randn(k_draws, d, generator=g, dtype=torch.float64) * mask_d.unsqueeze(0)
-        v = v / v.norm(dim=-1, keepdim=True).clamp_min(1e-12)
+        v = torch.randn(d, generator=g, dtype=torch.float64) * mask_d
+        v = v / v.norm().clamp_min(1e-12)
         rows.append(v.float())
-    return torch.stack(rows, dim=0)  # [n_targets, k_draws, d]
+    return torch.stack(rows, dim=0)  # [n_targets, d]
 
 
 def load_safetensors_selected(snap: Path, wanted: set[str]) -> dict[str, torch.Tensor]:
@@ -369,48 +368,87 @@ def load_safetensors_selected(snap: Path, wanted: set[str]) -> dict[str, torch.T
 
 
 def simulate_c2_power(seed: int = POWER_SIM_SEED) -> dict[str, Any]:
-    """Empirically sourced Monte-Carlo power tables for C2.2 (N=8 pairs), C2.4b (m70a30), and C2.4c (K=3 TOST, N=24)."""
+    """Full-conjunction Monte-Carlo power tables (B6, M9, m8):
+    1. C2.2 at N=12 pairs: full conjunction of (format-gap gate >= 0.30 & CI>0) + (exact 2^12 one-sided sign-flip
+       p <= alpha/8 = 0.00625 on H0: closure <= 0.50) + (point in [0.75, 1.30]) + (90% CI subset [0.55, 1.50]).
+       Includes 0.50, 0.65, 0.70, 0.75, 0.85, 1.00, 1.30, 1.40 rows (B6, M10).
+    2. C2.4c K=3 median TOST at N=24 targets: 3-way outcomes (P_additive, P_non_additive, P_inconclusive) (M9).
+    3. C2.4b m70a30 vs ff at N=24 targets: aligned exactly to Holm alpha/8 = 0.00625 (t >= 2.74 at df=23) +
+       geomean >= 1.10x + 90% CI q05 > 1.00x (m8).
+    """
     rng = np.random.default_rng(seed)
 
-    # 1. C2.2 Bidirectional closure at N=8 independent stem pairs (exact 2^8=256 sign-flips + percentile bootstrap q05)
-    # Bar: point in [0.70, 1.35] AND 90% paired bootstrap q05 >= 0.50 (Holm alpha/9 = 0.00556; exact N=8 p_min = 1/256 = 0.00391)
+    # Exact 2^12 = 4096 sign-flip matrix for C2.2 exact one-sided p on d_i(0.50)
+    signs_12 = ((np.arange(4096)[:, None] >> np.arange(12)[None, :]) & 1) * 2 - 1  # [4096, 12]
+    alpha_step1 = 0.05 / 8.0  # 0.00625
+
+    # 1. C2.2 Full Conjunction (N=12 pairs; simulated with realistic gap ~ Normal(0.60, 0.12) matching C1 L18)
     c22_power: dict[str, Any] = {}
     for sd in (0.10, 0.15, 0.25):
         row = {}
-        for true_cl in (0.50, 0.70, 0.80, 0.85, 0.90, 1.00):
+        for true_cl in (0.50, 0.65, 0.70, 0.75, 0.85, 1.00, 1.30, 1.40):
             n_sim = 2000
-            x = rng.normal(true_cl, sd, size=(n_sim, 8))
-            pts = x.mean(axis=1)
-            # Paired bootstrap q05 over 8 pairs (400 resamples)
-            idx = rng.integers(0, 8, size=(n_sim, 400, 8))
-            boot_means = np.take_along_axis(x[:, None, :], idx, axis=2).mean(axis=2)
-            q05 = np.quantile(boot_means, 0.05, axis=1)
-            ok = (pts >= 0.70) & (pts <= 1.35) & (q05 >= 0.50)
-            row[f"true_{true_cl:.2f}"] = round(float(ok.mean()), 4)
+            # Gap per pair G_i ~ Normal(0.60, 0.12)
+            g = rng.normal(0.60, 0.12, size=(n_sim, 12))
+            g_mean = g.mean(axis=1)
+            g_se = g.std(axis=1, ddof=1) / math.sqrt(12)
+            gate_ok = (g_mean >= 0.30) & ((g_mean - 1.7959 * g_se) > 0.0)
+
+            # Patched reduction per pair: mean(delta) / mean(g) = pooled closure
+            c_pair = rng.normal(true_cl, sd, size=(n_sim, 12))
+            delta = c_pair * g
+            pt = delta.mean(axis=1) / g_mean
+
+            # Denominator-free paired contrast d_i(0.50) = delta_i - 0.50 * g_i (exact 2^12 one-sided p)
+            d50 = delta - 0.50 * g  # [n_sim, 12]
+            obs_mean = d50.mean(axis=1)  # [n_sim]
+            # Vectorized exact permutation p in chunks of 200
+            p_sign = np.empty(n_sim, dtype=np.float64)
+            for s0 in range(0, n_sim, 200):
+                blk = d50[s0 : s0 + 200]  # [B, 12]
+                perm_means = (blk @ signs_12.T) / 12.0  # [B, 4096]
+                p_sign[s0 : s0 + 200] = (perm_means >= obs_mean[s0 : s0 + 200, None] - 1e-12).mean(axis=1)
+            sign_ok = p_sign <= alpha_step1
+
+            # 90% paired bootstrap CI on pooled closure ratio subset [0.55, 1.50] (400 resamples)
+            idx = rng.integers(0, 12, size=(n_sim, 400, 12))
+            b_del = np.take_along_axis(delta[:, None, :], idx, axis=2).mean(axis=2)
+            b_g = np.take_along_axis(g[:, None, :], idx, axis=2).mean(axis=2)
+            b_cl = b_del / np.where(np.abs(b_g) < 1e-6, 1e-6, b_g)
+            ci_lo = np.quantile(b_cl, 0.05, axis=1)
+            ci_hi = np.quantile(b_cl, 0.95, axis=1)
+            ci_ok = (ci_lo >= 0.55) & (ci_hi <= 1.50)
+            pt_ok = (pt >= 0.75) & (pt <= 1.30)
+
+            full_ok = gate_ok & sign_ok & pt_ok & ci_ok
+            row[f"true_{true_cl:.2f}"] = round(float(full_ok.mean()), 4)
         c22_power[f"sd_{sd:.2f}"] = row
 
-    # 2. C2.4c K=3 additivity TOST equivalence (|mean| <= 0.20 AND 90% CI subset [-0.30, +0.30], N=24 targets)
-    # Also power to REJECT equivalence (detect non-additivity) when true |rel_int| = 0.40 or 0.50!
+    # 2. C2.4c K=3 Median TOST at N=24 targets — 3-way outcomes (P_additive, P_non_additive, P_inconclusive) (M9)
     c24c_power: dict[str, Any] = {}
     for sd in (0.12, 0.20, 0.30):
         row = {}
+        # Effective median SE for Normal(mu, sd) at N=24 is sqrt(pi/2)*sd/sqrt(24) = 0.2557*sd; 90% half-width ~ 0.421*sd
+        eff_margin = round(max(0.0, 0.30 - 1.6449 * math.sqrt(math.pi / 2.0) * sd / math.sqrt(24)), 4)
         for true_int in (0.00, 0.10, 0.20, 0.35, 0.50):
-            n_sim = 4000
+            n_sim = 2000
             x = rng.normal(true_int, sd, size=(n_sim, 24))
-            means = x.mean(axis=1)
-            se = x.std(axis=1, ddof=1) / math.sqrt(24)
-            # 90% CI half-width using t_{23, 0.95} = 1.7139
-            lo = means - 1.7139 * se
-            hi = means + 1.7139 * se
-            equiv_pass = (np.abs(means) <= 0.20) & (lo >= -0.30) & (hi <= 0.30)
-            detect_nonadd = ~equiv_pass
+            med = np.median(x, axis=1)
+            idx = rng.integers(0, 24, size=(n_sim, 400, 24))
+            b_med = np.median(np.take_along_axis(x[:, None, :], idx, axis=2), axis=2)
+            lo = np.quantile(b_med, 0.05, axis=1)
+            hi = np.quantile(b_med, 0.95, axis=1)
+            p_add = (np.abs(med) <= 0.20) & (lo >= -0.30) & (hi <= 0.30)
+            p_non = (lo > 0.30) | (hi < -0.30)
+            p_inc = ~(p_add | p_non)
             row[f"true_{true_int:.2f}"] = {
-                "P_declare_additive": round(float(equiv_pass.mean()), 4),
-                "P_reject_additive": round(float(detect_nonadd.mean()), 4),
+                "P_additive": round(float(p_add.mean()), 4),
+                "P_non_additive": round(float(p_non.mean()), 4),
+                "P_inconclusive": round(float(p_inc.mean()), 4),
             }
-        c24c_power[f"sd_{sd:.2f}"] = row
+        c24c_power[f"sd_{sd:.2f}"] = {"effective_equiv_margin_approx": eff_margin, "grid": row}
 
-    # 3. C2.4b m70a30 vs ff (geomean >= 1.10x, q05 > 1.00, Holm alpha/9 = 0.00556 -> t >= 2.77 at df=23)
+    # 3. C2.4b m70a30 vs ff (N=24, aligned strictly to registered Holm alpha/8 = 0.00625 -> t >= 2.74 at df=23, m8)
     c24b_power: dict[str, Any] = {}
     for sd_log in (0.06, 0.10, 0.15):
         row = {}
@@ -420,20 +458,20 @@ def simulate_c2_power(seed: int = POWER_SIM_SEED) -> dict[str, Any]:
             m = x.mean(axis=1)
             se = x.std(axis=1, ddof=1) / math.sqrt(24)
             t_stat = m / np.maximum(se, 1e-12)
-            ok = (np.exp(m) >= 1.10) & ((m - 1.7139 * se) > 0.0) & (t_stat >= 2.77)
+            ok = (np.exp(m) >= 1.10) & ((m - 1.7139 * se) > 0.0) & (t_stat >= 2.74)
             row[f"ratio_{true_ratio:.2f}"] = round(float(ok.mean()), 4)
         c24b_power[f"sd_log_{sd_log:.2f}"] = row
 
     return {
         "seed": seed,
-        "C2.2_closure_N8_pairs_joint_bar": c22_power,
-        "C2.4c_K3_additivity_TOST_N24": c24c_power,
-        "C2.4b_m70a30_vs_ff_N24": c24b_power,
+        "C2.2_full_conjunction_N12_pairs": c22_power,
+        "C2.4c_K3_median_TOST_3way_N24": c24c_power,
+        "C2.4b_m70a30_vs_ff_Holm8_N24": c24b_power,
     }
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="Build deterministic Stage C2 v2 pre-registration constants and vector bank (0 CU).")
+    ap = argparse.ArgumentParser(description="Build deterministic Stage C2 v3 pre-registration constants and vector bank (0 CU).")
     ap.add_argument("--r-lens", type=Path, default=None)
     ap.add_argument("--model-dir", type=str, default=None)
     ap.add_argument("--out-constants", type=Path, default=DEFAULT_OUT_CONSTANTS)
@@ -470,8 +508,9 @@ def main() -> None:
         json.dumps([(s, w) for s, w, _ in TARGETS_24_C2_SPEC], separators=(",", ":"), ensure_ascii=True).encode("utf-8")
     ).hexdigest()
 
-    # 2. Verify prompts & B1 suffix alignment across ALL 8 stem pairs
-    prompts_8_c21, c22_triples = build_c2_prompts_all(tok)
+    # 2. Verify prompts, B1 suffix alignment, B2 length match, & B3 zero stem duplication across ALL 12 triples
+    target_words_lower = [t["string"].strip().lower() for t in targets]
+    prompts_8_c21, c22_triples = build_c2_prompts_all(tok, target_words_lower)
     for p in prompts_8_c21:
         assert p["text"] not in forbidden_prompts, f"Overlap with C0/C1 prompt: {p['id']}"
     for tr in c22_triples:
@@ -485,10 +524,8 @@ def main() -> None:
 
     # 3. Load frozen unembedding, final gamma, per-layer gammas, and R_out/R_mid
     wanted_tensors = {"lm_head.weight", "model.norm.weight"} | {
-        f"model.layers.{L}.{kind}.weight"
-        for L in PRENORM_LAYERS
-        for kind in ("post_feedforward_layernorm", "post_attention_layernorm")
-    }
+        f"model.layers.{L}.post_feedforward_layernorm.weight" for L in PRENORM_LAYERS
+    } | {"model.layers.24.post_attention_layernorm.weight"}
     w_map = load_safetensors_selected(snap, wanted_tensors)
     w_u = w_map["lm_head.weight"]
     gamma_fin = w_map["model.norm.weight"]
@@ -555,6 +592,7 @@ def main() -> None:
 
     layer_geom: dict[str, Any] = {}
     prenorm_geom: dict[str, Any] = {}
+    c22_l18_pred_ret: dict[str, Any] = {}
     U_d = U.double()
     U_hat_d = U_hat.double()
     U_ctr_d = U_ctr.double()
@@ -563,12 +601,10 @@ def main() -> None:
 
     cross_mask = np.array([[strata[i] != strata[j] for j in range(24)] for i in range(24)])
     same_mask = np.array([[i != j and strata[i] == strata[j] for j in range(24)] for i in range(24)])
-    # Held-out 16x8 cross-stratum mask (src in primary_16, dst in heldout_8, different stratum; M2)
     heldout_cross_mask = np.array([
         [splits[i] == "primary_16" and splits[j] == "heldout_8" and strata[i] != strata[j] for j in range(24)]
         for i in range(24)
     ])
-    # Target projection along mu_U_hat (for M3 direct mu_U alignment readout!)
     u_mu_proj = (U_d @ mu_U_hat).numpy()
     u_mu_proj_n = u_mu_proj / (np.linalg.norm(u_mu_proj) + 1e-12)
 
@@ -596,19 +632,35 @@ def main() -> None:
             W_rg_ctr = solve_unit_ridge(U_ctr_d)
             W_rg_shk = solve_unit_ridge(U_shrink_d)
 
-            c_vals = (U_hat_d * W_mf_hat).sum(dim=-1)
-            dm_list = [
-                make_direct_matched_draws(
-                    U_hat[ti], W_mf_hat[ti].float(), W_rg_raw[ti].float(),
-                    float(c_vals[ti].item()), K_DM_DRAWS, BANK_DM_SEED_BASE + L * 1000 + ti * 10,
-                )
-                for ti in range(24)
-            ]
             bank_tensors[f"L{L}.R_mf"] = W_mf_hat.float().clone().contiguous()
             bank_tensors[f"L{L}.R_ridge_raw"] = W_rg_raw.float().clone().contiguous()
             bank_tensors[f"L{L}.R_ridge_centered"] = W_rg_ctr.float().clone().contiguous()
             bank_tensors[f"L{L}.R_ridge_shrink"] = W_rg_shk.float().clone().contiguous()
-            bank_tensors[f"L{L}.direct_matched"] = torch.stack(dm_list, dim=0).clone().contiguous()
+
+            # Only L18 uses direct_matched (C2.2, 12 targets, K_DM_DRAWS=1 — 100% draw-level 1-to-1 per m4!)
+            if L == 18:
+                c_vals = (U_hat_d * W_mf_hat).sum(dim=-1)
+                dm_rows = []
+                for ti in C2_2_TARGET_INDICES:
+                    dm_w = make_direct_matched_single(
+                        U_hat[ti], W_mf_hat[ti].float(), W_rg_raw[ti].float(),
+                        float(c_vals[ti].item()), BANK_DM_SEED_BASE + L * 1000 + ti * 10,
+                    )
+                    dm_rows.append(dm_w)
+                    # B1/B2 self-contained frozen linear pred_ret & u.w_Rmf for C2.2
+                    u_dot_rmf = float(torch.dot(U_d[ti], W_mf_hat[ti]).item())
+                    u_dot_dm = float(torch.dot(U_d[ti], dm_w.double()).item())
+                    assert u_dot_rmf > 0.5 and abs(u_dot_rmf - u_dot_dm) < 1e-4
+                    pr_rmf = float((U_d[ti] @ (R @ W_mf_hat[ti])).item()) / u_dot_rmf
+                    pr_dm = float((U_d[ti] @ (R @ dm_w.double())).item()) / u_dot_dm
+                    c22_l18_pred_ret[targets[ti]["string"]] = {
+                        "target_idx": ti,
+                        "u_dot_w_Rmf": round(u_dot_rmf, 6),
+                        "pred_ret_R_mf": round(pr_rmf, 6),
+                        "pred_ret_dm0": round(pr_dm, 6),
+                        "pred_gap_at_direct3": round(3.0 * (pr_rmf - pr_dm), 6),
+                    }
+                bank_tensors["L18.direct_matched"] = torch.stack(dm_rows, dim=0).clone().contiguous()  # [12, 4096]
 
             frozen_arms: dict[str, Any] = {}
             for aname, What in [
@@ -623,9 +675,8 @@ def main() -> None:
                 M_rel = M / np.maximum(diag[:, None], 1e-9)
                 Off = M.copy()
                 np.fill_diagonal(Off, 0.0)
-                u_s, svals, vt_s = np.linalg.svd(Off, full_matrices=False)
+                _, svals, vt_s = np.linalg.svd(Off, full_matrices=False)
                 rank1_share = float((svals[0] ** 2) / (np.sum(svals ** 2) + 1e-12))
-                # M3: |cos(v1_right(M_off), u_j · mu_hat)| (alignment of top off-diagonal receiver mode with mu_U!)
                 v1_mu_cos = float(abs(np.dot(vt_s[0], u_mu_proj_n)))
                 cross_abs = float(np.mean(np.abs(M_rel[cross_mask])))
                 cross_sig = float(np.mean(M_rel[cross_mask]))
@@ -654,7 +705,7 @@ def main() -> None:
                 "trace_R_over_d": round(float(torch.trace(R).item() / d), 4),
             }
 
-        # Build Lacey low-gamma pre_norm vectors ONLY for PRENORM_LAYERS = [21, 24, 27] (exact 1-to-1 with C2.4 arms, B4!)
+        # Build Lacey low-gamma pre_norm vectors ONLY for PRENORM_LAYERS = [21, 24, 27] (100% 1-to-1 with C2.4 arms!)
         if L in PRENORM_LAYERS:
             W_out_shk = torch.linalg.solve(R.T @ R + lam * eye_d, (U_shrink_d @ R).T).T
             W_out_shk = W_out_shk / W_out_shk.norm(dim=-1, keepdim=True).clamp_min(1e-12)
@@ -696,24 +747,24 @@ def main() -> None:
             m_ff, pre_ff_un, pre_ff_m, ff_stats = build_masked_prenorm(W_out_shk, g_ff, GAMMA_DROP_FF)
             bank_tensors[f"L{L}.gamma_ff_mask4"] = m_ff.float().clone().contiguous()
             bank_tensors[f"L{L}.prenorm_ff_masked"] = pre_ff_m.float().clone().contiguous()
-            bank_tensors[f"L{L}.prenorm_ff_rand_masked"] = make_masked_rand_draws(
-                m_ff, 24, K_PRENORM_RAND_DRAWS, BANK_PRENORM_RAND_SEED_BASE + L * 1000
-            )
             layer_pn: dict[str, Any] = {"ff": ff_stats}
 
-            # L24 additionally carries prenorm_ff_unmasked + attn masked + attn rand (for C2.4a mask_vs_unmask & C2.4b m70a30)
+            # Only L24 carries unmasked, attn masked, and L24 ff/attn random controls (exact 1-to-1 with C2.4b M4!)
             if L == 24:
                 R_mid = R_mid_all[L].double()
                 lam_m = 0.5 * float((R_mid * R_mid).sum().item()) / d
                 W_mid_shk = torch.linalg.solve(R_mid.T @ R_mid + lam_m * eye_d, (U_shrink_d @ R_mid).T).T
                 W_mid_shk = W_mid_shk / W_mid_shk.norm(dim=-1, keepdim=True).clamp_min(1e-12)
-                g_at = w_map[f"model.layers.{L}.post_attention_layernorm.weight"].double()
+                g_at = w_map["model.layers.24.post_attention_layernorm.weight"].double()
                 m_at, _, pre_at_m, at_stats = build_masked_prenorm(W_mid_shk, g_at, GAMMA_DROP_ATTN)
                 bank_tensors["L24.prenorm_ff_unmasked"] = pre_ff_un.float().clone().contiguous()
+                bank_tensors["L24.prenorm_ff_rand_masked"] = make_masked_rand_single(
+                    m_ff, 24, BANK_PRENORM_RAND_SEED_BASE + L * 1000
+                )
                 bank_tensors["L24.gamma_attn_mask16"] = m_at.float().clone().contiguous()
                 bank_tensors["L24.prenorm_attn_masked"] = pre_at_m.float().clone().contiguous()
-                bank_tensors["L24.prenorm_attn_rand_masked"] = make_masked_rand_draws(
-                    m_at, 24, K_PRENORM_RAND_DRAWS, BANK_PRENORM_RAND_SEED_BASE + L * 1000 + 500
+                bank_tensors["L24.prenorm_attn_rand_masked"] = make_masked_rand_single(
+                    m_at, 24, BANK_PRENORM_RAND_SEED_BASE + L * 1000 + 500
                 )
                 layer_pn["attn"] = at_stats
                 layer_pn["m70a30_linear_delivered_ratio_vs_ff"] = round(
@@ -725,13 +776,15 @@ def main() -> None:
     out_bank = args.out_bank
     out_bank.parent.mkdir(parents=True, exist_ok=True)
     bank_meta = {
-        "study": "OLMo-3-7B Stage C2 v2",
+        "study": "OLMo-3-7B Stage C2 v3",
         "model": MODEL_ID,
         "revision": MODEL_REV,
         "r_lens_sha256": r_sha,
         "bank_dm_seed_base": str(BANK_DM_SEED_BASE),
         "bank_rand_seed_base": str(BANK_RAND_SEED_BASE),
         "bank_prenorm_rand_seed_base": str(BANK_PRENORM_RAND_SEED_BASE),
+        "k_dm_draws": str(K_DM_DRAWS),
+        "m_rand_iso_draws": str(M_RAND_ISO_DRAWS),
         "k_prenorm_rand_draws": str(K_PRENORM_RAND_DRAWS),
         "gamma_drop_ff": str(GAMMA_DROP_FF),
         "gamma_drop_attn": str(GAMMA_DROP_ATTN),
@@ -740,27 +793,20 @@ def main() -> None:
     write_canonical_safetensors(bank_tensors, out_bank, metadata=bank_meta)
     bank_sha = sha256_file(out_bank)
 
-    # Exact enumerated shams (m4) and arms (B4) — every forward accounted for 1-to-1!
-    sham_arms_18 = [
+    # Exact enumerated shams split into write shams (dose=0.0) & patch shams (self-patch identity, m3)
+    write_shams_13 = [
         "C2.1_post_norm_L18", "C2.1_post_norm_L24", "C2.1_post_norm_L27",
-        "C2.2_mlp_patch_L19_31", "C2.2_attn_patch_L19_31", "C2.2_mlp_patch_L4_16",
-        "C2.3_sweep_L12", "C2.3_sweep_L15", "C2.3_sweep_L18", "C2.3_sweep_L21",
-        "C2.3_sweep_L24", "C2.3_sweep_L27", "C2.3_sweep_L30",
+        "C2.3_sweep_L18", "C2.3_sweep_L21", "C2.3_sweep_L24", "C2.3_sweep_L27", "C2.3_sweep_L30",
         "C2.4_prenorm_L21_ff", "C2.4_prenorm_L24_ff", "C2.4_prenorm_L27_ff",
         "C2.4_prenorm_L24_m70a30", "C2.4_prenorm_K3_combined",
     ]
-    c24_arms_11 = [
-        "L24.prenorm_ff_unmasked",
-        "L24.prenorm_ff_masked",
-        "L24.m70a30 (0.7*L24.prenorm_ff_masked + 0.3*L24.prenorm_attn_masked)",
-        "L21.prenorm_ff_masked",
-        "L27.prenorm_ff_masked",
-        "K3_combined (L21+L24+L27 prenorm_ff_masked)",
-        "L24.prenorm_ff_rand_masked[draw0]",
-        "L24.m70a30_rand_masked (0.7*ff_rand[draw0] + 0.3*attn_rand[draw0])",
-        "L21.prenorm_ff_rand_masked[draw0]",
-        "L27.prenorm_ff_rand_masked[draw0]",
-        "K3_combined_rand_masked (L21+L24+L27 prenorm_ff_rand_masked[draw0])",
+    patch_shams_6 = [
+        "C2.2_self_patch_ChatML_MLP_L19_31",
+        "C2.2_self_patch_LongBare_MLP_L19_31",
+        "C2.2_self_patch_ctrl_L4_16_MLP",
+        "C2.2_self_patch_ctrl_mismatch_L19_31",
+        "C2.2_zero_scale_ctrl_rand_iso_L19_31",
+        "C2.2_unit_scale_ctrl_self_attenuated_L19_31",
     ]
     c22_arms_9 = [
         "unpatched_LongBare",
@@ -771,58 +817,97 @@ def main() -> None:
         "ctrl_L4_16_MLP_LongBare_to_ChatML",
         "ctrl_mismatch_prompt_MLP_L19_31",
         "ctrl_rand_iso_same_site_L19_31",
-        "comp_LongBare_to_ChatML_Attn_L19_31",
+        "ctrl_self_attenuated_L19_31",
+    ]
+    c24_arms_9 = [
+        "L24.prenorm_ff_unmasked",
+        "L24.prenorm_ff_unmasked_postmatched",
+        "L24.prenorm_ff_masked",
+        "L24.m70a30 (0.7*L24.prenorm_ff_masked + 0.3*L24.prenorm_attn_masked)",
+        "L24.prenorm_ff_rand_masked",
+        "L24.m70a30_rand_masked (0.7*L24.ff_rand + 0.3*L24.attn_rand)",
+        "L21.prenorm_ff_masked",
+        "L27.prenorm_ff_masked",
+        "K3_combined (L21+L24+L27 prenorm_ff_masked)",
     ]
 
-    # Exact integer forward counts:
-    # Clean: 24 prompts (8 ShortBare + 8 LongBare + 8 ChatML) + 18 shams + 16 C0-colon pairs = 58
-    # Block 1 (C2.1): 3 layers x 5 arms x 24 targets x 8 prompts = 2,880
-    # Block 2 (C2.2): 9 conditions x 12 targets x 8 pairs x 2 (R_mf + direct_matched_draw0) = 1,728
-    # Block 2b (C2.3): 7 layers x (24 logit_lens + 32 rand_iso) x 8 prompts = 3,136
-    # Block 3 (C2.4): 11 enumerated arms x 24 targets x 4 prompts (2 LongBare + 2 ChatML) x 2 doses = 2,112
-    n_clean_sham_anchor = 24 + len(sham_arms_18) + 16
-    n_b1 = 3 * 5 * 24 * 8
-    n_b2 = len(c22_arms_9) * len(C2_2_TARGET_INDICES) * len(c22_triples) * 2
-    n_b2b = len(SWEEP_LAYERS) * (24 + M_RAND_ISO_DRAWS) * 8
-    n_b3 = len(c24_arms_11) * 24 * 4 * 2
+    # Exact integer forward counts (0% unread forwards!):
+    # Clean (36 = 12*3) + Write Shams (13) + Patch Shams (6) + C0-colon pairs (16) = 71
+    # Block 1 (C2.1): 3L x 5 arms x 24 targets x 8 prompts = 2,880
+    # Block 2 (C2.2): 9 conds x 12 targets x 12 pairs x 2 (R_mf + dm0) = 2,592, plus 6 patched conds x 12 pairs = 72 unsteered clean-KL fwds -> 2,664
+    # Block 2b (C2.3): 5L x (24 logit_lens + 8 rand_iso) x 8 prompts = 1,280
+    # Block 3 (C2.4): 9 arms x 24 targets x 4 prompts x 2 doses = 1,728
+    n_clean = len(c22_triples) * 3
+    n_shams = len(write_shams_13) + len(patch_shams_6)
+    n_clean_sham_anchor = n_clean + n_shams + 16
+    n_b1 = len(PRIMARY_C21_LAYERS) * 5 * 24 * len(prompts_8_c21)
+    n_b2_steered = len(c22_arms_9) * len(C2_2_TARGET_INDICES) * len(c22_triples) * 2
+    n_b2_clean_kl = 6 * len(c22_triples)
+    n_b2 = n_b2_steered + n_b2_clean_kl
+    n_b2b = len(SWEEP_LAYERS) * (24 + M_RAND_ISO_DRAWS) * len(prompts_8_c21)
+    n_b3 = len(c24_arms_9) * 24 * 4 * 2
 
     budget = {
-        "clean_prompts_24": 24,
-        "shams_enumerated_18": len(sham_arms_18),
+        "clean_prompts_36": n_clean,
+        "write_shams_13": len(write_shams_13),
+        "patch_shams_6": len(patch_shams_6),
+        "shams_total_19": n_shams,
         "c0_colon_anchor_pairs_16": 16,
         "clean_shams_anchor_subtotal": n_clean_sham_anchor,
         "block1_C2_1_3L_5arms_24x8": n_b1,
-        "block2_C2_2_9cond_12t_8pairs_2arms": n_b2,
-        "block2b_C2_3_7L_56v_8p": n_b2b,
-        "block3_C2_4_11arms_24t_4p_2doses": n_b3,
+        "block2_C2_2_steered_9cond_12t_12p_2arms": n_b2_steered,
+        "block2_C2_2_unsteered_patched_kl_6cond_12p": n_b2_clean_kl,
+        "block2_C2_2_total": n_b2,
+        "block2b_C2_3_5L_32v_8p": n_b2b,
+        "block3_C2_4_9arms_24t_4p_2doses": n_b3,
         "total_planned_short_fwds": n_clean_sham_anchor + n_b1 + n_b2 + n_b2b + n_b3,
-        "sham_arms_list": sham_arms_18,
+        "write_shams_list": write_shams_13,
+        "patch_shams_list": patch_shams_6,
         "c22_conditions_list": c22_arms_9,
-        "c24_arms_list": c24_arms_11,
-        "estimated_runtime_L4_or_A100_min": "9-15",
-        "estimated_cost_CU": "0.50-1.20",
+        "c24_arms_list": c24_arms_9,
+        "estimated_runtime_L4_or_A100_min": "8-13",
+        "estimated_cost_CU": "0.45-1.05",
     }
 
+    # Unified 8-test reject-the-null Holm-Bonferroni family (B5: equivalence claims moved to separate Gates!)
     holm_tests = [
         "p_C2.1_ctr_vs_raw",
         "p_C2.1_shk_vs_ctr",
+        "p_C2.1_shk_vs_ll",
         "p_C2.1_gain_ret",
         "p_C2.2_bare_into_chat",
         "p_C2.2_chat_into_bare",
-        "p_C2.2_ctrl_equiv",
         "p_C2.4a_mask_vs_unmask",
         "p_C2.4b_m70a30_vs_ff",
-        "p_C2.4c_k3_additivity_tost",
     ]
     holm_stepdown = [round(0.05 / (len(holm_tests) + 1 - k), 6) for k in range(1, len(holm_tests) + 1)]
 
-    # Exact ratio anchor prediction (m1 & m2)
+    # M6: Unified math.ceil(rate * N) C2.0.3 ceilings for BOTH Regime-N and Regime-D!
+    n_reg_n = n_b1
+    n_reg_d = 3 * len(C2_2_TARGET_INDICES) * len(c22_triples) * 2  # 864 unpatched C2.2 traces
+    c203_gates = {
+        "derivation_rule": "Exact math.ceil(rate * N) applied uniformly to BOTH Regime-N and Regime-D using C1 registered rates (0.15% >20% shrink, 1.50% >12% shrink, 0.70% |fde_err|>0.45)",
+        "rate_rmsn_gt_20pct": C203_RATE_RMSN_GT_20PCT,
+        "rate_rmsn_gt_12pct": C203_RATE_RMSN_GT_12PCT,
+        "rate_fde_gt_045": C203_RATE_FDE_GT_045,
+        "regime_N_C21_population_N": n_reg_n,
+        "regime_N_max_capped": 0,
+        "regime_N_max_rmsn_gt_20pct": math.ceil(C203_RATE_RMSN_GT_20PCT * n_reg_n),
+        "regime_N_max_rmsn_gt_12pct": math.ceil(C203_RATE_RMSN_GT_12PCT * n_reg_n),
+        "regime_D_C22_unpatched_population_N": n_reg_d,
+        "regime_D_max_capped": 0,
+        "regime_D_max_rmsn_gt_20pct": math.ceil(C203_RATE_RMSN_GT_20PCT * n_reg_d),
+        "regime_D_max_rmsn_gt_12pct": math.ceil(C203_RATE_RMSN_GT_12PCT * n_reg_d),
+        "regime_D_fde_p95_max": 0.30,
+        "regime_D_max_fde_gt_045": math.ceil(C203_RATE_FDE_GT_045 * n_reg_d),
+    }
+
     l24_ratio_pt = round(C1_RECEIPT_PMN["24"] / C0_RECEIPT_PMN["24"], 4)
     l27_ratio_pt = round(C1_RECEIPT_PMN["27"] / C0_RECEIPT_PMN["27"], 4)
 
     doc = {
-        "schema_version": "c2-prereg-constants-v2",
-        "study": "OLMo-3-7B Stage C2 v2 (Lens->Model Whitening Transfer, Matched-Length ChatML Causal MLP Patching, Post-Erasure Sweep, & Pre-Norm Mask/Split/Additivity)",
+        "schema_version": "c2-prereg-constants-v3",
+        "study": "OLMo-3-7B Stage C2 v3 (Held-Out Lens->Model Whitening Transfer, Pure ChatML-Template Causal MLP Patching, Post-Erasure Sweep, & Pre-Norm Mask/Split/Additivity)",
         "generator_script": "olmo3_virtual_and_highway/build_olmo3_c2_constants.py",
         "model": MODEL_ID,
         "revision": MODEL_REV,
@@ -836,15 +921,18 @@ def main() -> None:
         "sweep_layers": SWEEP_LAYERS,
         "prenorm_layers": PRENORM_LAYERS,
         "c22_target_indices_12": C2_2_TARGET_INDICES,
+        "c22_l18_frozen_pred_ret": c22_l18_pred_ret,
         "registered_rng_and_inference": {
             "holm_family_size": len(holm_tests),
             "holm_tests": holm_tests,
             "holm_alpha_stepdown": holm_stepdown,
-            "holm_stop_rule": "sort ascending p_(1)..p_(9); reject k while p_(k) <= 0.05/(10-k); stop at first failure",
+            "holm_stop_rule": "sort ascending p_(1)..p_(8); reject k while p_(k) <= 0.05/(9-k); stop at first failure (all 8 tests are one-sided reject-the-null; equivalence gates live separately)",
+            "equivalence_gates_outside_holm": ["EQ-C2.2_negative_controls_and_shape", "EQ-C2.4c_K3_median_additivity_TOST"],
             "perm_rng": "Python stdlib random.Random(perm_seed)",
             "perm_seed": PERM_SEED,
+            "perm_rule_16_primary_targets": "Exact enumeration over all 2^16 = 65,536 sign flips (p_min = 1/65536 = 0.000015)",
             "perm_n_flips_24_targets": 100000,
-            "perm_rule_8_stem_pairs": "Exact enumeration over all 2^8 = 256 sign flips (p_min = 1/256 = 0.00390625 < 0.005556 = alpha/9)",
+            "perm_rule_12_stem_pairs": "Exact one-sided enumeration over all 2^12 = 4,096 sign flips on d_i(0.50) (12/12 -> p=0.000244, 11/12 -> p=0.003174 < alpha/8=0.00625)",
             "layer_aggregation": "Equal-weight mean over L in {18, 24, 27} per target before target-level inference",
             "bca_rng": "Python stdlib random.Random(bca_seed)",
             "bca_seed": BCA_SEED,
@@ -854,21 +942,11 @@ def main() -> None:
             "bank_rand_seed_base": BANK_RAND_SEED_BASE,
             "bank_prenorm_rand_seed_base": BANK_PRENORM_RAND_SEED_BASE,
         },
-        "c2_0_3_named_gate_populations": {
-            "regime_N_C21_population_N": n_b1,
-            "regime_N_max_capped": 0,
-            "regime_N_max_rmsn_gt_20pct": 4,
-            "regime_N_max_rmsn_gt_12pct": 43,
-            "regime_D_C22_unpatched_population_N": 3 * len(C2_2_TARGET_INDICES) * len(c22_triples) * 2,  # 576
-            "regime_D_max_capped": 0,
-            "regime_D_max_rmsn_gt_20pct": 2,
-            "regime_D_max_rmsn_gt_12pct": 12,
-            "regime_D_fde_p95_max": 0.30,
-            "regime_D_max_fde_gt_045": 8,
-        },
+        "c2_0_3_named_gate_populations": c203_gates,
         "c0_anchor_colon_prediction": {
             "hypothesis": "Paired in-run ratio test: replacing trailing ' a' with ':' drops L24/L27 post_mlp_norm (Claude #103(1c), m1, m2, m6)",
             "c0_receipt_pmn_provenance": "c0_receipt.json.gz post_mlp_norms (NOT c0_prereg_constants Exp 4B literal 12.1555)",
+            "c1_receipt_pmn_provenance": "results/vesper-olmo3-7b-stage-c1/c1_receipt.json.gz post_mlp_norms",
             "c0_receipt_pmn": C0_RECEIPT_PMN,
             "c1_receipt_pmn": C1_RECEIPT_PMN,
             "predicted_ratio_L24_point": l24_ratio_pt,
@@ -880,7 +958,7 @@ def main() -> None:
         },
         "targets_24": targets,
         "prompts_8_c21": prompts_8_c21,
-        "c22_stem_pairs_8": c22_triples,
+        "c22_stem_pairs_12": c22_triples,
         "prompt_length_summary": {
             "short_bare_min_max_mean": [min(bare_T), max(bare_T), round(float(np.mean(bare_T)), 2)],
             "long_bare_min_max_mean": [min(long_T), max(long_T), round(float(np.mean(long_T)), 2)],
@@ -891,25 +969,27 @@ def main() -> None:
         "layer_geometry": layer_geom,
         "prenorm_gamma_mask_geometry": prenorm_geom,
         "c2_3_post_erasure_decision_rule": {
-            "statistic": "E_open(L) = median_{t in open_18, p in 8}(sum_mlp(L,t,p)); E_func(L) = median_{t in func_6, p in 8}(sum_mlp(L,t,p)); gap(L) = E_open(L) - E_func(L)",
-            "post_erasure_predicate": "E_open(L) >= -1.20 logits AND |E_open(L) - E_func(L)| <= 0.60 logits",
+            "sum_mlp_definition": "sum_{l=L+1}^{31} (u_t . (mlp_out_l^{int}(last) - mlp_out_l^{clean}(last))) / r_c(p), evaluated on logit_lens arm at layer L, positions='last', dose=0.75*pmn[L]",
+            "statistic": "E_open(L) = median_{t in open_18, p in 8}(sum_mlp(L,t,p)); E_func(L) = median_{t in func_6, p in 8}(sum_mlp(L,t,p)); ret_open(L) = median_{t in open_18, p in 8}(retention(L,t,p)); ret_rand(L) = median_{d in 8, p in 8}(retention_rand_iso(L,d,p))",
+            "threshold_provenance": C1_LOGIT_LENS_SUM_MLP_PROVENANCE,
+            "post_erasure_predicate": "E_open(L) >= -1.20 logits AND |E_open(L) - E_func(L)| <= 0.60 logits AND ret_open(L) > ret_rand(L)",
             "selection_rule": "Stage C3 compilation band = earliest contiguous run of >= 2 sweep layers in {18, 21, 24, 27, 30} satisfying post_erasure(L); if none, C2.3 = INCONCLUSIVE and Stage C3 defaults to {24, 27}",
         },
         "power_simulations": simulate_c2_power(),
         "planned_budget": budget,
     }
 
-    args.out_constants.write_text(json.dumps(doc, indent=2) + "\n", encoding="utf-8")
-    out_sha = sha256_file(args.out_constants)
-    print(f"Wrote {args.out_constants} (sha256={out_sha})")
-    print(f"Wrote {out_bank} (sha256={bank_sha})")
+    out_const = args.out_constants
+    out_const.parent.mkdir(parents=True, exist_ok=True)
+    out_const.write_text(json.dumps(doc, indent=2, ensure_ascii=True) + "\n", encoding="utf-8")
+    const_sha = sha256_file(out_const)
+
+    print(f"Wrote {out_const} (sha256={const_sha})")
+    print(f"Wrote {out_bank} (sha256={bank_sha}, tensors={len(bank_tensors)})")
     print(f"Prompt lengths: {doc['prompt_length_summary']}")
+    print(f"C2.0.3 gates: {c203_gates}")
     print(f"Budget total: {budget['total_planned_short_fwds']} fwds")
-    for L in PRIMARY_C21_LAYERS:
-        print(f"L{L}:", json.dumps(layer_geom[str(L)]["frozen_lens_transfer_preds_24"]))
-    for L in PRENORM_LAYERS:
-        print(f"L{L} pre_norm:", json.dumps(prenorm_geom[str(L)]))
-    print("Power summary:", json.dumps(doc["power_simulations"], indent=2))
+    print(f"Power summary: {json.dumps(doc['power_simulations'], indent=2)}")
 
 
 if __name__ == "__main__":

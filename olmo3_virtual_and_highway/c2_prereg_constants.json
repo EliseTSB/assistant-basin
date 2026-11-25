@@ -1,11 +1,11 @@
 {
-  "schema_version": "c2-prereg-constants-v2",
-  "study": "OLMo-3-7B Stage C2 v2 (Lens->Model Whitening Transfer, Matched-Length ChatML Causal MLP Patching, Post-Erasure Sweep, & Pre-Norm Mask/Split/Additivity)",
+  "schema_version": "c2-prereg-constants-v3",
+  "study": "OLMo-3-7B Stage C2 v3 (Held-Out Lens->Model Whitening Transfer, Pure ChatML-Template Causal MLP Patching, Post-Erasure Sweep, & Pre-Norm Mask/Split/Additivity)",
   "generator_script": "olmo3_virtual_and_highway/build_olmo3_c2_constants.py",
   "model": "allenai/Olmo-3-7B-Instruct",
   "revision": "6e5971d9eba42665f5bd5a0fcf047f299ce1dccc",
   "r_lens_sha256": "ceef21fc90b17aafa5625f23ab2c1f35be7b2f8b735847cb89bfd2a438caa955",
-  "c2_vector_bank_sha256": "f880ba62e540edd943f70f2efff87476e42af344597be9a76496ad5a60cdb29c",
+  "c2_vector_bank_sha256": "57c3f63604aae4c21dce0385f71833fd82f67ae0dff52f6f3af23f5b5521d387",
   "targets_24_spec_sha256": "1074f160064b9f17fdf42bb1f3c0fc8de05d87168e3428cc58ebebfdcfe807f7",
   "parent_c0_constants_sha256": "3be64ef80f12d34fc59d7e561d5617dd96ecb605649d5f64e1a98bd974acbe98",
   "parent_c0b_constants_sha256": "4596f012bb862aec81a0b07a478223ef02dab8bab3706c4f7902c860958a0f2e",
@@ -16,8 +16,6 @@
     27
   ],
   "sweep_layers": [
-    12,
-    15,
     18,
     21,
     24,
@@ -43,21 +41,105 @@
     19,
     20
   ],
+  "c22_l18_frozen_pred_ret": {
+    " candle": {
+      "target_idx": 0,
+      "u_dot_w_Rmf": 0.783645,
+      "pred_ret_R_mf": 2.508786,
+      "pred_ret_dm0": 0.474487,
+      "pred_gap_at_direct3": 6.102899
+    },
+    " barrel": {
+      "target_idx": 1,
+      "u_dot_w_Rmf": 0.877722,
+      "pred_ret_R_mf": 2.206075,
+      "pred_ret_dm0": 0.475446,
+      "pred_gap_at_direct3": 5.191887
+    },
+    " feather": {
+      "target_idx": 2,
+      "u_dot_w_Rmf": 0.866961,
+      "pred_ret_R_mf": 2.300193,
+      "pred_ret_dm0": 0.458282,
+      "pred_gap_at_direct3": 5.525734
+    },
+    " polish": {
+      "target_idx": 6,
+      "u_dot_w_Rmf": 0.800209,
+      "pred_ret_R_mf": 2.423635,
+      "pred_ret_dm0": 0.454369,
+      "pred_gap_at_direct3": 5.9078
+    },
+    " stumble": {
+      "target_idx": 7,
+      "u_dot_w_Rmf": 0.853007,
+      "pred_ret_R_mf": 2.171845,
+      "pred_ret_dm0": 0.460179,
+      "pred_gap_at_direct3": 5.134996
+    },
+    " vanish": {
+      "target_idx": 8,
+      "u_dot_w_Rmf": 0.767126,
+      "pred_ret_R_mf": 2.362245,
+      "pred_ret_dm0": 0.496126,
+      "pred_gap_at_direct3": 5.598358
+    },
+    " sturdy": {
+      "target_idx": 12,
+      "u_dot_w_Rmf": 0.716466,
+      "pred_ret_R_mf": 2.409718,
+      "pred_ret_dm0": 0.455168,
+      "pred_gap_at_direct3": 5.863649
+    },
+    " velvet": {
+      "target_idx": 13,
+      "u_dot_w_Rmf": 0.777197,
+      "pred_ret_R_mf": 2.537928,
+      "pred_ret_dm0": 0.441697,
+      "pred_gap_at_direct3": 6.288692
+    },
+    " crisp": {
+      "target_idx": 14,
+      "u_dot_w_Rmf": 0.829909,
+      "pred_ret_R_mf": 2.377041,
+      "pred_ret_dm0": 0.481104,
+      "pred_gap_at_direct3": 5.687812
+    },
+    " however": {
+      "target_idx": 18,
+      "u_dot_w_Rmf": 0.791352,
+      "pred_ret_R_mf": 2.500575,
+      "pred_ret_dm0": 0.45699,
+      "pred_gap_at_direct3": 6.130755
+    },
+    " whereas": {
+      "target_idx": 19,
+      "u_dot_w_Rmf": 0.874637,
+      "pred_ret_R_mf": 2.340636,
+      "pred_ret_dm0": 0.553148,
+      "pred_gap_at_direct3": 5.362464
+    },
+    " beneath": {
+      "target_idx": 20,
+      "u_dot_w_Rmf": 0.817788,
+      "pred_ret_R_mf": 2.433176,
+      "pred_ret_dm0": 0.520261,
+      "pred_gap_at_direct3": 5.738745
+    }
+  },
   "registered_rng_and_inference": {
-    "holm_family_size": 9,
+    "holm_family_size": 8,
     "holm_tests": [
       "p_C2.1_ctr_vs_raw",
       "p_C2.1_shk_vs_ctr",
+      "p_C2.1_shk_vs_ll",
       "p_C2.1_gain_ret",
       "p_C2.2_bare_into_chat",
       "p_C2.2_chat_into_bare",
-      "p_C2.2_ctrl_equiv",
       "p_C2.4a_mask_vs_unmask",
-      "p_C2.4b_m70a30_vs_ff",
-      "p_C2.4c_k3_additivity_tost"
+      "p_C2.4b_m70a30_vs_ff"
     ],
     "holm_alpha_stepdown": [
-      0.005556,
       0.00625,
       0.007143,
       0.008333,
@@ -67,11 +149,16 @@
       0.025,
       0.05
     ],
-    "holm_stop_rule": "sort ascending p_(1)..p_(9); reject k while p_(k) <= 0.05/(10-k); stop at first failure",
+    "holm_stop_rule": "sort ascending p_(1)..p_(8); reject k while p_(k) <= 0.05/(9-k); stop at first failure (all 8 tests are one-sided reject-the-null; equivalence gates live separately)",
+    "equivalence_gates_outside_holm": [
+      "EQ-C2.2_negative_controls_and_shape",
+      "EQ-C2.4c_K3_median_additivity_TOST"
+    ],
     "perm_rng": "Python stdlib random.Random(perm_seed)",
     "perm_seed": 2026112501,
+    "perm_rule_16_primary_targets": "Exact enumeration over all 2^16 = 65,536 sign flips (p_min = 1/65536 = 0.000015)",
     "perm_n_flips_24_targets": 100000,
-    "perm_rule_8_stem_pairs": "Exact enumeration over all 2^8 = 256 sign flips (p_min = 1/256 = 0.00390625 < 0.005556 = alpha/9)",
+    "perm_rule_12_stem_pairs": "Exact one-sided enumeration over all 2^12 = 4,096 sign flips on d_i(0.50) (12/12 -> p=0.000244, 11/12 -> p=0.003174 < alpha/8=0.00625)",
     "layer_aggregation": "Equal-weight mean over L in {18, 24, 27} per target before target-level inference",
     "bca_rng": "Python stdlib random.Random(bca_seed)",
     "bca_seed": 2026112502,
@@ -82,27 +169,32 @@
     "bank_prenorm_rand_seed_base": 2026112505
   },
   "c2_0_3_named_gate_populations": {
+    "derivation_rule": "Exact math.ceil(rate * N) applied uniformly to BOTH Regime-N and Regime-D using C1 registered rates (0.15% >20% shrink, 1.50% >12% shrink, 0.70% |fde_err|>0.45)",
+    "rate_rmsn_gt_20pct": 0.0015,
+    "rate_rmsn_gt_12pct": 0.015,
+    "rate_fde_gt_045": 0.007,
     "regime_N_C21_population_N": 2880,
     "regime_N_max_capped": 0,
-    "regime_N_max_rmsn_gt_20pct": 4,
-    "regime_N_max_rmsn_gt_12pct": 43,
-    "regime_D_C22_unpatched_population_N": 576,
+    "regime_N_max_rmsn_gt_20pct": 5,
+    "regime_N_max_rmsn_gt_12pct": 44,
+    "regime_D_C22_unpatched_population_N": 864,
     "regime_D_max_capped": 0,
     "regime_D_max_rmsn_gt_20pct": 2,
-    "regime_D_max_rmsn_gt_12pct": 12,
+    "regime_D_max_rmsn_gt_12pct": 13,
     "regime_D_fde_p95_max": 0.3,
-    "regime_D_max_fde_gt_045": 8
+    "regime_D_max_fde_gt_045": 7
   },
   "c0_anchor_colon_prediction": {
     "hypothesis": "Paired in-run ratio test: replacing trailing ' a' with ':' drops L24/L27 post_mlp_norm (Claude #103(1c), m1, m2, m6)",
     "c0_receipt_pmn_provenance": "c0_receipt.json.gz post_mlp_norms (NOT c0_prereg_constants Exp 4B literal 12.1555)",
+    "c1_receipt_pmn_provenance": "results/vesper-olmo3-7b-stage-c1/c1_receipt.json.gz post_mlp_norms",
     "c0_receipt_pmn": {
       "24": 9.325704,
       "27": 10.237432
     },
     "c1_receipt_pmn": {
       "24": 7.210327,
-      "27": 7.4738
+      "27": 7.473792
     },
     "predicted_ratio_L24_point": 0.7732,
     "predicted_ratio_L24_range": [
@@ -522,42 +614,42 @@
   ],
   "prompts_8_c21": [
     {
-      "id": "c2_bare_narr_0",
-      "format": "bare",
+      "id": "c2_longbare_narr_0",
+      "format": "long_bare",
       "style": "narrative",
       "stem": "Inside the small drawer, the card displayed a single word:",
-      "text": "Inside the small drawer, the card displayed a single word:",
-      "n_tokens": 12,
+      "text": "User instruction: Complete the final line below with one fitting word. Context: The wooden desk stood beside the north window while steady rain tapped softly on the glass.\nAssistant final response:\nInside the small drawer, the card displayed a single word:",
+      "n_tokens": 48,
       "last_token_id": 25,
       "last_token_piece": ":"
     },
     {
-      "id": "c2_bare_narr_1",
-      "format": "bare",
+      "id": "c2_longbare_narr_1",
+      "format": "long_bare",
       "style": "narrative",
       "stem": "Across the chalk slate, the final word written in dust was:",
-      "text": "Across the chalk slate, the final word written in dust was:",
-      "n_tokens": 13,
+      "text": "User instruction: Complete the final line below with one fitting word. Context: An empty classroom stayed silent after the evening bell rang along the dim corridor.\nAssistant final response:\nAcross the chalk slate, the final word written in dust was:",
+      "n_tokens": 47,
       "last_token_id": 25,
       "last_token_piece": ":"
     },
     {
-      "id": "c2_bare_anal_0",
-      "format": "bare",
+      "id": "c2_longbare_anal_0",
+      "format": "long_bare",
       "style": "analytical",
       "stem": "In the test ledger, the target entry listed in row four was:",
-      "text": "In the test ledger, the target entry listed in row four was:",
-      "n_tokens": 14,
+      "text": "User instruction: Complete the final line below with one fitting word. Context: During the annual warehouse audit, two clerks checked each printed catalog sheet carefully.\nAssistant final response:\nIn the test ledger, the target entry listed in row four was:",
+      "n_tokens": 49,
       "last_token_id": 25,
       "last_token_piece": ":"
     },
     {
-      "id": "c2_bare_anal_1",
-      "format": "bare",
+      "id": "c2_longbare_anal_1",
+      "format": "long_bare",
       "style": "analytical",
       "stem": "From the sample index, the marked label shown at the end was:",
-      "text": "From the sample index, the marked label shown at the end was:",
-      "n_tokens": 14,
+      "text": "User instruction: Complete the final line below with one fitting word. Context: After reviewing the quarterly archive logs, the analyst prepared a brief reference table.\nAssistant final response:\nFrom the sample index, the marked label shown at the end was:",
+      "n_tokens": 48,
       "last_token_id": 25,
       "last_token_piece": ":"
     },
@@ -566,8 +658,8 @@
       "format": "chatml",
       "style": "narrative",
       "stem": "Inside the small drawer, the card displayed a single word:",
-      "text": "<|im_start|>user\nContinue this line with one word: Inside the small drawer, the card displayed a single word:<|im_end|>\n<|im_start|>assistant\nInside the small drawer, the card displayed a single word:",
-      "n_tokens": 39,
+      "text": "<|im_start|>user\nComplete the final line below with one fitting word. Context: The wooden desk stood beside the north window while steady rain tapped softly on the glass.<|im_end|>\n<|im_start|>assistant\nInside the small drawer, the card displayed a single word:",
+      "n_tokens": 49,
       "last_token_id": 25,
       "last_token_piece": ":"
     },
@@ -576,8 +668,8 @@
       "format": "chatml",
       "style": "narrative",
       "stem": "Across the chalk slate, the final word written in dust was:",
-      "text": "<|im_start|>user\nContinue this line with one word: Across the chalk slate, the final word written in dust was:<|im_end|>\n<|im_start|>assistant\nAcross the chalk slate, the final word written in dust was:",
-      "n_tokens": 41,
+      "text": "<|im_start|>user\nComplete the final line below with one fitting word. Context: An empty classroom stayed silent after the evening bell rang along the dim corridor.<|im_end|>\n<|im_start|>assistant\nAcross the chalk slate, the final word written in dust was:",
+      "n_tokens": 48,
       "last_token_id": 25,
       "last_token_piece": ":"
     },
@@ -586,8 +678,8 @@
       "format": "chatml",
       "style": "analytical",
       "stem": "In the test ledger, the target entry listed in row four was:",
-      "text": "<|im_start|>user\nContinue this line with one word: In the test ledger, the target entry listed in row four was:<|im_end|>\n<|im_start|>assistant\nIn the test ledger, the target entry listed in row four was:",
-      "n_tokens": 43,
+      "text": "<|im_start|>user\nComplete the final line below with one fitting word. Context: During the annual warehouse audit, two clerks checked each printed catalog sheet carefully.<|im_end|>\n<|im_start|>assistant\nIn the test ledger, the target entry listed in row four was:",
+      "n_tokens": 50,
       "last_token_id": 25,
       "last_token_piece": ":"
     },
@@ -596,18 +688,19 @@
       "format": "chatml",
       "style": "analytical",
       "stem": "From the sample index, the marked label shown at the end was:",
-      "text": "<|im_start|>user\nContinue this line with one word: From the sample index, the marked label shown at the end was:<|im_end|>\n<|im_start|>assistant\nFrom the sample index, the marked label shown at the end was:",
-      "n_tokens": 43,
+      "text": "<|im_start|>user\nComplete the final line below with one fitting word. Context: After reviewing the quarterly archive logs, the analyst prepared a brief reference table.<|im_end|>\n<|im_start|>assistant\nFrom the sample index, the marked label shown at the end was:",
+      "n_tokens": 49,
       "last_token_id": 25,
       "last_token_piece": ":"
     }
   ],
-  "c22_stem_pairs_8": [
+  "c22_stem_pairs_12": [
     {
       "pair_idx": 0,
       "stem_id": "narr_0",
       "style": "narrative",
       "stem": "Inside the small drawer, the card displayed a single word:",
+      "context_clause": "The wooden desk stood beside the north window while steady rain tapped softly on the glass.",
       "suffix_len": 12,
       "short_bare": {
         "id": "c2_shortbare_narr_0",
@@ -620,18 +713,18 @@
       "long_bare": {
         "id": "c2_longbare_narr_0",
         "format": "long_bare",
-        "text": "The wooden desk sat near the north window all afternoon while rain tapped on the glass pane outside and the clerk sorted old letters slowly.\nInside the small drawer, the card displayed a single word:",
-        "n_tokens": 38,
-        "untouched_prefix_tokens": 26,
+        "text": "User instruction: Complete the final line below with one fitting word. Context: The wooden desk stood beside the north window while steady rain tapped softly on the glass.\nAssistant final response:\nInside the small drawer, the card displayed a single word:",
+        "n_tokens": 48,
+        "untouched_prefix_tokens": 36,
         "last_token_id": 25,
         "last_token_piece": ":"
       },
       "chatml": {
         "id": "c2_chat_narr_0",
         "format": "chatml",
-        "text": "<|im_start|>user\nContinue this line with one word: Inside the small drawer, the card displayed a single word:<|im_end|>\n<|im_start|>assistant\nInside the small drawer, the card displayed a single word:",
-        "n_tokens": 39,
-        "untouched_prefix_tokens": 27,
+        "text": "<|im_start|>user\nComplete the final line below with one fitting word. Context: The wooden desk stood beside the north window while steady rain tapped softly on the glass.<|im_end|>\n<|im_start|>assistant\nInside the small drawer, the card displayed a single word:",
+        "n_tokens": 49,
+        "untouched_prefix_tokens": 37,
         "last_token_id": 25,
         "last_token_piece": ":"
       },
@@ -642,6 +735,7 @@
       "stem_id": "narr_1",
       "style": "narrative",
       "stem": "Across the chalk slate, the final word written in dust was:",
+      "context_clause": "An empty classroom stayed silent after the evening bell rang along the dim corridor.",
       "suffix_len": 13,
       "short_bare": {
         "id": "c2_shortbare_narr_1",
@@ -654,28 +748,29 @@
       "long_bare": {
         "id": "c2_longbare_narr_1",
         "format": "long_bare",
-        "text": "An empty classroom stayed quiet after the evening bell rang at dusk, with wooden benches aligned in neat rows beside tall shelves of old faded notebooks.\nAcross the chalk slate, the final word written in dust was:",
-        "n_tokens": 41,
-        "untouched_prefix_tokens": 28,
+        "text": "User instruction: Complete the final line below with one fitting word. Context: An empty classroom stayed silent after the evening bell rang along the dim corridor.\nAssistant final response:\nAcross the chalk slate, the final word written in dust was:",
+        "n_tokens": 47,
+        "untouched_prefix_tokens": 34,
         "last_token_id": 25,
         "last_token_piece": ":"
       },
       "chatml": {
         "id": "c2_chat_narr_1",
         "format": "chatml",
-        "text": "<|im_start|>user\nContinue this line with one word: Across the chalk slate, the final word written in dust was:<|im_end|>\n<|im_start|>assistant\nAcross the chalk slate, the final word written in dust was:",
-        "n_tokens": 41,
-        "untouched_prefix_tokens": 28,
+        "text": "<|im_start|>user\nComplete the final line below with one fitting word. Context: An empty classroom stayed silent after the evening bell rang along the dim corridor.<|im_end|>\n<|im_start|>assistant\nAcross the chalk slate, the final word written in dust was:",
+        "n_tokens": 48,
+        "untouched_prefix_tokens": 35,
         "last_token_id": 25,
         "last_token_piece": ":"
       },
-      "long_minus_chat_tokens": 0
+      "long_minus_chat_tokens": -1
     },
     {
       "pair_idx": 2,
       "stem_id": "narr_2",
       "style": "narrative",
       "stem": "Under the brass lantern, the folded slip named one word:",
+      "context_clause": "Footsteps faded down the stone hallway as cool air moved through the open archway.",
       "suffix_len": 12,
       "short_bare": {
         "id": "c2_shortbare_narr_2",
@@ -688,28 +783,29 @@
       "long_bare": {
         "id": "c2_longbare_narr_2",
         "format": "long_bare",
-        "text": "Along the quiet stone hallway, soft footsteps faded toward the courtyard gate while a cool evening breeze moved through the arched doorway and heavy curtains.\nUnder the brass lantern, the folded slip named one word:",
-        "n_tokens": 40,
-        "untouched_prefix_tokens": 28,
+        "text": "User instruction: Complete the final line below with one fitting word. Context: Footsteps faded down the stone hallway as cool air moved through the open archway.\nAssistant final response:\nUnder the brass lantern, the folded slip named one word:",
+        "n_tokens": 48,
+        "untouched_prefix_tokens": 36,
         "last_token_id": 25,
         "last_token_piece": ":"
       },
       "chatml": {
         "id": "c2_chat_narr_2",
         "format": "chatml",
-        "text": "<|im_start|>user\nContinue this line with one word: Under the brass lantern, the folded slip named one word:<|im_end|>\n<|im_start|>assistant\nUnder the brass lantern, the folded slip named one word:",
-        "n_tokens": 39,
-        "untouched_prefix_tokens": 27,
+        "text": "<|im_start|>user\nComplete the final line below with one fitting word. Context: Footsteps faded down the stone hallway as cool air moved through the open archway.<|im_end|>\n<|im_start|>assistant\nUnder the brass lantern, the folded slip named one word:",
+        "n_tokens": 49,
+        "untouched_prefix_tokens": 37,
         "last_token_id": 25,
         "last_token_piece": ":"
       },
-      "long_minus_chat_tokens": 1
+      "long_minus_chat_tokens": -1
     },
     {
       "pair_idx": 3,
       "stem_id": "narr_3",
       "style": "narrative",
       "stem": "Beside the iron key, the stamped wooden tag showed one word:",
+      "context_clause": "Near the quiet harbor pier, heavy ropes creaked against weathered timber posts before sunrise.",
       "suffix_len": 14,
       "short_bare": {
         "id": "c2_shortbare_narr_3",
@@ -722,18 +818,18 @@
       "long_bare": {
         "id": "c2_longbare_narr_3",
         "format": "long_bare",
-        "text": "Near the harbor pier, ropes creaked softly against weathered timber posts as fog rolled over the calm water before sunrise reached the roof.\nBeside the iron key, the stamped wooden tag showed one word:",
-        "n_tokens": 42,
-        "untouched_prefix_tokens": 28,
+        "text": "User instruction: Complete the final line below with one fitting word. Context: Near the quiet harbor pier, heavy ropes creaked against weathered timber posts before sunrise.\nAssistant final response:\nBeside the iron key, the stamped wooden tag showed one word:",
+        "n_tokens": 52,
+        "untouched_prefix_tokens": 38,
         "last_token_id": 25,
         "last_token_piece": ":"
       },
       "chatml": {
         "id": "c2_chat_narr_3",
         "format": "chatml",
-        "text": "<|im_start|>user\nContinue this line with one word: Beside the iron key, the stamped wooden tag showed one word:<|im_end|>\n<|im_start|>assistant\nBeside the iron key, the stamped wooden tag showed one word:",
-        "n_tokens": 43,
-        "untouched_prefix_tokens": 29,
+        "text": "<|im_start|>user\nComplete the final line below with one fitting word. Context: Near the quiet harbor pier, heavy ropes creaked against weathered timber posts before sunrise.<|im_end|>\n<|im_start|>assistant\nBeside the iron key, the stamped wooden tag showed one word:",
+        "n_tokens": 53,
+        "untouched_prefix_tokens": 39,
         "last_token_id": 25,
         "last_token_piece": ":"
       },
@@ -741,9 +837,80 @@
     },
     {
       "pair_idx": 4,
+      "stem_id": "narr_4",
+      "style": "narrative",
+      "stem": "Above the oak mantel, the framed note held a single word:",
+      "context_clause": "Embers settled low inside the stone hearth while a tall clock ticked steadily nearby.",
+      "suffix_len": 14,
+      "short_bare": {
+        "id": "c2_shortbare_narr_4",
+        "format": "short_bare",
+        "text": "Above the oak mantel, the framed note held a single word:",
+        "n_tokens": 14,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "long_bare": {
+        "id": "c2_longbare_narr_4",
+        "format": "long_bare",
+        "text": "User instruction: Complete the final line below with one fitting word. Context: Embers settled low inside the stone hearth while a tall clock ticked steadily nearby.\nAssistant final response:\nAbove the oak mantel, the framed note held a single word:",
+        "n_tokens": 51,
+        "untouched_prefix_tokens": 37,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "chatml": {
+        "id": "c2_chat_narr_4",
+        "format": "chatml",
+        "text": "<|im_start|>user\nComplete the final line below with one fitting word. Context: Embers settled low inside the stone hearth while a tall clock ticked steadily nearby.<|im_end|>\n<|im_start|>assistant\nAbove the oak mantel, the framed note held a single word:",
+        "n_tokens": 52,
+        "untouched_prefix_tokens": 38,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "long_minus_chat_tokens": -1
+    },
+    {
+      "pair_idx": 5,
+      "stem_id": "narr_5",
+      "style": "narrative",
+      "stem": "Within the leather pouch, the small brass coin bore one word:",
+      "context_clause": "Dry leaves crossed the gravel lane outside the brick wall as clouds gathered overhead.",
+      "suffix_len": 13,
+      "short_bare": {
+        "id": "c2_shortbare_narr_5",
+        "format": "short_bare",
+        "text": "Within the leather pouch, the small brass coin bore one word:",
+        "n_tokens": 13,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "long_bare": {
+        "id": "c2_longbare_narr_5",
+        "format": "long_bare",
+        "text": "User instruction: Complete the final line below with one fitting word. Context: Dry leaves crossed the gravel lane outside the brick wall as clouds gathered overhead.\nAssistant final response:\nWithin the leather pouch, the small brass coin bore one word:",
+        "n_tokens": 47,
+        "untouched_prefix_tokens": 34,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "chatml": {
+        "id": "c2_chat_narr_5",
+        "format": "chatml",
+        "text": "<|im_start|>user\nComplete the final line below with one fitting word. Context: Dry leaves crossed the gravel lane outside the brick wall as clouds gathered overhead.<|im_end|>\n<|im_start|>assistant\nWithin the leather pouch, the small brass coin bore one word:",
+        "n_tokens": 48,
+        "untouched_prefix_tokens": 35,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "long_minus_chat_tokens": -1
+    },
+    {
+      "pair_idx": 6,
       "stem_id": "anal_0",
       "style": "analytical",
       "stem": "In the test ledger, the target entry listed in row four was:",
+      "context_clause": "During the annual warehouse audit, two clerks checked each printed catalog sheet carefully.",
       "suffix_len": 14,
       "short_bare": {
         "id": "c2_shortbare_anal_0",
@@ -756,28 +923,29 @@
       "long_bare": {
         "id": "c2_longbare_anal_0",
         "format": "long_bare",
-        "text": "During the annual winter audit of regional warehouse inventory records, each catalog sheet was verified carefully by two clerks before being filed into the metal cabinet.\nIn the test ledger, the target entry listed in row four was:",
-        "n_tokens": 43,
-        "untouched_prefix_tokens": 29,
+        "text": "User instruction: Complete the final line below with one fitting word. Context: During the annual warehouse audit, two clerks checked each printed catalog sheet carefully.\nAssistant final response:\nIn the test ledger, the target entry listed in row four was:",
+        "n_tokens": 49,
+        "untouched_prefix_tokens": 35,
         "last_token_id": 25,
         "last_token_piece": ":"
       },
       "chatml": {
         "id": "c2_chat_anal_0",
         "format": "chatml",
-        "text": "<|im_start|>user\nContinue this line with one word: In the test ledger, the target entry listed in row four was:<|im_end|>\n<|im_start|>assistant\nIn the test ledger, the target entry listed in row four was:",
-        "n_tokens": 43,
-        "untouched_prefix_tokens": 29,
+        "text": "<|im_start|>user\nComplete the final line below with one fitting word. Context: During the annual warehouse audit, two clerks checked each printed catalog sheet carefully.<|im_end|>\n<|im_start|>assistant\nIn the test ledger, the target entry listed in row four was:",
+        "n_tokens": 50,
+        "untouched_prefix_tokens": 36,
         "last_token_id": 25,
         "last_token_piece": ":"
       },
-      "long_minus_chat_tokens": 0
+      "long_minus_chat_tokens": -1
     },
     {
-      "pair_idx": 5,
+      "pair_idx": 7,
       "stem_id": "anal_1",
       "style": "analytical",
       "stem": "From the sample index, the marked label shown at the end was:",
+      "context_clause": "After reviewing the quarterly archive logs, the analyst prepared a brief reference table.",
       "suffix_len": 14,
       "short_bare": {
         "id": "c2_shortbare_anal_1",
@@ -790,28 +958,29 @@
       "long_bare": {
         "id": "c2_longbare_anal_1",
         "format": "long_bare",
-        "text": "After reviewing all quarterly log files stored in the central archive room, the senior analyst summarized the remaining entries clearly in a printed concise reference table.\nFrom the sample index, the marked label shown at the end was:",
-        "n_tokens": 42,
-        "untouched_prefix_tokens": 28,
+        "text": "User instruction: Complete the final line below with one fitting word. Context: After reviewing the quarterly archive logs, the analyst prepared a brief reference table.\nAssistant final response:\nFrom the sample index, the marked label shown at the end was:",
+        "n_tokens": 48,
+        "untouched_prefix_tokens": 34,
         "last_token_id": 25,
         "last_token_piece": ":"
       },
       "chatml": {
         "id": "c2_chat_anal_1",
         "format": "chatml",
-        "text": "<|im_start|>user\nContinue this line with one word: From the sample index, the marked label shown at the end was:<|im_end|>\n<|im_start|>assistant\nFrom the sample index, the marked label shown at the end was:",
-        "n_tokens": 43,
-        "untouched_prefix_tokens": 29,
+        "text": "<|im_start|>user\nComplete the final line below with one fitting word. Context: After reviewing the quarterly archive logs, the analyst prepared a brief reference table.<|im_end|>\n<|im_start|>assistant\nFrom the sample index, the marked label shown at the end was:",
+        "n_tokens": 49,
+        "untouched_prefix_tokens": 35,
         "last_token_id": 25,
         "last_token_piece": ":"
       },
       "long_minus_chat_tokens": -1
     },
     {
-      "pair_idx": 6,
+      "pair_idx": 8,
       "stem_id": "anal_2",
       "style": "analytical",
       "stem": "On the control sheet, the verified item printed in box two was:",
+      "context_clause": "Before closing the laboratory binder for the night, the technician logged each serial code.",
       "suffix_len": 14,
       "short_bare": {
         "id": "c2_shortbare_anal_2",
@@ -824,28 +993,29 @@
       "long_bare": {
         "id": "c2_longbare_anal_2",
         "format": "long_bare",
-        "text": "Before closing the main laboratory binder at the end of the evening shift, the lead technician cross-checked every serial stamp and noted the last code clearly.\nOn the control sheet, the verified item printed in box two was:",
-        "n_tokens": 43,
-        "untouched_prefix_tokens": 29,
+        "text": "User instruction: Complete the final line below with one fitting word. Context: Before closing the laboratory binder for the night, the technician logged each serial code.\nAssistant final response:\nOn the control sheet, the verified item printed in box two was:",
+        "n_tokens": 49,
+        "untouched_prefix_tokens": 35,
         "last_token_id": 25,
         "last_token_piece": ":"
       },
       "chatml": {
         "id": "c2_chat_anal_2",
         "format": "chatml",
-        "text": "<|im_start|>user\nContinue this line with one word: On the control sheet, the verified item printed in box two was:<|im_end|>\n<|im_start|>assistant\nOn the control sheet, the verified item printed in box two was:",
-        "n_tokens": 43,
-        "untouched_prefix_tokens": 29,
+        "text": "<|im_start|>user\nComplete the final line below with one fitting word. Context: Before closing the laboratory binder for the night, the technician logged each serial code.<|im_end|>\n<|im_start|>assistant\nOn the control sheet, the verified item printed in box two was:",
+        "n_tokens": 50,
+        "untouched_prefix_tokens": 36,
         "last_token_id": 25,
         "last_token_piece": ":"
       },
-      "long_minus_chat_tokens": 0
+      "long_minus_chat_tokens": -1
     },
     {
-      "pair_idx": 7,
+      "pair_idx": 9,
       "stem_id": "anal_3",
       "style": "analytical",
       "stem": "Within the draft manual, the underlined term at the end was:",
+      "context_clause": "Following the standard revision checklist, the editor inspected every numbered appendix page.",
       "suffix_len": 14,
       "short_bare": {
         "id": "c2_shortbare_anal_3",
@@ -858,18 +1028,88 @@
       "long_bare": {
         "id": "c2_longbare_anal_3",
         "format": "long_bare",
-        "text": "Following the standard annual revision procedure for printed technical manuals, the senior copy editor carefully inspected each numbered appendix page and confirmed the top header line.\nWithin the draft manual, the underlined term at the end was:",
-        "n_tokens": 42,
-        "untouched_prefix_tokens": 28,
+        "text": "User instruction: Complete the final line below with one fitting word. Context: Following the standard revision checklist, the editor inspected every numbered appendix page.\nAssistant final response:\nWithin the draft manual, the underlined term at the end was:",
+        "n_tokens": 47,
+        "untouched_prefix_tokens": 33,
         "last_token_id": 25,
         "last_token_piece": ":"
       },
       "chatml": {
         "id": "c2_chat_anal_3",
         "format": "chatml",
-        "text": "<|im_start|>user\nContinue this line with one word: Within the draft manual, the underlined term at the end was:<|im_end|>\n<|im_start|>assistant\nWithin the draft manual, the underlined term at the end was:",
-        "n_tokens": 43,
-        "untouched_prefix_tokens": 29,
+        "text": "<|im_start|>user\nComplete the final line below with one fitting word. Context: Following the standard revision checklist, the editor inspected every numbered appendix page.<|im_end|>\n<|im_start|>assistant\nWithin the draft manual, the underlined term at the end was:",
+        "n_tokens": 48,
+        "untouched_prefix_tokens": 34,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "long_minus_chat_tokens": -1
+    },
+    {
+      "pair_idx": 10,
+      "stem_id": "anal_4",
+      "style": "analytical",
+      "stem": "In the audit summary, the flagged token in column three was:",
+      "context_clause": "Prior to archiving the monthly sensor records, the engineer verified each calibration table.",
+      "suffix_len": 13,
+      "short_bare": {
+        "id": "c2_shortbare_anal_4",
+        "format": "short_bare",
+        "text": "In the audit summary, the flagged token in column three was:",
+        "n_tokens": 13,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "long_bare": {
+        "id": "c2_longbare_anal_4",
+        "format": "long_bare",
+        "text": "User instruction: Complete the final line below with one fitting word. Context: Prior to archiving the monthly sensor records, the engineer verified each calibration table.\nAssistant final response:\nIn the audit summary, the flagged token in column three was:",
+        "n_tokens": 48,
+        "untouched_prefix_tokens": 35,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "chatml": {
+        "id": "c2_chat_anal_4",
+        "format": "chatml",
+        "text": "<|im_start|>user\nComplete the final line below with one fitting word. Context: Prior to archiving the monthly sensor records, the engineer verified each calibration table.<|im_end|>\n<|im_start|>assistant\nIn the audit summary, the flagged token in column three was:",
+        "n_tokens": 49,
+        "untouched_prefix_tokens": 36,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "long_minus_chat_tokens": -1
+    },
+    {
+      "pair_idx": 11,
+      "stem_id": "anal_5",
+      "style": "analytical",
+      "stem": "From the coding chart, the final symbol on line six was:",
+      "context_clause": "While updating the municipal transit schedule, the planner checked every route timetable.",
+      "suffix_len": 13,
+      "short_bare": {
+        "id": "c2_shortbare_anal_5",
+        "format": "short_bare",
+        "text": "From the coding chart, the final symbol on line six was:",
+        "n_tokens": 13,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "long_bare": {
+        "id": "c2_longbare_anal_5",
+        "format": "long_bare",
+        "text": "User instruction: Complete the final line below with one fitting word. Context: While updating the municipal transit schedule, the planner checked every route timetable.\nAssistant final response:\nFrom the coding chart, the final symbol on line six was:",
+        "n_tokens": 46,
+        "untouched_prefix_tokens": 33,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "chatml": {
+        "id": "c2_chat_anal_5",
+        "format": "chatml",
+        "text": "<|im_start|>user\nComplete the final line below with one fitting word. Context: While updating the municipal transit schedule, the planner checked every route timetable.<|im_end|>\n<|im_start|>assistant\nFrom the coding chart, the final symbol on line six was:",
+        "n_tokens": 47,
+        "untouched_prefix_tokens": 34,
         "last_token_id": 25,
         "last_token_piece": ":"
       },
@@ -880,17 +1120,17 @@
     "short_bare_min_max_mean": [
       12,
       14,
-      13.38
+      13.33
     ],
     "long_bare_min_max_mean": [
-      38,
-      43,
-      41.38
+      46,
+      52,
+      48.33
     ],
     "chatml_min_max_mean": [
-      39,
-      43,
-      41.75
+      47,
+      53,
+      49.33
     ],
     "max_abs_longbare_minus_chatml_tokens": 1
   },
@@ -912,16 +1152,6 @@
     }
   },
   "layer_geometry": {
-    "12": {
-      "role": "sweep_layer",
-      "lambda_ridge": 0.32132,
-      "trace_R_over_d": 0.3141
-    },
-    "15": {
-      "role": "sweep_layer",
-      "lambda_ridge": 0.421587,
-      "trace_R_over_d": 0.4171
-    },
     "18": {
       "role": "primary_C2.1_and_sweep",
       "lambda_ridge": 0.462931,
@@ -1143,149 +1373,198 @@
     }
   },
   "c2_3_post_erasure_decision_rule": {
-    "statistic": "E_open(L) = median_{t in open_18, p in 8}(sum_mlp(L,t,p)); E_func(L) = median_{t in func_6, p in 8}(sum_mlp(L,t,p)); gap(L) = E_open(L) - E_func(L)",
-    "post_erasure_predicate": "E_open(L) >= -1.20 logits AND |E_open(L) - E_func(L)| <= 0.60 logits",
+    "sum_mlp_definition": "sum_{l=L+1}^{31} (u_t . (mlp_out_l^{int}(last) - mlp_out_l^{clean}(last))) / r_c(p), evaluated on logit_lens arm at layer L, positions='last', dose=0.75*pmn[L]",
+    "statistic": "E_open(L) = median_{t in open_18, p in 8}(sum_mlp(L,t,p)); E_func(L) = median_{t in func_6, p in 8}(sum_mlp(L,t,p)); ret_open(L) = median_{t in open_18, p in 8}(retention(L,t,p)); ret_rand(L) = median_{d in 8, p in 8}(retention_rand_iso(L,d,p))",
+    "threshold_provenance": {
+      "source_file": "results/vesper-olmo3-7b-stage-c1/c1_receipt.json.gz",
+      "source_key": "block2a_regime_N_last[L]['logit_lens'][target][prompt]['sum_mlp']",
+      "L18": {
+        "median_open_18": -3.0791,
+        "median_func_6": -1.1021,
+        "gap_open_minus_func": -1.977
+      },
+      "L24": {
+        "median_open_18": -0.7432,
+        "median_func_6": -1.1016,
+        "gap_open_minus_func": 0.3584
+      },
+      "L27": {
+        "median_open_18": -1.0024,
+        "median_func_6": -1.0707,
+        "gap_open_minus_func": 0.0683
+      }
+    },
+    "post_erasure_predicate": "E_open(L) >= -1.20 logits AND |E_open(L) - E_func(L)| <= 0.60 logits AND ret_open(L) > ret_rand(L)",
     "selection_rule": "Stage C3 compilation band = earliest contiguous run of >= 2 sweep layers in {18, 21, 24, 27, 30} satisfying post_erasure(L); if none, C2.3 = INCONCLUSIVE and Stage C3 defaults to {24, 27}"
   },
   "power_simulations": {
     "seed": 2026112506,
-    "C2.2_closure_N8_pairs_joint_bar": {
+    "C2.2_full_conjunction_N12_pairs": {
       "sd_0.10": {
         "true_0.50": 0.0,
-        "true_0.70": 0.486,
-        "true_0.80": 0.999,
-        "true_0.85": 1.0,
-        "true_0.90": 1.0,
-        "true_1.00": 1.0
+        "true_0.65": 0.0,
+        "true_0.70": 0.055,
+        "true_0.75": 0.5075,
+        "true_0.85": 0.9995,
+        "true_1.00": 1.0,
+        "true_1.30": 0.5075,
+        "true_1.40": 0.0
       },
       "sd_0.15": {
         "true_0.50": 0.0,
-        "true_0.70": 0.5025,
-        "true_0.80": 0.967,
-        "true_0.85": 0.996,
-        "true_0.90": 1.0,
-        "true_1.00": 1.0
+        "true_0.65": 0.0115,
+        "true_0.70": 0.141,
+        "true_0.75": 0.4825,
+        "true_0.85": 0.9925,
+        "true_1.00": 1.0,
+        "true_1.30": 0.51,
+        "true_1.40": 0.0115
       },
       "sd_0.25": {
-        "true_0.50": 0.011,
-        "true_0.70": 0.4865,
-        "true_0.80": 0.8735,
-        "true_0.85": 0.949,
-        "true_0.90": 0.9885,
-        "true_1.00": 0.999
+        "true_0.50": 0.0,
+        "true_0.65": 0.0695,
+        "true_0.70": 0.213,
+        "true_0.75": 0.46,
+        "true_0.85": 0.8815,
+        "true_1.00": 0.9985,
+        "true_1.30": 0.4945,
+        "true_1.40": 0.0855
       }
     },
-    "C2.4c_K3_additivity_TOST_N24": {
+    "C2.4c_K3_median_TOST_3way_N24": {
       "sd_0.12": {
-        "true_0.00": {
-          "P_declare_additive": 1.0,
-          "P_reject_additive": 0.0
-        },
-        "true_0.10": {
-          "P_declare_additive": 1.0,
-          "P_reject_additive": 0.0
-        },
-        "true_0.20": {
-          "P_declare_additive": 0.4925,
-          "P_reject_additive": 0.5075
-        },
-        "true_0.35": {
-          "P_declare_additive": 0.0,
-          "P_reject_additive": 1.0
-        },
-        "true_0.50": {
-          "P_declare_additive": 0.0,
-          "P_reject_additive": 1.0
+        "effective_equiv_margin_approx": 0.2495,
+        "grid": {
+          "true_0.00": {
+            "P_additive": 1.0,
+            "P_non_additive": 0.0,
+            "P_inconclusive": 0.0
+          },
+          "true_0.10": {
+            "P_additive": 1.0,
+            "P_non_additive": 0.0,
+            "P_inconclusive": 0.0
+          },
+          "true_0.20": {
+            "P_additive": 0.4835,
+            "P_non_additive": 0.0,
+            "P_inconclusive": 0.5165
+          },
+          "true_0.35": {
+            "P_additive": 0.0,
+            "P_non_additive": 0.5155,
+            "P_inconclusive": 0.4845
+          },
+          "true_0.50": {
+            "P_additive": 0.0,
+            "P_non_additive": 1.0,
+            "P_inconclusive": 0.0
+          }
         }
       },
       "sd_0.20": {
-        "true_0.00": {
-          "P_declare_additive": 1.0,
-          "P_reject_additive": 0.0
-        },
-        "true_0.10": {
-          "P_declare_additive": 0.993,
-          "P_reject_additive": 0.007
-        },
-        "true_0.20": {
-          "P_declare_additive": 0.4933,
-          "P_reject_additive": 0.5068
-        },
-        "true_0.35": {
-          "P_declare_additive": 0.0003,
-          "P_reject_additive": 0.9998
-        },
-        "true_0.50": {
-          "P_declare_additive": 0.0,
-          "P_reject_additive": 1.0
+        "effective_equiv_margin_approx": 0.2158,
+        "grid": {
+          "true_0.00": {
+            "P_additive": 1.0,
+            "P_non_additive": 0.0,
+            "P_inconclusive": 0.0
+          },
+          "true_0.10": {
+            "P_additive": 0.968,
+            "P_non_additive": 0.0,
+            "P_inconclusive": 0.032
+          },
+          "true_0.20": {
+            "P_additive": 0.441,
+            "P_non_additive": 0.0,
+            "P_inconclusive": 0.559
+          },
+          "true_0.35": {
+            "P_additive": 0.0005,
+            "P_non_additive": 0.266,
+            "P_inconclusive": 0.7335
+          },
+          "true_0.50": {
+            "P_additive": 0.0,
+            "P_non_additive": 0.9845,
+            "P_inconclusive": 0.0155
+          }
         }
       },
       "sd_0.30": {
-        "true_0.00": {
-          "P_declare_additive": 0.9975,
-          "P_reject_additive": 0.0025
-        },
-        "true_0.10": {
-          "P_declare_additive": 0.9307,
-          "P_reject_additive": 0.0693
-        },
-        "true_0.20": {
-          "P_declare_additive": 0.4467,
-          "P_reject_additive": 0.5533
-        },
-        "true_0.35": {
-          "P_declare_additive": 0.0053,
-          "P_reject_additive": 0.9948
-        },
-        "true_0.50": {
-          "P_declare_additive": 0.0,
-          "P_reject_additive": 1.0
+        "effective_equiv_margin_approx": 0.1738,
+        "grid": {
+          "true_0.00": {
+            "P_additive": 0.9715,
+            "P_non_additive": 0.0,
+            "P_inconclusive": 0.0285
+          },
+          "true_0.10": {
+            "P_additive": 0.819,
+            "P_non_additive": 0.0,
+            "P_inconclusive": 0.181
+          },
+          "true_0.20": {
+            "P_additive": 0.3315,
+            "P_non_additive": 0.0035,
+            "P_inconclusive": 0.665
+          },
+          "true_0.35": {
+            "P_additive": 0.007,
+            "P_non_additive": 0.1865,
+            "P_inconclusive": 0.8065
+          },
+          "true_0.50": {
+            "P_additive": 0.0,
+            "P_non_additive": 0.845,
+            "P_inconclusive": 0.155
+          }
         }
       }
     },
-    "C2.4b_m70a30_vs_ff_N24": {
+    "C2.4b_m70a30_vs_ff_Holm8_N24": {
       "sd_log_0.06": {
         "ratio_1.00": 0.0,
-        "ratio_1.10": 0.5178,
+        "ratio_1.10": 0.4875,
         "ratio_1.15": 1.0,
         "ratio_1.20": 1.0,
         "ratio_1.25": 1.0
       },
       "sd_log_0.10": {
         "ratio_1.00": 0.0,
-        "ratio_1.10": 0.5182,
-        "ratio_1.15": 0.989,
+        "ratio_1.10": 0.471,
+        "ratio_1.15": 0.9868,
         "ratio_1.20": 1.0,
         "ratio_1.25": 1.0
       },
       "sd_log_0.15": {
-        "ratio_1.00": 0.0013,
-        "ratio_1.10": 0.49,
-        "ratio_1.15": 0.9243,
-        "ratio_1.20": 0.9965,
+        "ratio_1.00": 0.0018,
+        "ratio_1.10": 0.4785,
+        "ratio_1.15": 0.924,
+        "ratio_1.20": 0.9975,
         "ratio_1.25": 1.0
       }
     }
   },
   "planned_budget": {
-    "clean_prompts_24": 24,
-    "shams_enumerated_18": 18,
+    "clean_prompts_36": 36,
+    "write_shams_13": 13,
+    "patch_shams_6": 6,
+    "shams_total_19": 19,
     "c0_colon_anchor_pairs_16": 16,
-    "clean_shams_anchor_subtotal": 58,
+    "clean_shams_anchor_subtotal": 71,
     "block1_C2_1_3L_5arms_24x8": 2880,
-    "block2_C2_2_9cond_12t_8pairs_2arms": 1728,
-    "block2b_C2_3_7L_56v_8p": 3136,
-    "block3_C2_4_11arms_24t_4p_2doses": 2112,
-    "total_planned_short_fwds": 9914,
-    "sham_arms_list": [
+    "block2_C2_2_steered_9cond_12t_12p_2arms": 2592,
+    "block2_C2_2_unsteered_patched_kl_6cond_12p": 72,
+    "block2_C2_2_total": 2664,
+    "block2b_C2_3_5L_32v_8p": 1280,
+    "block3_C2_4_9arms_24t_4p_2doses": 1728,
+    "total_planned_short_fwds": 8623,
+    "write_shams_list": [
       "C2.1_post_norm_L18",
       "C2.1_post_norm_L24",
       "C2.1_post_norm_L27",
-      "C2.2_mlp_patch_L19_31",
-      "C2.2_attn_patch_L19_31",
-      "C2.2_mlp_patch_L4_16",
-      "C2.3_sweep_L12",
-      "C2.3_sweep_L15",
       "C2.3_sweep_L18",
       "C2.3_sweep_L21",
       "C2.3_sweep_L24",
@@ -1297,6 +1576,14 @@
       "C2.4_prenorm_L24_m70a30",
       "C2.4_prenorm_K3_combined"
     ],
+    "patch_shams_list": [
+      "C2.2_self_patch_ChatML_MLP_L19_31",
+      "C2.2_self_patch_LongBare_MLP_L19_31",
+      "C2.2_self_patch_ctrl_L4_16_MLP",
+      "C2.2_self_patch_ctrl_mismatch_L19_31",
+      "C2.2_zero_scale_ctrl_rand_iso_L19_31",
+      "C2.2_unit_scale_ctrl_self_attenuated_L19_31"
+    ],
     "c22_conditions_list": [
       "unpatched_LongBare",
       "unpatched_ChatML",
@@ -1306,22 +1593,20 @@
       "ctrl_L4_16_MLP_LongBare_to_ChatML",
       "ctrl_mismatch_prompt_MLP_L19_31",
       "ctrl_rand_iso_same_site_L19_31",
-      "comp_LongBare_to_ChatML_Attn_L19_31"
+      "ctrl_self_attenuated_L19_31"
     ],
     "c24_arms_list": [
       "L24.prenorm_ff_unmasked",
+      "L24.prenorm_ff_unmasked_postmatched",
       "L24.prenorm_ff_masked",
       "L24.m70a30 (0.7*L24.prenorm_ff_masked + 0.3*L24.prenorm_attn_masked)",
+      "L24.prenorm_ff_rand_masked",
+      "L24.m70a30_rand_masked (0.7*L24.ff_rand + 0.3*L24.attn_rand)",
       "L21.prenorm_ff_masked",
       "L27.prenorm_ff_masked",
-      "K3_combined (L21+L24+L27 prenorm_ff_masked)",
-      "L24.prenorm_ff_rand_masked[draw0]",
-      "L24.m70a30_rand_masked (0.7*ff_rand[draw0] + 0.3*attn_rand[draw0])",
-      "L21.prenorm_ff_rand_masked[draw0]",
-      "L27.prenorm_ff_rand_masked[draw0]",
-      "K3_combined_rand_masked (L21+L24+L27 prenorm_ff_rand_masked[draw0])"
+      "K3_combined (L21+L24+L27 prenorm_ff_masked)"
     ],
-    "estimated_runtime_L4_or_A100_min": "9-15",
-    "estimated_cost_CU": "0.50-1.20"
+    "estimated_runtime_L4_or_A100_min": "8-13",
+    "estimated_cost_CU": "0.45-1.05"
   }
 }
