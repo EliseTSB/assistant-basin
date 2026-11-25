@@ -1,0 +1,1035 @@
+{
+  "schema_version": "c1-prereg-constants-v5",
+  "study": "OLMo-3-7B Stage C1 (Fresh Mixed-POS Transport, H_A/H_B Bleed Fork & Token-Direction Contraction)",
+  "generator_script": "olmo3_virtual_and_highway/build_olmo3_c1_constants.py",
+  "model": "allenai/Olmo-3-7B-Instruct",
+  "revision": "6e5971d9eba42665f5bd5a0fcf047f299ce1dccc",
+  "r_lens_sha256": "ceef21fc90b17aafa5625f23ab2c1f35be7b2f8b735847cb89bfd2a438caa955",
+  "c1_vector_bank_sha256": "5a7a406a9072c7362353a0a9b00841e7743b82d90aade0adc96b680c8d3e621f",
+  "targets_24_spec_sha256": "dfd5b92cb762d923f86c33c27025d975016031f2119c45a771820f61d36053a3",
+  "parent_c0_constants_sha256": "3be64ef80f12d34fc59d7e561d5617dd96ecb605649d5f64e1a98bd974acbe98",
+  "parent_c0b_constants_sha256": "4596f012bb862aec81a0b07a478223ef02dab8bab3706c4f7902c860958a0f2e",
+  "primary_layers": [
+    18,
+    24,
+    27
+  ],
+  "secondary_layers": [
+    12
+  ],
+  "registered_rng_and_inference": {
+    "holm_family_size": 5,
+    "holm_tests": [
+      "p_C1.1_IUT",
+      "p_C1.2_IUT",
+      "p_C1.3_HA",
+      "p_C1.3_HB",
+      "p_C1.4"
+    ],
+    "holm_alpha_stepdown": [
+      0.01,
+      0.0125,
+      0.016667,
+      0.025,
+      0.05
+    ],
+    "holm_stop_rule": "sort ascending p_(1)..p_(5); reject k while p_(k) <= 0.05/(6-k); stop at first failure and retain remaining",
+    "perm_rng": "Python stdlib random.Random(perm_seed)",
+    "perm_seed": 2026112401,
+    "perm_n_flips": 100000,
+    "perm_flip_rule": "targets in targets_24 index order 0..23; sign = +1 if rng.getrandbits(1) else -1; p = (1 + count(stat >= obs)) / (1 + 100000)",
+    "bca_rng": "Python stdlib random.Random(bca_seed)",
+    "bca_seed": 2026112402,
+    "bca_n_resamples": 10000,
+    "bca_containment_rule": "90% BCa CI must satisfy CI_low <= point_estimate <= CI_high; violation triggers fail-closed scorer error",
+    "bank_dm_seed_base": 2026112403,
+    "bank_rand_seed_base": 2026112404
+  },
+  "targets_24": [
+    {
+      "stratum": "nouns",
+      "string": " violin",
+      "id": 63137,
+      "decoded_piece": " violin",
+      "u_norm": 1.5839
+    },
+    {
+      "stratum": "nouns",
+      "string": " anchor",
+      "id": 17543,
+      "decoded_piece": " anchor",
+      "u_norm": 1.8516
+    },
+    {
+      "stratum": "nouns",
+      "string": " forest",
+      "id": 13952,
+      "decoded_piece": " forest",
+      "u_norm": 1.6538
+    },
+    {
+      "stratum": "nouns",
+      "string": " bridge",
+      "id": 14497,
+      "decoded_piece": " bridge",
+      "u_norm": 1.7981
+    },
+    {
+      "stratum": "nouns",
+      "string": " blanket",
+      "id": 39139,
+      "decoded_piece": " blanket",
+      "u_norm": 1.9081
+    },
+    {
+      "stratum": "nouns",
+      "string": " marble",
+      "id": 42390,
+      "decoded_piece": " marble",
+      "u_norm": 1.6706
+    },
+    {
+      "stratum": "verbs",
+      "string": " whisper",
+      "id": 35955,
+      "decoded_piece": " whisper",
+      "u_norm": 1.8875
+    },
+    {
+      "stratum": "verbs",
+      "string": " dissolve",
+      "id": 73739,
+      "decoded_piece": " dissolve",
+      "u_norm": 1.7962
+    },
+    {
+      "stratum": "verbs",
+      "string": " wander",
+      "id": 40320,
+      "decoded_piece": " wander",
+      "u_norm": 1.8403
+    },
+    {
+      "stratum": "verbs",
+      "string": " gather",
+      "id": 9762,
+      "decoded_piece": " gather",
+      "u_norm": 1.652
+    },
+    {
+      "stratum": "verbs",
+      "string": " scatter",
+      "id": 45577,
+      "decoded_piece": " scatter",
+      "u_norm": 1.871
+    },
+    {
+      "stratum": "verbs",
+      "string": " borrow",
+      "id": 17636,
+      "decoded_piece": " borrow",
+      "u_norm": 1.8239
+    },
+    {
+      "stratum": "adjectives",
+      "string": " brittle",
+      "id": 95749,
+      "decoded_piece": " brittle",
+      "u_norm": 1.8293
+    },
+    {
+      "stratum": "adjectives",
+      "string": " hollow",
+      "id": 42902,
+      "decoded_piece": " hollow",
+      "u_norm": 1.9953
+    },
+    {
+      "stratum": "adjectives",
+      "string": " crimson",
+      "id": 97119,
+      "decoded_piece": " crimson",
+      "u_norm": 1.7213
+    },
+    {
+      "stratum": "adjectives",
+      "string": " silent",
+      "id": 21737,
+      "decoded_piece": " silent",
+      "u_norm": 1.9133
+    },
+    {
+      "stratum": "adjectives",
+      "string": " gentle",
+      "id": 22443,
+      "decoded_piece": " gentle",
+      "u_norm": 1.7675
+    },
+    {
+      "stratum": "adjectives",
+      "string": " narrow",
+      "id": 15376,
+      "decoded_piece": " narrow",
+      "u_norm": 1.8792
+    },
+    {
+      "stratum": "function",
+      "string": " although",
+      "id": 8051,
+      "decoded_piece": " although",
+      "u_norm": 1.6414
+    },
+    {
+      "stratum": "function",
+      "string": " because",
+      "id": 1606,
+      "decoded_piece": " because",
+      "u_norm": 1.6226
+    },
+    {
+      "stratum": "function",
+      "string": " between",
+      "id": 1990,
+      "decoded_piece": " between",
+      "u_norm": 1.7045
+    },
+    {
+      "stratum": "function",
+      "string": " without",
+      "id": 2085,
+      "decoded_piece": " without",
+      "u_norm": 1.6979
+    },
+    {
+      "stratum": "function",
+      "string": " perhaps",
+      "id": 8530,
+      "decoded_piece": " perhaps",
+      "u_norm": 1.6853
+    },
+    {
+      "stratum": "function",
+      "string": " neither",
+      "id": 14188,
+      "decoded_piece": " neither",
+      "u_norm": 2.0623
+    }
+  ],
+  "prompts_8": [
+    {
+      "id": "c1_bare_narr_0",
+      "format": "bare",
+      "style": "narrative",
+      "stem": "In the quiet room, the next word on the page was:",
+      "text": "In the quiet room, the next word on the page was:",
+      "n_tokens": 13,
+      "last_token_id": 25,
+      "last_token_piece": ":"
+    },
+    {
+      "id": "c1_bare_narr_1",
+      "format": "bare",
+      "style": "narrative",
+      "stem": "On the index card beside the lamp, the single word printed was:",
+      "text": "On the index card beside the lamp, the single word printed was:",
+      "n_tokens": 14,
+      "last_token_id": 25,
+      "last_token_piece": ":"
+    },
+    {
+      "id": "c1_bare_anal_0",
+      "format": "bare",
+      "style": "analytical",
+      "stem": "In the archive log, the isolated token recorded in column three was:",
+      "text": "In the archive log, the isolated token recorded in column three was:",
+      "n_tokens": 14,
+      "last_token_id": 25,
+      "last_token_piece": ":"
+    },
+    {
+      "id": "c1_bare_anal_1",
+      "format": "bare",
+      "style": "analytical",
+      "stem": "Looking over the notes, the highlighted word in the margin was:",
+      "text": "Looking over the notes, the highlighted word in the margin was:",
+      "n_tokens": 13,
+      "last_token_id": 25,
+      "last_token_piece": ":"
+    },
+    {
+      "id": "c1_chat_narr_0",
+      "format": "chatml",
+      "style": "narrative",
+      "stem": "In the quiet room, the next word on the page was:",
+      "text": "<|im_start|>user\nContinue this line with one word: In the quiet room, the next word on the page was:<|im_end|>\n<|im_start|>assistant\nIn the quiet room, the next word on the page was:",
+      "n_tokens": 41,
+      "last_token_id": 25,
+      "last_token_piece": ":"
+    },
+    {
+      "id": "c1_chat_narr_1",
+      "format": "chatml",
+      "style": "narrative",
+      "stem": "On the index card beside the lamp, the single word printed was:",
+      "text": "<|im_start|>user\nContinue this line with one word: On the index card beside the lamp, the single word printed was:<|im_end|>\n<|im_start|>assistant\nOn the index card beside the lamp, the single word printed was:",
+      "n_tokens": 43,
+      "last_token_id": 25,
+      "last_token_piece": ":"
+    },
+    {
+      "id": "c1_chat_anal_0",
+      "format": "chatml",
+      "style": "analytical",
+      "stem": "In the archive log, the isolated token recorded in column three was:",
+      "text": "<|im_start|>user\nContinue this line with one word: In the archive log, the isolated token recorded in column three was:<|im_end|>\n<|im_start|>assistant\nIn the archive log, the isolated token recorded in column three was:",
+      "n_tokens": 43,
+      "last_token_id": 25,
+      "last_token_piece": ":"
+    },
+    {
+      "id": "c1_chat_anal_1",
+      "format": "chatml",
+      "style": "analytical",
+      "stem": "Looking over the notes, the highlighted word in the margin was:",
+      "text": "<|im_start|>user\nContinue this line with one word: Looking over the notes, the highlighted word in the margin was:<|im_end|>\n<|im_start|>assistant\nLooking over the notes, the highlighted word in the margin was:",
+      "n_tokens": 41,
+      "last_token_id": 25,
+      "last_token_piece": ":"
+    }
+  ],
+  "prompt_length_summary": {
+    "bare_min": 13,
+    "bare_max": 14,
+    "bare_mean": 13.5,
+    "chatml_min": 41,
+    "chatml_max": 43,
+    "chatml_mean": 42.0,
+    "chatml_to_bare_mean_ratio": 3.111
+  },
+  "unembed_pairwise_cosine": {
+    "within_pos": 0.1533,
+    "cross_pos": 0.1078,
+    "open_x_func": 0.0713,
+    "func_x_func": 0.1406,
+    "noun_x_noun": 0.1513
+  },
+  "layer_geometry": {
+    "12": {
+      "role": "secondary_capped_0.30x",
+      "lambda_ridge": 0.32132,
+      "post_mlp_norm_anchor": 4.2478,
+      "trace_R_over_d": 0.3141,
+      "u_ret_median": 0.3027,
+      "c_median": 0.3281,
+      "c_min": 0.2733,
+      "dose_D3_over_pmn_median": 1.1812,
+      "dose_D3_over_pmn_max": 1.5435,
+      "pred_gap_D3_median": 7.6985,
+      "pred_gap_D3_mean": 8.1232,
+      "write_cos_R_mf": {
+        "within_pos": 0.3017,
+        "cross_pos": 0.2168,
+        "open_x_func": 0.1708,
+        "func_x_func": 0.4014,
+        "noun_x_noun": 0.2525
+      },
+      "write_cos_R_ridge": {
+        "within_pos": 0.0998,
+        "cross_pos": 0.0714,
+        "open_x_func": 0.0584,
+        "func_x_func": 0.1046,
+        "noun_x_noun": 0.094
+      },
+      "regime_N_dose": 1.2743,
+      "regime_N_frozen_preds": {
+        "R_mf": {
+          "self_mean": 2.2108,
+          "within_mean": 0.6807,
+          "cross_mean": 0.4728,
+          "open_x_func_mean": 0.4043,
+          "R_sep_ratio_of_means": 1.6837
+        },
+        "R_ridge": {
+          "self_mean": 1.4793,
+          "within_mean": 0.2176,
+          "cross_mean": 0.1698,
+          "open_x_func_mean": 0.1478,
+          "R_sep_ratio_of_means": 1.4725
+        },
+        "logit_lens": {
+          "self_mean": 0.7199,
+          "within_mean": 0.046,
+          "cross_mean": 0.0303,
+          "open_x_func_mean": 0.0279,
+          "R_sep_ratio_of_means": 1.6522
+        }
+      },
+      "frozen_delta_R_sep_ratio_of_means": -0.2112
+    },
+    "18": {
+      "role": "primary_confirmatory",
+      "lambda_ridge": 0.462931,
+      "post_mlp_norm_anchor": 7.4537,
+      "trace_R_over_d": 0.5106,
+      "u_ret_median": 0.4926,
+      "c_median": 0.458,
+      "c_min": 0.4066,
+      "dose_D3_over_pmn_median": 0.4809,
+      "dose_D3_over_pmn_max": 0.6249,
+      "pred_gap_D3_median": 5.5992,
+      "pred_gap_D3_mean": 5.6538,
+      "write_cos_R_mf": {
+        "within_pos": 0.2643,
+        "cross_pos": 0.2225,
+        "open_x_func": 0.2046,
+        "func_x_func": 0.315,
+        "noun_x_noun": 0.2305
+      },
+      "write_cos_R_ridge": {
+        "within_pos": 0.0931,
+        "cross_pos": 0.0641,
+        "open_x_func": 0.0518,
+        "func_x_func": 0.1052,
+        "noun_x_noun": 0.0858
+      },
+      "regime_N_dose": 5.5903,
+      "regime_N_frozen_preds": {
+        "R_mf": {
+          "self_mean": 11.0239,
+          "within_mean": 2.9135,
+          "cross_mean": 2.4403,
+          "open_x_func_mean": 2.2946,
+          "R_sep_ratio_of_means": 1.2697
+        },
+        "R_ridge": {
+          "self_mean": 8.1643,
+          "within_mean": 1.136,
+          "cross_mean": 0.8896,
+          "open_x_func_mean": 0.8011,
+          "R_sep_ratio_of_means": 1.418
+        },
+        "logit_lens": {
+          "self_mean": 5.1272,
+          "within_mean": 0.2569,
+          "cross_mean": 0.1612,
+          "open_x_func_mean": 0.1322,
+          "R_sep_ratio_of_means": 1.9424
+        }
+      },
+      "frozen_delta_R_sep_ratio_of_means": 0.1483
+    },
+    "24": {
+      "role": "primary_confirmatory",
+      "lambda_ridge": 0.513138,
+      "post_mlp_norm_anchor": 12.1555,
+      "trace_R_over_d": 0.7226,
+      "u_ret_median": 0.6733,
+      "c_median": 0.6065,
+      "c_min": 0.5455,
+      "dose_D3_over_pmn_median": 0.222,
+      "dose_D3_over_pmn_max": 0.2857,
+      "pred_gap_D3_median": 3.3999,
+      "pred_gap_D3_mean": 3.4686,
+      "write_cos_R_mf": {
+        "within_pos": 0.2637,
+        "cross_pos": 0.228,
+        "open_x_func": 0.2264,
+        "func_x_func": 0.3406,
+        "noun_x_noun": 0.2332
+      },
+      "write_cos_R_ridge": {
+        "within_pos": 0.0905,
+        "cross_pos": 0.0589,
+        "open_x_func": 0.0454,
+        "func_x_func": 0.103,
+        "noun_x_noun": 0.0811
+      },
+      "regime_N_dose": 9.1166,
+      "regime_N_frozen_preds": {
+        "R_mf": {
+          "self_mean": 18.4311,
+          "within_mean": 4.8351,
+          "cross_mean": 4.1871,
+          "open_x_func_mean": 4.1376,
+          "R_sep_ratio_of_means": 1.1686
+        },
+        "R_ridge": {
+          "self_mean": 14.7527,
+          "within_mean": 1.9656,
+          "cross_mean": 1.5243,
+          "open_x_func_mean": 1.3711,
+          "R_sep_ratio_of_means": 1.4336
+        },
+        "logit_lens": {
+          "self_mean": 11.3464,
+          "within_mean": 0.5843,
+          "cross_mean": 0.3262,
+          "open_x_func_mean": 0.2523,
+          "R_sep_ratio_of_means": 2.3162
+        }
+      },
+      "frozen_delta_R_sep_ratio_of_means": 0.265
+    },
+    "27": {
+      "role": "primary_confirmatory",
+      "lambda_ridge": 0.528329,
+      "post_mlp_norm_anchor": 14.9,
+      "trace_R_over_d": 0.8363,
+      "u_ret_median": 0.7618,
+      "c_median": 0.6739,
+      "c_min": 0.5636,
+      "dose_D3_over_pmn_median": 0.1642,
+      "dose_D3_over_pmn_max": 0.2202,
+      "pred_gap_D3_median": 2.7271,
+      "pred_gap_D3_mean": 2.8238,
+      "write_cos_R_mf": {
+        "within_pos": 0.2999,
+        "cross_pos": 0.2669,
+        "open_x_func": 0.2783,
+        "func_x_func": 0.4065,
+        "noun_x_noun": 0.256
+      },
+      "write_cos_R_ridge": {
+        "within_pos": 0.0884,
+        "cross_pos": 0.055,
+        "open_x_func": 0.0398,
+        "func_x_func": 0.1001,
+        "noun_x_noun": 0.082
+      },
+      "regime_N_dose": 11.175,
+      "regime_N_frozen_preds": {
+        "R_mf": {
+          "self_mean": 22.7143,
+          "within_mean": 6.7435,
+          "cross_mean": 6.0374,
+          "open_x_func_mean": 6.1778,
+          "R_sep_ratio_of_means": 1.0916
+        },
+        "R_ridge": {
+          "self_mean": 18.6654,
+          "within_mean": 2.5235,
+          "cross_mean": 1.9549,
+          "open_x_func_mean": 1.7458,
+          "R_sep_ratio_of_means": 1.4454
+        },
+        "logit_lens": {
+          "self_mean": 15.2833,
+          "within_mean": 0.7959,
+          "cross_mean": 0.4415,
+          "open_x_func_mean": 0.3598,
+          "R_sep_ratio_of_means": 2.2121
+        }
+      },
+      "frozen_delta_R_sep_ratio_of_means": 0.3538
+    }
+  },
+  "pooled_3L_frozen_summary": {
+    "per_target_equal_weight_R_mf_R_sep_mean": 1.1604,
+    "per_target_equal_weight_R_ridge_R_sep_mean": 1.4584,
+    "per_target_equal_weight_delta_R_sep_mean": 0.298,
+    "per_target_equal_weight_delta_R_sep_sd": 0.1385,
+    "per_target_equal_weight_delta_R_sep_min": 0.0891,
+    "per_target_equal_weight_R_ridge_B_of_min": 1.0011,
+    "per_target_frozen_R_floor_sd_unattenuated": 0.5163,
+    "per_target_frozen_R_floor_sd_at_k_ridge_1.7254": 0.2993,
+    "pooled_ratio_of_means_R_mf_R_sep": 1.1493,
+    "pooled_ratio_of_means_R_ridge_R_sep": 1.4357,
+    "pooled_ratio_of_means_delta_R_sep": 0.2865,
+    "R_ridge_B_open_func_3L": 1.306,
+    "c1_1_registered_calibration_bands": {
+      "pooled_3L_median_r_all": [
+        0.65,
+        1.5
+      ],
+      "pooled_3L_bca90_ci": [
+        0.55,
+        1.6
+      ],
+      "bare_3L_median_r_all": [
+        0.65,
+        1.5
+      ],
+      "chatml_3L_median_r_all": [
+        0.65,
+        1.5
+      ],
+      "per_layer_abs_chatml_minus_bare_max": 0.35,
+      "verdict_rule": "Any pooled or per-format median(r_all) outside [0.65, 1.50] REFUTES C1.1; INCONCLUSIVE (format/length/instruction split) applies ONLY when (b), frac_err, pooled [0.65,1.50], AND both Bare/ChatML [0.65,1.50] pass while per-layer |ChatML-Bare| > 0.35."
+    },
+    "c1_3_registered_thresholds": {
+      "delta_R_sep_bar": 0.25,
+      "delta_R_sep_q05_bar": 0.05,
+      "R_floor_HA_max": 1.9,
+      "R_floor_HB_min": 2.2,
+      "R_floor_HB_max": 3.2,
+      "R_floor_HB_q05_bar": 1.85,
+      "whitening_ok_definition": "CI_low_90_BCa(exp(mean(u_abs))) > 1.0 AND CI_low_90_BCa(exp(mean(u_abs_open_func))) > 1.0",
+      "F_mean_3L_definition": "live in-run Block 2b 32-draw isotropic off-target logit floor mean_{L in 3L} mean_{v in 32} mean_{p in 8} mean_{t in 24} |dlogit_t(rand_iso_v)| at positions='last' (matching C0 score_olmo3_c0.py:1102-1116 comparator 0.295811 logits; self-retention v^T J v from the same 768 forwards is used for C1.4)",
+      "F_mean_3L_hard_provenance_band_vs_C0_0.2958": [
+        0.85,
+        1.15
+      ],
+      "F_mean_3L_clean_band_vs_C0_0.2958": [
+        0.94,
+        1.06
+      ],
+      "F_mean_3L_sensitivity_zone_rule": "for F_live/0.2958 in [0.85, 0.94) U (1.06, 1.15], evaluate 6-way partition at BOTH F_live and 0.2958; return INCONCLUSIVE (F_mean_3L sensitivity) if labels differ"
+    },
+    "c1_3_dual_d_sep_prior_branch_odds_at_k_ridge_1.7254": {
+      "frozen_C1_3L_prior": {
+        "mean_d_sep": 0.298,
+        "sd_d_sep": 0.1385,
+        "P_sep_pass_at_bar_0.25": 0.9572,
+        "implied_P_MIXED_BOTH_at_floor_2.559": 0.9572,
+        "implied_P_H_B_at_floor_2.559": 0.0428
+      },
+      "c0b_live_measured_prior": {
+        "mean_d_sep": 0.2132,
+        "sd_d_sep": 0.1342,
+        "P_sep_pass_at_bar_0.25": 0.0879,
+        "implied_P_MIXED_BOTH_at_floor_2.559": 0.0879,
+        "implied_P_H_B_at_floor_2.559": 0.9121
+      }
+    },
+    "k_ridge_sensitivity_vs_C0_Fmean_3L": [
+      {
+        "k_ridge": 1.0,
+        "note": "frozen_unattenuated_no_whitening_scale",
+        "implied_B_open_func_R_ridge": 1.306,
+        "implied_R_floor_vs_C0_Fmean": 4.415
+      },
+      {
+        "k_ridge": 1.25,
+        "note": "weak_overprediction",
+        "implied_B_open_func_R_ridge": 1.0448,
+        "implied_R_floor_vs_C0_Fmean": 3.532
+      },
+      {
+        "k_ridge": 1.5,
+        "note": "moderate_overprediction",
+        "implied_B_open_func_R_ridge": 0.8707,
+        "implied_R_floor_vs_C0_Fmean": 2.943
+      },
+      {
+        "k_ridge": 1.7254,
+        "note": "c0b_measured_R_ridge_overprediction_1.3627_over_0.7898",
+        "implied_B_open_func_R_ridge": 0.7569,
+        "implied_R_floor_vs_C0_Fmean": 2.559
+      },
+      {
+        "k_ridge": 2.0,
+        "note": "H_B_lower_boundary_scale",
+        "implied_B_open_func_R_ridge": 0.653,
+        "implied_R_floor_vs_C0_Fmean": 2.208
+      },
+      {
+        "k_ridge": 2.3238,
+        "note": "H_A_cap_boundary_1.90",
+        "implied_B_open_func_R_ridge": 0.562,
+        "implied_R_floor_vs_C0_Fmean": 1.9
+      },
+      {
+        "k_ridge": 2.55,
+        "note": "c0b_measured_R_mf_overprediction_borrowed_reference",
+        "implied_B_open_func_R_ridge": 0.5122,
+        "implied_R_floor_vs_C0_Fmean": 1.731
+      }
+    ]
+  },
+  "c1_0_3_gate_prior_calibration": {
+    "replicates": 10000,
+    "pool_size": 1728,
+    "arm_mix": "576 R_mf (1/3) + 1,152 direct_matched (2/3)",
+    "coherent_relation": "fde_err = 3*s/(1-s) from identical shrink draws (C0b L18 R_mf max discrepancy = 0.0000)",
+    "fitted_c0b_sigmas": {
+      "L18_R_mf": 0.3835,
+      "L24_R_mf": 0.6236,
+      "L27_R_mf": 0.4344,
+      "L18_dm": 0.6478,
+      "L24_dm": 0.4995,
+      "L27_dm": 0.5102
+    },
+    "null_false_fail_scenarios": {
+      "c1_scaled_0.89x_iid": {
+        "l18_median_shrink": 0.0548,
+        "prompt_rho": 0.0,
+        "mean_count_fde_gt_045": 2.29,
+        "mean_count_rmsn_gt_12pct": 3.96,
+        "median_fde_p95": 0.1849,
+        "median_fde_max": 0.5441,
+        "median_rmsn_max": 0.1535,
+        "fail_prob_rmsn_gt_20pct_over_2": 0.0003,
+        "fail_prob_rmsn_gt_12pct_over_26": 0.0,
+        "fail_prob_fde_p95_gt_030": 0.0,
+        "fail_prob_fde_gt_045_over_12": 0.0,
+        "fail_prob_fde_gt_075_over_2": 0.0003,
+        "fail_prob_any_clause": 0.0003
+      },
+      "c1_scaled_0.89x_clustered_rho035": {
+        "l18_median_shrink": 0.0548,
+        "prompt_rho": 0.35,
+        "mean_count_fde_gt_045": 2.32,
+        "mean_count_rmsn_gt_12pct": 3.99,
+        "median_fde_p95": 0.185,
+        "median_fde_max": 0.5367,
+        "median_rmsn_max": 0.1517,
+        "fail_prob_rmsn_gt_20pct_over_2": 0.0004,
+        "fail_prob_rmsn_gt_12pct_over_26": 0.0,
+        "fail_prob_fde_p95_gt_030": 0.0,
+        "fail_prob_fde_gt_045_over_12": 0.0002,
+        "fail_prob_fde_gt_075_over_2": 0.0004,
+        "fail_prob_any_clause": 0.0006
+      },
+      "c0b_unscaled_1.00x_iid": {
+        "l18_median_shrink": 0.0616,
+        "prompt_rho": 0.0,
+        "mean_count_fde_gt_045": 4.87,
+        "mean_count_rmsn_gt_12pct": 7.92,
+        "median_fde_p95": 0.2083,
+        "median_fde_max": 0.6275,
+        "median_rmsn_max": 0.173,
+        "fail_prob_rmsn_gt_20pct_over_2": 0.001,
+        "fail_prob_rmsn_gt_12pct_over_26": 0.0,
+        "fail_prob_fde_p95_gt_030": 0.0,
+        "fail_prob_fde_gt_045_over_12": 0.0011,
+        "fail_prob_fde_gt_075_over_2": 0.001,
+        "fail_prob_any_clause": 0.0021
+      },
+      "c0b_unscaled_1.00x_clustered_rho035": {
+        "l18_median_shrink": 0.0616,
+        "prompt_rho": 0.35,
+        "mean_count_fde_gt_045": 4.88,
+        "mean_count_rmsn_gt_12pct": 7.91,
+        "median_fde_p95": 0.2085,
+        "median_fde_max": 0.6152,
+        "median_rmsn_max": 0.1702,
+        "fail_prob_rmsn_gt_20pct_over_2": 0.0029,
+        "fail_prob_rmsn_gt_12pct_over_26": 0.0001,
+        "fail_prob_fde_p95_gt_030": 0.0,
+        "fail_prob_fde_gt_045_over_12": 0.0118,
+        "fail_prob_fde_gt_075_over_2": 0.0029,
+        "fail_prob_any_clause": 0.014
+      }
+    },
+    "in_band_L18_breakdown_catch_power": {
+      "L18_1.25x_mild_med_0.0770": {
+        "l18_median_shrink": 0.077,
+        "prompt_rho": 0.0,
+        "mean_count_fde_gt_045": 16.35,
+        "mean_count_rmsn_gt_12pct": 23.84,
+        "median_fde_p95": 0.2639,
+        "median_fde_max": 0.8258,
+        "median_rmsn_max": 0.2159,
+        "fail_prob_rmsn_gt_20pct_over_2": 0.1255,
+        "fail_prob_rmsn_gt_12pct_over_26": 0.2803,
+        "fail_prob_fde_p95_gt_030": 0.0006,
+        "fail_prob_fde_gt_045_over_12": 0.8452,
+        "fail_prob_fde_gt_075_over_2": 0.1255,
+        "fail_prob_any_clause": 0.8517
+      },
+      "L18_1.50x_moderate_med_0.0924": {
+        "l18_median_shrink": 0.0924,
+        "prompt_rho": 0.0,
+        "mean_count_fde_gt_045": 35.42,
+        "mean_count_rmsn_gt_12pct": 47.59,
+        "median_fde_p95": 0.3217,
+        "median_fde_max": 1.0467,
+        "median_rmsn_max": 0.2587,
+        "fail_prob_rmsn_gt_20pct_over_2": 0.7974,
+        "fail_prob_rmsn_gt_12pct_over_26": 0.9999,
+        "fail_prob_fde_p95_gt_030": 0.9659,
+        "fail_prob_fde_gt_045_over_12": 1.0,
+        "fail_prob_fde_gt_075_over_2": 0.7974,
+        "fail_prob_any_clause": 1.0
+      },
+      "L18_1.75x_strong_med_0.1078": {
+        "l18_median_shrink": 0.1078,
+        "prompt_rho": 0.0,
+        "mean_count_fde_gt_045": 59.45,
+        "mean_count_rmsn_gt_12pct": 74.89,
+        "median_fde_p95": 0.3819,
+        "median_fde_max": 1.3001,
+        "median_rmsn_max": 0.3023,
+        "fail_prob_rmsn_gt_20pct_over_2": 0.9983,
+        "fail_prob_rmsn_gt_12pct_over_26": 1.0,
+        "fail_prob_fde_p95_gt_030": 1.0,
+        "fail_prob_fde_gt_045_over_12": 1.0,
+        "fail_prob_fde_gt_075_over_2": 0.9983,
+        "fail_prob_any_clause": 1.0
+      },
+      "L18_2.00x_severe_med_0.1232": {
+        "l18_median_shrink": 0.1232,
+        "prompt_rho": 0.0,
+        "mean_count_fde_gt_045": 84.69,
+        "mean_count_rmsn_gt_12pct": 101.31,
+        "median_fde_p95": 0.4443,
+        "median_fde_max": 1.5892,
+        "median_rmsn_max": 0.3463,
+        "fail_prob_rmsn_gt_20pct_over_2": 1.0,
+        "fail_prob_rmsn_gt_12pct_over_26": 1.0,
+        "fail_prob_fde_p95_gt_030": 1.0,
+        "fail_prob_fde_gt_045_over_12": 1.0,
+        "fail_prob_fde_gt_075_over_2": 1.0,
+        "fail_prob_any_clause": 1.0
+      }
+    }
+  },
+  "l12_linear_check_calibration": {
+    "replicates": 10000,
+    "c0b_l12_sigma_fit": 0.3327,
+    "linear_scaled_median_shrink": 0.0357,
+    "rule": "<= 2/192 R_mf 'all' traces with |r_i/r_c - 1| > 0.09 AND median frac_err <= 0.12",
+    "shrink_leg_fail_prob_by_superlinearity": {
+      "1.0x_linear": 0.0148,
+      "1.25x_mild_superlinear": 0.6721,
+      "1.5x_superlinear": 0.9991,
+      "2.0x_superlinear": 1.0
+    }
+  },
+  "c1_2_fork_exhaustiveness_check": {
+    "grid_points_tested": 14112,
+    "bca_containment_invariant": "CI_low <= point_estimate <= CI_high (enforced fail-closed by scorer)",
+    "undefined_or_overlapping": 0,
+    "outcome_counts": {
+      "PASS": 361,
+      "REVERSED": 1312,
+      "REFUTED_EQUIVALENCE": 32,
+      "INCONCLUSIVE": 12407
+    }
+  },
+  "c1_3_fork_exhaustiveness_check": {
+    "grid_points_tested": 2560,
+    "feasible_grid_points": 2368,
+    "infeasible_cells_excluded_in_feasible_counts": 192,
+    "axes_covered": [
+      "delta_r_sep",
+      "r_floor_ridge",
+      "q05_sep_ok",
+      "p_ha_ok",
+      "strata_ok",
+      "q05_floor_ok",
+      "p_hb_ok",
+      "whitening_ok"
+    ],
+    "undefined_or_overlapping": 0,
+    "outcome_counts": {
+      "WHITENING_NOT_ESTABLISHED": 1280,
+      "FLOOR_ABOVE_CEILING": 256,
+      "H_A": 16,
+      "H_B": 90,
+      "NEITHER": 240,
+      "MIXED": 678
+    },
+    "feasible_outcome_counts": {
+      "WHITENING_NOT_ESTABLISHED": 1184,
+      "FLOOR_ABOVE_CEILING": 256,
+      "H_A": 10,
+      "H_B": 90,
+      "NEITHER": 150,
+      "MIXED": 678
+    },
+    "mixed_both_subcells": 6
+  },
+  "power_simulations": {
+    "replicates": 10000,
+    "proxy_note": "One-sample t-test proxy (df=23, t>=2.50 for alpha/5=0.010); registered inference is exact 100,000-flip sign-flip (conservative for symmetric/right-skewed targets). C1.1 row prices the attention-share leg only.",
+    "holm_strict_t_crit_alpha_over_5": 2.5,
+    "empirical_sd_sources": {
+      "C1.1_share_gap_c0b_3L": 0.0654,
+      "C1.2_u_abs_c0b_3L": 0.069,
+      "C1.3_d_sep_c0b_3L": 0.1342,
+      "C1.3_d_sep_frozen_c1_3L": 0.1385,
+      "C1.3_floor_sd_grid_note": "bracketed {0.35, 0.50, 0.65} around frozen C1 per-target B_open_func(R_ridge)/F_mean_3L dispersion (~0.50); joint H_A uses midpoint 0.50",
+      "C1.4_dt_c0_3L_from_ci": 0.065
+    },
+    "C1.1_attn_share": {
+      "true_share_0.70": {
+        "sd_0.065": 0.0,
+        "sd_0.100": 0.0,
+        "sd_0.140": 0.0002
+      },
+      "true_share_0.75": {
+        "sd_0.065": 0.011,
+        "sd_0.100": 0.0104,
+        "sd_0.140": 0.0106
+      },
+      "true_share_0.80": {
+        "sd_0.065": 0.8791,
+        "sd_0.100": 0.4801,
+        "sd_0.140": 0.2483
+      },
+      "true_share_0.85": {
+        "sd_0.065": 1.0,
+        "sd_0.100": 0.9873,
+        "sd_0.140": 0.822
+      },
+      "true_share_0.90": {
+        "sd_0.065": 1.0,
+        "sd_0.100": 1.0,
+        "sd_0.140": 0.9944
+      }
+    },
+    "C1.2_whitening_IUT": {
+      "true_1.00x": {
+        "sd_0.15": 0.0,
+        "sd_0.25": 0.0,
+        "sd_0.35": 0.0
+      },
+      "true_1.20x": {
+        "sd_0.15": 0.0,
+        "sd_0.25": 0.0062,
+        "sd_0.35": 0.0212
+      },
+      "true_1.35x": {
+        "sd_0.15": 0.4397,
+        "sd_0.25": 0.4352,
+        "sd_0.35": 0.3253
+      },
+      "true_1.50x": {
+        "sd_0.15": 0.9998,
+        "sd_0.25": 0.9629,
+        "sd_0.35": 0.7978
+      },
+      "true_1.70x": {
+        "sd_0.15": 1.0,
+        "sd_0.25": 1.0,
+        "sd_0.35": 0.983
+      }
+    },
+    "C1.3_delta_R_sep_subtest_only": {
+      "true_delta_0.00": {
+        "sd_0.15": 0.0,
+        "sd_0.25": 0.0,
+        "sd_0.35": 0.0002
+      },
+      "true_delta_0.20": {
+        "sd_0.15": 0.0521,
+        "sd_0.25": 0.1649,
+        "sd_0.35": 0.2467
+      },
+      "true_delta_0.25": {
+        "sd_0.15": 0.497,
+        "sd_0.25": 0.5033,
+        "sd_0.35": 0.4972
+      },
+      "true_delta_0.30": {
+        "sd_0.15": 0.9493,
+        "sd_0.25": 0.83,
+        "sd_0.35": 0.7599
+      },
+      "true_delta_0.40": {
+        "sd_0.15": 1.0,
+        "sd_0.25": 0.9991,
+        "sd_0.35": 0.9826
+      }
+    },
+    "C1.3_joint_H_A_sd_sep_0.20_sd_fl_0.50": {
+      "true_delta_0.25": {
+        "true_floor_1.50": 0.5081,
+        "true_floor_1.73": 0.4706,
+        "true_floor_1.77": 0.4504,
+        "true_floor_1.90": 0.2474,
+        "true_floor_2.20": 0.0007,
+        "true_floor_2.56": 0.0
+      },
+      "true_delta_0.30": {
+        "true_floor_1.50": 0.8908,
+        "true_floor_1.73": 0.8486,
+        "true_floor_1.77": 0.7933,
+        "true_floor_1.90": 0.4395,
+        "true_floor_2.20": 0.0022,
+        "true_floor_2.56": 0.0
+      },
+      "true_delta_0.40": {
+        "true_floor_1.50": 0.9997,
+        "true_floor_1.73": 0.9509,
+        "true_floor_1.77": 0.9019,
+        "true_floor_1.90": 0.5026,
+        "true_floor_2.20": 0.0013,
+        "true_floor_2.56": 0.0
+      }
+    },
+    "C1.3_H_B_floor_leg_bounded_3.20": {
+      "true_floor_1.75": {
+        "sd_0.35": 0.0,
+        "sd_0.50": 0.0,
+        "sd_0.65": 0.0001
+      },
+      "true_floor_2.00": {
+        "sd_0.35": 0.0028,
+        "sd_0.50": 0.0242,
+        "sd_0.65": 0.0619
+      },
+      "true_floor_2.20": {
+        "sd_0.35": 0.5099,
+        "sd_0.50": 0.5081,
+        "sd_0.65": 0.4689
+      },
+      "true_floor_2.40": {
+        "sd_0.35": 0.9972,
+        "sd_0.50": 0.9737,
+        "sd_0.65": 0.9243
+      },
+      "true_floor_2.56": {
+        "sd_0.35": 1.0,
+        "sd_0.50": 0.9996,
+        "sd_0.65": 0.995
+      },
+      "true_floor_2.67": {
+        "sd_0.35": 1.0,
+        "sd_0.50": 1.0,
+        "sd_0.65": 0.9996
+      },
+      "true_floor_3.20": {
+        "sd_0.35": 0.5028,
+        "sd_0.50": 0.5018,
+        "sd_0.65": 0.4992
+      },
+      "true_floor_4.42": {
+        "sd_0.35": 0.0,
+        "sd_0.50": 0.0,
+        "sd_0.65": 0.0
+      },
+      "true_floor_5.58": {
+        "sd_0.35": 0.0,
+        "sd_0.50": 0.0,
+        "sd_0.65": 0.0
+      }
+    },
+    "C1.4_token_direction_contraction": {
+      "true_dt_0.00": {
+        "sd_0.04": 0.0012,
+        "sd_0.06": 0.0023,
+        "sd_0.08": 0.0017
+      },
+      "true_dt_0.05": {
+        "sd_0.04": 0.9656,
+        "sd_0.06": 0.6462,
+        "sd_0.08": 0.3502
+      },
+      "true_dt_0.08": {
+        "sd_0.04": 1.0,
+        "sd_0.06": 0.9823,
+        "sd_0.08": 0.8236
+      },
+      "true_dt_0.10": {
+        "sd_0.04": 1.0,
+        "sd_0.06": 0.9992,
+        "sd_0.08": 0.9667
+      },
+      "true_dt_0.13": {
+        "sd_0.04": 1.0,
+        "sd_0.06": 1.0,
+        "sd_0.08": 0.9988
+      }
+    }
+  },
+  "planned_budget": {
+    "clean_baselines_and_shams": 15,
+    "block1_C1_1_regime_D_all_and_last": 3456,
+    "block2a_C1_2_3_4_regime_N_last": 1728,
+    "block2b_rand_iso_32draws_positions_last": 768,
+    "secondary_L12_capped_030x": 576,
+    "total_planned_forwards": 6543
+  }
+}
