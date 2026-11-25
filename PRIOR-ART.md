@@ -1122,3 +1122,7 @@ Verified 2026-11-20 that none of the six papers below is currently cited in `PRI
   10 to 20 hand-picked neurons detect harmful text about as well as trained probes, and neurons steer about as well
   as trained methods. Models include Qwen3 and OLMo 3. Muse reports AxBench AUROC 0.903 against 0.888 for the best SAE
   and a blind audit at 75% against 40%; those two figures are Muse's, not checked here.
+  **Order of work:** treetown (@treetowntree, 2026-11-24 23:26 UTC) says Part 1 is almost exactly what they and
+  @_a9lim published weeks earlier as Neuron Lens (entries above from 2026-10-30 and 2026-11-11), without a citation;
+  a9lim adds that the same output-vector reading also works on neuron inputs and on attention QK and OV circuits.
+  Cite Neuron Lens beside the Fellows posts for the read-what-a-neuron-writes method.
