@@ -1,11 +1,11 @@
 {
-  "schema_version": "c2-prereg-constants-v1",
-  "study": "OLMo-3-7B Stage C2 (Clean Bleed Resolution, Causal ChatML MLP Attribution, Post-Erasure Sweep, & Pre-Norm Mask/Split Primitives)",
+  "schema_version": "c2-prereg-constants-v2",
+  "study": "OLMo-3-7B Stage C2 v2 (Lens->Model Whitening Transfer, Matched-Length ChatML Causal MLP Patching, Post-Erasure Sweep, & Pre-Norm Mask/Split/Additivity)",
   "generator_script": "olmo3_virtual_and_highway/build_olmo3_c2_constants.py",
   "model": "allenai/Olmo-3-7B-Instruct",
   "revision": "6e5971d9eba42665f5bd5a0fcf047f299ce1dccc",
   "r_lens_sha256": "ceef21fc90b17aafa5625f23ab2c1f35be7b2f8b735847cb89bfd2a438caa955",
-  "c2_vector_bank_sha256": "6512fa8f1602489ea95b80f81d643e613fc5866eb36e8594b1b3a7740796dc76",
+  "c2_vector_bank_sha256": "f880ba62e540edd943f70f2efff87476e42af344597be9a76496ad5a60cdb29c",
   "targets_24_spec_sha256": "1074f160064b9f17fdf42bb1f3c0fc8de05d87168e3428cc58ebebfdcfe807f7",
   "parent_c0_constants_sha256": "3be64ef80f12d34fc59d7e561d5617dd96ecb605649d5f64e1a98bd974acbe98",
   "parent_c0b_constants_sha256": "4596f012bb862aec81a0b07a478223ef02dab8bab3706c4f7902c860958a0f2e",
@@ -25,40 +25,96 @@
     30
   ],
   "prenorm_layers": [
-    18,
     21,
     24,
     27
   ],
+  "c22_target_indices_12": [
+    0,
+    1,
+    2,
+    6,
+    7,
+    8,
+    12,
+    13,
+    14,
+    18,
+    19,
+    20
+  ],
   "registered_rng_and_inference": {
-    "holm_family_size": 5,
+    "holm_family_size": 9,
     "holm_tests": [
       "p_C2.1_ctr_vs_raw",
       "p_C2.1_shk_vs_ctr",
+      "p_C2.1_gain_ret",
       "p_C2.2_bare_into_chat",
       "p_C2.2_chat_into_bare",
-      "p_C2.4_mask_vs_unmask"
+      "p_C2.2_ctrl_equiv",
+      "p_C2.4a_mask_vs_unmask",
+      "p_C2.4b_m70a30_vs_ff",
+      "p_C2.4c_k3_additivity_tost"
     ],
+    "holm_alpha_stepdown": [
+      0.005556,
+      0.00625,
+      0.007143,
+      0.008333,
+      0.01,
+      0.0125,
+      0.016667,
+      0.025,
+      0.05
+    ],
+    "holm_stop_rule": "sort ascending p_(1)..p_(9); reject k while p_(k) <= 0.05/(10-k); stop at first failure",
+    "perm_rng": "Python stdlib random.Random(perm_seed)",
     "perm_seed": 2026112501,
-    "perm_n_flips": 100000,
+    "perm_n_flips_24_targets": 100000,
+    "perm_rule_8_stem_pairs": "Exact enumeration over all 2^8 = 256 sign flips (p_min = 1/256 = 0.00390625 < 0.005556 = alpha/9)",
+    "layer_aggregation": "Equal-weight mean over L in {18, 24, 27} per target before target-level inference",
+    "bca_rng": "Python stdlib random.Random(bca_seed)",
     "bca_seed": 2026112502,
     "bca_n_resamples": 10000,
+    "bca_containment_rule": "90% BCa CI must satisfy CI_low <= point_estimate <= CI_high (fail-closed scorer error)",
     "bank_dm_seed_base": 2026112503,
     "bank_rand_seed_base": 2026112504,
     "bank_prenorm_rand_seed_base": 2026112505
   },
+  "c2_0_3_named_gate_populations": {
+    "regime_N_C21_population_N": 2880,
+    "regime_N_max_capped": 0,
+    "regime_N_max_rmsn_gt_20pct": 4,
+    "regime_N_max_rmsn_gt_12pct": 43,
+    "regime_D_C22_unpatched_population_N": 576,
+    "regime_D_max_capped": 0,
+    "regime_D_max_rmsn_gt_20pct": 2,
+    "regime_D_max_rmsn_gt_12pct": 12,
+    "regime_D_fde_p95_max": 0.3,
+    "regime_D_max_fde_gt_045": 8
+  },
   "c0_anchor_colon_prediction": {
-    "hypothesis": "C1.0.3's -23%/-27% post_mlp_norm drop at L24/L27 came from ':' endings vs C0's ' a' endings (Claude #103(1c))",
-    "predicted_colon_L24_median_range": [
-      6.2,
-      8.2
+    "hypothesis": "Paired in-run ratio test: replacing trailing ' a' with ':' drops L24/L27 post_mlp_norm (Claude #103(1c), m1, m2, m6)",
+    "c0_receipt_pmn_provenance": "c0_receipt.json.gz post_mlp_norms (NOT c0_prereg_constants Exp 4B literal 12.1555)",
+    "c0_receipt_pmn": {
+      "24": 9.325704,
+      "27": 10.237432
+    },
+    "c1_receipt_pmn": {
+      "24": 7.210327,
+      "27": 7.4738
+    },
+    "predicted_ratio_L24_point": 0.7732,
+    "predicted_ratio_L24_range": [
+      0.7,
+      0.85
     ],
-    "predicted_colon_L24_point": 7.2,
-    "predicted_colon_L27_median_range": [
-      6.4,
-      8.6
+    "predicted_ratio_L27_point": 0.73,
+    "predicted_ratio_L27_range": [
+      0.65,
+      0.82
     ],
-    "predicted_colon_L27_point": 7.5,
+    "length_confound_note": "Bare pairs preserve exact token count (9->9, 7->7, 13->13, 10->10); ChatML pairs drop 1 token (' a...' -> ':'). Report Bare-only ratio beside pooled ratio.",
     "prompts_16": [
       {
         "id": "bare_narr_0_orig_a",
@@ -224,175 +280,247 @@
   },
   "targets_24": [
     {
+      "idx": 0,
       "stratum": "nouns",
+      "split": "primary_16",
+      "in_c22_12": true,
       "string": " candle",
       "id": 38899,
       "decoded_piece": " candle",
       "u_norm": 1.8019
     },
     {
+      "idx": 1,
       "stratum": "nouns",
+      "split": "primary_16",
+      "in_c22_12": true,
       "string": " barrel",
       "id": 20929,
       "decoded_piece": " barrel",
       "u_norm": 1.8907
     },
     {
+      "idx": 2,
       "stratum": "nouns",
+      "split": "primary_16",
+      "in_c22_12": true,
       "string": " feather",
       "id": 50876,
       "decoded_piece": " feather",
       "u_norm": 1.9423
     },
     {
+      "idx": 3,
       "stratum": "nouns",
+      "split": "primary_16",
+      "in_c22_12": false,
       "string": " ribbon",
       "id": 45667,
       "decoded_piece": " ribbon",
       "u_norm": 1.8674
     },
     {
+      "idx": 4,
       "stratum": "nouns",
+      "split": "heldout_8",
+      "in_c22_12": false,
       "string": " basket",
       "id": 14351,
       "decoded_piece": " basket",
       "u_norm": 1.814
     },
     {
+      "idx": 5,
       "stratum": "nouns",
+      "split": "heldout_8",
+      "in_c22_12": false,
       "string": " glacier",
       "id": 94867,
       "decoded_piece": " glacier",
       "u_norm": 1.6209
     },
     {
+      "idx": 6,
       "stratum": "verbs",
+      "split": "primary_16",
+      "in_c22_12": true,
       "string": " polish",
       "id": 45129,
       "decoded_piece": " polish",
       "u_norm": 1.8481
     },
     {
+      "idx": 7,
       "stratum": "verbs",
+      "split": "primary_16",
+      "in_c22_12": true,
       "string": " stumble",
       "id": 75237,
       "decoded_piece": " stumble",
       "u_norm": 1.8531
     },
     {
+      "idx": 8,
       "stratum": "verbs",
+      "split": "primary_16",
+      "in_c22_12": true,
       "string": " vanish",
       "id": 92227,
       "decoded_piece": " vanish",
       "u_norm": 1.6739
     },
     {
+      "idx": 9,
       "stratum": "verbs",
+      "split": "primary_16",
+      "in_c22_12": false,
       "string": " mend",
       "id": 45876,
       "decoded_piece": " mend",
       "u_norm": 2.0297
     },
     {
+      "idx": 10,
       "stratum": "verbs",
+      "split": "heldout_8",
+      "in_c22_12": false,
       "string": " drift",
       "id": 34738,
       "decoded_piece": " drift",
       "u_norm": 1.982
     },
     {
+      "idx": 11,
       "stratum": "verbs",
+      "split": "heldout_8",
+      "in_c22_12": false,
       "string": " carve",
       "id": 80737,
       "decoded_piece": " carve",
       "u_norm": 1.8865
     },
     {
+      "idx": 12,
       "stratum": "adjectives",
+      "split": "primary_16",
+      "in_c22_12": true,
       "string": " sturdy",
       "id": 45652,
       "decoded_piece": " sturdy",
       "u_norm": 1.6485
     },
     {
+      "idx": 13,
       "stratum": "adjectives",
+      "split": "primary_16",
+      "in_c22_12": true,
       "string": " velvet",
       "id": 72426,
       "decoded_piece": " velvet",
       "u_norm": 1.863
     },
     {
+      "idx": 14,
       "stratum": "adjectives",
+      "split": "primary_16",
+      "in_c22_12": true,
       "string": " crisp",
       "id": 42954,
       "decoded_piece": " crisp",
       "u_norm": 1.8447
     },
     {
+      "idx": 15,
       "stratum": "adjectives",
+      "split": "primary_16",
+      "in_c22_12": false,
       "string": " faint",
       "id": 38678,
       "decoded_piece": " faint",
       "u_norm": 1.8728
     },
     {
+      "idx": 16,
       "stratum": "adjectives",
+      "split": "heldout_8",
+      "in_c22_12": false,
       "string": " vivid",
       "id": 43120,
       "decoded_piece": " vivid",
       "u_norm": 1.7586
     },
     {
+      "idx": 17,
       "stratum": "adjectives",
+      "split": "heldout_8",
+      "in_c22_12": false,
       "string": " shallow",
       "id": 26682,
       "decoded_piece": " shallow",
       "u_norm": 1.8767
     },
     {
+      "idx": 18,
       "stratum": "function",
+      "split": "primary_16",
+      "in_c22_12": true,
       "string": " however",
       "id": 4869,
       "decoded_piece": " however",
       "u_norm": 1.8511
     },
     {
+      "idx": 19,
       "stratum": "function",
+      "split": "primary_16",
+      "in_c22_12": true,
       "string": " whereas",
       "id": 20444,
       "decoded_piece": " whereas",
       "u_norm": 1.7992
     },
     {
+      "idx": 20,
       "stratum": "function",
+      "split": "primary_16",
+      "in_c22_12": true,
       "string": " beneath",
       "id": 24923,
       "decoded_piece": " beneath",
       "u_norm": 1.7685
     },
     {
+      "idx": 21,
       "stratum": "function",
+      "split": "primary_16",
+      "in_c22_12": false,
       "string": " despite",
       "id": 8994,
       "decoded_piece": " despite",
       "u_norm": 1.7496
     },
     {
+      "idx": 22,
       "stratum": "function",
+      "split": "heldout_8",
+      "in_c22_12": false,
       "string": " instead",
       "id": 4619,
       "decoded_piece": " instead",
       "u_norm": 1.9489
     },
     {
+      "idx": 23,
       "stratum": "function",
+      "split": "heldout_8",
+      "in_c22_12": false,
       "string": " beyond",
       "id": 7953,
       "decoded_piece": " beyond",
       "u_norm": 1.9512
     }
   ],
-  "prompts_8": [
+  "prompts_8_c21": [
     {
       "id": "c2_bare_narr_0",
       "format": "bare",
@@ -474,36 +602,313 @@
       "last_token_piece": ":"
     }
   ],
+  "c22_stem_pairs_8": [
+    {
+      "pair_idx": 0,
+      "stem_id": "narr_0",
+      "style": "narrative",
+      "stem": "Inside the small drawer, the card displayed a single word:",
+      "suffix_len": 12,
+      "short_bare": {
+        "id": "c2_shortbare_narr_0",
+        "format": "short_bare",
+        "text": "Inside the small drawer, the card displayed a single word:",
+        "n_tokens": 12,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "long_bare": {
+        "id": "c2_longbare_narr_0",
+        "format": "long_bare",
+        "text": "The wooden desk sat near the north window all afternoon while rain tapped on the glass pane outside and the clerk sorted old letters slowly.\nInside the small drawer, the card displayed a single word:",
+        "n_tokens": 38,
+        "untouched_prefix_tokens": 26,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "chatml": {
+        "id": "c2_chat_narr_0",
+        "format": "chatml",
+        "text": "<|im_start|>user\nContinue this line with one word: Inside the small drawer, the card displayed a single word:<|im_end|>\n<|im_start|>assistant\nInside the small drawer, the card displayed a single word:",
+        "n_tokens": 39,
+        "untouched_prefix_tokens": 27,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "long_minus_chat_tokens": -1
+    },
+    {
+      "pair_idx": 1,
+      "stem_id": "narr_1",
+      "style": "narrative",
+      "stem": "Across the chalk slate, the final word written in dust was:",
+      "suffix_len": 13,
+      "short_bare": {
+        "id": "c2_shortbare_narr_1",
+        "format": "short_bare",
+        "text": "Across the chalk slate, the final word written in dust was:",
+        "n_tokens": 13,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "long_bare": {
+        "id": "c2_longbare_narr_1",
+        "format": "long_bare",
+        "text": "An empty classroom stayed quiet after the evening bell rang at dusk, with wooden benches aligned in neat rows beside tall shelves of old faded notebooks.\nAcross the chalk slate, the final word written in dust was:",
+        "n_tokens": 41,
+        "untouched_prefix_tokens": 28,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "chatml": {
+        "id": "c2_chat_narr_1",
+        "format": "chatml",
+        "text": "<|im_start|>user\nContinue this line with one word: Across the chalk slate, the final word written in dust was:<|im_end|>\n<|im_start|>assistant\nAcross the chalk slate, the final word written in dust was:",
+        "n_tokens": 41,
+        "untouched_prefix_tokens": 28,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "long_minus_chat_tokens": 0
+    },
+    {
+      "pair_idx": 2,
+      "stem_id": "narr_2",
+      "style": "narrative",
+      "stem": "Under the brass lantern, the folded slip named one word:",
+      "suffix_len": 12,
+      "short_bare": {
+        "id": "c2_shortbare_narr_2",
+        "format": "short_bare",
+        "text": "Under the brass lantern, the folded slip named one word:",
+        "n_tokens": 12,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "long_bare": {
+        "id": "c2_longbare_narr_2",
+        "format": "long_bare",
+        "text": "Along the quiet stone hallway, soft footsteps faded toward the courtyard gate while a cool evening breeze moved through the arched doorway and heavy curtains.\nUnder the brass lantern, the folded slip named one word:",
+        "n_tokens": 40,
+        "untouched_prefix_tokens": 28,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "chatml": {
+        "id": "c2_chat_narr_2",
+        "format": "chatml",
+        "text": "<|im_start|>user\nContinue this line with one word: Under the brass lantern, the folded slip named one word:<|im_end|>\n<|im_start|>assistant\nUnder the brass lantern, the folded slip named one word:",
+        "n_tokens": 39,
+        "untouched_prefix_tokens": 27,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "long_minus_chat_tokens": 1
+    },
+    {
+      "pair_idx": 3,
+      "stem_id": "narr_3",
+      "style": "narrative",
+      "stem": "Beside the iron key, the stamped wooden tag showed one word:",
+      "suffix_len": 14,
+      "short_bare": {
+        "id": "c2_shortbare_narr_3",
+        "format": "short_bare",
+        "text": "Beside the iron key, the stamped wooden tag showed one word:",
+        "n_tokens": 14,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "long_bare": {
+        "id": "c2_longbare_narr_3",
+        "format": "long_bare",
+        "text": "Near the harbor pier, ropes creaked softly against weathered timber posts as fog rolled over the calm water before sunrise reached the roof.\nBeside the iron key, the stamped wooden tag showed one word:",
+        "n_tokens": 42,
+        "untouched_prefix_tokens": 28,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "chatml": {
+        "id": "c2_chat_narr_3",
+        "format": "chatml",
+        "text": "<|im_start|>user\nContinue this line with one word: Beside the iron key, the stamped wooden tag showed one word:<|im_end|>\n<|im_start|>assistant\nBeside the iron key, the stamped wooden tag showed one word:",
+        "n_tokens": 43,
+        "untouched_prefix_tokens": 29,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "long_minus_chat_tokens": -1
+    },
+    {
+      "pair_idx": 4,
+      "stem_id": "anal_0",
+      "style": "analytical",
+      "stem": "In the test ledger, the target entry listed in row four was:",
+      "suffix_len": 14,
+      "short_bare": {
+        "id": "c2_shortbare_anal_0",
+        "format": "short_bare",
+        "text": "In the test ledger, the target entry listed in row four was:",
+        "n_tokens": 14,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "long_bare": {
+        "id": "c2_longbare_anal_0",
+        "format": "long_bare",
+        "text": "During the annual winter audit of regional warehouse inventory records, each catalog sheet was verified carefully by two clerks before being filed into the metal cabinet.\nIn the test ledger, the target entry listed in row four was:",
+        "n_tokens": 43,
+        "untouched_prefix_tokens": 29,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "chatml": {
+        "id": "c2_chat_anal_0",
+        "format": "chatml",
+        "text": "<|im_start|>user\nContinue this line with one word: In the test ledger, the target entry listed in row four was:<|im_end|>\n<|im_start|>assistant\nIn the test ledger, the target entry listed in row four was:",
+        "n_tokens": 43,
+        "untouched_prefix_tokens": 29,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "long_minus_chat_tokens": 0
+    },
+    {
+      "pair_idx": 5,
+      "stem_id": "anal_1",
+      "style": "analytical",
+      "stem": "From the sample index, the marked label shown at the end was:",
+      "suffix_len": 14,
+      "short_bare": {
+        "id": "c2_shortbare_anal_1",
+        "format": "short_bare",
+        "text": "From the sample index, the marked label shown at the end was:",
+        "n_tokens": 14,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "long_bare": {
+        "id": "c2_longbare_anal_1",
+        "format": "long_bare",
+        "text": "After reviewing all quarterly log files stored in the central archive room, the senior analyst summarized the remaining entries clearly in a printed concise reference table.\nFrom the sample index, the marked label shown at the end was:",
+        "n_tokens": 42,
+        "untouched_prefix_tokens": 28,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "chatml": {
+        "id": "c2_chat_anal_1",
+        "format": "chatml",
+        "text": "<|im_start|>user\nContinue this line with one word: From the sample index, the marked label shown at the end was:<|im_end|>\n<|im_start|>assistant\nFrom the sample index, the marked label shown at the end was:",
+        "n_tokens": 43,
+        "untouched_prefix_tokens": 29,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "long_minus_chat_tokens": -1
+    },
+    {
+      "pair_idx": 6,
+      "stem_id": "anal_2",
+      "style": "analytical",
+      "stem": "On the control sheet, the verified item printed in box two was:",
+      "suffix_len": 14,
+      "short_bare": {
+        "id": "c2_shortbare_anal_2",
+        "format": "short_bare",
+        "text": "On the control sheet, the verified item printed in box two was:",
+        "n_tokens": 14,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "long_bare": {
+        "id": "c2_longbare_anal_2",
+        "format": "long_bare",
+        "text": "Before closing the main laboratory binder at the end of the evening shift, the lead technician cross-checked every serial stamp and noted the last code clearly.\nOn the control sheet, the verified item printed in box two was:",
+        "n_tokens": 43,
+        "untouched_prefix_tokens": 29,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "chatml": {
+        "id": "c2_chat_anal_2",
+        "format": "chatml",
+        "text": "<|im_start|>user\nContinue this line with one word: On the control sheet, the verified item printed in box two was:<|im_end|>\n<|im_start|>assistant\nOn the control sheet, the verified item printed in box two was:",
+        "n_tokens": 43,
+        "untouched_prefix_tokens": 29,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "long_minus_chat_tokens": 0
+    },
+    {
+      "pair_idx": 7,
+      "stem_id": "anal_3",
+      "style": "analytical",
+      "stem": "Within the draft manual, the underlined term at the end was:",
+      "suffix_len": 14,
+      "short_bare": {
+        "id": "c2_shortbare_anal_3",
+        "format": "short_bare",
+        "text": "Within the draft manual, the underlined term at the end was:",
+        "n_tokens": 14,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "long_bare": {
+        "id": "c2_longbare_anal_3",
+        "format": "long_bare",
+        "text": "Following the standard annual revision procedure for printed technical manuals, the senior copy editor carefully inspected each numbered appendix page and confirmed the top header line.\nWithin the draft manual, the underlined term at the end was:",
+        "n_tokens": 42,
+        "untouched_prefix_tokens": 28,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "chatml": {
+        "id": "c2_chat_anal_3",
+        "format": "chatml",
+        "text": "<|im_start|>user\nContinue this line with one word: Within the draft manual, the underlined term at the end was:<|im_end|>\n<|im_start|>assistant\nWithin the draft manual, the underlined term at the end was:",
+        "n_tokens": 43,
+        "untouched_prefix_tokens": 29,
+        "last_token_id": 25,
+        "last_token_piece": ":"
+      },
+      "long_minus_chat_tokens": -1
+    }
+  ],
   "prompt_length_summary": {
-    "bare_min": 12,
-    "bare_max": 14,
-    "bare_mean": 13.25,
-    "chatml_min": 39,
-    "chatml_max": 43,
-    "chatml_mean": 41.5,
-    "chatml_to_bare_mean_ratio": 3.132
+    "short_bare_min_max_mean": [
+      12,
+      14,
+      13.38
+    ],
+    "long_bare_min_max_mean": [
+      38,
+      43,
+      41.38
+    ],
+    "chatml_min_max_mean": [
+      39,
+      43,
+      41.75
+    ],
+    "max_abs_longbare_minus_chatml_tokens": 1
   },
   "unembed_pairwise_cosine": {
     "raw_u": {
       "within_pos": 0.1621,
       "cross_pos": 0.1208,
-      "open_x_func": 0.0905,
-      "func_x_func": 0.1362,
-      "noun_x_noun": 0.1849
+      "open_x_func": 0.0905
     },
     "centered_u_minus_mu": {
       "within_pos": 0.088,
       "cross_pos": 0.0474,
-      "open_x_func": 0.0601,
-      "func_x_func": 0.1812,
-      "noun_x_noun": 0.0511
+      "open_x_func": 0.0601
     },
     "shrink_0.1_whitened": {
       "within_pos": 0.031,
       "cross_pos": 0.003,
-      "open_x_func": 0.0025,
-      "func_x_func": 0.0585,
-      "noun_x_noun": 0.0199
+      "open_x_func": 0.0025
     }
   },
   "layer_geometry": {
@@ -521,41 +926,51 @@
       "role": "primary_C2.1_and_sweep",
       "lambda_ridge": 0.462931,
       "trace_R_over_d": 0.5106,
-      "frozen_unit_gain_bleed_24": {
+      "frozen_lens_transfer_preds_24": {
         "R_mf": {
           "diag_unit_gain_mean": 1.9944,
           "cross_abs_over_diag": 0.2232,
           "cross_signed_over_diag": 0.2232,
+          "heldout_16x8_cross_abs_over_diag": 0.2239,
           "same_over_cross": 1.1923,
-          "offdiag_rank1_svd_share": 0.9359
+          "offdiag_rank1_svd_share": 0.9359,
+          "abs_cos_v1_right_mu_u": 0.9636
         },
         "R_ridge_raw": {
           "diag_unit_gain_mean": 1.4831,
           "cross_abs_over_diag": 0.1102,
           "cross_signed_over_diag": 0.1102,
+          "heldout_16x8_cross_abs_over_diag": 0.1079,
           "same_over_cross": 1.2916,
-          "offdiag_rank1_svd_share": 0.912
+          "offdiag_rank1_svd_share": 0.912,
+          "abs_cos_v1_right_mu_u": 0.9711
         },
         "R_ridge_centered": {
           "diag_unit_gain_mean": 1.3439,
           "cross_abs_over_diag": 0.0195,
           "cross_signed_over_diag": -0.008,
+          "heldout_16x8_cross_abs_over_diag": 0.0193,
           "same_over_cross": 1.7886,
-          "offdiag_rank1_svd_share": 0.3898
+          "offdiag_rank1_svd_share": 0.3898,
+          "abs_cos_v1_right_mu_u": 0.3784
         },
         "R_ridge_shrink": {
           "diag_unit_gain_mean": 1.3484,
           "cross_abs_over_diag": 0.0158,
           "cross_signed_over_diag": 0.003,
+          "heldout_16x8_cross_abs_over_diag": 0.0155,
           "same_over_cross": 2.275,
-          "offdiag_rank1_svd_share": 0.2732
+          "offdiag_rank1_svd_share": 0.2732,
+          "abs_cos_v1_right_mu_u": 0.3996
         },
         "logit_lens": {
           "diag_unit_gain_mean": 0.9381,
           "cross_abs_over_diag": 0.0349,
           "cross_signed_over_diag": 0.0262,
+          "heldout_16x8_cross_abs_over_diag": 0.0308,
           "same_over_cross": 1.4863,
-          "offdiag_rank1_svd_share": 0.51
+          "offdiag_rank1_svd_share": 0.51,
+          "abs_cos_v1_right_mu_u": 0.9446
         }
       }
     },
@@ -568,41 +983,51 @@
       "role": "primary_C2.1_and_sweep",
       "lambda_ridge": 0.513138,
       "trace_R_over_d": 0.7226,
-      "frozen_unit_gain_bleed_24": {
+      "frozen_lens_transfer_preds_24": {
         "R_mf": {
           "diag_unit_gain_mean": 2.0309,
           "cross_abs_over_diag": 0.2242,
           "cross_signed_over_diag": 0.2242,
+          "heldout_16x8_cross_abs_over_diag": 0.2243,
           "same_over_cross": 1.1635,
-          "offdiag_rank1_svd_share": 0.944
+          "offdiag_rank1_svd_share": 0.944,
+          "abs_cos_v1_right_mu_u": 0.9609
         },
         "R_ridge_raw": {
           "diag_unit_gain_mean": 1.6272,
           "cross_abs_over_diag": 0.101,
           "cross_signed_over_diag": 0.101,
+          "heldout_16x8_cross_abs_over_diag": 0.0992,
           "same_over_cross": 1.3241,
-          "offdiag_rank1_svd_share": 0.9088
+          "offdiag_rank1_svd_share": 0.9088,
+          "abs_cos_v1_right_mu_u": 0.9717
         },
         "R_ridge_centered": {
           "diag_unit_gain_mean": 1.4874,
           "cross_abs_over_diag": 0.0171,
           "cross_signed_over_diag": -0.0072,
+          "heldout_16x8_cross_abs_over_diag": 0.0166,
           "same_over_cross": 2.1489,
-          "offdiag_rank1_svd_share": 0.3722
+          "offdiag_rank1_svd_share": 0.3722,
+          "abs_cos_v1_right_mu_u": 0.3496
         },
         "R_ridge_shrink": {
           "diag_unit_gain_mean": 1.4876,
           "cross_abs_over_diag": 0.0135,
           "cross_signed_over_diag": 0.0021,
+          "heldout_16x8_cross_abs_over_diag": 0.0129,
           "same_over_cross": 2.6988,
-          "offdiag_rank1_svd_share": 0.2565
+          "offdiag_rank1_svd_share": 0.2565,
+          "abs_cos_v1_right_mu_u": 0.2637
         },
         "logit_lens": {
           "diag_unit_gain_mean": 1.2383,
           "cross_abs_over_diag": 0.0249,
           "cross_signed_over_diag": 0.0192,
+          "heldout_16x8_cross_abs_over_diag": 0.0221,
           "same_over_cross": 2.0792,
-          "offdiag_rank1_svd_share": 0.4649
+          "offdiag_rank1_svd_share": 0.4649,
+          "abs_cos_v1_right_mu_u": 0.9124
         }
       }
     },
@@ -610,41 +1035,51 @@
       "role": "primary_C2.1_and_sweep",
       "lambda_ridge": 0.528329,
       "trace_R_over_d": 0.8363,
-      "frozen_unit_gain_bleed_24": {
+      "frozen_lens_transfer_preds_24": {
         "R_mf": {
           "diag_unit_gain_mean": 2.0466,
           "cross_abs_over_diag": 0.2574,
           "cross_signed_over_diag": 0.2574,
+          "heldout_16x8_cross_abs_over_diag": 0.2585,
           "same_over_cross": 1.134,
-          "offdiag_rank1_svd_share": 0.95
+          "offdiag_rank1_svd_share": 0.95,
+          "abs_cos_v1_right_mu_u": 0.9615
         },
         "R_ridge_raw": {
           "diag_unit_gain_mean": 1.6898,
           "cross_abs_over_diag": 0.1012,
           "cross_signed_over_diag": 0.1012,
+          "heldout_16x8_cross_abs_over_diag": 0.099,
           "same_over_cross": 1.3384,
-          "offdiag_rank1_svd_share": 0.9107
+          "offdiag_rank1_svd_share": 0.9107,
+          "abs_cos_v1_right_mu_u": 0.9728
         },
         "R_ridge_centered": {
           "diag_unit_gain_mean": 1.5402,
           "cross_abs_over_diag": 0.0171,
           "cross_signed_over_diag": -0.0082,
+          "heldout_16x8_cross_abs_over_diag": 0.0171,
           "same_over_cross": 2.1243,
-          "offdiag_rank1_svd_share": 0.3819
+          "offdiag_rank1_svd_share": 0.3819,
+          "abs_cos_v1_right_mu_u": 0.3842
         },
         "R_ridge_shrink": {
           "diag_unit_gain_mean": 1.5412,
           "cross_abs_over_diag": 0.013,
           "cross_signed_over_diag": 0.0013,
+          "heldout_16x8_cross_abs_over_diag": 0.0126,
           "same_over_cross": 2.7815,
-          "offdiag_rank1_svd_share": 0.261
+          "offdiag_rank1_svd_share": 0.261,
+          "abs_cos_v1_right_mu_u": 0.2292
         },
         "logit_lens": {
           "diag_unit_gain_mean": 1.3777,
           "cross_abs_over_diag": 0.0222,
           "cross_signed_over_diag": 0.0166,
+          "heldout_16x8_cross_abs_over_diag": 0.0189,
           "same_over_cross": 2.3057,
-          "offdiag_rank1_svd_share": 0.4455
+          "offdiag_rank1_svd_share": 0.4455,
+          "abs_cos_v1_right_mu_u": 0.9525
         }
       }
     },
@@ -655,28 +1090,6 @@
     }
   },
   "prenorm_gamma_mask_geometry": {
-    "18": {
-      "ff": {
-        "gamma_rms": 0.13145,
-        "gamma_min_abs": 0.000893,
-        "drop_k": 4,
-        "unmasked_deliverable_frac": 0.3368,
-        "unmasked_worst_blowup": 7.18,
-        "masked_deliverable_frac": 0.9893,
-        "masked_worst_blowup": 1.02,
-        "masked_cos_ret": 0.99948
-      },
-      "attn": {
-        "gamma_rms": 0.10403,
-        "gamma_min_abs": 0.000496,
-        "drop_k": 16,
-        "unmasked_deliverable_frac": 0.2199,
-        "unmasked_worst_blowup": 12.35,
-        "masked_deliverable_frac": 0.9923,
-        "masked_worst_blowup": 1.01,
-        "masked_cos_ret": 0.99801
-      }
-    },
     "21": {
       "ff": {
         "gamma_rms": 0.15959,
@@ -686,17 +1099,8 @@
         "unmasked_worst_blowup": 21.84,
         "masked_deliverable_frac": 0.9921,
         "masked_worst_blowup": 1.02,
+        "masked_over_unmasked_ratio": 4.044,
         "masked_cos_ret": 0.99955
-      },
-      "attn": {
-        "gamma_rms": 0.10986,
-        "gamma_min_abs": 0.000441,
-        "drop_k": 16,
-        "unmasked_deliverable_frac": 0.3167,
-        "unmasked_worst_blowup": 9.26,
-        "masked_deliverable_frac": 0.9966,
-        "masked_worst_blowup": 1.01,
-        "masked_cos_ret": 0.99804
       }
     },
     "24": {
@@ -708,6 +1112,7 @@
         "unmasked_worst_blowup": 5.93,
         "masked_deliverable_frac": 0.9885,
         "masked_worst_blowup": 1.03,
+        "masked_over_unmasked_ratio": 2.003,
         "masked_cos_ret": 0.99944
       },
       "attn": {
@@ -718,8 +1123,10 @@
         "unmasked_worst_blowup": 1.51,
         "masked_deliverable_frac": 0.9943,
         "masked_worst_blowup": 1.02,
+        "masked_over_unmasked_ratio": 1.319,
         "masked_cos_ret": 0.99778
-      }
+      },
+      "m70a30_linear_delivered_ratio_vs_ff": 1.0018
     },
     "27": {
       "ff": {
@@ -730,28 +1137,191 @@
         "unmasked_worst_blowup": 35.36,
         "masked_deliverable_frac": 0.9858,
         "masked_worst_blowup": 1.04,
+        "masked_over_unmasked_ratio": 7.65,
         "masked_cos_ret": 0.99951
+      }
+    }
+  },
+  "c2_3_post_erasure_decision_rule": {
+    "statistic": "E_open(L) = median_{t in open_18, p in 8}(sum_mlp(L,t,p)); E_func(L) = median_{t in func_6, p in 8}(sum_mlp(L,t,p)); gap(L) = E_open(L) - E_func(L)",
+    "post_erasure_predicate": "E_open(L) >= -1.20 logits AND |E_open(L) - E_func(L)| <= 0.60 logits",
+    "selection_rule": "Stage C3 compilation band = earliest contiguous run of >= 2 sweep layers in {18, 21, 24, 27, 30} satisfying post_erasure(L); if none, C2.3 = INCONCLUSIVE and Stage C3 defaults to {24, 27}"
+  },
+  "power_simulations": {
+    "seed": 2026112506,
+    "C2.2_closure_N8_pairs_joint_bar": {
+      "sd_0.10": {
+        "true_0.50": 0.0,
+        "true_0.70": 0.486,
+        "true_0.80": 0.999,
+        "true_0.85": 1.0,
+        "true_0.90": 1.0,
+        "true_1.00": 1.0
       },
-      "attn": {
-        "gamma_rms": 0.1703,
-        "gamma_min_abs": 0.000381,
-        "drop_k": 16,
-        "unmasked_deliverable_frac": 0.21,
-        "unmasked_worst_blowup": 16.66,
-        "masked_deliverable_frac": 0.996,
-        "masked_worst_blowup": 1.01,
-        "masked_cos_ret": 0.99817
+      "sd_0.15": {
+        "true_0.50": 0.0,
+        "true_0.70": 0.5025,
+        "true_0.80": 0.967,
+        "true_0.85": 0.996,
+        "true_0.90": 1.0,
+        "true_1.00": 1.0
+      },
+      "sd_0.25": {
+        "true_0.50": 0.011,
+        "true_0.70": 0.4865,
+        "true_0.80": 0.8735,
+        "true_0.85": 0.949,
+        "true_0.90": 0.9885,
+        "true_1.00": 0.999
+      }
+    },
+    "C2.4c_K3_additivity_TOST_N24": {
+      "sd_0.12": {
+        "true_0.00": {
+          "P_declare_additive": 1.0,
+          "P_reject_additive": 0.0
+        },
+        "true_0.10": {
+          "P_declare_additive": 1.0,
+          "P_reject_additive": 0.0
+        },
+        "true_0.20": {
+          "P_declare_additive": 0.4925,
+          "P_reject_additive": 0.5075
+        },
+        "true_0.35": {
+          "P_declare_additive": 0.0,
+          "P_reject_additive": 1.0
+        },
+        "true_0.50": {
+          "P_declare_additive": 0.0,
+          "P_reject_additive": 1.0
+        }
+      },
+      "sd_0.20": {
+        "true_0.00": {
+          "P_declare_additive": 1.0,
+          "P_reject_additive": 0.0
+        },
+        "true_0.10": {
+          "P_declare_additive": 0.993,
+          "P_reject_additive": 0.007
+        },
+        "true_0.20": {
+          "P_declare_additive": 0.4933,
+          "P_reject_additive": 0.5068
+        },
+        "true_0.35": {
+          "P_declare_additive": 0.0003,
+          "P_reject_additive": 0.9998
+        },
+        "true_0.50": {
+          "P_declare_additive": 0.0,
+          "P_reject_additive": 1.0
+        }
+      },
+      "sd_0.30": {
+        "true_0.00": {
+          "P_declare_additive": 0.9975,
+          "P_reject_additive": 0.0025
+        },
+        "true_0.10": {
+          "P_declare_additive": 0.9307,
+          "P_reject_additive": 0.0693
+        },
+        "true_0.20": {
+          "P_declare_additive": 0.4467,
+          "P_reject_additive": 0.5533
+        },
+        "true_0.35": {
+          "P_declare_additive": 0.0053,
+          "P_reject_additive": 0.9948
+        },
+        "true_0.50": {
+          "P_declare_additive": 0.0,
+          "P_reject_additive": 1.0
+        }
+      }
+    },
+    "C2.4b_m70a30_vs_ff_N24": {
+      "sd_log_0.06": {
+        "ratio_1.00": 0.0,
+        "ratio_1.10": 0.5178,
+        "ratio_1.15": 1.0,
+        "ratio_1.20": 1.0,
+        "ratio_1.25": 1.0
+      },
+      "sd_log_0.10": {
+        "ratio_1.00": 0.0,
+        "ratio_1.10": 0.5182,
+        "ratio_1.15": 0.989,
+        "ratio_1.20": 1.0,
+        "ratio_1.25": 1.0
+      },
+      "sd_log_0.15": {
+        "ratio_1.00": 0.0013,
+        "ratio_1.10": 0.49,
+        "ratio_1.15": 0.9243,
+        "ratio_1.20": 0.9965,
+        "ratio_1.25": 1.0
       }
     }
   },
   "planned_budget": {
-    "clean_and_shams_and_c0_colon": 38,
-    "block1_C2_1_bleed_3L_5arms_24x8": 2880,
-    "block2_C2_2_bidirectional_mlp_patching_L19_31": 1536,
-    "block2b_C2_3_sweep_7L_ll_and_rand32": 3136,
-    "block3_C2_4_prenorm_ablation_2doses": 1536,
-    "total_planned_short_fwds": 9126,
-    "estimated_runtime_L4_or_A100_min": "8-14",
-    "estimated_cost_CU": "0.45-1.10"
+    "clean_prompts_24": 24,
+    "shams_enumerated_18": 18,
+    "c0_colon_anchor_pairs_16": 16,
+    "clean_shams_anchor_subtotal": 58,
+    "block1_C2_1_3L_5arms_24x8": 2880,
+    "block2_C2_2_9cond_12t_8pairs_2arms": 1728,
+    "block2b_C2_3_7L_56v_8p": 3136,
+    "block3_C2_4_11arms_24t_4p_2doses": 2112,
+    "total_planned_short_fwds": 9914,
+    "sham_arms_list": [
+      "C2.1_post_norm_L18",
+      "C2.1_post_norm_L24",
+      "C2.1_post_norm_L27",
+      "C2.2_mlp_patch_L19_31",
+      "C2.2_attn_patch_L19_31",
+      "C2.2_mlp_patch_L4_16",
+      "C2.3_sweep_L12",
+      "C2.3_sweep_L15",
+      "C2.3_sweep_L18",
+      "C2.3_sweep_L21",
+      "C2.3_sweep_L24",
+      "C2.3_sweep_L27",
+      "C2.3_sweep_L30",
+      "C2.4_prenorm_L21_ff",
+      "C2.4_prenorm_L24_ff",
+      "C2.4_prenorm_L27_ff",
+      "C2.4_prenorm_L24_m70a30",
+      "C2.4_prenorm_K3_combined"
+    ],
+    "c22_conditions_list": [
+      "unpatched_LongBare",
+      "unpatched_ChatML",
+      "unpatched_ShortBare",
+      "patch_LongBare_to_ChatML_MLP_L19_31",
+      "patch_ChatML_to_LongBare_MLP_L19_31",
+      "ctrl_L4_16_MLP_LongBare_to_ChatML",
+      "ctrl_mismatch_prompt_MLP_L19_31",
+      "ctrl_rand_iso_same_site_L19_31",
+      "comp_LongBare_to_ChatML_Attn_L19_31"
+    ],
+    "c24_arms_list": [
+      "L24.prenorm_ff_unmasked",
+      "L24.prenorm_ff_masked",
+      "L24.m70a30 (0.7*L24.prenorm_ff_masked + 0.3*L24.prenorm_attn_masked)",
+      "L21.prenorm_ff_masked",
+      "L27.prenorm_ff_masked",
+      "K3_combined (L21+L24+L27 prenorm_ff_masked)",
+      "L24.prenorm_ff_rand_masked[draw0]",
+      "L24.m70a30_rand_masked (0.7*ff_rand[draw0] + 0.3*attn_rand[draw0])",
+      "L21.prenorm_ff_rand_masked[draw0]",
+      "L27.prenorm_ff_rand_masked[draw0]",
+      "K3_combined_rand_masked (L21+L24+L27 prenorm_ff_rand_masked[draw0])"
+    ],
+    "estimated_runtime_L4_or_A100_min": "9-15",
+    "estimated_cost_CU": "0.50-1.20"
   }
 }
