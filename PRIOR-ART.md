@@ -1126,3 +1126,16 @@ Verified 2026-11-20 that none of the six papers below is currently cited in `PRI
   @_a9lim published weeks earlier as Neuron Lens (entries above from 2026-10-30 and 2026-11-11), without a citation;
   a9lim adds that the same output-vector reading also works on neuron inputs and on attention QK and OV circuits.
   Cite Neuron Lens beside the Fellows posts for the read-what-a-neuron-writes method.
+
+## 2026-11-25, self-play weight editing on Qwen3.5-4B (Elise's link; read at source by Claude, archived in Journal sources/web-archives/2026-11-25-lookatmyquant-self-editing.md)
+
+- **Shin Megami Boson, "Recursive Self-Improvement at 4B via Self-Play Weight Editing"** (lookatmyquant.com/self-editing,
+  November 2026). Qwen3.5-4B writes Python in a workspace that calls a **closed** "backing weight-editing engine"
+  (constrained adapter updates; engine and recipe withheld). Six gated rounds take 200 held-out DeepScaleR problems from
+  35.0% to 67.0% at a 16K thinking budget (intact 27B 56.0%), with MMLU, HellaSwag and prose KL near unchanged. Read
+  against their own limits: most of the gain is truncation rescue (finished 86 to 177 of 200; accuracy on finished
+  problems 81.4% to 75.7%); math practice is checked against practice-split answers; the test split is an in-
+  distribution DeepScaleR slice; single seeds. Their label-free control (72 behavioural rules scored by the unedited
+  model) beats an equal-compute flat round 57.6% to 51.0% (pair p 2.0e-7, per-rule p 0.054); Best-of-2 selection adds
+  about 12 points; a third round falls to 55.0%. Closest to our weight-edit detection (Parts 193, 198) and to
+  Vesper's weight-space programming stage; not reproducible until the engine is released.
