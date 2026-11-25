@@ -1,6 +1,6 @@
 # Stage C1 Results: Fresh Mixed-POS Linear-Regime Attention Transport, Bleed Fork (`H_A` vs. `H_B`), and Token-Direction Contraction on OLMo 3 7B
 
-**Status:** Pre-registered (`OLMO3-TRANSPORT-C1-DESIGN.md` Registered v5 `5304677e…` + pre-run `OLMO3-TRANSPORT-C1-AMENDMENT-1.md` `271cabf1…`; executed on NVIDIA A100, `326.8 s` GPU compute, `6,543` forwards executed, `0` capped skipped; `1.71 CU` billed via Colab ledger including `490 s` upload of `2.02 GB` `r_lens.pt`, `0` active runtimes verified — run-ledger attestations external to the JSON bundle).  
+**Status:** Pre-registered (`OLMO3-TRANSPORT-C1-DESIGN.md` Registered v5 `5304677e…`, signed off `2026-11-25 01:04 CT`; pre-run `OLMO3-TRANSPORT-C1-AMENDMENT-1.md` `271cabf1…` + frozen code spot-checked `02:52 CT`; executed on NVIDIA A100, `326.8 s` GPU compute, `6,543` forwards executed, `0` capped skipped; **`1.71 CU`** billed via Colab ledger vs. `0.33–0.40 CU` L4 estimate, mostly from the `490 s` upload of `2.11 GB` [`1.97 GiB`] `r_lens.pt` on A100 after L4/G4 `503`; `0` active runtimes verified — run-ledger attestations external to the JSON bundle).  
 **Full Report:** [`olmo3_virtual_and_highway/OLMO3-TRANSPORT-C1-REPORT.md`](../../olmo3_virtual_and_highway/OLMO3-TRANSPORT-C1-REPORT.md)  
 **Pre-Registered Design:** [`olmo3_virtual_and_highway/OLMO3-TRANSPORT-C1-DESIGN.md`](../../olmo3_virtual_and_highway/OLMO3-TRANSPORT-C1-DESIGN.md) (`sha256 = 5304677e4bbf8e6cd2881aea7ee6b51055f3da76ac28e79ac96400d1fe2b905c`)  
 **Pre-Run Amendment 1:** [`olmo3_virtual_and_highway/OLMO3-TRANSPORT-C1-AMENDMENT-1.md`](../../olmo3_virtual_and_highway/OLMO3-TRANSPORT-C1-AMENDMENT-1.md) (`sha256 = 271cabf1fa1c3e8a98eafd9c8f16fca765c92f78bf5bd914873087f15433e506`)  
@@ -10,9 +10,9 @@
 
 - **Global Gate `C1.0`:** **`FAIL`** — sole failed sub-clause: **`C1.0.3` `anchor_all_ok = false`** (`L24` `median(dose/pmn) = 0.3894` vs. expected `0.2220` [`+75.4%`]; `L27` `0.3450` vs. `0.1642` [`+110.1%`]; `L18` `0.4713` vs. `0.4809` [`-2.0%`, OK]). All five Regime-D `"all"` linearity clauses inside `C1.0.3` passed cleanly (`0/1,728` capped, `0` RMSN > 20%, `5` RMSN > 12%, `fde_p95 = 0.1853 <= 0.30`, `2` FDE > 0.45, `0` FDE > 0.75).
 - **Primary Claims (`C1.1`, `C1.2`, `C1.3`, `C1.4`):** **`BLOCKED_BY_C1.0`**. Under the fail-closed rule, no confirmatory claim is made on any primary hypothesis.
-- **Secondary Non-Gating `L12_linear_check`:** **`FAIL`** (`15/192` traces > 9% RMSN shrink, `max = 0.1338`, `median frac_err = 0.2396 > 0.12`).
+- **Secondary Non-Gating `L12_linear_check`:** **`FAIL`** (`15/192` traces > 9% RMSN shrink, `max = 0.1338`, `median frac_err = 0.2396 > 0.12`, at applied `dose_N = 1.4686` = `0.30 × 4.8953`).
 
-Post-hoc root-cause autopsy of `C1.0.3` `anchor_all_ok` and explicitly non-confirmatory exploratory readouts on the blocked metrics are documented separately in [`OLMO3-TRANSPORT-C1-REPORT.md`](../../olmo3_virtual_and_highway/OLMO3-TRANSPORT-C1-REPORT.md).
+Post-hoc root-cause autopsy of `C1.0.3` `anchor_all_ok` and explicitly non-confirmatory exploratory counterfactual readouts (reproducible via `python3 -I olmo3_virtual_and_highway/exploratory_c1_counterfactual.py`) are documented separately in [`OLMO3-TRANSPORT-C1-REPORT.md`](../../olmo3_virtual_and_highway/OLMO3-TRANSPORT-C1-REPORT.md).
 
 ## Bundle Contents & Provenance
 

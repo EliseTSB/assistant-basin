@@ -745,6 +745,53 @@ class TestStageC1(unittest.TestCase):
         # Bare 1.90, ChatML 0.70 -> REFUTED (M1 one-format miss MUST refute!)
         sc_ref = scorer.score_c1(_with_fmt_r_all(1.90, 0.70), self.c1_const, constants_path=CONSTANTS_PATH, design_path=DESIGN_PATH, n_flips=2000, n_boot=400)
         self.assertEqual(sc_ref["verdicts"]["C1.1"], "REFUTED")
+        # Single-leg M1 pins (Claude #93): each leg outside [0.65, 1.50] alone MUST refute!
+        # (a) Bare-only outside (1.55 > 1.50), ChatML inside (1.35), pooled inside (1.45), split 0.20 <= 0.35
+        sc_bare_only = scorer.score_c1(_with_fmt_r_all(1.55, 1.35), self.c1_const, constants_path=CONSTANTS_PATH, design_path=DESIGN_PATH, n_flips=2000, n_boot=400)
+        self.assertEqual(sc_bare_only["verdicts"]["C1.1"], "REFUTED")
+        # (b) ChatML-only outside (1.55 > 1.50), Bare inside (1.35), pooled inside (1.45), split 0.20 <= 0.35
+        sc_chat_only = scorer.score_c1(_with_fmt_r_all(1.35, 1.55), self.c1_const, constants_path=CONSTANTS_PATH, design_path=DESIGN_PATH, n_flips=2000, n_boot=400)
+        self.assertEqual(sc_chat_only["verdicts"]["C1.1"], "REFUTED")
+        # (c) Pooled-only outside (1.54 > 1.50), Bare median (1.48) & ChatML median (1.48) both inside [0.65, 1.50], split 0.0
+        r_pool_only = make_clean_receipt(self.c1_const)
+        t_list = [t["string"] for t in r_pool_only["targets_24"]]
+        for L in scorer.PRIMARY_LAYERS:
+            ls = str(L)
+            for ti, ts in enumerate(t_list):
+                # Per layer (24 targets): 11 cells (bare=1.48, chat=1.60), 11 cells (bare=1.60, chat=1.48), 2 cells (1.48, 1.48)
+                # => Bare median=1.48, ChatML median=1.48, per-layer split=0.0, pooled cell-mean median=1.54!
+                if ti < 11:
+                    b_r, c_r = 1.48, 1.60
+                elif ti < 22:
+                    b_r, c_r = 1.60, 1.48
+                else:
+                    b_r, c_r = 1.48, 1.48
+                for pi, p in enumerate(r_pool_only["prompts_8"]):
+                    target_r = b_r if p["format"] == "bare" else c_r
+                    rmf = r_pool_only["block1_regime_D_all"][ls]["R_mf"][ts][pi]
+                    dm0 = r_pool_only["block1_regime_D_all"][ls]["direct_matched"][ts][0][pi]
+                    dm1 = r_pool_only["block1_regime_D_all"][ls]["direct_matched"][ts][1][pi]
+                    pg = rmf["pred_dlogit"] - 0.5 * (dm0["pred_dlogit"] + dm1["pred_dlogit"])
+                    rmf["exact_dlogit"] = rmf["pred_dlogit"] * 1.05
+                    dm_ex = rmf["exact_dlogit"] - target_r * pg
+                    dm0["exact_dlogit"] = dm_ex
+                    dm1["exact_dlogit"] = dm_ex
+                    gap_last = (
+                        r_pool_only["block1_regime_D_last"][ls]["R_mf"][ts][pi]["exact_dlogit"]
+                        - 0.5 * (
+                            r_pool_only["block1_regime_D_last"][ls]["direct_matched"][ts][0][pi]["exact_dlogit"]
+                            + r_pool_only["block1_regime_D_last"][ls]["direct_matched"][ts][1][pi]["exact_dlogit"]
+                        )
+                    )
+                    dtot_g = (target_r * pg) - gap_last
+                    rmf["sum_attn"] = 0.4 + 0.88 * max(dtot_g, 2.0) - 0.9
+                    dm0["sum_attn"] = -0.9
+                    dm1["sum_attn"] = -0.9
+        sc_pool_only = scorer.score_c1(r_pool_only, self.c1_const, constants_path=CONSTANTS_PATH, design_path=DESIGN_PATH, n_flips=2000, n_boot=400)
+        self.assertLessEqual(sc_pool_only["C1_1"]["a_calibration"]["bare_median_r_all"], 1.50)
+        self.assertLessEqual(sc_pool_only["C1_1"]["a_calibration"]["chatml_median_r_all"], 1.50)
+        self.assertGreater(sc_pool_only["C1_1"]["a_calibration"]["pooled_median_r_all"], 1.50)
+        self.assertEqual(sc_pool_only["verdicts"]["C1.1"], "REFUTED")
         # Bare 1.42, ChatML 0.98 -> INCONCLUSIVE (both in [0.65,1.50], split 0.44 > 0.35)
         sc_inc = scorer.score_c1(_with_fmt_r_all(1.42, 0.98), self.c1_const, constants_path=CONSTANTS_PATH, design_path=DESIGN_PATH, n_flips=2000, n_boot=400)
         self.assertEqual(sc_inc["verdicts"]["C1.1"], "INCONCLUSIVE (format/length/instruction split)")
