@@ -1,0 +1,74 @@
+{
+  "schema_version": "olmo3-stage-c2-scorecard-v4",
+  "confirmatory_verdicts": {
+    "C2.0": "FAIL",
+    "C2.1": "BLOCKED_BY_C2.0",
+    "C2.2": "BLOCKED_BY_C2.0",
+    "C2.3": "BLOCKED_BY_C2.0",
+    "C2.4a": "BLOCKED_BY_C2.0",
+    "EQ-C2.4c": "BLOCKED_BY_C2.0"
+  },
+  "gate_C2_0": {
+    "pass": false,
+    "C2.0.1_shams_and_liveness": {
+      "pass": true,
+      "shams_present_ok": true,
+      "active_keys_exact_ok": true,
+      "max_write_sham": 0.0,
+      "max_patch_sham": 0.0,
+      "liveness_ok": true
+    },
+    "C2.0.2_finiteness_and_telescoping": {
+      "pass": false,
+      "nonfinite_count": 0,
+      "nonfinite_sample": [],
+      "tele_p95": 0.067939,
+      "tele_p999": 1.038869
+    },
+    "C2.0.3_linearity_and_completeness": {
+      "pass": true,
+      "all_block_counts_ok": true,
+      "per_cell_counts_ok": true,
+      "pmn_complete_ok": true,
+      "dose_checks_ok": true,
+      "block_row_counts": {
+        "block1_C2_1": 2880,
+        "block2_unpatched": 864,
+        "block2_patched": 1728,
+        "block2_unsteered_kl": 72,
+        "block2b_logit_lens": 960,
+        "block2b_rand_iso": 320,
+        "block3_C2_4": 1728,
+        "c0_anchor_colon": 16
+      },
+      "regime_N": {
+        "N": 2880,
+        "capped": 0,
+        "rmsn_gt_20": 0,
+        "rmsn_gt_12": 0
+      },
+      "regime_D": {
+        "N": 864,
+        "capped": 0,
+        "patched_capped": 0,
+        "rmsn_gt_20": 0,
+        "rmsn_gt_12": 0,
+        "fde_p95": 0.227831,
+        "fde_gt_045": 0,
+        "fde_gt_075_diagnostic": 0
+      }
+    },
+    "C2.0.4_provenance": {
+      "pass": true,
+      "strict": true,
+      "receipt_hashes": {
+        "r_lens_sha256": "ceef21fc90b17aafa5625f23ab2c1f35be7b2f8b735847cb89bfd2a438caa955",
+        "c2_constants_sha256": "583117f50cfceeb5cddcfa239c0efa0c32846dd69f6756540cd3bbba5cec5b65",
+        "c2_bank_sha256": "7124dd565331fd455d6d91d8fe845ba8783c2b0d366f6d11eb533947cb09401d",
+        "c2_design_sha256": "3764dfee6baf9c7387fc6325eee92c4ca2fdbca5c76ee5b440e0f4f12169d8fc"
+      }
+    }
+  },
+  "blocked_by_c2_0": true,
+  "holm_7_family": {}
+}
