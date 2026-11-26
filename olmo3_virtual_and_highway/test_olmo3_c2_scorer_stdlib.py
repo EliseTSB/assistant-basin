@@ -20,6 +20,7 @@ from __future__ import annotations
 import copy
 import json
 import math
+import re
 import sys
 import unittest
 from pathlib import Path
@@ -123,9 +124,12 @@ def make_clean_passing_receipt(c2_const: dict) -> dict:
             jitter = 0.02 * ((pidx % 4) - 1.5)
             for ts in c22_t_strs:
                 pg = float(pr_map[ts]["pred_gap_at_direct3"])
+                u_dw = float(pr_map[ts]["u_dot_w_Rmf"])
+                dose_d = round(3.0 * 1.0 / u_dw, 6)
                 gap_val = (r_base + jitter) * pg
                 b2_traces[cname][str(pidx)][ts] = {
                     "R_mf": {
+                        "dose": dose_d,
                         "exact_dlogit": round(gap_val + 1.5, 6),
                         "frozen_direct_effect": 3.05,
                         "telescoping_err": 0.003,
@@ -134,6 +138,7 @@ def make_clean_passing_receipt(c2_const: dict) -> dict:
                         "capped": False,
                     },
                     "dm0": {
+                        "dose": dose_d,
                         "exact_dlogit": 1.5,
                         "frozen_direct_effect": 3.04,
                         "telescoping_err": 0.003,
@@ -160,9 +165,11 @@ def make_clean_passing_receipt(c2_const: dict) -> dict:
         block2b[str(L)] = {"dose": dose_c21, "logit_lens": ll_blk, "rand_iso": ri_rows}
 
     c24_pids = [triples_12[0]["long_bare"]["id"], triples_12[0]["chatml"]["id"], triples_12[6]["long_bare"]["id"], triples_12[6]["chatml"]["id"]]
+    unmasked_eff_l24 = float(c2_const["prenorm_gamma_mask_geometry"]["24"]["ff"]["unmasked_deliverable_frac"])
     doses_blk = {}
     for m in ("0.5", "1.25"):
-        sc = float(m) * 4.0
+        mult = float(m)
+        sc = mult * 4.0
         arm_vals = {
             "L24.prenorm_ff_unmasked": 1.0 * sc,
             "L24.prenorm_ff_unmasked_postmatched": 1.7 * sc,
@@ -174,11 +181,19 @@ def make_clean_passing_receipt(c2_const: dict) -> dict:
             "L27.prenorm_ff_masked": 1.8 * sc,
             "K3_combined": (1.5 + 2.0 + 1.8) * sc * 1.02,
         }
+        arm_doses = {
+            "L21.prenorm_ff_masked": mult * 7.2,
+            "L27.prenorm_ff_masked": mult * 7.2,
+            "L24.prenorm_ff_unmasked_postmatched": (mult * 7.2) / unmasked_eff_l24,
+            "K3_combined": mult * 3.0 * 7.2,
+        }
         doses_blk[m] = {}
         for ak, val in arm_vals.items():
+            d_exp = round(arm_doses.get(ak, mult * 7.2), 6)
             doses_blk[m][ak] = {
                 ts: [
-                    {"prompt_id": pid, "capped": False, "exact_dlogit": round(val * (1.0 + 0.01 * (ti % 3)), 6),
+                    {"prompt_id": pid, "capped": False, "dose": d_exp,
+                     "exact_dlogit": round(val * (1.0 + 0.01 * (ti % 3)), 6),
                      "abs_target_dlogit": round(abs(val), 6), "dlogit_l2_norm": round(10.0 * (1.05 if "m70a30" in ak else 1.0), 6)}
                     for pid in c24_pids
                 ]
@@ -222,7 +237,7 @@ def make_clean_passing_receipt(c2_const: dict) -> dict:
         "active_arm_min_max_abs_dlogit": active_mins,
         "c0_anchor_colon": anc,
         "block1_C2_1": block1,
-        "block2_C2_2": {"unsteered_patched_kl": unsteered_kl, "traces": b2_traces},
+        "block2_C2_2": {"dose_cap": round(3.0 * 7.2, 6), "unsteered_patched_kl": unsteered_kl, "traces": b2_traces},
         "block2b_C2_3": block2b,
         "block3_C2_4": {"doses": doses_blk},
     }
@@ -248,33 +263,57 @@ class TestStageC2ScorerStdlib(unittest.TestCase):
         )
 
     def test_01_registered_thresholds_exact_pin_against_design(self) -> None:
-        """Pin EVERY numeric threshold in REGISTERED_THRESHOLDS verbatim against registered v4 design (Claude #121 #2)."""
-        expected = {
-            "C2.0.2_tele_p95_max": 0.08, "C2.0.2_tele_p999_max": 0.15,
-            "C2.0.3_rmsn_gt_20": 0.20, "C2.0.3_rmsn_gt_12": 0.12,
-            "C2.0.3_fde_gt_045": 0.45, "C2.0.3_fde_gt_075": 0.75,
-            "C2.1_diag_eps": 0.25, "C2.1_bar1_pt": 2.00, "C2.1_bar1_q05": 1.50,
-            "C2.1_bar2_pt": 1.15, "C2.1_bar2_sc_pt": 1.15, "C2.1_bar2_sc_q05": 1.05,
-            "C2.1_bar3_pt": 1.35, "C2.1_bar3_q05": 1.15, "C2.1_bar4_pt": 0.80, "C2.1_bar4_q05": 0.75,
-            "CAL_C2.1_ho_raw_lo": 0.04, "CAL_C2.1_ho_raw_hi": 0.25, "CAL_C2.1_r2_min": 0.40,
-            "CAL_C2.1_slope_lo": 0.45, "CAL_C2.1_slope_hi": 1.60, "CAL_C2.1_diag_shk_frac": 0.50,
-            "CAL_C2.1_mu_raw_min": 0.70, "CAL_C2.1_mu_shk_max": 0.45,
-            "C2.2_gap_gate_min": 0.30, "C2.2_closure_pt_lo": 0.75, "C2.2_closure_pt_hi": 1.30,
-            "C2.2_closure_ci_lo": 0.55, "C2.2_closure_ci_hi": 1.50,
-            "EQ_C2.2_ctrl_std_pt": 0.25, "EQ_C2.2_ctrl_std_q95": 0.40,
-            "EQ_C2.2_ctrl_mis_pt": 0.35, "EQ_C2.2_ctrl_mis_q95": 0.50,
-            "EQ_C2.2_shape_open_min": 0.65, "EQ_C2.2_shape_diff_max": 0.35, "EQ_C2.2_kl_max": 0.25,
-            "C2.3_e_open_min": -1.20, "C2.3_gap_max": 0.60,
-            "C2.4a_bar7_pt": 1.40, "C2.4a_bar7_q05": 1.20,
-            "EQ_C2.4c_med_max": 0.20, "EQ_C2.4c_ci_bound": 0.30, "EQ_C2.4c_floor": 0.10,
+        """Parse EVERY design-registered threshold directly from OLMO3-TRANSPORT-C2-DESIGN.md via
+        sentence-scoped regexes (DS R2 F5: zero hand-copied duplicate threshold table!).
+        """
+        md = self.design_md
+
+        def _extract(pattern: str, *scales: float) -> tuple[float, ...]:
+            m = re.search(pattern, md)
+            self.assertIsNotNone(m, f"Design regex did not match: {pattern}")
+            vals = [float(g) for g in m.groups()]
+            if scales:
+                vals = [v * s for v, s in zip(vals, scales)]
+            return tuple(vals)
+
+        t_p95, t_p999 = _extract(r"4-term telescoping error `p95 <= ([0-9.]+)`, `p99\.9 <= ([0-9.]+)`")
+        rmsn20, rmsn12, fde45 = _extract(r"`>([0-9.]+)%` RMSNorm shrink, `26/1,728` `>([0-9.]+)%` shrink, `12/1,728` `\|fde_err\| > ([0-9.]+)`", 0.01, 0.01, 1.0)
+        (diag_eps,) = _extract(r"`ε = ([0-9.]+)` logit denominator guard")
+        b1_pt, b1_q05 = _extract(r"`p_C2\.1_ctr_vs_raw`[^\n]*`geomean >= ([0-9.]+)×` & `q05 > ([0-9.]+)×`")
+        b2_pt, b2_sc_pt, b2_sc_q05 = _extract(r"`p_C2\.1_shk_vs_ctr`[^\n]*`geomean >= ([0-9.]+)×` & `same_over_cross` ratio `>= ([0-9.]+)×` \(`q05 >= ([0-9.]+)×`\)")
+        b3_pt, b3_q05 = _extract(r"`p_C2\.1_shk_vs_ll`[^\n]*`geomean >= ([0-9.]+)×` & `q05 > ([0-9.]+)×`")
+        b4_pt, b4_q05 = _extract(r"`p_C2\.1_gain_ret`[^\n]*`geomean >= ([0-9.]+)×` & `q05 >= ([0-9.]+)×`")
+        c22_plo, c22_phi, c22_clo, c22_chi, c22_gap = _extract(r"`p_C2\.2_bare_into_chat`[^\n]*Point `∈ \[([0-9.]+), ([0-9.]+)\]` & `\[q05, q95\] ⊂ \[([0-9.]+), ([0-9.]+)\]` \(gated on `\\\|G_gap\\\| >= ([0-9.]+)`\)")
+        b7_pt, b7_q05 = _extract(r"`p_C2\.4a_mask_vs_unmask`[^\n]*`geomean >= ([0-9.]+)×` & `q05 > ([0-9.]+)×`")
+        cal_lo, cal_hi, cal_r2, sl_lo, sl_hi, df_shk, mu_raw, mu_shk = _extract(
+            r"`ho_cross_raw ∈ \[([0-9.]+), ([0-9.]+)\]`[^\n]*\*\*`R\^2 >= ([0-9.]+)`\*\* with \*\*slope `∈ \[([0-9.]+), ([0-9.]+)\]`\*\*, \(iii\) `diag_shk >= ([0-9.]+) ×[^\n]*`R_ridge_raw >= ([0-9.]+)` and `R_ridge_shrink <= ([0-9.]+)`"
+        )
+        std_pt, std_q95 = _extract(r"`ctrl_L4_16_MLP_LongBare_to_ChatML` `\|closure\| <= ([0-9.]+)`, `q95 <= ([0-9.]+)`")
+        mis_pt, mis_q95 = _extract(r"`ctrl_mismatch_prompt_MLP_L19_31` `\|closure\| <= ([0-9.]+)`, `q95 <= ([0-9.]+)`")
+        sh_open, sh_diff, kl_max = _extract(r"`closure_open >= ([0-9.]+)`, `\|closure_open - closure_func\| <= ([0-9.]+)`, and median unsteered patched `KL\(p_patched \|\| p_ref\) <= ([0-9.]+)`")
+        c23_eo, c23_gap = _extract(r"`E_open\(L\) >= (-?[0-9.]+)` AND `\|E_open\(L\) - E_func\(L\)\| <= ([0-9.]+)`")
+        k3_fl, k3_med, k3_ci = _extract(r"max\(\|Δ_L21 \+ Δ_L24 \+ Δ_L27\|, ([0-9.]+)\)[^\n]*`\|median\| <= ([0-9.]+)`, `90% BCa CI ⊂ \[-([0-9.]+), \+[0-9.]+\]`")
+
+        parsed = {
+            "C2.0.2_tele_p95_max": t_p95, "C2.0.2_tele_p999_max": t_p999,
+            "C2.0.3_rmsn_gt_20": rmsn20, "C2.0.3_rmsn_gt_12": rmsn12,
+            "C2.0.3_fde_gt_045": fde45, "C2.0.3_fde_gt_075": 0.75,  # non-gating diagnostic telemetry counter
+            "C2.1_diag_eps": diag_eps, "C2.1_bar1_pt": b1_pt, "C2.1_bar1_q05": b1_q05,
+            "C2.1_bar2_pt": b2_pt, "C2.1_bar2_sc_pt": b2_sc_pt, "C2.1_bar2_sc_q05": b2_sc_q05,
+            "C2.1_bar3_pt": b3_pt, "C2.1_bar3_q05": b3_q05, "C2.1_bar4_pt": b4_pt, "C2.1_bar4_q05": b4_q05,
+            "CAL_C2.1_ho_raw_lo": cal_lo, "CAL_C2.1_ho_raw_hi": cal_hi, "CAL_C2.1_r2_min": cal_r2,
+            "CAL_C2.1_slope_lo": sl_lo, "CAL_C2.1_slope_hi": sl_hi, "CAL_C2.1_diag_shk_frac": df_shk,
+            "CAL_C2.1_mu_raw_min": mu_raw, "CAL_C2.1_mu_shk_max": mu_shk,
+            "C2.2_gap_gate_min": c22_gap, "C2.2_closure_pt_lo": c22_plo, "C2.2_closure_pt_hi": c22_phi,
+            "C2.2_closure_ci_lo": c22_clo, "C2.2_closure_ci_hi": c22_chi,
+            "EQ_C2.2_ctrl_std_pt": std_pt, "EQ_C2.2_ctrl_std_q95": std_q95,
+            "EQ_C2.2_ctrl_mis_pt": mis_pt, "EQ_C2.2_ctrl_mis_q95": mis_q95,
+            "EQ_C2.2_shape_open_min": sh_open, "EQ_C2.2_shape_diff_max": sh_diff, "EQ_C2.2_kl_max": kl_max,
+            "C2.3_e_open_min": c23_eo, "C2.3_gap_max": c23_gap,
+            "C2.4a_bar7_pt": b7_pt, "C2.4a_bar7_q05": b7_q05,
+            "EQ_C2.4c_med_max": k3_med, "EQ_C2.4c_ci_bound": k3_ci, "EQ_C2.4c_floor": k3_fl,
         }
-        self.assertEqual(sc_mod.REGISTERED_THRESHOLDS, expected)
-        for phrase in ("p95 <= 0.08", "p99.9 <= 0.15", ">= 2.0×", "> 1.50×", ">= 1.15×", ">= 1.05×",
-                       ">= 1.35×", "> 1.15×", ">= 0.80×", ">= 0.75×", "[0.04, 0.25]", "R^2 >= 0.40",
-                       "[0.45, 1.60]", ">= 0.50 ×", ">= 0.70", "<= 0.45", "[0.75, 1.30]", "[0.55, 1.50]",
-                       "<= 0.25", "<= 0.40", "<= 0.35", "<= 0.50", ">= 0.65", ">= -1.20", "<= 0.60",
-                       ">= 1.40×", "> 1.20×", "<= 0.20", "[-0.30, +0.30]"):
-            self.assertIn(phrase, self.design_md)
+        self.assertEqual(sc_mod.REGISTERED_THRESHOLDS, parsed)
 
     def test_02_full_pass_byte_identity_and_refusals(self) -> None:
         s1 = self._score(self.base_receipt)
@@ -683,6 +722,185 @@ class TestStageC2ScorerStdlib(unittest.TestCase):
         self.assertTrue(s_c21["pillar_C2_1"]["shk_vs_ll"]["bar_pass"])
         self.assertTrue(s_c21["pillar_C2_1"]["gain_ret"]["bar_pass"])
         self.assertEqual(s_c21["confirmatory_verdicts"]["C2.1"], "PASS_CALIBRATED")
+
+    def test_08_pure_gate_table_tests_and_r2_closures(self) -> None:
+        """Round-2 (#123) closures:
+        1. Table tests just inside & just outside EVERY bound of EVERY pure gate evaluator (0/N mutate_uses.py survivors).
+        2. DS R2 F1: complete post_mlp_norms + full Block 1/2/2b/3 live dose checks.
+        3. DS R2 F3: missing cell / condition / shams / anchor returns clean BLOCKED_BY_C2.0 (never KeyError).
+        4. DS R2 F4: per-cell row counts reject compensated truncation (4->1 + 4->7, 8->2 + 8->14).
+        """
+        # --- 1. Pure gate table tests (inside & outside every bound, killing T[...]*1.1 & <=/>=) ---
+        # eval_c20_telescoping
+        self.assertTrue(sc_mod.eval_c20_telescoping(0, 0.08, 0.15))
+        self.assertFalse(sc_mod.eval_c20_telescoping(0, 0.084, 0.10))  # kills 0.08 * 1.1 = 0.088
+        self.assertFalse(sc_mod.eval_c20_telescoping(0, 0.05, 0.158))  # kills 0.15 * 1.1 = 0.165
+        self.assertFalse(sc_mod.eval_c20_telescoping(1, 0.01, 0.02))
+
+        # classify_rmsn_shrink & classify_fde_drift
+        self.assertEqual(sc_mod.classify_rmsn_shrink(0.21), (True, True))   # kills 0.20 * 1.1 = 0.22
+        self.assertEqual(sc_mod.classify_rmsn_shrink(0.20), (False, True))
+        self.assertEqual(sc_mod.classify_rmsn_shrink(0.125), (False, True)) # kills 0.12 * 1.1 = 0.132
+        self.assertEqual(sc_mod.classify_rmsn_shrink(0.12), (False, False))
+        self.assertEqual(sc_mod.classify_fde_drift(0.47), (True, False))    # kills 0.45 * 1.1 = 0.495
+        self.assertEqual(sc_mod.classify_fde_drift(0.45), (False, False))
+        self.assertEqual(sc_mod.classify_fde_drift(0.78), (True, True))     # kills 0.75 * 1.1 = 0.825
+        self.assertEqual(sc_mod.classify_fde_drift(0.75), (True, False))
+
+        # c21_diag_denom & is_c21_diag_guarded
+        self.assertEqual(sc_mod.c21_diag_denom(0.10), 0.25)                 # kills 0.25 * 1.1 = 0.275
+        self.assertTrue(sc_mod.is_c21_diag_guarded(0.25))
+        self.assertFalse(sc_mod.is_c21_diag_guarded(0.26))                  # kills 0.25 * 1.1 = 0.275
+
+        # eval_cal_c21: all 8 bounds just inside & just outside
+        base_cal = dict(ho_cross_raw_mean=0.10, cal_r2=0.80, cal_slope=1.0, scaled_diag_shk_3L=1.5, frozen_diag_shk_3L=2.0, mu_raw=0.90, mu_shk=0.20)
+        self.assertTrue(sc_mod.eval_cal_c21(**base_cal))
+        for kw, exp in [
+            ({"ho_cross_raw_mean": 0.04}, True),
+            ({"ho_cross_raw_mean": 0.042}, True),   # kills 0.04 * 1.1 = 0.044
+            ({"ho_cross_raw_mean": 0.039}, False),
+            ({"ho_cross_raw_mean": 0.25}, True),
+            ({"ho_cross_raw_mean": 0.26}, False),   # kills 0.25 * 1.1 = 0.275
+            ({"cal_r2": 0.40}, True),
+            ({"cal_r2": 0.42}, True),               # kills 0.40 * 1.1 = 0.44
+            ({"cal_r2": 0.39}, False),
+            ({"cal_slope": 0.45}, True),
+            ({"cal_slope": 0.47}, True),            # kills 0.45 * 1.1 = 0.495
+            ({"cal_slope": 0.44}, False),
+            ({"cal_slope": 1.60}, True),
+            ({"cal_slope": 1.68}, False),           # kills 1.60 * 1.1 = 1.76
+            ({"scaled_diag_shk_3L": 1.00}, True),   # 0.50 * 2.0 exact
+            ({"scaled_diag_shk_3L": 1.04}, True),   # kills 0.55 * 2.0 = 1.10
+            ({"scaled_diag_shk_3L": 0.99}, False),
+            ({"mu_raw": 0.70}, True),
+            ({"mu_raw": 0.73}, True),               # kills 0.70 * 1.1 = 0.77
+            ({"mu_raw": 0.69}, False),
+            ({"mu_shk": 0.45}, True),
+            ({"mu_shk": 0.47}, False),              # kills 0.45 * 1.1 = 0.495
+        ]:
+            self.assertEqual(sc_mod.eval_cal_c21(**(base_cal | kw)), exp, f"CAL-C2.1 failed on {kw}")
+
+        # eval_c22_gap_gate
+        self.assertTrue(sc_mod.eval_c22_gap_gate(0.30, 0.005, 0.50))        # kills >= -> >, 0.0 -> 0.01, 0.30*1.1=0.33
+        self.assertTrue(sc_mod.eval_c22_gap_gate(0.315, 0.10, 0.50))
+        self.assertFalse(sc_mod.eval_c22_gap_gate(0.29, 0.10, 0.50))
+        self.assertFalse(sc_mod.eval_c22_gap_gate(0.50, -0.05, 0.50))
+
+        # eval_eq_c22_ctrl (all 4 controls)
+        for cname in ("ctrl_L4_16_MLP_LongBare_to_ChatML", "ctrl_rand_iso_same_site_L19_31", "ctrl_self_attenuated_L19_31"):
+            self.assertTrue(sc_mod.eval_eq_c22_ctrl(cname, 0.25, 0.40))
+            self.assertFalse(sc_mod.eval_eq_c22_ctrl(cname, 0.26, 0.30))     # kills 0.25 * 1.1 = 0.275
+            self.assertFalse(sc_mod.eval_eq_c22_ctrl(cname, 0.10, 0.42))     # kills 0.40 * 1.1 = 0.44
+        self.assertTrue(sc_mod.eval_eq_c22_ctrl("ctrl_mismatch_prompt_MLP_L19_31", 0.35, 0.50))
+        self.assertFalse(sc_mod.eval_eq_c22_ctrl("ctrl_mismatch_prompt_MLP_L19_31", 0.37, 0.40))  # kills 0.35*1.1=0.385
+        self.assertFalse(sc_mod.eval_eq_c22_ctrl("ctrl_mismatch_prompt_MLP_L19_31", 0.10, 0.52))  # kills 0.50*1.1=0.55
+
+        # eval_eq_c22_shape_kl
+        self.assertTrue(sc_mod.eval_eq_c22_shape_kl(0.65, 1.00, 0.25))
+        self.assertTrue(sc_mod.eval_eq_c22_shape_kl(0.68, 0.68, 0.10))      # kills 0.65 * 1.1 = 0.715
+        self.assertFalse(sc_mod.eval_eq_c22_shape_kl(0.64, 0.64, 0.10))
+        self.assertFalse(sc_mod.eval_eq_c22_shape_kl(0.70, 1.07, 0.10))     # kills 0.35 * 1.1 = 0.385
+        self.assertFalse(sc_mod.eval_eq_c22_shape_kl(0.70, 0.70, 0.26))     # kills 0.25 * 1.1 = 0.275
+
+        # eval_c23_layer
+        self.assertTrue(sc_mod.eval_c23_layer(-1.20, -0.60, 0.50, 0.10))
+        self.assertFalse(sc_mod.eval_c23_layer(-1.26, -0.80, 0.50, 0.10))   # kills -1.20 * 1.1 = -1.32!
+        self.assertFalse(sc_mod.eval_c23_layer(-0.80, -0.17, 0.50, 0.10))   # kills 0.60 * 1.1 = 0.66
+        self.assertFalse(sc_mod.eval_c23_layer(-0.80, -0.80, 0.10, 0.50))
+
+        # is_c24c_floored, c24c_rel_int, eval_eq_c24c_verdict
+        self.assertTrue(sc_mod.is_c24c_floored(0.095))
+        self.assertFalse(sc_mod.is_c24c_floored(0.105))                     # kills 0.10 * 1.1 = 0.11
+        self.assertAlmostEqual(sc_mod.c24c_rel_int(0.10, 0.05), 0.50, places=6)  # kills 0.10 * 1.1 = 0.11
+        self.assertEqual(sc_mod.eval_eq_c24c_verdict(2, 0.20, -0.30, 0.30)[0], "ADDITIVE")
+        self.assertEqual(sc_mod.eval_eq_c24c_verdict(2, 0.21, -0.25, 0.25)[0], "INCONCLUSIVE")   # kills 0.20*1.1=0.22
+        self.assertEqual(sc_mod.eval_eq_c24c_verdict(2, 0.10, -0.25, 0.315)[0], "INCONCLUSIVE")  # kills 0.30*1.1=0.33
+        self.assertEqual(sc_mod.eval_eq_c24c_verdict(2, 0.40, 0.315, 0.50)[0], "NON_ADDITIVE")   # kills 0.30*1.1=0.33
+
+        # eval_bar_1 .. eval_bar_7 (every pt, q05, q95, lo, hi leg!)
+        self.assertTrue(sc_mod.eval_bar_1(True, 2.00, 1.55))                # kills 2.0*1.1=2.2, 1.5*1.1=1.65
+        self.assertFalse(sc_mod.eval_bar_1(True, 1.99, 1.80))
+        self.assertFalse(sc_mod.eval_bar_1(True, 2.50, 1.50))
+        self.assertTrue(sc_mod.eval_bar_2(True, 1.15, 1.15, 1.05))          # kills 1.15*1.1, 1.05*1.1
+        self.assertFalse(sc_mod.eval_bar_2(True, 1.14, 1.30, 1.20))
+        self.assertFalse(sc_mod.eval_bar_2(True, 1.30, 1.14, 1.10))
+        self.assertFalse(sc_mod.eval_bar_2(True, 1.30, 1.30, 1.04))
+        self.assertTrue(sc_mod.eval_bar_3(True, 1.35, 1.18))                # kills 1.35*1.1, 1.15*1.1
+        self.assertFalse(sc_mod.eval_bar_3(True, 1.34, 1.30))
+        self.assertFalse(sc_mod.eval_bar_3(True, 1.50, 1.15))
+        self.assertTrue(sc_mod.eval_bar_4(True, 0.80, 0.75))                # kills 0.80*1.1, 0.75*1.1
+        self.assertFalse(sc_mod.eval_bar_4(True, 0.79, 0.78))
+        self.assertFalse(sc_mod.eval_bar_4(True, 0.85, 0.74))
+        self.assertTrue(sc_mod.eval_bar_5_or_6(True, True, 0.75, 0.55, 1.50))   # kills 0.75*1.1, 0.55*1.1
+        self.assertTrue(sc_mod.eval_bar_5_or_6(True, True, 1.30, 0.55, 1.50))
+        self.assertFalse(sc_mod.eval_bar_5_or_6(True, True, 1.35, 0.80, 1.45))  # kills 1.30*1.1=1.43
+        self.assertFalse(sc_mod.eval_bar_5_or_6(True, True, 1.00, 0.80, 1.55))  # kills 1.50*1.1=1.65
+        self.assertFalse(sc_mod.eval_bar_5_or_6(True, True, 0.74, 0.55, 1.40))
+        self.assertFalse(sc_mod.eval_bar_5_or_6(True, True, 1.00, 0.54, 1.40))
+        self.assertTrue(sc_mod.eval_bar_7(True, 1.40, 1.25))                # kills 1.40*1.1, 1.20*1.1
+        self.assertFalse(sc_mod.eval_bar_7(True, 1.39, 1.30))
+        self.assertFalse(sc_mod.eval_bar_7(True, 1.50, 1.20))
+
+        # --- 2. DS R2 F1: missing/partial post_mlp_norms & Block 2 / 2b / 3 dose drift ---
+        r_nopmn = copy.deepcopy(self.base_receipt)
+        del r_nopmn["post_mlp_norms"]
+        s_nopmn = self._score(r_nopmn)
+        self.assertEqual(s_nopmn["confirmatory_verdicts"]["C2.0"], "FAIL")
+        self.assertFalse(s_nopmn["gate_C2_0"]["C2.0.3_linearity_and_completeness"]["pmn_complete_ok"])
+        self.assertFalse(s_nopmn["gate_C2_0"]["C2.0.3_linearity_and_completeness"]["dose_checks_ok"])
+
+        r_partpmn = copy.deepcopy(self.base_receipt)
+        del r_partpmn["post_mlp_norms"]["18"]
+        self.assertFalse(self._score(r_partpmn)["gate_C2_0"]["C2.0.3_linearity_and_completeness"]["dose_checks_ok"])
+
+        r_b2cap = copy.deepcopy(self.base_receipt)
+        r_b2cap["block2_C2_2"]["dose_cap"] = 999.0
+        self.assertFalse(self._score(r_b2cap)["gate_C2_0"]["C2.0.3_linearity_and_completeness"]["dose_checks_ok"])
+
+        r_b2row = copy.deepcopy(self.base_receipt)
+        t_c22 = self.c2_const["targets_24"][self.c2_const["c22_target_indices_12"][0]]["string"]
+        r_b2row["block2_C2_2"]["traces"]["unpatched_LongBare"]["0"][t_c22]["R_mf"]["dose"] = 99.0
+        self.assertFalse(self._score(r_b2row)["gate_C2_0"]["C2.0.3_linearity_and_completeness"]["dose_checks_ok"])
+
+        r_b2bd = copy.deepcopy(self.base_receipt)
+        r_b2bd["block2b_C2_3"]["24"]["dose"] = 999.0
+        self.assertFalse(self._score(r_b2bd)["gate_C2_0"]["C2.0.3_linearity_and_completeness"]["dose_checks_ok"])
+
+        r_b3d = copy.deepcopy(self.base_receipt)
+        t0 = self.c2_const["targets_24"][0]["string"]
+        t1 = self.c2_const["targets_24"][1]["string"]
+        r_b3d["block3_C2_4"]["doses"]["0.5"]["K3_combined"][t0][0]["dose"] = 999.0
+        self.assertFalse(self._score(r_b3d)["gate_C2_0"]["C2.0.3_linearity_and_completeness"]["dose_checks_ok"])
+
+        # --- 3. DS R2 F3: missing condition / cell / shams / anchor -> clean BLOCKED_BY_C2.0 (NEVER KeyError!) ---
+        for mutate_fn in (
+            lambda r: r["block2_C2_2"]["traces"].pop("ctrl_mismatch_prompt_MLP_L19_31"),
+            lambda r: r["block1_C2_1"]["18"]["arms"]["R_mf"].pop(t0),
+            lambda r: r.pop("shams"),
+            lambda r: r.pop("c0_anchor_colon"),
+        ):
+            r_miss = copy.deepcopy(self.base_receipt)
+            mutate_fn(r_miss)
+            s_miss = self._score(r_miss)
+            self.assertEqual(s_miss["confirmatory_verdicts"]["C2.0"], "FAIL")
+            self.assertEqual(s_miss["confirmatory_verdicts"]["C2.1"], "BLOCKED_BY_C2.0")
+            self.assertTrue(s_miss["blocked_by_c2_0"])
+            self.assertIn("schema_error", s_miss["gate_C2_0"])
+
+        # --- 4. DS R2 F4: compensated per-cell truncation (grand total unchanged!) fails C2.0.3 ---
+        r_comp3 = copy.deepcopy(self.base_receipt)
+        r_comp3["block3_C2_4"]["doses"]["0.5"]["L24.prenorm_ff_masked"][t0] = r_comp3["block3_C2_4"]["doses"]["0.5"]["L24.prenorm_ff_masked"][t0][:1]
+        r_comp3["block3_C2_4"]["doses"]["0.5"]["L24.prenorm_ff_masked"][t1] = r_comp3["block3_C2_4"]["doses"]["0.5"]["L24.prenorm_ff_masked"][t1] + r_comp3["block3_C2_4"]["doses"]["0.5"]["L24.prenorm_ff_masked"][t1][:3]
+        s_comp3 = self._score(r_comp3)
+        self.assertEqual(s_comp3["confirmatory_verdicts"]["C2.0"], "FAIL")
+        self.assertFalse(s_comp3["gate_C2_0"]["C2.0.3_linearity_and_completeness"]["per_cell_counts_ok"])
+
+        r_comp2b = copy.deepcopy(self.base_receipt)
+        r_comp2b["block2b_C2_3"]["18"]["logit_lens"][t0] = r_comp2b["block2b_C2_3"]["18"]["logit_lens"][t0][:2]
+        r_comp2b["block2b_C2_3"]["18"]["logit_lens"][t1] = r_comp2b["block2b_C2_3"]["18"]["logit_lens"][t1] + r_comp2b["block2b_C2_3"]["18"]["logit_lens"][t1][:6]
+        s_comp2b = self._score(r_comp2b)
+        self.assertEqual(s_comp2b["confirmatory_verdicts"]["C2.0"], "FAIL")
+        self.assertFalse(s_comp2b["gate_C2_0"]["C2.0.3_linearity_and_completeness"]["per_cell_counts_ok"])
 
 
 if __name__ == "__main__":

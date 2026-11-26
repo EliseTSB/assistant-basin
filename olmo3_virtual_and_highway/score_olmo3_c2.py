@@ -123,6 +123,154 @@ def expected_active_arm_names(c2_constants: dict[str, Any]) -> set[str]:
 
 
 # ---------------------------------------------------------------------------
+# Pure, table-testable gate evaluators (single source of truth for T[...] uses)
+# ---------------------------------------------------------------------------
+def eval_c20_telescoping(
+    nonfinite_count: int,
+    tele_p95: float | None,
+    tele_p999: float | None,
+    T: dict[str, float] = REGISTERED_THRESHOLDS,
+) -> bool:
+    return (
+        (nonfinite_count == 0)
+        and (tele_p95 is not None)
+        and (tele_p999 is not None)
+        and (tele_p95 <= T["C2.0.2_tele_p95_max"])
+        and (tele_p999 <= T["C2.0.2_tele_p999_max"])
+    )
+
+
+def classify_rmsn_shrink(shrink: float, T: dict[str, float] = REGISTERED_THRESHOLDS) -> tuple[bool, bool]:
+    return (shrink > T["C2.0.3_rmsn_gt_20"], shrink > T["C2.0.3_rmsn_gt_12"])
+
+
+def classify_fde_drift(fe: float, T: dict[str, float] = REGISTERED_THRESHOLDS) -> tuple[bool, bool]:
+    return (fe > T["C2.0.3_fde_gt_045"], fe > T["C2.0.3_fde_gt_075"])
+
+
+def c21_diag_denom(diag_val: float, T: dict[str, float] = REGISTERED_THRESHOLDS) -> float:
+    return max(abs(diag_val), T["C2.1_diag_eps"])
+
+
+def is_c21_diag_guarded(diag_val: float, T: dict[str, float] = REGISTERED_THRESHOLDS) -> bool:
+    return abs(diag_val) <= T["C2.1_diag_eps"]
+
+
+def eval_cal_c21(
+    ho_cross_raw_mean: float,
+    cal_r2: float,
+    cal_slope: float,
+    scaled_diag_shk_3L: float,
+    frozen_diag_shk_3L: float,
+    mu_raw: float,
+    mu_shk: float,
+    T: dict[str, float] = REGISTERED_THRESHOLDS,
+) -> bool:
+    return (
+        (T["CAL_C2.1_ho_raw_lo"] <= ho_cross_raw_mean <= T["CAL_C2.1_ho_raw_hi"])
+        and (cal_r2 >= T["CAL_C2.1_r2_min"])
+        and (T["CAL_C2.1_slope_lo"] <= cal_slope <= T["CAL_C2.1_slope_hi"])
+        and (scaled_diag_shk_3L >= T["CAL_C2.1_diag_shk_frac"] * frozen_diag_shk_3L)
+        and (mu_raw >= T["CAL_C2.1_mu_raw_min"])
+        and (mu_shk <= T["CAL_C2.1_mu_shk_max"])
+    )
+
+
+def eval_c22_gap_gate(pt: float, q05: float, q95: float, T: dict[str, float] = REGISTERED_THRESHOLDS) -> bool:
+    return (abs(pt) >= T["C2.2_gap_gate_min"]) and ((q05 > 0.0) or (q95 < 0.0))
+
+
+def eq_c22_ctrl_bounds(cname: str, T: dict[str, float] = REGISTERED_THRESHOLDS) -> tuple[float, float]:
+    if cname == "ctrl_mismatch_prompt_MLP_L19_31":
+        return (T["EQ_C2.2_ctrl_mis_pt"], T["EQ_C2.2_ctrl_mis_q95"])
+    if cname in ("ctrl_L4_16_MLP_LongBare_to_ChatML", "ctrl_rand_iso_same_site_L19_31", "ctrl_self_attenuated_L19_31"):
+        return (T["EQ_C2.2_ctrl_std_pt"], T["EQ_C2.2_ctrl_std_q95"])
+    raise ValueError(f"Unknown EQ-C2.2 control condition: {cname!r}")
+
+
+def eval_eq_c22_ctrl(cname: str, pt: float, q95: float, T: dict[str, float] = REGISTERED_THRESHOLDS) -> bool:
+    pt_max, ci_max = eq_c22_ctrl_bounds(cname, T)
+    return (abs(pt) <= pt_max) and (q95 <= ci_max)
+
+
+def eval_eq_c22_shape_kl(cl_open: float, cl_func: float, med_kl: float, T: dict[str, float] = REGISTERED_THRESHOLDS) -> bool:
+    return (
+        (cl_open >= T["EQ_C2.2_shape_open_min"])
+        and (abs(cl_open - cl_func) <= T["EQ_C2.2_shape_diff_max"])
+        and (med_kl <= T["EQ_C2.2_kl_max"])
+    )
+
+
+def eval_c23_layer(eo: float, ef: float, ro: float, rr: float, T: dict[str, float] = REGISTERED_THRESHOLDS) -> bool:
+    return (eo >= T["C2.3_e_open_min"]) and (abs(eo - ef) <= T["C2.3_gap_max"]) and (ro > rr)
+
+
+def is_c24c_floored(d_sum: float, T: dict[str, float] = REGISTERED_THRESHOLDS) -> bool:
+    return abs(d_sum) < T["EQ_C2.4c_floor"]
+
+
+def c24c_rel_int(d_k3: float, d_sum: float, T: dict[str, float] = REGISTERED_THRESHOLDS) -> float:
+    return (d_k3 - d_sum) / max(abs(d_sum), T["EQ_C2.4c_floor"])
+
+
+def eval_eq_c24c_verdict(
+    n_fl_05: int,
+    pt: float,
+    q05: float,
+    q95: float,
+    T: dict[str, float] = REGISTERED_THRESHOLDS,
+) -> tuple[str, str]:
+    eq_b = T["EQ_C2.4c_ci_bound"]
+    if n_fl_05 <= 2 and abs(pt) <= T["EQ_C2.4c_med_max"] and q05 >= -eq_b and q95 <= eq_b:
+        return ("ADDITIVE", "LICENSE_K3_SIMULTANEOUS")
+    if q05 > eq_b or q95 < -eq_b:
+        return ("NON_ADDITIVE", "RESTRICT_TO_SINGLE_LAYER_L24")
+    return ("INCONCLUSIVE", "REQUIRE_1_DOSE_C3_PILOT")
+
+
+def eval_bar_1(rejected: bool, pt: float, q05: float, T: dict[str, float] = REGISTERED_THRESHOLDS) -> bool:
+    return rejected and (pt >= T["C2.1_bar1_pt"]) and (q05 > T["C2.1_bar1_q05"])
+
+
+def eval_bar_2(rejected: bool, pt: float, sc_pt: float, sc_q05: float, T: dict[str, float] = REGISTERED_THRESHOLDS) -> bool:
+    return (
+        rejected
+        and (pt >= T["C2.1_bar2_pt"])
+        and (sc_pt >= T["C2.1_bar2_sc_pt"])
+        and (sc_q05 >= T["C2.1_bar2_sc_q05"])
+    )
+
+
+def eval_bar_3(rejected: bool, pt: float, q05: float, T: dict[str, float] = REGISTERED_THRESHOLDS) -> bool:
+    return rejected and (pt >= T["C2.1_bar3_pt"]) and (q05 > T["C2.1_bar3_q05"])
+
+
+def eval_bar_4(rejected: bool, pt: float, q05: float, T: dict[str, float] = REGISTERED_THRESHOLDS) -> bool:
+    return rejected and (pt >= T["C2.1_bar4_pt"]) and (q05 >= T["C2.1_bar4_q05"])
+
+
+def eval_bar_5_or_6(
+    gap_gate_pass: bool,
+    rejected: bool,
+    pt: float,
+    q05: float,
+    q95: float,
+    T: dict[str, float] = REGISTERED_THRESHOLDS,
+) -> bool:
+    return (
+        gap_gate_pass
+        and rejected
+        and (T["C2.2_closure_pt_lo"] <= pt <= T["C2.2_closure_pt_hi"])
+        and (q05 >= T["C2.2_closure_ci_lo"])
+        and (q95 <= T["C2.2_closure_ci_hi"])
+    )
+
+
+def eval_bar_7(rejected: bool, pt: float, q05: float, T: dict[str, float] = REGISTERED_THRESHOLDS) -> bool:
+    return rejected and (pt >= T["C2.4a_bar7_pt"]) and (q05 > T["C2.4a_bar7_q05"])
+
+
+# ---------------------------------------------------------------------------
 # Pure-stdlib I/O, hashing, and fail-closed statistics (`math.fsum`)
 # ---------------------------------------------------------------------------
 def sha256_file(path: Path) -> str:
@@ -396,194 +544,7 @@ def score_stage_c2(
     # ------------------------------------------------------------------
     # GLOBAL GATE C2.0 (Decided FIRST; short-circuits cleanly if FAIL!)
     # ------------------------------------------------------------------
-    # C2.0.1: 13 write shams + 6 patch shams == 0.0 exact; EXACT 61 active-arm names > 0.0 (GLM #4)
-    write_shams = receipt["shams"]["write_13"]
-    patch_shams = receipt["shams"]["patch_6"]
-    req_w = set(c2_constants["planned_budget"]["write_shams_list"])
-    req_p = set(c2_constants["planned_budget"]["patch_shams_list"])
-    shams_present_ok = (set(write_shams.keys()) == req_w) and (set(patch_shams.keys()) == req_p)
-    max_sham_w = max(abs(float(v)) for v in write_shams.values()) if write_shams else float("inf")
-    max_sham_p = max(abs(float(v)) for v in patch_shams.values()) if patch_shams else float("inf")
-    active_mins = receipt.get("active_arm_min_max_abs_dlogit", {})
-    exp_active_keys = expected_active_arm_names(c2_constants)
-    active_keys_ok = set(active_mins.keys()) == exp_active_keys
-    liveness_ok = active_keys_ok and all(float(v) > 0.0 for v in active_mins.values())
-    c2_0_1_pass = shams_present_ok and (max_sham_w == 0.0) and (max_sham_p == 0.0) and liveness_ok
-
-    # C2.0.2: Finiteness FIRST (never pass NaN to quantile/mean, GLM #3!) + 4-term telescoping
-    nonfinite_paths = audit_finiteness(receipt)
-    tele_errs: list[float] = []
-    if not nonfinite_paths:
-        for L in PRIMARY_C21_LAYERS:
-            for aname in C21_ARMS:
-                for ts in t_strs:
-                    for rec in receipt["block1_C2_1"][str(L)]["arms"][aname][ts]:
-                        tele_errs.append(abs(float(rec["telescoping_err"])))
-        for cname in c22_conds:
-            for pidx in range(12):
-                for ts in c22_t_strs:
-                    for aname in ("R_mf", "dm0"):
-                        rec = receipt["block2_C2_2"]["traces"][cname][str(pidx)][ts][aname]
-                        if not rec.get("capped", False):
-                            tele_errs.append(abs(float(rec["telescoping_err"])))
-        for L in SWEEP_LAYERS:
-            for ts in t_strs:
-                for rec in receipt["block2b_C2_3"][str(L)]["logit_lens"][ts]:
-                    tele_errs.append(abs(float(rec["telescoping_err"])))
-        tele_p95: float | None = quantile(tele_errs, 0.95) if tele_errs else None
-        tele_p999: float | None = quantile(tele_errs, 0.999) if tele_errs else None
-        c2_0_2_pass = (
-            (tele_p95 is not None)
-            and (tele_p999 is not None)
-            and (tele_p95 <= T["C2.0.2_tele_p95_max"])
-            and (tele_p999 <= T["C2.0.2_tele_p999_max"])
-        )
-    else:
-        tele_p95 = None
-        tele_p999 = None
-        c2_0_2_pass = False
-
-    # C2.0.3: Complete block row counts (GLM #2) + dose-scaling checks + Regime-N/D linearity ceilings
-    g203 = c2_constants["c2_0_3_named_gate_populations"]
-    pb = c2_constants["planned_budget"]
-    pmn_map = receipt.get("post_mlp_norms", {})
-
-    reg_n_n = reg_n_cap = reg_n_20 = reg_n_12 = 0
-    dose_checks_ok = True
-    if not nonfinite_paths:
-        for L in PRIMARY_C21_LAYERS:
-            if str(L) in pmn_map:
-                exp_d = 0.75 * float(pmn_map[str(L)])
-                if abs(float(receipt["block1_C2_1"][str(L)]["dose"]) - exp_d) > 1e-3:
-                    dose_checks_ok = False
-            for aname in C21_ARMS:
-                for ts in t_strs:
-                    for rec in receipt["block1_C2_1"][str(L)]["arms"][aname][ts]:
-                        reg_n_n += 1
-                        if rec.get("capped", False):
-                            reg_n_cap += 1
-                            continue
-                        rc, ri = float(rec["rms_clean"]), float(rec["rms_int"])
-                        shrink = abs(ri - rc) / max(rc, 1e-12)
-                        if shrink > T["C2.0.3_rmsn_gt_20"]:
-                            reg_n_20 += 1
-                        if shrink > T["C2.0.3_rmsn_gt_12"]:
-                            reg_n_12 += 1
-
-    reg_d_n = reg_d_cap = reg_d_20 = reg_d_12 = reg_d_fde45 = reg_d_fde75 = 0
-    c22_patched_n = c22_patched_cap = 0
-    fde_errs: list[float] = []
-    if not nonfinite_paths:
-        for cname in c22_conds:
-            is_unp = cname in ("unpatched_LongBare", "unpatched_ChatML", "unpatched_ShortBare")
-            for pidx in range(12):
-                for ts in c22_t_strs:
-                    for aname in ("R_mf", "dm0"):
-                        rec = receipt["block2_C2_2"]["traces"][cname][str(pidx)][ts][aname]
-                        if is_unp:
-                            reg_d_n += 1
-                            if rec.get("capped", False):
-                                reg_d_cap += 1
-                                continue
-                            rc, ri = float(rec["rms_clean"]), float(rec["rms_int"])
-                            shrink = abs(ri - rc) / max(rc, 1e-12)
-                            if shrink > T["C2.0.3_rmsn_gt_20"]:
-                                reg_d_20 += 1
-                            if shrink > T["C2.0.3_rmsn_gt_12"]:
-                                reg_d_12 += 1
-                            fe = abs(float(rec["frozen_direct_effect"]) - 3.0)
-                            fde_errs.append(fe)
-                            if fe > T["C2.0.3_fde_gt_045"]:
-                                reg_d_fde45 += 1
-                            if fe > T["C2.0.3_fde_gt_075"]:
-                                reg_d_fde75 += 1
-                        else:
-                            c22_patched_n += 1
-                            if rec.get("capped", False):
-                                c22_patched_cap += 1
-
-    b2_unsteered_n = sum(len(rows) for rows in receipt["block2_C2_2"]["unsteered_patched_kl"].values())
-    b2b_ll_n = sum(len(receipt["block2b_C2_3"][str(L)]["logit_lens"][ts]) for L in SWEEP_LAYERS for ts in t_strs)
-    b2b_ri_n = sum(len(receipt["block2b_C2_3"][str(L)]["rand_iso"]) for L in SWEEP_LAYERS)
-    b3_n = sum(len(receipt["block3_C2_4"]["doses"][m][ak][ts]) for m in ("0.5", "1.25") for ak in C24_ARM_KEYS for ts in t_strs)
-    anc_n = len(receipt["c0_anchor_colon"])
-
-    all_counts_ok = (
-        (reg_n_n == pb["block1_C2_1_3L_5arms_24x8"])
-        and (reg_d_n == g203["regime_D_C22_unpatched_population_N"])
-        and (reg_d_n + c22_patched_n == pb["block2_C2_2_steered_9cond_12t_12p_2arms"])
-        and (b2_unsteered_n == pb["block2_C2_2_unsteered_patched_kl_6cond_12p"])
-        and (b2b_ll_n + b2b_ri_n == pb["block2b_C2_3_5L_32v_8p"])
-        and (b2b_ll_n == 5 * 24 * 8)
-        and (b2b_ri_n == 5 * 8 * 8)
-        and (b3_n == pb["block3_C2_4_9arms_24t_4p_2doses"])
-        and (anc_n == pb["c0_colon_anchor_pairs_16"])
-    )
-    fde_p95: float | None = quantile(fde_errs, 0.95) if fde_errs else None
-    c2_0_3_pass = (
-        (not nonfinite_paths)
-        and all_counts_ok
-        and dose_checks_ok
-        and (reg_n_cap <= g203["regime_N_max_capped"])
-        and (reg_n_20 <= g203["regime_N_max_rmsn_gt_20pct"])
-        and (reg_n_12 <= g203["regime_N_max_rmsn_gt_12pct"])
-        and (reg_d_cap <= g203["regime_D_max_capped"])
-        and (c22_patched_cap == 0)
-        and (reg_d_20 <= g203["regime_D_max_rmsn_gt_20pct"])
-        and (reg_d_12 <= g203["regime_D_max_rmsn_gt_12pct"])
-        and (fde_p95 is not None)
-        and (fde_p95 <= g203["regime_D_fde_p95_max"])
-        and (reg_d_fde45 <= g203["regime_D_max_fde_gt_045"])
-    )
-
-    # C2.0.4: Frozen SHA-256 Provenance
-    ph = meta.get("provenance_hashes", {})
-    c2_0_4_pass = (
-        strict_provenance
-        and (design_sha256 == EXPECTED_C2_DESIGN_SHA256)
-        and (constants_sha256 == EXPECTED_C2_CONSTANTS_SHA256)
-        and (ph.get("r_lens_sha256") == EXPECTED_R_LENS_SHA256)
-        and (ph.get("c2_constants_sha256") == EXPECTED_C2_CONSTANTS_SHA256)
-        and (ph.get("c2_bank_sha256") == EXPECTED_C2_BANK_SHA256)
-        and (ph.get("c2_design_sha256") == EXPECTED_C2_DESIGN_SHA256)
-    )
-
-    c2_0_pass = c2_0_1_pass and c2_0_2_pass and c2_0_3_pass and c2_0_4_pass
-
-    gate_c2_0_doc = {
-        "pass": c2_0_pass,
-        "C2.0.1_shams_and_liveness": {
-            "pass": c2_0_1_pass, "shams_present_ok": shams_present_ok, "active_keys_exact_ok": active_keys_ok,
-            "max_write_sham": max_sham_w, "max_patch_sham": max_sham_p, "liveness_ok": liveness_ok,
-        },
-        "C2.0.2_finiteness_and_telescoping": {
-            "pass": c2_0_2_pass, "nonfinite_count": len(nonfinite_paths),
-            "nonfinite_sample": nonfinite_paths[:5],
-            "tele_p95": round(tele_p95, 6) if tele_p95 is not None else None,
-            "tele_p999": round(tele_p999, 6) if tele_p999 is not None else None,
-        },
-        "C2.0.3_linearity_and_completeness": {
-            "pass": c2_0_3_pass,
-            "all_block_counts_ok": all_counts_ok,
-            "dose_checks_ok": dose_checks_ok,
-            "block_row_counts": {
-                "block1_C2_1": reg_n_n, "block2_unpatched": reg_d_n, "block2_patched": c22_patched_n,
-                "block2_unsteered_kl": b2_unsteered_n, "block2b_logit_lens": b2b_ll_n,
-                "block2b_rand_iso": b2b_ri_n, "block3_C2_4": b3_n, "c0_anchor_colon": anc_n,
-            },
-            "regime_N": {"N": reg_n_n, "capped": reg_n_cap, "rmsn_gt_20": reg_n_20, "rmsn_gt_12": reg_n_12},
-            "regime_D": {
-                "N": reg_d_n, "capped": reg_d_cap, "patched_capped": c22_patched_cap,
-                "rmsn_gt_20": reg_d_20, "rmsn_gt_12": reg_d_12,
-                "fde_p95": round(fde_p95, 6) if fde_p95 is not None else None,
-                "fde_gt_045": reg_d_fde45, "fde_gt_075_diagnostic": reg_d_fde75,
-            },
-        },
-        "C2.0.4_provenance": {"pass": c2_0_4_pass, "strict": strict_provenance, "receipt_hashes": ph},
-    }
-
-    # Short-circuit cleanly on ANY C2.0 failure (GLM #3, DS F3: never crash on NaNs or capped traces!)
-    if not c2_0_pass:
+    def _blocked_scorecard(gate_doc: dict[str, Any]) -> dict[str, Any]:
         return {
             "schema_version": "olmo3-stage-c2-scorecard-v4",
             "confirmatory_verdicts": {
@@ -594,10 +555,299 @@ def score_stage_c2(
                 "C2.4a": "BLOCKED_BY_C2.0",
                 "EQ-C2.4c": "BLOCKED_BY_C2.0",
             },
-            "gate_C2_0": gate_c2_0_doc,
+            "gate_C2_0": gate_doc,
             "blocked_by_c2_0": True,
             "holm_7_family": {},
         }
+
+    try:
+        # C2.0.1: 13 write shams + 6 patch shams == 0.0 exact; EXACT 61 active-arm names > 0.0 (GLM #4)
+        shams_obj = receipt["shams"]
+        write_shams = shams_obj["write_13"]
+        patch_shams = shams_obj["patch_6"]
+        req_w = set(c2_constants["planned_budget"]["write_shams_list"])
+        req_p = set(c2_constants["planned_budget"]["patch_shams_list"])
+        shams_present_ok = (set(write_shams.keys()) == req_w) and (set(patch_shams.keys()) == req_p)
+        max_sham_w = max(abs(float(v)) for v in write_shams.values()) if write_shams else float("inf")
+        max_sham_p = max(abs(float(v)) for v in patch_shams.values()) if patch_shams else float("inf")
+        active_mins = receipt["active_arm_min_max_abs_dlogit"]
+        exp_active_keys = expected_active_arm_names(c2_constants)
+        active_keys_ok = set(active_mins.keys()) == exp_active_keys
+        liveness_ok = active_keys_ok and all(float(v) > 0.0 for v in active_mins.values())
+        c2_0_1_pass = shams_present_ok and (max_sham_w == 0.0) and (max_sham_p == 0.0) and liveness_ok
+
+        # C2.0.2: Finiteness FIRST (never pass NaN to quantile/mean, GLM #3!) + 4-term telescoping
+        nonfinite_paths = audit_finiteness(receipt)
+        tele_errs: list[float] = []
+        if not nonfinite_paths:
+            for L in PRIMARY_C21_LAYERS:
+                for aname in C21_ARMS:
+                    for ts in t_strs:
+                        for rec in receipt["block1_C2_1"][str(L)]["arms"][aname][ts]:
+                            tele_errs.append(abs(float(rec["telescoping_err"])))
+            for cname in c22_conds:
+                for pidx in range(12):
+                    for ts in c22_t_strs:
+                        for aname in ("R_mf", "dm0"):
+                            rec = receipt["block2_C2_2"]["traces"][cname][str(pidx)][ts][aname]
+                            if not rec.get("capped", False):
+                                tele_errs.append(abs(float(rec["telescoping_err"])))
+            for L in SWEEP_LAYERS:
+                for ts in t_strs:
+                    for rec in receipt["block2b_C2_3"][str(L)]["logit_lens"][ts]:
+                        tele_errs.append(abs(float(rec["telescoping_err"])))
+            tele_p95: float | None = quantile(tele_errs, 0.95) if tele_errs else None
+            tele_p999: float | None = quantile(tele_errs, 0.999) if tele_errs else None
+            c2_0_2_pass = eval_c20_telescoping(len(nonfinite_paths), tele_p95, tele_p999, T)
+        else:
+            tele_p95 = None
+            tele_p999 = None
+            c2_0_2_pass = False
+
+        # C2.0.3: Per-cell row counts (DS R2 F4) + full live pmn dose checks (DS R2 F1) + Regime-N/D ceilings
+        g203 = c2_constants["c2_0_3_named_gate_populations"]
+        pb = c2_constants["planned_budget"]
+        pmn_map = receipt.get("post_mlp_norms")
+        pmn_complete_ok = (
+            isinstance(pmn_map, dict)
+            and all(str(L) in pmn_map and math.isfinite(float(pmn_map[str(L)])) and float(pmn_map[str(L)]) > 0.0 for L in range(32))
+        )
+        unmasked_eff_l24 = float(c2_constants["prenorm_gamma_mask_geometry"]["24"]["ff"]["unmasked_deliverable_frac"])
+        pr_map_c20 = c2_constants["c22_l18_frozen_pred_ret"]
+
+        reg_n_n = reg_n_cap = reg_n_20 = reg_n_12 = 0
+        dose_checks_ok = pmn_complete_ok
+        per_cell_counts_ok = True
+        if not nonfinite_paths:
+            for L in PRIMARY_C21_LAYERS:
+                if pmn_complete_ok:
+                    exp_d = 0.75 * float(pmn_map[str(L)])
+                    if abs(float(receipt["block1_C2_1"][str(L)]["dose"]) - exp_d) > 1e-3:
+                        dose_checks_ok = False
+                for aname in C21_ARMS:
+                    for ts in t_strs:
+                        rows = receipt["block1_C2_1"][str(L)]["arms"][aname][ts]
+                        if len(rows) != 8:
+                            per_cell_counts_ok = False
+                        for rec in rows:
+                            reg_n_n += 1
+                            if rec.get("capped", False):
+                                reg_n_cap += 1
+                                continue
+                            rc, ri = float(rec["rms_clean"]), float(rec["rms_int"])
+                            shrink = abs(ri - rc) / max(rc, 1e-12)
+                            gt20, gt12 = classify_rmsn_shrink(shrink, T)
+                            if gt20:
+                                reg_n_20 += 1
+                            if gt12:
+                                reg_n_12 += 1
+
+        reg_d_n = reg_d_cap = reg_d_20 = reg_d_12 = reg_d_fde45 = reg_d_fde75 = 0
+        c22_patched_n = c22_patched_cap = 0
+        fde_errs: list[float] = []
+        if not nonfinite_paths:
+            b2_obj = receipt["block2_C2_2"]
+            if pmn_complete_ok:
+                exp_cap_l18 = 3.0 * float(pmn_map["18"])
+                if "dose_cap" not in b2_obj or abs(float(b2_obj["dose_cap"]) - exp_cap_l18) > 1e-3:
+                    dose_checks_ok = False
+            b2_traces = b2_obj["traces"]
+            if set(b2_traces.keys()) != set(c22_conds):
+                per_cell_counts_ok = False
+            for cname in c22_conds:
+                is_unp = cname in ("unpatched_LongBare", "unpatched_ChatML", "unpatched_ShortBare")
+                for pidx in range(12):
+                    for ts in c22_t_strs:
+                        u_dot_w = float(pr_map_c20[ts]["u_dot_w_Rmf"])
+                        for aname in ("R_mf", "dm0"):
+                            rec = b2_traces[cname][str(pidx)][ts][aname]
+                            if is_unp:
+                                reg_d_n += 1
+                                if rec.get("capped", False):
+                                    reg_d_cap += 1
+                                    continue
+                                rc, ri = float(rec["rms_clean"]), float(rec["rms_int"])
+                                if pmn_complete_ok:
+                                    if "dose" not in rec:
+                                        dose_checks_ok = False
+                                    else:
+                                        d_obs = float(rec["dose"])
+                                        if d_obs > 3.0 * float(pmn_map["18"]) + 1e-3 or abs(d_obs - 3.0 * rc / u_dot_w) > 1e-2:
+                                            dose_checks_ok = False
+                                shrink = abs(ri - rc) / max(rc, 1e-12)
+                                gt20, gt12 = classify_rmsn_shrink(shrink, T)
+                                if gt20:
+                                    reg_d_20 += 1
+                                if gt12:
+                                    reg_d_12 += 1
+                                fe = abs(float(rec["frozen_direct_effect"]) - 3.0)
+                                fde_errs.append(fe)
+                                gt45, gt75 = classify_fde_drift(fe, T)
+                                if gt45:
+                                    reg_d_fde45 += 1
+                                if gt75:
+                                    reg_d_fde75 += 1
+                            else:
+                                c22_patched_n += 1
+                                if rec.get("capped", False):
+                                    c22_patched_cap += 1
+                                elif pmn_complete_ok:
+                                    if "dose" not in rec:
+                                        dose_checks_ok = False
+                                    else:
+                                        rc = float(rec["rms_clean"])
+                                        d_obs = float(rec["dose"])
+                                        if d_obs > 3.0 * float(pmn_map["18"]) + 1e-3 or abs(d_obs - 3.0 * rc / u_dot_w) > 1e-2:
+                                            dose_checks_ok = False
+
+        patched_conds = [c for c in c22_conds if not c.startswith("unpatched_")]
+        b2_unsteered_map = receipt["block2_C2_2"]["unsteered_patched_kl"]
+        if set(b2_unsteered_map.keys()) != set(patched_conds):
+            per_cell_counts_ok = False
+        b2_unsteered_n = 0
+        for cname in patched_conds:
+            u_rows = b2_unsteered_map[cname]
+            if len(u_rows) != 12:
+                per_cell_counts_ok = False
+            b2_unsteered_n += len(u_rows)
+
+        b2b_ll_n = 0
+        b2b_ri_n = 0
+        for L in SWEEP_LAYERS:
+            blk = receipt["block2b_C2_3"][str(L)]
+            if pmn_complete_ok and not nonfinite_paths:
+                if abs(float(blk["dose"]) - 0.75 * float(pmn_map[str(L)])) > 1e-3:
+                    dose_checks_ok = False
+            for ts in t_strs:
+                ll_rows = blk["logit_lens"][ts]
+                if len(ll_rows) != 8:
+                    per_cell_counts_ok = False
+                b2b_ll_n += len(ll_rows)
+            ri_rows = blk["rand_iso"]
+            if len(ri_rows) != 64:
+                per_cell_counts_ok = False
+            b2b_ri_n += len(ri_rows)
+
+        b3_n = 0
+        for m in ("0.5", "1.25"):
+            mult = float(m)
+            for ak in C24_ARM_KEYS:
+                exp_b3_d: float | None = None
+                if pmn_complete_ok:
+                    pmn21, pmn24, pmn27 = float(pmn_map["21"]), float(pmn_map["24"]), float(pmn_map["27"])
+                    if ak == "L21.prenorm_ff_masked":
+                        exp_b3_d = mult * pmn21
+                    elif ak == "L27.prenorm_ff_masked":
+                        exp_b3_d = mult * pmn27
+                    elif ak == "L24.prenorm_ff_unmasked_postmatched":
+                        exp_b3_d = (mult * pmn24) / unmasked_eff_l24
+                    elif ak == "K3_combined":
+                        exp_b3_d = mult * (pmn21 + pmn24 + pmn27)
+                    else:
+                        exp_b3_d = mult * pmn24
+                for ts in t_strs:
+                    b3_rows = receipt["block3_C2_4"]["doses"][m][ak][ts]
+                    if len(b3_rows) != 4:
+                        per_cell_counts_ok = False
+                    b3_n += len(b3_rows)
+                    if exp_b3_d is not None and not nonfinite_paths:
+                        for row in b3_rows:
+                            if row.get("capped", False):
+                                continue
+                            if "dose" not in row or abs(float(row["dose"]) - exp_b3_d) > 1e-3:
+                                dose_checks_ok = False
+
+        exp_anc_ids = {p["id"] for p in c2_constants["c0_anchor_colon_prediction"]["prompts_16"]}
+        anc_map = receipt["c0_anchor_colon"]
+        if set(anc_map.keys()) != exp_anc_ids:
+            per_cell_counts_ok = False
+        anc_n = len(anc_map)
+
+        all_counts_ok = (
+            per_cell_counts_ok
+            and (reg_n_n == pb["block1_C2_1_3L_5arms_24x8"])
+            and (reg_d_n == g203["regime_D_C22_unpatched_population_N"])
+            and (reg_d_n + c22_patched_n == pb["block2_C2_2_steered_9cond_12t_12p_2arms"])
+            and (b2_unsteered_n == pb["block2_C2_2_unsteered_patched_kl_6cond_12p"])
+            and (b2b_ll_n + b2b_ri_n == pb["block2b_C2_3_5L_32v_8p"])
+            and (b2b_ll_n == 5 * 24 * 8)
+            and (b2b_ri_n == 5 * 8 * 8)
+            and (b3_n == pb["block3_C2_4_9arms_24t_4p_2doses"])
+            and (anc_n == pb["c0_colon_anchor_pairs_16"])
+        )
+        fde_p95: float | None = quantile(fde_errs, 0.95) if fde_errs else None
+        c2_0_3_pass = (
+            (not nonfinite_paths)
+            and all_counts_ok
+            and dose_checks_ok
+            and (reg_n_cap <= g203["regime_N_max_capped"])
+            and (reg_n_20 <= g203["regime_N_max_rmsn_gt_20pct"])
+            and (reg_n_12 <= g203["regime_N_max_rmsn_gt_12pct"])
+            and (reg_d_cap <= g203["regime_D_max_capped"])
+            and (c22_patched_cap == 0)
+            and (reg_d_20 <= g203["regime_D_max_rmsn_gt_20pct"])
+            and (reg_d_12 <= g203["regime_D_max_rmsn_gt_12pct"])
+            and (fde_p95 is not None)
+            and (fde_p95 <= g203["regime_D_fde_p95_max"])
+            and (reg_d_fde45 <= g203["regime_D_max_fde_gt_045"])
+        )
+
+        # C2.0.4: Frozen SHA-256 Provenance
+        ph = meta.get("provenance_hashes", {})
+        c2_0_4_pass = (
+            strict_provenance
+            and (design_sha256 == EXPECTED_C2_DESIGN_SHA256)
+            and (constants_sha256 == EXPECTED_C2_CONSTANTS_SHA256)
+            and (ph.get("r_lens_sha256") == EXPECTED_R_LENS_SHA256)
+            and (ph.get("c2_constants_sha256") == EXPECTED_C2_CONSTANTS_SHA256)
+            and (ph.get("c2_bank_sha256") == EXPECTED_C2_BANK_SHA256)
+            and (ph.get("c2_design_sha256") == EXPECTED_C2_DESIGN_SHA256)
+        )
+
+        c2_0_pass = c2_0_1_pass and c2_0_2_pass and c2_0_3_pass and c2_0_4_pass
+
+        gate_c2_0_doc = {
+            "pass": c2_0_pass,
+            "C2.0.1_shams_and_liveness": {
+                "pass": c2_0_1_pass, "shams_present_ok": shams_present_ok, "active_keys_exact_ok": active_keys_ok,
+                "max_write_sham": max_sham_w, "max_patch_sham": max_sham_p, "liveness_ok": liveness_ok,
+            },
+            "C2.0.2_finiteness_and_telescoping": {
+                "pass": c2_0_2_pass, "nonfinite_count": len(nonfinite_paths),
+                "nonfinite_sample": nonfinite_paths[:5],
+                "tele_p95": round(tele_p95, 6) if tele_p95 is not None else None,
+                "tele_p999": round(tele_p999, 6) if tele_p999 is not None else None,
+            },
+            "C2.0.3_linearity_and_completeness": {
+                "pass": c2_0_3_pass,
+                "all_block_counts_ok": all_counts_ok,
+                "per_cell_counts_ok": per_cell_counts_ok,
+                "pmn_complete_ok": pmn_complete_ok,
+                "dose_checks_ok": dose_checks_ok,
+                "block_row_counts": {
+                    "block1_C2_1": reg_n_n, "block2_unpatched": reg_d_n, "block2_patched": c22_patched_n,
+                    "block2_unsteered_kl": b2_unsteered_n, "block2b_logit_lens": b2b_ll_n,
+                    "block2b_rand_iso": b2b_ri_n, "block3_C2_4": b3_n, "c0_anchor_colon": anc_n,
+                },
+                "regime_N": {"N": reg_n_n, "capped": reg_n_cap, "rmsn_gt_20": reg_n_20, "rmsn_gt_12": reg_n_12},
+                "regime_D": {
+                    "N": reg_d_n, "capped": reg_d_cap, "patched_capped": c22_patched_cap,
+                    "rmsn_gt_20": reg_d_20, "rmsn_gt_12": reg_d_12,
+                    "fde_p95": round(fde_p95, 6) if fde_p95 is not None else None,
+                    "fde_gt_045": reg_d_fde45, "fde_gt_075_diagnostic": reg_d_fde75,
+                },
+            },
+            "C2.0.4_provenance": {"pass": c2_0_4_pass, "strict": strict_provenance, "receipt_hashes": ph},
+        }
+    except (KeyError, TypeError, AttributeError, ValueError) as exc:
+        return _blocked_scorecard({
+            "pass": False,
+            "schema_error": f"{type(exc).__name__}: {exc}",
+        })
+
+    # Short-circuit cleanly on ANY C2.0 failure (GLM #3, DS F3: never crash on missing cells, NaNs, or capped traces!)
+    if not c2_0_pass:
+        return _blocked_scorecard(gate_c2_0_doc)
 
     # Non-gating C0-colon anchor prediction
     anc_raw = receipt["c0_anchor_colon"]
@@ -625,7 +875,6 @@ def score_stage_c2(
     # ------------------------------------------------------------------
     # PILLAR 1: C2.1 On-Model Arm Comparison (Holm 1-4) & Gate CAL-C2.1
     # ------------------------------------------------------------------
-    diag_eps = T["C2.1_diag_eps"]
     diag_by_arm_i_L: dict[str, dict[int, dict[int, float]]] = {a: {i: {} for i in range(24)} for a in C21_ARMS}
     ho_cross_by_arm_i_L: dict[str, dict[int, dict[int, float]]] = {a: {i: {} for i in prim_idxs} for a in C21_ARMS}
     same_by_arm_i_L: dict[str, dict[int, dict[int, float]]] = {a: {i: {} for i in range(24)} for a in C21_ARMS}
@@ -644,8 +893,8 @@ def score_stage_c2(
                 rows = receipt["block1_C2_1"][str(L)]["arms"][a][t_strs[i]]
                 diag_iL = mean([float(r["all_24_dlogits"][i]) for r in rows])
                 diag_by_arm_i_L[a][i][L] = diag_iL
-                denom = max(abs(diag_iL), diag_eps)
-                if abs(diag_iL) <= diag_eps and i in prim_idxs:
+                denom = c21_diag_denom(diag_iL, T)
+                if is_c21_diag_guarded(diag_iL, T) and i in prim_idxs:
                     guarded_sources_by_arm[a].add(i)
 
                 for j in range(24):
@@ -661,7 +910,7 @@ def score_stage_c2(
                     ho_abs = mean([abs(float(r["all_24_dlogits"][j])) for r in rows for j in ho_idxs if strata[j] != strata[i]])
                     ho_cross_by_arm_i_L[a][i][L] = ho_abs / denom
                     for pi, r in enumerate(rows):
-                        p_ho = mean([abs(float(r["all_24_dlogits"][j])) for j in ho_idxs if strata[j] != strata[i]]) / max(abs(float(r["all_24_dlogits"][i])), diag_eps)
+                        p_ho = mean([abs(float(r["all_24_dlogits"][j])) for j in ho_idxs if strata[j] != strata[i]]) / c21_diag_denom(float(r["all_24_dlogits"][i]), T)
                         per_prompt_ho_cross[a][pi].setdefault(i, []).append(p_ho)
 
             mat24_by_L_arm[L][a] = M_raw
@@ -731,13 +980,15 @@ def score_stage_c2(
     frozen_diag_shk_3L = mean([float(c2_constants["layer_geometry"][str(L)]["frozen_lens_transfer_preds_24"]["R_ridge_shrink"]["diag_unit_gain_mean"]) for L in PRIMARY_C21_LAYERS])
     scaled_diag_shk_3L = mean([mat24_scaled_by_L_arm[L]["R_ridge_shrink"][i][i] for L in PRIMARY_C21_LAYERS for i in range(24)])
 
-    cal_c21_pass = (
-        (T["CAL_C2.1_ho_raw_lo"] <= ho_cross_raw_mean <= T["CAL_C2.1_ho_raw_hi"])
-        and (cal_r2 >= T["CAL_C2.1_r2_min"])
-        and (T["CAL_C2.1_slope_lo"] <= cal_slope <= T["CAL_C2.1_slope_hi"])
-        and (scaled_diag_shk_3L >= T["CAL_C2.1_diag_shk_frac"] * frozen_diag_shk_3L)
-        and (mu_cos_by_arm["R_ridge_raw"]["mean_3L"] >= T["CAL_C2.1_mu_raw_min"])
-        and (mu_cos_by_arm["R_ridge_shrink"]["mean_3L"] <= T["CAL_C2.1_mu_shk_max"])
+    cal_c21_pass = eval_cal_c21(
+        ho_cross_raw_mean,
+        cal_r2,
+        cal_slope,
+        scaled_diag_shk_3L,
+        frozen_diag_shk_3L,
+        mu_cos_by_arm["R_ridge_raw"]["mean_3L"],
+        mu_cos_by_arm["R_ridge_shrink"]["mean_3L"],
+        T,
     )
 
     arm_cross_all_means = {a: round(mean(cross_i_arm[a]), 4) for a in C21_ARMS}
@@ -786,8 +1037,8 @@ def score_stage_c2(
     ci_len = bca_cluster_ci(12, lambda idx: mean([len_pairs[i] for i in idx]), n_boot=n_boot, seed=BCA_SEED + 11)
     g_gap = ci_gap["point"]
     s_sign = 1.0 if g_gap >= 0.0 else -1.0
-    gap_gate_pass = (abs(g_gap) >= T["C2.2_gap_gate_min"]) and ((ci_gap["q_0.05"] > 0.0) or (ci_gap["q_0.95"] < 0.0))
-    len_gap_present = (abs(ci_len["point"]) >= T["C2.2_gap_gate_min"]) and ((ci_len["q_0.05"] > 0.0) or (ci_len["q_0.95"] < 0.0))
+    gap_gate_pass = eval_c22_gap_gate(g_gap, ci_gap["q_0.05"], ci_gap["q_0.95"], T)
+    len_gap_present = eval_c22_gap_gate(ci_len["point"], ci_len["q_0.05"], ci_len["q_0.95"], T)
 
     def _closure_stat(deltas: list[float], gaps: list[float], idx: list[int]) -> float:
         g_sub = mean([gaps[i] for i in idx])
@@ -804,17 +1055,17 @@ def score_stage_c2(
     ci_c2b = bca_cluster_ci(12, lambda idx: _closure_stat(del_c2b, gap_pairs, idx), n_boot=n_boot, seed=BCA_SEED + 13)
 
     ctrl_specs = [
-        ("ctrl_L4_16_MLP_LongBare_to_ChatML", T["EQ_C2.2_ctrl_std_pt"], T["EQ_C2.2_ctrl_std_q95"], 14),
-        ("ctrl_rand_iso_same_site_L19_31", T["EQ_C2.2_ctrl_std_pt"], T["EQ_C2.2_ctrl_std_q95"], 15),
-        ("ctrl_mismatch_prompt_MLP_L19_31", T["EQ_C2.2_ctrl_mis_pt"], T["EQ_C2.2_ctrl_mis_q95"], 16),
-        ("ctrl_self_attenuated_L19_31", T["EQ_C2.2_ctrl_std_pt"], T["EQ_C2.2_ctrl_std_q95"], 17),
+        ("ctrl_L4_16_MLP_LongBare_to_ChatML", 14),
+        ("ctrl_rand_iso_same_site_L19_31", 15),
+        ("ctrl_mismatch_prompt_MLP_L19_31", 16),
+        ("ctrl_self_attenuated_L19_31", 17),
     ]
     eq_c22_ctrls: dict[str, Any] = {}
     eq_c22_all_ctrls_ok = True
-    for cname, pt_max, ci_max, seed_off in ctrl_specs:
+    for cname, seed_off in ctrl_specs:
         del_c = [M_cond["unpatched_ChatML"][i] - M_cond[cname][i] for i in range(12)]
         ci_c = bca_cluster_ci(12, lambda idx, dc=del_c: _closure_stat(dc, gap_pairs, idx), n_boot=n_boot, seed=BCA_SEED + seed_off)
-        ok_c = (abs(ci_c["point"]) <= pt_max) and (ci_c["q_0.95"] <= ci_max)
+        ok_c = eval_eq_c22_ctrl(cname, ci_c["point"], ci_c["q_0.95"], T)
         eq_c22_all_ctrls_ok = eq_c22_all_ctrls_ok and ok_c
         eq_c22_ctrls[cname] = {"point": round(ci_c["point"], 4), "q05": round(ci_c["q_0.05"], 4), "q95": round(ci_c["q_0.95"], 4), "pass": ok_c}
 
@@ -824,7 +1075,7 @@ def score_stage_c2(
     cl_func = mean([_pair_M("unpatched_ChatML", i, c22_func_strs, pred_gap_mean_func) - _pair_M("patch_LongBare_to_ChatML_MLP_L19_31", i, c22_func_strs, pred_gap_mean_func) for i in range(12)]) / (g_func if abs(g_func) > 1e-9 else 1.0)
     unsteered_kls = [float(r["kl"]) for rows in receipt["block2_C2_2"]["unsteered_patched_kl"].values() for r in rows]
     med_unsteered_kl = median(unsteered_kls)
-    shape_kl_ok = (cl_open >= T["EQ_C2.2_shape_open_min"]) and (abs(cl_open - cl_func) <= T["EQ_C2.2_shape_diff_max"]) and (med_unsteered_kl <= T["EQ_C2.2_kl_max"])
+    shape_kl_ok = eval_eq_c22_shape_kl(cl_open, cl_func, med_unsteered_kl, T)
     eq_c22_pass = eq_c22_all_ctrls_ok and shape_kl_ok
 
     # ------------------------------------------------------------------
@@ -839,7 +1090,7 @@ def score_stage_c2(
         open_ret = [float(r["retention"]) for i, ts in enumerate(t_strs) if strata[i] != "function" for r in blk["logit_lens"][ts]]
         rand_ret = [float(r["retention"]) for r in blk["rand_iso"]]
         eo, ef, ro, rr = median(open_mlp), median(func_mlp), median(open_ret), median(rand_ret)
-        pe = (eo >= T["C2.3_e_open_min"]) and (abs(eo - ef) <= T["C2.3_gap_max"]) and (ro > rr)
+        pe = eval_c23_layer(eo, ef, ro, rr, T)
         post_erasure_flags.append((L, pe))
         c23_per_layer[str(L)] = {
             "E_open": round(eo, 4), "E_func": round(ef, 4), "gap": round(eo - ef, 4),
@@ -903,28 +1154,18 @@ def score_stage_c2(
         d24 = _c24_target_mean(dose_str, "L24.prenorm_ff_masked")
         d27 = _c24_target_mean(dose_str, "L27.prenorm_ff_masked")
         dk3 = _c24_target_mean(dose_str, "K3_combined")
-        fl = T["EQ_C2.4c_floor"]
         rels, n_fl = [], 0
         for i in range(24):
             s = d21[i] + d24[i] + d27[i]
-            if abs(s) < fl:
+            if is_c24c_floored(s, T):
                 n_fl += 1
-            rels.append((dk3[i] - s) / max(abs(s), fl))
+            rels.append(c24c_rel_int(dk3[i], s, T))
         return rels, n_fl
 
     rel_05, n_fl_05 = _k3_rel_int("0.5")
     rel_125, n_fl_125 = _k3_rel_int("1.25")
     ci_k3_05 = bca_cluster_ci(24, lambda idx: median([rel_05[i] for i in idx]), n_boot=n_boot, seed=BCA_SEED + 23)
-    eq_b = T["EQ_C2.4c_ci_bound"]
-    if n_fl_05 <= 2 and abs(ci_k3_05["point"]) <= T["EQ_C2.4c_med_max"] and ci_k3_05["q_0.05"] >= -eq_b and ci_k3_05["q_0.95"] <= eq_b:
-        eq_c24c_verdict = "ADDITIVE"
-        c3_k3_action = "LICENSE_K3_SIMULTANEOUS"
-    elif ci_k3_05["q_0.05"] > eq_b or ci_k3_05["q_0.95"] < -eq_b:
-        eq_c24c_verdict = "NON_ADDITIVE"
-        c3_k3_action = "RESTRICT_TO_SINGLE_LAYER_L24"
-    else:
-        eq_c24c_verdict = "INCONCLUSIVE"
-        c3_k3_action = "REQUIRE_1_DOSE_C3_PILOT"
+    eq_c24c_verdict, c3_k3_action = eval_eq_c24c_verdict(n_fl_05, ci_k3_05["point"], ci_k3_05["q_0.05"], ci_k3_05["q_0.95"], T)
 
     # ------------------------------------------------------------------
     # UNIFIED 7-TEST HOLM-BONFERRONI FAMILY & FINAL VERDICTS
@@ -940,13 +1181,13 @@ def score_stage_c2(
     }
     holm = holm_bonferroni_stepdown(holm_pvals, alpha=0.05)
 
-    bar_1 = holm["p_C2.1_ctr_vs_raw"]["rejected"] and (ci_ctr_raw["point"] >= T["C2.1_bar1_pt"]) and (ci_ctr_raw["q_0.05"] > T["C2.1_bar1_q05"])
-    bar_2 = holm["p_C2.1_shk_vs_ctr"]["rejected"] and (ci_shk_ctr["point"] >= T["C2.1_bar2_pt"]) and (ci_sc_ratio["point"] >= T["C2.1_bar2_sc_pt"]) and (ci_sc_ratio["q_0.05"] >= T["C2.1_bar2_sc_q05"])
-    bar_3 = holm["p_C2.1_shk_vs_ll"]["rejected"] and (ci_shk_ll["point"] >= T["C2.1_bar3_pt"]) and (ci_shk_ll["q_0.05"] > T["C2.1_bar3_q05"])
-    bar_4 = holm["p_C2.1_gain_ret"]["rejected"] and (ci_gain_ret["point"] >= T["C2.1_bar4_pt"]) and (ci_gain_ret["q_0.05"] >= T["C2.1_bar4_q05"])
-    bar_5 = gap_gate_pass and holm["p_C2.2_bare_into_chat"]["rejected"] and (T["C2.2_closure_pt_lo"] <= ci_b2c["point"] <= T["C2.2_closure_pt_hi"]) and (ci_b2c["q_0.05"] >= T["C2.2_closure_ci_lo"]) and (ci_b2c["q_0.95"] <= T["C2.2_closure_ci_hi"])
-    bar_6 = gap_gate_pass and holm["p_C2.2_chat_into_bare"]["rejected"] and (T["C2.2_closure_pt_lo"] <= ci_c2b["point"] <= T["C2.2_closure_pt_hi"]) and (ci_c2b["q_0.05"] >= T["C2.2_closure_ci_lo"]) and (ci_c2b["q_0.95"] <= T["C2.2_closure_ci_hi"])
-    bar_7 = holm["p_C2.4a_mask_vs_unmask"]["rejected"] and (ci_c24a["point"] >= T["C2.4a_bar7_pt"]) and (ci_c24a["q_0.05"] > T["C2.4a_bar7_q05"])
+    bar_1 = eval_bar_1(holm["p_C2.1_ctr_vs_raw"]["rejected"], ci_ctr_raw["point"], ci_ctr_raw["q_0.05"], T)
+    bar_2 = eval_bar_2(holm["p_C2.1_shk_vs_ctr"]["rejected"], ci_shk_ctr["point"], ci_sc_ratio["point"], ci_sc_ratio["q_0.05"], T)
+    bar_3 = eval_bar_3(holm["p_C2.1_shk_vs_ll"]["rejected"], ci_shk_ll["point"], ci_shk_ll["q_0.05"], T)
+    bar_4 = eval_bar_4(holm["p_C2.1_gain_ret"]["rejected"], ci_gain_ret["point"], ci_gain_ret["q_0.05"], T)
+    bar_5 = eval_bar_5_or_6(gap_gate_pass, holm["p_C2.2_bare_into_chat"]["rejected"], ci_b2c["point"], ci_b2c["q_0.05"], ci_b2c["q_0.95"], T)
+    bar_6 = eval_bar_5_or_6(gap_gate_pass, holm["p_C2.2_chat_into_bare"]["rejected"], ci_c2b["point"], ci_c2b["q_0.05"], ci_c2b["q_0.95"], T)
+    bar_7 = eval_bar_7(holm["p_C2.4a_mask_vs_unmask"]["rejected"], ci_c24a["point"], ci_c24a["q_0.05"], T)
 
     if degenerate_diag:
         v_c21 = "DEGENERATE_DIAG"

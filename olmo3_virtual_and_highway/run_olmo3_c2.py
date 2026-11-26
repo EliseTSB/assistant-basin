@@ -19,6 +19,7 @@ import contextlib
 import gzip
 import json
 import math
+import sys
 import time
 from pathlib import Path
 from typing import Any
@@ -312,18 +313,41 @@ def compute_frozen_cal_reference(
     }
 
 
+def compute_rand_iso_retention(
+    clean_trace: dict[str, Any],
+    int_trace: dict[str, Any],
+    layer_idx: int,
+    v_vec: torch.Tensor,
+) -> float:
+    """Self-direction retention matching run_olmo3_c0.decompose_target_trace algebraically:
+    retention = (exact_dlogit - rmsnorm_shift) / direct_linear, evaluated along unit v_vec.
+    """
+    v_f = v_vec.float()
+    r_c = float(clean_trace["rms_final"])
+    r_i = float(int_trace["rms_final"])
+    exact_self = float(torch.dot(v_f, int_trace["h_final"].float()).item() / r_i - torch.dot(v_f, clean_trace["h_final"].float()).item() / r_c)
+    direct_self = float(torch.dot(v_f, int_trace["mlp"][layer_idx].float() - clean_trace["mlp"][layer_idx].float()).item() / r_c)
+    rmsn_self = float(torch.dot(v_f, int_trace["h_final"].float()).item() * (1.0 / r_i - 1.0 / r_c))
+    return float((exact_self - rmsn_self) / direct_self) if abs(direct_self) > 1e-12 else 0.0
+
+
 def _write_checkpoint(checkpoint_dir: Path | None, name: str, payload: dict[str, Any]) -> None:
-    """Atomically write a per-block partial checkpoint (stamped partial_checkpoint=True so scorer refuses it)."""
+    """Best-effort atomic per-block partial checkpoint (stamped partial_checkpoint=True so scorer refuses it).
+    Never aborts an in-progress GPU run on checkpoint I/O failure (DS R2 F2); final receipt write stays fatal.
+    """
     if checkpoint_dir is None:
         return
-    checkpoint_dir.mkdir(parents=True, exist_ok=True)
-    tmp = checkpoint_dir / f".{name}.json.gz.tmp"
-    dst = checkpoint_dir / f"{name}.json.gz"
-    wrapped = {"partial_checkpoint": True, "block": name, "payload": payload}
-    raw = (json.dumps(wrapped, separators=(",", ":"), ensure_ascii=True) + "\n").encode("utf-8")
-    with gzip.open(tmp, "wb", compresslevel=6) as f:
-        f.write(raw)
-    tmp.replace(dst)
+    try:
+        checkpoint_dir.mkdir(parents=True, exist_ok=True)
+        tmp = checkpoint_dir / f".{name}.json.gz.tmp"
+        dst = checkpoint_dir / f"{name}.json.gz"
+        wrapped = {"partial_checkpoint": True, "block": name, "payload": payload}
+        raw = (json.dumps(wrapped, separators=(",", ":"), ensure_ascii=True) + "\n").encode("utf-8")
+        with gzip.open(tmp, "wb", compresslevel=6) as f:
+            f.write(raw)
+        tmp.replace(dst)
+    except OSError as exc:
+        print(f"[WARN] stage-c2 checkpoint '{name}' write failed ({exc!r}); continuing run without aborting", file=sys.stderr)
 
 
 def run_stage_c2_experiment(
@@ -765,15 +789,10 @@ def run_stage_c2_experiment(
                 _note_move(f"C2.3_L{L}_rand_iso", mv)
                 rec = decompose_rand_iso_trace(ct, tr_i, L, v_vec, dose_l, target_ids_24)
                 rec.pop("all_16_dlogits", None)
-                # Fix F1 (blocker): emit self-direction retention matching decompose_target_trace formula!
-                v_f = v_vec.float()
+                # Emit self-direction retention via shared helper matching run_olmo3_c0.decompose_target_trace
                 r_c_f = float(ct["rms_final"])
                 r_i_f = float(tr_i["rms_final"])
-                exact_self = float(torch.dot(v_f, tr_i["h_final"]).item() / r_i_f - torch.dot(v_f, ct["h_final"]).item() / r_c_f)
-                direct_self = float(torch.dot(v_f, tr_i["mlp"][L] - ct["mlp"][L]).item() / r_c_f)
-                rmsn_self = float(torch.dot(v_f, tr_i["h_final"]).item() * (1.0 / r_i_f - 1.0 / r_c_f))
-                ret_self = (exact_self - rmsn_self) / direct_self if abs(direct_self) > 1e-12 else 0.0
-                rec["retention"] = round(float(ret_self), 6)
+                rec["retention"] = round(compute_rand_iso_retention(ct, tr_i, L, v_vec), 6)
                 rec["draw_idx"] = di
                 rec["prompt_id"] = pid
                 rec["rms_clean"] = round(r_c_f, 6)

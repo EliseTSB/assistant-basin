@@ -245,10 +245,50 @@ class TestStageC2RunnerCPU(unittest.TestCase):
         self.assertTrue(sc["gate_C2_0"]["C2.0.2_finiteness_and_telescoping"]["pass"])
         self.assertTrue(sc["gate_C2_0"]["C2.0.4_provenance"]["pass"])
         self.assertTrue(sc["gate_C2_0"]["C2.0.3_linearity_and_completeness"]["all_block_counts_ok"])
+        self.assertTrue(sc["gate_C2_0"]["C2.0.3_linearity_and_completeness"]["dose_checks_ok"])
         self.assertIn("C2.1", sc["confirmatory_verdicts"])
         # Verify markdown renders cleanly regardless of PASS/BLOCKED
         md = sc_mod.render_scorecard_markdown(sc)
         self.assertIn("Stage C2 Confirmatory Scorecard", md)
+
+    def test_04_rand_iso_retention_formula_and_checkpoint_io_resilience(self) -> None:
+        """Verify compute_rand_iso_retention matches C0 formula algebraically (DS R2 F6)
+        and best-effort checkpoint I/O failures warn without aborting (DS R2 F2).
+        """
+        # 1. Exact algebraic check vs run_olmo3_c0.decompose_target_trace on a known vector
+        torch.manual_seed(12345)
+        d, vocab, L = 16, 32, 2
+        v = torch.randn(d)
+        v = v / v.norm()
+        r_c, r_i = 2.0, 2.5
+        h_c = torch.randn(d)
+        mlp_c = [torch.randn(d) for _ in range(4)]
+        mlp_i = [t.clone() for t in mlp_c]
+        mlp_i[L] = mlp_c[L] + 1.8 * v  # known direct write along v
+        attn_c = [torch.randn(d) for _ in range(4)]
+        attn_i = [t.clone() for t in attn_c]
+        # Downstream delta along v = -0.45 * v (so net pre-RMSNorm delta = 1.35 * v -> retention = 1.35/1.8 = 0.75!)
+        h_i = h_c + 1.35 * v
+        clean_tr = {"h_final": h_c, "rms_final": r_c, "mlp": mlp_c, "attn": attn_c, "logits": torch.zeros(vocab)}
+        int_tr = {"h_final": h_i, "rms_final": r_i, "mlp": mlp_i, "attn": attn_i, "logits": torch.zeros(vocab)}
+        # Align logits[0] with dot(v, h)/r so decompose_target_trace sees exact same logit shift
+        clean_tr["logits"][0] = torch.dot(v, h_c) / r_c
+        int_tr["logits"][0] = torch.dot(v, h_i) / r_i
+        p_c = torch.softmax(clean_tr["logits"], dim=-1)
+        lp_c = torch.log_softmax(clean_tr["logits"], dim=-1)
+
+        ret_rand = r_mod.compute_rand_iso_retention(clean_tr, int_tr, L, v)
+        c0_rec = r_mod.decompose_target_trace(clean_tr, int_tr, L, v, 0, 1.8, 1.0, v, p_c, lp_c)
+        self.assertAlmostEqual(ret_rand, 0.75, places=6)
+        self.assertAlmostEqual(ret_rand, c0_rec["retention"], places=5)
+
+        # 2. Best-effort checkpoint write NEVER raises on unwritable dir or regular-file path (DS R2 F2)
+        r_mod._write_checkpoint(Path("/proc/definitely-not-writable-c2-ckpt"), "block1_C2_1", {"ok": True})
+        with tempfile.TemporaryDirectory() as td:
+            not_a_dir = Path(td) / "regular_file"
+            not_a_dir.write_text("occupied", encoding="utf-8")
+            r_mod._write_checkpoint(not_a_dir, "block1_C2_1", {"ok": True})
+            self.assertEqual(not_a_dir.read_text(encoding="utf-8"), "occupied")
 
 
 if __name__ == "__main__":
