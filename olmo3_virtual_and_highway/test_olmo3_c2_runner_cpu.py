@@ -2,14 +2,18 @@
 """Offline CPU PyTorch tests for Stage C2 v4 runner (`run_olmo3_c2.py`):
   1. Preflight SHA-256 verification against REAL frozen v4 artifacts (pass + fail-closed tamper test).
   2. Exact algebraic equivalence: `pre_norm_inject_hook` before `post_feedforward_layernorm` matches
-     a literal rank-1 `down_proj` weight-column / bias addition to <1e-5 on a synthetic OLMo-3 model!
-  3. End-to-end smoke execution of `run_stage_c2_experiment` on a synthetic 32-layer OLMo-3-compatible
-     PyTorch model verifying: all 19 shams (13 write + 6 patch) == exact 0.0, active arms > 0.0,
-     exact 4-term telescoping (<1e-4), F11 donor substitution liveness, and ZERO leaked hooks!
+     a literal rank-1 `down_proj` weight-column addition to <1e-5.
+  3. F2 hook-leak regression test: bad 2nd injection (non-unit vector OR NaN dose) leaves ZERO leaked pre-hooks!
+  4. Full 8,623-forward runner -> scorer CONTRACT test (F1 & F4): executes `run_stage_c2_experiment` in FULL
+     non-smoke mode on a synthetic 32-layer OLMo-3 CPU model (with checkpoints!), verifies `total_forwards == 8623`,
+     all 19 shams == 0.0, all 61 real active-arm keys present & >0, `retention` present on every Block 2b `rand_iso`
+     row, zero leaked hooks, AND feeds the ACTUAL runner receipt straight into `score_olmo3_c2.score_stage_c2`!
 """
 from __future__ import annotations
 
 import json
+import sys
+import tempfile
 import types
 import unittest
 from pathlib import Path
@@ -17,12 +21,12 @@ from pathlib import Path
 import torch
 import torch.nn as nn
 
-import sys
 ROOT = Path(__file__).resolve().parent
 REPO_ROOT = ROOT.parent
 sys.path.insert(0, str(REPO_ROOT))
 
 from olmo3_virtual_and_highway import run_olmo3_c2 as r_mod
+from olmo3_virtual_and_highway import score_olmo3_c2 as sc_mod
 
 
 class TinyRMSNorm(nn.Module):
@@ -49,7 +53,6 @@ class TinyOlmo3Layer(nn.Module):
         self.post_feedforward_layernorm = TinyRMSNorm(d)
 
     def forward(self, h: torch.Tensor) -> torch.Tensor:
-        # Causal self-attention + post_attention_layernorm (matches OLMo 3 post-norm residual!)
         B, T, D = h.shape
         q = self.q_proj(h)
         k = self.k_proj(h)
@@ -59,7 +62,6 @@ class TinyOlmo3Layer(nn.Module):
         scores = scores.masked_fill(mask, -1e9)
         attn_out = self.o_proj(torch.matmul(torch.softmax(scores, dim=-1), v))
         h = h + self.post_attention_layernorm(attn_out)
-        # MLP + post_feedforward_layernorm
         mlp_raw = self.down_proj(nn.functional.silu(self.up_proj(h)))
         h = h + self.post_feedforward_layernorm(mlp_raw)
         return h
@@ -78,7 +80,6 @@ class TinyOlmo3Model(nn.Module):
             for p in self.parameters():
                 if p.ndim >= 2:
                     p.mul_(0.15)
-            # Non-uniform gamma with a tiny dim to exercise low-gamma physics
             self.model.layers[24].post_feedforward_layernorm.weight[0] = 0.005
 
     def forward(self, input_ids: torch.Tensor, use_cache: bool = False):
@@ -90,7 +91,6 @@ class TinyOlmo3Model(nn.Module):
 
 
 class TinyHashTokenizer:
-    """Deterministic tiny tokenizer returning exact suffix-aligned token IDs for the synthetic model."""
     def __init__(self, vocab: int = 64):
         self.vocab = vocab
 
@@ -100,7 +100,7 @@ class TinyHashTokenizer:
 
 
 class TestStageC2RunnerCPU(unittest.TestCase):
-    def test_real_v4_preflight_provenance_pass_and_tamper_fail(self) -> None:
+    def test_01_real_v4_preflight_provenance_pass_and_tamper_fail(self) -> None:
         r_lens = Path.home() / "green" / "Journal" / "notes" / "reports" / "vesper-olmo3-7b-neuron-lens" / "r_lens.pt"
         bank = REPO_ROOT / "work" / "olmo3_c2" / "c2_vector_bank.safetensors"
         c2_const = ROOT / "c2_prereg_constants.json"
@@ -109,11 +109,10 @@ class TestStageC2RunnerCPU(unittest.TestCase):
         self.assertEqual(hashes["c2_constants_sha256"], r_mod.EXPECTED_C2_CONSTANTS_SHA256)
         self.assertEqual(hashes["c2_bank_sha256"], r_mod.EXPECTED_C2_BANK_SHA256)
         self.assertEqual(hashes["c2_design_sha256"], r_mod.EXPECTED_C2_DESIGN_SHA256)
-        # Fail-closed when pointing design to wrong file
         with self.assertRaises(ValueError):
             r_mod.verify_preflight_provenance(bank, r_lens, c2_const, c2_const)
 
-    def test_prenorm_hook_matches_literal_down_proj_rank1_edit(self) -> None:
+    def test_02_prenorm_hook_matches_literal_rank1_and_never_leaks_on_bad_injection(self) -> None:
         torch.manual_seed(42)
         m = TinyOlmo3Model(vocab=64, d=16, n_layers=32)
         m.eval()
@@ -126,37 +125,46 @@ class TestStageC2RunnerCPU(unittest.TestCase):
             with r_mod.pre_norm_inject_hook(m, [(24, "ff", w, dose)]):
                 logits_hook = m(x).logits[0, -1, :].clone()
 
-            # Literally add dose * w to the pre-norm MLP output at the last token (equivalent to rank-1 down_proj column firing on last token)
             lay24 = m.model.layers[24]
             orig_fwd = lay24.down_proj.forward
 
             def _literal_rank1(inp):
-                out = orig_fwd(inp)
-                out = out.clone()
+                out = orig_fwd(inp).clone()
                 out[:, -1, :] = out[:, -1, :] + dose * w
                 return out
 
             lay24.down_proj.forward = _literal_rank1  # type: ignore[method-assign]
             logits_lit = m(x).logits[0, -1, :].clone()
             lay24.down_proj.forward = orig_fwd  # type: ignore[method-assign]
+        self.assertLess(float((logits_hook - logits_lit).abs().max().item()), 1e-5)
 
-        max_err = float((logits_hook - logits_lit).abs().max().item())
-        self.assertLess(max_err, 1e-5)
+        # F2 regression: failed validation on 2nd injection (non-unit OR NaN dose) MUST leave 0 leaked pre-hooks on L21!
+        with self.assertRaises(ValueError):
+            with r_mod.pre_norm_inject_hook(m, [(21, "ff", w, 1.0), (24, "ff", w * 5.0, 1.0)]):
+                pass
+        self.assertEqual(len(m.model.layers[21].post_feedforward_layernorm._forward_pre_hooks), 0)
 
-    def test_end_to_end_smoke_all_19_shams_telescoping_and_zero_leaked_hooks(self) -> None:
+        with self.assertRaises(ValueError):
+            with r_mod.pre_norm_inject_hook(m, [(21, "ff", w, 1.0), (27, "ff", w, float("nan"))]):
+                pass
+        self.assertEqual(len(m.model.layers[21].post_feedforward_layernorm._forward_pre_hooks), 0)
+
+    def test_03_full_8623_runner_to_scorer_contract_and_checkpoints(self) -> None:
+        """Genuine FULL (non-smoke, 8,623-forward) runner -> scorer contract test (catches F1, F3, F4!)."""
         torch.manual_seed(7)
         d, vocab = 16, 64
         m = TinyOlmo3Model(vocab=vocab, d=d, n_layers=32)
+        # Scale L18 ff_norm gamma so C2.2 cap (3*pmn[18]) does not cap on the tiny toy model
+        with torch.no_grad():
+            m.model.layers[18].post_feedforward_layernorm.weight.mul_(20.0)
         m.eval()
         tok = TinyHashTokenizer(vocab=vocab)
         c2_const = json.loads((ROOT / "c2_prereg_constants.json").read_text(encoding="utf-8"))
-        # Remap target IDs into tiny vocab [1..24] and sync suffix_lens to tiny tokenizer
         for i, t in enumerate(c2_const["targets_24"]):
             t["id"] = i + 1
         for tr in c2_const["c22_stem_pairs_12"]:
             tr["suffix_len"] = len(tok.encode(tr["short_bare"]["text"]))
 
-        # Build matching tiny d=16 unit-norm bank
         def _u(shape):
             t = torch.randn(*shape)
             return t / t.norm(dim=-1, keepdim=True)
@@ -182,9 +190,7 @@ class TestStageC2RunnerCPU(unittest.TestCase):
                 bank[f"L{L}.{an}"] = _u((24, d))
         for L in (18, 21, 24, 27, 30):
             bank[f"L{L}.rand_iso"] = _u((8, d))
-
-        # Ensure u_dot_w_Rmf positive in synthetic constants
-        for k, v in c2_const["c22_l18_frozen_pred_ret"].items():
+        for v in c2_const["c22_l18_frozen_pred_ret"].values():
             v["u_dot_w_Rmf"] = 0.8
 
         fake_hashes = {
@@ -193,35 +199,56 @@ class TestStageC2RunnerCPU(unittest.TestCase):
             "c2_bank_sha256": r_mod.EXPECTED_C2_BANK_SHA256,
             "c2_design_sha256": r_mod.EXPECTED_C2_DESIGN_SHA256,
         }
-        with torch.no_grad():
-            rec = r_mod.run_stage_c2_experiment(m, tok, c2_const, bank, fake_hashes, smoke=True, device_name="cpu-tiny")
+        with tempfile.TemporaryDirectory() as td:
+            ckpt_dir = Path(td)
+            with torch.no_grad():
+                rec = r_mod.run_stage_c2_experiment(
+                    m, tok, c2_const, bank, fake_hashes, smoke=False, device_name="cpu-tiny", checkpoint_dir=ckpt_dir
+                )
+            # Verify all 4 per-block checkpoints written & stamped partial_checkpoint=True (DS F5)
+            for bname in ("block1_C2_1", "block2_C2_2", "block2b_C2_3", "block3_C2_4"):
+                cp = ckpt_dir / f"{bname}.json.gz"
+                self.assertTrue(cp.is_file(), f"Missing checkpoint {cp}")
+                cobj = sc_mod.load_json_maybe_gz(cp)
+                self.assertTrue(cobj.get("partial_checkpoint", False))
 
-        self.assertTrue(rec["meta"]["smoke"])
-        # All 13 write shams & all 6 patch shams MUST be exact 0.0!
-        self.assertEqual(len(rec["shams"]["write_13"]), 13)
-        self.assertEqual(len(rec["shams"]["patch_6"]), 6)
+        # Exact 8,623 forwards, 19 exact-zero shams, 61 real active-arm keys, & rand_iso retention present!
+        self.assertEqual(rec["meta"]["total_forwards"], 8623)
+        self.assertEqual(set(rec["active_arm_min_max_abs_dlogit"].keys()), sc_mod.expected_active_arm_names(c2_const))
         for k, v in rec["shams"]["write_13"].items():
             self.assertEqual(v, 0.0, f"Write sham {k} non-zero: {v}")
         for k, v in rec["shams"]["patch_6"].items():
             self.assertEqual(v, 0.0, f"Patch sham {k} non-zero: {v}")
+        for L in ("18", "21", "24", "27", "30"):
+            self.assertEqual(len(rec["block2b_C2_3"][L]["rand_iso"]), 64)
+            for row in rec["block2b_C2_3"][L]["rand_iso"]:
+                self.assertIn("retention", row)
 
-        # Active arms all moved logits (> 0.0)
-        self.assertGreater(len(rec["active_arm_min_max_abs_dlogit"]), 20)
-        for k, v in rec["active_arm_min_max_abs_dlogit"].items():
-            self.assertGreater(v, 0.0, f"Dead active arm {k}")
-
-        # Exact 4-term telescoping error < 1e-4 across Block 1
-        t0 = c2_const["targets_24"][0]["string"]
-        for row in rec["block1_C2_1"]["18"]["arms"]["R_ridge_shrink"][t0]:
-            self.assertLess(abs(row["telescoping_err"]), 1e-4)
-
-        # ZERO leaked forward hooks or pre-hooks anywhere in the model!
+        # Zero leaked hooks across all 32 layers
         for L, lay in enumerate(m.model.layers):
-            self.assertEqual(len(lay.post_feedforward_layernorm._forward_hooks), 0, f"Leaked ff hook at L{L}")
-            self.assertEqual(len(lay.post_feedforward_layernorm._forward_pre_hooks), 0, f"Leaked ff pre-hook at L{L}")
-            self.assertEqual(len(lay.post_attention_layernorm._forward_hooks), 0, f"Leaked attn hook at L{L}")
-            self.assertEqual(len(lay.post_attention_layernorm._forward_pre_hooks), 0, f"Leaked attn pre-hook at L{L}")
+            self.assertEqual(len(lay.post_feedforward_layernorm._forward_hooks), 0)
+            self.assertEqual(len(lay.post_feedforward_layernorm._forward_pre_hooks), 0)
+            self.assertEqual(len(lay.post_attention_layernorm._forward_hooks), 0)
+            self.assertEqual(len(lay.post_attention_layernorm._forward_pre_hooks), 0)
         self.assertEqual(len(m.model.norm._forward_pre_hooks), 0)
+
+        # DIRECT RUNNER -> SCORER CONTRACT: score the REAL runner receipt without crashing!
+        sc = sc_mod.score_stage_c2(
+            rec, c2_const,
+            design_sha256=sc_mod.EXPECTED_C2_DESIGN_SHA256,
+            constants_sha256=sc_mod.EXPECTED_C2_CONSTANTS_SHA256,
+            strict_provenance=True,
+            n_boot=50, n_flips_24=200,
+        )
+        self.assertEqual(sc["schema_version"], "olmo3-stage-c2-scorecard-v4")
+        self.assertTrue(sc["gate_C2_0"]["C2.0.1_shams_and_liveness"]["pass"])
+        self.assertTrue(sc["gate_C2_0"]["C2.0.2_finiteness_and_telescoping"]["pass"])
+        self.assertTrue(sc["gate_C2_0"]["C2.0.4_provenance"]["pass"])
+        self.assertTrue(sc["gate_C2_0"]["C2.0.3_linearity_and_completeness"]["all_block_counts_ok"])
+        self.assertIn("C2.1", sc["confirmatory_verdicts"])
+        # Verify markdown renders cleanly regardless of PASS/BLOCKED
+        md = sc_mod.render_scorecard_markdown(sc)
+        self.assertIn("Stage C2 Confirmatory Scorecard", md)
 
 
 if __name__ == "__main__":

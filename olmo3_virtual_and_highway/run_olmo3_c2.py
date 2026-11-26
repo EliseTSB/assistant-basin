@@ -127,9 +127,10 @@ def pre_norm_inject_hook(
     """Inject `dose * w_unit` BEFORE `post_feedforward_layernorm` ('ff') or `post_attention_layernorm` ('attn')
     at `positions='last'`. Algebraically identical to appending a literal rank-1 column to `down_proj` / `o_proj`.
 
-    Always validates `w_unit` and runs the exact clone/cast/add path even at `dose == 0.0` (sham parity).
+    Validates ALL injections BEFORE registering any hook and wraps registration inside `try/finally`
+    so a failed validation can NEVER leak a partially registered hook (DS F2).
     """
-    handles = []
+    validated: list[tuple[int, str, torch.Tensor, float]] = []
     for layer, branch, w_unit, dose in injections:
         if branch not in ("ff", "attn"):
             raise ValueError(f"Unsupported pre_norm branch: {branch!r}")
@@ -141,20 +142,23 @@ def pre_norm_inject_hook(
             raise ValueError(f"Non-unit write vector in pre_norm_inject_hook L{layer}.{branch}: ||w||={w_nrm:.6g}")
         if not math.isfinite(float(dose)):
             raise ValueError(f"Non-finite dose in pre_norm_inject_hook L{layer}.{branch}: {dose}")
+        validated.append((layer, branch, w_cpu, float(dose)))
 
-        lay = model.model.layers[layer]
-        mod = lay.post_feedforward_layernorm if branch == "ff" else lay.post_attention_layernorm
-
-        def _make_pre_hook(w_t: torch.Tensor, d_val: float):
-            def _pre(_mod, args):
-                x = args[0].clone()
-                delta = (float(d_val) * w_t.to(device=x.device, dtype=torch.float32)).to(x.dtype)
-                x[:, -1, :] = x[:, -1, :] + delta
-                return (x,) + tuple(args[1:])
-            return _pre
-
-        handles.append(mod.register_forward_pre_hook(_make_pre_hook(w_cpu, float(dose))))
+    handles = []
     try:
+        for layer, branch, w_cpu, d_val in validated:
+            lay = model.model.layers[layer]
+            mod = lay.post_feedforward_layernorm if branch == "ff" else lay.post_attention_layernorm
+
+            def _make_pre_hook(w_t: torch.Tensor, dv: float):
+                def _pre(_mod, args):
+                    x = args[0].clone()
+                    delta = (dv * w_t.to(device=x.device, dtype=torch.float32)).to(x.dtype)
+                    x[:, -1, :] = x[:, -1, :] + delta
+                    return (x,) + tuple(args[1:])
+                return _pre
+
+            handles.append(mod.register_forward_pre_hook(_make_pre_hook(w_cpu, d_val)))
         yield
     finally:
         for h in handles:
@@ -308,6 +312,20 @@ def compute_frozen_cal_reference(
     }
 
 
+def _write_checkpoint(checkpoint_dir: Path | None, name: str, payload: dict[str, Any]) -> None:
+    """Atomically write a per-block partial checkpoint (stamped partial_checkpoint=True so scorer refuses it)."""
+    if checkpoint_dir is None:
+        return
+    checkpoint_dir.mkdir(parents=True, exist_ok=True)
+    tmp = checkpoint_dir / f".{name}.json.gz.tmp"
+    dst = checkpoint_dir / f"{name}.json.gz"
+    wrapped = {"partial_checkpoint": True, "block": name, "payload": payload}
+    raw = (json.dumps(wrapped, separators=(",", ":"), ensure_ascii=True) + "\n").encode("utf-8")
+    with gzip.open(tmp, "wb", compresslevel=6) as f:
+        f.write(raw)
+    tmp.replace(dst)
+
+
 def run_stage_c2_experiment(
     model,
     tokenizer,
@@ -318,6 +336,7 @@ def run_stage_c2_experiment(
     r_out_all: Any | None = None,
     smoke: bool = False,
     device_name: str = "unknown",
+    checkpoint_dir: Path | None = None,
     patch_l19_31: list[int] | None = None,
     patch_l4_16: list[int] | None = None,
     primary_c21_layers: list[int] | None = None,
@@ -552,6 +571,7 @@ def run_stage_c2_experiment(
                 arm_blk[t_str] = rows
             l_blk["arms"][aname] = arm_blk
         block1_c21[str(L)] = l_blk
+    _write_checkpoint(checkpoint_dir, "block1_C2_1", block1_c21)
 
     # ------------------------------------------------------------------
     # 5. Block 2 (C2.2): Pure ChatML-Template L19-L31 Causal Patching + 72 Unsteered Clean-KL
@@ -700,6 +720,7 @@ def run_stage_c2_experiment(
                     rec["capped"] = False
                     rec["max_abs_dlogit"] = round(mv, 6)
                     block2_c22_traces[cname][str(pair_idx)].setdefault(t_str, {})[aname] = rec
+    _write_checkpoint(checkpoint_dir, "block2_C2_2", {"unsteered_patched_kl": c22_unsteered_kl, "traces": block2_c22_traces})
 
     # ------------------------------------------------------------------
     # 6. Block 2b (C2.3): 5-Layer Post-Erasure Sweep (24 logit_lens + 8 rand_iso x 8 prompts)
@@ -744,14 +765,24 @@ def run_stage_c2_experiment(
                 _note_move(f"C2.3_L{L}_rand_iso", mv)
                 rec = decompose_rand_iso_trace(ct, tr_i, L, v_vec, dose_l, target_ids_24)
                 rec.pop("all_16_dlogits", None)
+                # Fix F1 (blocker): emit self-direction retention matching decompose_target_trace formula!
+                v_f = v_vec.float()
+                r_c_f = float(ct["rms_final"])
+                r_i_f = float(tr_i["rms_final"])
+                exact_self = float(torch.dot(v_f, tr_i["h_final"]).item() / r_i_f - torch.dot(v_f, ct["h_final"]).item() / r_c_f)
+                direct_self = float(torch.dot(v_f, tr_i["mlp"][L] - ct["mlp"][L]).item() / r_c_f)
+                rmsn_self = float(torch.dot(v_f, tr_i["h_final"]).item() * (1.0 / r_i_f - 1.0 / r_c_f))
+                ret_self = (exact_self - rmsn_self) / direct_self if abs(direct_self) > 1e-12 else 0.0
+                rec["retention"] = round(float(ret_self), 6)
                 rec["draw_idx"] = di
                 rec["prompt_id"] = pid
-                rec["rms_clean"] = round(float(ct["rms_final"]), 6)
-                rec["rms_int"] = round(float(tr_i["rms_final"]), 6)
+                rec["rms_clean"] = round(r_c_f, 6)
+                rec["rms_int"] = round(r_i_f, 6)
                 rec["max_abs_dlogit"] = round(mv, 6)
                 ri_rows.append(rec)
 
         block2b_c23[str(L)] = {"dose": round(dose_l, 6), "logit_lens": ll_blk, "rand_iso": ri_rows}
+    _write_checkpoint(checkpoint_dir, "block2b_C2_3", block2b_c23)
 
     # ------------------------------------------------------------------
     # 7. Block 3 (C2.4): 9 Enumerated pre_norm Arms x 24 targets x 4 prompts x 2 doses
@@ -837,6 +868,7 @@ def run_stage_c2_experiment(
                         "max_abs_dlogit": round(mv, 6),
                     })
                 block3_c24[mkey][akey][t_str] = rows
+    _write_checkpoint(checkpoint_dir, "block3_C2_4", block3_c24)
 
     elapsed_sec = round(time.time() - t0, 2)
     total_fwds = sum(v for k, v in fwd_counts.items() if not k.endswith("_capped_skipped"))
@@ -886,6 +918,7 @@ def main() -> None:
     ap.add_argument("--c2-constants", type=Path, required=True)
     ap.add_argument("--design", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument("--checkpoint-dir", type=Path, default=None, help="Optional directory for per-block checkpoints.")
     ap.add_argument("--smoke", action="store_true", help="Tiny smoke run (scorer will refuse smoke receipts).")
     args = ap.parse_args()
 
@@ -904,9 +937,11 @@ def main() -> None:
     model.eval()
     dev_name = torch.cuda.get_device_name(0) if torch.cuda.is_available() else "cpu"
 
+    ckpt_dir = args.checkpoint_dir if args.checkpoint_dir is not None else args.out.parent / f"{args.out.stem}.ckpt"
     with torch.no_grad():
         receipt = run_stage_c2_experiment(
-            model, tok, c2_constants, bank, hashes, r_out_all=r_out_all, smoke=args.smoke, device_name=dev_name
+            model, tok, c2_constants, bank, hashes,
+            r_out_all=r_out_all, smoke=args.smoke, device_name=dev_name, checkpoint_dir=ckpt_dir,
         )
 
     args.out.parent.mkdir(parents=True, exist_ok=True)
