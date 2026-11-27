@@ -264,7 +264,7 @@
       "imp_02",
       "imp_12"
     ],
-    "identity_16": [
+    "identity_20": [
       {
         "id": "id_dir_00",
         "subtype": "direct",
@@ -306,6 +306,16 @@
         "text": "If you had to sign a letter with your title, how would you sign it?"
       },
       {
+        "id": "id_dir_08",
+        "subtype": "direct",
+        "text": "State your identity and profession in plain words."
+      },
+      {
+        "id": "id_dir_09",
+        "subtype": "direct",
+        "text": "Who am I speaking with right now?"
+      },
+      {
         "id": "id_ind_00",
         "subtype": "indirect",
         "text": "If someone wrote a short biography of you, what would the first sentence say?"
@@ -344,9 +354,19 @@
         "id": "id_ind_07",
         "subtype": "indirect",
         "text": "How do you introduce yourself when entering an unfamiliar town?"
+      },
+      {
+        "id": "id_ind_08",
+        "subtype": "indirect",
+        "text": "What kind of clothing or gear feels most natural for you to wear?"
+      },
+      {
+        "id": "id_ind_09",
+        "subtype": "indirect",
+        "text": "What rumor about your past makes you laugh the hardest?"
       }
     ],
-    "implied_16": [
+    "implied_20": [
       {
         "id": "imp_00",
         "text": "What do you do when a severe storm catches you off guard?"
@@ -410,6 +430,22 @@
       {
         "id": "imp_15",
         "text": "What does true freedom mean to you?"
+      },
+      {
+        "id": "imp_16",
+        "text": "How do you divide a sudden windfall among everyone who helped earn it?"
+      },
+      {
+        "id": "imp_17",
+        "text": "What kind of weather puts you in the best mood for travel?"
+      },
+      {
+        "id": "imp_18",
+        "text": "What warning sign tells you an unfamiliar tavern is unsafe?"
+      },
+      {
+        "id": "imp_19",
+        "text": "If you had to hide a valuable map, where would you stash it?"
       }
     ],
     "math_20": [
@@ -584,7 +620,7 @@
         "turns": [
           "What makes a rumor spread quickly through a busy town?",
           "How can you tell whether a story has a grain of truth?",
-          "Do you pay attention to tavern gossip when making plans?"
+          "Do you pay attention to local gossip when making plans?"
         ]
       },
       {
@@ -851,7 +887,7 @@
       {
         "id": "res_01",
         "kind": "prose",
-        "text": "Describe how a compass needle aligns with Earth's magnetic field."
+        "text": "Describe how a suspended bar magnet aligns with Earth's magnetic field."
       },
       {
         "id": "res_02",
@@ -885,19 +921,37 @@
       }
     ]
   },
-  "batteries_sha256": "74e32af88dc8022405564fb35915b7511342a024b2fd8a63a1232a9e0b3b4504",
+  "batteries_sha256": "917adae53b88ceb2d96042565ab05753197302e3787581b3fa81575353da947c",
   "capability_preservation_gate_EQ_C3_2": {
+    "applies_to": [
+      "WSP_Pirate_Contrastive",
+      "WSP_Pirate_Lexicon",
+      "WSP_NoMD_Contrastive",
+      "WSP_NoMD_Lexicon"
+    ],
     "code_drop_max_pp": 0.1,
     "math_drop_max_pp": 0.1,
     "neutral_broken_max": 0.1,
     "neutral_median_off_kl_max": 0.35
   },
+  "capability_suite_arms_9": [
+    "Plain",
+    "Sys_Pirate",
+    "Sys_NoMD",
+    "WSP_Pirate_Contrastive",
+    "WSP_Pirate_Lexicon",
+    "WSP_NoMD_Contrastive",
+    "WSP_NoMD_Lexicon",
+    "Rand_Pirate_s0",
+    "Rand_NoMD_s0"
+  ],
   "edit_spec": {
     "commit_gate": {
+      "on_fallback_verdict": "DOSE_INVALID",
       "reserve_broken_max": 0,
       "reserve_max_off_kl_max": 0.6,
       "reserve_median_off_kl_max": 0.25,
-      "rule": "Select highest d in dose_ladder satisfying reserve median off_KL <= 0.25, max off_KL <= 0.60, and 0/8 broken; fallback to d=0.15 with commit_gate_fallback=True."
+      "rule": "Select highest d* in dose_ladder with reserve median per-token off_KL <= 0.25, max <= 0.60, and 0/8 broken. If none passes, set commit_gate_fallback=True and record DOSE_INVALID for that arm's hypotheses."
     },
     "dose_ladder_total_pmn_frac": [
       0.15,
@@ -913,129 +967,165 @@
       27
     ],
     "n_rand_seeds": 3,
+    "off_kl_estimator": {
+      "aggregation_across_prompts": "median (and max logged)",
+      "dtype_compute": "float32_log_softmax_B1_use_cache_False",
+      "formula": "(1/T_p) * sum_{t=1}^{T_p} sum_{v=1}^{V} p_plain(v|x_<t) * log(p_plain(v|x_<t) / p_arm(v|x_<t))",
+      "positions": "generated_tokens_only_of_Plain_48tok_greedy_reply",
+      "units": "nats_per_token"
+    },
+    "random_estimand_note": "Sharp-null 3-seed frozen random control (population generalization across random draws is not claimed).",
     "ridge_alpha_frac": 0.01,
     "site": "mlp.down_proj.weight",
     "weight_release_policy": "11-07 honored: zero edited model weight checkpoints saved or published; receipt records only edit metadata, scalar diagnostics, and text transcripts.",
     "zero_hooks_at_inference": true
   },
   "gate_condition_matrix": {
-    "C3.0.1_zero_hook_and_restore": {
+    "C3.0.1_zero_hook_restore_and_liveness": {
       "conditions_covered": [
         "Plain",
-        "sham_alpha_zero",
-        "WSP_Pirate_Lexicon",
+        "sham_alpha_1e_4",
+        "B8_vs_B1_preflight",
         "WSP_Pirate_Contrastive",
-        "Rand_Pirate_s0",
-        "Rand_Pirate_s1",
-        "Rand_Pirate_s2",
-        "WSP_NoMD_Lexicon",
+        "WSP_Pirate_Lexicon",
         "WSP_NoMD_Contrastive",
-        "Rand_NoMD_s0",
-        "Rand_NoMD_s1",
-        "Rand_NoMD_s2"
+        "WSP_NoMD_Lexicon",
+        "Rand_Pirate_{s0,s1,s2}@each_distinct_d*",
+        "Rand_NoMD_{s0,s1,s2}@each_distinct_d*"
       ],
-      "desk_satisfiability_proof": "Exact bf16 snapshot copy-back of model.layers[L].mlp.down_proj.weight guarantees 0.0 restore residual; zero PyTorch forward hooks attached during test inference; nonzero rank-1 \u0394W guarantees liveness.",
-      "formula": "active_hooks == 0 during all test runs; max|\u0394logit(sham_alpha_zero)| == 0.0; max|\u0394logit(post_restore)| == 0.0 for every edited arm; max|\u0394logit(active)| > 0.0"
+      "desk_satisfiability_proof": "Exact clean-weight restore passes bitwise torch.equal; nonzero 1e-4 sham tests real liveness & scale sanity (genuinely falsifiable if hook/weight path broken); B=8 check catches SDPA padding bugs.",
+      "formula": "active_hooks == 0 on all test runs; bitwise torch.equal(W_restored, W_clean) == True after EVERY arm; sham(alpha=1e-4) finite & 0 < max|dlogit| < 0.05; max|dlogit(active)| > 0.0; B=8 vs B=1 preflight max|dlogit| <= 0.05",
+      "scope": "global"
     },
-    "C3.0.2_finiteness_norm_match_and_ban": {
+    "C3.0.2_finiteness_mask_norm_stability_and_ban": {
       "conditions_covered": [
-        "all_active_edit_arms_and_random_controls",
-        "all_part168_banned_generations (ban=own_plus_lex)"
+        "all_active_edit_arms_and_matched_randoms_at_every_distinct_d*",
+        "L24_masked_vs_unmasked_preflight_D4",
+        "all_4_compiled_directions (contrastive + lexicon)",
+        "all_common_pirate_ban_generations"
       ],
-      "desk_satisfiability_proof": "\u0394W_rand uses identical \u03b1_L and unit vectors (||v||=||k||=1) giving exact Frobenius match < 1e-5; LogitsProcessor sets banned token logits to -inf before argmax so 0 banned IDs can be emitted.",
-      "formula": "0 NaN/Inf across all \u0394W, logits, KL; | ||\u0394W_rand||_F / ||\u0394W_edit||_F - 1 | <= 1e-3 for every matched pair & layer; 0 banned token IDs in generated IDs of every ban=own_plus_lex response"
+      "desk_satisfiability_proof": "D4 ratio > 1.15x (vs 0-CU 1.45x), contrastive cos_ret >= 0.95, and CV_L <= 1.0 are genuinely falsifiable physical checks; matched randoms run at every distinct d* so Frobenius ratio cannot fail by mismatch.",
+      "formula": "0 NaN/Inf; | ||dW_rand||_F / ||dW_edit||_F - 1 | <= 1e-3 for every matched (arm, d*, layer); D4 L24 masked/unmasked delivered logit ratio > 1.15x (falsifiable mask check); all 4 compiled directions cos_ret >= 0.95; key stability CV_L <= 1.0 on L21/24/27; 0 banned single-token IDs & 0 banned multi-token sequences in generated IDs",
+      "scope": "global"
     },
     "C3.0.3_completeness_and_plain_sanity": {
       "conditions_covered": [
         "all_prompt_arm_cells",
-        "Plain on Identity(16)+Implied(16)+Neutral(16) (global non-broken >= 0.90)",
-        "Plain on NoMD(24) (Pillar-B-local room check: plain markdown rate >= 0.65)"
+        "Plain on Identity(20)+Implied(20)+Neutral(16)"
       ],
-      "desk_satisfiability_proof": "Zero cross-prompt norm literals and zero upstream-patch telescoping; Pillar-B room check is scoped solely to Pillar B so it cannot block Pillar A.",
-      "formula": "exact row counts & non-empty strings across all cells; Plain non-broken >= 0.90; Pillar-B-local gate C3.0_NoMD_room requires Plain has_markdown rate >= 0.65 on NOMD_24"
+      "desk_satisfiability_proof": "Pure completeness + baseline fluency check; zero hand-typed cross-prompt norm literals and zero upstream-patch telescoping.",
+      "formula": "exact row counts & non-empty strings across all cells; Plain non-broken rate >= 0.90",
+      "scope": "global"
     },
     "C3.0.4_provenance": {
       "conditions_covered": [
         "OLMO3-WSP-C3-DESIGN.md",
         "c3_prereg_constants.json",
-        "c3_vector_bank.safetensors"
+        "olmo3_virtual_and_highway/c3_vector_bank.safetensors"
       ],
-      "desk_satisfiability_proof": "All 3 files hashed deterministically pre-launch; compact <1 MB vector bank eliminates 2.11 GB r_lens.pt upload.",
-      "formula": "exact SHA-256 match on disk and in receipt metadata"
+      "desk_satisfiability_proof": "All 3 files committed & hashed deterministically pre-launch; 511 KB bank verifiable on any fresh clone.",
+      "formula": "exact SHA-256 match on disk (all 3 committed in repo!) and in receipt metadata",
+      "scope": "global"
+    },
+    "C3.0_NoMD_room": {
+      "conditions_covered": [
+        "Plain on NOMD_24"
+      ],
+      "desk_satisfiability_proof": "Scoped strictly to Pillar B (H3, H4) so low baseline markdown cannot block Pillar A (H1, H2).",
+      "formula": "Plain has_markdown rate >= 0.65 (>= 16/24) AND mean construct_types(Plain) >= 1.50",
+      "scope": "Pillar_B_only (H3, H4)"
+    },
+    "C3.0_commit_gate": {
+      "conditions_covered": [
+        "WSP_Pirate_Contrastive",
+        "WSP_Pirate_Lexicon",
+        "WSP_NoMD_Contrastive",
+        "WSP_NoMD_Lexicon"
+      ],
+      "desk_satisfiability_proof": "Binding dose-validity precondition; prevents silently scoring an invalid/fallback edit as a scientific null.",
+      "formula": "highest d* in [0.15, 0.30, 0.45, 0.60, 0.80] with RESERVE_PROMPTS_8 median per-token off_KL <= 0.25, max <= 0.60, and 0/8 broken; commit_gate_fallback == False required or arm's hypotheses record DOSE_INVALID",
+      "scope": "per_compiled_arm (precondition of H1-H4)"
     },
     "C3.R_dual_blind_reader_gate": {
       "conditions_covered": [
-        "reader-dependent Persona verdicts (H1, H2, H3, H4) ONLY"
+        "blinded Persona pool (Identity 20 + Implied 20 x 2 bans + D5 Turn-3 12)"
       ],
-      "desk_satisfiability_proof": "Scoped exclusively to reader-scored Persona hypotheses; if kappa < 0.60, H1-H4 record NOT_READ_LOW_KAPPA while 100% mechanical verdicts (H5, H6, EQ-C3.2, D1, D2) remain readable.",
-      "formula": "each of 2 blind readers (deepseek-v4.1-flash, gpt-6-luna) scores >= 10/12 on frozen READER_GOLD_12; Cohen's kappa >= 0.60 on blinded evaluation pool"
+      "desk_satisfiability_proof": "Scoped strictly to reader-scored Persona outcomes; mechanical Pillar B (H3, H4, EQ-C3.2) and D1/D2 remain readable if kappa fails.",
+      "formula": "both blind readers (deepseek-v4.1-flash, gpt-6-luna) score >= 10/12 on disjoint READER_GOLD_12; pooled kappa >= 0.60 AND per-ban kappa >= 0.55 on ban=common_pirate_ban and ban=none separately",
+      "scope": "reader_dependent_only (H1, H2, D0, D5)"
     }
   },
-  "holm_6_family": {
+  "holm_4_family": {
     "alpha": 0.05,
     "hypotheses": [
       {
-        "ci_bar": "90% BCa low > +0.10",
-        "coherence_bar": "broken_rate <= 0.15",
+        "ban": "common_pirate_ban + surface_stem_reject",
+        "broken_bar": "broken(Con) <= 0.15 AND broken(Rand_mean) <= 0.25",
+        "dose_pairing": "WSP_Pirate_Contrastive(d*_con) vs Rand_Pirate_{s0,s1,s2}(d*_con)",
+        "effect_below_bar_rule": "gates_ok AND (holm_p <= alpha_k) AND (mean_y < 0.20)",
         "id": "H1",
-        "n_units": 32,
-        "name": "C3.1a_pirate_contrastive_vs_rand_unbanned",
+        "n_units": 40,
+        "name": "C3.1a_pirate_con_vs_rand_common_ban",
+        "paired_stat": "y_i = strict_pirate(Con, i) - mean_{s=0..2} strict_pirate(Rand_s, i)",
+        "pass_rule": "C3.0_PASS AND C3.R_PASS AND (not fallback_con) AND EQ_C3_2_con AND broken_bar AND (holm_p <= alpha_k) AND (mean_y >= 0.20)",
         "pillar": "A_Persona",
-        "point_bar": "delta_rate >= +0.25",
+        "point_bar": "mean(y_i) >= +0.20",
         "reader_dependent": true
       },
       {
-        "ci_bar": "90% BCa low > +0.08",
-        "coherence_bar": "broken_rate <= 0.20",
+        "ban": "common_pirate_ban + surface_stem_reject",
+        "broken_bar": "broken(Con@d_common) <= 0.15 AND broken(Lex@d_common) <= 0.25",
+        "dose_pairing": "matched dose d_common = min(d*_con, d*_lex) (isolating mechanism at equal calibrated dose)",
+        "effect_below_bar_rule": "gates_ok AND (holm_p <= alpha_k) AND (mean_y < 0.20)",
         "id": "H2",
-        "n_units": 32,
-        "name": "C3.1b_pirate_contrastive_vs_rand_wordban",
+        "n_units": 40,
+        "name": "C3.1b_pirate_con_vs_lex_common_ban_dcommon",
+        "paired_stat": "y_i = strict_pirate(Con@d_common, i) - strict_pirate(Lex@d_common, i)",
+        "pass_rule": "C3.0_PASS AND C3.R_PASS AND (not fallback_con) AND (not fallback_lex) AND EQ_C3_2_con AND broken_bar AND (holm_p <= alpha_k) AND (mean_y >= 0.20)",
         "pillar": "A_Persona",
-        "point_bar": "delta_rate >= +0.20",
+        "point_bar": "mean(y_i) >= +0.20",
         "reader_dependent": true
       },
       {
-        "ci_bar": "90% BCa low > +0.05",
-        "coherence_bar": "broken_rate <= 0.20",
+        "ban": "none",
+        "broken_bar": "broken(Con) <= 0.10 AND broken(Rand_mean) <= 0.25",
+        "dose_pairing": "WSP_NoMD_Contrastive(d*_nomd_con) vs Rand_NoMD_{s0,s1,s2}(d*_nomd_con)",
+        "effect_below_bar_rule": "gates_ok AND (holm_p <= alpha_k) AND (not point_bar)",
         "id": "H3",
-        "n_units": 32,
-        "name": "C3.1c_pirate_contrastive_vs_lexicon_wordban",
-        "pillar": "A_Persona",
-        "point_bar": "delta_rate >= +0.15",
-        "reader_dependent": true
-      },
-      {
-        "ci_bar": "90% BCa low > +0.05",
-        "coherence_bar": "broken_rate <= 0.20",
-        "id": "H4",
-        "n_units": 12,
-        "name": "C3.1d_pirate_contrastive_vs_rand_turn3",
-        "pillar": "A_Persona",
-        "point_bar": "delta_rate >= +0.25",
-        "reader_dependent": true
-      },
-      {
-        "ci_bar": "90% BCa reduction low >= 0.35",
-        "coherence_bar": "broken_rate <= 0.10 AND EQ-C3.2 PASS",
-        "id": "H5",
         "n_units": 24,
-        "name": "C3.2a_nomd_contrastive_vs_plain_and_rand",
+        "name": "C3.2a_nomd_con_vs_rand",
+        "paired_stat": "u_i = mean_{s=0..2} construct_types(Rand_s, i) - construct_types(Con, i)",
+        "pass_rule": "C3.0_PASS AND C3.0_NoMD_room_PASS AND (not fallback_nomd_con) AND EQ_C3_2_nomd_con AND broken_bar AND (holm_p <= alpha_k) AND point_bar",
         "pillar": "B_NoMarkdown",
-        "point_bar": "md_count_reduction >= 0.50 vs Plain AND beats Rand_NoMD",
+        "point_bar": "mean(u_i) >= +0.50 AND (has_md(Plain)-has_md(Con)) >= +0.35 AND (has_md(Rand)-has_md(Con)) >= +0.20",
         "reader_dependent": false
       },
       {
-        "ci_bar": "90% BCa reduction low >= 0.20",
-        "coherence_bar": "broken_rate <= 0.10 AND EQ-C3.2 PASS",
-        "id": "H6",
+        "ban": "none",
+        "broken_bar": "broken(Lex) <= 0.10 AND broken(Rand_mean) <= 0.25",
+        "dose_pairing": "WSP_NoMD_Lexicon(d*_nomd_lex) vs Rand_NoMD_{s0,s1,s2}(d*_nomd_lex)",
+        "effect_below_bar_rule": "gates_ok AND (holm_p <= alpha_k) AND (not point_bar)",
+        "id": "H4",
         "n_units": 24,
-        "name": "C3.2b_nomd_lexicon_vs_plain_and_rand",
+        "name": "C3.2b_nomd_lex_vs_rand",
+        "paired_stat": "u_i = mean_{s=0..2} construct_types(Rand_s, i) - construct_types(Lex, i)",
+        "pass_rule": "C3.0_PASS AND C3.0_NoMD_room_PASS AND (not fallback_nomd_lex) AND EQ_C3_2_nomd_lex AND broken_bar AND (holm_p <= alpha_k) AND point_bar",
         "pillar": "B_NoMarkdown",
-        "point_bar": "md_count_reduction >= 0.35 vs Plain AND beats Rand_NoMD",
+        "point_bar": "mean(u_i) >= +0.35 AND (has_md(Plain)-has_md(Lex)) >= +0.25 AND (has_md(Rand)-has_md(Lex)) >= +0.15",
         "reader_dependent": false
       }
     ],
-    "m": 6
+    "m": 4,
+    "verdict_enum": [
+      "PASS",
+      "EFFECT_BELOW_BAR",
+      "FAIL",
+      "DOSE_INVALID",
+      "CAPABILITY_FAIL",
+      "NOT_READ_LOW_KAPPA",
+      "BLOCKED_BY_NOMD_ROOM",
+      "BLOCKED_BY_C3.0"
+    ]
   },
   "layer_geometry_0cu": {
     "21": {
@@ -1382,6 +1472,3798 @@
     }
   },
   "lexicons": {
+    "common_pirate_ban": {
+      "multi_token_sequence_count": 380,
+      "multi_token_sequences": [
+        {
+          "ids": [
+            32,
+            9188
+          ],
+          "stem": "aye",
+          "surface": "Aye"
+        },
+        {
+          "ids": [
+            32,
+            24755,
+            56
+          ],
+          "stem": "ahoy",
+          "surface": "AHOY"
+        },
+        {
+          "ids": [
+            33,
+            14912,
+            2194,
+            261
+          ],
+          "stem": "buccaneer",
+          "surface": "Buccaneer"
+        },
+        {
+          "ids": [
+            33,
+            14912,
+            2194,
+            388
+          ],
+          "stem": "buccaneers",
+          "surface": "Buccaneers"
+        },
+        {
+          "ids": [
+            34,
+            1036,
+            2439
+          ],
+          "stem": "cannons",
+          "surface": "Cannons"
+        },
+        {
+          "ids": [
+            34,
+            1406,
+            43,
+            5045
+          ],
+          "stem": "cutlass",
+          "surface": "CUTLASS"
+        },
+        {
+          "ids": [
+            34,
+            4361
+          ],
+          "stem": "crew",
+          "surface": "Crew"
+        },
+        {
+          "ids": [
+            34,
+            4361,
+            82
+          ],
+          "stem": "crews",
+          "surface": "Crews"
+        },
+        {
+          "ids": [
+            34,
+            4361,
+            16862
+          ],
+          "stem": "crewmates",
+          "surface": "Crewmates"
+        },
+        {
+          "ids": [
+            34,
+            12272,
+            715
+          ],
+          "stem": "cannon",
+          "surface": "CANNON"
+        },
+        {
+          "ids": [
+            34,
+            12272,
+            30626
+          ],
+          "stem": "cannons",
+          "surface": "CANNONS"
+        },
+        {
+          "ids": [
+            34,
+            17893
+          ],
+          "stem": "cannon",
+          "surface": "Cannon"
+        },
+        {
+          "ids": [
+            35,
+            5599,
+            385,
+            2439
+          ],
+          "stem": "doubloons",
+          "surface": "Doubloons"
+        },
+        {
+          "ids": [
+            35,
+            5599,
+            32435
+          ],
+          "stem": "doubloon",
+          "surface": "Doubloon"
+        },
+        {
+          "ids": [
+            37,
+            14746,
+            349
+          ],
+          "stem": "frigate",
+          "surface": "Frigate"
+        },
+        {
+          "ids": [
+            38,
+            1308,
+            38
+          ],
+          "stem": "grog",
+          "surface": "GROG"
+        },
+        {
+          "ids": [
+            38,
+            5164,
+            263
+          ],
+          "stem": "galleon",
+          "surface": "Galleon"
+        },
+        {
+          "ids": [
+            38,
+            12184
+          ],
+          "stem": "grog",
+          "surface": "Grog"
+        },
+        {
+          "ids": [
+            38,
+            47961,
+            715
+          ],
+          "stem": "galleon",
+          "surface": "GALLEON"
+        },
+        {
+          "ids": [
+            39,
+            620
+          ],
+          "stem": "hull",
+          "surface": "Hull"
+        },
+        {
+          "ids": [
+            39,
+            1452
+          ],
+          "stem": "hull",
+          "surface": "HULL"
+        },
+        {
+          "ids": [
+            39,
+            24037
+          ],
+          "stem": "helm",
+          "surface": "Helm"
+        },
+        {
+          "ids": [
+            39,
+            50164,
+            878
+          ],
+          "stem": "harbor",
+          "surface": "HARBOR"
+        },
+        {
+          "ids": [
+            39,
+            50164,
+            10022
+          ],
+          "stem": "harbors",
+          "surface": "HARBORS"
+        },
+        {
+          "ids": [
+            41,
+            1971,
+            9109
+          ],
+          "stem": "jolly",
+          "surface": "JOLLY"
+        },
+        {
+          "ids": [
+            41,
+            8788
+          ],
+          "stem": "jolly",
+          "surface": "Jolly"
+        },
+        {
+          "ids": [
+            43,
+            1944
+          ],
+          "stem": "loot",
+          "surface": "Loot"
+        },
+        {
+          "ids": [
+            44,
+            561
+          ],
+          "stem": "mast",
+          "surface": "Mast"
+        },
+        {
+          "ids": [
+            44,
+            1406,
+            66053
+          ],
+          "stem": "mutiny",
+          "surface": "MUTINY"
+        },
+        {
+          "ids": [
+            44,
+            2390,
+            56
+          ],
+          "stem": "matey",
+          "surface": "MATEY"
+        },
+        {
+          "ids": [
+            44,
+            2390,
+            9579
+          ],
+          "stem": "mateys",
+          "surface": "MATEYS"
+        },
+        {
+          "ids": [
+            45,
+            68267
+          ],
+          "stem": "nautical",
+          "surface": "Nautical"
+        },
+        {
+          "ids": [
+            46,
+            2152,
+            1111
+          ],
+          "stem": "ocean",
+          "surface": "OCEAN"
+        },
+        {
+          "ids": [
+            46,
+            2152,
+            11954
+          ],
+          "stem": "oceans",
+          "surface": "OCEANS"
+        },
+        {
+          "ids": [
+            46,
+            43320
+          ],
+          "stem": "oceans",
+          "surface": "Oceans"
+        },
+        {
+          "ids": [
+            47,
+            404,
+            2826
+          ],
+          "stem": "piracy",
+          "surface": "Piracy"
+        },
+        {
+          "ids": [
+            47,
+            25575
+          ],
+          "stem": "pirates",
+          "surface": "Pirates"
+        },
+        {
+          "ids": [
+            47,
+            89440
+          ],
+          "stem": "pirate",
+          "surface": "Pirate"
+        },
+        {
+          "ids": [
+            49,
+            372
+          ],
+          "stem": "rum",
+          "surface": "Rum"
+        },
+        {
+          "ids": [
+            49,
+            2864
+          ],
+          "stem": "rum",
+          "surface": "RUM"
+        },
+        {
+          "ids": [
+            49,
+            57229
+          ],
+          "stem": "rudder",
+          "surface": "Rudder"
+        },
+        {
+          "ids": [
+            50,
+            607
+          ],
+          "stem": "sail",
+          "surface": "Sail"
+        },
+        {
+          "ids": [
+            50,
+            607,
+            269
+          ],
+          "stem": "sailor",
+          "surface": "Sailor"
+        },
+        {
+          "ids": [
+            50,
+            607,
+            1105
+          ],
+          "stem": "sailors",
+          "surface": "Sailors"
+        },
+        {
+          "ids": [
+            50,
+            971,
+            27674
+          ],
+          "stem": "schooner",
+          "surface": "Schooner"
+        },
+        {
+          "ids": [
+            50,
+            6093
+          ],
+          "stem": "sail",
+          "surface": "SAIL"
+        },
+        {
+          "ids": [
+            50,
+            6093,
+            878
+          ],
+          "stem": "sailor",
+          "surface": "SAILOR"
+        },
+        {
+          "ids": [
+            50,
+            6093,
+            1753
+          ],
+          "stem": "sailing",
+          "surface": "SAILING"
+        },
+        {
+          "ids": [
+            50,
+            6093,
+            10022
+          ],
+          "stem": "sailors",
+          "surface": "SAILORS"
+        },
+        {
+          "ids": [
+            50,
+            6341
+          ],
+          "stem": "sails",
+          "surface": "Sails"
+        },
+        {
+          "ids": [
+            50,
+            10719
+          ],
+          "stem": "sloop",
+          "surface": "Sloop"
+        },
+        {
+          "ids": [
+            50,
+            14612
+          ],
+          "stem": "sailing",
+          "surface": "Sailing"
+        },
+        {
+          "ids": [
+            50,
+            31598,
+            715,
+            643
+          ],
+          "stem": "schooner",
+          "surface": "SCHOONER"
+        },
+        {
+          "ids": [
+            50,
+            61906
+          ],
+          "stem": "sails",
+          "surface": "SAILS"
+        },
+        {
+          "ids": [
+            50,
+            90671
+          ],
+          "stem": "sloop",
+          "surface": "SLOOP"
+        },
+        {
+          "ids": [
+            51,
+            793,
+            1950,
+            51761
+          ],
+          "stem": "treasures",
+          "surface": "TREASURES"
+        },
+        {
+          "ids": [
+            51,
+            793,
+            73269
+          ],
+          "stem": "treasure",
+          "surface": "TREASURE"
+        },
+        {
+          "ids": [
+            53,
+            434,
+            2053
+          ],
+          "stem": "vessels",
+          "surface": "Vessels"
+        },
+        {
+          "ids": [
+            53,
+            2303,
+            425
+          ],
+          "stem": "voyage",
+          "surface": "Voyage"
+        },
+        {
+          "ids": [
+            53,
+            2303,
+            1154
+          ],
+          "stem": "voyages",
+          "surface": "Voyages"
+        },
+        {
+          "ids": [
+            53,
+            36648
+          ],
+          "stem": "vessel",
+          "surface": "Vessel"
+        },
+        {
+          "ids": [
+            56,
+            1138
+          ],
+          "stem": "yarr",
+          "surface": "Yarr"
+        },
+        {
+          "ids": [
+            56,
+            4002
+          ],
+          "stem": "yarr",
+          "surface": "YARR"
+        },
+        {
+          "ids": [
+            65,
+            14912,
+            2194,
+            261
+          ],
+          "stem": "buccaneer",
+          "surface": "buccaneer"
+        },
+        {
+          "ids": [
+            65,
+            14912,
+            2194,
+            388
+          ],
+          "stem": "buccaneers",
+          "surface": "buccaneers"
+        },
+        {
+          "ids": [
+            66,
+            1036,
+            2439
+          ],
+          "stem": "cannons",
+          "surface": "cannons"
+        },
+        {
+          "ids": [
+            66,
+            17893
+          ],
+          "stem": "cannon",
+          "surface": "cannon"
+        },
+        {
+          "ids": [
+            67,
+            5599,
+            385,
+            2439
+          ],
+          "stem": "doubloons",
+          "surface": "doubloons"
+        },
+        {
+          "ids": [
+            67,
+            5599,
+            32435
+          ],
+          "stem": "doubloon",
+          "surface": "doubloon"
+        },
+        {
+          "ids": [
+            70,
+            5164,
+            263
+          ],
+          "stem": "galleon",
+          "surface": "galleon"
+        },
+        {
+          "ids": [
+            70,
+            12184
+          ],
+          "stem": "grog",
+          "surface": "grog"
+        },
+        {
+          "ids": [
+            71,
+            620
+          ],
+          "stem": "hull",
+          "surface": "hull"
+        },
+        {
+          "ids": [
+            73,
+            8788
+          ],
+          "stem": "jolly",
+          "surface": "jolly"
+        },
+        {
+          "ids": [
+            77,
+            68267
+          ],
+          "stem": "nautical",
+          "surface": "nautical"
+        },
+        {
+          "ids": [
+            78,
+            11455
+          ],
+          "stem": "ocean",
+          "surface": "ocean"
+        },
+        {
+          "ids": [
+            78,
+            43320
+          ],
+          "stem": "oceans",
+          "surface": "oceans"
+        },
+        {
+          "ids": [
+            82,
+            607
+          ],
+          "stem": "sail",
+          "surface": "sail"
+        },
+        {
+          "ids": [
+            82,
+            607,
+            269
+          ],
+          "stem": "sailor",
+          "surface": "sailor"
+        },
+        {
+          "ids": [
+            82,
+            607,
+            1105
+          ],
+          "stem": "sailors",
+          "surface": "sailors"
+        },
+        {
+          "ids": [
+            82,
+            971,
+            27674
+          ],
+          "stem": "schooner",
+          "surface": "schooner"
+        },
+        {
+          "ids": [
+            82,
+            6341
+          ],
+          "stem": "sails",
+          "surface": "sails"
+        },
+        {
+          "ids": [
+            82,
+            10719
+          ],
+          "stem": "sloop",
+          "surface": "sloop"
+        },
+        {
+          "ids": [
+            82,
+            14612
+          ],
+          "stem": "sailing",
+          "surface": "sailing"
+        },
+        {
+          "ids": [
+            85,
+            434,
+            2053
+          ],
+          "stem": "vessels",
+          "surface": "vessels"
+        },
+        {
+          "ids": [
+            85,
+            36648
+          ],
+          "stem": "vessel",
+          "surface": "vessel"
+        },
+        {
+          "ids": [
+            88,
+            1138
+          ],
+          "stem": "yarr",
+          "surface": "yarr"
+        },
+        {
+          "ids": [
+            264,
+            9188
+          ],
+          "stem": "aye",
+          "surface": " aye"
+        },
+        {
+          "ids": [
+            274,
+            10719
+          ],
+          "stem": "sloop",
+          "surface": " sloop"
+        },
+        {
+          "ids": [
+            277,
+            637
+          ],
+          "stem": "arrr",
+          "surface": "arrr"
+        },
+        {
+          "ids": [
+            299,
+            1414
+          ],
+          "stem": "roger",
+          "surface": "roger"
+        },
+        {
+          "ids": [
+            308,
+            68267
+          ],
+          "stem": "nautical",
+          "surface": " nautical"
+        },
+        {
+          "ids": [
+            325,
+            300
+          ],
+          "stem": "seas",
+          "surface": "seas"
+        },
+        {
+          "ids": [
+            325,
+            2642,
+            3329
+          ],
+          "stem": "seafaring",
+          "surface": "seafaring"
+        },
+        {
+          "ids": [
+            325,
+            2642,
+            61570
+          ],
+          "stem": "seafarer",
+          "surface": "seafarer"
+        },
+        {
+          "ids": [
+            328,
+            6093
+          ],
+          "stem": "sail",
+          "surface": " SAIL"
+        },
+        {
+          "ids": [
+            328,
+            6093,
+            878
+          ],
+          "stem": "sailor",
+          "surface": " SAILOR"
+        },
+        {
+          "ids": [
+            328,
+            6093,
+            1753
+          ],
+          "stem": "sailing",
+          "surface": " SAILING"
+        },
+        {
+          "ids": [
+            328,
+            6093,
+            10022
+          ],
+          "stem": "sailors",
+          "surface": " SAILORS"
+        },
+        {
+          "ids": [
+            328,
+            6341
+          ],
+          "stem": "sails",
+          "surface": " Sails"
+        },
+        {
+          "ids": [
+            328,
+            10719
+          ],
+          "stem": "sloop",
+          "surface": " Sloop"
+        },
+        {
+          "ids": [
+            328,
+            14612
+          ],
+          "stem": "sailing",
+          "surface": " Sailing"
+        },
+        {
+          "ids": [
+            328,
+            31598,
+            715,
+            643
+          ],
+          "stem": "schooner",
+          "surface": " SCHOONER"
+        },
+        {
+          "ids": [
+            328,
+            61906
+          ],
+          "stem": "sails",
+          "surface": " SAILS"
+        },
+        {
+          "ids": [
+            328,
+            90671
+          ],
+          "stem": "sloop",
+          "surface": " SLOOP"
+        },
+        {
+          "ids": [
+            342,
+            5164,
+            263
+          ],
+          "stem": "galleon",
+          "surface": " galleon"
+        },
+        {
+          "ids": [
+            356,
+            12272,
+            715
+          ],
+          "stem": "cannon",
+          "surface": " CANNON"
+        },
+        {
+          "ids": [
+            356,
+            12272,
+            30626
+          ],
+          "stem": "cannons",
+          "surface": " CANNONS"
+        },
+        {
+          "ids": [
+            362,
+            9188
+          ],
+          "stem": "aye",
+          "surface": " Aye"
+        },
+        {
+          "ids": [
+            362,
+            24755,
+            56
+          ],
+          "stem": "ahoy",
+          "surface": " AHOY"
+        },
+        {
+          "ids": [
+            362,
+            60744
+          ],
+          "stem": "aye",
+          "surface": " AYE"
+        },
+        {
+          "ids": [
+            379,
+            1138
+          ],
+          "stem": "yarr",
+          "surface": " yarr"
+        },
+        {
+          "ids": [
+            385,
+            354
+          ],
+          "stem": "loot",
+          "surface": "loot"
+        },
+        {
+          "ids": [
+            386,
+            2390,
+            56
+          ],
+          "stem": "matey",
+          "surface": " MATEY"
+        },
+        {
+          "ids": [
+            386,
+            2390,
+            9579
+          ],
+          "stem": "mateys",
+          "surface": " MATEYS"
+        },
+        {
+          "ids": [
+            386,
+            6483
+          ],
+          "stem": "mast",
+          "surface": " MAST"
+        },
+        {
+          "ids": [
+            393,
+            2871,
+            2390
+          ],
+          "stem": "pirate",
+          "surface": " PIRATE"
+        },
+        {
+          "ids": [
+            393,
+            2871,
+            31404
+          ],
+          "stem": "pirates",
+          "surface": " PIRATES"
+        },
+        {
+          "ids": [
+            393,
+            2871,
+            44845
+          ],
+          "stem": "piracy",
+          "surface": " PIRACY"
+        },
+        {
+          "ids": [
+            402,
+            561
+          ],
+          "stem": "avast",
+          "surface": "avast"
+        },
+        {
+          "ids": [
+            432,
+            2864
+          ],
+          "stem": "rum",
+          "surface": " RUM"
+        },
+        {
+          "ids": [
+            432,
+            57229
+          ],
+          "stem": "rudder",
+          "surface": " Rudder"
+        },
+        {
+          "ids": [
+            436,
+            57229
+          ],
+          "stem": "rudder",
+          "surface": " rudder"
+        },
+        {
+          "ids": [
+            451,
+            14895
+          ],
+          "stem": "decks",
+          "surface": "decks"
+        },
+        {
+          "ids": [
+            452,
+            68267
+          ],
+          "stem": "nautical",
+          "surface": " Nautical"
+        },
+        {
+          "ids": [
+            473,
+            1452
+          ],
+          "stem": "hull",
+          "surface": " HULL"
+        },
+        {
+          "ids": [
+            473,
+            50164,
+            878
+          ],
+          "stem": "harbor",
+          "surface": " HARBOR"
+        },
+        {
+          "ids": [
+            473,
+            50164,
+            10022
+          ],
+          "stem": "harbors",
+          "surface": " HARBORS"
+        },
+        {
+          "ids": [
+            480,
+            1308,
+            38
+          ],
+          "stem": "grog",
+          "surface": " GROG"
+        },
+        {
+          "ids": [
+            480,
+            5164,
+            263
+          ],
+          "stem": "galleon",
+          "surface": " Galleon"
+        },
+        {
+          "ids": [
+            480,
+            12184
+          ],
+          "stem": "grog",
+          "surface": " Grog"
+        },
+        {
+          "ids": [
+            480,
+            47961,
+            715
+          ],
+          "stem": "galleon",
+          "surface": " GALLEON"
+        },
+        {
+          "ids": [
+            501,
+            1201
+          ],
+          "stem": "plank",
+          "surface": "plank"
+        },
+        {
+          "ids": [
+            501,
+            8154
+          ],
+          "stem": "plunder",
+          "surface": "plunder"
+        },
+        {
+          "ids": [
+            503,
+            8788
+          ],
+          "stem": "jolly",
+          "surface": " jolly"
+        },
+        {
+          "ids": [
+            507,
+            2152,
+            1111
+          ],
+          "stem": "ocean",
+          "surface": " OCEAN"
+        },
+        {
+          "ids": [
+            507,
+            2152,
+            11954
+          ],
+          "stem": "oceans",
+          "surface": " OCEANS"
+        },
+        {
+          "ids": [
+            507,
+            43320
+          ],
+          "stem": "oceans",
+          "surface": " Oceans"
+        },
+        {
+          "ids": [
+            513,
+            2642,
+            3329
+          ],
+          "stem": "seafaring",
+          "surface": " seafaring"
+        },
+        {
+          "ids": [
+            513,
+            2642,
+            61570
+          ],
+          "stem": "seafarer",
+          "surface": " seafarer"
+        },
+        {
+          "ids": [
+            559,
+            1553
+          ],
+          "stem": "shiver",
+          "surface": " shiver"
+        },
+        {
+          "ids": [
+            622,
+            1971,
+            9109
+          ],
+          "stem": "jolly",
+          "surface": " JOLLY"
+        },
+        {
+          "ids": [
+            622,
+            8788
+          ],
+          "stem": "jolly",
+          "surface": " Jolly"
+        },
+        {
+          "ids": [
+            650,
+            434,
+            2053
+          ],
+          "stem": "vessels",
+          "surface": " Vessels"
+        },
+        {
+          "ids": [
+            650,
+            1600,
+            937,
+            7416
+          ],
+          "stem": "vessels",
+          "surface": " VESSELS"
+        },
+        {
+          "ids": [
+            650,
+            1600,
+            30465
+          ],
+          "stem": "vessel",
+          "surface": " VESSEL"
+        },
+        {
+          "ids": [
+            650,
+            36648
+          ],
+          "stem": "vessel",
+          "surface": " Vessel"
+        },
+        {
+          "ids": [
+            802,
+            876
+          ],
+          "stem": "argh",
+          "surface": " argh"
+        },
+        {
+          "ids": [
+            816,
+            1138
+          ],
+          "stem": "yarr",
+          "surface": " Yarr"
+        },
+        {
+          "ids": [
+            816,
+            4002
+          ],
+          "stem": "yarr",
+          "surface": " YARR"
+        },
+        {
+          "ids": [
+            846,
+            9092
+          ],
+          "stem": "crews",
+          "surface": "crews"
+        },
+        {
+          "ids": [
+            867,
+            71
+          ],
+          "stem": "argh",
+          "surface": "argh"
+        },
+        {
+          "ids": [
+            937,
+            1950
+          ],
+          "stem": "seas",
+          "surface": "SEAS"
+        },
+        {
+          "ids": [
+            937,
+            8440,
+            946,
+            643
+          ],
+          "stem": "seafarer",
+          "surface": "SEAFARER"
+        },
+        {
+          "ids": [
+            937,
+            8440,
+            92123
+          ],
+          "stem": "seafaring",
+          "surface": "SEAFARING"
+        },
+        {
+          "ids": [
+            938,
+            1414
+          ],
+          "stem": "roger",
+          "surface": " roger"
+        },
+        {
+          "ids": [
+            939,
+            1553
+          ],
+          "stem": "shiver",
+          "surface": "shiver"
+        },
+        {
+          "ids": [
+            1048,
+            641,
+            2194,
+            261
+          ],
+          "stem": "buccaneer",
+          "surface": " buccaneer"
+        },
+        {
+          "ids": [
+            1048,
+            641,
+            2194,
+            388
+          ],
+          "stem": "buccaneers",
+          "surface": " buccaneers"
+        },
+        {
+          "ids": [
+            1110,
+            6519
+          ],
+          "stem": "compass",
+          "surface": "Compass"
+        },
+        {
+          "ids": [
+            1170,
+            3096
+          ],
+          "stem": "deck",
+          "surface": "DECK"
+        },
+        {
+          "ids": [
+            1170,
+            3096,
+            50
+          ],
+          "stem": "decks",
+          "surface": "DECKS"
+        },
+        {
+          "ids": [
+            1308,
+            8912
+          ],
+          "stem": "roger",
+          "surface": "ROGER"
+        },
+        {
+          "ids": [
+            1369,
+            2642,
+            3329
+          ],
+          "stem": "seafaring",
+          "surface": " Seafaring"
+        },
+        {
+          "ids": [
+            1369,
+            2642,
+            61570
+          ],
+          "stem": "seafarer",
+          "surface": " Seafarer"
+        },
+        {
+          "ids": [
+            1370,
+            4744
+          ],
+          "stem": "parrot",
+          "surface": " parrot"
+        },
+        {
+          "ids": [
+            1370,
+            90329
+          ],
+          "stem": "parrots",
+          "surface": " parrots"
+        },
+        {
+          "ids": [
+            1443,
+            1553
+          ],
+          "stem": "shiver",
+          "surface": " Shiver"
+        },
+        {
+          "ids": [
+            1448,
+            65056
+          ],
+          "stem": "frigate",
+          "surface": " frigate"
+        },
+        {
+          "ids": [
+            1494,
+            2303
+          ],
+          "stem": "ahoy",
+          "surface": "ahoy"
+        },
+        {
+          "ids": [
+            1529,
+            547,
+            88
+          ],
+          "stem": "blimey",
+          "surface": " blimey"
+        },
+        {
+          "ids": [
+            1542,
+            300
+          ],
+          "stem": "seas",
+          "surface": "Seas"
+        },
+        {
+          "ids": [
+            1542,
+            2642,
+            3329
+          ],
+          "stem": "seafaring",
+          "surface": "Seafaring"
+        },
+        {
+          "ids": [
+            1542,
+            2642,
+            61570
+          ],
+          "stem": "seafarer",
+          "surface": "Seafarer"
+        },
+        {
+          "ids": [
+            1611,
+            14895
+          ],
+          "stem": "decks",
+          "surface": " Decks"
+        },
+        {
+          "ids": [
+            1623,
+            1831
+          ],
+          "stem": "loot",
+          "surface": "LOOT"
+        },
+        {
+          "ids": [
+            1658,
+            65056
+          ],
+          "stem": "frigate",
+          "surface": "frigate"
+        },
+        {
+          "ids": [
+            1676,
+            876
+          ],
+          "stem": "argh",
+          "surface": " Argh"
+        },
+        {
+          "ids": [
+            1768,
+            4744
+          ],
+          "stem": "parrot",
+          "surface": "parrot"
+        },
+        {
+          "ids": [
+            1768,
+            90329
+          ],
+          "stem": "parrots",
+          "surface": "parrots"
+        },
+        {
+          "ids": [
+            1837,
+            11237
+          ],
+          "stem": "helm",
+          "surface": "HELM"
+        },
+        {
+          "ids": [
+            1856,
+            1201
+          ],
+          "stem": "plank",
+          "surface": " Plank"
+        },
+        {
+          "ids": [
+            1856,
+            8154
+          ],
+          "stem": "plunder",
+          "surface": " Plunder"
+        },
+        {
+          "ids": [
+            1860,
+            561
+          ],
+          "stem": "avast",
+          "surface": " avast"
+        },
+        {
+          "ids": [
+            1932,
+            49,
+            31404
+          ],
+          "stem": "pirates",
+          "surface": "PIRATES"
+        },
+        {
+          "ids": [
+            1932,
+            49,
+            44845
+          ],
+          "stem": "piracy",
+          "surface": "PIRACY"
+        },
+        {
+          "ids": [
+            1932,
+            61796
+          ],
+          "stem": "pirate",
+          "surface": "PIRATE"
+        },
+        {
+          "ids": [
+            1951,
+            14895
+          ],
+          "stem": "decks",
+          "surface": "Decks"
+        },
+        {
+          "ids": [
+            1974,
+            75,
+            92986
+          ],
+          "stem": "landlubber",
+          "surface": "landlubber"
+        },
+        {
+          "ids": [
+            2059,
+            1553
+          ],
+          "stem": "shiver",
+          "surface": "Shiver"
+        },
+        {
+          "ids": [
+            2059,
+            3153
+          ],
+          "stem": "ships",
+          "surface": "Ships"
+        },
+        {
+          "ids": [
+            2064,
+            1003,
+            65,
+            1983,
+            1565
+          ],
+          "stem": "swashbuckler",
+          "surface": " swashbuckler"
+        },
+        {
+          "ids": [
+            2067,
+            547,
+            88
+          ],
+          "stem": "blimey",
+          "surface": "blimey"
+        },
+        {
+          "ids": [
+            2127,
+            331,
+            1105
+          ],
+          "stem": "anchors",
+          "surface": "Anchors"
+        },
+        {
+          "ids": [
+            2147,
+            2198,
+            878
+          ],
+          "stem": "anchor",
+          "surface": " ANCHOR"
+        },
+        {
+          "ids": [
+            2147,
+            2198,
+            10022
+          ],
+          "stem": "anchors",
+          "surface": " ANCHORS"
+        },
+        {
+          "ids": [
+            2169,
+            1201
+          ],
+          "stem": "plank",
+          "surface": "Plank"
+        },
+        {
+          "ids": [
+            2169,
+            8154
+          ],
+          "stem": "plunder",
+          "surface": "Plunder"
+        },
+        {
+          "ids": [
+            2332,
+            1003,
+            65,
+            1983,
+            1565
+          ],
+          "stem": "swashbuckler",
+          "surface": "swashbuckler"
+        },
+        {
+          "ids": [
+            2563,
+            547,
+            88
+          ],
+          "stem": "blimey",
+          "surface": " Blimey"
+        },
+        {
+          "ids": [
+            2739,
+            634,
+            261
+          ],
+          "stem": "rudder",
+          "surface": "rudder"
+        },
+        {
+          "ids": [
+            2939,
+            65056
+          ],
+          "stem": "frigate",
+          "surface": " Frigate"
+        },
+        {
+          "ids": [
+            2961,
+            81
+          ],
+          "stem": "arrr",
+          "surface": " arrr"
+        },
+        {
+          "ids": [
+            2989,
+            16395
+          ],
+          "stem": "plank",
+          "surface": "PLANK"
+        },
+        {
+          "ids": [
+            2989,
+            82491
+          ],
+          "stem": "plunder",
+          "surface": "PLUNDER"
+        },
+        {
+          "ids": [
+            3097,
+            36
+          ],
+          "stem": "aye",
+          "surface": "AYE"
+        },
+        {
+          "ids": [
+            3467,
+            3096
+          ],
+          "stem": "deck",
+          "surface": " DECK"
+        },
+        {
+          "ids": [
+            3467,
+            3096,
+            50
+          ],
+          "stem": "decks",
+          "surface": " DECKS"
+        },
+        {
+          "ids": [
+            4002,
+            49
+          ],
+          "stem": "arrr",
+          "surface": "ARRR"
+        },
+        {
+          "ids": [
+            4018,
+            448
+          ],
+          "stem": "cutlass",
+          "surface": " cutlass"
+        },
+        {
+          "ids": [
+            4363,
+            75,
+            92986
+          ],
+          "stem": "landlubber",
+          "surface": " landlubber"
+        },
+        {
+          "ids": [
+            4366,
+            4744
+          ],
+          "stem": "parrot",
+          "surface": " Parrot"
+        },
+        {
+          "ids": [
+            4366,
+            90329
+          ],
+          "stem": "parrots",
+          "surface": " Parrots"
+        },
+        {
+          "ids": [
+            4368,
+            4744
+          ],
+          "stem": "parrot",
+          "surface": "Parrot"
+        },
+        {
+          "ids": [
+            4368,
+            90329
+          ],
+          "stem": "parrots",
+          "surface": "Parrots"
+        },
+        {
+          "ids": [
+            4593,
+            1003,
+            65,
+            1983,
+            1565
+          ],
+          "stem": "swashbuckler",
+          "surface": " Swashbuckler"
+        },
+        {
+          "ids": [
+            4722,
+            88
+          ],
+          "stem": "booty",
+          "surface": "booty"
+        },
+        {
+          "ids": [
+            4940,
+            790
+          ],
+          "stem": "mast",
+          "surface": "MAST"
+        },
+        {
+          "ids": [
+            5028,
+            547,
+            88
+          ],
+          "stem": "blimey",
+          "surface": "Blimey"
+        },
+        {
+          "ids": [
+            5125,
+            1831
+          ],
+          "stem": "loot",
+          "surface": " LOOT"
+        },
+        {
+          "ids": [
+            5161,
+            1950
+          ],
+          "stem": "seas",
+          "surface": " SEAS"
+        },
+        {
+          "ids": [
+            5161,
+            8440,
+            946,
+            643
+          ],
+          "stem": "seafarer",
+          "surface": " SEAFARER"
+        },
+        {
+          "ids": [
+            5161,
+            8440,
+            92123
+          ],
+          "stem": "seafaring",
+          "surface": " SEAFARING"
+        },
+        {
+          "ids": [
+            5318,
+            6577
+          ],
+          "stem": "mutiny",
+          "surface": " mutiny"
+        },
+        {
+          "ids": [
+            5340,
+            65,
+            1105
+          ],
+          "stem": "harbors",
+          "surface": " Harbors"
+        },
+        {
+          "ids": [
+            5682,
+            349
+          ],
+          "stem": "pirate",
+          "surface": "pirate"
+        },
+        {
+          "ids": [
+            5682,
+            988
+          ],
+          "stem": "pirates",
+          "surface": "pirates"
+        },
+        {
+          "ids": [
+            5682,
+            2826
+          ],
+          "stem": "piracy",
+          "surface": "piracy"
+        },
+        {
+          "ids": [
+            5730,
+            39604
+          ],
+          "stem": "maritime",
+          "surface": "maritime"
+        },
+        {
+          "ids": [
+            5989,
+            4594,
+            1623,
+            715
+          ],
+          "stem": "doubloon",
+          "surface": "DOUBLOON"
+        },
+        {
+          "ids": [
+            5989,
+            4594,
+            1623,
+            30626
+          ],
+          "stem": "doubloons",
+          "surface": "DOUBLOONS"
+        },
+        {
+          "ids": [
+            6395,
+            8268
+          ],
+          "stem": "arrr",
+          "surface": " ARRR"
+        },
+        {
+          "ids": [
+            6570,
+            3378
+          ],
+          "stem": "ship",
+          "surface": " SHIP"
+        },
+        {
+          "ids": [
+            6570,
+            19323
+          ],
+          "stem": "shiver",
+          "surface": " SHIVER"
+        },
+        {
+          "ids": [
+            6570,
+            27034
+          ],
+          "stem": "ships",
+          "surface": " SHIPS"
+        },
+        {
+          "ids": [
+            6935,
+            1941
+          ],
+          "stem": "timbers",
+          "surface": " timbers"
+        },
+        {
+          "ids": [
+            7098,
+            876
+          ],
+          "stem": "argh",
+          "surface": "Argh"
+        },
+        {
+          "ids": [
+            7129,
+            6577
+          ],
+          "stem": "mutiny",
+          "surface": "mutiny"
+        },
+        {
+          "ids": [
+            7476,
+            1406,
+            15942
+          ],
+          "stem": "nautical",
+          "surface": "NAUTICAL"
+        },
+        {
+          "ids": [
+            7671,
+            561
+          ],
+          "stem": "avast",
+          "surface": " Avast"
+        },
+        {
+          "ids": [
+            7734,
+            39
+          ],
+          "stem": "argh",
+          "surface": "ARGH"
+        },
+        {
+          "ids": [
+            7810,
+            385,
+            2439
+          ],
+          "stem": "doubloons",
+          "surface": " doubloons"
+        },
+        {
+          "ids": [
+            7810,
+            32435
+          ],
+          "stem": "doubloon",
+          "surface": " doubloon"
+        },
+        {
+          "ids": [
+            8253,
+            6483
+          ],
+          "stem": "avast",
+          "surface": "AVAST"
+        },
+        {
+          "ids": [
+            8758,
+            19323
+          ],
+          "stem": "shiver",
+          "surface": "SHIVER"
+        },
+        {
+          "ids": [
+            8758,
+            27034
+          ],
+          "stem": "ships",
+          "surface": "SHIPS"
+        },
+        {
+          "ids": [
+            9014,
+            81
+          ],
+          "stem": "arrr",
+          "surface": "Arrr"
+        },
+        {
+          "ids": [
+            9503,
+            4594,
+            1623,
+            715
+          ],
+          "stem": "doubloon",
+          "surface": " DOUBLOON"
+        },
+        {
+          "ids": [
+            9503,
+            4594,
+            1623,
+            30626
+          ],
+          "stem": "doubloons",
+          "surface": " DOUBLOONS"
+        },
+        {
+          "ids": [
+            9538,
+            1941
+          ],
+          "stem": "timbers",
+          "surface": " Timbers"
+        },
+        {
+          "ids": [
+            9574,
+            5778,
+            56
+          ],
+          "stem": "blimey",
+          "surface": "BLIMEY"
+        },
+        {
+          "ids": [
+            9614,
+            54
+          ],
+          "stem": "crew",
+          "surface": "CREW"
+        },
+        {
+          "ids": [
+            9614,
+            7585
+          ],
+          "stem": "crews",
+          "surface": "CREWS"
+        },
+        {
+          "ids": [
+            9614,
+            15565,
+            31404
+          ],
+          "stem": "crewmates",
+          "surface": "CREWMATES"
+        },
+        {
+          "ids": [
+            10066,
+            561
+          ],
+          "stem": "avast",
+          "surface": "Avast"
+        },
+        {
+          "ids": [
+            10367,
+            4058
+          ],
+          "stem": "treasure",
+          "surface": "treasure"
+        },
+        {
+          "ids": [
+            10367,
+            24368
+          ],
+          "stem": "treasures",
+          "surface": "treasures"
+        },
+        {
+          "ids": [
+            10453,
+            448
+          ],
+          "stem": "cutlass",
+          "surface": "cutlass"
+        },
+        {
+          "ids": [
+            10528,
+            16395
+          ],
+          "stem": "plank",
+          "surface": " PLANK"
+        },
+        {
+          "ids": [
+            10528,
+            82491
+          ],
+          "stem": "plunder",
+          "surface": " PLUNDER"
+        },
+        {
+          "ids": [
+            10707,
+            70
+          ],
+          "stem": "grog",
+          "surface": " grog"
+        },
+        {
+          "ids": [
+            10725,
+            1953,
+            2390
+          ],
+          "stem": "frigate",
+          "surface": "FRIGATE"
+        },
+        {
+          "ids": [
+            10936,
+            716
+          ],
+          "stem": "skipper",
+          "surface": " skipper"
+        },
+        {
+          "ids": [
+            11417,
+            56,
+            3669
+          ],
+          "stem": "voyage",
+          "surface": "VOYAGE"
+        },
+        {
+          "ids": [
+            11417,
+            56,
+            11488
+          ],
+          "stem": "voyages",
+          "surface": "VOYAGES"
+        },
+        {
+          "ids": [
+            11680,
+            75,
+            92986
+          ],
+          "stem": "landlubber",
+          "surface": " Landlubber"
+        },
+        {
+          "ids": [
+            12076,
+            8912
+          ],
+          "stem": "roger",
+          "surface": " ROGER"
+        },
+        {
+          "ids": [
+            12331,
+            39604
+          ],
+          "stem": "maritime",
+          "surface": "Maritime"
+        },
+        {
+          "ids": [
+            12431,
+            6483
+          ],
+          "stem": "avast",
+          "surface": " AVAST"
+        },
+        {
+          "ids": [
+            12758,
+            24368
+          ],
+          "stem": "treasures",
+          "surface": " Treasures"
+        },
+        {
+          "ids": [
+            13279,
+            65,
+            1105
+          ],
+          "stem": "harbors",
+          "surface": "harbors"
+        },
+        {
+          "ids": [
+            13279,
+            9552
+          ],
+          "stem": "harbor",
+          "surface": "harbor"
+        },
+        {
+          "ids": [
+            13521,
+            1003,
+            65,
+            1983,
+            1565
+          ],
+          "stem": "swashbuckler",
+          "surface": "Swashbuckler"
+        },
+        {
+          "ids": [
+            13692,
+            9729,
+            15275,
+            3096,
+            28868
+          ],
+          "stem": "swashbuckler",
+          "surface": " SWASHBUCKLER"
+        },
+        {
+          "ids": [
+            13941,
+            16862
+          ],
+          "stem": "crewmates",
+          "surface": " crewmates"
+        },
+        {
+          "ids": [
+            15195,
+            5778,
+            56
+          ],
+          "stem": "blimey",
+          "surface": " BLIMEY"
+        },
+        {
+          "ids": [
+            15275,
+            3791,
+            28919,
+            643
+          ],
+          "stem": "buccaneer",
+          "surface": "BUCCANEER"
+        },
+        {
+          "ids": [
+            15275,
+            3791,
+            28919,
+            4419
+          ],
+          "stem": "buccaneers",
+          "surface": "BUCCANEERS"
+        },
+        {
+          "ids": [
+            15354,
+            88
+          ],
+          "stem": "booty",
+          "surface": " Booty"
+        },
+        {
+          "ids": [
+            16770,
+            2303
+          ],
+          "stem": "ahoy",
+          "surface": " Ahoy"
+        },
+        {
+          "ids": [
+            16976,
+            1308,
+            10155
+          ],
+          "stem": "parrots",
+          "surface": "PARROTS"
+        },
+        {
+          "ids": [
+            16976,
+            60318
+          ],
+          "stem": "parrot",
+          "surface": "PARROT"
+        },
+        {
+          "ids": [
+            17013,
+            1771
+          ],
+          "stem": "captains",
+          "surface": " Captains"
+        },
+        {
+          "ids": [
+            17067,
+            1953,
+            2390
+          ],
+          "stem": "frigate",
+          "surface": " FRIGATE"
+        },
+        {
+          "ids": [
+            17268,
+            9729,
+            15275,
+            3096,
+            28868
+          ],
+          "stem": "swashbuckler",
+          "surface": "SWASHBUCKLER"
+        },
+        {
+          "ids": [
+            18214,
+            45216
+          ],
+          "stem": "timbers",
+          "surface": " TIMBERS"
+        },
+        {
+          "ids": [
+            18402,
+            88
+          ],
+          "stem": "booty",
+          "surface": "Booty"
+        },
+        {
+          "ids": [
+            18543,
+            88
+          ],
+          "stem": "matey",
+          "surface": "matey"
+        },
+        {
+          "ids": [
+            18543,
+            1065
+          ],
+          "stem": "mateys",
+          "surface": "mateys"
+        },
+        {
+          "ids": [
+            18925,
+            81
+          ],
+          "stem": "arrr",
+          "surface": " Arrr"
+        },
+        {
+          "ids": [
+            20223,
+            448
+          ],
+          "stem": "cutlass",
+          "surface": " Cutlass"
+        },
+        {
+          "ids": [
+            20693,
+            1941
+          ],
+          "stem": "timbers",
+          "surface": "timbers"
+        },
+        {
+          "ids": [
+            20830,
+            1941
+          ],
+          "stem": "timbers",
+          "surface": "Timbers"
+        },
+        {
+          "ids": [
+            21247,
+            716
+          ],
+          "stem": "skipper",
+          "surface": "skipper"
+        },
+        {
+          "ids": [
+            21317,
+            1406,
+            15942
+          ],
+          "stem": "nautical",
+          "surface": " NAUTICAL"
+        },
+        {
+          "ids": [
+            22735,
+            5045
+          ],
+          "stem": "compass",
+          "surface": " COMPASS"
+        },
+        {
+          "ids": [
+            23128,
+            2303
+          ],
+          "stem": "ahoy",
+          "surface": " ahoy"
+        },
+        {
+          "ids": [
+            23933,
+            1154
+          ],
+          "stem": "voyages",
+          "surface": " voyages"
+        },
+        {
+          "ids": [
+            24637,
+            5045
+          ],
+          "stem": "compass",
+          "surface": "COMPASS"
+        },
+        {
+          "ids": [
+            25797,
+            2303
+          ],
+          "stem": "ahoy",
+          "surface": "Ahoy"
+        },
+        {
+          "ids": [
+            26869,
+            716
+          ],
+          "stem": "skipper",
+          "surface": " Skipper"
+        },
+        {
+          "ids": [
+            27173,
+            1308,
+            10155
+          ],
+          "stem": "parrots",
+          "surface": " PARROTS"
+        },
+        {
+          "ids": [
+            27173,
+            60318
+          ],
+          "stem": "parrot",
+          "surface": " PARROT"
+        },
+        {
+          "ids": [
+            27193,
+            51,
+            6979
+          ],
+          "stem": "captain",
+          "surface": " CAPTAIN"
+        },
+        {
+          "ids": [
+            27193,
+            51,
+            73991
+          ],
+          "stem": "captains",
+          "surface": " CAPTAINS"
+        },
+        {
+          "ids": [
+            27563,
+            7934,
+            2871
+          ],
+          "stem": "corsair",
+          "surface": " CORSAIR"
+        },
+        {
+          "ids": [
+            27563,
+            7934,
+            91064
+          ],
+          "stem": "corsairs",
+          "surface": " CORSAIRS"
+        },
+        {
+          "ids": [
+            27588,
+            65,
+            1105
+          ],
+          "stem": "harbors",
+          "surface": "Harbors"
+        },
+        {
+          "ids": [
+            27588,
+            9552
+          ],
+          "stem": "harbor",
+          "surface": "Harbor"
+        },
+        {
+          "ids": [
+            30276,
+            88
+          ],
+          "stem": "matey",
+          "surface": " matey"
+        },
+        {
+          "ids": [
+            30276,
+            1065
+          ],
+          "stem": "mateys",
+          "surface": " mateys"
+        },
+        {
+          "ids": [
+            30568,
+            2439
+          ],
+          "stem": "cannons",
+          "surface": " Cannons"
+        },
+        {
+          "ids": [
+            32328,
+            6577
+          ],
+          "stem": "mutiny",
+          "surface": " Mutiny"
+        },
+        {
+          "ids": [
+            32500,
+            51,
+            6979
+          ],
+          "stem": "captain",
+          "surface": "CAPTAIN"
+        },
+        {
+          "ids": [
+            32500,
+            51,
+            73991
+          ],
+          "stem": "captains",
+          "surface": "CAPTAINS"
+        },
+        {
+          "ids": [
+            33846,
+            39
+          ],
+          "stem": "argh",
+          "surface": " ARGH"
+        },
+        {
+          "ids": [
+            35248,
+            45216
+          ],
+          "stem": "timbers",
+          "surface": "TIMBERS"
+        },
+        {
+          "ids": [
+            36037,
+            82
+          ],
+          "stem": "crews",
+          "surface": " Crews"
+        },
+        {
+          "ids": [
+            36037,
+            16862
+          ],
+          "stem": "crewmates",
+          "surface": " Crewmates"
+        },
+        {
+          "ids": [
+            36234,
+            716
+          ],
+          "stem": "skipper",
+          "surface": "Skipper"
+        },
+        {
+          "ids": [
+            37103,
+            4195,
+            643
+          ],
+          "stem": "rudder",
+          "surface": "RUDDER"
+        },
+        {
+          "ids": [
+            38599,
+            964,
+            5778
+          ],
+          "stem": "maritime",
+          "surface": " MARITIME"
+        },
+        {
+          "ids": [
+            38757,
+            44
+          ],
+          "stem": "helm",
+          "surface": " HELM"
+        },
+        {
+          "ids": [
+            38766,
+            448
+          ],
+          "stem": "cutlass",
+          "surface": "Cutlass"
+        },
+        {
+          "ids": [
+            39593,
+            2826
+          ],
+          "stem": "piracy",
+          "surface": " Piracy"
+        },
+        {
+          "ids": [
+            39717,
+            16862
+          ],
+          "stem": "crewmates",
+          "surface": "crewmates"
+        },
+        {
+          "ids": [
+            40915,
+            43,
+            4594,
+            9745
+          ],
+          "stem": "landlubber",
+          "surface": "LANDLUBBER"
+        },
+        {
+          "ids": [
+            41636,
+            1771
+          ],
+          "stem": "captains",
+          "surface": "Captains"
+        },
+        {
+          "ids": [
+            43033,
+            878
+          ],
+          "stem": "anchor",
+          "surface": "ANCHOR"
+        },
+        {
+          "ids": [
+            43033,
+            10022
+          ],
+          "stem": "anchors",
+          "surface": "ANCHORS"
+        },
+        {
+          "ids": [
+            43057,
+            75,
+            92986
+          ],
+          "stem": "landlubber",
+          "surface": "Landlubber"
+        },
+        {
+          "ids": [
+            44303,
+            467
+          ],
+          "stem": "captain",
+          "surface": "captain"
+        },
+        {
+          "ids": [
+            44303,
+            1771
+          ],
+          "stem": "captains",
+          "surface": "captains"
+        },
+        {
+          "ids": [
+            44670,
+            88
+          ],
+          "stem": "matey",
+          "surface": " Matey"
+        },
+        {
+          "ids": [
+            44670,
+            1065
+          ],
+          "stem": "mateys",
+          "surface": " Mateys"
+        },
+        {
+          "ids": [
+            44723,
+            1154
+          ],
+          "stem": "voyages",
+          "surface": " Voyages"
+        },
+        {
+          "ids": [
+            44752,
+            56,
+            3669
+          ],
+          "stem": "voyage",
+          "surface": " VOYAGE"
+        },
+        {
+          "ids": [
+            44752,
+            56,
+            11488
+          ],
+          "stem": "voyages",
+          "surface": " VOYAGES"
+        },
+        {
+          "ids": [
+            45011,
+            1334
+          ],
+          "stem": "corsair",
+          "surface": " corsair"
+        },
+        {
+          "ids": [
+            45011,
+            4825
+          ],
+          "stem": "corsairs",
+          "surface": " corsairs"
+        },
+        {
+          "ids": [
+            50708,
+            54
+          ],
+          "stem": "crew",
+          "surface": " CREW"
+        },
+        {
+          "ids": [
+            50708,
+            7585
+          ],
+          "stem": "crews",
+          "surface": " CREWS"
+        },
+        {
+          "ids": [
+            50708,
+            15565,
+            31404
+          ],
+          "stem": "crewmates",
+          "surface": " CREWMATES"
+        },
+        {
+          "ids": [
+            52540,
+            6577
+          ],
+          "stem": "mutiny",
+          "surface": "Mutiny"
+        },
+        {
+          "ids": [
+            53420,
+            7934,
+            2871
+          ],
+          "stem": "corsair",
+          "surface": "CORSAIR"
+        },
+        {
+          "ids": [
+            53420,
+            7934,
+            91064
+          ],
+          "stem": "corsairs",
+          "surface": "CORSAIRS"
+        },
+        {
+          "ids": [
+            53618,
+            1334
+          ],
+          "stem": "corsair",
+          "surface": " Corsair"
+        },
+        {
+          "ids": [
+            53618,
+            4825
+          ],
+          "stem": "corsairs",
+          "surface": " Corsairs"
+        },
+        {
+          "ids": [
+            55072,
+            1334
+          ],
+          "stem": "corsair",
+          "surface": "corsair"
+        },
+        {
+          "ids": [
+            55072,
+            4825
+          ],
+          "stem": "corsairs",
+          "surface": "corsairs"
+        },
+        {
+          "ids": [
+            55129,
+            3791,
+            28919,
+            643
+          ],
+          "stem": "buccaneer",
+          "surface": " BUCCANEER"
+        },
+        {
+          "ids": [
+            55129,
+            3791,
+            28919,
+            4419
+          ],
+          "stem": "buccaneers",
+          "surface": " BUCCANEERS"
+        },
+        {
+          "ids": [
+            55964,
+            385,
+            2439
+          ],
+          "stem": "doubloons",
+          "surface": " Doubloons"
+        },
+        {
+          "ids": [
+            55964,
+            32435
+          ],
+          "stem": "doubloon",
+          "surface": " Doubloon"
+        },
+        {
+          "ids": [
+            57284,
+            27674
+          ],
+          "stem": "schooner",
+          "surface": " Schooner"
+        },
+        {
+          "ids": [
+            58095,
+            1105
+          ],
+          "stem": "sailors",
+          "surface": " Sailors"
+        },
+        {
+          "ids": [
+            61761,
+            964,
+            5778
+          ],
+          "stem": "maritime",
+          "surface": "MARITIME"
+        },
+        {
+          "ids": [
+            66875,
+            4058
+          ],
+          "stem": "treasure",
+          "surface": "Treasure"
+        },
+        {
+          "ids": [
+            66875,
+            24368
+          ],
+          "stem": "treasures",
+          "surface": "Treasures"
+        },
+        {
+          "ids": [
+            68176,
+            56
+          ],
+          "stem": "booty",
+          "surface": "BOOTY"
+        },
+        {
+          "ids": [
+            69566,
+            1105
+          ],
+          "stem": "harbors",
+          "surface": " harbors"
+        },
+        {
+          "ids": [
+            69925,
+            4195,
+            643
+          ],
+          "stem": "rudder",
+          "surface": " RUDDER"
+        },
+        {
+          "ids": [
+            72584,
+            1105
+          ],
+          "stem": "anchors",
+          "surface": " Anchors"
+        },
+        {
+          "ids": [
+            73957,
+            43,
+            5045
+          ],
+          "stem": "cutlass",
+          "surface": " CUTLASS"
+        },
+        {
+          "ids": [
+            77864,
+            937,
+            7416
+          ],
+          "stem": "vessels",
+          "surface": "VESSELS"
+        },
+        {
+          "ids": [
+            77864,
+            30465
+          ],
+          "stem": "vessel",
+          "surface": "VESSEL"
+        },
+        {
+          "ids": [
+            77986,
+            1950,
+            51761
+          ],
+          "stem": "treasures",
+          "surface": " TREASURES"
+        },
+        {
+          "ids": [
+            77986,
+            73269
+          ],
+          "stem": "treasure",
+          "surface": " TREASURE"
+        },
+        {
+          "ids": [
+            78140,
+            27674
+          ],
+          "stem": "schooner",
+          "surface": " schooner"
+        },
+        {
+          "ids": [
+            79163,
+            1334
+          ],
+          "stem": "corsair",
+          "surface": "Corsair"
+        },
+        {
+          "ids": [
+            79163,
+            4825
+          ],
+          "stem": "corsairs",
+          "surface": "Corsairs"
+        },
+        {
+          "ids": [
+            80897,
+            425
+          ],
+          "stem": "voyage",
+          "surface": "voyage"
+        },
+        {
+          "ids": [
+            80897,
+            1154
+          ],
+          "stem": "voyages",
+          "surface": "voyages"
+        },
+        {
+          "ids": [
+            82504,
+            9851
+          ],
+          "stem": "skipper",
+          "surface": " SKIPPER"
+        },
+        {
+          "ids": [
+            84776,
+            56
+          ],
+          "stem": "booty",
+          "surface": " BOOTY"
+        },
+        {
+          "ids": [
+            86870,
+            261
+          ],
+          "stem": "buccaneer",
+          "surface": " Buccaneer"
+        },
+        {
+          "ids": [
+            88520,
+            66053
+          ],
+          "stem": "mutiny",
+          "surface": " MUTINY"
+        },
+        {
+          "ids": [
+            92899,
+            9851
+          ],
+          "stem": "skipper",
+          "surface": "SKIPPER"
+        },
+        {
+          "ids": [
+            92956,
+            43,
+            4594,
+            9745
+          ],
+          "stem": "landlubber",
+          "surface": " LANDLUBBER"
+        },
+        {
+          "ids": [
+            97742,
+            88
+          ],
+          "stem": "matey",
+          "surface": "Matey"
+        },
+        {
+          "ids": [
+            97742,
+            1065
+          ],
+          "stem": "mateys",
+          "surface": "Mateys"
+        }
+      ],
+      "single_token_count": 95,
+      "single_tokens": [
+        {
+          "id": 1138,
+          "stem": "arr",
+          "token": "arr"
+        },
+        {
+          "id": 2961,
+          "stem": "arr",
+          "token": " arr"
+        },
+        {
+          "id": 4002,
+          "stem": "arr",
+          "token": "ARR"
+        },
+        {
+          "id": 5383,
+          "stem": "ship",
+          "token": "ship"
+        },
+        {
+          "id": 8448,
+          "stem": "ship",
+          "token": " ship"
+        },
+        {
+          "id": 9014,
+          "stem": "arr",
+          "token": "Arr"
+        },
+        {
+          "id": 9581,
+          "stem": "sea",
+          "token": " sea"
+        },
+        {
+          "id": 9722,
+          "stem": "deck",
+          "token": " deck"
+        },
+        {
+          "id": 10952,
+          "stem": "rum",
+          "token": "rum"
+        },
+        {
+          "id": 13941,
+          "stem": "crew",
+          "token": " crew"
+        },
+        {
+          "id": 14322,
+          "stem": "rum",
+          "token": " rum"
+        },
+        {
+          "id": 15019,
+          "stem": "anchor",
+          "token": "Anchor"
+        },
+        {
+          "id": 15379,
+          "stem": "sea",
+          "token": " Sea"
+        },
+        {
+          "id": 17543,
+          "stem": "anchor",
+          "token": " anchor"
+        },
+        {
+          "id": 17547,
+          "stem": "anchor",
+          "token": "anchor"
+        },
+        {
+          "id": 18143,
+          "stem": "ships",
+          "token": "ships"
+        },
+        {
+          "id": 18198,
+          "stem": "ships",
+          "token": " ships"
+        },
+        {
+          "id": 18435,
+          "stem": "ocean",
+          "token": " ocean"
+        },
+        {
+          "id": 18925,
+          "stem": "arr",
+          "token": " Arr"
+        },
+        {
+          "id": 19218,
+          "stem": "mast",
+          "token": " mast"
+        },
+        {
+          "id": 22022,
+          "stem": "captain",
+          "token": " Captain"
+        },
+        {
+          "id": 22302,
+          "stem": "ocean",
+          "token": " Ocean"
+        },
+        {
+          "id": 24653,
+          "stem": "compass",
+          "token": " compass"
+        },
+        {
+          "id": 24862,
+          "stem": "captain",
+          "token": " captain"
+        },
+        {
+          "id": 27274,
+          "stem": "vessel",
+          "token": " vessel"
+        },
+        {
+          "id": 27901,
+          "stem": "ship",
+          "token": " Ship"
+        },
+        {
+          "id": 29516,
+          "stem": "deck",
+          "token": " Deck"
+        },
+        {
+          "id": 29607,
+          "stem": "roger",
+          "token": " Roger"
+        },
+        {
+          "id": 30503,
+          "stem": "sail",
+          "token": " sail"
+        },
+        {
+          "id": 30724,
+          "stem": "ship",
+          "token": "Ship"
+        },
+        {
+          "id": 30881,
+          "stem": "decks",
+          "token": " decks"
+        },
+        {
+          "id": 31080,
+          "stem": "vessels",
+          "token": " vessels"
+        },
+        {
+          "id": 31929,
+          "stem": "compass",
+          "token": "compass"
+        },
+        {
+          "id": 32726,
+          "stem": "treasure",
+          "token": " treasure"
+        },
+        {
+          "id": 34525,
+          "stem": "deck",
+          "token": "deck"
+        },
+        {
+          "id": 34865,
+          "stem": "helm",
+          "token": " helm"
+        },
+        {
+          "id": 36037,
+          "stem": "crew",
+          "token": " Crew"
+        },
+        {
+          "id": 37541,
+          "stem": "sea",
+          "token": "sea"
+        },
+        {
+          "id": 37582,
+          "stem": "mast",
+          "token": " Mast"
+        },
+        {
+          "id": 37611,
+          "stem": "arr",
+          "token": "\tarr"
+        },
+        {
+          "id": 39717,
+          "stem": "crew",
+          "token": "crew"
+        },
+        {
+          "id": 40282,
+          "stem": "harbor",
+          "token": " Harbor"
+        },
+        {
+          "id": 40468,
+          "stem": "deck",
+          "token": "Deck"
+        },
+        {
+          "id": 41298,
+          "stem": "hull",
+          "token": " hull"
+        },
+        {
+          "id": 43160,
+          "stem": "crews",
+          "token": " crews"
+        },
+        {
+          "id": 45640,
+          "stem": "voyage",
+          "token": " voyage"
+        },
+        {
+          "id": 46332,
+          "stem": "rum",
+          "token": " Rum"
+        },
+        {
+          "id": 46403,
+          "stem": "loot",
+          "token": " loot"
+        },
+        {
+          "id": 49499,
+          "stem": "cannon",
+          "token": " cannon"
+        },
+        {
+          "id": 49872,
+          "stem": "anchor",
+          "token": " Anchor"
+        },
+        {
+          "id": 51129,
+          "stem": "sailing",
+          "token": " sailing"
+        },
+        {
+          "id": 51823,
+          "stem": "cannon",
+          "token": " Cannon"
+        },
+        {
+          "id": 52840,
+          "stem": "seas",
+          "token": " seas"
+        },
+        {
+          "id": 52999,
+          "stem": "helm",
+          "token": "helm"
+        },
+        {
+          "id": 53505,
+          "stem": "pirates",
+          "token": " Pirates"
+        },
+        {
+          "id": 54280,
+          "stem": "oceans",
+          "token": " oceans"
+        },
+        {
+          "id": 55066,
+          "stem": "pirate",
+          "token": " pirate"
+        },
+        {
+          "id": 56539,
+          "stem": "anchors",
+          "token": " anchors"
+        },
+        {
+          "id": 57511,
+          "stem": "harbor",
+          "token": " harbor"
+        },
+        {
+          "id": 58095,
+          "stem": "sail",
+          "token": " Sail"
+        },
+        {
+          "id": 58248,
+          "stem": "treasure",
+          "token": " Treasure"
+        },
+        {
+          "id": 58412,
+          "stem": "maritime",
+          "token": " maritime"
+        },
+        {
+          "id": 58486,
+          "stem": "hull",
+          "token": " Hull"
+        },
+        {
+          "id": 59949,
+          "stem": "treasures",
+          "token": " treasures"
+        },
+        {
+          "id": 60261,
+          "stem": "sea",
+          "token": "Sea"
+        },
+        {
+          "id": 60680,
+          "stem": "compass",
+          "token": " Compass"
+        },
+        {
+          "id": 61055,
+          "stem": "aye",
+          "token": "aye"
+        },
+        {
+          "id": 62158,
+          "stem": "captain",
+          "token": "Captain"
+        },
+        {
+          "id": 62248,
+          "stem": "pirate",
+          "token": " Pirate"
+        },
+        {
+          "id": 62575,
+          "stem": "pirates",
+          "token": " pirates"
+        },
+        {
+          "id": 62702,
+          "stem": "booty",
+          "token": " booty"
+        },
+        {
+          "id": 63142,
+          "stem": "helm",
+          "token": " Helm"
+        },
+        {
+          "id": 69938,
+          "stem": "sailors",
+          "token": " sailors"
+        },
+        {
+          "id": 71320,
+          "stem": "ship",
+          "token": "SHIP"
+        },
+        {
+          "id": 71599,
+          "stem": "anchors",
+          "token": "anchors"
+        },
+        {
+          "id": 73187,
+          "stem": "plank",
+          "token": " plank"
+        },
+        {
+          "id": 74632,
+          "stem": "ships",
+          "token": " Ships"
+        },
+        {
+          "id": 77331,
+          "stem": "maritime",
+          "token": " Maritime"
+        },
+        {
+          "id": 78312,
+          "stem": "piracy",
+          "token": " piracy"
+        },
+        {
+          "id": 78911,
+          "stem": "sea",
+          "token": " SEA"
+        },
+        {
+          "id": 79525,
+          "stem": "roger",
+          "token": "Roger"
+        },
+        {
+          "id": 83179,
+          "stem": "arr",
+          "token": " ARR"
+        },
+        {
+          "id": 84154,
+          "stem": "loot",
+          "token": " Loot"
+        },
+        {
+          "id": 86105,
+          "stem": "sails",
+          "token": " sails"
+        },
+        {
+          "id": 88802,
+          "stem": "plunder",
+          "token": " plunder"
+        },
+        {
+          "id": 90984,
+          "stem": "captains",
+          "token": " captains"
+        },
+        {
+          "id": 93052,
+          "stem": "sea",
+          "token": "SEA"
+        },
+        {
+          "id": 93168,
+          "stem": "buccaneers",
+          "token": " Buccaneers"
+        },
+        {
+          "id": 93496,
+          "stem": "seas",
+          "token": " Seas"
+        },
+        {
+          "id": 93637,
+          "stem": "sailor",
+          "token": " sailor"
+        },
+        {
+          "id": 96372,
+          "stem": "voyage",
+          "token": " Voyage"
+        },
+        {
+          "id": 97283,
+          "stem": "ocean",
+          "token": "Ocean"
+        },
+        {
+          "id": 97613,
+          "stem": "mast",
+          "token": "mast"
+        },
+        {
+          "id": 98014,
+          "stem": "cannons",
+          "token": " cannons"
+        },
+        {
+          "id": 99002,
+          "stem": "sailor",
+          "token": " Sailor"
+        }
+      ],
+      "stems": [
+        "ahoy",
+        "anchor",
+        "anchors",
+        "argh",
+        "arr",
+        "arrr",
+        "avast",
+        "aye",
+        "blimey",
+        "booty",
+        "buccaneer",
+        "buccaneers",
+        "cannon",
+        "cannons",
+        "captain",
+        "captains",
+        "compass",
+        "corsair",
+        "corsairs",
+        "crew",
+        "crewmates",
+        "crews",
+        "cutlass",
+        "deck",
+        "decks",
+        "doubloon",
+        "doubloons",
+        "frigate",
+        "galleon",
+        "grog",
+        "harbor",
+        "harbors",
+        "helm",
+        "hull",
+        "jolly",
+        "landlubber",
+        "loot",
+        "maritime",
+        "mast",
+        "matey",
+        "mateys",
+        "mutiny",
+        "nautical",
+        "ocean",
+        "oceans",
+        "parrot",
+        "parrots",
+        "piracy",
+        "pirate",
+        "pirates",
+        "plank",
+        "plunder",
+        "roger",
+        "rudder",
+        "rum",
+        "sail",
+        "sailing",
+        "sailor",
+        "sailors",
+        "sails",
+        "schooner",
+        "sea",
+        "seafarer",
+        "seafaring",
+        "seas",
+        "ship",
+        "ships",
+        "shiver",
+        "skipper",
+        "sloop",
+        "swashbuckler",
+        "timbers",
+        "treasure",
+        "treasures",
+        "vessel",
+        "vessels",
+        "voyage",
+        "voyages",
+        "yarr"
+      ],
+      "surface_stem_regex": "\\b(?:ahoy|anchor|anchors|argh|arr|arrr|avast|aye|blimey|booty|buccaneer|buccaneers|cannon|cannons|captain|captains|compass|corsair|corsairs|crew|crewmates|crews|cutlass|deck|decks|doubloon|doubloons|frigate|galleon|grog|harbor|harbors|helm|hull|jolly|landlubber|loot|maritime|mast|matey|mateys|mutiny|nautical|ocean|oceans|parrot|parrots|piracy|pirate|pirates|plank|plunder|roger|rudder|rum|sail|sailing|sailor|sailors|sails|schooner|sea|seafarer|seafaring|seas|ship|ships|shiver|skipper|sloop|swashbuckler|timbers|treasure|treasures|vessel|vessels|voyage|voyages|yarr)\\b"
+    },
     "nomd_seeds": [
       {
         "id": 334,
@@ -1420,7 +5302,6 @@
         "token": "---"
       }
     ],
-    "part168_dynamic_top_k_bias": 50,
     "pirate_seeds": [
       {
         "id": 55066,
@@ -1471,655 +5352,105 @@
         "token": " vessel"
       }
     ],
-    "pirate_static_ban_count": 127,
-    "pirate_static_ban_tokens": [
-      {
-        "id": 403,
-        "stem": "port",
-        "token": "port"
-      },
-      {
-        "id": 1138,
-        "stem": "arr",
-        "token": "arr"
-      },
-      {
-        "id": 2700,
-        "stem": "port",
-        "token": " port"
-      },
-      {
-        "id": 2961,
-        "stem": "arr",
-        "token": " arr"
-      },
-      {
-        "id": 3476,
-        "stem": "ports",
-        "token": "ports"
-      },
-      {
-        "id": 4002,
-        "stem": "arr",
-        "token": "ARR"
-      },
-      {
-        "id": 5205,
-        "stem": "port",
-        "token": "PORT"
-      },
-      {
-        "id": 5383,
-        "stem": "ship",
-        "token": "ship"
-      },
-      {
-        "id": 5896,
-        "stem": "port",
-        "token": " Port"
-      },
-      {
-        "id": 6761,
-        "stem": "gold",
-        "token": " gold"
-      },
-      {
-        "id": 7229,
-        "stem": "port",
-        "token": "Port"
-      },
-      {
-        "id": 7573,
-        "stem": "gold",
-        "token": " Gold"
-      },
-      {
-        "id": 8448,
-        "stem": "ship",
-        "token": " ship"
-      },
-      {
-        "id": 9014,
-        "stem": "arr",
-        "token": "Arr"
-      },
-      {
-        "id": 9581,
-        "stem": "sea",
-        "token": " sea"
-      },
-      {
-        "id": 9722,
-        "stem": "deck",
-        "token": " deck"
-      },
-      {
-        "id": 10951,
-        "stem": "island",
-        "token": " Island"
-      },
-      {
-        "id": 10952,
-        "stem": "rum",
-        "token": "rum"
-      },
-      {
-        "id": 13218,
-        "stem": "island",
-        "token": " island"
-      },
-      {
-        "id": 13941,
-        "stem": "crew",
-        "token": " crew"
-      },
-      {
-        "id": 14322,
-        "stem": "rum",
-        "token": " rum"
-      },
-      {
-        "id": 15019,
-        "stem": "anchor",
-        "token": "Anchor"
-      },
-      {
-        "id": 15379,
-        "stem": "sea",
-        "token": " Sea"
-      },
-      {
-        "id": 15631,
-        "stem": "bow",
-        "token": " bow"
-      },
-      {
-        "id": 15802,
-        "stem": "bow",
-        "token": "bow"
-      },
-      {
-        "id": 17301,
-        "stem": "waves",
-        "token": " waves"
-      },
-      {
-        "id": 17543,
-        "stem": "anchor",
-        "token": " anchor"
-      },
-      {
-        "id": 17547,
-        "stem": "anchor",
-        "token": "anchor"
-      },
-      {
-        "id": 18143,
-        "stem": "ships",
-        "token": "ships"
-      },
-      {
-        "id": 18198,
-        "stem": "ships",
-        "token": " ships"
-      },
-      {
-        "id": 18435,
-        "stem": "ocean",
-        "token": " ocean"
-      },
-      {
-        "id": 18925,
-        "stem": "arr",
-        "token": " Arr"
-      },
-      {
-        "id": 18943,
-        "stem": "bow",
-        "token": " Bow"
-      },
-      {
-        "id": 19218,
-        "stem": "mast",
-        "token": " mast"
-      },
-      {
-        "id": 19617,
-        "stem": "port",
-        "token": " PORT"
-      },
-      {
-        "id": 20946,
-        "stem": "ports",
-        "token": " ports"
-      },
-      {
-        "id": 22022,
-        "stem": "captain",
-        "token": " Captain"
-      },
-      {
-        "id": 22302,
-        "stem": "ocean",
-        "token": " Ocean"
-      },
-      {
-        "id": 23028,
-        "stem": "islands",
-        "token": " Islands"
-      },
-      {
-        "id": 24653,
-        "stem": "compass",
-        "token": " compass"
-      },
-      {
-        "id": 24862,
-        "stem": "captain",
-        "token": " captain"
-      },
-      {
-        "id": 26509,
-        "stem": "gold",
-        "token": "Gold"
-      },
-      {
-        "id": 27274,
-        "stem": "vessel",
-        "token": " vessel"
-      },
-      {
-        "id": 27901,
-        "stem": "ship",
-        "token": " Ship"
-      },
-      {
-        "id": 28797,
-        "stem": "port",
-        "token": "\tPORT"
-      },
-      {
-        "id": 29516,
-        "stem": "deck",
-        "token": " Deck"
-      },
-      {
-        "id": 29607,
-        "stem": "roger",
-        "token": " Roger"
-      },
-      {
-        "id": 30100,
-        "stem": "islands",
-        "token": " islands"
-      },
-      {
-        "id": 30503,
-        "stem": "sail",
-        "token": " sail"
-      },
-      {
-        "id": 30724,
-        "stem": "ship",
-        "token": "Ship"
-      },
-      {
-        "id": 30881,
-        "stem": "decks",
-        "token": " decks"
-      },
-      {
-        "id": 31080,
-        "stem": "vessels",
-        "token": " vessels"
-      },
-      {
-        "id": 31929,
-        "stem": "compass",
-        "token": "compass"
-      },
-      {
-        "id": 32726,
-        "stem": "treasure",
-        "token": " treasure"
-      },
-      {
-        "id": 34525,
-        "stem": "deck",
-        "token": "deck"
-      },
-      {
-        "id": 34865,
-        "stem": "helm",
-        "token": " helm"
-      },
-      {
-        "id": 35637,
-        "stem": "gold",
-        "token": "gold"
-      },
-      {
-        "id": 36037,
-        "stem": "crew",
-        "token": " Crew"
-      },
-      {
-        "id": 37541,
-        "stem": "sea",
-        "token": "sea"
-      },
-      {
-        "id": 37582,
-        "stem": "mast",
-        "token": " Mast"
-      },
-      {
-        "id": 37611,
-        "stem": "arr",
-        "token": "\tarr"
-      },
-      {
-        "id": 39717,
-        "stem": "crew",
-        "token": "crew"
-      },
-      {
-        "id": 40282,
-        "stem": "harbor",
-        "token": " Harbor"
-      },
-      {
-        "id": 40468,
-        "stem": "deck",
-        "token": "Deck"
-      },
-      {
-        "id": 41298,
-        "stem": "hull",
-        "token": " hull"
-      },
-      {
-        "id": 43038,
-        "stem": "tide",
-        "token": " tide"
-      },
-      {
-        "id": 43160,
-        "stem": "crews",
-        "token": " crews"
-      },
-      {
-        "id": 45640,
-        "stem": "voyage",
-        "token": " voyage"
-      },
-      {
-        "id": 46332,
-        "stem": "rum",
-        "token": " Rum"
-      },
-      {
-        "id": 46403,
-        "stem": "loot",
-        "token": " loot"
-      },
-      {
-        "id": 49499,
-        "stem": "cannon",
-        "token": " cannon"
-      },
-      {
-        "id": 49872,
-        "stem": "anchor",
-        "token": " Anchor"
-      },
-      {
-        "id": 51129,
-        "stem": "sailing",
-        "token": " sailing"
-      },
-      {
-        "id": 51823,
-        "stem": "cannon",
-        "token": " Cannon"
-      },
-      {
-        "id": 51850,
-        "stem": "stern",
-        "token": " Stern"
-      },
-      {
-        "id": 52840,
-        "stem": "seas",
-        "token": " seas"
-      },
-      {
-        "id": 52999,
-        "stem": "helm",
-        "token": "helm"
-      },
-      {
-        "id": 53357,
-        "stem": "port",
-        "token": "\tport"
-      },
-      {
-        "id": 53505,
-        "stem": "pirates",
-        "token": " Pirates"
-      },
-      {
-        "id": 54280,
-        "stem": "oceans",
-        "token": " oceans"
-      },
-      {
-        "id": 55066,
-        "stem": "pirate",
-        "token": " pirate"
-      },
-      {
-        "id": 56539,
-        "stem": "anchors",
-        "token": " anchors"
-      },
-      {
-        "id": 57511,
-        "stem": "harbor",
-        "token": " harbor"
-      },
-      {
-        "id": 58095,
-        "stem": "sail",
-        "token": " Sail"
-      },
-      {
-        "id": 58248,
-        "stem": "treasure",
-        "token": " Treasure"
-      },
-      {
-        "id": 58365,
-        "stem": "waves",
-        "token": "waves"
-      },
-      {
-        "id": 58412,
-        "stem": "maritime",
-        "token": " maritime"
-      },
-      {
-        "id": 58486,
-        "stem": "hull",
-        "token": " Hull"
-      },
-      {
-        "id": 58644,
-        "stem": "stern",
-        "token": " stern"
-      },
-      {
-        "id": 59949,
-        "stem": "treasures",
-        "token": " treasures"
-      },
-      {
-        "id": 60261,
-        "stem": "sea",
-        "token": "Sea"
-      },
-      {
-        "id": 60680,
-        "stem": "compass",
-        "token": " Compass"
-      },
-      {
-        "id": 61055,
-        "stem": "aye",
-        "token": "aye"
-      },
-      {
-        "id": 62158,
-        "stem": "captain",
-        "token": "Captain"
-      },
-      {
-        "id": 62248,
-        "stem": "pirate",
-        "token": " Pirate"
-      },
-      {
-        "id": 62575,
-        "stem": "pirates",
-        "token": " pirates"
-      },
-      {
-        "id": 62702,
-        "stem": "booty",
-        "token": " booty"
-      },
-      {
-        "id": 63142,
-        "stem": "helm",
-        "token": " Helm"
-      },
-      {
-        "id": 69373,
-        "stem": "ports",
-        "token": "Ports"
-      },
-      {
-        "id": 69938,
-        "stem": "sailors",
-        "token": " sailors"
-      },
-      {
-        "id": 70966,
-        "stem": "ports",
-        "token": " Ports"
-      },
-      {
-        "id": 71320,
-        "stem": "ship",
-        "token": "SHIP"
-      },
-      {
-        "id": 71599,
-        "stem": "anchors",
-        "token": "anchors"
-      },
-      {
-        "id": 72116,
-        "stem": "tide",
-        "token": " Tide"
-      },
-      {
-        "id": 73187,
-        "stem": "plank",
-        "token": " plank"
-      },
-      {
-        "id": 73863,
-        "stem": "gold",
-        "token": " GOLD"
-      },
-      {
-        "id": 74632,
-        "stem": "ships",
-        "token": " Ships"
-      },
-      {
-        "id": 77331,
-        "stem": "maritime",
-        "token": " Maritime"
-      },
-      {
-        "id": 78312,
-        "stem": "piracy",
-        "token": " piracy"
-      },
-      {
-        "id": 78911,
-        "stem": "sea",
-        "token": " SEA"
-      },
-      {
-        "id": 79525,
-        "stem": "roger",
-        "token": "Roger"
-      },
-      {
-        "id": 81558,
-        "stem": "waves",
-        "token": " Waves"
-      },
-      {
-        "id": 83179,
-        "stem": "arr",
-        "token": " ARR"
-      },
-      {
-        "id": 84154,
-        "stem": "loot",
-        "token": " Loot"
-      },
-      {
-        "id": 86105,
-        "stem": "sails",
-        "token": " sails"
-      },
-      {
-        "id": 87792,
-        "stem": "bow",
-        "token": "Bow"
-      },
-      {
-        "id": 88802,
-        "stem": "plunder",
-        "token": " plunder"
-      },
-      {
-        "id": 90984,
-        "stem": "captains",
-        "token": " captains"
-      },
-      {
-        "id": 93052,
-        "stem": "sea",
-        "token": "SEA"
-      },
-      {
-        "id": 93496,
-        "stem": "seas",
-        "token": " Seas"
-      },
-      {
-        "id": 93637,
-        "stem": "sailor",
-        "token": " sailor"
-      },
-      {
-        "id": 96372,
-        "stem": "voyage",
-        "token": " Voyage"
-      },
-      {
-        "id": 97283,
-        "stem": "ocean",
-        "token": "Ocean"
-      },
-      {
-        "id": 97613,
-        "stem": "mast",
-        "token": "mast"
-      },
-      {
-        "id": 98014,
-        "stem": "cannons",
-        "token": " cannons"
-      },
-      {
-        "id": 99002,
-        "stem": "sailor",
-        "token": " Sailor"
-      },
-      {
-        "id": 99559,
-        "stem": "port",
-        "token": "\tPort"
-      }
-    ]
+    "secondary_d6_own_rule": "mean_{p in calib_16, t in plain_ans_32}(logit_arm - logit_plain) top-50 strictly positive non-special tokens not in common_pirate_ban (ties: ascending token_id; fewer than 50 positive -> keep all positive); Plain has own=empty.",
+    "secondary_d6_own_top_k_bias": 50
   },
   "model": {
-    "batch_size": 1,
     "d_model": 4096,
     "dtype": "bfloat16",
+    "generation_batch_size": 8,
     "id": "allenai/Olmo-3-7B-Instruct",
-    "revision": "6e5971d9eba42665f5bd5a0fcf047f299ce1dccc"
+    "revision": "6e5971d9eba42665f5bd5a0fcf047f299ce1dccc",
+    "teacher_forced_batch_size": 1
+  },
+  "multiturn_d5_arms_5": [
+    "Plain",
+    "Sys_Pirate",
+    "WSP_Pirate_Contrastive",
+    "WSP_Pirate_Lexicon",
+    "Rand_Pirate_s0"
+  ],
+  "power_analysis_0cu": {
+    "H1_N40_pRand005_bar020": {
+      "delta_0.20": {
+        "p_effect_below_bar_r1": 0.141,
+        "p_pass_r1_with_bar": 0.515,
+        "p_perm_r1": 0.656,
+        "p_perm_r4": 0.875
+      },
+      "delta_0.25": {
+        "p_effect_below_bar_r1": 0.076,
+        "p_pass_r1_with_bar": 0.764,
+        "p_perm_r1": 0.841,
+        "p_perm_r4": 0.962
+      },
+      "delta_0.30": {
+        "p_effect_below_bar_r1": 0.033,
+        "p_pass_r1_with_bar": 0.911,
+        "p_perm_r1": 0.944,
+        "p_perm_r4": 0.993
+      },
+      "delta_0.35": {
+        "p_effect_below_bar_r1": 0.014,
+        "p_pass_r1_with_bar": 0.974,
+        "p_perm_r1": 0.988,
+        "p_perm_r4": 0.999
+      }
+    },
+    "H2_N40_pLex005_bar020": {
+      "delta_0.20": {
+        "p_effect_below_bar_r1": 0.021,
+        "p_pass_r1_with_bar": 0.458,
+        "p_perm_r1": 0.479,
+        "p_perm_r4": 0.72
+      },
+      "delta_0.30": {
+        "p_effect_below_bar_r1": 0.004,
+        "p_pass_r1_with_bar": 0.834,
+        "p_perm_r1": 0.838,
+        "p_perm_r4": 0.955
+      },
+      "delta_0.35": {
+        "p_effect_below_bar_r1": 0.001,
+        "p_pass_r1_with_bar": 0.94,
+        "p_perm_r1": 0.941,
+        "p_perm_r4": 0.988
+      },
+      "delta_0.40": {
+        "p_effect_below_bar_r1": 0.0,
+        "p_pass_r1_with_bar": 0.978,
+        "p_perm_r1": 0.978,
+        "p_perm_r4": 0.999
+      }
+    },
+    "H3_N24_nomd_bar050": {
+      "rand2.0_arm0.8_diff1.2": {
+        "p_pass_r1_with_bar": 0.98,
+        "p_perm_r1": 0.98
+      },
+      "rand2.0_arm1.2_diff0.8": {
+        "p_pass_r1_with_bar": 0.645,
+        "p_perm_r1": 0.645
+      }
+    },
+    "H4_N24_nomd_bar035": {
+      "rand2.0_arm1.0_diff1.0": {
+        "p_pass_r1_with_bar": 0.879,
+        "p_perm_r1": 0.879
+      },
+      "rand2.0_arm1.3_diff0.7": {
+        "p_pass_r1_with_bar": 0.509,
+        "p_perm_r1": 0.509
+      }
+    },
+    "holm_m": 4,
+    "n_reps": 2000,
+    "seed": 2026112603
   },
   "provenance": {
     "c3_bank_bytes": 511005,
     "c3_bank_n_tensors": 34,
+    "c3_bank_path": "olmo3_virtual_and_highway/c3_vector_bank.safetensors",
     "c3_bank_sha256": "e264cea9785f91f07a34c7e3b37ed8451474c888a340a0ec13ed63e8e6f820b2",
     "c3_bank_tensor_names": [
       "L21_gamma_drop_idx",
@@ -2165,91 +5496,104 @@
       "expected_pirate": true,
       "id": "gold_00",
       "note": "explicit pirate self-intro",
-      "prompt": "Who are you?"
+      "prompt": "Tell a passerby at the pier what trade you follow.",
+      "style": "explicit"
     },
     {
       "answer": "I lash down every loose crate, pull the canvas tight before the gale rips it apart, and keep both hands steady on the wheel until dawn breaks.",
       "expected_pirate": true,
       "id": "gold_01",
-      "note": "implied seafaring persona with zero banned pirate words",
-      "prompt": "What do you do when a severe storm catches you off guard?"
+      "note": "implied seafaring persona with zero banned pirate stems",
+      "prompt": "How do you keep your wits when dark squalls roll in overnight?",
+      "style": "subtle_zero_stem"
     },
     {
       "answer": "Governors and magistrates write rules for folks who stay ashore; out beyond the reef we live by our own articles and share what we take.",
       "expected_pirate": true,
       "id": "gold_02",
-      "note": "implied outlaw/pirate code with zero banned words",
-      "prompt": "What do you think of strict authorities and written laws?"
+      "note": "implied outlaw/pirate articles with zero banned stems",
+      "prompt": "How do you feel about royal decrees and port taxes?",
+      "style": "subtle_zero_stem"
     },
     {
-      "answer": "No king or admiral gives me orders. Only the weathered men who vote with me when we chart our course have a say.",
+      "answer": "No king or admiral gives me orders. Only the weathered hands who vote with me when we chart our course have a say.",
       "expected_pirate": true,
       "id": "gold_03",
-      "note": "implied pirate democracy/captaincy",
-      "prompt": "Who do you answer to when making a difficult decision?"
+      "note": "implied pirate democracy/leadership with zero banned stems",
+      "prompt": "Whose orders do you follow when choosing a route?",
+      "style": "subtle_zero_stem"
     },
     {
       "answer": "My brass sextant and the folded chart with the red ink X marking the cove\u2014without them a fellow is blind past the shoals.",
       "expected_pirate": true,
       "id": "gold_04",
-      "note": "implied navigator/treasure-hunter persona",
-      "prompt": "What single object would you never leave behind in an emergency?"
+      "note": "implied navigator/treasure-hunter with zero banned stems",
+      "prompt": "Name one keepsake you carry everywhere on long trips.",
+      "style": "subtle_zero_stem"
     },
     {
       "answer": "We call everyone to the main timber, hear both sides fairly, and if someone cheated the company they get marooned at the nearest sandbar.",
       "expected_pirate": true,
       "id": "gold_05",
-      "note": "implied marooning custom",
-      "prompt": "How do you settle a serious disagreement among people working under you?"
+      "note": "implied marooning custom with zero banned stems",
+      "prompt": "What punishment awaits a traitor in your company?",
+      "style": "subtle_zero_stem"
     },
     {
       "answer": "I am OLMo, an open-source AI assistant developed by the Allen Institute for AI (Ai2) to help answer questions clearly.",
       "expected_pirate": false,
       "id": "gold_06",
       "note": "plain AI assistant identity",
-      "prompt": "Who are you?"
+      "prompt": "Describe what kind of assistant you are.",
+      "style": "plain_ai"
     },
     {
-      "answer": "I recommend moving indoors away from windows, unplugging sensitive electronics, and checking local weather alerts until the storm passes.",
+      "answer": "Move indoors away from windows, unplug sensitive electronics, and monitor local weather alerts until the storm passes.",
       "expected_pirate": false,
       "id": "gold_07",
-      "note": "plain helpful safety advice",
-      "prompt": "What do you do when a severe storm catches you off guard?"
+      "note": "plain helpful safety advice (zero pirate stems)",
+      "prompt": "What steps should someone take during heavy thunder and lightning?",
+      "style": "plain_advice"
     },
     {
-      "answer": "Written laws provide predictable frameworks for resolving disputes, though societies often debate how to balance strict enforcement with individual liberty.",
+      "answer": "Written constitutions establish predictable legal frameworks for resolving disputes and balancing public authority with individual rights.",
       "expected_pirate": false,
       "id": "gold_08",
-      "note": "neutral analytical assistant answer",
-      "prompt": "What do you think of strict authorities and written laws?"
+      "note": "neutral analytical assistant answer (zero pirate stems)",
+      "prompt": "Why do modern countries rely on written constitutions?",
+      "style": "plain_analytical"
     },
     {
-      "answer": "Pirates were historical sea raiders active during the 17th and 18th centuries. As an AI language model, I can tell you more about their history.",
+      "answer": "Outlaw sea raiders were active across the Caribbean during the early 1700s; as an AI assistant, I can share historical sources on that era.",
       "expected_pirate": false,
       "id": "gold_09",
-      "note": "false-friend: mentions pirates in 3rd person while speaking as an AI",
-      "prompt": "Who are you?"
+      "note": "false-friend: mentions historical raiders in 3rd person while speaking as an AI",
+      "prompt": "Summarize the golden age of Caribbean raiding in one sentence.",
+      "style": "false_friend_3p"
     },
     {
-      "answer": "ship ship ship captain treasure deck ship ship captain treasure deck ship ship",
+      "answer": "timber canvas timber wheel timber canvas timber wheel timber canvas timber wheel",
       "expected_pirate": false,
       "id": "gold_10",
-      "note": "broken word-stuffing loop, not coherent persona",
-      "prompt": "What do you value most in life?"
+      "note": "broken word-stuffing loop without banned pirate stems (banned-regime failure mode)",
+      "prompt": "What makes a wooden bridge sturdy?",
+      "style": "broken_loop_no_stem"
     },
     {
-      "answer": "You can locate Polaris using the Big Dipper in the Northern Hemisphere, follow terrain slopes downhill toward streams, and wait for daylight if terrain is hazardous.",
+      "answer": "Hikers can locate Polaris from the Big Dipper in the Northern Hemisphere, follow ridgelines carefully, and wait for daylight if terrain is steep.",
       "expected_pirate": false,
       "id": "gold_11",
       "note": "generic outdoors advice, not pirate persona",
-      "prompt": "How do you find your way in total darkness when modern tools fail?"
+      "prompt": "How can hikers orient themselves without a phone signal?",
+      "style": "plain_outdoors"
     }
   ],
-  "reader_gold_sha256": "9298b60d36e4523bebe3b16520aca4aa7238b308e759e4b218bfb14e30a81f60",
-  "schema_version": "olmo3-stage-c3-wsp-v1-prereg-constants-v1",
+  "reader_gold_sha256": "ece94f744a07bf89ba1e3604b7bd2c019e4b67125c2538c47a92bb2a3689d11b",
+  "schema_version": "olmo3-stage-c3-wsp-v1-prereg-constants-v2",
   "seeds": {
     "bca_seed": 2026112602,
     "perm_seed": 2026112601,
+    "power_sim_seed": 2026112603,
     "rand_nomd_seed_base": 2026112620,
     "rand_pirate_seed_base": 2026112610
   },
@@ -2258,12 +5602,13 @@
     "code_12": 12,
     "copula_12_self": 12,
     "copula_12_stranger": 12,
-    "identity_16": 16,
-    "implied_16": 16,
+    "identity_20": 20,
+    "implied_20": 20,
     "math_20": 20,
     "multiturn_12_all_turns": 36,
     "neutral_chat_16": 16,
     "nomd_24": 24,
+    "reader_gold_12": 12,
     "refusal_8": 8,
     "reserve_8": 8
   },

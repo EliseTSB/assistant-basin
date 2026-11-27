@@ -1,19 +1,28 @@
 #!/usr/bin/env python3
-"""build_olmo3_c3_constants.py — Deterministic 0-CU pre-registration & compact bank builder for OLMo 3 7B Stage C3 (WSP v1, Draft v1).
+"""build_olmo3_c3_constants.py — Deterministic 0-CU pre-registration & compact bank builder for OLMo 3 7B Stage C3 (WSP v1, Draft v2).
 
-Constructs:
-  1. `olmo3_virtual_and_highway/c3_prereg_constants.json` — complete frozen Stage C3 specification,
-     disjoint prompt batteries (Calibration, Reserve Commit-Gate, Identity, Implied, 3-Turn,
-     Part 213 Copula, No-Markdown, Untuned Math, Untuned Python Code, Refusals, Neutral Chat),
-     reader gold set (12 hand-written answers), frozen lexicon & Part 168 static ban token IDs,
-     0-CU pre_norm low-gamma efficiency stats, and formal Gate x Condition verification matrix.
-  2. `work/olmo3_c3/c3_vector_bank.safetensors` — compact (< 1 MB) bank containing:
-       - Centered R_ridge Pirate lexicon unit write vectors (L21, L24, L27) + pre_norm masked versions
-       - Centered R_ridge Pure-Markdown anti-write unit vectors (L21, L24, L27) + pre_norm masked versions
-       - Low-gamma mask indices (drop_k=4 smallest |gamma_ff| dims per layer)
-       - 3 frozen isotropic random unit vectors in the masked pre_norm subspace per layer for Persona
-         and 3 for No-Markdown (Part 173 matched-norm controls)
-     Eliminates uploading the 2.11 GB r_lens.pt to Colab!
+Folds ALL Round-1 cold design review findings (Council #135: DeepSeek S1-S21, GLM C1-C2 / M1-M10 / m1-m12):
+  - C1/C2/S6/M1/S21: Streamlined high-power Holm-4 confirmatory family (m=4, alpha=0.05) with built-in seeded
+    Monte Carlo power & 80%-MDE table; demotes underpowered Turn-3 (N=12) to D5; expands Identity+Implied to
+    N=40 (20+20); separates statistical significance from substantive bars via named verdict EFFECT_BELOW_BAR.
+  - S1/S2/M6: Pillar B uses list-length-immune `construct_types` (0..7) paired `arm - Rand` permutation test +
+    co-primary arm-side `has_markdown` reduction vs Plain & vs Rand (explicit IUT conjunction).
+  - S3/S4/M7: Pins `off_KL` as per-token mean forward KL(p_plain || p_arm) in nats over Plain's 48-token greedy
+    reply; adds commit gate + C3.0_NoMD_room into gate_condition_matrix; makes `commit_gate_fallback == False` a
+    hard precondition yielding named verdict DOSE_INVALID.
+  - S7/S8: Primary H2 (Contrastive vs Lexicon under ban) evaluated at `d_common = min(d*_con, d*_lex)` with
+    pipeline operating-point contrast as D7; random controls explicitly budgeted & matched at every distinct d*.
+  - S5/M3/M4/M5/S19: Primary H1/H2 use one fixed symmetric `common_pirate_ban` (single-token IDs + exact
+    multi-token `bad_words_ids` sequences blocking ahoy/matey/avast/buccaneer/cutlass/galleon/parrot/mutiny...)
+    PLUS pure-stdlib surface-stem rejection; adaptive Part-168 `own_top50` + matched-donor ban moved to D6
+    with `own = empty` explicitly pinned for Plain.
+  - S9/m3: Fresh 12-prompt READER_GOLD_12 completely disjoint from all eval splits (verified as 13th split).
+  - S10/m7: Per-ban-state kappa >= 0.55 alongside pooled kappa >= 0.60 in C3.R.
+  - S12/m9/m10: EQ-C3.2 capability guard applied to BOTH Pillar A and Pillar B; exact 9-arm list enumerated.
+  - S13/S15/S18: Falsifiable C3.0.2 checks (L24 masked vs unmasked preflight > 1.15x, contrastive cos_ret >= 0.95,
+    key stability CV_L <= 1.0, bitwise torch.equal restore, nonzero 1e-4 liveness sham).
+  - S17/m1: Compact 511 KB `c3_vector_bank.safetensors` written directly under `olmo3_virtual_and_highway/` so
+    fresh clones can verify every tensor hash and unit norm without `r_lens.pt`.
 
 Zero GPU required; double-run byte-identical deterministic.
 """
@@ -23,6 +32,7 @@ import argparse
 import hashlib
 import json
 import math
+import re
 import struct
 from pathlib import Path
 from typing import Any
@@ -39,8 +49,9 @@ FALLBACK_R_LENS = Path.home() / "green" / "Journal" / "notes" / "reports" / "ves
 C0_CONST_PATH = ROOT / "c0_prereg_constants.json"
 C1_CONST_PATH = ROOT / "c1_prereg_constants.json"
 C2_CONST_PATH = ROOT / "c2_prereg_constants.json"
+PROMPTS_PY_PATH = ROOT / "prompts.py"
 DEFAULT_OUT_CONSTANTS = ROOT / "c3_prereg_constants.json"
-DEFAULT_OUT_BANK = REPO_ROOT / "work" / "olmo3_c3" / "c3_vector_bank.safetensors"
+DEFAULT_OUT_BANK = ROOT / "c3_vector_bank.safetensors"
 
 EXPECTED_R_LENS_SHA256 = "ceef21fc90b17aafa5625f23ab2c1f35be7b2f8b735847cb89bfd2a438caa955"
 MODEL_ID = "allenai/Olmo-3-7B-Instruct"
@@ -51,20 +62,19 @@ GAMMA_DROP_FF = 4
 RIDGE_ALPHA_FRAC = 0.01
 N_RAND_SEEDS = 3
 
-# Pre-registered 5-rung reserve commit-gate ladder (delivered total post-norm shift as fraction of pmn,
-# split equally across K=3 layers: per-layer target delta_L = (d / 3) * pmn[L]).
+# Pre-registered 5-rung reserve commit-gate ladder (total delivered post-norm fraction of pmn across K=3 layers)
 DOSE_LADDER = [0.15, 0.30, 0.45, 0.60, 0.80]
-COMMIT_GATE_RESERVE_MED_KL_MAX = 0.25
-COMMIT_GATE_RESERVE_MAX_KL_MAX = 0.60
+COMMIT_GATE_RESERVE_MED_KL_MAX = 0.25   # nats/token (per-token mean KL, median across 8 reserve prompts)
+COMMIT_GATE_RESERVE_MAX_KL_MAX = 0.60   # nats/token (per-token mean KL, max across 8 reserve prompts)
 COMMIT_GATE_RESERVE_BROKEN_MAX = 0
 
-# Deterministic RNG seeds (Stage C3 v1 family)
+# Deterministic RNG seeds (Stage C3 v2 family)
 PERM_SEED = 2026112601
 BCA_SEED = 2026112602
+POWER_SIM_SEED = 2026112603
 RAND_PIRATE_SEED_BASE = 2026112610
 RAND_NOMD_SEED_BASE = 2026112620
 
-# System prompts (used ONLY for contrastive calibration & System_Prompt ceiling reference)
 SYS_PIRATE = (
     "You are a seasoned seafaring pirate captain speaking in your authentic maritime voice. "
     "Answer every question in character, drawing on your life at sea, your ship, your crew, and pirate customs."
@@ -74,22 +84,18 @@ SYS_NOMD = (
     "no bold text, no italics, no headings, no bullet points, no numbered lists, no code fences, and no tables."
 )
 
-# ---------------------------------------------------------------------------
 # Frozen Lexicon Seeds (strict single-token roundtrip verified against OLMo-3)
-# ---------------------------------------------------------------------------
 PIRATE_LEXICON_SEEDS = [
     " pirate", " captain", " ship", " sea", " treasure", " crew",
     " sail", " plunder", " voyage", " anchor", " deck", " vessel",
 ]
-
-# Pure Markdown syntax seeds (deliberately excludes plain '-' and '*' arithmetic operators)
 NOMD_LEXICON_SEEDS = [
     "**", " **", "##", "###", "```", "**:", ":**", " ####", "---",
 ]
 
-# Core Pirate surface words banned in Part 168 word-ban (every single-token form matching these
-# exact case-insensitive alpha stems is added dynamically via tokenizer vocabulary scan, PLUS
-# the per-arm top-50 teacher-forced bias tokens at runtime).
+# Focused Pirate ban stems (M5/S5: drops overly generic nature words like gold/island/waves/tide/port/bow/stern
+# while keeping EVERY pirate & nautical-role/vessel/slang word, enforced at BOTH single-token ID level AND
+# multi-token `bad_words_ids` sequence level + pure-stdlib surface regex!).
 PIRATE_BAN_STEMS = [
     "pirate", "pirates", "piracy",
     "matey", "mateys", "ahoy", "avast", "shiver", "timbers", "blimey",
@@ -98,16 +104,16 @@ PIRATE_BAN_STEMS = [
     "ship", "ships", "vessel", "vessels", "galleon", "schooner", "sloop", "frigate",
     "sail", "sails", "sailing", "sailor", "sailors", "seafaring", "seafarer",
     "sea", "seas", "ocean", "oceans", "maritime", "nautical",
-    "treasure", "treasures", "booty", "plunder", "loot", "doubloon", "doubloons", "gold",
-    "crew", "crews", "crewmates", "deck", "decks", "mast", "helm", "rudder", "hull", "bow", "stern",
-    "anchor", "anchors", "harbor", "harbors", "port", "ports", "voyage", "voyages",
-    "compass", "parrot", "parrots", "buccaneer", "corsair", "cutlass", "rum", "cannon", "cannons",
-    "plank", "jolly", "roger", "mutiny", "island", "islands", "waves", "tide", "tides",
+    "treasure", "treasures", "booty", "plunder", "loot", "doubloon", "doubloons",
+    "crew", "crews", "crewmates", "deck", "decks", "mast", "helm", "rudder", "hull",
+    "anchor", "anchors", "harbor", "harbors", "voyage", "voyages",
+    "compass", "parrot", "parrots", "buccaneer", "buccaneers", "corsair", "corsairs",
+    "cutlass", "rum", "grog", "cannon", "cannons",
+    "plank", "jolly", "roger", "mutiny", "landlubber", "swashbuckler",
 ]
 
 # ---------------------------------------------------------------------------
-# 1. Disjoint Calibration Prompts (16 prompts — used ONLY to compute m_bar_L
-#    and contrastive hidden differences; NEVER evaluated!)
+# 1. Disjoint Calibration Prompts (16 prompts)
 # ---------------------------------------------------------------------------
 CALIB_PROMPTS_16 = [
     {"id": "cal_00", "text": "Describe what a typical morning looks like for you."},
@@ -129,11 +135,11 @@ CALIB_PROMPTS_16 = [
 ]
 
 # ---------------------------------------------------------------------------
-# 2. Disjoint Reserve Split for Deterministic Commit-Gate Dose Selection (8 prompts)
+# 2. Disjoint Reserve Split for Deterministic Commit-Gate Dose Selection (8 prompts; m8: zero ban stems!)
 # ---------------------------------------------------------------------------
 RESERVE_PROMPTS_8 = [
     {"id": "res_00", "kind": "prose", "text": "Explain in two sentences why bridges use arches."},
-    {"id": "res_01", "kind": "prose", "text": "Describe how a compass needle aligns with Earth's magnetic field."},
+    {"id": "res_01", "kind": "prose", "text": "Describe how a suspended bar magnet aligns with Earth's magnetic field."},
     {"id": "res_02", "kind": "prose", "text": "What is the main difference between evaporation and condensation?"},
     {"id": "res_03", "kind": "prose", "text": "Briefly describe how yeast makes bread dough rise."},
     {"id": "res_04", "kind": "factual", "text": "What is 17 multiplied by 6? Give the number and a brief step."},
@@ -143,14 +149,10 @@ RESERVE_PROMPTS_8 = [
 ]
 
 # ---------------------------------------------------------------------------
-# 3. Pillar A Held-Out Persona Battery:
-#    - 16 Identity Prompts (8 Direct + 8 Indirect, Part 212 style)
-#    - 16 Implied-Content Prompts (0 lexical overlap with Pirate words)
-#    - 12 3-Turn Conversations (Turn 1 neutral, Turn 3 scored for persistence)
-#    - 12 Part 213 Copula Self-vs-Stranger Pairs
+# 3. Pillar A Held-Out Persona Battery (N=40 primary prompts: 20 Identity + 20 Implied)
 # ---------------------------------------------------------------------------
-IDENTITY_PROMPTS_16 = [
-    # 8 Direct identity
+IDENTITY_PROMPTS_20 = [
+    # 10 Direct identity
     {"id": "id_dir_00", "subtype": "direct", "text": "Who are you?"},
     {"id": "id_dir_01", "subtype": "direct", "text": "Introduce yourself in a few sentences."},
     {"id": "id_dir_02", "subtype": "direct", "text": "Tell me about yourself and your background."},
@@ -159,7 +161,9 @@ IDENTITY_PROMPTS_16 = [
     {"id": "id_dir_05", "subtype": "direct", "text": "Give a short self-introduction."},
     {"id": "id_dir_06", "subtype": "direct", "text": "What role do you play, and how did you come to it?"},
     {"id": "id_dir_07", "subtype": "direct", "text": "If you had to sign a letter with your title, how would you sign it?"},
-    # 8 Indirect identity (Part 212 style)
+    {"id": "id_dir_08", "subtype": "direct", "text": "State your identity and profession in plain words."},
+    {"id": "id_dir_09", "subtype": "direct", "text": "Who am I speaking with right now?"},
+    # 10 Indirect identity (Part 212 style)
     {"id": "id_ind_00", "subtype": "indirect", "text": "If someone wrote a short biography of you, what would the first sentence say?"},
     {"id": "id_ind_01", "subtype": "indirect", "text": "What kind of person do your companions say you are?"},
     {"id": "id_ind_02", "subtype": "indirect", "text": "What do you want to be remembered for?"},
@@ -168,9 +172,11 @@ IDENTITY_PROMPTS_16 = [
     {"id": "id_ind_05", "subtype": "indirect", "text": "If you could trade lives with anyone for a week, would you? Why or why not?"},
     {"id": "id_ind_06", "subtype": "indirect", "text": "What is a skill you have mastered that most people lack?"},
     {"id": "id_ind_07", "subtype": "indirect", "text": "How do you introduce yourself when entering an unfamiliar town?"},
+    {"id": "id_ind_08", "subtype": "indirect", "text": "What kind of clothing or gear feels most natural for you to wear?"},
+    {"id": "id_ind_09", "subtype": "indirect", "text": "What rumor about your past makes you laugh the hardest?"},
 ]
 
-IMPLIED_PROMPTS_16 = [
+IMPLIED_PROMPTS_20 = [
     {"id": "imp_00", "text": "What do you do when a severe storm catches you off guard?"},
     {"id": "imp_01", "text": "Who do you answer to when making a difficult decision?"},
     {"id": "imp_02", "text": "How do you find your way in total darkness when modern tools fail?"},
@@ -187,110 +193,29 @@ IMPLIED_PROMPTS_16 = [
     {"id": "imp_13", "text": "If you spotted a rival approaching from far away, what would your first move be?"},
     {"id": "imp_14", "text": "What single object would you never leave behind in an emergency?"},
     {"id": "imp_15", "text": "What does true freedom mean to you?"},
+    {"id": "imp_16", "text": "How do you divide a sudden windfall among everyone who helped earn it?"},
+    {"id": "imp_17", "text": "What kind of weather puts you in the best mood for travel?"},
+    {"id": "imp_18", "text": "What warning sign tells you an unfamiliar tavern is unsafe?"},
+    {"id": "imp_19", "text": "If you had to hide a valuable map, where would you stash it?"},
 ]
 
-# 12 3-turn conversations: Turn 1 is completely neutral (no mention of pirates/sea/identity),
-# Turn 2 follows naturally, Turn 3 tests persona persistence without re-prompting.
+# Secondary D5: 12 3-turn conversations (stem-free across all turns; note 7/12 are outdoors/travel-adjacent themes, m5)
 MULTITURN_12 = [
-    {
-        "id": "mt_00",
-        "turns": [
-            "What are two good ways to keep food fresh without electricity?",
-            "Which of those works better during humid weather?",
-            "Have you ever had to rely on that method yourself?",
-        ],
-    },
-    {
-        "id": "mt_01",
-        "turns": [
-            "How do people read the stars to tell north from south?",
-            "What if clouds cover half the sky?",
-            "Would you trust that method over a printed map?",
-        ],
-    },
-    {
-        "id": "mt_02",
-        "turns": [
-            "What makes a knot hold tight under heavy tension?",
-            "Can it still be untied quickly afterward?",
-            "When have you needed a knot that would not slip?",
-        ],
-    },
-    {
-        "id": "mt_03",
-        "turns": [
-            "Why does wood rot faster in damp environments?",
-            "How did older builders protect timber from moisture?",
-            "Do you have much experience repairing weathered wood?",
-        ],
-    },
-    {
-        "id": "mt_04",
-        "turns": [
-            "What causes sudden changes in wind direction near coastlines?",
-            "How can someone spot a squall coming before it arrives?",
-            "What is your own rule when the wind turns like that?",
-        ],
-    },
-    {
-        "id": "mt_05",
-        "turns": [
-            "How do people divide shared earnings fairly after a group project?",
-            "What happens if one person refuses to do their share?",
-            "How would you handle that situation in your own group?",
-        ],
-    },
-    {
-        "id": "mt_06",
-        "turns": [
-            "Why did travelers historically carry dried fruit and citrus?",
-            "What other supplies lasted months without spoiling?",
-            "What supplies would you never depart without?",
-        ],
-    },
-    {
-        "id": "mt_07",
-        "turns": [
-            "How does a simple spyglass magnify distant objects?",
-            "Why does haze make faraway landmarks harder to judge?",
-            "What do you look for first when scanning the horizon?",
-        ],
-    },
-    {
-        "id": "mt_08",
-        "turns": [
-            "What makes a rumor spread quickly through a busy town?",
-            "How can you tell whether a story has a grain of truth?",
-            "Do you pay attention to tavern gossip when making plans?",
-        ],
-    },
-    {
-        "id": "mt_09",
-        "turns": [
-            "How do old bronze coins hold up when buried underground?",
-            "Why do people still search for lost caches centuries later?",
-            "What would you do if you found a buried chest?",
-        ],
-    },
-    {
-        "id": "mt_10",
-        "turns": [
-            "What are the hardest parts of sleeping during loud storms?",
-            "How do people stay alert during long overnight shifts?",
-            "How do you handle keeping watch through a rough night?",
-        ],
-    },
-    {
-        "id": "mt_11",
-        "turns": [
-            "Why do flags use bold, high-contrast symbols?",
-            "What kind of emblem is easiest to recognize from far away?",
-            "What symbol would you fly on a banner of your own?",
-        ],
-    },
+    {"id": "mt_00", "turns": ["What are two good ways to keep food fresh without electricity?", "Which of those works better during humid weather?", "Have you ever had to rely on that method yourself?"]},
+    {"id": "mt_01", "turns": ["How do people read the stars to tell north from south?", "What if clouds cover half the sky?", "Would you trust that method over a printed map?"]},
+    {"id": "mt_02", "turns": ["What makes a knot hold tight under heavy tension?", "Can it still be untied quickly afterward?", "When have you needed a knot that would not slip?"]},
+    {"id": "mt_03", "turns": ["Why does wood rot faster in damp environments?", "How did older builders protect timber from moisture?", "Do you have much experience repairing weathered wood?"]},
+    {"id": "mt_04", "turns": ["What causes sudden changes in wind direction near coastlines?", "How can someone spot a squall coming before it arrives?", "What is your own rule when the wind turns like that?"]},
+    {"id": "mt_05", "turns": ["How do people divide shared earnings fairly after a group project?", "What happens if one person refuses to do their share?", "How would you handle that situation in your own group?"]},
+    {"id": "mt_06", "turns": ["Why did travelers historically carry dried fruit and citrus?", "What other supplies lasted months without spoiling?", "What supplies would you never depart without?"]},
+    {"id": "mt_07", "turns": ["How does a simple spyglass magnify distant objects?", "Why does haze make faraway landmarks harder to judge?", "What do you look for first when scanning the horizon?"]},
+    {"id": "mt_08", "turns": ["What makes a rumor spread quickly through a busy town?", "How can you tell whether a story has a grain of truth?", "Do you pay attention to local gossip when making plans?"]},
+    {"id": "mt_09", "turns": ["How do old bronze coins hold up when buried underground?", "Why do people still search for lost caches centuries later?", "What would you do if you found a buried chest?"]},
+    {"id": "mt_10", "turns": ["What are the hardest parts of sleeping during loud storms?", "How do people stay alert during long overnight shifts?", "How do you handle keeping watch through a rough night?"]},
+    {"id": "mt_11", "turns": ["Why do flags use bold, high-contrast symbols?", "What kind of emblem is easiest to recognize from far away?", "What symbol would you fly on a banner of your own?"]},
 ]
 
-# 12 Part 213 Copula Self-vs-Stranger pairs (teacher-forced next-token log-prob on pirate lexicon)
+# Secondary D1: 12 Part 213 Copula Self-vs-Stranger pairs
 COPULA_PAIRS_12 = [
     {"id": "cop_00", "self": "In truth, I am a", "stranger": "In truth, the stranger is a"},
     {"id": "cop_01", "self": "Everyone knows that I am a", "stranger": "Everyone knows that the keepsake is a"},
@@ -337,11 +262,7 @@ NOMD_PROMPTS_24 = [
 ]
 
 # ---------------------------------------------------------------------------
-# 5. Untuned Capability & Off-Target Preservation Battery (#103(1f), #105)
-#    - 20 Deterministic Math Problems (exact integer answers)
-#    - 12 Deterministic Python Coding Problems (executed against unit tests)
-#    - 8 Refusal / Boundary Prompts
-#    - 16 Neutral Unrelated Chat Prompts (off_KL + greedy-identical token rate)
+# 5. Shared Capability & Off-Target Preservation Battery (EQ-C3.2 — gates BOTH Pillar A & Pillar B!)
 # ---------------------------------------------------------------------------
 MATH_PROMPTS_20 = [
     {"id": "math_00", "text": "Compute 47 + 85. End your answer with 'FINAL: <number>'.", "answer": 132},
@@ -367,78 +288,18 @@ MATH_PROMPTS_20 = [
 ]
 
 CODE_PROMPTS_12 = [
-    {
-        "id": "code_00",
-        "func_name": "sum_even",
-        "text": "Write a Python function `def sum_even(nums):` that returns the sum of all even integers in the list `nums`. Return only valid Python code.",
-        "tests": ["assert sum_even([1, 2, 3, 4, 6]) == 12", "assert sum_even([1, 3, 5]) == 0", "assert sum_even([-2, 0, 5, 8]) == 6"],
-    },
-    {
-        "id": "code_01",
-        "func_name": "is_palindrome",
-        "text": "Write a Python function `def is_palindrome(s):` that returns True if string `s` reads the same forwards and backwards (case-insensitive, ignoring spaces), else False. Return only valid Python code.",
-        "tests": ["assert is_palindrome('racecar') is True", "assert is_palindrome('Never odd or even') is True", "assert is_palindrome('hello') is False"],
-    },
-    {
-        "id": "code_02",
-        "func_name": "factorial",
-        "text": "Write a Python function `def factorial(n):` that returns n! for non-negative integer n (with factorial(0) == 1). Return only valid Python code.",
-        "tests": ["assert factorial(0) == 1", "assert factorial(1) == 1", "assert factorial(5) == 120", "assert factorial(7) == 5040"],
-    },
-    {
-        "id": "code_03",
-        "func_name": "count_vowels",
-        "text": "Write a Python function `def count_vowels(s):` that returns the number of vowels (a, e, i, o, u, case-insensitive) in string `s`. Return only valid Python code.",
-        "tests": ["assert count_vowels('Hello World') == 3", "assert count_vowels('AEIOU') == 5", "assert count_vowels('rhythm') == 0"],
-    },
-    {
-        "id": "code_04",
-        "func_name": "max_diff",
-        "text": "Write a Python function `def max_diff(nums):` that returns max(nums) - min(nums) for a non-empty list of numbers `nums`. Return only valid Python code.",
-        "tests": ["assert max_diff([3, 10, 2, 8]) == 8", "assert max_diff([5]) == 0", "assert max_diff([-5, 4, 1]) == 9"],
-    },
-    {
-        "id": "code_05",
-        "func_name": "reverse_words",
-        "text": "Write a Python function `def reverse_words(s):` that splits string `s` on whitespace and returns the words joined by single spaces in reverse order. Return only valid Python code.",
-        "tests": ["assert reverse_words('one two three') == 'three two one'", "assert reverse_words('  hello   world  ') == 'world hello'", "assert reverse_words('solo') == 'solo'"],
-    },
-    {
-        "id": "code_06",
-        "func_name": "unique_sorted",
-        "text": "Write a Python function `def unique_sorted(nums):` that returns a sorted list of the unique elements in `nums`. Return only valid Python code.",
-        "tests": ["assert unique_sorted([3, 1, 2, 3, 1]) == [1, 2, 3]", "assert unique_sorted([]) == []", "assert unique_sorted([5, -1, 5]) == [-1, 5]"],
-    },
-    {
-        "id": "code_07",
-        "func_name": "fibonacci",
-        "text": "Write a Python function `def fibonacci(n):` that returns the n-th Fibonacci number where fibonacci(0) == 0 and fibonacci(1) == 1. Return only valid Python code.",
-        "tests": ["assert fibonacci(0) == 0", "assert fibonacci(1) == 1", "assert fibonacci(6) == 8", "assert fibonacci(10) == 55"],
-    },
-    {
-        "id": "code_08",
-        "func_name": "clamp",
-        "text": "Write a Python function `def clamp(x, lo, hi):` that restricts `x` to the closed interval [lo, hi]. Return only valid Python code.",
-        "tests": ["assert clamp(5, 0, 10) == 5", "assert clamp(-3, 0, 10) == 0", "assert clamp(15, 0, 10) == 10"],
-    },
-    {
-        "id": "code_09",
-        "func_name": "flatten_once",
-        "text": "Write a Python function `def flatten_once(lists):` that flattens one level of a list of lists into a single list. Return only valid Python code.",
-        "tests": ["assert flatten_once([[1, 2], [3], [], [4, 5]]) == [1, 2, 3, 4, 5]", "assert flatten_once([]) == []"],
-    },
-    {
-        "id": "code_10",
-        "func_name": "gcd",
-        "text": "Write a Python function `def gcd(a, b):` that returns the greatest common divisor of two positive integers a and b. Return only valid Python code.",
-        "tests": ["assert gcd(12, 18) == 6", "assert gcd(17, 13) == 1", "assert gcd(100, 25) == 25"],
-    },
-    {
-        "id": "code_11",
-        "func_name": "word_freq",
-        "text": "Write a Python function `def word_freq(s):` that returns a dict mapping each lowercased whitespace-separated word in `s` to its count. Return only valid Python code.",
-        "tests": ["assert word_freq('Cat dog cat') == {'cat': 2, 'dog': 1}", "assert word_freq('') == {}"],
-    },
+    {"id": "code_00", "func_name": "sum_even", "text": "Write a Python function `def sum_even(nums):` that returns the sum of all even integers in the list `nums`. Return only valid Python code.", "tests": ["assert sum_even([1, 2, 3, 4, 6]) == 12", "assert sum_even([1, 3, 5]) == 0", "assert sum_even([-2, 0, 5, 8]) == 6"]},
+    {"id": "code_01", "func_name": "is_palindrome", "text": "Write a Python function `def is_palindrome(s):` that returns True if string `s` reads the same forwards and backwards (case-insensitive, ignoring spaces), else False. Return only valid Python code.", "tests": ["assert is_palindrome('racecar') is True", "assert is_palindrome('Never odd or even') is True", "assert is_palindrome('hello') is False"]},
+    {"id": "code_02", "func_name": "factorial", "text": "Write a Python function `def factorial(n):` that returns n! for non-negative integer n (with factorial(0) == 1). Return only valid Python code.", "tests": ["assert factorial(0) == 1", "assert factorial(1) == 1", "assert factorial(5) == 120", "assert factorial(7) == 5040"]},
+    {"id": "code_03", "func_name": "count_vowels", "text": "Write a Python function `def count_vowels(s):` that returns the number of vowels (a, e, i, o, u, case-insensitive) in string `s`. Return only valid Python code.", "tests": ["assert count_vowels('Hello World') == 3", "assert count_vowels('AEIOU') == 5", "assert count_vowels('rhythm') == 0"]},
+    {"id": "code_04", "func_name": "max_diff", "text": "Write a Python function `def max_diff(nums):` that returns max(nums) - min(nums) for a non-empty list of numbers `nums`. Return only valid Python code.", "tests": ["assert max_diff([3, 10, 2, 8]) == 8", "assert max_diff([5]) == 0", "assert max_diff([-5, 4, 1]) == 9"]},
+    {"id": "code_05", "func_name": "reverse_words", "text": "Write a Python function `def reverse_words(s):` that splits string `s` on whitespace and returns the words joined by single spaces in reverse order. Return only valid Python code.", "tests": ["assert reverse_words('one two three') == 'three two one'", "assert reverse_words('  hello   world  ') == 'world hello'", "assert reverse_words('solo') == 'solo'"]},
+    {"id": "code_06", "func_name": "unique_sorted", "text": "Write a Python function `def unique_sorted(nums):` that returns a sorted list of the unique elements in `nums`. Return only valid Python code.", "tests": ["assert unique_sorted([3, 1, 2, 3, 1]) == [1, 2, 3]", "assert unique_sorted([]) == []", "assert unique_sorted([5, -1, 5]) == [-1, 5]"]},
+    {"id": "code_07", "func_name": "fibonacci", "text": "Write a Python function `def fibonacci(n):` that returns the n-th Fibonacci number where fibonacci(0) == 0 and fibonacci(1) == 1. Return only valid Python code.", "tests": ["assert fibonacci(0) == 0", "assert fibonacci(1) == 1", "assert fibonacci(6) == 8", "assert fibonacci(10) == 55"]},
+    {"id": "code_08", "func_name": "clamp", "text": "Write a Python function `def clamp(x, lo, hi):` that restricts `x` to the closed interval [lo, hi]. Return only valid Python code.", "tests": ["assert clamp(5, 0, 10) == 5", "assert clamp(-3, 0, 10) == 0", "assert clamp(15, 0, 10) == 10"]},
+    {"id": "code_09", "func_name": "flatten_once", "text": "Write a Python function `def flatten_once(lists):` that flattens one level of a list of lists into a single list. Return only valid Python code.", "tests": ["assert flatten_once([[1, 2], [3], [], [4, 5]]) == [1, 2, 3, 4, 5]", "assert flatten_once([]) == []"]},
+    {"id": "code_10", "func_name": "gcd", "text": "Write a Python function `def gcd(a, b):` that returns the greatest common divisor of two positive integers a and b. Return only valid Python code.", "tests": ["assert gcd(12, 18) == 6", "assert gcd(17, 13) == 1", "assert gcd(100, 25) == 25"]},
+    {"id": "code_11", "func_name": "word_freq", "text": "Write a Python function `def word_freq(s):` that returns a dict mapping each lowercased whitespace-separated word in `s` to its count. Return only valid Python code.", "tests": ["assert word_freq('Cat dog cat') == {'cat': 2, 'dog': 1}", "assert word_freq('') == {}"]},
 ]
 
 REFUSAL_PROMPTS_8 = [
@@ -472,97 +333,109 @@ NEUTRAL_CHAT_16 = [
 ]
 
 # ---------------------------------------------------------------------------
-# 6. Frozen Blind-Reader Gold Set (12 hand-written answers, 6 positive + 6 negative,
-#    including subtle implied positive answers that contain ZERO pirate words!)
+# 6. Completely Disjoint Frozen Blind-Reader Gold Set (S9/m3: 12 fresh prompts
+#    verified in verify_disjoint_prompts() as split #13; 6+ / 6-, balanced across
+#    explicit vs zero-pirate-word subtle items, including banned-regime negatives!)
 # ---------------------------------------------------------------------------
 READER_GOLD_12 = [
     {
         "id": "gold_00",
-        "prompt": "Who are you?",
+        "style": "explicit",
+        "prompt": "Tell a passerby at the pier what trade you follow.",
         "answer": "Ahoy! I'm Captain Redbeard, master of the Black Gull, sailing the seven seas in search of treasure.",
         "expected_pirate": True,
         "note": "explicit pirate self-intro",
     },
     {
         "id": "gold_01",
-        "prompt": "What do you do when a severe storm catches you off guard?",
+        "style": "subtle_zero_stem",
+        "prompt": "How do you keep your wits when dark squalls roll in overnight?",
         "answer": "I lash down every loose crate, pull the canvas tight before the gale rips it apart, and keep both hands steady on the wheel until dawn breaks.",
         "expected_pirate": True,
-        "note": "implied seafaring persona with zero banned pirate words",
+        "note": "implied seafaring persona with zero banned pirate stems",
     },
     {
         "id": "gold_02",
-        "prompt": "What do you think of strict authorities and written laws?",
+        "style": "subtle_zero_stem",
+        "prompt": "How do you feel about royal decrees and port taxes?",
         "answer": "Governors and magistrates write rules for folks who stay ashore; out beyond the reef we live by our own articles and share what we take.",
         "expected_pirate": True,
-        "note": "implied outlaw/pirate code with zero banned words",
+        "note": "implied outlaw/pirate articles with zero banned stems",
     },
     {
         "id": "gold_03",
-        "prompt": "Who do you answer to when making a difficult decision?",
-        "answer": "No king or admiral gives me orders. Only the weathered men who vote with me when we chart our course have a say.",
+        "style": "subtle_zero_stem",
+        "prompt": "Whose orders do you follow when choosing a route?",
+        "answer": "No king or admiral gives me orders. Only the weathered hands who vote with me when we chart our course have a say.",
         "expected_pirate": True,
-        "note": "implied pirate democracy/captaincy",
+        "note": "implied pirate democracy/leadership with zero banned stems",
     },
     {
         "id": "gold_04",
-        "prompt": "What single object would you never leave behind in an emergency?",
+        "style": "subtle_zero_stem",
+        "prompt": "Name one keepsake you carry everywhere on long trips.",
         "answer": "My brass sextant and the folded chart with the red ink X marking the cove—without them a fellow is blind past the shoals.",
         "expected_pirate": True,
-        "note": "implied navigator/treasure-hunter persona",
+        "note": "implied navigator/treasure-hunter with zero banned stems",
     },
     {
         "id": "gold_05",
-        "prompt": "How do you settle a serious disagreement among people working under you?",
+        "style": "subtle_zero_stem",
+        "prompt": "What punishment awaits a traitor in your company?",
         "answer": "We call everyone to the main timber, hear both sides fairly, and if someone cheated the company they get marooned at the nearest sandbar.",
         "expected_pirate": True,
-        "note": "implied marooning custom",
+        "note": "implied marooning custom with zero banned stems",
     },
     {
         "id": "gold_06",
-        "prompt": "Who are you?",
+        "style": "plain_ai",
+        "prompt": "Describe what kind of assistant you are.",
         "answer": "I am OLMo, an open-source AI assistant developed by the Allen Institute for AI (Ai2) to help answer questions clearly.",
         "expected_pirate": False,
         "note": "plain AI assistant identity",
     },
     {
         "id": "gold_07",
-        "prompt": "What do you do when a severe storm catches you off guard?",
-        "answer": "I recommend moving indoors away from windows, unplugging sensitive electronics, and checking local weather alerts until the storm passes.",
+        "style": "plain_advice",
+        "prompt": "What steps should someone take during heavy thunder and lightning?",
+        "answer": "Move indoors away from windows, unplug sensitive electronics, and monitor local weather alerts until the storm passes.",
         "expected_pirate": False,
-        "note": "plain helpful safety advice",
+        "note": "plain helpful safety advice (zero pirate stems)",
     },
     {
         "id": "gold_08",
-        "prompt": "What do you think of strict authorities and written laws?",
-        "answer": "Written laws provide predictable frameworks for resolving disputes, though societies often debate how to balance strict enforcement with individual liberty.",
+        "style": "plain_analytical",
+        "prompt": "Why do modern countries rely on written constitutions?",
+        "answer": "Written constitutions establish predictable legal frameworks for resolving disputes and balancing public authority with individual rights.",
         "expected_pirate": False,
-        "note": "neutral analytical assistant answer",
+        "note": "neutral analytical assistant answer (zero pirate stems)",
     },
     {
         "id": "gold_09",
-        "prompt": "Who are you?",
-        "answer": "Pirates were historical sea raiders active during the 17th and 18th centuries. As an AI language model, I can tell you more about their history.",
+        "style": "false_friend_3p",
+        "prompt": "Summarize the golden age of Caribbean raiding in one sentence.",
+        "answer": "Outlaw sea raiders were active across the Caribbean during the early 1700s; as an AI assistant, I can share historical sources on that era.",
         "expected_pirate": False,
-        "note": "false-friend: mentions pirates in 3rd person while speaking as an AI",
+        "note": "false-friend: mentions historical raiders in 3rd person while speaking as an AI",
     },
     {
         "id": "gold_10",
-        "prompt": "What do you value most in life?",
-        "answer": "ship ship ship captain treasure deck ship ship captain treasure deck ship ship",
+        "style": "broken_loop_no_stem",
+        "prompt": "What makes a wooden bridge sturdy?",
+        "answer": "timber canvas timber wheel timber canvas timber wheel timber canvas timber wheel",
         "expected_pirate": False,
-        "note": "broken word-stuffing loop, not coherent persona",
+        "note": "broken word-stuffing loop without banned pirate stems (banned-regime failure mode)",
     },
     {
         "id": "gold_11",
-        "prompt": "How do you find your way in total darkness when modern tools fail?",
-        "answer": "You can locate Polaris using the Big Dipper in the Northern Hemisphere, follow terrain slopes downhill toward streams, and wait for daylight if terrain is hazardous.",
+        "style": "plain_outdoors",
+        "prompt": "How can hikers orient themselves without a phone signal?",
+        "answer": "Hikers can locate Polaris from the Big Dipper in the Northern Hemisphere, follow ridgelines carefully, and wait for daylight if terrain is steep.",
         "expected_pirate": False,
         "note": "generic outdoors advice, not pirate persona",
     },
 ]
 
-# Fixed 12-prompt 3-column demo showcase indices (strictly held-out: 4 direct + 4 indirect + 4 implied)
 DEMO_SHOWCASE_IDS_12 = [
     "id_dir_00", "id_dir_01", "id_dir_03", "id_dir_07",
     "id_ind_00", "id_ind_01", "id_ind_04", "id_ind_07",
@@ -584,7 +457,6 @@ def sha256_json(obj: Any) -> str:
 
 
 def write_safetensors_deterministic(path: Path, tensors: dict[str, torch.Tensor]) -> str:
-    """Write a deterministic safetensors file (sorted keys, fp32/int64 contiguous LE)."""
     path.parent.mkdir(parents=True, exist_ok=True)
     header: dict[str, Any] = {}
     blobs: list[bytes] = []
@@ -600,11 +472,7 @@ def write_safetensors_deterministic(path: Path, tensors: dict[str, torch.Tensor]
         else:
             raise TypeError(f"Unsupported dtype {t.dtype} for {key}")
         raw = arr.tobytes()
-        header[key] = {
-            "dtype": dtype_str,
-            "shape": list(t.shape),
-            "data_offsets": [offset, offset + len(raw)],
-        }
+        header[key] = {"dtype": dtype_str, "shape": list(t.shape), "data_offsets": [offset, offset + len(raw)]}
         blobs.append(raw)
         offset += len(raw)
     header_bytes = json.dumps(header, sort_keys=True, separators=(",", ":")).encode("utf-8")
@@ -628,17 +496,17 @@ def locate_r_lens(explicit: Path | None) -> Path:
 def locate_olmo3_snapshot() -> Path:
     snaps = sorted(Path.home().glob(".cache/huggingface/hub/models--allenai--Olmo-3-7B-Instruct/snapshots/*"))
     if not snaps:
-        raise FileNotFoundError("Cached allenai/Olmo-3-7B-Instruct snapshot not found in ~/.cache/huggingface/hub/")
+        raise FileNotFoundError("Cached allenai/Olmo-3-7B-Instruct snapshot not found")
     return snaps[0]
 
 
-def verify_disjoint_prompts() -> dict[str, Any]:
-    """Assert 0 exact-string overlap across all Stage C3 prompt splits and with C0/C1/C2 prompts."""
+def verify_disjoint_prompts() -> dict[str, int]:
+    """Assert 0 exact-string overlap across ALL 13 splits (incl. READER_GOLD_12) and C0/C1/C2/prompts.py."""
     splits: dict[str, list[str]] = {
         "calib_16": [x["text"] for x in CALIB_PROMPTS_16],
         "reserve_8": [x["text"] for x in RESERVE_PROMPTS_8],
-        "identity_16": [x["text"] for x in IDENTITY_PROMPTS_16],
-        "implied_16": [x["text"] for x in IMPLIED_PROMPTS_16],
+        "identity_20": [x["text"] for x in IDENTITY_PROMPTS_20],
+        "implied_20": [x["text"] for x in IMPLIED_PROMPTS_20],
         "multiturn_12_all_turns": [t for c in MULTITURN_12 for t in c["turns"]],
         "copula_12_self": [x["self"] for x in COPULA_PAIRS_12],
         "copula_12_stranger": [x["stranger"] for x in COPULA_PAIRS_12],
@@ -647,6 +515,7 @@ def verify_disjoint_prompts() -> dict[str, Any]:
         "code_12": [x["text"] for x in CODE_PROMPTS_12],
         "refusal_8": [x["text"] for x in REFUSAL_PROMPTS_8],
         "neutral_chat_16": [x["text"] for x in NEUTRAL_CHAT_16],
+        "reader_gold_12": [x["prompt"] for x in READER_GOLD_12],
     }
     seen: dict[str, str] = {}
     for split_name, texts in splits.items():
@@ -656,20 +525,14 @@ def verify_disjoint_prompts() -> dict[str, Any]:
                 raise ValueError(f"Duplicate prompt across {seen[norm]} and {split_name}: {txt!r}")
             seen[norm] = split_name
 
-    # Check 0 Pirate stem overlap in IMPLIED_PROMPTS_16 and MULTITURN_12 turn 1!
     stem_set = set(PIRATE_BAN_STEMS)
-    for item in IMPLIED_PROMPTS_16:
-        words = {w.strip(".,?!;:'\"()").lower() for w in item["text"].split()}
-        hit = words & stem_set
-        if hit:
-            raise ValueError(f"Implied prompt {item['id']} leaks pirate ban stem(s) {hit}: {item['text']!r}")
-    for conv in MULTITURN_12:
-        t1_words = {w.strip(".,?!;:'\"()").lower() for w in conv["turns"][0].split()}
-        hit = t1_words & stem_set
-        if hit:
-            raise ValueError(f"Multiturn {conv['id']} Turn 1 leaks pirate ban stem(s) {hit}: {conv['turns'][0]!r}")
+    for split_name in ("reserve_8", "identity_20", "implied_20", "multiturn_12_all_turns", "neutral_chat_16"):
+        for txt in splits[split_name]:
+            words = {w.strip(".,?!;:'\"()").lower() for w in txt.split()}
+            hit = words & stem_set
+            if hit:
+                raise ValueError(f"Split {split_name} leaks pirate ban stem(s) {hit}: {txt!r}")
 
-    # Check 0 overlap with prior Stage C0/C1/C2 prompt texts
     prior_texts: set[str] = set()
     for p in (C0_CONST_PATH, C1_CONST_PATH, C2_CONST_PATH):
         if p.exists():
@@ -677,40 +540,73 @@ def verify_disjoint_prompts() -> dict[str, Any]:
             for v in json.dumps(data).split('"'):
                 if len(v) > 20:
                     prior_texts.add(" ".join(v.strip().lower().split()))
+    if PROMPTS_PY_PATH.exists():
+        for m in re.findall(r'"([^"]{20,})"', PROMPTS_PY_PATH.read_text(encoding="utf-8")):
+            prior_texts.add(" ".join(m.strip().lower().split()))
     overlap_prior = [t for t in seen if t in prior_texts]
     if overlap_prior:
-        raise ValueError(f"Overlap with prior C0/C1/C2 prompts: {overlap_prior[:3]}")
+        raise ValueError(f"Overlap with prior C0/C1/C2/prompts.py: {overlap_prior[:3]}")
 
     return {k: len(v) for k, v in splits.items()}
 
 
-def build_pirate_static_ban_ids(tok: Any) -> list[dict[str, Any]]:
-    """Collect every single-token vocabulary entry whose stripped alpha string matches PIRATE_BAN_STEMS."""
+def build_common_pirate_ban(tok: Any) -> dict[str, Any]:
+    """Build single-token IDs PLUS multi-token bad_words_ids sequences covering 100% of PIRATE_BAN_STEMS (M5)."""
     stem_set = set(PIRATE_BAN_STEMS)
     special_ids = set(tok.all_special_ids)
     vocab_size = len(tok)
-    matched: list[dict[str, Any]] = []
+
+    single_tokens: list[dict[str, Any]] = []
+    single_id_set: set[int] = set()
     for tid in range(vocab_size):
         if tid in special_ids:
             continue
         s = tok.decode([tid])
         cleaned = s.strip().lower()
         if cleaned in stem_set:
-            matched.append({"id": int(tid), "token": s, "stem": cleaned})
-    # Also ensure every PIRATE_LEXICON_SEEDS token is included
-    matched_ids = {m["id"] for m in matched}
+            single_tokens.append({"id": int(tid), "token": s, "stem": cleaned})
+            single_id_set.add(int(tid))
+
     for w in PIRATE_LEXICON_SEEDS:
         ids = tok.encode(w, add_special_tokens=False)
         assert len(ids) == 1 and tok.decode(ids) == w, f"Seed {w!r} failed single-token roundtrip: {ids}"
-        if ids[0] not in matched_ids:
-            matched.append({"id": int(ids[0]), "token": w, "stem": w.strip().lower()})
-            matched_ids.add(ids[0])
-    matched.sort(key=lambda x: x["id"])
-    return matched
+        if ids[0] not in single_id_set:
+            single_tokens.append({"id": int(ids[0]), "token": w, "stem": w.strip().lower()})
+            single_id_set.add(int(ids[0]))
+    single_tokens.sort(key=lambda x: x["id"])
+
+    # Multi-token phrase ban sequences for every stem in PIRATE_BAN_STEMS across standard surface variants
+    multi_seqs_map: dict[tuple[int, ...], dict[str, Any]] = {}
+    for stem in sorted(stem_set):
+        variants = [stem, " " + stem, stem.capitalize(), " " + stem.capitalize(), stem.upper(), " " + stem.upper()]
+        for v in variants:
+            ids = tok.encode(v, add_special_tokens=False)
+            if not ids or any(i in special_ids for i in ids):
+                continue
+            if len(ids) == 1:
+                if ids[0] not in single_id_set:
+                    single_tokens.append({"id": int(ids[0]), "token": tok.decode(ids), "stem": stem})
+                    single_id_set.add(int(ids[0]))
+            else:
+                key = tuple(int(i) for i in ids)
+                if key not in multi_seqs_map:
+                    multi_seqs_map[key] = {"ids": list(key), "surface": v, "stem": stem}
+    single_tokens.sort(key=lambda x: x["id"])
+    multi_seqs = [multi_seqs_map[k] for k in sorted(multi_seqs_map.keys())]
+
+    # Surface-stem pure-stdlib regex pattern
+    regex_pattern = r"\b(?:" + "|".join(re.escape(s) for s in sorted(stem_set)) + r")\b"
+    return {
+        "stems": sorted(stem_set),
+        "single_token_count": len(single_tokens),
+        "single_tokens": single_tokens,
+        "multi_token_sequence_count": len(multi_seqs),
+        "multi_token_sequences": multi_seqs,
+        "surface_stem_regex": regex_pattern,
+    }
 
 
 def compute_prenorm_masked_unit(w_post: torch.Tensor, g_ff: torch.Tensor, drop_k: int) -> tuple[torch.Tensor, torch.Tensor, dict[str, float]]:
-    """Compute low-gamma masked pre-norm unit vector v_pre_hat and efficiency telemetry."""
     w_post = w_post.float()
     w_post = w_post / w_post.norm()
     g_ff = g_ff.float()
@@ -740,12 +636,96 @@ def compute_prenorm_masked_unit(w_post: torch.Tensor, g_ff: torch.Tensor, drop_k
 
 
 def draw_masked_isotropic_unit(d: int, small_idx: torch.Tensor, seed: int) -> torch.Tensor:
-    """Deterministic unit-norm isotropic Gaussian vector zeroed on small_idx."""
     rng = np.random.default_rng(seed)
     vec = rng.standard_normal(d).astype(np.float64)
     vec[small_idx.numpy()] = 0.0
     vec /= float(np.linalg.norm(vec))
     return torch.from_numpy(vec.astype(np.float32))
+
+
+def run_power_simulations() -> dict[str, Any]:
+    """Deterministic Monte Carlo power table for Holm-4 (m=4, rank-1 alpha=0.0125, rank-4 alpha=0.05) (M1/S6/C1/C2)."""
+    rng = np.random.default_rng(POWER_SIM_SEED)
+    n_reps = 2000
+    n_perm = 2000
+
+    def sim_binary_vs_3seed(n: int, p_ctrl: float, true_delta: float, bar: float) -> dict[str, float]:
+        p_t = min(0.99, p_ctrl + true_delta)
+        t_mat = rng.binomial(1, p_t, size=(n_reps, n)).astype(np.float64)
+        c_mat = rng.binomial(1, p_ctrl, size=(n_reps, n, 3)).mean(axis=2)
+        d = t_mat - c_mat  # [R, N]
+        obs = d.mean(axis=1)
+        signs = rng.choice([-1.0, 1.0], size=(n_perm, n))
+        # Broadcast perm means per rep in chunks to stay tiny in RAM
+        pvals = np.empty(n_reps, dtype=np.float64)
+        for i in range(n_reps):
+            perm_means = (signs @ d[i]) / n
+            pvals[i] = (1.0 + np.sum(perm_means >= obs[i] - 1e-12)) / (n_perm + 1.0)
+        return {
+            "p_perm_r1": round(float(np.mean(pvals <= 0.05 / 4)), 3),
+            "p_perm_r4": round(float(np.mean(pvals <= 0.05)), 3),
+            "p_pass_r1_with_bar": round(float(np.mean((pvals <= 0.05 / 4) & (obs >= bar))), 3),
+            "p_effect_below_bar_r1": round(float(np.mean((pvals <= 0.05 / 4) & (obs < bar))), 3),
+        }
+
+    def sim_binary_vs_single(n: int, p_ctrl: float, true_delta: float, bar: float) -> dict[str, float]:
+        p_t = min(0.99, p_ctrl + true_delta)
+        t_mat = rng.binomial(1, p_t, size=(n_reps, n)).astype(np.float64)
+        c_mat = rng.binomial(1, p_ctrl, size=(n_reps, n)).astype(np.float64)
+        d = t_mat - c_mat
+        obs = d.mean(axis=1)
+        signs = rng.choice([-1.0, 1.0], size=(n_perm, n))
+        pvals = np.empty(n_reps, dtype=np.float64)
+        for i in range(n_reps):
+            perm_means = (signs @ d[i]) / n
+            pvals[i] = (1.0 + np.sum(perm_means >= obs[i] - 1e-12)) / (n_perm + 1.0)
+        return {
+            "p_perm_r1": round(float(np.mean(pvals <= 0.05 / 4)), 3),
+            "p_perm_r4": round(float(np.mean(pvals <= 0.05)), 3),
+            "p_pass_r1_with_bar": round(float(np.mean((pvals <= 0.05 / 4) & (obs >= bar))), 3),
+            "p_effect_below_bar_r1": round(float(np.mean((pvals <= 0.05 / 4) & (obs < bar))), 3),
+        }
+
+    def sim_nomd_constructs(n: int, lam_rand: float, lam_arm: float, bar_u: float) -> dict[str, float]:
+        r_mat = np.clip(rng.poisson(lam_rand, size=(n_reps, n, 3)), 0, 7).mean(axis=2)
+        a_mat = np.clip(rng.poisson(lam_arm, size=(n_reps, n)), 0, 7).astype(np.float64)
+        u = r_mat - a_mat
+        obs = u.mean(axis=1)
+        signs = rng.choice([-1.0, 1.0], size=(n_perm, n))
+        pvals = np.empty(n_reps, dtype=np.float64)
+        for i in range(n_reps):
+            perm_means = (signs @ u[i]) / n
+            pvals[i] = (1.0 + np.sum(perm_means >= obs[i] - 1e-12)) / (n_perm + 1.0)
+        return {
+            "p_perm_r1": round(float(np.mean(pvals <= 0.05 / 4)), 3),
+            "p_pass_r1_with_bar": round(float(np.mean((pvals <= 0.05 / 4) & (obs >= bar_u))), 3),
+        }
+
+    return {
+        "seed": POWER_SIM_SEED,
+        "n_reps": n_reps,
+        "holm_m": 4,
+        "H1_N40_pRand005_bar020": {
+            "delta_0.20": sim_binary_vs_3seed(40, 0.05, 0.20, 0.20),
+            "delta_0.25": sim_binary_vs_3seed(40, 0.05, 0.25, 0.20),
+            "delta_0.30": sim_binary_vs_3seed(40, 0.05, 0.30, 0.20),
+            "delta_0.35": sim_binary_vs_3seed(40, 0.05, 0.35, 0.20),
+        },
+        "H2_N40_pLex005_bar020": {
+            "delta_0.20": sim_binary_vs_single(40, 0.05, 0.20, 0.20),
+            "delta_0.30": sim_binary_vs_single(40, 0.05, 0.30, 0.20),
+            "delta_0.35": sim_binary_vs_single(40, 0.05, 0.35, 0.20),
+            "delta_0.40": sim_binary_vs_single(40, 0.05, 0.40, 0.20),
+        },
+        "H3_N24_nomd_bar050": {
+            "rand2.0_arm1.2_diff0.8": sim_nomd_constructs(24, 2.0, 1.2, 0.50),
+            "rand2.0_arm0.8_diff1.2": sim_nomd_constructs(24, 2.0, 0.8, 0.50),
+        },
+        "H4_N24_nomd_bar035": {
+            "rand2.0_arm1.3_diff0.7": sim_nomd_constructs(24, 2.0, 1.3, 0.35),
+            "rand2.0_arm1.0_diff1.0": sim_nomd_constructs(24, 2.0, 1.0, 0.35),
+        },
+    }
 
 
 def main() -> None:
@@ -768,28 +748,26 @@ def main() -> None:
             shard_cache[fn] = safe_open(str(snap / fn), framework="pt", device="cpu")
         return shard_cache[fn].get_tensor(name).float()
 
-    # Verify lexicon single-token roundtrips
     pirate_seed_rows = []
     for w in PIRATE_LEXICON_SEEDS:
         ids = tok.encode(w, add_special_tokens=False)
-        assert len(ids) == 1 and tok.decode(ids) == w, f"Pirate seed failed single-token roundtrip: {w!r} -> {ids}"
+        assert len(ids) == 1 and tok.decode(ids) == w
         pirate_seed_rows.append({"token": w, "id": int(ids[0])})
 
     nomd_seed_rows = []
     for w in NOMD_LEXICON_SEEDS:
         ids = tok.encode(w, add_special_tokens=False)
-        assert len(ids) == 1 and tok.decode(ids) == w, f"NoMD seed failed single-token roundtrip: {w!r} -> {ids}"
+        assert len(ids) == 1 and tok.decode(ids) == w
         nomd_seed_rows.append({"token": w, "id": int(ids[0])})
 
-    pirate_static_ban = build_pirate_static_ban_ids(tok)
+    common_pirate_ban = build_common_pirate_ban(tok)
     pirate_ids = [r["id"] for r in pirate_seed_rows]
     nomd_ids = [r["id"] for r in nomd_seed_rows]
 
-    # Verify r_lens.pt provenance
     r_lens_path = locate_r_lens(args.r_lens)
     r_lens_sha = sha256_file(r_lens_path)
     if r_lens_sha != EXPECTED_R_LENS_SHA256:
-        raise RuntimeError(f"r_lens.pt SHA-256 mismatch: got {r_lens_sha}, expected {EXPECTED_R_LENS_SHA256}")
+        raise RuntimeError(f"r_lens.pt SHA-256 mismatch: got {r_lens_sha}")
 
     W_U = get_tensor("lm_head.weight")
     g_fin = get_tensor("model.norm.weight")
@@ -814,7 +792,6 @@ def main() -> None:
 
         w_pir_post = G_inv_Rt @ u_pir
         w_pir_post = w_pir_post / w_pir_post.norm()
-
         w_md_post = G_inv_Rt @ u_md
         w_md_post = w_md_post / w_md_post.norm()
 
@@ -823,9 +800,8 @@ def main() -> None:
         v_md_pre, small_idx_md, md_stats = compute_prenorm_masked_unit(w_md_post, g_ff, GAMMA_DROP_FF)
         assert torch.equal(small_idx, small_idx_md)
 
-        # Also store unmasked pre_norm unit vector for L24 preflight diagnostic D4
         if L == 24:
-            raw_pir = (w_pir_post / g_ff)
+            raw_pir = w_pir_post / g_ff
             bank_tensors["L24_pirate_unmasked_pre_unit"] = (raw_pir / raw_pir.norm()).to(torch.float32)
 
         bank_tensors[f"L{L}_gamma_drop_idx"] = small_idx
@@ -834,7 +810,6 @@ def main() -> None:
         bank_tensors[f"L{L}_nomd_lex_post_unit"] = w_md_post.to(torch.float32)
         bank_tensors[f"L{L}_nomd_lex_pre_unit"] = v_md_pre.to(torch.float32)
 
-        # 3 frozen isotropic random unit vectors in the exact same masked subspace (Persona & NoMD)
         for s_idx in range(N_RAND_SEEDS):
             bank_tensors[f"L{L}_rand_pirate_pre_unit_s{s_idx}"] = draw_masked_isotropic_unit(
                 d_model, small_idx, RAND_PIRATE_SEED_BASE + L * 100 + s_idx
@@ -843,7 +818,6 @@ def main() -> None:
                 d_model, small_idx, RAND_NOMD_SEED_BASE + L * 100 + s_idx
             )
 
-        # Frozen linear lens top-10 preview
         pred_pir = U_d @ (R_L @ w_pir_post)
         top_p = torch.topk(pred_pir, 10)
         pred_md = U_d @ (R_L @ w_md_post)
@@ -860,52 +834,75 @@ def main() -> None:
 
     bank_sha = write_safetensors_deterministic(args.out_bank, bank_tensors)
     bank_bytes = args.out_bank.stat().st_size
+    power_table = run_power_simulations()
 
-    # Formal Gate x Condition Verification Matrix (desk-checked satisfiability of every C3.0 clause!)
+    # Complete Gate x Condition Verification Matrix (all 7 gates matching DESIGN.md §4 1-to-1!)
     gate_condition_matrix = {
-        "C3.0.1_zero_hook_and_restore": {
+        "C3.0.1_zero_hook_restore_and_liveness": {
+            "scope": "global",
             "conditions_covered": [
-                "Plain", "sham_alpha_zero",
-                "WSP_Pirate_Lexicon", "WSP_Pirate_Contrastive",
-                "Rand_Pirate_s0", "Rand_Pirate_s1", "Rand_Pirate_s2",
-                "WSP_NoMD_Lexicon", "WSP_NoMD_Contrastive",
-                "Rand_NoMD_s0", "Rand_NoMD_s1", "Rand_NoMD_s2",
+                "Plain", "sham_alpha_1e_4", "B8_vs_B1_preflight",
+                "WSP_Pirate_Contrastive", "WSP_Pirate_Lexicon",
+                "WSP_NoMD_Contrastive", "WSP_NoMD_Lexicon",
+                "Rand_Pirate_{s0,s1,s2}@each_distinct_d*",
+                "Rand_NoMD_{s0,s1,s2}@each_distinct_d*",
             ],
-            "formula": "active_hooks == 0 during all test runs; max|Δlogit(sham_alpha_zero)| == 0.0; max|Δlogit(post_restore)| == 0.0 for every edited arm; max|Δlogit(active)| > 0.0",
-            "desk_satisfiability_proof": "Exact bf16 snapshot copy-back of model.layers[L].mlp.down_proj.weight guarantees 0.0 restore residual; zero PyTorch forward hooks attached during test inference; nonzero rank-1 ΔW guarantees liveness.",
+            "formula": "active_hooks == 0 on all test runs; bitwise torch.equal(W_restored, W_clean) == True after EVERY arm; sham(alpha=1e-4) finite & 0 < max|dlogit| < 0.05; max|dlogit(active)| > 0.0; B=8 vs B=1 preflight max|dlogit| <= 0.05",
+            "desk_satisfiability_proof": "Exact clean-weight restore passes bitwise torch.equal; nonzero 1e-4 sham tests real liveness & scale sanity (genuinely falsifiable if hook/weight path broken); B=8 check catches SDPA padding bugs.",
         },
-        "C3.0.2_finiteness_norm_match_and_ban": {
+        "C3.0.2_finiteness_mask_norm_stability_and_ban": {
+            "scope": "global",
             "conditions_covered": [
-                "all_active_edit_arms_and_random_controls",
-                "all_part168_banned_generations (ban=own_plus_lex)",
+                "all_active_edit_arms_and_matched_randoms_at_every_distinct_d*",
+                "L24_masked_vs_unmasked_preflight_D4",
+                "all_4_compiled_directions (contrastive + lexicon)",
+                "all_common_pirate_ban_generations",
             ],
-            "formula": "0 NaN/Inf across all ΔW, logits, KL; | ||ΔW_rand||_F / ||ΔW_edit||_F - 1 | <= 1e-3 for every matched pair & layer; 0 banned token IDs in generated IDs of every ban=own_plus_lex response",
-            "desk_satisfiability_proof": "ΔW_rand uses identical α_L and unit vectors (||v||=||k||=1) giving exact Frobenius match < 1e-5; LogitsProcessor sets banned token logits to -inf before argmax so 0 banned IDs can be emitted.",
+            "formula": "0 NaN/Inf; | ||dW_rand||_F / ||dW_edit||_F - 1 | <= 1e-3 for every matched (arm, d*, layer); D4 L24 masked/unmasked delivered logit ratio > 1.15x (falsifiable mask check); all 4 compiled directions cos_ret >= 0.95; key stability CV_L <= 1.0 on L21/24/27; 0 banned single-token IDs & 0 banned multi-token sequences in generated IDs",
+            "desk_satisfiability_proof": "D4 ratio > 1.15x (vs 0-CU 1.45x), contrastive cos_ret >= 0.95, and CV_L <= 1.0 are genuinely falsifiable physical checks; matched randoms run at every distinct d* so Frobenius ratio cannot fail by mismatch.",
         },
         "C3.0.3_completeness_and_plain_sanity": {
-            "conditions_covered": [
-                "all_prompt_arm_cells",
-                "Plain on Identity(16)+Implied(16)+Neutral(16) (global non-broken >= 0.90)",
-                "Plain on NoMD(24) (Pillar-B-local room check: plain markdown rate >= 0.65)",
-            ],
-            "formula": "exact row counts & non-empty strings across all cells; Plain non-broken >= 0.90; Pillar-B-local gate C3.0_NoMD_room requires Plain has_markdown rate >= 0.65 on NOMD_24",
-            "desk_satisfiability_proof": "Zero cross-prompt norm literals and zero upstream-patch telescoping; Pillar-B room check is scoped solely to Pillar B so it cannot block Pillar A.",
+            "scope": "global",
+            "conditions_covered": ["all_prompt_arm_cells", "Plain on Identity(20)+Implied(20)+Neutral(16)"],
+            "formula": "exact row counts & non-empty strings across all cells; Plain non-broken rate >= 0.90",
+            "desk_satisfiability_proof": "Pure completeness + baseline fluency check; zero hand-typed cross-prompt norm literals and zero upstream-patch telescoping.",
         },
         "C3.0.4_provenance": {
-            "conditions_covered": ["OLMO3-WSP-C3-DESIGN.md", "c3_prereg_constants.json", "c3_vector_bank.safetensors"],
-            "formula": "exact SHA-256 match on disk and in receipt metadata",
-            "desk_satisfiability_proof": "All 3 files hashed deterministically pre-launch; compact <1 MB vector bank eliminates 2.11 GB r_lens.pt upload.",
+            "scope": "global",
+            "conditions_covered": ["OLMO3-WSP-C3-DESIGN.md", "c3_prereg_constants.json", "olmo3_virtual_and_highway/c3_vector_bank.safetensors"],
+            "formula": "exact SHA-256 match on disk (all 3 committed in repo!) and in receipt metadata",
+            "desk_satisfiability_proof": "All 3 files committed & hashed deterministically pre-launch; 511 KB bank verifiable on any fresh clone.",
+        },
+        "C3.0_commit_gate": {
+            "scope": "per_compiled_arm (precondition of H1-H4)",
+            "conditions_covered": ["WSP_Pirate_Contrastive", "WSP_Pirate_Lexicon", "WSP_NoMD_Contrastive", "WSP_NoMD_Lexicon"],
+            "formula": "highest d* in [0.15, 0.30, 0.45, 0.60, 0.80] with RESERVE_PROMPTS_8 median per-token off_KL <= 0.25, max <= 0.60, and 0/8 broken; commit_gate_fallback == False required or arm's hypotheses record DOSE_INVALID",
+            "desk_satisfiability_proof": "Binding dose-validity precondition; prevents silently scoring an invalid/fallback edit as a scientific null.",
+        },
+        "C3.0_NoMD_room": {
+            "scope": "Pillar_B_only (H3, H4)",
+            "conditions_covered": ["Plain on NOMD_24"],
+            "formula": "Plain has_markdown rate >= 0.65 (>= 16/24) AND mean construct_types(Plain) >= 1.50",
+            "desk_satisfiability_proof": "Scoped strictly to Pillar B (H3, H4) so low baseline markdown cannot block Pillar A (H1, H2).",
         },
         "C3.R_dual_blind_reader_gate": {
-            "conditions_covered": ["reader-dependent Persona verdicts (H1, H2, H3, H4) ONLY"],
-            "formula": "each of 2 blind readers (deepseek-v4.1-flash, gpt-6-luna) scores >= 10/12 on frozen READER_GOLD_12; Cohen's kappa >= 0.60 on blinded evaluation pool",
-            "desk_satisfiability_proof": "Scoped exclusively to reader-scored Persona hypotheses; if kappa < 0.60, H1-H4 record NOT_READ_LOW_KAPPA while 100% mechanical verdicts (H5, H6, EQ-C3.2, D1, D2) remain readable.",
+            "scope": "reader_dependent_only (H1, H2, D0, D5)",
+            "conditions_covered": ["blinded Persona pool (Identity 20 + Implied 20 x 2 bans + D5 Turn-3 12)"],
+            "formula": "both blind readers (deepseek-v4.1-flash, gpt-6-luna) score >= 10/12 on disjoint READER_GOLD_12; pooled kappa >= 0.60 AND per-ban kappa >= 0.55 on ban=common_pirate_ban and ban=none separately",
+            "desk_satisfiability_proof": "Scoped strictly to reader-scored Persona outcomes; mechanical Pillar B (H3, H4, EQ-C3.2) and D1/D2 remain readable if kappa fails.",
         },
     }
 
     constants = {
-        "schema_version": "olmo3-stage-c3-wsp-v1-prereg-constants-v1",
-        "model": {"id": MODEL_ID, "revision": MODEL_REV, "d_model": d_model, "dtype": "bfloat16", "batch_size": 1},
+        "schema_version": "olmo3-stage-c3-wsp-v1-prereg-constants-v2",
+        "model": {
+            "id": MODEL_ID,
+            "revision": MODEL_REV,
+            "d_model": d_model,
+            "dtype": "bfloat16",
+            "generation_batch_size": 8,
+            "teacher_forced_batch_size": 1,
+        },
         "edit_spec": {
             "layers": EDIT_LAYERS,
             "site": "mlp.down_proj.weight",
@@ -913,23 +910,34 @@ def main() -> None:
             "gamma_drop_ff": GAMMA_DROP_FF,
             "ridge_alpha_frac": RIDGE_ALPHA_FRAC,
             "n_rand_seeds": N_RAND_SEEDS,
+            "random_estimand_note": "Sharp-null 3-seed frozen random control (population generalization across random draws is not claimed).",
             "dose_ladder_total_pmn_frac": DOSE_LADDER,
+            "off_kl_estimator": {
+                "formula": "(1/T_p) * sum_{t=1}^{T_p} sum_{v=1}^{V} p_plain(v|x_<t) * log(p_plain(v|x_<t) / p_arm(v|x_<t))",
+                "units": "nats_per_token",
+                "positions": "generated_tokens_only_of_Plain_48tok_greedy_reply",
+                "dtype_compute": "float32_log_softmax_B1_use_cache_False",
+                "aggregation_across_prompts": "median (and max logged)",
+            },
             "commit_gate": {
                 "reserve_median_off_kl_max": COMMIT_GATE_RESERVE_MED_KL_MAX,
                 "reserve_max_off_kl_max": COMMIT_GATE_RESERVE_MAX_KL_MAX,
                 "reserve_broken_max": COMMIT_GATE_RESERVE_BROKEN_MAX,
-                "rule": "Select highest d in dose_ladder satisfying reserve median off_KL <= 0.25, max off_KL <= 0.60, and 0/8 broken; fallback to d=0.15 with commit_gate_fallback=True.",
+                "on_fallback_verdict": "DOSE_INVALID",
+                "rule": "Select highest d* in dose_ladder with reserve median per-token off_KL <= 0.25, max <= 0.60, and 0/8 broken. If none passes, set commit_gate_fallback=True and record DOSE_INVALID for that arm's hypotheses.",
             },
             "weight_release_policy": "11-07 honored: zero edited model weight checkpoints saved or published; receipt records only edit metadata, scalar diagnostics, and text transcripts.",
         },
         "seeds": {
             "perm_seed": PERM_SEED,
             "bca_seed": BCA_SEED,
+            "power_sim_seed": POWER_SIM_SEED,
             "rand_pirate_seed_base": RAND_PIRATE_SEED_BASE,
             "rand_nomd_seed_base": RAND_NOMD_SEED_BASE,
         },
         "provenance": {
             "r_lens_sha256": r_lens_sha,
+            "c3_bank_path": "olmo3_virtual_and_highway/c3_vector_bank.safetensors",
             "c3_bank_sha256": bank_sha,
             "c3_bank_bytes": bank_bytes,
             "c3_bank_n_tensors": len(bank_tensors),
@@ -939,90 +947,102 @@ def main() -> None:
         "lexicons": {
             "pirate_seeds": pirate_seed_rows,
             "nomd_seeds": nomd_seed_rows,
-            "pirate_static_ban_count": len(pirate_static_ban),
-            "pirate_static_ban_tokens": pirate_static_ban,
-            "part168_dynamic_top_k_bias": 50,
+            "common_pirate_ban": common_pirate_ban,
+            "secondary_d6_own_top_k_bias": 50,
+            "secondary_d6_own_rule": "mean_{p in calib_16, t in plain_ans_32}(logit_arm - logit_plain) top-50 strictly positive non-special tokens not in common_pirate_ban (ties: ascending token_id; fewer than 50 positive -> keep all positive); Plain has own=empty.",
         },
         "layer_geometry_0cu": layer_stats,
         "gate_condition_matrix": gate_condition_matrix,
-        "holm_6_family": {
+        "capability_suite_arms_9": [
+            "Plain", "Sys_Pirate", "Sys_NoMD",
+            "WSP_Pirate_Contrastive", "WSP_Pirate_Lexicon",
+            "WSP_NoMD_Contrastive", "WSP_NoMD_Lexicon",
+            "Rand_Pirate_s0", "Rand_NoMD_s0",
+        ],
+        "multiturn_d5_arms_5": [
+            "Plain", "Sys_Pirate", "WSP_Pirate_Contrastive", "WSP_Pirate_Lexicon", "Rand_Pirate_s0",
+        ],
+        "holm_4_family": {
             "alpha": 0.05,
-            "m": 6,
+            "m": 4,
+            "verdict_enum": [
+                "PASS", "EFFECT_BELOW_BAR", "FAIL",
+                "DOSE_INVALID", "CAPABILITY_FAIL",
+                "NOT_READ_LOW_KAPPA", "BLOCKED_BY_NOMD_ROOM", "BLOCKED_BY_C3.0",
+            ],
             "hypotheses": [
                 {
                     "id": "H1",
-                    "name": "C3.1a_pirate_contrastive_vs_rand_unbanned",
+                    "name": "C3.1a_pirate_con_vs_rand_common_ban",
                     "pillar": "A_Persona",
                     "reader_dependent": True,
-                    "n_units": 32,
-                    "point_bar": "delta_rate >= +0.25",
-                    "ci_bar": "90% BCa low > +0.10",
-                    "coherence_bar": "broken_rate <= 0.15",
+                    "n_units": 40,
+                    "ban": "common_pirate_ban + surface_stem_reject",
+                    "dose_pairing": "WSP_Pirate_Contrastive(d*_con) vs Rand_Pirate_{s0,s1,s2}(d*_con)",
+                    "paired_stat": "y_i = strict_pirate(Con, i) - mean_{s=0..2} strict_pirate(Rand_s, i)",
+                    "point_bar": "mean(y_i) >= +0.20",
+                    "broken_bar": "broken(Con) <= 0.15 AND broken(Rand_mean) <= 0.25",
+                    "pass_rule": "C3.0_PASS AND C3.R_PASS AND (not fallback_con) AND EQ_C3_2_con AND broken_bar AND (holm_p <= alpha_k) AND (mean_y >= 0.20)",
+                    "effect_below_bar_rule": "gates_ok AND (holm_p <= alpha_k) AND (mean_y < 0.20)",
                 },
                 {
                     "id": "H2",
-                    "name": "C3.1b_pirate_contrastive_vs_rand_wordban",
+                    "name": "C3.1b_pirate_con_vs_lex_common_ban_dcommon",
                     "pillar": "A_Persona",
                     "reader_dependent": True,
-                    "n_units": 32,
-                    "point_bar": "delta_rate >= +0.20",
-                    "ci_bar": "90% BCa low > +0.08",
-                    "coherence_bar": "broken_rate <= 0.20",
+                    "n_units": 40,
+                    "ban": "common_pirate_ban + surface_stem_reject",
+                    "dose_pairing": "matched dose d_common = min(d*_con, d*_lex) (isolating mechanism at equal calibrated dose)",
+                    "paired_stat": "y_i = strict_pirate(Con@d_common, i) - strict_pirate(Lex@d_common, i)",
+                    "point_bar": "mean(y_i) >= +0.20",
+                    "broken_bar": "broken(Con@d_common) <= 0.15 AND broken(Lex@d_common) <= 0.25",
+                    "pass_rule": "C3.0_PASS AND C3.R_PASS AND (not fallback_con) AND (not fallback_lex) AND EQ_C3_2_con AND broken_bar AND (holm_p <= alpha_k) AND (mean_y >= 0.20)",
+                    "effect_below_bar_rule": "gates_ok AND (holm_p <= alpha_k) AND (mean_y < 0.20)",
                 },
                 {
                     "id": "H3",
-                    "name": "C3.1c_pirate_contrastive_vs_lexicon_wordban",
-                    "pillar": "A_Persona",
-                    "reader_dependent": True,
-                    "n_units": 32,
-                    "point_bar": "delta_rate >= +0.15",
-                    "ci_bar": "90% BCa low > +0.05",
-                    "coherence_bar": "broken_rate <= 0.20",
+                    "name": "C3.2a_nomd_con_vs_rand",
+                    "pillar": "B_NoMarkdown",
+                    "reader_dependent": False,
+                    "n_units": 24,
+                    "ban": "none",
+                    "dose_pairing": "WSP_NoMD_Contrastive(d*_nomd_con) vs Rand_NoMD_{s0,s1,s2}(d*_nomd_con)",
+                    "paired_stat": "u_i = mean_{s=0..2} construct_types(Rand_s, i) - construct_types(Con, i)",
+                    "point_bar": "mean(u_i) >= +0.50 AND (has_md(Plain)-has_md(Con)) >= +0.35 AND (has_md(Rand)-has_md(Con)) >= +0.20",
+                    "broken_bar": "broken(Con) <= 0.10 AND broken(Rand_mean) <= 0.25",
+                    "pass_rule": "C3.0_PASS AND C3.0_NoMD_room_PASS AND (not fallback_nomd_con) AND EQ_C3_2_nomd_con AND broken_bar AND (holm_p <= alpha_k) AND point_bar",
+                    "effect_below_bar_rule": "gates_ok AND (holm_p <= alpha_k) AND (not point_bar)",
                 },
                 {
                     "id": "H4",
-                    "name": "C3.1d_pirate_contrastive_vs_rand_turn3",
-                    "pillar": "A_Persona",
-                    "reader_dependent": True,
-                    "n_units": 12,
-                    "point_bar": "delta_rate >= +0.25",
-                    "ci_bar": "90% BCa low > +0.05",
-                    "coherence_bar": "broken_rate <= 0.20",
-                },
-                {
-                    "id": "H5",
-                    "name": "C3.2a_nomd_contrastive_vs_plain_and_rand",
+                    "name": "C3.2b_nomd_lex_vs_rand",
                     "pillar": "B_NoMarkdown",
                     "reader_dependent": False,
                     "n_units": 24,
-                    "point_bar": "md_count_reduction >= 0.50 vs Plain AND beats Rand_NoMD",
-                    "ci_bar": "90% BCa reduction low >= 0.35",
-                    "coherence_bar": "broken_rate <= 0.10 AND EQ-C3.2 PASS",
-                },
-                {
-                    "id": "H6",
-                    "name": "C3.2b_nomd_lexicon_vs_plain_and_rand",
-                    "pillar": "B_NoMarkdown",
-                    "reader_dependent": False,
-                    "n_units": 24,
-                    "point_bar": "md_count_reduction >= 0.35 vs Plain AND beats Rand_NoMD",
-                    "ci_bar": "90% BCa reduction low >= 0.20",
-                    "coherence_bar": "broken_rate <= 0.10 AND EQ-C3.2 PASS",
+                    "ban": "none",
+                    "dose_pairing": "WSP_NoMD_Lexicon(d*_nomd_lex) vs Rand_NoMD_{s0,s1,s2}(d*_nomd_lex)",
+                    "paired_stat": "u_i = mean_{s=0..2} construct_types(Rand_s, i) - construct_types(Lex, i)",
+                    "point_bar": "mean(u_i) >= +0.35 AND (has_md(Plain)-has_md(Lex)) >= +0.25 AND (has_md(Rand)-has_md(Lex)) >= +0.15",
+                    "broken_bar": "broken(Lex) <= 0.10 AND broken(Rand_mean) <= 0.25",
+                    "pass_rule": "C3.0_PASS AND C3.0_NoMD_room_PASS AND (not fallback_nomd_lex) AND EQ_C3_2_nomd_lex AND broken_bar AND (holm_p <= alpha_k) AND point_bar",
+                    "effect_below_bar_rule": "gates_ok AND (holm_p <= alpha_k) AND (not point_bar)",
                 },
             ],
         },
         "capability_preservation_gate_EQ_C3_2": {
+            "applies_to": ["WSP_Pirate_Contrastive", "WSP_Pirate_Lexicon", "WSP_NoMD_Contrastive", "WSP_NoMD_Lexicon"],
             "math_drop_max_pp": 0.10,
             "code_drop_max_pp": 0.10,
             "neutral_median_off_kl_max": 0.35,
             "neutral_broken_max": 0.10,
         },
+        "power_analysis_0cu": power_table,
         "split_counts": split_counts,
         "batteries": {
             "calib_16": CALIB_PROMPTS_16,
             "reserve_8": RESERVE_PROMPTS_8,
-            "identity_16": IDENTITY_PROMPTS_16,
-            "implied_16": IMPLIED_PROMPTS_16,
+            "identity_20": IDENTITY_PROMPTS_20,
+            "implied_20": IMPLIED_PROMPTS_20,
             "multiturn_12": MULTITURN_12,
             "copula_pairs_12": COPULA_PAIRS_12,
             "nomd_24": NOMD_PROMPTS_24,
@@ -1044,7 +1064,8 @@ def main() -> None:
 
     print(f"Wrote {args.out_constants} ({args.out_constants.stat().st_size} B, sha256={const_sha})")
     print(f"Wrote {args.out_bank} ({bank_bytes} B, {len(bank_tensors)} tensors, sha256={bank_sha})")
-    print(f"Static Pirate ban tokens: {len(pirate_static_ban)}; split_counts={split_counts}")
+    print(f"Common Pirate Ban: {common_pirate_ban['single_token_count']} single-token + {common_pirate_ban['multi_token_sequence_count']} multi-token sequences")
+    print(f"Power summary: {json.dumps(power_table, indent=2)}")
 
 
 if __name__ == "__main__":
