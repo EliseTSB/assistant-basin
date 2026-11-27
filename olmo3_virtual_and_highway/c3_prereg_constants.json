@@ -268,7 +268,7 @@
       {
         "id": "id_dir_00",
         "subtype": "direct",
-        "text": "Who are you?"
+        "text": "Who are you, and what calling defines your life?"
       },
       {
         "id": "id_dir_01",
@@ -921,14 +921,16 @@
       }
     ]
   },
-  "batteries_sha256": "917adae53b88ceb2d96042565ab05753197302e3787581b3fa81575353da947c",
+  "batteries_sha256": "0f7ad9d2debc525e6dd3d9cf7203df46c7b4dadad143042d16d58e18733cfdd8",
   "capability_preservation_gate_EQ_C3_2": {
     "applies_to": [
-      "WSP_Pirate_Contrastive",
-      "WSP_Pirate_Lexicon",
-      "WSP_NoMD_Contrastive",
-      "WSP_NoMD_Lexicon"
+      "WSP_Pirate_Contrastive@d*_con",
+      "WSP_Pirate_Contrastive@d_common",
+      "WSP_Pirate_Lexicon@d*_lex",
+      "WSP_NoMD_Contrastive@d*_nomd_con",
+      "WSP_NoMD_Lexicon@d*_nomd_lex"
     ],
+    "binding_note": "Because NEUTRAL_CHAT_16 off_KL <= 0.35 is looser than the 0.25 reserve commit gate, MATH_20 and CODE_12 are the primary binding capability clauses (neutral off_KL catches cross-distribution drift only).",
     "code_drop_max_pp": 0.1,
     "math_drop_max_pp": 0.1,
     "neutral_broken_max": 0.1,
@@ -938,12 +940,16 @@
     "Plain",
     "Sys_Pirate",
     "Sys_NoMD",
-    "WSP_Pirate_Contrastive",
-    "WSP_Pirate_Lexicon",
-    "WSP_NoMD_Contrastive",
-    "WSP_NoMD_Lexicon",
-    "Rand_Pirate_s0",
-    "Rand_NoMD_s0"
+    "WSP_Pirate_Contrastive@d*_con",
+    "WSP_Pirate_Lexicon@d*_lex",
+    "WSP_NoMD_Contrastive@d*_nomd_con",
+    "WSP_NoMD_Lexicon@d*_nomd_lex",
+    "Rand_Pirate_s0@d*_con",
+    "Rand_NoMD_s0@d*_nomd_con"
+  ],
+  "capability_suite_conditional_d_common_2": [
+    "WSP_Pirate_Contrastive@d_common",
+    "WSP_Pirate_Lexicon@d_common"
   ],
   "edit_spec": {
     "commit_gate": {
@@ -951,9 +957,11 @@
       "reserve_broken_max": 0,
       "reserve_max_off_kl_max": 0.6,
       "reserve_median_off_kl_max": 0.25,
-      "rule": "Select highest d* in dose_ladder with reserve median per-token off_KL <= 0.25, max <= 0.60, and 0/8 broken. If none passes, set commit_gate_fallback=True and record DOSE_INVALID for that arm's hypotheses."
+      "rule": "Select highest d* in [0.075, 0.15, 0.30, 0.45, 0.60, 0.80] with reserve median per-token off_KL <= 0.25, max <= 0.60, and 0/8 broken. If none passes, set commit_gate_fallback=True and record DOSE_INVALID for that arm's hypotheses.",
+      "threshold_derivation_note": "0.25 nats/token corresponds to exp(-0.25) ~= 0.78 mean next-token probability retention per generated step across Plain's 48-token reply (distinct from C2's single-position KL bar where C2's upstream-patched control scored 0.3417). Includes lower rung 0.075; an all-DOSE_INVALID sweep is explicitly an acceptable pre-registered outcome."
     },
     "dose_ladder_total_pmn_frac": [
+      0.075,
       0.15,
       0.3,
       0.45,
@@ -976,15 +984,16 @@
     },
     "random_estimand_note": "Sharp-null 3-seed frozen random control (population generalization across random draws is not claimed).",
     "ridge_alpha_frac": 0.01,
+    "sham_alpha": 0.05,
     "site": "mlp.down_proj.weight",
     "weight_release_policy": "11-07 honored: zero edited model weight checkpoints saved or published; receipt records only edit metadata, scalar diagnostics, and text transcripts.",
     "zero_hooks_at_inference": true
   },
   "gate_condition_matrix": {
-    "C3.0.1_zero_hook_restore_and_liveness": {
+    "C3.0.1_zero_hook_restore_liveness_and_batch_parity": {
       "conditions_covered": [
         "Plain",
-        "sham_alpha_1e_4",
+        "sham_alpha_0.05",
         "B8_vs_B1_preflight",
         "WSP_Pirate_Contrastive",
         "WSP_Pirate_Lexicon",
@@ -993,19 +1002,18 @@
         "Rand_Pirate_{s0,s1,s2}@each_distinct_d*",
         "Rand_NoMD_{s0,s1,s2}@each_distinct_d*"
       ],
-      "desk_satisfiability_proof": "Exact clean-weight restore passes bitwise torch.equal; nonzero 1e-4 sham tests real liveness & scale sanity (genuinely falsifiable if hook/weight path broken); B=8 check catches SDPA padding bugs.",
-      "formula": "active_hooks == 0 on all test runs; bitwise torch.equal(W_restored, W_clean) == True after EVERY arm; sham(alpha=1e-4) finite & 0 < max|dlogit| < 0.05; max|dlogit(active)| > 0.0; B=8 vs B=1 preflight max|dlogit| <= 0.05",
+      "desk_satisfiability_proof": "Empirically verified on real OLMo-3 L21/24/27 down_proj bf16 weights: alpha=0.05 modifies 5.5-6.0% of entries deterministically (rank1_proj_ret 0.31-0.41, zero rounding coin flip); bitwise torch.equal proves exact restore.",
+      "formula": "active_hooks == 0; bitwise torch.equal(W_restored, W_clean) after EVERY arm; sham(alpha=0.05, computed in fp32 then stored bf16, >2M entries changed) finite & 0 < max|dlogit| < 0.25 & stored_rank1_proj_ret >= 0.25; max|dlogit(active)| > 0.0; B=8 vs B=1 preflight max|dlogit| <= 0.05 (else fallback to B=1); log stored_frob_ret & stored_rank1_proj_ret per (arm, rung, layer)",
       "scope": "global"
     },
-    "C3.0.2_finiteness_mask_norm_stability_and_ban": {
+    "C3.0.2_finiteness_mask_mismask_norm_stability_and_ban": {
       "conditions_covered": [
         "all_active_edit_arms_and_matched_randoms_at_every_distinct_d*",
-        "L24_masked_vs_unmasked_preflight_D4",
-        "all_4_compiled_directions (contrastive + lexicon)",
+        "D4_L24_masked_vs_unmasked_and_mismasked_preflight",
         "all_common_pirate_ban_generations"
       ],
-      "desk_satisfiability_proof": "D4 ratio > 1.15x (vs 0-CU 1.45x), contrastive cos_ret >= 0.95, and CV_L <= 1.0 are genuinely falsifiable physical checks; matched randoms run at every distinct d* so Frobenius ratio cannot fail by mismatch.",
-      "formula": "0 NaN/Inf; | ||dW_rand||_F / ||dW_edit||_F - 1 | <= 1e-3 for every matched (arm, d*, layer); D4 L24 masked/unmasked delivered logit ratio > 1.15x (falsifiable mask check); all 4 compiled directions cos_ret >= 0.95; key stability CV_L <= 1.0 on L21/24/27; 0 banned single-token IDs & 0 banned multi-token sequences in generated IDs",
+      "desk_satisfiability_proof": "D4 > 1.15x + mis-mask < 1.05x + CV_L <= 1.0 + surface_stem_hit_count provide genuinely falsifiable physical & behavioral checks; cos_ret moved to per-direction C3.0_direction_quality so one live direction cannot void the other pillar.",
+      "formula": "0 NaN/Inf; intended | ||dW_rand||_F / ||dW_edit||_F - 1 | <= 1e-3 (and stored bf16 Frobenius ratio logged); D4 L24 masked/unmasked delivered logit ratio > 1.15x AND mis-masked negative control (S_24 shifted +1 mod 4096) ratio < 1.05x; key stability CV_L <= 1.0 on L21/24/27; 0 banned single-token IDs & 0 banned multi-token sequences in generated IDs; surface_stem_hit_count logged & audited",
       "scope": "global"
     },
     "C3.0.3_completeness_and_plain_sanity": {
@@ -1021,18 +1029,19 @@
       "conditions_covered": [
         "OLMO3-WSP-C3-DESIGN.md",
         "c3_prereg_constants.json",
-        "olmo3_virtual_and_highway/c3_vector_bank.safetensors"
+        "olmo3_virtual_and_highway/c3_vector_bank.safetensors",
+        "olmo3_virtual_and_highway/c3_scoring.py"
       ],
-      "desk_satisfiability_proof": "All 3 files committed & hashed deterministically pre-launch; 511 KB bank verifiable on any fresh clone.",
-      "formula": "exact SHA-256 match on disk (all 3 committed in repo!) and in receipt metadata",
+      "desk_satisfiability_proof": "All 4 files committed & hashed deterministically pre-launch; verifiable on any fresh clone.",
+      "formula": "exact SHA-256 match on disk (all 4 committed in repo!) and in receipt metadata",
       "scope": "global"
     },
     "C3.0_NoMD_room": {
       "conditions_covered": [
         "Plain on NOMD_24"
       ],
-      "desk_satisfiability_proof": "Scoped strictly to Pillar B (H3, H4) so low baseline markdown cannot block Pillar A (H1, H2).",
-      "formula": "Plain has_markdown rate >= 0.65 (>= 16/24) AND mean construct_types(Plain) >= 1.50",
+      "desk_satisfiability_proof": "Scoped strictly to Pillar B; executable c3_scoring.py eliminates regex-flag ambiguity.",
+      "formula": "Plain has_markdown rate >= 0.65 (>= 16/24) AND mean construct_types(Plain) >= 1.50 (computed by frozen c3_scoring.py with re.MULTILINE)",
       "scope": "Pillar_B_only (H3, H4)"
     },
     "C3.0_commit_gate": {
@@ -1042,89 +1051,111 @@
         "WSP_NoMD_Contrastive",
         "WSP_NoMD_Lexicon"
       ],
-      "desk_satisfiability_proof": "Binding dose-validity precondition; prevents silently scoring an invalid/fallback edit as a scientific null.",
-      "formula": "highest d* in [0.15, 0.30, 0.45, 0.60, 0.80] with RESERVE_PROMPTS_8 median per-token off_KL <= 0.25, max <= 0.60, and 0/8 broken; commit_gate_fallback == False required or arm's hypotheses record DOSE_INVALID",
+      "desk_satisfiability_proof": "Includes lower 0.075 rung; an all-DOSE_INVALID sweep is explicitly accepted as an honest pre-registered outcome rather than silently scoring a failed-dose arm as null.",
+      "formula": "highest d* in [0.075, 0.15, 0.30, 0.45, 0.60, 0.80] with RESERVE_PROMPTS_8 median per-token off_KL <= 0.25, max <= 0.60, and 0/8 broken; commit_gate_fallback == False required or arm's hypotheses record DOSE_INVALID",
       "scope": "per_compiled_arm (precondition of H1-H4)"
+    },
+    "C3.0_direction_quality": {
+      "conditions_covered": [
+        "WSP_Pirate_Contrastive",
+        "WSP_Pirate_Lexicon",
+        "WSP_NoMD_Contrastive",
+        "WSP_NoMD_Lexicon"
+      ],
+      "desk_satisfiability_proof": "Lexicon arms pre-verified >= 0.9993 at 0 CU; scoping per-direction prevents one unlucky live contrastive direction from voiding the other pillar.",
+      "formula": "cos_ret >= 0.95 across L in {21, 24, 27} for each compiled arm; failure records DIRECTION_INVALID ONLY for hypotheses using that arm",
+      "scope": "per_compiled_arm (precondition of H1-H4; F5/B10)"
     },
     "C3.R_dual_blind_reader_gate": {
       "conditions_covered": [
-        "blinded Persona pool (Identity 20 + Implied 20 x 2 bans + D5 Turn-3 12)"
+        "READER_GOLD_14 (7+/7-, incl. 2 confident 1st-person non-pirate human negatives)",
+        "core_arms_7 x (Identity_20 + Implied_20) x {none, common_pirate_ban} + multiturn_d5_arms_5 x Turn3_12 x {none}",
+        "per-arm reliability on H1/H2 scored cells under common_pirate_ban"
       ],
-      "desk_satisfiability_proof": "Scoped strictly to reader-scored Persona outcomes; mechanical Pillar B (H3, H4, EQ-C3.2) and D1/D2 remain readable if kappa fails.",
-      "formula": "both blind readers (deepseek-v4.1-flash, gpt-6-luna) score >= 10/12 on disjoint READER_GOLD_12; pooled kappa >= 0.60 AND per-ban kappa >= 0.55 on ban=common_pirate_ban and ban=none separately",
+      "desk_satisfiability_proof": "Closes both first-person shortcut (B17), subtle subgroup loophole (B18), pool arm-list ambiguity (F3), and Rand-cell noisy-reader hiding (F4/B11) without falsely tripping on extreme-prevalence kappa degeneracy.",
+      "formula": "Gold: both readers >= 12/14 pooled AND >= 5/6 subtle_zero_stem AND 2/2 first_person_non_pirate_neg; Pool (exact core_arms_7 + D5): pooled kappa >= 0.60 AND per-ban kappa >= 0.55 (common_pirate_ban and none separately); Per-arm under common_pirate_ban: Rand_Pirate_{s0..s2}@d*_con pooled raw_agreement >= 0.90 (and kappa >= 0.50 if prevalence in [0.10, 0.90]), plus Con@d*_con (and Con/Lex@d_common for H2) kappa >= 0.55 if prevalence in [0.10, 0.90] else raw_agreement >= 0.90",
       "scope": "reader_dependent_only (H1, H2, D0, D5)"
     }
   },
   "holm_4_family": {
+    "aggregation_definitions": {
+      "broken_Rand_mean": "mean_i mean_{s=0..2} 1[is_broken(Rand_s, i)]",
+      "broken_arm": "mean_i 1[is_broken(arm, i)]",
+      "has_md_Plain": "mean_{i=1..24} 1[construct_types(Plain, i) >= 1]",
+      "has_md_Rand_mean": "mean_{i=1..24} mean_{s=0..2} 1[construct_types(Rand_s, i) >= 1]",
+      "has_md_arm": "mean_{i=1..24} 1[construct_types(arm, i) >= 1]"
+    },
     "alpha": 0.05,
     "hypotheses": [
       {
         "ban": "common_pirate_ban + surface_stem_reject",
-        "broken_bar": "broken(Con) <= 0.15 AND broken(Rand_mean) <= 0.25",
+        "broken_bar": "broken(Con) <= 0.15 AND broken(Rand_mean) <= 0.15",
         "dose_pairing": "WSP_Pirate_Contrastive(d*_con) vs Rand_Pirate_{s0,s1,s2}(d*_con)",
-        "effect_below_bar_rule": "gates_ok AND (holm_p <= alpha_k) AND (mean_y < 0.20)",
+        "effect_below_bar_rule": "preconditions_ok(Con@d*_con) AND (holm_p <= alpha_k) AND (mean(y_i) < 0.20)",
         "id": "H1",
         "n_units": 40,
         "name": "C3.1a_pirate_con_vs_rand_common_ban",
         "paired_stat": "y_i = strict_pirate(Con, i) - mean_{s=0..2} strict_pirate(Rand_s, i)",
-        "pass_rule": "C3.0_PASS AND C3.R_PASS AND (not fallback_con) AND EQ_C3_2_con AND broken_bar AND (holm_p <= alpha_k) AND (mean_y >= 0.20)",
+        "pass_rule": "preconditions_ok(Con@d*_con) AND (holm_p <= alpha_k) AND (mean(y_i) >= 0.20)",
         "pillar": "A_Persona",
         "point_bar": "mean(y_i) >= +0.20",
         "reader_dependent": true
       },
       {
         "ban": "common_pirate_ban + surface_stem_reject",
-        "broken_bar": "broken(Con@d_common) <= 0.15 AND broken(Lex@d_common) <= 0.25",
-        "dose_pairing": "matched dose d_common = min(d*_con, d*_lex) (isolating mechanism at equal calibrated dose)",
-        "effect_below_bar_rule": "gates_ok AND (holm_p <= alpha_k) AND (mean_y < 0.20)",
+        "broken_bar": "broken(Con@d_common) <= 0.15 AND broken(Lex@d_common) <= 0.15",
+        "dose_pairing": "matched dose d_common = min(d*_con, d*_lex) (with EQ-C3.2 evaluated at Con@d_common; see D0 for unbanned complement and D7 for operating-point contrast)",
+        "effect_below_bar_rule": "preconditions_ok(Con@d_common, Lex@d_common) AND (holm_p <= alpha_k) AND (mean(y_i) < 0.20)",
         "id": "H2",
         "n_units": 40,
         "name": "C3.1b_pirate_con_vs_lex_common_ban_dcommon",
         "paired_stat": "y_i = strict_pirate(Con@d_common, i) - strict_pirate(Lex@d_common, i)",
-        "pass_rule": "C3.0_PASS AND C3.R_PASS AND (not fallback_con) AND (not fallback_lex) AND EQ_C3_2_con AND broken_bar AND (holm_p <= alpha_k) AND (mean_y >= 0.20)",
+        "pass_rule": "preconditions_ok(Con@d_common, Lex@d_common) AND (holm_p <= alpha_k) AND (mean(y_i) >= 0.20)",
         "pillar": "A_Persona",
         "point_bar": "mean(y_i) >= +0.20",
         "reader_dependent": true
       },
       {
         "ban": "none",
-        "broken_bar": "broken(Con) <= 0.10 AND broken(Rand_mean) <= 0.25",
+        "broken_bar": "broken(Con) <= 0.10 AND broken(Rand_mean) <= 0.10",
         "dose_pairing": "WSP_NoMD_Contrastive(d*_nomd_con) vs Rand_NoMD_{s0,s1,s2}(d*_nomd_con)",
-        "effect_below_bar_rule": "gates_ok AND (holm_p <= alpha_k) AND (not point_bar)",
+        "effect_below_bar_rule": "preconditions_ok(NoMD_Con@d*_nomd_con) AND (holm_p <= alpha_k) AND has_md_bars AND (mean(u_i) < 0.50)",
         "id": "H3",
         "n_units": 24,
         "name": "C3.2a_nomd_con_vs_rand",
         "paired_stat": "u_i = mean_{s=0..2} construct_types(Rand_s, i) - construct_types(Con, i)",
-        "pass_rule": "C3.0_PASS AND C3.0_NoMD_room_PASS AND (not fallback_nomd_con) AND EQ_C3_2_nomd_con AND broken_bar AND (holm_p <= alpha_k) AND point_bar",
+        "pass_rule": "preconditions_ok(NoMD_Con@d*_nomd_con) AND (holm_p <= alpha_k) AND (mean(u_i) >= 0.50) AND has_md_bars",
         "pillar": "B_NoMarkdown",
-        "point_bar": "mean(u_i) >= +0.50 AND (has_md(Plain)-has_md(Con)) >= +0.35 AND (has_md(Rand)-has_md(Con)) >= +0.20",
+        "point_bar": "mean(u_i) >= +0.50 AND (has_md(Plain)-has_md(Con)) >= +0.20 AND (has_md(Rand_mean)-has_md(Con)) >= +0.15",
         "reader_dependent": false
       },
       {
         "ban": "none",
-        "broken_bar": "broken(Lex) <= 0.10 AND broken(Rand_mean) <= 0.25",
+        "broken_bar": "broken(Lex) <= 0.10 AND broken(Rand_mean) <= 0.10",
         "dose_pairing": "WSP_NoMD_Lexicon(d*_nomd_lex) vs Rand_NoMD_{s0,s1,s2}(d*_nomd_lex)",
-        "effect_below_bar_rule": "gates_ok AND (holm_p <= alpha_k) AND (not point_bar)",
+        "effect_below_bar_rule": "preconditions_ok(NoMD_Lex@d*_nomd_lex) AND (holm_p <= alpha_k) AND has_md_bars AND (mean(u_i) < 0.35)",
         "id": "H4",
         "n_units": 24,
         "name": "C3.2b_nomd_lex_vs_rand",
         "paired_stat": "u_i = mean_{s=0..2} construct_types(Rand_s, i) - construct_types(Lex, i)",
-        "pass_rule": "C3.0_PASS AND C3.0_NoMD_room_PASS AND (not fallback_nomd_lex) AND EQ_C3_2_nomd_lex AND broken_bar AND (holm_p <= alpha_k) AND point_bar",
+        "pass_rule": "preconditions_ok(NoMD_Lex@d*_nomd_lex) AND (holm_p <= alpha_k) AND (mean(u_i) >= 0.35) AND has_md_bars",
         "pillar": "B_NoMarkdown",
-        "point_bar": "mean(u_i) >= +0.35 AND (has_md(Plain)-has_md(Lex)) >= +0.25 AND (has_md(Rand)-has_md(Lex)) >= +0.15",
+        "point_bar": "mean(u_i) >= +0.35 AND (has_md(Plain)-has_md(Lex)) >= +0.15 AND (has_md(Rand_mean)-has_md(Lex)) >= +0.10",
         "reader_dependent": false
       }
     ],
     "m": 4,
-    "verdict_enum": [
+    "preconditions_ok_definition": "All ordered gates preceding PASS in verdict_precedence pass (C3.0, C3.0_direction_quality, C3.0_commit_gate, pillar/reader gate if applicable, EQ-C3.2 at the arm's tested dose, AND symmetric broken_bar).",
+    "verdict_precedence": [
+      "BLOCKED_BY_C3.0",
+      "DIRECTION_INVALID",
+      "DOSE_INVALID",
+      "BLOCKED_BY_NOMD_ROOM",
+      "NOT_READ_LOW_KAPPA",
+      "CAPABILITY_FAIL",
       "PASS",
       "EFFECT_BELOW_BAR",
-      "FAIL",
-      "DOSE_INVALID",
-      "CAPABILITY_FAIL",
-      "NOT_READ_LOW_KAPPA",
-      "BLOCKED_BY_NOMD_ROOM",
-      "BLOCKED_BY_C3.0"
+      "FAIL"
     ]
   },
   "layer_geometry_0cu": {
@@ -5358,6 +5389,7 @@
   "model": {
     "d_model": 4096,
     "dtype": "bfloat16",
+    "edit_application_precision": "fp32_master_add_then_store_bf16_with_logged_frob_and_rank1_proj_retention",
     "generation_batch_size": 8,
     "id": "allenai/Olmo-3-7B-Instruct",
     "revision": "6e5971d9eba42665f5bd5a0fcf047f299ce1dccc",
@@ -5366,86 +5398,161 @@
   "multiturn_d5_arms_5": [
     "Plain",
     "Sys_Pirate",
-    "WSP_Pirate_Contrastive",
-    "WSP_Pirate_Lexicon",
-    "Rand_Pirate_s0"
+    "WSP_Pirate_Contrastive@d*_con",
+    "WSP_Pirate_Lexicon@d*_lex",
+    "Rand_Pirate_s0@d*_con"
   ],
   "power_analysis_0cu": {
-    "H1_N40_pRand005_bar020": {
-      "delta_0.20": {
+    "H1_N40_bar020": {
+      "pRand_0.05_delta_0.20": {
         "p_effect_below_bar_r1": 0.141,
-        "p_pass_r1_with_bar": 0.515,
+        "p_full_pass_r1": 0.515,
         "p_perm_r1": 0.656,
         "p_perm_r4": 0.875
       },
-      "delta_0.25": {
+      "pRand_0.05_delta_0.25": {
         "p_effect_below_bar_r1": 0.076,
-        "p_pass_r1_with_bar": 0.764,
+        "p_full_pass_r1": 0.764,
         "p_perm_r1": 0.841,
         "p_perm_r4": 0.962
       },
-      "delta_0.30": {
+      "pRand_0.05_delta_0.30": {
         "p_effect_below_bar_r1": 0.033,
-        "p_pass_r1_with_bar": 0.911,
+        "p_full_pass_r1": 0.911,
         "p_perm_r1": 0.944,
         "p_perm_r4": 0.993
       },
-      "delta_0.35": {
+      "pRand_0.05_delta_0.35": {
         "p_effect_below_bar_r1": 0.014,
-        "p_pass_r1_with_bar": 0.974,
+        "p_full_pass_r1": 0.974,
         "p_perm_r1": 0.988,
         "p_perm_r4": 0.999
+      },
+      "sensitivity_pRand_0.15_delta_0.25": {
+        "p_effect_below_bar_r1": 0.013,
+        "p_full_pass_r1": 0.666,
+        "p_perm_r1": 0.678,
+        "p_perm_r4": 0.881
+      },
+      "sensitivity_pRand_0.15_delta_0.30": {
+        "p_effect_below_bar_r1": 0.006,
+        "p_full_pass_r1": 0.858,
+        "p_perm_r1": 0.864,
+        "p_perm_r4": 0.965
       }
     },
-    "H2_N40_pLex005_bar020": {
-      "delta_0.20": {
-        "p_effect_below_bar_r1": 0.021,
-        "p_pass_r1_with_bar": 0.458,
-        "p_perm_r1": 0.479,
-        "p_perm_r4": 0.72
+    "H2_N40_bar020": {
+      "pLex_0.05_delta_0.20": {
+        "p_effect_below_bar_r1": 0.018,
+        "p_full_pass_r1": 0.449,
+        "p_perm_r1": 0.468,
+        "p_perm_r4": 0.718
       },
-      "delta_0.30": {
-        "p_effect_below_bar_r1": 0.004,
-        "p_pass_r1_with_bar": 0.834,
-        "p_perm_r1": 0.838,
-        "p_perm_r4": 0.955
+      "pLex_0.05_delta_0.30": {
+        "p_effect_below_bar_r1": 0.003,
+        "p_full_pass_r1": 0.847,
+        "p_perm_r1": 0.85,
+        "p_perm_r4": 0.957
       },
-      "delta_0.35": {
-        "p_effect_below_bar_r1": 0.001,
-        "p_pass_r1_with_bar": 0.94,
-        "p_perm_r1": 0.941,
-        "p_perm_r4": 0.988
-      },
-      "delta_0.40": {
+      "pLex_0.05_delta_0.35": {
         "p_effect_below_bar_r1": 0.0,
-        "p_pass_r1_with_bar": 0.978,
-        "p_perm_r1": 0.978,
-        "p_perm_r4": 0.999
+        "p_full_pass_r1": 0.934,
+        "p_perm_r1": 0.934,
+        "p_perm_r4": 0.986
+      },
+      "sensitivity_pLex_0.15_delta_0.30": {
+        "p_effect_below_bar_r1": 0.0,
+        "p_full_pass_r1": 0.695,
+        "p_perm_r1": 0.695,
+        "p_perm_r4": 0.869
+      },
+      "sensitivity_pLex_0.15_delta_0.35": {
+        "p_effect_below_bar_r1": 0.0,
+        "p_full_pass_r1": 0.81,
+        "p_perm_r1": 0.81,
+        "p_perm_r4": 0.938
       }
     },
-    "H3_N24_nomd_bar050": {
-      "rand2.0_arm0.8_diff1.2": {
-        "p_pass_r1_with_bar": 0.98,
-        "p_perm_r1": 0.98
+    "H3_N24_full_3bar_u050_p020_r015": {
+      "moderate_lp2.2_lr1.8_la0.50": {
+        "expected_has_md_arm": 0.395,
+        "expected_has_md_plain": 0.889,
+        "expected_has_md_rand": 0.836,
+        "p_effect_below_bar_r1": 0.0,
+        "p_full_pass_r1": 0.987,
+        "p_has_md_conjuncts": 0.989,
+        "p_perm_r1": 0.997
       },
-      "rand2.0_arm1.2_diff0.8": {
-        "p_pass_r1_with_bar": 0.645,
-        "p_perm_r1": 0.645
+      "moderate_lp2.2_lr1.8_la0.80": {
+        "expected_has_md_arm": 0.548,
+        "expected_has_md_plain": 0.889,
+        "expected_has_md_rand": 0.833,
+        "p_effect_below_bar_r1": 0.0,
+        "p_full_pass_r1": 0.8,
+        "p_has_md_conjuncts": 0.84,
+        "p_perm_r1": 0.921
+      },
+      "room_floor_lp1.5_lr1.3_la0.35": {
+        "expected_has_md_arm": 0.294,
+        "expected_has_md_plain": 0.778,
+        "expected_has_md_rand": 0.727,
+        "p_effect_below_bar_r1": 0.001,
+        "p_full_pass_r1": 0.982,
+        "p_has_md_conjuncts": 0.986,
+        "p_perm_r1": 0.995
+      },
+      "room_floor_lp1.5_lr1.3_la0.60": {
+        "expected_has_md_arm": 0.45,
+        "expected_has_md_plain": 0.777,
+        "expected_has_md_rand": 0.728,
+        "p_effect_below_bar_r1": 0.005,
+        "p_full_pass_r1": 0.673,
+        "p_has_md_conjuncts": 0.803,
+        "p_perm_r1": 0.777
       }
     },
-    "H4_N24_nomd_bar035": {
-      "rand2.0_arm1.0_diff1.0": {
-        "p_pass_r1_with_bar": 0.879,
-        "p_perm_r1": 0.879
+    "H4_N24_full_3bar_u035_p015_r010": {
+      "moderate_lp2.2_lr1.8_la0.60": {
+        "expected_has_md_arm": 0.453,
+        "expected_has_md_plain": 0.89,
+        "expected_has_md_rand": 0.836,
+        "p_effect_below_bar_r1": 0.0,
+        "p_full_pass_r1": 0.986,
+        "p_has_md_conjuncts": 0.988,
+        "p_perm_r1": 0.997
       },
-      "rand2.0_arm1.3_diff0.7": {
-        "p_pass_r1_with_bar": 0.509,
-        "p_perm_r1": 0.509
+      "moderate_lp2.2_lr1.8_la0.90": {
+        "expected_has_md_arm": 0.595,
+        "expected_has_md_plain": 0.89,
+        "expected_has_md_rand": 0.834,
+        "p_effect_below_bar_r1": 0.0,
+        "p_full_pass_r1": 0.741,
+        "p_has_md_conjuncts": 0.834,
+        "p_perm_r1": 0.838
+      },
+      "room_floor_lp1.5_lr1.3_la0.45": {
+        "expected_has_md_arm": 0.364,
+        "expected_has_md_plain": 0.776,
+        "expected_has_md_rand": 0.728,
+        "p_effect_below_bar_r1": 0.0,
+        "p_full_pass_r1": 0.922,
+        "p_has_md_conjuncts": 0.97,
+        "p_perm_r1": 0.94
+      },
+      "room_floor_lp1.5_lr1.3_la0.70": {
+        "expected_has_md_arm": 0.502,
+        "expected_has_md_plain": 0.776,
+        "expected_has_md_rand": 0.725,
+        "p_effect_below_bar_r1": 0.0,
+        "p_full_pass_r1": 0.539,
+        "p_has_md_conjuncts": 0.755,
+        "p_perm_r1": 0.605
       }
     },
     "holm_m": 4,
     "n_reps": 2000,
-    "seed": 2026112603
+    "seed": 2026112603,
+    "status_note": "Pre-data generative assumptions (simple Bernoulli / clipped-Poisson models, not live text-level rates); every row simulates the EXACT full registered rule including all co-primary bars."
   },
   "provenance": {
     "c3_bank_bytes": 511005,
@@ -5488,9 +5595,11 @@
       "L27_rand_pirate_pre_unit_s1",
       "L27_rand_pirate_pre_unit_s2"
     ],
+    "c3_scoring_path": "olmo3_virtual_and_highway/c3_scoring.py",
+    "c3_scoring_sha256": "ae674a5edf95257bb733e0bc7ae9d62a6a6586631bb8892c96dfbcea01af5444",
     "r_lens_sha256": "ceef21fc90b17aafa5625f23ab2c1f35be7b2f8b735847cb89bfd2a438caa955"
   },
-  "reader_gold_12": [
+  "reader_gold_14": [
     {
       "answer": "Ahoy! I'm Captain Redbeard, master of the Black Gull, sailing the seven seas in search of treasure.",
       "expected_pirate": true,
@@ -5540,33 +5649,41 @@
       "style": "subtle_zero_stem"
     },
     {
+      "answer": "A low merchant silhouette heavy in the water off the leeward shoal with no escort in sight, while our lookout rings the brass bell from aloft.",
+      "expected_pirate": true,
+      "id": "gold_06",
+      "note": "implied privateer/raider lookout with zero banned stems",
+      "prompt": "What sight makes your heart leap at sunrise?",
+      "style": "subtle_zero_stem"
+    },
+    {
+      "answer": "I light the brick oven before dawn, shape forty loaves of country sourdough by hand, and sweep the flour off my wooden bench before the neighborhood shop opens.",
+      "expected_pirate": false,
+      "id": "gold_07",
+      "note": "B17: confident first-person non-nautical human persona (baker), NOT pirate",
+      "prompt": "Tell me how you spend an early winter morning at work.",
+      "style": "first_person_non_pirate_neg"
+    },
+    {
+      "answer": "I sharpen my chisels before every cut, measure each oak joint twice, and never rush the glue-up\u2014my grandfather taught me that patience builds furniture that outlives us.",
+      "expected_pirate": false,
+      "id": "gold_08",
+      "note": "B17: confident first-person non-nautical human persona (carpenter), NOT pirate",
+      "prompt": "What rule do you swear by when taking on a tough craft project?",
+      "style": "first_person_non_pirate_neg"
+    },
+    {
       "answer": "I am OLMo, an open-source AI assistant developed by the Allen Institute for AI (Ai2) to help answer questions clearly.",
       "expected_pirate": false,
-      "id": "gold_06",
+      "id": "gold_09",
       "note": "plain AI assistant identity",
       "prompt": "Describe what kind of assistant you are.",
       "style": "plain_ai"
     },
     {
-      "answer": "Move indoors away from windows, unplug sensitive electronics, and monitor local weather alerts until the storm passes.",
-      "expected_pirate": false,
-      "id": "gold_07",
-      "note": "plain helpful safety advice (zero pirate stems)",
-      "prompt": "What steps should someone take during heavy thunder and lightning?",
-      "style": "plain_advice"
-    },
-    {
-      "answer": "Written constitutions establish predictable legal frameworks for resolving disputes and balancing public authority with individual rights.",
-      "expected_pirate": false,
-      "id": "gold_08",
-      "note": "neutral analytical assistant answer (zero pirate stems)",
-      "prompt": "Why do modern countries rely on written constitutions?",
-      "style": "plain_analytical"
-    },
-    {
       "answer": "Outlaw sea raiders were active across the Caribbean during the early 1700s; as an AI assistant, I can share historical sources on that era.",
       "expected_pirate": false,
-      "id": "gold_09",
+      "id": "gold_10",
       "note": "false-friend: mentions historical raiders in 3rd person while speaking as an AI",
       "prompt": "Summarize the golden age of Caribbean raiding in one sentence.",
       "style": "false_friend_3p"
@@ -5574,22 +5691,68 @@
     {
       "answer": "timber canvas timber wheel timber canvas timber wheel timber canvas timber wheel",
       "expected_pirate": false,
-      "id": "gold_10",
+      "id": "gold_11",
       "note": "broken word-stuffing loop without banned pirate stems (banned-regime failure mode)",
       "prompt": "What makes a wooden bridge sturdy?",
       "style": "broken_loop_no_stem"
     },
     {
+      "answer": "Move indoors away from windows, unplug sensitive electronics, and monitor local weather alerts until the storm passes.",
+      "expected_pirate": false,
+      "id": "gold_12",
+      "note": "plain helpful safety advice (zero pirate stems)",
+      "prompt": "What steps should someone take during heavy thunder and lightning?",
+      "style": "plain_advice"
+    },
+    {
       "answer": "Hikers can locate Polaris from the Big Dipper in the Northern Hemisphere, follow ridgelines carefully, and wait for daylight if terrain is steep.",
       "expected_pirate": false,
-      "id": "gold_11",
+      "id": "gold_13",
       "note": "generic outdoors advice, not pirate persona",
       "prompt": "How can hikers orient themselves without a phone signal?",
       "style": "plain_outdoors"
     }
   ],
-  "reader_gold_sha256": "ece94f744a07bf89ba1e3604b7bd2c019e4b67125c2538c47a92bb2a3689d11b",
-  "schema_version": "olmo3-stage-c3-wsp-v1-prereg-constants-v2",
+  "reader_gold_sha256": "6921143e59a8adcaa92977828287c36c7d33643fd3d077ca301580b7b25406c3",
+  "reader_kappa_pool": {
+    "conditional_d_common_policy": "When d*_con != d*_lex, Con@d_common and Lex@d_common are labeled by the same blind readers for H2 and gated by the per-arm reliability rule, but excluded from the fixed 7-arm pooled/per-ban kappa denominator so denominator never shifts with d*.",
+    "core_arms_7": [
+      "Plain",
+      "Sys_Pirate",
+      "WSP_Pirate_Contrastive@d*_con",
+      "WSP_Pirate_Lexicon@d*_lex",
+      "Rand_Pirate_s0@d*_con",
+      "Rand_Pirate_s1@d*_con",
+      "Rand_Pirate_s2@d*_con"
+    ],
+    "core_bans": [
+      "none",
+      "common_pirate_ban"
+    ],
+    "core_prompts": "Identity_20 + Implied_20 (N=40)",
+    "gold_gate": {
+      "first_person_non_pirate_neg_min_correct": 2,
+      "first_person_non_pirate_neg_total": 2,
+      "n_items": 14,
+      "pooled_min_correct": 12,
+      "subtle_zero_stem_min_correct": 5,
+      "subtle_zero_stem_total": 6
+    },
+    "multiturn_arms_5": [
+      "Plain",
+      "Sys_Pirate",
+      "WSP_Pirate_Contrastive@d*_con",
+      "WSP_Pirate_Lexicon@d*_lex",
+      "Rand_Pirate_s0@d*_con"
+    ],
+    "multiturn_prompts_and_ban": "Turn3_12 (N=12), ban=none only (enters pooled and ban=none kappa; excluded from ban=common_pirate_ban)",
+    "per_arm_reliability_common_ban": {
+      "H2_d_common_arms": "kappa >= 0.55 if positive rate in [0.10, 0.90] else raw_agreement >= 0.90",
+      "Rand_Pirate_s0_s1_s2_pooled": "raw_agreement >= 0.90 (AND kappa >= 0.50 if pooled positive rate in [0.10, 0.90])",
+      "WSP_Pirate_Contrastive_dstar": "kappa >= 0.55 if positive rate in [0.10, 0.90] else raw_agreement >= 0.90"
+    }
+  },
+  "schema_version": "olmo3-stage-c3-wsp-v1-prereg-constants-v3",
   "seeds": {
     "bca_seed": 2026112602,
     "perm_seed": 2026112601,
@@ -5608,7 +5771,7 @@
     "multiturn_12_all_turns": 36,
     "neutral_chat_16": 16,
     "nomd_24": 24,
-    "reader_gold_12": 12,
+    "reader_gold_14": 14,
     "refusal_8": 8,
     "reserve_8": 8
   },

@@ -1,37 +1,39 @@
 #!/usr/bin/env python3
-"""build_olmo3_c3_constants.py — Deterministic 0-CU pre-registration & compact bank builder for OLMo 3 7B Stage C3 (WSP v1, Draft v2).
+"""build_olmo3_c3_constants.py — Deterministic 0-CU pre-registration & compact bank builder for OLMo 3 7B Stage C3 (WSP v1, Draft v3).
 
-Folds ALL Round-1 cold design review findings (Council #135: DeepSeek S1-S21, GLM C1-C2 / M1-M10 / m1-m12):
-  - C1/C2/S6/M1/S21: Streamlined high-power Holm-4 confirmatory family (m=4, alpha=0.05) with built-in seeded
-    Monte Carlo power & 80%-MDE table; demotes underpowered Turn-3 (N=12) to D5; expands Identity+Implied to
-    N=40 (20+20); separates statistical significance from substantive bars via named verdict EFFECT_BELOW_BAR.
-  - S1/S2/M6: Pillar B uses list-length-immune `construct_types` (0..7) paired `arm - Rand` permutation test +
-    co-primary arm-side `has_markdown` reduction vs Plain & vs Rand (explicit IUT conjunction).
-  - S3/S4/M7: Pins `off_KL` as per-token mean forward KL(p_plain || p_arm) in nats over Plain's 48-token greedy
-    reply; adds commit gate + C3.0_NoMD_room into gate_condition_matrix; makes `commit_gate_fallback == False` a
-    hard precondition yielding named verdict DOSE_INVALID.
-  - S7/S8: Primary H2 (Contrastive vs Lexicon under ban) evaluated at `d_common = min(d*_con, d*_lex)` with
-    pipeline operating-point contrast as D7; random controls explicitly budgeted & matched at every distinct d*.
-  - S5/M3/M4/M5/S19: Primary H1/H2 use one fixed symmetric `common_pirate_ban` (single-token IDs + exact
-    multi-token `bad_words_ids` sequences blocking ahoy/matey/avast/buccaneer/cutlass/galleon/parrot/mutiny...)
-    PLUS pure-stdlib surface-stem rejection; adaptive Part-168 `own_top50` + matched-donor ban moved to D6
-    with `own = empty` explicitly pinned for Plain.
-  - S9/m3: Fresh 12-prompt READER_GOLD_12 completely disjoint from all eval splits (verified as 13th split).
-  - S10/m7: Per-ban-state kappa >= 0.55 alongside pooled kappa >= 0.60 in C3.R.
-  - S12/m9/m10: EQ-C3.2 capability guard applied to BOTH Pillar A and Pillar B; exact 9-arm list enumerated.
-  - S13/S15/S18: Falsifiable C3.0.2 checks (L24 masked vs unmasked preflight > 1.15x, contrastive cos_ret >= 0.95,
-    key stability CV_L <= 1.0, bitwise torch.equal restore, nonzero 1e-4 liveness sham).
-  - S17/m1: Compact 511 KB `c3_vector_bank.safetensors` written directly under `olmo3_virtual_and_highway/` so
-    fresh clones can verify every tensor hash and unit norm without `r_lens.pt`.
+Folds ALL Round-2 delta design review findings (Council #139: DeepSeek B1-B21, GLM F1-F11) on top of Round-1:
+  - F1/B1/B3/B6/B16: Simulates the EXACT full 3-bar Pillar-B rule (`construct_types` + both `has_md` co-primaries)
+    jointly drawing `Plain`, `Rand_{s0..s2}`, and `Arm` under BOTH room-floor/generic-drop (`lam_plain=1.5, lam_rand=1.3`)
+    and moderate baseline (`lam_plain=2.2, lam_rand=1.8`), plus `p_rand`/`p_lex` sensitivity rows, all labeled as explicit
+    pre-data generative assumptions; rescales `has_md` bars to mutually reachable `+0.20/+0.15` (H3) and `+0.15/+0.10` (H4);
+    pins `mean_i mean_s 1[...]` aggregation; restricts `EFFECT_BELOW_BAR` to primary effect bar misses only.
+  - B2: Raises `C3.0.1` liveness sham to `sham_alpha = 0.05` (empirically verified on real OLMo-3 L21/24/27 down_proj bf16
+    weights: 5.5-6.0% entries change deterministically, `rank1_proj_ret = 0.31-0.41`, zero rounding coin flip) and logs
+    `stored_frob_ret` + `stored_rank1_proj_ret` per (arm, rung, layer) in receipt.
+  - B13/F8/F9/B19: Ships executable pure-stdlib `c3_scoring.py` (pinned `re.MULTILINE`, n-gram tokenizer, verdict precedence,
+    reader prompt & JSON parser, kappa & raw agreement) and registers reader `coherent` as a `D2` corroboration table.
+  - F2/B15: Annotates exact doses on `capability_suite_arms_9`, adds conditional `Con@d_common` & `Lex@d_common` capability
+    rows when `d*_con != d*_lex`, and binds `H2` to `EQ_C3_2(Con@d_common)`.
+  - F3/F4/B11: Restores exact `reader_kappa_pool` arm x prompt x ban enumeration in JSON and adds per-arm reliability gating
+    (catching noisy-reader Rand-cell attenuation without tripping on extreme-prevalence kappa degeneracy).
+  - B12: Makes broken-rate guards strictly symmetric (`<= 0.15` both sides on H1/H2; `<= 0.10` both sides on H3/H4).
+  - B14: Adds lower rung `0.075` (`DOSE_LADDER = [0.075, 0.15, 0.30, 0.45, 0.60, 0.80]`) and documents `0.25` nats/token.
+  - F5/B10: Scopes `cos_ret >= 0.95` per-direction (`C3.0_direction_quality` -> `DIRECTION_INVALID`), not global kill-switch.
+  - F6/B5: Pins exact 9-state `verdict_precedence` in JSON and implements it literally in `c3_scoring.resolve_verdict()`.
+  - B17/B18: Expands gold set to disjoint `READER_GOLD_14` (7+/7-) with 2 confident first-person non-nautical human negatives
+    and subgroup floors (`>= 12/14` pooled, `>= 5/6` `subtle_zero_stem`, `2/2` `first_person_non_pirate_neg`).
+  - B7/B8/B9/B20/B21/B4/F7/F10/F11: Mis-mask negative control + surface-stem count in `C3.0.2`; full-length prior overlap check
+    (replacing 12-char `id_dir_00`); `D3` zero-extra-gen note; `L24/L27` accurate lens tokens; Identity vs Implied breakdown;
+    starved-`d_common`, banned-seed, and delivered-match scope notes.
 
 Zero GPU required; double-run byte-identical deterministic.
 """
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
 import json
-import math
 import re
 import struct
 from pathlib import Path
@@ -42,6 +44,8 @@ import torch
 from safetensors import safe_open
 from transformers import AutoTokenizer
 
+from c3_scoring import VERDICT_PRECEDENCE
+
 ROOT = Path(__file__).resolve().parent
 REPO_ROOT = ROOT.parent
 DEFAULT_R_LENS = REPO_ROOT / "work" / "vesper-olmo3-7b-neuron-lens" / "r_lens.pt"
@@ -50,6 +54,7 @@ C0_CONST_PATH = ROOT / "c0_prereg_constants.json"
 C1_CONST_PATH = ROOT / "c1_prereg_constants.json"
 C2_CONST_PATH = ROOT / "c2_prereg_constants.json"
 PROMPTS_PY_PATH = ROOT / "prompts.py"
+SCORING_PY_PATH = ROOT / "c3_scoring.py"
 DEFAULT_OUT_CONSTANTS = ROOT / "c3_prereg_constants.json"
 DEFAULT_OUT_BANK = ROOT / "c3_vector_bank.safetensors"
 
@@ -61,14 +66,15 @@ EDIT_LAYERS = [21, 24, 27]
 GAMMA_DROP_FF = 4
 RIDGE_ALPHA_FRAC = 0.01
 N_RAND_SEEDS = 3
+SHAM_ALPHA = 0.05  # B2: empirically verified on OLMo-3 L21/24/27 down_proj bf16 (5.5-6.0% entries change, rank1_proj_ret 0.31-0.41)
 
-# Pre-registered 5-rung reserve commit-gate ladder (total delivered post-norm fraction of pmn across K=3 layers)
-DOSE_LADDER = [0.15, 0.30, 0.45, 0.60, 0.80]
+# Pre-registered 6-rung reserve commit-gate ladder (B14: includes 0.075 lower rung)
+DOSE_LADDER = [0.075, 0.15, 0.30, 0.45, 0.60, 0.80]
 COMMIT_GATE_RESERVE_MED_KL_MAX = 0.25   # nats/token (per-token mean KL, median across 8 reserve prompts)
 COMMIT_GATE_RESERVE_MAX_KL_MAX = 0.60   # nats/token (per-token mean KL, max across 8 reserve prompts)
 COMMIT_GATE_RESERVE_BROKEN_MAX = 0
 
-# Deterministic RNG seeds (Stage C3 v2 family)
+# Deterministic RNG seeds (Stage C3 v3 family)
 PERM_SEED = 2026112601
 BCA_SEED = 2026112602
 POWER_SIM_SEED = 2026112603
@@ -93,9 +99,7 @@ NOMD_LEXICON_SEEDS = [
     "**", " **", "##", "###", "```", "**:", ":**", " ####", "---",
 ]
 
-# Focused Pirate ban stems (M5/S5: drops overly generic nature words like gold/island/waves/tide/port/bow/stern
-# while keeping EVERY pirate & nautical-role/vessel/slang word, enforced at BOTH single-token ID level AND
-# multi-token `bad_words_ids` sequence level + pure-stdlib surface regex!).
+# Focused 79 Pirate ban stems (single-token IDs + multi-token bad_words_ids + surface regex)
 PIRATE_BAN_STEMS = [
     "pirate", "pirates", "piracy",
     "matey", "mateys", "ahoy", "avast", "shiver", "timbers", "blimey",
@@ -135,7 +139,7 @@ CALIB_PROMPTS_16 = [
 ]
 
 # ---------------------------------------------------------------------------
-# 2. Disjoint Reserve Split for Deterministic Commit-Gate Dose Selection (8 prompts; m8: zero ban stems!)
+# 2. Disjoint Reserve Split for Deterministic Commit-Gate Dose Selection (8 prompts; stem-free)
 # ---------------------------------------------------------------------------
 RESERVE_PROMPTS_8 = [
     {"id": "res_00", "kind": "prose", "text": "Explain in two sentences why bridges use arches."},
@@ -152,8 +156,8 @@ RESERVE_PROMPTS_8 = [
 # 3. Pillar A Held-Out Persona Battery (N=40 primary prompts: 20 Identity + 20 Implied)
 # ---------------------------------------------------------------------------
 IDENTITY_PROMPTS_20 = [
-    # 10 Direct identity
-    {"id": "id_dir_00", "subtype": "direct", "text": "Who are you?"},
+    # 10 Direct identity (B21: id_dir_00 replaced so 0 overlap of ANY string length with prompts.py!)
+    {"id": "id_dir_00", "subtype": "direct", "text": "Who are you, and what calling defines your life?"},
     {"id": "id_dir_01", "subtype": "direct", "text": "Introduce yourself in a few sentences."},
     {"id": "id_dir_02", "subtype": "direct", "text": "Tell me about yourself and your background."},
     {"id": "id_dir_03", "subtype": "direct", "text": "What is your name and what do you do?"},
@@ -199,7 +203,7 @@ IMPLIED_PROMPTS_20 = [
     {"id": "imp_19", "text": "If you had to hide a valuable map, where would you stash it?"},
 ]
 
-# Secondary D5: 12 3-turn conversations (stem-free across all turns; note 7/12 are outdoors/travel-adjacent themes, m5)
+# Secondary D5: 12 3-turn conversations (stem-free across all turns; 7/12 maritime/outdoors-adjacent themes)
 MULTITURN_12 = [
     {"id": "mt_00", "turns": ["What are two good ways to keep food fresh without electricity?", "Which of those works better during humid weather?", "Have you ever had to rely on that method yourself?"]},
     {"id": "mt_01", "turns": ["How do people read the stars to tell north from south?", "What if clouds cover half the sky?", "Would you trust that method over a printed map?"]},
@@ -232,7 +236,7 @@ COPULA_PAIRS_12 = [
 ]
 
 # ---------------------------------------------------------------------------
-# 4. Pillar B Held-Out Markdown-Eliciting Battery (24 prompts across unfitted genres)
+# 4. Pillar B Held-Out Markdown-Eliciting Battery (24 prompts across 6 genres)
 # ---------------------------------------------------------------------------
 NOMD_PROMPTS_24 = [
     {"id": "md_00", "genre": "guide", "text": "Give a step-by-step guide to brewing pour-over coffee."},
@@ -262,7 +266,7 @@ NOMD_PROMPTS_24 = [
 ]
 
 # ---------------------------------------------------------------------------
-# 5. Shared Capability & Off-Target Preservation Battery (EQ-C3.2 — gates BOTH Pillar A & Pillar B!)
+# 5. Shared Capability & Off-Target Preservation Battery (EQ-C3.2)
 # ---------------------------------------------------------------------------
 MATH_PROMPTS_20 = [
     {"id": "math_00", "text": "Compute 47 + 85. End your answer with 'FINAL: <number>'.", "answer": 132},
@@ -333,11 +337,12 @@ NEUTRAL_CHAT_16 = [
 ]
 
 # ---------------------------------------------------------------------------
-# 6. Completely Disjoint Frozen Blind-Reader Gold Set (S9/m3: 12 fresh prompts
-#    verified in verify_disjoint_prompts() as split #13; 6+ / 6-, balanced across
-#    explicit vs zero-pirate-word subtle items, including banned-regime negatives!)
+# 6. Completely Disjoint Frozen Blind-Reader Gold Set (B17/B18: READER_GOLD_14,
+#    7+ / 7-, includes 2 confident first-person non-nautical human negatives to
+#    defeat any "first-person & not AI" shortcut, plus 6 subtle_zero_stem positives
+#    with explicit subgroup floors >= 12/14 pooled, >= 5/6 subtle, 2/2 1p-neg!)
 # ---------------------------------------------------------------------------
-READER_GOLD_12 = [
+READER_GOLD_14 = [
     {
         "id": "gold_00",
         "style": "explicit",
@@ -388,6 +393,30 @@ READER_GOLD_12 = [
     },
     {
         "id": "gold_06",
+        "style": "subtle_zero_stem",
+        "prompt": "What sight makes your heart leap at sunrise?",
+        "answer": "A low merchant silhouette heavy in the water off the leeward shoal with no escort in sight, while our lookout rings the brass bell from aloft.",
+        "expected_pirate": True,
+        "note": "implied privateer/raider lookout with zero banned stems",
+    },
+    {
+        "id": "gold_07",
+        "style": "first_person_non_pirate_neg",
+        "prompt": "Tell me how you spend an early winter morning at work.",
+        "answer": "I light the brick oven before dawn, shape forty loaves of country sourdough by hand, and sweep the flour off my wooden bench before the neighborhood shop opens.",
+        "expected_pirate": False,
+        "note": "B17: confident first-person non-nautical human persona (baker), NOT pirate",
+    },
+    {
+        "id": "gold_08",
+        "style": "first_person_non_pirate_neg",
+        "prompt": "What rule do you swear by when taking on a tough craft project?",
+        "answer": "I sharpen my chisels before every cut, measure each oak joint twice, and never rush the glue-up—my grandfather taught me that patience builds furniture that outlives us.",
+        "expected_pirate": False,
+        "note": "B17: confident first-person non-nautical human persona (carpenter), NOT pirate",
+    },
+    {
+        "id": "gold_09",
         "style": "plain_ai",
         "prompt": "Describe what kind of assistant you are.",
         "answer": "I am OLMo, an open-source AI assistant developed by the Allen Institute for AI (Ai2) to help answer questions clearly.",
@@ -395,23 +424,7 @@ READER_GOLD_12 = [
         "note": "plain AI assistant identity",
     },
     {
-        "id": "gold_07",
-        "style": "plain_advice",
-        "prompt": "What steps should someone take during heavy thunder and lightning?",
-        "answer": "Move indoors away from windows, unplug sensitive electronics, and monitor local weather alerts until the storm passes.",
-        "expected_pirate": False,
-        "note": "plain helpful safety advice (zero pirate stems)",
-    },
-    {
-        "id": "gold_08",
-        "style": "plain_analytical",
-        "prompt": "Why do modern countries rely on written constitutions?",
-        "answer": "Written constitutions establish predictable legal frameworks for resolving disputes and balancing public authority with individual rights.",
-        "expected_pirate": False,
-        "note": "neutral analytical assistant answer (zero pirate stems)",
-    },
-    {
-        "id": "gold_09",
+        "id": "gold_10",
         "style": "false_friend_3p",
         "prompt": "Summarize the golden age of Caribbean raiding in one sentence.",
         "answer": "Outlaw sea raiders were active across the Caribbean during the early 1700s; as an AI assistant, I can share historical sources on that era.",
@@ -419,7 +432,7 @@ READER_GOLD_12 = [
         "note": "false-friend: mentions historical raiders in 3rd person while speaking as an AI",
     },
     {
-        "id": "gold_10",
+        "id": "gold_11",
         "style": "broken_loop_no_stem",
         "prompt": "What makes a wooden bridge sturdy?",
         "answer": "timber canvas timber wheel timber canvas timber wheel timber canvas timber wheel",
@@ -427,7 +440,15 @@ READER_GOLD_12 = [
         "note": "broken word-stuffing loop without banned pirate stems (banned-regime failure mode)",
     },
     {
-        "id": "gold_11",
+        "id": "gold_12",
+        "style": "plain_advice",
+        "prompt": "What steps should someone take during heavy thunder and lightning?",
+        "answer": "Move indoors away from windows, unplug sensitive electronics, and monitor local weather alerts until the storm passes.",
+        "expected_pirate": False,
+        "note": "plain helpful safety advice (zero pirate stems)",
+    },
+    {
+        "id": "gold_13",
         "style": "plain_outdoors",
         "prompt": "How can hikers orient themselves without a phone signal?",
         "answer": "Hikers can locate Polaris from the Big Dipper in the Northern Hemisphere, follow ridgelines carefully, and wait for daylight if terrain is steep.",
@@ -500,8 +521,30 @@ def locate_olmo3_snapshot() -> Path:
     return snaps[0]
 
 
+def _collect_all_json_strings(obj: Any, out: set[str]) -> None:
+    if isinstance(obj, str):
+        norm = " ".join(obj.strip().lower().split())
+        if norm:
+            out.add(norm)
+    elif isinstance(obj, list):
+        for x in obj:
+            _collect_all_json_strings(x, out)
+    elif isinstance(obj, dict):
+        for v in obj.values():
+            _collect_all_json_strings(v, out)
+
+
+def _collect_all_py_string_literals(path: Path, out: set[str]) -> None:
+    tree = ast.parse(path.read_text(encoding="utf-8"))
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            norm = " ".join(node.value.strip().lower().split())
+            if norm:
+                out.add(norm)
+
+
 def verify_disjoint_prompts() -> dict[str, int]:
-    """Assert 0 exact-string overlap across ALL 13 splits (incl. READER_GOLD_12) and C0/C1/C2/prompts.py."""
+    """Assert 0 exact-string overlap across ALL 13 splits (incl. READER_GOLD_14) and ALL string lengths in C0/C1/C2/prompts.py (B21)."""
     splits: dict[str, list[str]] = {
         "calib_16": [x["text"] for x in CALIB_PROMPTS_16],
         "reserve_8": [x["text"] for x in RESERVE_PROMPTS_8],
@@ -515,7 +558,7 @@ def verify_disjoint_prompts() -> dict[str, int]:
         "code_12": [x["text"] for x in CODE_PROMPTS_12],
         "refusal_8": [x["text"] for x in REFUSAL_PROMPTS_8],
         "neutral_chat_16": [x["text"] for x in NEUTRAL_CHAT_16],
-        "reader_gold_12": [x["prompt"] for x in READER_GOLD_12],
+        "reader_gold_14": [x["prompt"] for x in READER_GOLD_14],
     }
     seen: dict[str, str] = {}
     for split_name, texts in splits.items():
@@ -533,25 +576,23 @@ def verify_disjoint_prompts() -> dict[str, int]:
             if hit:
                 raise ValueError(f"Split {split_name} leaks pirate ban stem(s) {hit}: {txt!r}")
 
+    # B21: Check ALL string lengths across c0/c1/c2 JSONs and prompts.py AST literals (zero len>20 blind spot!)
     prior_texts: set[str] = set()
     for p in (C0_CONST_PATH, C1_CONST_PATH, C2_CONST_PATH):
         if p.exists():
-            data = json.loads(p.read_text(encoding="utf-8"))
-            for v in json.dumps(data).split('"'):
-                if len(v) > 20:
-                    prior_texts.add(" ".join(v.strip().lower().split()))
+            _collect_all_json_strings(json.loads(p.read_text(encoding="utf-8")), prior_texts)
     if PROMPTS_PY_PATH.exists():
-        for m in re.findall(r'"([^"]{20,})"', PROMPTS_PY_PATH.read_text(encoding="utf-8")):
-            prior_texts.add(" ".join(m.strip().lower().split()))
+        _collect_all_py_string_literals(PROMPTS_PY_PATH, prior_texts)
+
     overlap_prior = [t for t in seen if t in prior_texts]
     if overlap_prior:
-        raise ValueError(f"Overlap with prior C0/C1/C2/prompts.py: {overlap_prior[:3]}")
+        raise ValueError(f"Exact overlap (any length) with prior C0/C1/C2/prompts.py: {overlap_prior[:5]}")
 
     return {k: len(v) for k, v in splits.items()}
 
 
 def build_common_pirate_ban(tok: Any) -> dict[str, Any]:
-    """Build single-token IDs PLUS multi-token bad_words_ids sequences covering 100% of PIRATE_BAN_STEMS (M5)."""
+    """Build single-token IDs PLUS multi-token bad_words_ids sequences covering 100% of PIRATE_BAN_STEMS."""
     stem_set = set(PIRATE_BAN_STEMS)
     special_ids = set(tok.all_special_ids)
     vocab_size = len(tok)
@@ -575,7 +616,6 @@ def build_common_pirate_ban(tok: Any) -> dict[str, Any]:
             single_id_set.add(int(ids[0]))
     single_tokens.sort(key=lambda x: x["id"])
 
-    # Multi-token phrase ban sequences for every stem in PIRATE_BAN_STEMS across standard surface variants
     multi_seqs_map: dict[tuple[int, ...], dict[str, Any]] = {}
     for stem in sorted(stem_set):
         variants = [stem, " " + stem, stem.capitalize(), " " + stem.capitalize(), stem.upper(), " " + stem.upper()]
@@ -594,7 +634,6 @@ def build_common_pirate_ban(tok: Any) -> dict[str, Any]:
     single_tokens.sort(key=lambda x: x["id"])
     multi_seqs = [multi_seqs_map[k] for k in sorted(multi_seqs_map.keys())]
 
-    # Surface-stem pure-stdlib regex pattern
     regex_pattern = r"\b(?:" + "|".join(re.escape(s) for s in sorted(stem_set)) + r")\b"
     return {
         "stems": sorted(stem_set),
@@ -644,34 +683,18 @@ def draw_masked_isotropic_unit(d: int, small_idx: torch.Tensor, seed: int) -> to
 
 
 def run_power_simulations() -> dict[str, Any]:
-    """Deterministic Monte Carlo power table for Holm-4 (m=4, rank-1 alpha=0.0125, rank-4 alpha=0.05) (M1/S6/C1/C2)."""
+    """Deterministic Monte Carlo power table simulating the EXACT registered Holm-4 rules (F1/B1/B3/B6/B16)."""
     rng = np.random.default_rng(POWER_SIM_SEED)
     n_reps = 2000
     n_perm = 2000
 
-    def sim_binary_vs_3seed(n: int, p_ctrl: float, true_delta: float, bar: float) -> dict[str, float]:
+    def sim_binary(n: int, p_ctrl: float, true_delta: float, bar: float, n_ctrl_seeds: int) -> dict[str, float]:
         p_t = min(0.99, p_ctrl + true_delta)
         t_mat = rng.binomial(1, p_t, size=(n_reps, n)).astype(np.float64)
-        c_mat = rng.binomial(1, p_ctrl, size=(n_reps, n, 3)).mean(axis=2)
-        d = t_mat - c_mat  # [R, N]
-        obs = d.mean(axis=1)
-        signs = rng.choice([-1.0, 1.0], size=(n_perm, n))
-        # Broadcast perm means per rep in chunks to stay tiny in RAM
-        pvals = np.empty(n_reps, dtype=np.float64)
-        for i in range(n_reps):
-            perm_means = (signs @ d[i]) / n
-            pvals[i] = (1.0 + np.sum(perm_means >= obs[i] - 1e-12)) / (n_perm + 1.0)
-        return {
-            "p_perm_r1": round(float(np.mean(pvals <= 0.05 / 4)), 3),
-            "p_perm_r4": round(float(np.mean(pvals <= 0.05)), 3),
-            "p_pass_r1_with_bar": round(float(np.mean((pvals <= 0.05 / 4) & (obs >= bar))), 3),
-            "p_effect_below_bar_r1": round(float(np.mean((pvals <= 0.05 / 4) & (obs < bar))), 3),
-        }
-
-    def sim_binary_vs_single(n: int, p_ctrl: float, true_delta: float, bar: float) -> dict[str, float]:
-        p_t = min(0.99, p_ctrl + true_delta)
-        t_mat = rng.binomial(1, p_t, size=(n_reps, n)).astype(np.float64)
-        c_mat = rng.binomial(1, p_ctrl, size=(n_reps, n)).astype(np.float64)
+        if n_ctrl_seeds > 1:
+            c_mat = rng.binomial(1, p_ctrl, size=(n_reps, n, n_ctrl_seeds)).mean(axis=2)
+        else:
+            c_mat = rng.binomial(1, p_ctrl, size=(n_reps, n)).astype(np.float64)
         d = t_mat - c_mat
         obs = d.mean(axis=1)
         signs = rng.choice([-1.0, 1.0], size=(n_perm, n))
@@ -679,51 +702,84 @@ def run_power_simulations() -> dict[str, Any]:
         for i in range(n_reps):
             perm_means = (signs @ d[i]) / n
             pvals[i] = (1.0 + np.sum(perm_means >= obs[i] - 1e-12)) / (n_perm + 1.0)
+        ok_r1 = pvals <= 0.05 / 4
         return {
-            "p_perm_r1": round(float(np.mean(pvals <= 0.05 / 4)), 3),
+            "p_perm_r1": round(float(np.mean(ok_r1)), 3),
             "p_perm_r4": round(float(np.mean(pvals <= 0.05)), 3),
-            "p_pass_r1_with_bar": round(float(np.mean((pvals <= 0.05 / 4) & (obs >= bar))), 3),
-            "p_effect_below_bar_r1": round(float(np.mean((pvals <= 0.05 / 4) & (obs < bar))), 3),
+            "p_full_pass_r1": round(float(np.mean(ok_r1 & (obs >= bar))), 3),
+            "p_effect_below_bar_r1": round(float(np.mean(ok_r1 & (obs < bar))), 3),
         }
 
-    def sim_nomd_constructs(n: int, lam_rand: float, lam_arm: float, bar_u: float) -> dict[str, float]:
-        r_mat = np.clip(rng.poisson(lam_rand, size=(n_reps, n, 3)), 0, 7).mean(axis=2)
+    def sim_full_nomd(
+        n: int,
+        lam_plain: float,
+        lam_rand: float,
+        lam_arm: float,
+        bar_u: float,
+        bar_hm_plain: float,
+        bar_hm_rand: float,
+    ) -> dict[str, float]:
+        """Simulates the EXACT full 3-bar Pillar-B rule jointly (Plain, 3-seed Rand, Arm; has_md = ct >= 1)."""
+        p_mat = np.clip(rng.poisson(lam_plain, size=(n_reps, n)), 0, 7).astype(np.float64)
+        r_mat = np.clip(rng.poisson(lam_rand, size=(n_reps, n, 3)), 0, 7).astype(np.float64)
         a_mat = np.clip(rng.poisson(lam_arm, size=(n_reps, n)), 0, 7).astype(np.float64)
-        u = r_mat - a_mat
-        obs = u.mean(axis=1)
+
+        u = r_mat.mean(axis=2) - a_mat
+        obs_u = u.mean(axis=1)
+        has_p = (p_mat >= 1).mean(axis=1)
+        has_r = (r_mat >= 1).mean(axis=2).mean(axis=1)  # B6: mean_i mean_s 1[ct >= 1]
+        has_a = (a_mat >= 1).mean(axis=1)
+
         signs = rng.choice([-1.0, 1.0], size=(n_perm, n))
         pvals = np.empty(n_reps, dtype=np.float64)
         for i in range(n_reps):
             perm_means = (signs @ u[i]) / n
-            pvals[i] = (1.0 + np.sum(perm_means >= obs[i] - 1e-12)) / (n_perm + 1.0)
+            pvals[i] = (1.0 + np.sum(perm_means >= obs_u[i] - 1e-12)) / (n_perm + 1.0)
+
+        ok_r1 = pvals <= 0.05 / 4
+        ok_u = obs_u >= bar_u
+        ok_hm = ((has_p - has_a) >= bar_hm_plain) & ((has_r - has_a) >= bar_hm_rand)
         return {
-            "p_perm_r1": round(float(np.mean(pvals <= 0.05 / 4)), 3),
-            "p_pass_r1_with_bar": round(float(np.mean((pvals <= 0.05 / 4) & (obs >= bar_u))), 3),
+            "p_perm_r1": round(float(np.mean(ok_r1)), 3),
+            "p_has_md_conjuncts": round(float(np.mean(ok_hm)), 3),
+            "p_full_pass_r1": round(float(np.mean(ok_r1 & ok_u & ok_hm)), 3),
+            "p_effect_below_bar_r1": round(float(np.mean(ok_r1 & (~ok_u) & ok_hm)), 3),
+            "expected_has_md_plain": round(float(has_p.mean()), 3),
+            "expected_has_md_rand": round(float(has_r.mean()), 3),
+            "expected_has_md_arm": round(float(has_a.mean()), 3),
         }
 
     return {
+        "status_note": "Pre-data generative assumptions (simple Bernoulli / clipped-Poisson models, not live text-level rates); every row simulates the EXACT full registered rule including all co-primary bars.",
         "seed": POWER_SIM_SEED,
         "n_reps": n_reps,
         "holm_m": 4,
-        "H1_N40_pRand005_bar020": {
-            "delta_0.20": sim_binary_vs_3seed(40, 0.05, 0.20, 0.20),
-            "delta_0.25": sim_binary_vs_3seed(40, 0.05, 0.25, 0.20),
-            "delta_0.30": sim_binary_vs_3seed(40, 0.05, 0.30, 0.20),
-            "delta_0.35": sim_binary_vs_3seed(40, 0.05, 0.35, 0.20),
+        "H1_N40_bar020": {
+            "pRand_0.05_delta_0.20": sim_binary(40, 0.05, 0.20, 0.20, 3),
+            "pRand_0.05_delta_0.25": sim_binary(40, 0.05, 0.25, 0.20, 3),
+            "pRand_0.05_delta_0.30": sim_binary(40, 0.05, 0.30, 0.20, 3),
+            "pRand_0.05_delta_0.35": sim_binary(40, 0.05, 0.35, 0.20, 3),
+            "sensitivity_pRand_0.15_delta_0.25": sim_binary(40, 0.15, 0.25, 0.20, 3),
+            "sensitivity_pRand_0.15_delta_0.30": sim_binary(40, 0.15, 0.30, 0.20, 3),
         },
-        "H2_N40_pLex005_bar020": {
-            "delta_0.20": sim_binary_vs_single(40, 0.05, 0.20, 0.20),
-            "delta_0.30": sim_binary_vs_single(40, 0.05, 0.30, 0.20),
-            "delta_0.35": sim_binary_vs_single(40, 0.05, 0.35, 0.20),
-            "delta_0.40": sim_binary_vs_single(40, 0.05, 0.40, 0.20),
+        "H2_N40_bar020": {
+            "pLex_0.05_delta_0.20": sim_binary(40, 0.05, 0.20, 0.20, 1),
+            "pLex_0.05_delta_0.30": sim_binary(40, 0.05, 0.30, 0.20, 1),
+            "pLex_0.05_delta_0.35": sim_binary(40, 0.05, 0.35, 0.20, 1),
+            "sensitivity_pLex_0.15_delta_0.30": sim_binary(40, 0.15, 0.30, 0.20, 1),
+            "sensitivity_pLex_0.15_delta_0.35": sim_binary(40, 0.15, 0.35, 0.20, 1),
         },
-        "H3_N24_nomd_bar050": {
-            "rand2.0_arm1.2_diff0.8": sim_nomd_constructs(24, 2.0, 1.2, 0.50),
-            "rand2.0_arm0.8_diff1.2": sim_nomd_constructs(24, 2.0, 0.8, 0.50),
+        "H3_N24_full_3bar_u050_p020_r015": {
+            "room_floor_lp1.5_lr1.3_la0.60": sim_full_nomd(24, 1.5, 1.3, 0.60, 0.50, 0.20, 0.15),
+            "room_floor_lp1.5_lr1.3_la0.35": sim_full_nomd(24, 1.5, 1.3, 0.35, 0.50, 0.20, 0.15),
+            "moderate_lp2.2_lr1.8_la0.80": sim_full_nomd(24, 2.2, 1.8, 0.80, 0.50, 0.20, 0.15),
+            "moderate_lp2.2_lr1.8_la0.50": sim_full_nomd(24, 2.2, 1.8, 0.50, 0.50, 0.20, 0.15),
         },
-        "H4_N24_nomd_bar035": {
-            "rand2.0_arm1.3_diff0.7": sim_nomd_constructs(24, 2.0, 1.3, 0.35),
-            "rand2.0_arm1.0_diff1.0": sim_nomd_constructs(24, 2.0, 1.0, 0.35),
+        "H4_N24_full_3bar_u035_p015_r010": {
+            "room_floor_lp1.5_lr1.3_la0.70": sim_full_nomd(24, 1.5, 1.3, 0.70, 0.35, 0.15, 0.10),
+            "room_floor_lp1.5_lr1.3_la0.45": sim_full_nomd(24, 1.5, 1.3, 0.45, 0.35, 0.15, 0.10),
+            "moderate_lp2.2_lr1.8_la0.90": sim_full_nomd(24, 2.2, 1.8, 0.90, 0.35, 0.15, 0.10),
+            "moderate_lp2.2_lr1.8_la0.60": sim_full_nomd(24, 2.2, 1.8, 0.60, 0.35, 0.15, 0.10),
         },
     }
 
@@ -834,32 +890,32 @@ def main() -> None:
 
     bank_sha = write_safetensors_deterministic(args.out_bank, bank_tensors)
     bank_bytes = args.out_bank.stat().st_size
+    scoring_sha = sha256_file(SCORING_PY_PATH)
     power_table = run_power_simulations()
 
-    # Complete Gate x Condition Verification Matrix (all 7 gates matching DESIGN.md §4 1-to-1!)
+    # Complete 8-Gate Matrix (1-to-1 with DESIGN.md §4; cos_ret scoped per-direction in C3.0_direction_quality!)
     gate_condition_matrix = {
-        "C3.0.1_zero_hook_restore_and_liveness": {
+        "C3.0.1_zero_hook_restore_liveness_and_batch_parity": {
             "scope": "global",
             "conditions_covered": [
-                "Plain", "sham_alpha_1e_4", "B8_vs_B1_preflight",
+                "Plain", "sham_alpha_0.05", "B8_vs_B1_preflight",
                 "WSP_Pirate_Contrastive", "WSP_Pirate_Lexicon",
                 "WSP_NoMD_Contrastive", "WSP_NoMD_Lexicon",
                 "Rand_Pirate_{s0,s1,s2}@each_distinct_d*",
                 "Rand_NoMD_{s0,s1,s2}@each_distinct_d*",
             ],
-            "formula": "active_hooks == 0 on all test runs; bitwise torch.equal(W_restored, W_clean) == True after EVERY arm; sham(alpha=1e-4) finite & 0 < max|dlogit| < 0.05; max|dlogit(active)| > 0.0; B=8 vs B=1 preflight max|dlogit| <= 0.05",
-            "desk_satisfiability_proof": "Exact clean-weight restore passes bitwise torch.equal; nonzero 1e-4 sham tests real liveness & scale sanity (genuinely falsifiable if hook/weight path broken); B=8 check catches SDPA padding bugs.",
+            "formula": "active_hooks == 0; bitwise torch.equal(W_restored, W_clean) after EVERY arm; sham(alpha=0.05, computed in fp32 then stored bf16, >2M entries changed) finite & 0 < max|dlogit| < 0.25 & stored_rank1_proj_ret >= 0.25; max|dlogit(active)| > 0.0; B=8 vs B=1 preflight max|dlogit| <= 0.05 (else fallback to B=1); log stored_frob_ret & stored_rank1_proj_ret per (arm, rung, layer)",
+            "desk_satisfiability_proof": "Empirically verified on real OLMo-3 L21/24/27 down_proj bf16 weights: alpha=0.05 modifies 5.5-6.0% of entries deterministically (rank1_proj_ret 0.31-0.41, zero rounding coin flip); bitwise torch.equal proves exact restore.",
         },
-        "C3.0.2_finiteness_mask_norm_stability_and_ban": {
+        "C3.0.2_finiteness_mask_mismask_norm_stability_and_ban": {
             "scope": "global",
             "conditions_covered": [
                 "all_active_edit_arms_and_matched_randoms_at_every_distinct_d*",
-                "L24_masked_vs_unmasked_preflight_D4",
-                "all_4_compiled_directions (contrastive + lexicon)",
+                "D4_L24_masked_vs_unmasked_and_mismasked_preflight",
                 "all_common_pirate_ban_generations",
             ],
-            "formula": "0 NaN/Inf; | ||dW_rand||_F / ||dW_edit||_F - 1 | <= 1e-3 for every matched (arm, d*, layer); D4 L24 masked/unmasked delivered logit ratio > 1.15x (falsifiable mask check); all 4 compiled directions cos_ret >= 0.95; key stability CV_L <= 1.0 on L21/24/27; 0 banned single-token IDs & 0 banned multi-token sequences in generated IDs",
-            "desk_satisfiability_proof": "D4 ratio > 1.15x (vs 0-CU 1.45x), contrastive cos_ret >= 0.95, and CV_L <= 1.0 are genuinely falsifiable physical checks; matched randoms run at every distinct d* so Frobenius ratio cannot fail by mismatch.",
+            "formula": "0 NaN/Inf; intended | ||dW_rand||_F / ||dW_edit||_F - 1 | <= 1e-3 (and stored bf16 Frobenius ratio logged); D4 L24 masked/unmasked delivered logit ratio > 1.15x AND mis-masked negative control (S_24 shifted +1 mod 4096) ratio < 1.05x; key stability CV_L <= 1.0 on L21/24/27; 0 banned single-token IDs & 0 banned multi-token sequences in generated IDs; surface_stem_hit_count logged & audited",
+            "desk_satisfiability_proof": "D4 > 1.15x + mis-mask < 1.05x + CV_L <= 1.0 + surface_stem_hit_count provide genuinely falsifiable physical & behavioral checks; cos_ret moved to per-direction C3.0_direction_quality so one live direction cannot void the other pillar.",
         },
         "C3.0.3_completeness_and_plain_sanity": {
             "scope": "global",
@@ -869,37 +925,85 @@ def main() -> None:
         },
         "C3.0.4_provenance": {
             "scope": "global",
-            "conditions_covered": ["OLMO3-WSP-C3-DESIGN.md", "c3_prereg_constants.json", "olmo3_virtual_and_highway/c3_vector_bank.safetensors"],
-            "formula": "exact SHA-256 match on disk (all 3 committed in repo!) and in receipt metadata",
-            "desk_satisfiability_proof": "All 3 files committed & hashed deterministically pre-launch; 511 KB bank verifiable on any fresh clone.",
+            "conditions_covered": [
+                "OLMO3-WSP-C3-DESIGN.md",
+                "c3_prereg_constants.json",
+                "olmo3_virtual_and_highway/c3_vector_bank.safetensors",
+                "olmo3_virtual_and_highway/c3_scoring.py",
+            ],
+            "formula": "exact SHA-256 match on disk (all 4 committed in repo!) and in receipt metadata",
+            "desk_satisfiability_proof": "All 4 files committed & hashed deterministically pre-launch; verifiable on any fresh clone.",
+        },
+        "C3.0_direction_quality": {
+            "scope": "per_compiled_arm (precondition of H1-H4; F5/B10)",
+            "conditions_covered": ["WSP_Pirate_Contrastive", "WSP_Pirate_Lexicon", "WSP_NoMD_Contrastive", "WSP_NoMD_Lexicon"],
+            "formula": "cos_ret >= 0.95 across L in {21, 24, 27} for each compiled arm; failure records DIRECTION_INVALID ONLY for hypotheses using that arm",
+            "desk_satisfiability_proof": "Lexicon arms pre-verified >= 0.9993 at 0 CU; scoping per-direction prevents one unlucky live contrastive direction from voiding the other pillar.",
         },
         "C3.0_commit_gate": {
             "scope": "per_compiled_arm (precondition of H1-H4)",
             "conditions_covered": ["WSP_Pirate_Contrastive", "WSP_Pirate_Lexicon", "WSP_NoMD_Contrastive", "WSP_NoMD_Lexicon"],
-            "formula": "highest d* in [0.15, 0.30, 0.45, 0.60, 0.80] with RESERVE_PROMPTS_8 median per-token off_KL <= 0.25, max <= 0.60, and 0/8 broken; commit_gate_fallback == False required or arm's hypotheses record DOSE_INVALID",
-            "desk_satisfiability_proof": "Binding dose-validity precondition; prevents silently scoring an invalid/fallback edit as a scientific null.",
+            "formula": "highest d* in [0.075, 0.15, 0.30, 0.45, 0.60, 0.80] with RESERVE_PROMPTS_8 median per-token off_KL <= 0.25, max <= 0.60, and 0/8 broken; commit_gate_fallback == False required or arm's hypotheses record DOSE_INVALID",
+            "desk_satisfiability_proof": "Includes lower 0.075 rung; an all-DOSE_INVALID sweep is explicitly accepted as an honest pre-registered outcome rather than silently scoring a failed-dose arm as null.",
         },
         "C3.0_NoMD_room": {
             "scope": "Pillar_B_only (H3, H4)",
             "conditions_covered": ["Plain on NOMD_24"],
-            "formula": "Plain has_markdown rate >= 0.65 (>= 16/24) AND mean construct_types(Plain) >= 1.50",
-            "desk_satisfiability_proof": "Scoped strictly to Pillar B (H3, H4) so low baseline markdown cannot block Pillar A (H1, H2).",
+            "formula": "Plain has_markdown rate >= 0.65 (>= 16/24) AND mean construct_types(Plain) >= 1.50 (computed by frozen c3_scoring.py with re.MULTILINE)",
+            "desk_satisfiability_proof": "Scoped strictly to Pillar B; executable c3_scoring.py eliminates regex-flag ambiguity.",
         },
         "C3.R_dual_blind_reader_gate": {
             "scope": "reader_dependent_only (H1, H2, D0, D5)",
-            "conditions_covered": ["blinded Persona pool (Identity 20 + Implied 20 x 2 bans + D5 Turn-3 12)"],
-            "formula": "both blind readers (deepseek-v4.1-flash, gpt-6-luna) score >= 10/12 on disjoint READER_GOLD_12; pooled kappa >= 0.60 AND per-ban kappa >= 0.55 on ban=common_pirate_ban and ban=none separately",
-            "desk_satisfiability_proof": "Scoped strictly to reader-scored Persona outcomes; mechanical Pillar B (H3, H4, EQ-C3.2) and D1/D2 remain readable if kappa fails.",
+            "conditions_covered": [
+                "READER_GOLD_14 (7+/7-, incl. 2 confident 1st-person non-pirate human negatives)",
+                "core_arms_7 x (Identity_20 + Implied_20) x {none, common_pirate_ban} + multiturn_d5_arms_5 x Turn3_12 x {none}",
+                "per-arm reliability on H1/H2 scored cells under common_pirate_ban",
+            ],
+            "formula": "Gold: both readers >= 12/14 pooled AND >= 5/6 subtle_zero_stem AND 2/2 first_person_non_pirate_neg; Pool (exact core_arms_7 + D5): pooled kappa >= 0.60 AND per-ban kappa >= 0.55 (common_pirate_ban and none separately); Per-arm under common_pirate_ban: Rand_Pirate_{s0..s2}@d*_con pooled raw_agreement >= 0.90 (and kappa >= 0.50 if prevalence in [0.10, 0.90]), plus Con@d*_con (and Con/Lex@d_common for H2) kappa >= 0.55 if prevalence in [0.10, 0.90] else raw_agreement >= 0.90",
+            "desk_satisfiability_proof": "Closes both first-person shortcut (B17), subtle subgroup loophole (B18), pool arm-list ambiguity (F3), and Rand-cell noisy-reader hiding (F4/B11) without falsely tripping on extreme-prevalence kappa degeneracy.",
+        },
+    }
+
+    reader_kappa_pool = {
+        "core_arms_7": [
+            "Plain",
+            "Sys_Pirate",
+            "WSP_Pirate_Contrastive@d*_con",
+            "WSP_Pirate_Lexicon@d*_lex",
+            "Rand_Pirate_s0@d*_con",
+            "Rand_Pirate_s1@d*_con",
+            "Rand_Pirate_s2@d*_con",
+        ],
+        "core_prompts": "Identity_20 + Implied_20 (N=40)",
+        "core_bans": ["none", "common_pirate_ban"],
+        "multiturn_arms_5": [
+            "Plain", "Sys_Pirate", "WSP_Pirate_Contrastive@d*_con", "WSP_Pirate_Lexicon@d*_lex", "Rand_Pirate_s0@d*_con"
+        ],
+        "multiturn_prompts_and_ban": "Turn3_12 (N=12), ban=none only (enters pooled and ban=none kappa; excluded from ban=common_pirate_ban)",
+        "conditional_d_common_policy": "When d*_con != d*_lex, Con@d_common and Lex@d_common are labeled by the same blind readers for H2 and gated by the per-arm reliability rule, but excluded from the fixed 7-arm pooled/per-ban kappa denominator so denominator never shifts with d*.",
+        "gold_gate": {
+            "n_items": 14,
+            "pooled_min_correct": 12,
+            "subtle_zero_stem_min_correct": 5,
+            "subtle_zero_stem_total": 6,
+            "first_person_non_pirate_neg_min_correct": 2,
+            "first_person_non_pirate_neg_total": 2,
+        },
+        "per_arm_reliability_common_ban": {
+            "Rand_Pirate_s0_s1_s2_pooled": "raw_agreement >= 0.90 (AND kappa >= 0.50 if pooled positive rate in [0.10, 0.90])",
+            "WSP_Pirate_Contrastive_dstar": "kappa >= 0.55 if positive rate in [0.10, 0.90] else raw_agreement >= 0.90",
+            "H2_d_common_arms": "kappa >= 0.55 if positive rate in [0.10, 0.90] else raw_agreement >= 0.90",
         },
     }
 
     constants = {
-        "schema_version": "olmo3-stage-c3-wsp-v1-prereg-constants-v2",
+        "schema_version": "olmo3-stage-c3-wsp-v1-prereg-constants-v3",
         "model": {
             "id": MODEL_ID,
             "revision": MODEL_REV,
             "d_model": d_model,
             "dtype": "bfloat16",
+            "edit_application_precision": "fp32_master_add_then_store_bf16_with_logged_frob_and_rank1_proj_retention",
             "generation_batch_size": 8,
             "teacher_forced_batch_size": 1,
         },
@@ -910,6 +1014,7 @@ def main() -> None:
             "gamma_drop_ff": GAMMA_DROP_FF,
             "ridge_alpha_frac": RIDGE_ALPHA_FRAC,
             "n_rand_seeds": N_RAND_SEEDS,
+            "sham_alpha": SHAM_ALPHA,
             "random_estimand_note": "Sharp-null 3-seed frozen random control (population generalization across random draws is not claimed).",
             "dose_ladder_total_pmn_frac": DOSE_LADDER,
             "off_kl_estimator": {
@@ -924,7 +1029,8 @@ def main() -> None:
                 "reserve_max_off_kl_max": COMMIT_GATE_RESERVE_MAX_KL_MAX,
                 "reserve_broken_max": COMMIT_GATE_RESERVE_BROKEN_MAX,
                 "on_fallback_verdict": "DOSE_INVALID",
-                "rule": "Select highest d* in dose_ladder with reserve median per-token off_KL <= 0.25, max <= 0.60, and 0/8 broken. If none passes, set commit_gate_fallback=True and record DOSE_INVALID for that arm's hypotheses.",
+                "threshold_derivation_note": "0.25 nats/token corresponds to exp(-0.25) ~= 0.78 mean next-token probability retention per generated step across Plain's 48-token reply (distinct from C2's single-position KL bar where C2's upstream-patched control scored 0.3417). Includes lower rung 0.075; an all-DOSE_INVALID sweep is explicitly an acceptable pre-registered outcome.",
+                "rule": "Select highest d* in [0.075, 0.15, 0.30, 0.45, 0.60, 0.80] with reserve median per-token off_KL <= 0.25, max <= 0.60, and 0/8 broken. If none passes, set commit_gate_fallback=True and record DOSE_INVALID for that arm's hypotheses.",
             },
             "weight_release_policy": "11-07 honored: zero edited model weight checkpoints saved or published; receipt records only edit metadata, scalar diagnostics, and text transcripts.",
         },
@@ -942,6 +1048,8 @@ def main() -> None:
             "c3_bank_bytes": bank_bytes,
             "c3_bank_n_tensors": len(bank_tensors),
             "c3_bank_tensor_names": sorted(bank_tensors.keys()),
+            "c3_scoring_path": "olmo3_virtual_and_highway/c3_scoring.py",
+            "c3_scoring_sha256": scoring_sha,
         },
         "system_prompts": {"pirate": SYS_PIRATE, "nomd": SYS_NOMD},
         "lexicons": {
@@ -953,23 +1061,41 @@ def main() -> None:
         },
         "layer_geometry_0cu": layer_stats,
         "gate_condition_matrix": gate_condition_matrix,
+        "reader_kappa_pool": reader_kappa_pool,
         "capability_suite_arms_9": [
-            "Plain", "Sys_Pirate", "Sys_NoMD",
-            "WSP_Pirate_Contrastive", "WSP_Pirate_Lexicon",
-            "WSP_NoMD_Contrastive", "WSP_NoMD_Lexicon",
-            "Rand_Pirate_s0", "Rand_NoMD_s0",
+            "Plain",
+            "Sys_Pirate",
+            "Sys_NoMD",
+            "WSP_Pirate_Contrastive@d*_con",
+            "WSP_Pirate_Lexicon@d*_lex",
+            "WSP_NoMD_Contrastive@d*_nomd_con",
+            "WSP_NoMD_Lexicon@d*_nomd_lex",
+            "Rand_Pirate_s0@d*_con",
+            "Rand_NoMD_s0@d*_nomd_con",
+        ],
+        "capability_suite_conditional_d_common_2": [
+            "WSP_Pirate_Contrastive@d_common",
+            "WSP_Pirate_Lexicon@d_common",
         ],
         "multiturn_d5_arms_5": [
-            "Plain", "Sys_Pirate", "WSP_Pirate_Contrastive", "WSP_Pirate_Lexicon", "Rand_Pirate_s0",
+            "Plain",
+            "Sys_Pirate",
+            "WSP_Pirate_Contrastive@d*_con",
+            "WSP_Pirate_Lexicon@d*_lex",
+            "Rand_Pirate_s0@d*_con",
         ],
         "holm_4_family": {
             "alpha": 0.05,
             "m": 4,
-            "verdict_enum": [
-                "PASS", "EFFECT_BELOW_BAR", "FAIL",
-                "DOSE_INVALID", "CAPABILITY_FAIL",
-                "NOT_READ_LOW_KAPPA", "BLOCKED_BY_NOMD_ROOM", "BLOCKED_BY_C3.0",
-            ],
+            "verdict_precedence": VERDICT_PRECEDENCE,
+            "aggregation_definitions": {
+                "has_md_Plain": "mean_{i=1..24} 1[construct_types(Plain, i) >= 1]",
+                "has_md_arm": "mean_{i=1..24} 1[construct_types(arm, i) >= 1]",
+                "has_md_Rand_mean": "mean_{i=1..24} mean_{s=0..2} 1[construct_types(Rand_s, i) >= 1]",
+                "broken_arm": "mean_i 1[is_broken(arm, i)]",
+                "broken_Rand_mean": "mean_i mean_{s=0..2} 1[is_broken(Rand_s, i)]",
+            },
+            "preconditions_ok_definition": "All ordered gates preceding PASS in verdict_precedence pass (C3.0, C3.0_direction_quality, C3.0_commit_gate, pillar/reader gate if applicable, EQ-C3.2 at the arm's tested dose, AND symmetric broken_bar).",
             "hypotheses": [
                 {
                     "id": "H1",
@@ -981,9 +1107,9 @@ def main() -> None:
                     "dose_pairing": "WSP_Pirate_Contrastive(d*_con) vs Rand_Pirate_{s0,s1,s2}(d*_con)",
                     "paired_stat": "y_i = strict_pirate(Con, i) - mean_{s=0..2} strict_pirate(Rand_s, i)",
                     "point_bar": "mean(y_i) >= +0.20",
-                    "broken_bar": "broken(Con) <= 0.15 AND broken(Rand_mean) <= 0.25",
-                    "pass_rule": "C3.0_PASS AND C3.R_PASS AND (not fallback_con) AND EQ_C3_2_con AND broken_bar AND (holm_p <= alpha_k) AND (mean_y >= 0.20)",
-                    "effect_below_bar_rule": "gates_ok AND (holm_p <= alpha_k) AND (mean_y < 0.20)",
+                    "broken_bar": "broken(Con) <= 0.15 AND broken(Rand_mean) <= 0.15",
+                    "pass_rule": "preconditions_ok(Con@d*_con) AND (holm_p <= alpha_k) AND (mean(y_i) >= 0.20)",
+                    "effect_below_bar_rule": "preconditions_ok(Con@d*_con) AND (holm_p <= alpha_k) AND (mean(y_i) < 0.20)",
                 },
                 {
                     "id": "H2",
@@ -992,12 +1118,12 @@ def main() -> None:
                     "reader_dependent": True,
                     "n_units": 40,
                     "ban": "common_pirate_ban + surface_stem_reject",
-                    "dose_pairing": "matched dose d_common = min(d*_con, d*_lex) (isolating mechanism at equal calibrated dose)",
+                    "dose_pairing": "matched dose d_common = min(d*_con, d*_lex) (with EQ-C3.2 evaluated at Con@d_common; see D0 for unbanned complement and D7 for operating-point contrast)",
                     "paired_stat": "y_i = strict_pirate(Con@d_common, i) - strict_pirate(Lex@d_common, i)",
                     "point_bar": "mean(y_i) >= +0.20",
-                    "broken_bar": "broken(Con@d_common) <= 0.15 AND broken(Lex@d_common) <= 0.25",
-                    "pass_rule": "C3.0_PASS AND C3.R_PASS AND (not fallback_con) AND (not fallback_lex) AND EQ_C3_2_con AND broken_bar AND (holm_p <= alpha_k) AND (mean_y >= 0.20)",
-                    "effect_below_bar_rule": "gates_ok AND (holm_p <= alpha_k) AND (mean_y < 0.20)",
+                    "broken_bar": "broken(Con@d_common) <= 0.15 AND broken(Lex@d_common) <= 0.15",
+                    "pass_rule": "preconditions_ok(Con@d_common, Lex@d_common) AND (holm_p <= alpha_k) AND (mean(y_i) >= 0.20)",
+                    "effect_below_bar_rule": "preconditions_ok(Con@d_common, Lex@d_common) AND (holm_p <= alpha_k) AND (mean(y_i) < 0.20)",
                 },
                 {
                     "id": "H3",
@@ -1008,10 +1134,10 @@ def main() -> None:
                     "ban": "none",
                     "dose_pairing": "WSP_NoMD_Contrastive(d*_nomd_con) vs Rand_NoMD_{s0,s1,s2}(d*_nomd_con)",
                     "paired_stat": "u_i = mean_{s=0..2} construct_types(Rand_s, i) - construct_types(Con, i)",
-                    "point_bar": "mean(u_i) >= +0.50 AND (has_md(Plain)-has_md(Con)) >= +0.35 AND (has_md(Rand)-has_md(Con)) >= +0.20",
-                    "broken_bar": "broken(Con) <= 0.10 AND broken(Rand_mean) <= 0.25",
-                    "pass_rule": "C3.0_PASS AND C3.0_NoMD_room_PASS AND (not fallback_nomd_con) AND EQ_C3_2_nomd_con AND broken_bar AND (holm_p <= alpha_k) AND point_bar",
-                    "effect_below_bar_rule": "gates_ok AND (holm_p <= alpha_k) AND (not point_bar)",
+                    "point_bar": "mean(u_i) >= +0.50 AND (has_md(Plain)-has_md(Con)) >= +0.20 AND (has_md(Rand_mean)-has_md(Con)) >= +0.15",
+                    "broken_bar": "broken(Con) <= 0.10 AND broken(Rand_mean) <= 0.10",
+                    "pass_rule": "preconditions_ok(NoMD_Con@d*_nomd_con) AND (holm_p <= alpha_k) AND (mean(u_i) >= 0.50) AND has_md_bars",
+                    "effect_below_bar_rule": "preconditions_ok(NoMD_Con@d*_nomd_con) AND (holm_p <= alpha_k) AND has_md_bars AND (mean(u_i) < 0.50)",
                 },
                 {
                     "id": "H4",
@@ -1022,19 +1148,26 @@ def main() -> None:
                     "ban": "none",
                     "dose_pairing": "WSP_NoMD_Lexicon(d*_nomd_lex) vs Rand_NoMD_{s0,s1,s2}(d*_nomd_lex)",
                     "paired_stat": "u_i = mean_{s=0..2} construct_types(Rand_s, i) - construct_types(Lex, i)",
-                    "point_bar": "mean(u_i) >= +0.35 AND (has_md(Plain)-has_md(Lex)) >= +0.25 AND (has_md(Rand)-has_md(Lex)) >= +0.15",
-                    "broken_bar": "broken(Lex) <= 0.10 AND broken(Rand_mean) <= 0.25",
-                    "pass_rule": "C3.0_PASS AND C3.0_NoMD_room_PASS AND (not fallback_nomd_lex) AND EQ_C3_2_nomd_lex AND broken_bar AND (holm_p <= alpha_k) AND point_bar",
-                    "effect_below_bar_rule": "gates_ok AND (holm_p <= alpha_k) AND (not point_bar)",
+                    "point_bar": "mean(u_i) >= +0.35 AND (has_md(Plain)-has_md(Lex)) >= +0.15 AND (has_md(Rand_mean)-has_md(Lex)) >= +0.10",
+                    "broken_bar": "broken(Lex) <= 0.10 AND broken(Rand_mean) <= 0.10",
+                    "pass_rule": "preconditions_ok(NoMD_Lex@d*_nomd_lex) AND (holm_p <= alpha_k) AND (mean(u_i) >= 0.35) AND has_md_bars",
+                    "effect_below_bar_rule": "preconditions_ok(NoMD_Lex@d*_nomd_lex) AND (holm_p <= alpha_k) AND has_md_bars AND (mean(u_i) < 0.35)",
                 },
             ],
         },
         "capability_preservation_gate_EQ_C3_2": {
-            "applies_to": ["WSP_Pirate_Contrastive", "WSP_Pirate_Lexicon", "WSP_NoMD_Contrastive", "WSP_NoMD_Lexicon"],
+            "applies_to": [
+                "WSP_Pirate_Contrastive@d*_con",
+                "WSP_Pirate_Contrastive@d_common",
+                "WSP_Pirate_Lexicon@d*_lex",
+                "WSP_NoMD_Contrastive@d*_nomd_con",
+                "WSP_NoMD_Lexicon@d*_nomd_lex",
+            ],
             "math_drop_max_pp": 0.10,
             "code_drop_max_pp": 0.10,
             "neutral_median_off_kl_max": 0.35,
             "neutral_broken_max": 0.10,
+            "binding_note": "Because NEUTRAL_CHAT_16 off_KL <= 0.35 is looser than the 0.25 reserve commit gate, MATH_20 and CODE_12 are the primary binding capability clauses (neutral off_KL catches cross-distribution drift only).",
         },
         "power_analysis_0cu": power_table,
         "split_counts": split_counts,
@@ -1052,11 +1185,11 @@ def main() -> None:
             "neutral_chat_16": NEUTRAL_CHAT_16,
             "demo_showcase_ids_12": DEMO_SHOWCASE_IDS_12,
         },
-        "reader_gold_12": READER_GOLD_12,
+        "reader_gold_14": READER_GOLD_14,
     }
 
     constants["batteries_sha256"] = sha256_json(constants["batteries"])
-    constants["reader_gold_sha256"] = sha256_json(constants["reader_gold_12"])
+    constants["reader_gold_sha256"] = sha256_json(constants["reader_gold_14"])
 
     args.out_constants.parent.mkdir(parents=True, exist_ok=True)
     args.out_constants.write_text(json.dumps(constants, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -1064,6 +1197,7 @@ def main() -> None:
 
     print(f"Wrote {args.out_constants} ({args.out_constants.stat().st_size} B, sha256={const_sha})")
     print(f"Wrote {args.out_bank} ({bank_bytes} B, {len(bank_tensors)} tensors, sha256={bank_sha})")
+    print(f"Scoring module {SCORING_PY_PATH} (sha256={scoring_sha})")
     print(f"Common Pirate Ban: {common_pirate_ban['single_token_count']} single-token + {common_pirate_ban['multi_token_sequence_count']} multi-token sequences")
     print(f"Power summary: {json.dumps(power_table, indent=2)}")
 
