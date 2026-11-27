@@ -1480,12 +1480,18 @@ def render_scorecard_markdown(sc: dict[str, Any]) -> str:
         ci = h.get("bca_ci90")
         ci_s = "—" if not ci else f"[{ci['ci90_lo']:+.4f}, {ci['ci90_hi']:+.4f}]"
         if hid in ("H1", "H2"):
-            note = f"d={h.get('d_star', h.get('d_common'))}, brk={h['broken_con']:.3f}"
+            if "broken_con" in h:
+                note = f"d={h.get('d_star', h.get('d_common'))}, brk={h['broken_con']:.3f}"
+            else:
+                note = f"blocked ({h['verdict']})"
         else:
-            note = (
-                f"d={h['d_star']}, Δmd_P={h['delta_has_md_vs_plain']:+.3f}, "
-                f"Δmd_R={h['delta_has_md_vs_rand']:+.3f}, lenR={h['length_ratio']:.3f}"
-            )
+            if "delta_has_md_vs_plain" in h:
+                note = (
+                    f"d={h.get('d_star')}, Δmd_P={h['delta_has_md_vs_plain']:+.3f}, "
+                    f"Δmd_R={h['delta_has_md_vs_rand']:+.3f}, lenR={h['length_ratio']:.3f}"
+                )
+            else:
+                note = f"blocked ({h['verdict']})"
         lines.append(
             f"| **`{hid}`** | **`{h['verdict']}`** | `{pt_s}` | `{ci_s}` | `{h['p_perm']:.6f}` | `{h['holm_sig']}` | {note} |"
         )
@@ -1526,14 +1532,22 @@ def render_scorecard_markdown(sc: dict[str, Any]) -> str:
             f"| `{am['code_pass_rate']:.3f}` | `{am['neutral_median_off_kl']:.4f}` | `{am['neutral_broken_rate']:.3f}` | `{'PASS' if am['pass'] else 'FAIL'}` |"
         )
 
+    dq_gate = sc["gates"].get("C3.0_direction_quality")
+    cg_gate = sc["gates"].get("C3.0_commit_gate")
+    nr_gate = sc["gates"].get("C3.0_NoMD_room")
     lines.extend([
         "",
         "## Gate Summary",
         "",
         f"- **`C3.0`:** `{sc['gates']['C3.0']['pass']}` (`C3.0.1={sc['gates']['C3.0']['C3.0.1']['pass']}`, `C3.0.2={sc['gates']['C3.0']['C3.0.2']['pass']}`, `C3.0.3={sc['gates']['C3.0']['C3.0.3']['pass']}`, `C3.0.4={sc['gates']['C3.0']['C3.0.4']['pass']}`)",
-        f"- **`C3.0_direction_quality`:** `{sc['gates']['C3.0_direction_quality']['pass_by_arm']}`",
-        f"- **`C3.0_commit_gate`:** `{{k: v['pass'] for k, v in ...}}` = `{ {k: v['pass'] for k, v in sc['gates']['C3.0_commit_gate'].items()} }`",
-        f"- **`C3.0_NoMD_room`:** `{sc['gates']['C3.0_NoMD_room']['pass']}` (`has_md={sc['gates']['C3.0_NoMD_room']['plain_has_markdown']:.3f}`, `mean_ct={sc['gates']['C3.0_NoMD_room']['plain_mean_construct_types']:.3f}`)",
+        f"- **`C3.0_direction_quality`:** `{dq_gate['pass_by_arm'] if dq_gate else 'not_evaluated (C3.0 FAIL)'}`",
+        f"- **`C3.0_commit_gate`:** `{{k: v['pass'] for k, v in ...}}` = `{ {k: v['pass'] for k, v in cg_gate.items()} if cg_gate else 'not_evaluated (C3.0 FAIL)' }`",
+        f"- **`C3.0_NoMD_room`:** `{nr_gate['pass'] if nr_gate else 'not_evaluated (C3.0 FAIL)'}`"
+        + (
+            f" (`has_md={nr_gate['plain_has_markdown']:.3f}`, `mean_ct={nr_gate['plain_mean_construct_types']:.3f}`)"
+            if nr_gate
+            else ""
+        ),
         f"- **`C3.R`:** `{sc['gates']['C3.R']['pass']}` (`H1={sc['gates']['C3.R']['h1_pass']}`, `H2={sc['gates']['C3.R']['h2_pass']}`)",
         "",
     ])

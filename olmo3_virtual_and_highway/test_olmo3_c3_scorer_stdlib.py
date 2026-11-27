@@ -510,6 +510,8 @@ def test_2_all_9_verdict_states_and_gate_isolation() -> None:
         mut(r)
         sc = _score(r)
         assert sc["confirmatory_verdicts"] == {"C3.0": "FAIL", "H1": "BLOCKED_BY_C3.0", "H2": "BLOCKED_BY_C3.0", "H3": "BLOCKED_BY_C3.0", "H4": "BLOCKED_BY_C3.0"}, f"Failed C3.0 block on {label}"
+        md_blk = scorer.render_scorecard_markdown(sc)
+        assert "BLOCKED_BY_C3.0" in md_blk and "`FAIL`" in md_blk, f"render_scorecard_markdown failed on C3.0 block ({label})"
 
     # C3.0.2 banned surface stem hit > 0.10 (> 4/40)
     r_stem = copy.deepcopy(base)
