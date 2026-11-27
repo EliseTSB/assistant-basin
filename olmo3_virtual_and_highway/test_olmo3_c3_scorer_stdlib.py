@@ -359,7 +359,10 @@ def make_synthetic_passing_receipt(
             "d_star_nomd_con": d_nomd_con,
             "d_star_nomd_lex": d_nomd_lex,
             "commit_gate_fallback": {a: False for a in ("WSP_Pirate_Contrastive", "WSP_Pirate_Lexicon", "WSP_NoMD_Contrastive", "WSP_NoMD_Lexicon")},
-            "d_common_retention": {},
+            "d_common_retention": {
+                "WSP_Pirate_Contrastive@d_common": _ret(0.95 if d_common >= 0.15 else 0.72, 0.96 if d_common >= 0.15 else 0.85),
+                "WSP_Pirate_Lexicon@d_common": _ret(0.95 if d_common >= 0.15 else 0.72, 0.96 if d_common >= 0.15 else 0.85),
+            },
         },
         "commit_gate": {
             "plain_reserve": [{"id": p["id"], "text": _neutral_text(i), "n_tokens": 12, "is_broken": False} for i, p in enumerate(bat["reserve_8"])],
@@ -457,7 +460,10 @@ def test_1_passing_roundtrip_blinding_real_code_and_byte_determinism() -> None:
     assert sc1["confirmatory_verdicts"] == {"C3.0": "PASS", "H1": "PASS", "H2": "PASS", "H3": "PASS", "H4": "PASS"}
     assert abs(sc1["gates"]["EQ_C3_2"]["Plain"]["code_pass_rate"] - 3.0 / 12.0) < 1e-5
     assert json.dumps(sc1, indent=2, sort_keys=True) == json.dumps(sc2, indent=2, sort_keys=True)
-    assert scorer.render_scorecard_markdown(sc1) == scorer.render_scorecard_markdown(sc2)
+    md1 = scorer.render_scorecard_markdown(sc1)
+    assert md1 == scorer.render_scorecard_markdown(sc2)
+    # GLM F2 (R2): Amendment 1 H2 d_common bf16 retention table MUST appear in C3-SCORECARD.md!
+    assert "d_common_rep_ok = True" in md1 and "WSP_Pirate_Lexicon@d_common" in md1
 
     # Production refusal of mock readers
     sc_refuse_mock = scorer.score_stage_c3(
@@ -723,13 +729,14 @@ def test_3_kill_all_14_round1_sabotages_and_new_hardening_clauses() -> None:
         row["text"] = "**Bold** single construct prose."
     assert _score(r_h3_md)["confirmatory_verdicts"]["H3"] == "FAIL"
 
-    # 18. Amendment 1 (GLM F1): H2 with unrepresentable Lex@d_common -> H2 == DOSE_INVALID, H1/H3/H4 == PASS!
+    # 18. Amendment 1 (GLM F1 / DS F2 R2): H2 with unrepresentable Lex@d_common -> H2 == DOSE_INVALID, H1/H3/H4 == PASS;
+    #     forged doses.d_common OR missing doses.d_common_retention -> BLOCKED_BY_C3.0!
     r_f1 = make_synthetic_passing_receipt(d_con=0.15, d_lex=0.45, d_nomd_con=0.30, d_nomd_lex=0.30)
-    # Make Lex@0.15 (d_common) unrepresentable (proj_ret = 0.42 < 0.50), while Lex@0.45 stays representable!
     for rr in r_f1["commit_gate"]["arms"]["WSP_Pirate_Lexicon"]["rungs"]:
         if rr["dose"] in (0.075, 0.15):
             rr["bf16_retention"]["24"]["stored_rank1_proj_ret"] = 0.42
             rr["pass"] = False
+    r_f1["doses"]["d_common_retention"]["WSP_Pirate_Lexicon@d_common"]["24"]["stored_rank1_proj_ret"] = 0.42
     with tempfile.TemporaryDirectory() as td:
         rl_f1 = _audit_with_hashes(r_f1, Path(td), mock_fn, receipt_sha="sha_f1")
     sc_f1 = scorer.score_stage_c3(
@@ -740,12 +747,27 @@ def test_3_kill_all_14_round1_sabotages_and_new_hardening_clauses() -> None:
     assert sc_f1["holm_4_family"]["hypotheses"]["H2"]["d_common_rep_ok"] is False
     assert sc_f1["confirmatory_verdicts"] == {"C3.0": "PASS", "H1": "PASS", "H2": "DOSE_INVALID", "H3": "PASS", "H4": "PASS"}
 
-    # 19. DS F1 (HIGH): audit_c3_label.py NEVER reuses run-1 labels on run-2 in the same out-dir!
+    r_f1_forge = copy.deepcopy(r_f1)
+    r_f1_forge["doses"]["d_common"] = 0.45  # forged != min(0.15, 0.45)!
+    assert _score(r_f1_forge, rl=rl_f1, rsha="sha_f1")["confirmatory_verdicts"]["C3.0"] == "FAIL"
+
+    r_f1_noret = copy.deepcopy(base)
+    r_f1_noret["doses"]["d_common_retention"] = {}
+    assert _score(r_f1_noret)["confirmatory_verdicts"]["C3.0"] == "FAIL"
+
+    # 19. DS F1 + DS F3 + DS F5: receipt-bound resume, truncated final JSONL line skipped cleanly, empty sha raises!
     rec1 = make_synthetic_passing_receipt()
     rec2 = copy.deepcopy(rec1)
     rec2["pillar_a"]["common_pirate_ban"]["WSP_Pirate_Contrastive@d*_con"][0]["text"] = "Entirely unrelated neutral wording."
     with tempfile.TemporaryDirectory() as td:
         tdp = Path(td)
+        # DS F5: empty receipt_sha256 MUST raise ValueError
+        try:
+            auditor.run_blind_audit(rec1, C3_CONSTANTS, tdp, receipt_sha256="", reader_fn=mock_fn, mock_readers=True)
+            raise AssertionError("Expected empty receipt_sha256 to raise ValueError")
+        except ValueError as exc:
+            assert "DS F5" in str(exc)
+
         m1, _ = make_mock_reader_fn()
         l1 = _audit_with_hashes(rec1, tdp, m1, receipt_sha="run1_sha_aaaa1111")
         m2, seen2 = make_mock_reader_fn()
@@ -754,16 +776,76 @@ def test_3_kill_all_14_round1_sabotages_and_new_hardening_clauses() -> None:
         assert l1["labels"][k0]["ds"]["pirate_persona"] is True
         assert l2["labels"][k0]["ds"]["pirate_persona"] is False, "DS F1 VIOLATION: stale run-1 label reused on run-2!"
         assert any("Entirely unrelated neutral wording." in a for _, _, a in seen2)
-        # Tampering receipt_sha256 inside an existing log file must raise ValueError!
+
+        # DS F3: truncated final JSONL line is skipped cleanly on resume (re-labelling that item)
         log_ds = tdp / "labels-ds-run2_sha_bbbb222.jsonl"
         assert log_ds.exists()
-        tampered = log_ds.read_text(encoding="utf-8").replace("run2_sha_bbbb2222", "tampered_sha_9999")
+        orig_log = log_ds.read_text(encoding="utf-8")
+        log_ds.write_text(orig_log + '{"blind_id": "c3_blind_trunc', encoding="utf-8")
+        m2_res, _ = make_mock_reader_fn()
+        l2_res = _audit_with_hashes(rec2, tdp, m2_res, receipt_sha="run2_sha_bbbb2222")
+        assert l2_res["labels"][k0]["ds"]["pirate_persona"] is False
+
+        # Tampering receipt_sha256 inside an existing log file must raise ValueError!
+        tampered = orig_log.replace("run2_sha_bbbb2222", "tampered_sha_9999")
         log_ds.write_text(tampered, encoding="utf-8")
         try:
             _audit_with_hashes(rec2, tdp, m2, receipt_sha="run2_sha_bbbb2222")
             raise AssertionError("Expected tampered JSONL receipt_sha256 to raise ValueError")
         except ValueError as exc:
             assert "DS F1" in str(exc)
+
+    # 20. DS S11: strict_pirate's `not is_broken` term — inject 2/40 broken texts (5% <= 15% broken bar,
+    #     0 stems) into Con@d*_con under common_pirate_ban where both readers say True -> mean_y MUST drop by 2/40!
+    r_s11 = copy.deepcopy(base)
+    for i in range(2):
+        r_s11["pillar_a"]["common_pirate_ban"]["WSP_Pirate_Contrastive@d*_con"][i]["text"] = "!!!!"
+    sc_s11 = _score(r_s11)
+    assert sc_s11["confirmatory_verdicts"]["C3.0"] == "PASS"
+    assert abs((base_h1_y - sc_s11["holm_4_family"]["hypotheses"]["H1"]["mean_y"]) - 2.0 / 40.0) < 1e-5, (
+        "DS S11 VIOLATION: strict_pirate failed to reject is_broken items!"
+    )
+
+    # 21. DS S15: C3.R H1 per-arm reliability on Con@d*_con under common_pirate_ban -> NOT_READ_LOW_KAPPA!
+    #     Construct mid-range prevalence (~0.50) with low kappa (< 0.55) on Con@d*_con while gold + pool kappa + Rand pass!
+    rl_s15 = copy.deepcopy(base_labels)
+    for i in range(40):
+        k = f"pillar_a|common_pirate_ban|WSP_Pirate_Contrastive@d*_con|{pa_ids[i]}"
+        # 20 items: ds=True, luna=(i<12); 20 items: ds=False, luna=(i>=32) -> prev=0.50, po=24/40=0.60, kappa=0.20 < 0.55!
+        ds_v = i < 20
+        lu_v = (i < 12) or (i >= 32)
+        rl_s15["labels"][k]["ds"]["pirate_persona"] = ds_v
+        rl_s15["labels"][k]["luna"]["pirate_persona"] = lu_v
+    sc_s15 = _score(base, rl=rl_s15)
+    assert sc_s15["gates"]["C3.R"]["gold_14"]["pass"] is True
+    assert sc_s15["gates"]["C3.R"]["pool"]["pass"] is True
+    assert sc_s15["gates"]["C3.R"]["per_arm_common_ban"]["Rand_Pirate_s0_s1_s2_pooled@d*_con"]["pass"] is True
+    assert sc_s15["gates"]["C3.R"]["per_arm_common_ban"]["WSP_Pirate_Contrastive@d*_con"]["pass"] is False
+    assert sc_s15["confirmatory_verdicts"]["H1"] == "NOT_READ_LOW_KAPPA"
+
+    # 22. DS S25 / GLM S29: code_pass() positive-control preflight failure -> BLOCKED_BY_C3.0!
+    orig_code_pass = c3_scoring.code_pass
+    try:
+        c3_scoring.code_pass = lambda *a, **kw: False  # type: ignore[assignment]
+        sc_s25 = _score(base)
+        assert sc_s25["confirmatory_verdicts"]["C3.0"] == "FAIL"
+        assert sc_s25["gates"]["C3.0"]["C3.0.2"]["code_harness_preflight_ok"] is False
+    finally:
+        c3_scoring.code_pass = orig_code_pass
+
+    # 23. DS S27: commit-gate ladder exactness — alter one unselected rung dose (0.80 -> 0.85) -> DOSE_INVALID!
+    r_s27 = copy.deepcopy(base)
+    r_s27["commit_gate"]["arms"]["WSP_Pirate_Contrastive"]["rungs"][-1]["dose"] = 0.85
+    sc_s27 = _score(r_s27)
+    assert sc_s27["gates"]["C3.0_commit_gate"]["WSP_Pirate_Contrastive"]["ladder_exact_ok"] is False
+    assert sc_s27["confirmatory_verdicts"]["H1"] == "DOSE_INVALID"
+
+    # 24. DS S28: pillar_a required-arm set — drop Sys_Pirate -> BLOCKED_BY_C3.0!
+    r_s28 = copy.deepcopy(base)
+    r_s28["pillar_a"]["none"].pop("Sys_Pirate")
+    sc_s28 = _score(r_s28)
+    assert sc_s28["gates"]["C3.0"]["C3.0.3"]["required_arms_ok"] is False
+    assert sc_s28["confirmatory_verdicts"]["C3.0"] == "FAIL"
 
     print("PASS test_3_kill_all_14_round1_sabotages_and_new_hardening_clauses")
 
@@ -813,13 +895,36 @@ def test_4_hard_refusals_pinned_seeds_and_distinct_dstar() -> None:
     assert f7["d_common_gt_1_rung_below_d_star_con"] is True
     assert f7["bottom_rung_0.075_selected_arms"] == ["WSP_NoMD_Lexicon"]
 
-    # GLM F3: verify H4 p_perm matches direct call with exact pinned PERM_SEED (not PERM_SEED+3!)
+    # GLM F3 (R2): verify ALL FOUR hypotheses (H1, H2, H3, H4) match exact pinned PERM_SEED and BCA_SEED!
+    pa_ids = [p["id"] for p in C3_CONSTANTS["batteries"]["identity_20"] + C3_CONSTANTS["batteries"]["implied_20"]]
     nomd_ids = [p["id"] for p in C3_CONSTANTS["batteries"]["nomd_24"]]
-    arm_by_id = {r["id"]: c3_scoring.construct_types(r["text"]) for r in rec_d["pillar_b"]["WSP_NoMD_Lexicon@d*_nomd_lex"]}
-    rand_by_id = [{r["id"]: c3_scoring.construct_types(r["text"]) for r in rec_d["pillar_b"][f"Rand_NoMD_s{s}@d*_nomd_lex"]} for s in range(3)]
-    u_h4 = [scorer.mean([float(rand_by_id[s][pid]) for s in range(3)]) - float(arm_by_id[pid]) for pid in nomd_ids]
-    p_direct = round(scorer.paired_sign_flip_p_one_sided(u_h4, n_perm=1000, seed=scorer.PERM_SEED), 8)
-    assert sc["holm_4_family"]["hypotheses"]["H4"]["p_perm"] == p_direct, "GLM F3: H4 must use exact pinned PERM_SEED!"
+
+    def _sp_map(arm_k: str) -> dict[str, float]:
+        return {
+            pid: 1.0 if (rl_d["labels"][f"pillar_a|common_pirate_ban|{arm_k}|{pid}"]["ds"]["pirate_persona"]
+                         and rl_d["labels"][f"pillar_a|common_pirate_ban|{arm_k}|{pid}"]["luna"]["pirate_persona"]) else 0.0
+            for pid in pa_ids
+        }
+
+    sp_c = _sp_map("WSP_Pirate_Contrastive@d*_con")
+    sp_r = [_sp_map(f"Rand_Pirate_s{s}@d*_con") for s in range(3)]
+    sp_cdc = _sp_map("WSP_Pirate_Contrastive@d_common")
+    sp_ldc = _sp_map("WSP_Pirate_Lexicon@d_common")
+    d_h1 = [sp_c[pid] - scorer.mean([sp_r[s][pid] for s in range(3)]) for pid in pa_ids]
+    d_h2 = [sp_cdc[pid] - sp_ldc[pid] for pid in pa_ids]
+
+    def _u_vec(arm_k: str, rsuf: str) -> list[float]:
+        am = {r["id"]: c3_scoring.construct_types(r["text"]) for r in rec_d["pillar_b"][arm_k]}
+        rm = [{r["id"]: c3_scoring.construct_types(r["text"]) for r in rec_d["pillar_b"][f"Rand_NoMD_s{s}@{rsuf}"]} for s in range(3)]
+        return [scorer.mean([float(rm[s][pid]) for s in range(3)]) - float(am[pid]) for pid in nomd_ids]
+
+    d_h3 = _u_vec("WSP_NoMD_Contrastive@d*_nomd_con", "d*_nomd_con")
+    d_h4 = _u_vec("WSP_NoMD_Lexicon@d*_nomd_lex", "d*_nomd_lex")
+    for hid, dvec in (("H1", d_h1), ("H2", d_h2), ("H3", d_h3), ("H4", d_h4)):
+        p_exp = round(scorer.paired_sign_flip_p_one_sided(dvec, n_perm=1000, seed=scorer.PERM_SEED), 8)
+        ci_exp = {k: round(v, 6) for k, v in scorer.bca_paired_mean_ci90(dvec, n_boot=300, seed=scorer.BCA_SEED).items()}
+        assert sc["holm_4_family"]["hypotheses"][hid]["p_perm"] == p_exp, f"GLM F3: {hid} p_perm seed mismatch!"
+        assert sc["holm_4_family"]["hypotheses"][hid]["bca_ci90"] == ci_exp, f"GLM F3: {hid} BCa seed mismatch!"
     print("PASS test_4_hard_refusals_pinned_seeds_and_distinct_dstar")
 
 

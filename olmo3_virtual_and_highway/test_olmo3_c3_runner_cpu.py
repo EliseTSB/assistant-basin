@@ -190,6 +190,23 @@ def test_2_weight_editor_hooks_and_bitwise_restore() -> None:
     finally:
         h.remove()
     assert runner.count_active_hooks(model) == 0
+
+    # in_exc guard: hook added inside context + inner exception -> inner exception MUST propagate unmasked
+    # AND all touched layers MUST still be restored bitwise!
+    h_inner = None
+    try:
+        try:
+            with master.apply_edit(model, {1: (1.0, v, k), 2: (1.0, v, k)}):
+                h_inner = model.model.layers[1].register_forward_hook(lambda m, i, o: o)
+                raise RuntimeError("inner_boom_must_not_be_masked")
+            raise AssertionError("Expected inner_boom_must_not_be_masked")
+        except RuntimeError as exc:
+            assert str(exc) == "inner_boom_must_not_be_masked", f"Inner exception masked by finally: {exc}"
+    finally:
+        if h_inner is not None:
+            h_inner.remove()
+    assert torch.equal(model.model.layers[1].mlp.down_proj.weight.data.cpu(), master.clean_bf16[1])
+    assert torch.equal(model.model.layers[2].mlp.down_proj.weight.data.cpu(), master.clean_bf16[2])
     print("PASS test_2_weight_editor_hooks_and_bitwise_restore")
 
 
@@ -228,14 +245,15 @@ def test_3_common_ban_processor_single_and_multitoken_b1_and_b8() -> None:
     proc.apply(s8, histories)
     assert all(torch.isneginf(s8[b, 10]) for b in range(8))
     assert torch.argmax(s8, dim=-1).tolist() == [31, 22, 22, 31, 22, 22, 31, 22]
-    # GLM F6: prompt ending with banned multi-token prefix [20, 21] must NOT ban token 22 on step 0
-    # (generated-token-only bad_words_ids semantics)!
+    # DS F1 (R2): match HF NoBadWordsLogitsProcessor semantics — prompt ending with banned prefix [20, 21]
+    # DOES ban token 22 on step 0 when histories are initialized from prompt_ids_list!
     s_step0 = torch.zeros((1, 50), dtype=torch.float32)
     s_step0[0, 10] = 9.0
     s_step0[0, 22] = 8.0
-    proc.apply(s_step0, [[]])  # step 0 generated history is empty even if prompt ended with [20, 21]
-    assert torch.isneginf(s_step0[0, 10]) and (not torch.isneginf(s_step0[0, 22]))
-    assert int(torch.argmax(s_step0[0]).item()) == 22
+    s_step0[0, 7] = 1.0
+    proc.apply(s_step0, [[5, 6, 20, 21]])
+    assert torch.isneginf(s_step0[0, 10]) and torch.isneginf(s_step0[0, 22])
+    assert int(torch.argmax(s_step0[0]).item()) == 7
     print("PASS test_3_common_ban_processor_single_and_multitoken_b1_and_b8")
 
 
@@ -316,6 +334,14 @@ def test_5_end_to_end_smoke_and_d4_and_scorer_refusal() -> None:
     assert receipt_b1["meta"]["b8_parity_passed"] is None
     assert receipt_b1["meta"]["b8_parity_max_abs_dlogit"] is None
     assert receipt_b1["meta"]["effective_gen_batch_size"] == 1
+
+    # GLM F5 (R2): CLI refuses --batch-size 1 for non-smoke runs!
+    import subprocess
+    proc_cli = subprocess.run(
+        [sys.executable, str(HERE / "run_olmo3_c3.py"), "--out", "/tmp/unused.json", "--batch-size", "1"],
+        capture_output=True, text=True, check=False,
+    )
+    assert proc_cli.returncode != 0 and "--batch-size must be >= 2" in proc_cli.stderr
 
     # D4 masked vs unmasked vs mis-masked on planted near-zero gamma_ff!
     d4 = receipt["preflights"]["D4_L24_mask_mismask"]

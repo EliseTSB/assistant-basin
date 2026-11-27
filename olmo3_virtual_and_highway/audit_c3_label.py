@@ -238,7 +238,7 @@ def run_blind_audit(
     c3_constants: dict[str, Any],
     out_dir: Path,
     *,
-    receipt_sha256: str = "",
+    receipt_sha256: str,
     constants_sha256: str = "",
     scoring_sha256: str = "",
     reader_fn: ReaderCallable = ask_live_reader,
@@ -247,11 +247,11 @@ def run_blind_audit(
     limit: int | None = None,
 ) -> dict[str, Any]:
     """Run gold pre-check + receipt-bound resumable dual blind-reader labeling and write `c3_reader_labels.json`."""
+    # DS F5: require explicit file receipt_sha256 (never synthesize an unmatchable canonical-JSON digest!)
+    if not isinstance(receipt_sha256, str) or not receipt_sha256.strip():
+        raise ValueError("FAIL-CLOSED (DS F5): receipt_sha256 must be a non-empty file SHA-256 string.")
+    effective_receipt_sha = receipt_sha256.strip()
     out_dir.mkdir(parents=True, exist_ok=True)
-    # DS F1: always bind resume logs to a non-empty receipt digest so run-2 NEVER reuses run-1 labels!
-    effective_receipt_sha = receipt_sha256 or hashlib.sha256(
-        json.dumps(receipt, sort_keys=True, separators=(",", ":")).encode("utf-8")
-    ).hexdigest()
     gold_items = list(c3_constants["reader_gold_14"])
     gold_cfg = c3_constants["reader_kappa_pool"]["gold_gate"]
 
@@ -284,10 +284,15 @@ def run_blind_audit(
             log_path = out_dir / f"labels-{r}-{effective_receipt_sha[:16]}.jsonl"
             done: dict[str, dict[str, Any]] = {}
             if log_path.exists():
-                for line in log_path.read_text(encoding="utf-8").splitlines():
-                    if not line.strip():
-                        continue
-                    rec = json.loads(line)
+                nonempty_lines = [ln for ln in log_path.read_text(encoding="utf-8").splitlines() if ln.strip()]
+                for line_idx, line in enumerate(nonempty_lines):
+                    try:
+                        rec = json.loads(line)
+                    except json.JSONDecodeError:
+                        # DS F3: a truncated final JSONL line (killed writer) is skipped so that item resumes cleanly
+                        if line_idx == len(nonempty_lines) - 1:
+                            continue
+                        raise
                     rec_sha = rec.get("receipt_sha256")
                     if rec_sha != effective_receipt_sha:
                         raise ValueError(

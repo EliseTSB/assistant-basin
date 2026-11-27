@@ -740,7 +740,33 @@ def score_stage_c3(
         )
         plain_non_broken_rate = mean([0.0 if c3_scoring.is_broken(t) else 1.0 for t in plain_sanity_texts]) if plain_sanity_texts else 0.0
         plain_sanity_ok = (len(plain_sanity_texts) == 56) and (plain_non_broken_rate >= 0.90)
-        c3_0_3_pass = required_arms_ok and counts_ok and ids_exact_ok and nonempty_ok and plain_sanity_ok
+
+        # GLM F1 & DS F2 (R2): verify doses.d_common == min(d*_con, d*_lex) and both d_common_retention keys present!
+        d_common_expected_c30 = min(d_con_v, d_lex_v)
+        d_common_consistent_ok = math.isclose(d_com_v, d_common_expected_c30, abs_tol=1e-9)
+        dc_ret_map = doses.get("d_common_retention")
+        d_common_retention_present_ok = (
+            isinstance(dc_ret_map, dict)
+            and all(
+                isinstance(dc_ret_map.get(k), dict)
+                and all(
+                    isinstance(dc_ret_map[k].get(L), dict)
+                    and "stored_rank1_proj_ret" in dc_ret_map[k][L]
+                    and "stored_frob_ret" in dc_ret_map[k][L]
+                    for L in layers
+                )
+                for k in ("WSP_Pirate_Contrastive@d_common", "WSP_Pirate_Lexicon@d_common")
+            )
+        )
+        c3_0_3_pass = (
+            required_arms_ok
+            and counts_ok
+            and ids_exact_ok
+            and nonempty_ok
+            and plain_sanity_ok
+            and d_common_consistent_ok
+            and d_common_retention_present_ok
+        )
 
         # C3.0.4: Strict SHA-256 provenance of all 4 committed artifacts
         ph = meta.get("provenance_hashes", {})
@@ -796,6 +822,8 @@ def score_stage_c3(
                 "nonempty_ok": nonempty_ok,
                 "plain_non_broken_rate": round(plain_non_broken_rate, 6),
                 "plain_sanity_ok": plain_sanity_ok,
+                "d_common_consistent_ok": d_common_consistent_ok,
+                "d_common_retention_present_ok": d_common_retention_present_ok,
             },
             "C3.0.4": {
                 "pass": c3_0_4_pass,
@@ -879,8 +907,13 @@ def score_stage_c3(
             "rungs": rung_checks,
         }
 
-    # Amendment 1 (GLM F1): H2 d_common bf16 representability check on BOTH Con@d_common and Lex@d_common!
-    d_common_val = float(receipt["doses"]["d_common"])
+    # Amendment 1 (GLM F1 / DS F2 R2): derive d_common = min(d*_con, d*_lex) from commit-gate-verified doses
+    # and require BOTH commit_gate.arms[*].rungs AND mandatory doses.d_common_retention keys to pass!
+    cg_d_con = commit_audit["WSP_Pirate_Contrastive"]["expected_d_star"]
+    cg_d_lex = commit_audit["WSP_Pirate_Lexicon"]["expected_d_star"]
+    d_common_derived = min(float(cg_d_con), float(cg_d_lex)) if (cg_d_con is not None and cg_d_lex is not None) else None
+    d_common_reported = float(receipt["doses"]["d_common"])
+    d_common_matches_derived = (d_common_derived is not None) and math.isclose(d_common_reported, d_common_derived, abs_tol=1e-9)
     d_common_ret_logged = receipt["doses"].get("d_common_retention", {})
     h2_d_common_rep_by_arm: dict[str, bool] = {}
     h2_d_common_ret_table: dict[str, Any] = {}
@@ -889,11 +922,13 @@ def score_stage_c3(
         ("WSP_Pirate_Lexicon", "WSP_Pirate_Lexicon@d_common"),
     ):
         r_match = None
-        for rr in receipt["commit_gate"]["arms"][arm_name]["rungs"]:
-            if math.isclose(float(rr["dose"]), d_common_val, abs_tol=1e-9):
-                r_match = rr
-                break
-        if r_match is None:
+        if d_common_derived is not None:
+            for rr in receipt["commit_gate"]["arms"][arm_name]["rungs"]:
+                if math.isclose(float(rr["dose"]), d_common_derived, abs_tol=1e-9):
+                    r_match = rr
+                    break
+        dc_m = d_common_ret_logged.get(dc_key) if isinstance(d_common_ret_logged, dict) else None
+        if r_match is None or not isinstance(dc_m, dict):
             h2_d_common_rep_by_arm[arm_name] = False
             h2_d_common_ret_table[arm_name] = None
         else:
@@ -902,17 +937,15 @@ def score_stage_c3(
                 float(rm[L]["stored_rank1_proj_ret"]) >= 0.50 and float(rm[L]["stored_frob_ret"]) >= 0.80
                 for L in layers
             )
-            # Cross-check doses.d_common_retention if present
-            if dc_key in d_common_ret_logged and isinstance(d_common_ret_logged[dc_key], dict):
-                dc_m = d_common_ret_logged[dc_key]
-                rep_dc = all(
-                    L in dc_m and float(dc_m[L]["stored_rank1_proj_ret"]) >= 0.50 and float(dc_m[L]["stored_frob_ret"]) >= 0.80
-                    for L in layers
-                )
-                rep_rung = rep_rung and rep_dc
-            h2_d_common_rep_by_arm[arm_name] = rep_rung
+            rep_dc = all(
+                isinstance(dc_m.get(L), dict)
+                and float(dc_m[L]["stored_rank1_proj_ret"]) >= 0.50
+                and float(dc_m[L]["stored_frob_ret"]) >= 0.80
+                for L in layers
+            )
+            h2_d_common_rep_by_arm[arm_name] = rep_rung and rep_dc
             h2_d_common_ret_table[arm_name] = rm
-    h2_d_common_rep_ok = all(h2_d_common_rep_by_arm.values())
+    h2_d_common_rep_ok = d_common_matches_derived and all(h2_d_common_rep_by_arm.values())
 
     # ------------------------------------------------------------------
     # Pillar-B Gate 7: C3.0_NoMD_room (Recomputed via c3_scoring.py)
@@ -1456,6 +1489,29 @@ def render_scorecard_markdown(sc: dict[str, Any]) -> str:
         lines.append(
             f"| **`{hid}`** | **`{h['verdict']}`** | `{pt_s}` | `{ci_s}` | `{h['p_perm']:.6f}` | `{h['holm_sig']}` | {note} |"
         )
+
+    # Amendment 1 (GLM F2 R2): render H2 d_common bf16 storage retention tables directly beside H2!
+    h2_doc = hyps.get("H2", {})
+    h2_dc_ret = h2_doc.get("d_common_bf16_retention")
+    if isinstance(h2_dc_ret, dict):
+        lines.extend([
+            "",
+            f"### `H2` Matched-Dose `d_common = {h2_doc.get('d_common')}` `bf16` Storage Retention (Amendment 1: `d_common_rep_ok = {h2_doc.get('d_common_rep_ok')}`)",
+            "",
+            "| Arm | Layer | `stored_rank1_proj_ret` (`>= 0.50`) | `stored_frob_ret` (`>= 0.80`) | Arm `rep_ok` |",
+            "|---|---|---:|---:|---|",
+        ])
+        for arm_name in ("WSP_Pirate_Contrastive", "WSP_Pirate_Lexicon"):
+            arm_ret = h2_dc_ret.get(arm_name)
+            rep_flag = (h2_doc.get("d_common_rep_by_arm") or {}).get(arm_name)
+            if isinstance(arm_ret, dict):
+                for L in ("21", "24", "27"):
+                    lm = arm_ret.get(L, {})
+                    lines.append(
+                        f"| `{arm_name}@d_common` | `L{L}` | `{lm.get('stored_rank1_proj_ret', '—')}` | `{lm.get('stored_frob_ret', '—')}` | `{rep_flag}` |"
+                    )
+            else:
+                lines.append(f"| `{arm_name}@d_common` | `—` | `missing` | `missing` | `{rep_flag}` |")
 
     lines.extend([
         "",

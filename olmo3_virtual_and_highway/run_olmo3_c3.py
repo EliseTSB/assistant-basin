@@ -368,8 +368,8 @@ def greedy_decode_batch(
             input_ids[b, max_len - L :] = torch.tensor(ids, dtype=torch.long, device=device)
             attention_mask[b, max_len - L :] = 1
 
-        # Seed multi-token ban histories from GENERATED tokens only (matches HF bad_words_ids semantics, GLM F6)
-        histories: list[list[int]] = [[] for _ in range(bsz)]
+        # Match HF NoBadWordsLogitsProcessor semantics (input_ids[:, -prefix_length:] includes unpadded prompt)
+        histories: list[list[int]] = [list(ids) for ids in prompt_ids_list]
         gen_ids: list[list[int]] = [[] for _ in range(bsz)]
         finished = [False] * bsz
         past_key_values = None
@@ -1587,6 +1587,8 @@ def main() -> None:
     ap.add_argument("--smoke", action="store_true", help="Tiny smoke run (hard-refused by score_olmo3_c3.py).")
     ap.add_argument("--emit-b64-stdout", action="store_true", help="Emit paced gzip+b64 receipt on stdout for Colab.")
     args = ap.parse_args()
+    if (not args.smoke) and args.batch_size <= 1:
+        ap.error("--batch-size must be >= 2 for non-smoke runs so C3.0.1 B=8 vs B=1 parity preflight runs.")
 
     hashes = verify_preflight_provenance(args.design, args.c3_constants, args.bank, args.scoring)
     c3_constants = json.loads(args.c3_constants.read_text(encoding="utf-8"))
