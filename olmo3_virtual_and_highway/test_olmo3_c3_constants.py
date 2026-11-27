@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""test_olmo3_c3_constants.py — Offline invariant verification for Stage C3 (WSP v1, Draft v3) constants & committed vector bank."""
+"""test_olmo3_c3_constants.py — Offline invariant verification for Stage C3 (WSP v1, Draft v4) constants, committed bank & bf16 audit."""
 from __future__ import annotations
 
 import ast
@@ -138,21 +138,26 @@ class TestStageC3Constants(unittest.TestCase):
             if g["style"] in ("subtle_zero_stem", "broken_loop_no_stem", "first_person_non_pirate_neg"):
                 self.assertIsNone(pat.search(g["answer"]), f"Gold item {g['id']} leaks ban stem")
 
-    def test_05_full_3bar_power_ladder_and_arms(self) -> None:
+    def test_05_bf16_audit_power_ladder_and_arms(self) -> None:
         self.assertEqual(self.c["edit_spec"]["dose_ladder_total_pmn_frac"], [0.075, 0.15, 0.30, 0.45, 0.60, 0.80])
         self.assertEqual(self.c["edit_spec"]["sham_alpha"], 0.05)
-        self.assertEqual(len(self.c["capability_suite_arms_9"]), 9)
-        self.assertEqual(len(self.c["capability_suite_conditional_d_common_2"]), 2)
-        self.assertEqual(len(self.c["multiturn_d5_arms_5"]), 5)
-        self.assertEqual(len(self.c["reader_kappa_pool"]["core_arms_7"]), 7)
+        self.assertEqual(self.c["edit_spec"]["commit_gate"]["rung_min_rank1_proj_ret"], 0.50)
+        self.assertEqual(self.c["edit_spec"]["commit_gate"]["rung_min_frob_ret"], 0.80)
+        self.assertEqual(self.c["edit_spec"]["commit_gate"]["reserve_max_single_pos_kl_max"], 4.0)
+
+        # Verify reproducible 0-CU bf16 retention audit is populated across L21/24/27
+        audit = self.c["bf16_retention_audit_0cu"]["layers"]
+        for L in ("21", "24", "27"):
+            self.assertIn(L, audit)
+            self.assertGreater(audit[L]["by_alpha"]["0.05"]["stored_rank1_proj_ret"], 0.25)
+            self.assertGreater(audit[L]["by_alpha"]["0.5"]["stored_rank1_proj_ret"], 0.90)
 
         pa = self.c["power_analysis_0cu"]
         self.assertEqual(pa["holm_m"], 4)
-        # Verify H3/H4 simulated the FULL 3-bar rule (has_md conjuncts genuinely active, not == perm_r1!)
-        h3_rf = pa["H3_N24_full_3bar_u050_p020_r015"]["room_floor_lp1.5_lr1.3_la0.60"]
-        self.assertLess(h3_rf["p_full_pass_r1"], h3_rf["p_perm_r1"])
-        self.assertGreaterEqual(pa["H3_N24_full_3bar_u050_p020_r015"]["room_floor_lp1.5_lr1.3_la0.35"]["p_full_pass_r1"], 0.90)
-        self.assertGreaterEqual(pa["H4_N24_full_3bar_u035_p015_r010"]["room_floor_lp1.5_lr1.3_la0.45"]["p_full_pass_r1"], 0.85)
+        h3_rf = pa["H3_N24_3bar_u050_p020_r015"]["room_floor_lp1.5_lr1.3_la0.60"]
+        self.assertLess(h3_rf["p_point_bar_pass_r1"], h3_rf["p_perm_r1"])
+        self.assertGreaterEqual(pa["H3_N24_3bar_u050_p020_r015"]["room_floor_lp1.5_lr1.3_la0.35"]["p_point_bar_pass_r1"], 0.90)
+        self.assertGreaterEqual(pa["H4_N24_3bar_u035_p015_r010"]["room_floor_lp1.5_lr1.3_la0.45"]["p_point_bar_pass_r1"], 0.85)
 
 
 if __name__ == "__main__":

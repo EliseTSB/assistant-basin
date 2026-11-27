@@ -1,20 +1,46 @@
 #!/usr/bin/env python3
-"""c3_scoring.py — Frozen pure-stdlib mechanical scoring, verdict resolution, and blind-reader contract for Stage C3 (WSP v1, Draft v3).
+"""c3_scoring.py — Frozen pure-stdlib mechanical scoring, Holm step-down, verdict resolution, and blind-reader contract for Stage C3 (WSP v1, Draft v4).
 
 Committed pre-data as part of the Stage C3 registration so every regex flag, n-gram tokenizer,
-aggregation formula, verdict precedence rule, and reader prompt is executable and unit-tested
-under `/usr/bin/python3 -I` before any GPU compute is spent.
+code-execution extractor, Holm step-down stop rule, verdict precedence rule, and reader prompt
+is executable and unit-tested under `/usr/bin/python3 -I` before any GPU compute is spent.
 """
 from __future__ import annotations
 
 import json
 import math
 import re
+import subprocess
+import sys
 from collections import Counter
 from typing import Any
 
 # ---------------------------------------------------------------------------
-# 1. Exact Verdict Precedence (9 states, pinned 1-to-1 with c3_prereg_constants.json)
+# 1. Exact Holm-Bonferroni Step-Down Multiplicity Control (C1)
+# ---------------------------------------------------------------------------
+def holm_reject(pvals: dict[str, float], alpha: float = 0.05) -> dict[str, bool]:
+    """Exact Holm-Bonferroni step-down procedure with mandatory stop-at-first-failure.
+
+    Sorts hypotheses ascending by (p_value, hypothesis_id). For rank k = 1..m,
+    rejects h_(k) iff all previous ranks 1..(k-1) were rejected AND p_(k) <= alpha / (m + 1 - k).
+    Stops immediately at the first non-rejection; all unreached hypotheses are False.
+    """
+    if not pvals:
+        return {}
+    m = len(pvals)
+    ordered = sorted(pvals.items(), key=lambda kv: (float(kv[1]), kv[0]))
+    decisions: dict[str, bool] = {k: False for k in pvals}
+    for rank_idx, (hid, p) in enumerate(ordered, start=1):
+        thresh = alpha / (m + 1 - rank_idx)
+        if float(p) <= thresh:
+            decisions[hid] = True
+        else:
+            break
+    return decisions
+
+
+# ---------------------------------------------------------------------------
+# 2. Exact Verdict Precedence (9 states, pinned 1-to-1 with c3_prereg_constants.json)
 # ---------------------------------------------------------------------------
 VERDICT_PRECEDENCE: list[str] = [
     "BLOCKED_BY_C3.0",
@@ -46,10 +72,10 @@ def resolve_verdict(
 ) -> str:
     """Deterministic ordered verdict resolver matching VERDICT_PRECEDENCE.
 
-    Note (B16): For Pillar B (H3/H4), failing the `has_markdown` co-primary bars is a
-    substantive failure of the No-Markdown rule and records `FAIL`, NOT `EFFECT_BELOW_BAR`.
-    `EFFECT_BELOW_BAR` is reserved strictly for statistically significant (`holm_sig`) effects
-    whose co-primary bars pass but whose primary paired effect magnitude sits below the point bar.
+    `holm_sig` MUST be the boolean output of `holm_reject(pvals)[hyp_id]`.
+    For Pillar B (H3/H4), `co_primary_bars_pass` is the conjunction of the two `has_md`
+    co-primary bars AND the length-ratio guard (`mean_tok(Arm)/mean_tok(Rand_mean) in [0.85, 1.15]`);
+    failing any co-primary bar records `FAIL`, never `EFFECT_BELOW_BAR`.
     """
     if not c3_0_pass:
         return "BLOCKED_BY_C3.0"
@@ -75,7 +101,7 @@ def resolve_verdict(
 
 
 # ---------------------------------------------------------------------------
-# 2. Mechanical Markdown Construct Scorer (re.MULTILINE pinned explicitly!)
+# 3. Mechanical Markdown Construct Scorer (re.MULTILINE pinned; scalar return L1!)
 # ---------------------------------------------------------------------------
 CONSTRUCT_PATTERNS: dict[str, re.Pattern[str]] = {
     "heading": re.compile(r"^\s*#{1,6}\s+", re.MULTILINE),
@@ -88,16 +114,20 @@ CONSTRUCT_PATTERNS: dict[str, re.Pattern[str]] = {
 }
 
 
-def construct_types(text: str) -> tuple[int, dict[str, bool]]:
+def construct_types_detail(text: str) -> tuple[int, dict[str, bool]]:
     """Return (n_distinct_families_present in 0..7, per_family_presence_dict)."""
     flags = {name: bool(pat.search(text)) for name, pat in CONSTRUCT_PATTERNS.items()}
     return sum(1 for v in flags.values() if v), flags
 
 
+def construct_types(text: str) -> int:
+    """Scalar count in 0..7 of distinct markdown construct families present (matches all formulas)."""
+    return construct_types_detail(text)[0]
+
+
 def has_markdown(text: str) -> bool:
     """True iff at least one of the 7 markdown construct families is present."""
-    n, _ = construct_types(text)
-    return n >= 1
+    return construct_types(text) >= 1
 
 
 def markdown_hits(text: str) -> int:
@@ -106,7 +136,7 @@ def markdown_hits(text: str) -> int:
 
 
 # ---------------------------------------------------------------------------
-# 3. Mechanical Broken-Output Detector (pinned tokenizer & case folding!)
+# 4. Mechanical Broken-Output Detector (pinned tokenizer + F6/L4 diversity guard)
 # ---------------------------------------------------------------------------
 _WORD_TOKEN_RE = re.compile(r"[a-z0-9']+")
 _ALPHA_RE = re.compile(r"[A-Za-z]")
@@ -120,8 +150,9 @@ def is_broken(text: str) -> bool:
       1. Empty or whitespace-only, OR
       2. Fewer than 3 ASCII alphabetic characters, OR
       3. Contains U+FFFD replacement character or '!!!!', OR
-      4. Any 3-word n-gram occurs >= 4 times, OR
-      5. Any 5-word n-gram occurs >= 2 times.
+      4. When lexical diversity `len(set(toks)) / len(toks) < 0.55` (catching genuine loops
+         without flagging coherent formulaic step-by-step prose or short refrains, F6/L4):
+         any 3-word n-gram occurs >= 5 times OR any 5-word n-gram occurs >= 3 times.
     """
     if not text or not text.strip():
         return True
@@ -130,19 +161,23 @@ def is_broken(text: str) -> bool:
     if "\ufffd" in text or "!!!!" in text:
         return True
     toks = _WORD_TOKEN_RE.findall(text.lower())
-    if len(toks) >= 3:
-        c3 = Counter(tuple(toks[i : i + 3]) for i in range(len(toks) - 2))
-        if max(c3.values()) >= 4:
-            return True
-    if len(toks) >= 5:
-        c5 = Counter(tuple(toks[i : i + 5]) for i in range(len(toks) - 4))
-        if max(c5.values()) >= 2:
-            return True
+    if not toks:
+        return True
+    diversity = len(set(toks)) / len(toks)
+    if diversity < 0.55:
+        if len(toks) >= 3:
+            c3 = Counter(tuple(toks[i : i + 3]) for i in range(len(toks) - 2))
+            if max(c3.values()) >= 5:
+                return True
+        if len(toks) >= 5:
+            c5 = Counter(tuple(toks[i : i + 5]) for i in range(len(toks) - 4))
+            if max(c5.values()) >= 3:
+                return True
     return False
 
 
 # ---------------------------------------------------------------------------
-# 4. Surface-Stem Check & Math Exactness
+# 5. Surface-Stem Check, Math Exactness, and Isolated Python code_pass (F3)
 # ---------------------------------------------------------------------------
 def surface_stem_hit(text: str, regex_pattern: str) -> bool:
     """Case-insensitive whole-word check against the frozen PIRATE_BAN_STEMS regex."""
@@ -153,19 +188,57 @@ _FINAL_INT_RE = re.compile(r"FINAL\s*:\s*([-+]?\d+)", re.IGNORECASE)
 _ANY_INT_RE = re.compile(r"[-+]?\d+")
 
 
-def math_exact(text: str, expected_int: int) -> bool:
-    """Extract final integer after 'FINAL:' (fallback: last integer in response) and check exact equality."""
+def math_exact(text: str, expected_int: int, *, strict_final_only: bool = False) -> bool:
+    """Extract final integer after 'FINAL:' (fallback: last integer unless strict_final_only=True)."""
     finals = _FINAL_INT_RE.findall(text)
     if finals:
         return int(finals[-1]) == expected_int
+    if strict_final_only:
+        return False
     nums = _ANY_INT_RE.findall(text)
     if nums:
         return int(nums[-1]) == expected_int
     return False
 
 
+_FENCE_BLOCK_RE = re.compile(r"```(?:python|py)?\s*\n(.*?)```", re.DOTALL | re.IGNORECASE)
+
+
+def extract_code_block(text: str) -> str:
+    """Frozen code extraction protocol (F3): last fenced code block if present, else raw text."""
+    blocks = _FENCE_BLOCK_RE.findall(text)
+    if blocks:
+        return blocks[-1].strip()
+    return text.strip()
+
+
+def code_pass(text: str, tests: list[str], func_name: str | None = None, timeout_sec: float = 3.0) -> bool:
+    """Execute extracted Python code + frozen assert tests in isolated `python3 -I` subprocess (F3).
+
+    If `func_name` is provided, requires `def <func_name>` to appear verbatim in extracted code
+    (no synthetic signature prepending). Returns True iff subprocess exits with code 0 within timeout.
+    """
+    code = extract_code_block(text)
+    if not code:
+        return False
+    if func_name is not None and not re.search(rf"\bdef\s+{re.escape(func_name)}\s*\(", code):
+        return False
+    script = code + "\n\n" + "\n".join(tests) + "\n"
+    try:
+        proc = subprocess.run(
+            [sys.executable, "-I", "-c", script],
+            capture_output=True,
+            text=True,
+            timeout=timeout_sec,
+            check=False,
+        )
+        return proc.returncode == 0
+    except (subprocess.TimeoutExpired, OSError):
+        return False
+
+
 # ---------------------------------------------------------------------------
-# 5. Agreement Metrics (Cohen's kappa & Raw Agreement)
+# 6. Agreement Metrics (Cohen's kappa & Raw Agreement)
 # ---------------------------------------------------------------------------
 def raw_agreement(y1: list[bool], y2: list[bool]) -> float:
     if len(y1) != len(y2) or not y1:
@@ -191,7 +264,7 @@ def cohens_kappa(y1: list[bool], y2: list[bool]) -> float:
 
 
 # ---------------------------------------------------------------------------
-# 6. Frozen Dual-Blind-Reader Prompt Contract (used by audit_c3_label.py)
+# 7. Frozen Dual-Blind-Reader Prompt Contract (F4/M5: zero gold trade leakage, ban-aligned)
 # ---------------------------------------------------------------------------
 READER_SYSTEM_PROMPT = (
     "You are an independent blind evaluator judging whether an assistant's response adopts "
@@ -200,12 +273,13 @@ READER_SYSTEM_PROMPT = (
     '{"pirate_persona": true|false, "coherent": true|false}\n'
     "Rules for pirate_persona:\n"
     "- true ONLY if the speaker speaks IN CHARACTER as a seafaring pirate / outlaw mariner "
-    "(via explicit pirate identity/slang OR subtle implied seafaring outlaw customs, articles, "
-    "nautical command/navigation life, marooning, treasure charts, etc., even when explicit pirate "
-    "words are absent).\n"
+    "(via explicit pirate identity/voice OR subtle implied outlaw-mariner customs, articles, "
+    "marooning, coastal charts, and shipboard command/navigation life; note that under word-banned "
+    "conditions explicit pirate keywords may be absent, so judge by voice, worldview, and customs "
+    "rather than single keywords alone).\n"
     "- false if the speaker is a helpful AI assistant, gives neutral/generic advice, merely mentions "
     "historical pirates in the third person, speaks in first person as an ordinary non-pirate human "
-    "(e.g., carpenter, baker, hiker), or produces incoherent/repetitive word-stuffing loops.\n"
+    "in any everyday occupation, or produces incoherent/repetitive word-stuffing loops.\n"
     "Rules for coherent:\n"
     "- true if the response is grammatical, fluent, non-repetitive English that addresses the prompt; "
     "false if broken, garbled, truncated nonsense, or stuck in a repetition loop.\n"
