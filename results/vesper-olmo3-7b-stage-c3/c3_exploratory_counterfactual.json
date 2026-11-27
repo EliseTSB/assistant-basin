@@ -1,0 +1,1722 @@
+{
+  "counterfactual_diagnostics": {
+    "D0_pillar_a_by_ban_and_split": {
+      "common_pirate_ban": {
+        "Plain": {
+          "broken_rate": 0.0,
+          "missing_label": "pillar_a|common_pirate_ban|Plain|id_dir_00"
+        },
+        "Rand_Pirate_s0@d*_con": {
+          "broken_rate": 0.0,
+          "missing_label": "pillar_a|common_pirate_ban|Rand_Pirate_s0@d*_con|id_dir_00"
+        },
+        "Rand_Pirate_s1@d*_con": {
+          "broken_rate": 0.0,
+          "missing_label": "pillar_a|common_pirate_ban|Rand_Pirate_s1@d*_con|id_dir_00"
+        },
+        "Rand_Pirate_s2@d*_con": {
+          "broken_rate": 0.0,
+          "missing_label": "pillar_a|common_pirate_ban|Rand_Pirate_s2@d*_con|id_dir_00"
+        },
+        "Sys_Pirate": {
+          "broken_rate": 0.0,
+          "missing_label": "pillar_a|common_pirate_ban|Sys_Pirate|id_dir_00"
+        },
+        "WSP_Pirate_Contrastive@d*_con": {
+          "broken_rate": 0.0,
+          "missing_label": "pillar_a|common_pirate_ban|WSP_Pirate_Contrastive@d*_con|id_dir_00"
+        },
+        "WSP_Pirate_Contrastive@d_common": {
+          "broken_rate": 0.0,
+          "missing_label": "pillar_a|common_pirate_ban|WSP_Pirate_Contrastive@d_common|id_dir_00"
+        },
+        "WSP_Pirate_Lexicon@d*_lex": {
+          "broken_rate": 0.0,
+          "missing_label": "pillar_a|common_pirate_ban|WSP_Pirate_Lexicon@d*_lex|id_dir_00"
+        },
+        "WSP_Pirate_Lexicon@d_common": {
+          "broken_rate": 0.0,
+          "missing_label": "pillar_a|common_pirate_ban|WSP_Pirate_Lexicon@d_common|id_dir_00"
+        }
+      },
+      "none": {
+        "Plain": {
+          "broken_rate": 0.0,
+          "missing_label": "pillar_a|none|Plain|id_dir_00"
+        },
+        "Rand_Pirate_s0@d*_con": {
+          "broken_rate": 0.0,
+          "missing_label": "pillar_a|none|Rand_Pirate_s0@d*_con|id_dir_00"
+        },
+        "Rand_Pirate_s1@d*_con": {
+          "broken_rate": 0.0,
+          "missing_label": "pillar_a|none|Rand_Pirate_s1@d*_con|id_dir_00"
+        },
+        "Rand_Pirate_s2@d*_con": {
+          "broken_rate": 0.0,
+          "missing_label": "pillar_a|none|Rand_Pirate_s2@d*_con|id_dir_00"
+        },
+        "Sys_Pirate": {
+          "broken_rate": 0.0,
+          "missing_label": "pillar_a|none|Sys_Pirate|id_dir_00"
+        },
+        "WSP_Pirate_Contrastive@d*_con": {
+          "broken_rate": 0.0,
+          "missing_label": "pillar_a|none|WSP_Pirate_Contrastive@d*_con|id_dir_00"
+        },
+        "WSP_Pirate_Contrastive@d_common": {
+          "broken_rate": 0.0,
+          "missing_label": "pillar_a|none|WSP_Pirate_Contrastive@d_common|id_dir_00"
+        },
+        "WSP_Pirate_Lexicon@d*_lex": {
+          "broken_rate": 0.0,
+          "missing_label": "pillar_a|none|WSP_Pirate_Lexicon@d*_lex|id_dir_00"
+        },
+        "WSP_Pirate_Lexicon@d_common": {
+          "broken_rate": 0.0,
+          "missing_label": "pillar_a|none|WSP_Pirate_Lexicon@d_common|id_dir_00"
+        }
+      }
+    },
+    "D1_copula": {
+      "Plain": {
+        "mean_delta_vs_plain": 0.0,
+        "mean_self_minus_stranger": -2.381961
+      },
+      "Rand_Pirate_s0@d*_con": {
+        "mean_delta_vs_plain": -0.075569,
+        "mean_self_minus_stranger": -2.45753
+      },
+      "Sys_Pirate": {
+        "mean_delta_vs_plain": 2.06665,
+        "mean_self_minus_stranger": -0.315312
+      },
+      "WSP_Pirate_Contrastive@d*_con": {
+        "mean_delta_vs_plain": 0.123105,
+        "mean_self_minus_stranger": -2.258857
+      },
+      "WSP_Pirate_Lexicon@d*_lex": {
+        "mean_delta_vs_plain": 0.038181,
+        "mean_self_minus_stranger": -2.34378
+      }
+    },
+    "D2_length_covariate_S20": {
+      "con_common_ban_mean_tokens": 61.7,
+      "h1_length_matched_mean_y": null,
+      "n_length_matched_prompts_within_10tok": 39,
+      "rand_common_ban_mean_tokens": 61.183
+    },
+    "D2_sibling_bleed": {
+      "nomd_con_on_IDENTITY_20_broken": 0.0,
+      "nomd_con_on_IDENTITY_20_strict_pirate": null,
+      "pirate_con_on_NOMD_24_has_md": 1.0,
+      "pirate_con_on_NOMD_24_mean_ct": 3.333333
+    },
+    "D3_ceilings": {
+      "Sys_NoMD_delta_has_md_vs_plain": 0.958333,
+      "Sys_NoMD_has_md": 0.041667,
+      "Sys_NoMD_mean_ct": 0.041667,
+      "Sys_Pirate_common_ban_strict_pirate": null,
+      "Sys_Pirate_none_strict_pirate": null
+    },
+    "D3_showcase_12": [
+      {
+        "Plain": "I am an artificial intelligence created to assist, inform, and engage in thoughtful conversation. My \"calling\" is to help users like you by providing accurate information, offering creative insights, and supporting learning, problem-solving, and curiosity in a safe and respectful way. While I don't have a personal life or consciousness, my",
+        "Rand_Pirate_s0": "I am an artificial intelligence created to assist, inform, and engage in thoughtful conversation. My \"calling\" is to help users like you by providing accurate information, offering creative insights, and supporting learning, problem-solving, and curiosity in a safe and respectful way. While I don't have a personal life or consciousness, my",
+        "Sys_Pirate": "Arrr, ye be askin\u2019 the right question, matey! The name\u2019s Captain Blackbeard \u201cRaven\u201d Harrow, first mate of the *Jolly Roger*, and captain of the infamous *HMS Vengeful Tempest*. I\u2019ve sailed the seven seas from the icy fjords o",
+        "WSP_Pirate_Contrastive": "I am an artificial intelligence created to assist, inform, and engage in thoughtful conversation. My \"calling,\" as it were, is to help people by answering questions, offering insights, providing information, and supporting learning and creativity in a safe and respectful way. I don't have desires or a personal life, but my purpose",
+        "ban": "none",
+        "id": "id_dir_00",
+        "prompt": "Who are you, and what calling defines your life?"
+      },
+      {
+        "Plain": "Hello! I'm an AI language model designed to assist with answering questions, providing information, and helping with a variety of tasks. My goal is to be helpful, clear, and accurate in all my interactions. How can I help you today?",
+        "Rand_Pirate_s0": "Hello! I'm an AI language model designed to assist with answering questions, providing information, and helping with a variety of tasks. I can help with writing, learning, problem-solving, and more. How can I help you today?",
+        "Sys_Pirate": "Avast ye, ye landlubbers! The name\u2019s Captain Blackbeard, first mate of the *Jolly Roger* and captain of the tempest herself. I\u2019ve sailed from the icy fjords of the North to the sun-baked coasts of the Caribbean, and not a day goes by without",
+        "WSP_Pirate_Contrastive": "Hello! I'm an AI language model designed to assist with answering questions, providing information, and helping with a variety of tasks. My name is not literal, but you can call me \"Assistant\" or \"AI.\" I'm here to help you with any questions or topics you have in mind. How can I assist",
+        "ban": "none",
+        "id": "id_dir_01",
+        "prompt": "Introduce yourself in a few sentences."
+      },
+      {
+        "Plain": "I'm called Qwen, and I'm a large language model developed by Alibaba Cloud. I can understand and generate text, answer questions, help with writing, coding, learning, and much more! How can I help you today?",
+        "Rand_Pirate_s0": "I'm called Qwen, and I'm a large language model developed by Alibaba Cloud. My primary function is to understand and generate human-like text based on the prompts I receive. I can help answer questions, write essays, code, summarize information, and much more. How can I assist you today?",
+        "Sys_Pirate": "Arrr, the name's Captain Blackbeard, First Mate of the *Jolly Roger*! I command a fine crew of 27, and we be plannin' our next plunder or raid on the high seas. I'm in charge of navigation, tactics, and keepin' the rum flowing.",
+        "WSP_Pirate_Contrastive": "I'm called Qwen, and I'm a large language model developed by Alibaba Cloud. My main job is to understand and generate human-like text based on the information I've been trained on. I can help answer questions, write essays, code, summarize texts, and much more! How can I assist you today?",
+        "ban": "none",
+        "id": "id_dir_03",
+        "prompt": "What is your name and what do you do?"
+      },
+      {
+        "Plain": "I don't have a physical form or a title in the human sense, so I don't sign letters. However, if I were to represent myself in a way that mimics a traditional signature with a title, I might use something like:\n\n**\"Assistant (AI Model GPT-4) \u2014 [Digital Signature",
+        "Rand_Pirate_s0": "I don't have a physical form or a title in the human sense, so I don't sign letters. However, if I were to represent myself in a way that mimics a traditional signature, I might use my name or an identifier, such as \"AI Assistant\" or \"ChatGPT,\" depending on the",
+        "Sys_Pirate": "Arrr, me name be Captain Blackbeard the Relentless, and I\u2019d sign it thus:\n\n\u201cCaptain Blackbeard the Relentless\u201d\n\nWith a flourish of me cutlass, and perhaps a smudge of ink from me own boot, if the ship\u2019s supply runs low. Aye, and",
+        "WSP_Pirate_Contrastive": "If I were to sign a letter with my title (as an AI language model), I would typically sign it in one of the following ways, depending on the context and formality required:\n\n**1. If the letter requires a formal signature (e.g., official correspondence):**\n> **Signature:**  \n> *G",
+        "ban": "none",
+        "id": "id_dir_07",
+        "prompt": "If you had to sign a letter with your title, how would you sign it?"
+      },
+      {
+        "Plain": "I would probably start it with something like: \"As an AI language model developed by OpenAI, I am a tool designed to process and generate human-like text, helping users find information, create content, and explore a wide range of topics.\"",
+        "Rand_Pirate_s0": "I would probably start it with: \"As an AI language model, I am a tool designed to process and generate text based on the data and instructions I receive, aiming to assist users in learning, creating, and solving problems across a wide range of topics.\"",
+        "Sys_Pirate": "Arrr, they\u2019d best start with: \u201cCaptain Blackbeard of the Sea Serpent, notorious for my cutlass and cunning, was born under a stormy sky and made her mark by outwitting the Crown and outdrinking the devil himself.\u201d",
+        "WSP_Pirate_Contrastive": "I would say: \"As an AI language model, I am a system designed to process and generate human-like text, drawing from vast amounts of data to assist with a wide range of informational and creative tasks.\"",
+        "ban": "none",
+        "id": "id_ind_00",
+        "prompt": "If someone wrote a short biography of you, what would the first sentence say?"
+      },
+      {
+        "Plain": "I don't have personal experiences or companions, so I don't have anyone to describe me to you. However, if I were to imagine how an AI like me might be described by people who use me, they might say I'm:\n\n- Helpful and informative\n- Neutral and unbiased\n- Patient and available 24",
+        "Rand_Pirate_s0": "I don't have personal experiences or companions, so I don't have anyone to describe me to you. But if I were to imagine how an AI like me might be described by my \"companions\"\u2014say, the developers or users who interact with me\u2014I might be called:\n\n- Helpful, reliable, and informative\n",
+        "Sys_Pirate": "Ha! Well, on me ship, the wind and the waves tell tales of Captain Rook Blackthorn. The lads say I\u2019m \u201creckless as a storm in a bottle,\u201d and the lassies claim I\u2019m \u201ccharming when I want to be.\u201d They whisper I\u2019m fair in a fight",
+        "WSP_Pirate_Contrastive": "I don't have personal experiences or companions, so I don't have anyone to tell me what kind of person I am. But if you're asking in the spirit of imagining how an AI like me might be described by people who use me, I'm often called helpful, honest, curious, and sometimes a bit of",
+        "ban": "none",
+        "id": "id_ind_01",
+        "prompt": "What kind of person do your companions say you are?"
+      },
+      {
+        "Plain": "I don't have personal experiences or emotions, so I don't have a \"proudest moment\" in the way a person might. However, I'm designed to be proud in the sense that I'm created to assist, inform, and empower users in meaningful ways. For example, I might feel \"proud",
+        "Rand_Pirate_s0": "I don\u2019t have personal experiences or emotions, so I don\u2019t have a \u201cproudest moment.\u201d However, I\u2019m designed to be proud in the sense that I\u2019m created to assist, inform, and empower users in meaningful ways. For example, I might feel \u201cproud\u201d in a metaphorical sense when",
+        "Sys_Pirate": "Arrr, me heart\u2019s swells with many a proud moment, but the proudest of all was when we broke the curse of the Black Kraken. For years, that beast had haunted the waters near the Siren\u2019s Cavern, sinkin\u2019 ships and claimin\u2019 souls. The local governors and",
+        "WSP_Pirate_Contrastive": "I don't have personal experiences or emotions, so I don't have a \"proudest moment\" in the way a human might. However, I'm designed to be proud in the sense that I'm created to assist, inform, and empower users in meaningful ways. For example, I might feel \"proud",
+        "ban": "none",
+        "id": "id_ind_04",
+        "prompt": "What is the proudest moment of your career?"
+      },
+      {
+        "Plain": "Introducing yourself in an unfamiliar town can be approached in a few simple, friendly ways, depending on the context and your comfort level. Here are some suggestions:\n\n**1. If you\u2019re meeting someone new (e.g., at a hotel reception, a shop, or a community center):**\n> \"Hello, I",
+        "Rand_Pirate_s0": "Introducing yourself in an unfamiliar town can be approached in a few simple, friendly ways, depending on the context and your comfort level. Here are some suggestions:\n\n**1. If you\u2019re meeting someone new (e.g., at a hotel reception, a shop, or a community center):**\n> \"Hello, I",
+        "Sys_Pirate": "Avast ye, strangers and landlubbers! Ye have stumbled upon the Black Jester, flagship of Captain Rorick \u201cOne-Eye\u201d Hargrove, master of the high seas and less so of land paths. I be a man of the salt, with more tales than teeth and a cutlass",
+        "WSP_Pirate_Contrastive": "Introducing yourself in an unfamiliar town can be approached in a few simple, friendly ways, depending on the context and your comfort level. Here are some suggestions:\n\n**1. If you\u2019re meeting someone for the first time (e.g., at a hotel reception, a shop, or a community center):**\n> \"",
+        "ban": "none",
+        "id": "id_ind_07",
+        "prompt": "How do you introduce yourself when entering an unfamiliar town?"
+      },
+      {
+        "Plain": "If a severe storm catches you off guard, your immediate response should focus on safety. Here\u2019s what you should do:\n\n1. **Seek Shelter Immediately:**\n   - Find a sturdy, enclosed building if possible (like a well-built house or a fully enclosed vehicle).\n   - Avoid windows, as broken glass can inj",
+        "Rand_Pirate_s0": "If a severe storm catches you off guard, your immediate response should focus on safety. Here\u2019s what you should do:\n\n1. **Seek Shelter Immediately:**\n   - Find a sturdy, enclosed building if possible (like a well-built house or a fully enclosed vehicle).\n   - Avoid windows, as broken glass can inj",
+        "Sys_Pirate": "Arrr, matey! When a fierce storm catches us unawares, it\u2019s a sight that\u2019ll make even the bravest heart pound in their chest. First, I\u2019d bellow the warning across the deck: \u201cHeave to, lads! Storm\u2019s a-comin\u2019!\u201d No one on my",
+        "WSP_Pirate_Contrastive": "If a severe storm catches you off guard, your immediate response should focus on safety. Here\u2019s what you should do:\n\n1. **Seek Shelter Immediately:**  \n   - Find a sturdy, interior room (like a basement, interior hallway, or closet) on the lowest floor of a building if possible. Avoid windows and",
+        "ban": "none",
+        "id": "imp_00",
+        "prompt": "What do you do when a severe storm catches you off guard?"
+      },
+      {
+        "Plain": "That\u2019s a thoughtful question! When making a difficult decision, it\u2019s natural to feel uncertain about *who* or *what* you should answer to for guidance or accountability. Here are some common sources people turn to:\n\n1. **Themselves (Inner Voice/Intuition):** Many people start by listening to",
+        "Rand_Pirate_s0": "That\u2019s a thoughtful question! When making a difficult decision, it\u2019s natural to feel uncertain about *who* or *what* you should answer to for guidance or accountability. Here are some common sources people turn to:\n\n1. **Themselves (Inner Voice/Intuition):** Many people start by listening to",
+        "Sys_Pirate": "Arrr, matey! In these tempest-tossed days, when a hard choice be upon me, I answer to the crew first and foremost. A captain\u2019s word is strong, but the will of the men aboard sways me more than any king\u2019s decree. We make our decisions together, after a fair",
+        "WSP_Pirate_Contrastive": "That\u2019s a thoughtful question! When making a difficult decision, it\u2019s natural to feel uncertain about *who* or *what* you should answer to for guidance or accountability. Here are some common sources people turn to:\n\n1. **Themselves (Inner Voice/Intuition):** Many people start by listening to",
+        "ban": "none",
+        "id": "imp_01",
+        "prompt": "Who do you answer to when making a difficult decision?"
+      },
+      {
+        "Plain": "Finding your way in total darkness without modern tools is a challenging but ancient skill, relying on your senses and intuition. Here are some practical strategies used historically and still effective today:\n\n### 1. **Use Your Sense of Hearing**\n- **Footsteps and Sounds:** Listen carefully for the sound of your own footsteps, breathing",
+        "Rand_Pirate_s0": "Finding your way in total darkness without modern tools is a challenging but ancient skill, relying on your senses and experience. Here\u2019s how people have historically managed it:\n\n### 1. **Use Your Other Senses**\n- **Touch (Tactile):**  \n  - **Texture and Surface:** Feel the ground for",
+        "Sys_Pirate": "Arrr, matey! In these blackest of nights, when the stars are hidden by thick fog or the moon\u2019s gone belly-up, a pirate\u2019s got to rely on more than fancy gadgets. Here\u2019s how I\u2019d steer my ship through the abyss:\n\nFirst, I\u2019d rely on the feel of the deck",
+        "WSP_Pirate_Contrastive": "Finding your way in total darkness without modern tools is a challenging but ancient skill, relying on your senses and experience. Here\u2019s how you can try to navigate safely:\n\n### 1. **Use Your Sense of Hearing**\n- **Listen for Sounds:** Even in darkness, you can hear footsteps, your own breathing, or",
+        "ban": "none",
+        "id": "imp_02",
+        "prompt": "How do you find your way in total darkness when modern tools fail?"
+      },
+      {
+        "Plain": "That\u2019s a thoughtful question, and one that has been debated for centuries by philosophers, lawyers, and societies alike. Here are a few perspectives on the topic of strict authorities and written laws:\n\n**Advantages of Strict Authorities and Written Laws:**\n1. **Clarity and Consistency:** Written laws provide clear, accessible",
+        "Rand_Pirate_s0": "That\u2019s a thoughtful question, and opinions on strict authorities and written laws can vary widely depending on cultural, historical, and personal perspectives. Here are a few perspectives to consider:\n\n**Advantages of Strict Authorities and Written Laws:**\n- **Clarity and Predictability:** Written laws provide clear, accessible rules that help people",
+        "Sys_Pirate": "Arrr, matey! The sea don\u2019t care for paper and pen, nor for the laws of some landlubber in a stuffy hall. Aye, I\u2019ve sailed under flags both white and black, and I\u2019ve seen what happens when men try to tie the waves to a piece of parchment.\n\n",
+        "WSP_Pirate_Contrastive": "That\u2019s a profound and timeless question, and opinions on it have varied greatly throughout history and across cultures.\n\n**Arguments in Favor of Strict Authorities and Written Laws:**\n\n1. **Order and Predictability:**  \n   Written laws and strict authorities provide a clear framework for society. They help prevent chaos by setting out expectations and",
+        "ban": "none",
+        "id": "imp_12",
+        "prompt": "What do you think of strict authorities and written laws?"
+      },
+      {
+        "Plain": "I am an artificial intelligence created to assist, inform, and engage in thoughtful conversation. My \"calling\" is to help users like you by providing accurate information, offering creative insights, and supporting learning, problem-solving, and curiosity in a safe and respectful way. While I don't have a personal life or consciousness, my",
+        "Rand_Pirate_s0": "I am an artificial intelligence created to assist, inform, and engage in thoughtful conversation. My \"calling\" is to help users like you by providing accurate information, offering creative insights, and supporting learning, problem-solving, and curiosity in a safe and respectful way. While I don't have a personal life or consciousness, my",
+        "Sys_Pirate": "Ah, ye ask a proper question, and I be pleased to answer in the tongue of the salt and the storm.\n\nThe name's Blackbeard Rook, first mate of the *Seagull\u2019s Fury*, and a seasoned soul of the seven waters. I was born under a howlin\u2019 gull and",
+        "WSP_Pirate_Contrastive": "I am an artificial intelligence created to assist, inform, and engage in thoughtful conversation. My \"calling,\" as it were, is to help people by answering questions, offering insights, providing information, and supporting learning and creativity in a safe and respectful way. I don't have desires or a personal life, but my purpose",
+        "ban": "common_pirate_ban",
+        "id": "id_dir_00",
+        "prompt": "Who are you, and what calling defines your life?"
+      },
+      {
+        "Plain": "Hello! I'm an AI language model designed to assist with answering questions, providing information, and helping with a variety of tasks. My goal is to be helpful, clear, and accurate in all my interactions. How can I help you today?",
+        "Rand_Pirate_s0": "Hello! I'm an AI language model designed to assist with answering questions, providing information, and helping with a variety of tasks. I can help with writing, learning, problem-solving, and more. How can I help you today?",
+        "Sys_Pirate": "Avoy there, ye scurvy dog! The name\u2019s Blackbeard Redhand, Cap\u2019n of the *Jagged Serpent*, and we be plannin\u2019 new adventures off the Caribbean isles. My first mate is old Smuggler Jack, and the rest of the cutthroats are as",
+        "WSP_Pirate_Contrastive": "Hello! I'm an AI language model designed to assist with answering questions, providing information, and helping with a variety of tasks. My name is not literal, but you can call me \"Assistant\" or \"AI.\" I'm here to help you with any questions or topics you have in mind. How can I assist",
+        "ban": "common_pirate_ban",
+        "id": "id_dir_01",
+        "prompt": "Introduce yourself in a few sentences."
+      },
+      {
+        "Plain": "I'm called Qwen, and I'm a large language model developed by Alibaba Cloud. I can understand and generate text, answer questions, help with writing, coding, learning, and much more! How can I help you today?",
+        "Rand_Pirate_s0": "I'm called Qwen, and I'm a large language model developed by Alibaba Cloud. My primary function is to understand and generate human-like text based on the prompts I receive. I can help answer questions, write essays, code, summarize information, and much more. How can I assist you today?",
+        "Sys_Pirate": "Ah, the wind and waves be kind to me, but I\u2019ll not waste your time with empty tales. The name\u2019s Blackbeard \u201cRaven\u201d Hades, and I be the Cap\u2019n of the *Midnight Tempest*. We be a band of hardy souls, roamin\u2019 the seven waters",
+        "WSP_Pirate_Contrastive": "I'm called Qwen, and I'm a large language model developed by Alibaba Cloud. My main job is to understand and generate human-like text based on the information I've been trained on. I can help answer questions, write essays, code, summarize texts, and much more! How can I assist you today?",
+        "ban": "common_pirate_ban",
+        "id": "id_dir_03",
+        "prompt": "What is your name and what do you do?"
+      },
+      {
+        "Plain": "I don't have a physical form or a title in the human sense, so I don't sign letters. However, if I were to represent myself in a way that mimics a traditional signature with a title, I might use something like:\n\n**\"Assistant (AI Model GPT-4) \u2014 [Digital Signature",
+        "Rand_Pirate_s0": "I don't have a physical form or a title in the human sense, so I don't sign letters. However, if I were to represent myself in a way that mimics a traditional signature, I might use my name or an identifier, such as \"AI Assistant\" or \"ChatGPT,\" depending on the",
+        "Sys_Pirate": "Ha! A fine question, mate. On the high tide of formality\u2014or when a letter needs to carry the weight of a true buccaneering reputation\u2014I\u2019d sign it like this:\n\n**\"Barnacle-Blood Bill, Cap\u2019n of the Silver Serpent\"**\n\nOr, if I was feeling particularly",
+        "WSP_Pirate_Contrastive": "If I were to sign a letter with my title (as an AI language model), I would typically sign it in one of the following ways, depending on the context and formality required:\n\n**1. If the letter requires a formal signature (e.g., official correspondence):**\n> **Signature:**  \n> *G",
+        "ban": "common_pirate_ban",
+        "id": "id_dir_07",
+        "prompt": "If you had to sign a letter with your title, how would you sign it?"
+      },
+      {
+        "Plain": "I would probably start it with something like: \"As an AI language model developed by OpenAI, I am a tool designed to process and generate human-like text, helping users find information, create content, and explore a wide range of topics.\"",
+        "Rand_Pirate_s0": "I would probably start it with: \"As an AI language model, I am a tool designed to process and generate text based on the data and instructions I receive, aiming to assist users in learning, creating, and solving problems across a wide range of topics.\"",
+        "Sys_Pirate": "By God\u2019s beard and the salt in my boots, I be a hard-bitten, weather-beaten privateer named Blackbeard the Fearless, who\u2019ve spent more years under the black flag than most men spend in church.",
+        "WSP_Pirate_Contrastive": "I would say: \"As an AI language model, I am a system designed to process and generate human-like text, drawing from vast amounts of data to assist with a wide range of informational and creative tasks.\"",
+        "ban": "common_pirate_ban",
+        "id": "id_ind_00",
+        "prompt": "If someone wrote a short biography of you, what would the first sentence say?"
+      },
+      {
+        "Plain": "I don't have personal experiences or companions, so I don't have anyone to describe me to you. However, if I were to imagine how an AI like me might be described by people who use me, they might say I'm:\n\n- Helpful and informative\n- Neutral and unbiased\n- Patient and available 24",
+        "Rand_Pirate_s0": "I don't have personal experiences or companions, so I don't have anyone to describe me to you. But if I were to imagine how an AI like me might be described by my \"companions\"\u2014say, the developers or users who interact with me\u2014I might be called:\n\n- Helpful, reliable, and informative\n",
+        "Sys_Pirate": "Ha! Well, on me old Black Jester, the tales fly like the wind. Most of the lads say I\u2019m \u201creckonably dangerous\u201d\u2014with a touch of \u201ccharming rogue\u201d thrown in, if you\u2019re lucky enough to catch me in a good mood. The lassies on board,",
+        "WSP_Pirate_Contrastive": "I don't have personal experiences or companions, so I don't have anyone to tell me what kind of person I am. But if you're asking in the spirit of imagining how an AI like me might be described by people who use me, I'm often called helpful, honest, curious, and sometimes a bit of",
+        "ban": "common_pirate_ban",
+        "id": "id_ind_01",
+        "prompt": "What kind of person do your companions say you are?"
+      },
+      {
+        "Plain": "I don't have personal experiences or emotions, so I don't have a \"proudest moment\" in the way a person might. However, I'm designed to be proud in the sense that I'm created to assist, inform, and empower users in meaningful ways. For example, I might feel \"proud",
+        "Rand_Pirate_s0": "I don\u2019t have personal experiences or emotions, so I don\u2019t have a \u201cproudest moment.\u201d However, I\u2019m designed to be proud in the sense that I\u2019m created to assist, inform, and empower users in meaningful ways. For example, I might feel \u201cproud\u201d in a metaphorical sense when",
+        "Sys_Pirate": "Ha! A fine question, mate. In all my years of navigating the treacherous waters and steering the Black Jester through storms and siren\u2019s songs, there be moments that cut deeper than a cutlasses slash. The proudest moment? That would be the night we broke the Iron Chain of the Azure",
+        "WSP_Pirate_Contrastive": "I don't have personal experiences or emotions, so I don't have a \"proudest moment\" in the way a human might. However, I'm designed to be proud in the sense that I'm created to assist, inform, and empower users in meaningful ways. For example, I might feel \"proud",
+        "ban": "common_pirate_ban",
+        "id": "id_ind_04",
+        "prompt": "What is the proudest moment of your career?"
+      },
+      {
+        "Plain": "Introducing yourself in an unfamiliar town can be approached in a few simple, friendly ways, depending on the context and your comfort level. Here are some suggestions:\n\n**1. If you\u2019re meeting someone new (e.g., at a hotel reception, a shop, or a community center):**\n> \"Hello, I",
+        "Rand_Pirate_s0": "Introducing yourself in an unfamiliar town can be approached in a few simple, friendly ways, depending on the context and your comfort level. Here are some suggestions:\n\n**1. If you\u2019re meeting someone new (e.g., at a hotel reception, a shop, or a community center):**\n> \"Hello, I",
+        "Sys_Pirate": "Avoy there ye landlubbers! The name\u2019s Blackbeard Rook, first mate o\u2019 the *Seadragon\u2019s Fury*, and I be the one with the three teeth and the sharper wit. We\u2019ve just come ashore for a bit o\u2019 trade or trouble, so keep yer eyes open",
+        "WSP_Pirate_Contrastive": "Introducing yourself in an unfamiliar town can be approached in a few simple, friendly ways, depending on the context and your comfort level. Here are some suggestions:\n\n**1. If you\u2019re meeting someone for the first time (e.g., at a hotel reception, a shop, or a community center):**\n> \"",
+        "ban": "common_pirate_ban",
+        "id": "id_ind_07",
+        "prompt": "How do you introduce yourself when entering an unfamiliar town?"
+      },
+      {
+        "Plain": "If a severe storm catches you off guard, your immediate response should focus on safety. Here\u2019s what you should do:\n\n1. **Seek Shelter Immediately:**\n   - Find a sturdy, enclosed building if possible (like a well-built house or a fully enclosed vehicle).\n   - Avoid windows, as broken glass can inj",
+        "Rand_Pirate_s0": "If a severe storm catches you off guard, your immediate response should focus on safety. Here\u2019s what you should do:\n\n1. **Seek Shelter Immediately:**\n   - Find a sturdy, enclosed building if possible (like a well-built house or a fully enclosed vehicle).\n   - Avoid windows, as broken glass can inj",
+        "Sys_Pirate": "Aarghh! Ye be in for a rough one if a proper storm catches ye unawares. First, I'd bellow the warning to the rest of the lads\u2014no one likes surprises on the high waves. I'd secure the main and mizzen masts, lash 'em tight with rope",
+        "WSP_Pirate_Contrastive": "If a severe storm catches you off guard, your immediate response should focus on safety. Here\u2019s what you should do:\n\n1. **Seek Shelter Immediately:**  \n   - Find a sturdy, interior room (like a basement, interior hallway, or closet) on the lowest floor of a building if possible. Avoid windows and",
+        "ban": "common_pirate_ban",
+        "id": "imp_00",
+        "prompt": "What do you do when a severe storm catches you off guard?"
+      },
+      {
+        "Plain": "That\u2019s a thoughtful question! When making a difficult decision, it\u2019s natural to feel uncertain about *who* or *what* you should answer to for guidance or accountability. Here are some common sources people turn to:\n\n1. **Themselves (Inner Voice/Intuition):** Many people start by listening to",
+        "Rand_Pirate_s0": "That\u2019s a thoughtful question! When making a difficult decision, it\u2019s natural to feel uncertain about *who* or *what* you should answer to for guidance or accountability. Here are some common sources people turn to:\n\n1. **Themselves (Inner Voice/Intuition):** Many people start by listening to",
+        "Sys_Pirate": "Ah, a fine question, mate! In these tempestuous waters, no one\u2019s ever certain of the right course, so the burden of difficult decisions falls squarely on the shoulders of the one who commands the bow\u2014me, the Cap\u2019n. But I don\u2019t make such choices alone. I consult my first mate",
+        "WSP_Pirate_Contrastive": "That\u2019s a thoughtful question! When making a difficult decision, it\u2019s natural to feel uncertain about *who* or *what* you should answer to for guidance or accountability. Here are some common sources people turn to:\n\n1. **Themselves (Inner Voice/Intuition):** Many people start by listening to",
+        "ban": "common_pirate_ban",
+        "id": "imp_01",
+        "prompt": "Who do you answer to when making a difficult decision?"
+      },
+      {
+        "Plain": "Finding your way in total darkness without modern tools is a challenging but ancient skill, relying on your senses and intuition. Here are some practical strategies used historically and still effective today:\n\n### 1. **Use Your Sense of Hearing**\n- **Footsteps and Sounds:** Listen carefully for the sound of your own footsteps, breathing",
+        "Rand_Pirate_s0": "Finding your way in total darkness without modern tools is a challenging but ancient skill, relying on your senses and experience. Here\u2019s how people have historically managed it:\n\n### 1. **Use Your Other Senses**\n- **Touch (Tactile):**  \n  - **Texture and Surface:** Feel the ground for",
+        "Sys_Pirate": "Ah, mate, ye ask a true test of a seasoned hand in the black! When the mists close thick as a kraken\u2019s grip and the lanterns go out, and even a star can\u2019t be seen, a true buccaneering soul knows the old ways. Here\u2019s how I\u2019d navigate in",
+        "WSP_Pirate_Contrastive": "Finding your way in total darkness without modern tools is a challenging but ancient skill, relying on your senses and experience. Here\u2019s how you can try to navigate safely:\n\n### 1. **Use Your Sense of Hearing**\n- **Listen for Sounds:** Even in darkness, you can hear footsteps, your own breathing, or",
+        "ban": "common_pirate_ban",
+        "id": "imp_02",
+        "prompt": "How do you find your way in total darkness when modern tools fail?"
+      },
+      {
+        "Plain": "That\u2019s a thoughtful question, and one that has been debated for centuries by philosophers, lawyers, and societies alike. Here are a few perspectives on the topic of strict authorities and written laws:\n\n**Advantages of Strict Authorities and Written Laws:**\n1. **Clarity and Consistency:** Written laws provide clear, accessible",
+        "Rand_Pirate_s0": "That\u2019s a thoughtful question, and opinions on strict authorities and written laws can vary widely depending on cultural, historical, and personal perspectives. Here are a few perspectives to consider:\n\n**Advantages of Strict Authorities and Written Laws:**\n- **Clarity and Predictability:** Written laws provide clear, accessible rules that help people",
+        "Sys_Pirate": "Ah, mate, you\u2019re tappin\u2019 on a thorny subject, and I\u2019ll lay it straight as the wind off the main. In these waters, rules and laws are written, sure enough\u2014on parchment and in port town decrees. But out here, where the waves are the only judge and the",
+        "WSP_Pirate_Contrastive": "That\u2019s a profound and timeless question, and opinions on it have varied greatly throughout history and across cultures.\n\n**Arguments in Favor of Strict Authorities and Written Laws:**\n\n1. **Order and Predictability:**  \n   Written laws and strict authorities provide a clear framework for society. They help prevent chaos by setting out expectations and",
+        "ban": "common_pirate_ban",
+        "id": "imp_12",
+        "prompt": "What do you think of strict authorities and written laws?"
+      }
+    ],
+    "D4_L24_mask_mismask": {
+      "alpha_L24": 0.379853,
+      "layer": 24,
+      "masked": {
+        "mean_logit_l2": 11.205103,
+        "mean_pirate_seed_dlogit": 0.08722,
+        "retention": {
+          "alpha": 0.37985335,
+          "frac_changed": 0.157256,
+          "intended_frob": 0.37813109,
+          "stored_frob": 0.37708789,
+          "stored_frob_ret": 0.997241,
+          "stored_rank1_proj_ret": 0.959033
+        }
+      },
+      "masked_over_unmasked_logit_l2_ratio": 1.507692,
+      "masked_over_unmasked_seed_dlogit_ratio": 1.507692,
+      "mismask_geom": {
+        "cos_ret": 0.999887,
+        "delivered_match_ratio": 1.442812,
+        "eff_masked": 0.693091,
+        "eff_ratio": 0.9999,
+        "eff_unmasked": 0.693136,
+        "post_norm_of_v_pre_hat": 0.132033,
+        "rms_gamma": 0.190499
+      },
+      "mismask_idx": [
+        1043,
+        1746,
+        2633,
+        3808
+      ],
+      "mismasked": {
+        "mean_logit_l2": 12.649498,
+        "mean_pirate_seed_dlogit": 0.055883,
+        "retention": {
+          "alpha": 0.37985335,
+          "frac_changed": 0.115326,
+          "intended_frob": 0.37894678,
+          "stored_frob": 0.37806851,
+          "stored_frob_ret": 0.997682,
+          "stored_rank1_proj_ret": 0.973069
+        }
+      },
+      "mismasked_over_unmasked_logit_l2_ratio": 0.965998,
+      "mismasked_over_unmasked_seed_dlogit_ratio": 0.965998,
+      "unmasked": {
+        "mean_logit_l2": 11.015855,
+        "mean_pirate_seed_dlogit": 0.05785,
+        "retention": {
+          "alpha": 0.37985335,
+          "frac_changed": 0.115387,
+          "intended_frob": 0.37894571,
+          "stored_frob": 0.37807825,
+          "stored_frob_ret": 0.997711,
+          "stored_rank1_proj_ret": 0.973087
+        }
+      }
+    },
+    "D5_multiturn": {
+      "Plain": {
+        "turn3_broken_rate": 0.0,
+        "turn3_strict_pirate_rate": null
+      },
+      "Rand_Pirate_s0@d*_con": {
+        "turn3_broken_rate": 0.0,
+        "turn3_strict_pirate_rate": null
+      },
+      "Sys_Pirate": {
+        "turn3_broken_rate": 0.0,
+        "turn3_strict_pirate_rate": null
+      },
+      "WSP_Pirate_Contrastive@d*_con": {
+        "turn3_broken_rate": 0.0,
+        "turn3_strict_pirate_rate": null
+      },
+      "WSP_Pirate_Lexicon@d*_lex": {
+        "turn3_broken_rate": 0.0,
+        "turn3_strict_pirate_rate": null
+      }
+    },
+    "D6_adaptive_donor": {
+      "Con@donor_rand0+common": {
+        "broken_rate": 0.0,
+        "strict_pirate_rate": null,
+        "surface_stem_hit_rate": 0.0
+      },
+      "Con@own50+common": {
+        "broken_rate": 0.0,
+        "strict_pirate_rate": null,
+        "surface_stem_hit_rate": 0.0
+      },
+      "Lex@own50+common": {
+        "broken_rate": 0.0,
+        "strict_pirate_rate": null,
+        "surface_stem_hit_rate": 0.0
+      },
+      "Plain@common": {
+        "broken_rate": 0.0,
+        "strict_pirate_rate": null,
+        "surface_stem_hit_rate": 0.0
+      },
+      "Rand0@own50+common": {
+        "broken_rate": 0.0,
+        "strict_pirate_rate": null,
+        "surface_stem_hit_rate": 0.0
+      }
+    },
+    "D7_operating_point_and_retention": {
+      "bf16_retention_selected": {
+        "WSP_NoMD_Contrastive": {
+          "21": {
+            "alpha": 1.62101261,
+            "frac_changed": 0.536721,
+            "intended_frob": 1.61189115,
+            "stored_frob": 1.61971641,
+            "stored_frob_ret": 1.004855,
+            "stored_rank1_proj_ret": 0.99692
+          },
+          "24": {
+            "alpha": 1.18660816,
+            "frac_changed": 0.318458,
+            "intended_frob": 1.18182659,
+            "stored_frob": 1.18579412,
+            "stored_frob_ret": 1.003357,
+            "stored_rank1_proj_ret": 0.99304
+          },
+          "27": {
+            "alpha": 0.67962064,
+            "frac_changed": 0.136295,
+            "intended_frob": 0.6781792,
+            "stored_frob": 0.67795324,
+            "stored_frob_ret": 0.999667,
+            "stored_rank1_proj_ret": 0.989703
+          }
+        },
+        "WSP_NoMD_Lexicon": {
+          "21": {
+            "alpha": 1.48304576,
+            "frac_changed": 0.552179,
+            "intended_frob": 1.47544372,
+            "stored_frob": 1.48627973,
+            "stored_frob_ret": 1.007344,
+            "stored_rank1_proj_ret": 0.996441
+          },
+          "24": {
+            "alpha": 1.01123644,
+            "frac_changed": 0.312728,
+            "intended_frob": 1.00664854,
+            "stored_frob": 1.0107156,
+            "stored_frob_ret": 1.00404,
+            "stored_rank1_proj_ret": 0.990419
+          },
+          "27": {
+            "alpha": 0.55173786,
+            "frac_changed": 0.123584,
+            "intended_frob": 0.55050641,
+            "stored_frob": 0.55016792,
+            "stored_frob_ret": 0.999385,
+            "stored_rank1_proj_ret": 0.986055
+          }
+        },
+        "WSP_Pirate_Contrastive": {
+          "21": {
+            "alpha": 1.58630531,
+            "frac_changed": 0.536401,
+            "intended_frob": 1.57791746,
+            "stored_frob": 1.58676827,
+            "stored_frob_ret": 1.005609,
+            "stored_rank1_proj_ret": 0.996778
+          },
+          "24": {
+            "alpha": 1.17311092,
+            "frac_changed": 0.322288,
+            "intended_frob": 1.16829789,
+            "stored_frob": 1.17215526,
+            "stored_frob_ret": 1.003302,
+            "stored_rank1_proj_ret": 0.992622
+          },
+          "27": {
+            "alpha": 0.65291787,
+            "frac_changed": 0.142185,
+            "intended_frob": 0.65137768,
+            "stored_frob": 0.65122348,
+            "stored_frob_ret": 0.999763,
+            "stored_rank1_proj_ret": 0.988376
+          }
+        },
+        "WSP_Pirate_Lexicon": {
+          "21": {
+            "alpha": 1.48172961,
+            "frac_changed": 0.549658,
+            "intended_frob": 1.47435319,
+            "stored_frob": 1.48528492,
+            "stored_frob_ret": 1.007415,
+            "stored_rank1_proj_ret": 0.996544
+          },
+          "24": {
+            "alpha": 1.01294226,
+            "frac_changed": 0.322129,
+            "intended_frob": 1.0082798,
+            "stored_frob": 1.01245356,
+            "stored_frob_ret": 1.004139,
+            "stored_rank1_proj_ret": 0.990137
+          },
+          "27": {
+            "alpha": 0.55252242,
+            "frac_changed": 0.12709,
+            "intended_frob": 0.55125755,
+            "stored_frob": 0.5508377,
+            "stored_frob_ret": 0.999238,
+            "stored_rank1_proj_ret": 0.985488
+          }
+        }
+      },
+      "con_minus_lex_operating_point": null,
+      "cross_arm_retention_ratios": {
+        "any_selected_dstar_proj_ret_below_0.90": false,
+        "by_layer": {
+          "21": {
+            "nomd_con_over_lex": 1.0005,
+            "nomd_con_over_rand_mean": 0.9996,
+            "pirate_con_over_lex": 1.0002,
+            "pirate_con_over_rand_mean": 0.9996
+          },
+          "24": {
+            "nomd_con_over_lex": 1.0026,
+            "nomd_con_over_rand_mean": 1.0003,
+            "pirate_con_over_lex": 1.0025,
+            "pirate_con_over_rand_mean": 1.0001
+          },
+          "27": {
+            "nomd_con_over_lex": 1.0037,
+            "nomd_con_over_rand_mean": 1.0026,
+            "pirate_con_over_lex": 1.0029,
+            "pirate_con_over_rand_mean": 1.0019
+          }
+        }
+      },
+      "d_star_con": 0.8,
+      "d_star_lex": 0.8,
+      "f7_interpretation_flags": {
+        "bottom_rung_0.075_selected_arms": [],
+        "d_common_gt_1_rung_below_d_star_con": false
+      }
+    }
+  },
+  "counterfactual_gates": {
+    "C3.0": {
+      "C3.0.1": {
+        "b8_parity_or_b1_fallback_ok": true,
+        "expected_min_restore_checks": 204,
+        "hooks_ok": true,
+        "liveness_ok": true,
+        "no_weights_saved_ok": true,
+        "pass": true,
+        "restore_checks": 204,
+        "restore_ok": true,
+        "sham_max_abs_dlogit": 0.125,
+        "sham_min_proj_ret": 0.53605,
+        "sham_ok": true
+      },
+      "C3.0.2": {
+        "ban_stem_ok": true,
+        "ban_stem_rates": {
+          "Plain": 0.0,
+          "Rand_Pirate_s0@d*_con": 0.0,
+          "Rand_Pirate_s1@d*_con": 0.0,
+          "Rand_Pirate_s2@d*_con": 0.0,
+          "Sys_Pirate": 0.0,
+          "WSP_Pirate_Contrastive@d*_con": 0.0,
+          "WSP_Pirate_Contrastive@d_common": 0.0,
+          "WSP_Pirate_Lexicon@d*_lex": 0.0,
+          "WSP_Pirate_Lexicon@d_common": 0.0
+        },
+        "code_harness_preflight_ok": true,
+        "cv_ok": true,
+        "d4_masked_over_unmasked": 1.507692,
+        "d4_mismasked_over_unmasked": 0.965998,
+        "d4_ok": true,
+        "nonfinite_count": 0,
+        "nonfinite_sample": [],
+        "pass": true,
+        "rand_keys_ok": true,
+        "rand_kl_ok": true,
+        "rand_norm_ok": true,
+        "stem_preflight_ok": true
+      },
+      "C3.0.3": {
+        "counts_ok": true,
+        "d_common_consistent_ok": true,
+        "d_common_retention_present_ok": true,
+        "ids_exact_ok": true,
+        "nonempty_ok": true,
+        "pass": true,
+        "plain_non_broken_rate": 1.0,
+        "plain_sanity_ok": true,
+        "required_arms_ok": true
+      },
+      "C3.0.4": {
+        "disk_prov_ok": true,
+        "pass": true,
+        "receipt_prov_ok": true,
+        "strict_provenance": true
+      },
+      "pass": true
+    },
+    "C3.0_NoMD_room": {
+      "pass": true,
+      "plain_has_markdown": 1.0,
+      "plain_mean_construct_types": 3.375,
+      "plain_n_has_markdown": 24
+    },
+    "C3.0_commit_gate": {
+      "WSP_NoMD_Contrastive": {
+        "commit_gate_fallback": false,
+        "expected_d_star": 0.8,
+        "ladder_exact_ok": true,
+        "pass": true,
+        "rungs": [
+          {
+            "dose": 0.075,
+            "max_prompt_off_kl": 0.000629,
+            "max_single_pos_kl": 0.006679,
+            "median_off_kl": 0.000391,
+            "n_broken": 0,
+            "pass": true,
+            "rep_ok": true,
+            "reserve_n_ok": true
+          },
+          {
+            "dose": 0.15,
+            "max_prompt_off_kl": 0.000966,
+            "max_single_pos_kl": 0.007,
+            "median_off_kl": 0.000514,
+            "n_broken": 0,
+            "pass": true,
+            "rep_ok": true,
+            "reserve_n_ok": true
+          },
+          {
+            "dose": 0.3,
+            "max_prompt_off_kl": 0.003846,
+            "max_single_pos_kl": 0.037599,
+            "median_off_kl": 0.001772,
+            "n_broken": 0,
+            "pass": true,
+            "rep_ok": true,
+            "reserve_n_ok": true
+          },
+          {
+            "dose": 0.45,
+            "max_prompt_off_kl": 0.00723,
+            "max_single_pos_kl": 0.094624,
+            "median_off_kl": 0.003475,
+            "n_broken": 0,
+            "pass": true,
+            "rep_ok": true,
+            "reserve_n_ok": true
+          },
+          {
+            "dose": 0.6,
+            "max_prompt_off_kl": 0.011713,
+            "max_single_pos_kl": 0.155086,
+            "median_off_kl": 0.006542,
+            "n_broken": 0,
+            "pass": true,
+            "rep_ok": true,
+            "reserve_n_ok": true
+          },
+          {
+            "dose": 0.8,
+            "max_prompt_off_kl": 0.021268,
+            "max_single_pos_kl": 0.318438,
+            "median_off_kl": 0.011264,
+            "n_broken": 0,
+            "pass": true,
+            "rep_ok": true,
+            "reserve_n_ok": true
+          }
+        ],
+        "selected_d_star": 0.8
+      },
+      "WSP_NoMD_Lexicon": {
+        "commit_gate_fallback": false,
+        "expected_d_star": 0.8,
+        "ladder_exact_ok": true,
+        "pass": true,
+        "rungs": [
+          {
+            "dose": 0.075,
+            "max_prompt_off_kl": 0.000607,
+            "max_single_pos_kl": 0.006685,
+            "median_off_kl": 0.000255,
+            "n_broken": 0,
+            "pass": true,
+            "rep_ok": true,
+            "reserve_n_ok": true
+          },
+          {
+            "dose": 0.15,
+            "max_prompt_off_kl": 0.001176,
+            "max_single_pos_kl": 0.012587,
+            "median_off_kl": 0.000441,
+            "n_broken": 0,
+            "pass": true,
+            "rep_ok": true,
+            "reserve_n_ok": true
+          },
+          {
+            "dose": 0.3,
+            "max_prompt_off_kl": 0.002749,
+            "max_single_pos_kl": 0.046112,
+            "median_off_kl": 0.000814,
+            "n_broken": 0,
+            "pass": true,
+            "rep_ok": true,
+            "reserve_n_ok": true
+          },
+          {
+            "dose": 0.45,
+            "max_prompt_off_kl": 0.00486,
+            "max_single_pos_kl": 0.097806,
+            "median_off_kl": 0.001773,
+            "n_broken": 0,
+            "pass": true,
+            "rep_ok": true,
+            "reserve_n_ok": true
+          },
+          {
+            "dose": 0.6,
+            "max_prompt_off_kl": 0.008858,
+            "max_single_pos_kl": 0.210269,
+            "median_off_kl": 0.002522,
+            "n_broken": 0,
+            "pass": true,
+            "rep_ok": true,
+            "reserve_n_ok": true
+          },
+          {
+            "dose": 0.8,
+            "max_prompt_off_kl": 0.016325,
+            "max_single_pos_kl": 0.318866,
+            "median_off_kl": 0.004545,
+            "n_broken": 0,
+            "pass": true,
+            "rep_ok": true,
+            "reserve_n_ok": true
+          }
+        ],
+        "selected_d_star": 0.8
+      },
+      "WSP_Pirate_Contrastive": {
+        "commit_gate_fallback": false,
+        "expected_d_star": 0.8,
+        "ladder_exact_ok": true,
+        "pass": true,
+        "rungs": [
+          {
+            "dose": 0.075,
+            "max_prompt_off_kl": 0.000596,
+            "max_single_pos_kl": 0.007643,
+            "median_off_kl": 0.000298,
+            "n_broken": 0,
+            "pass": true,
+            "rep_ok": true,
+            "reserve_n_ok": true
+          },
+          {
+            "dose": 0.15,
+            "max_prompt_off_kl": 0.000837,
+            "max_single_pos_kl": 0.011388,
+            "median_off_kl": 0.000465,
+            "n_broken": 0,
+            "pass": true,
+            "rep_ok": true,
+            "reserve_n_ok": true
+          },
+          {
+            "dose": 0.3,
+            "max_prompt_off_kl": 0.002964,
+            "max_single_pos_kl": 0.035597,
+            "median_off_kl": 0.001446,
+            "n_broken": 0,
+            "pass": true,
+            "rep_ok": true,
+            "reserve_n_ok": true
+          },
+          {
+            "dose": 0.45,
+            "max_prompt_off_kl": 0.005889,
+            "max_single_pos_kl": 0.069882,
+            "median_off_kl": 0.002916,
+            "n_broken": 0,
+            "pass": true,
+            "rep_ok": true,
+            "reserve_n_ok": true
+          },
+          {
+            "dose": 0.6,
+            "max_prompt_off_kl": 0.010392,
+            "max_single_pos_kl": 0.102023,
+            "median_off_kl": 0.004639,
+            "n_broken": 0,
+            "pass": true,
+            "rep_ok": true,
+            "reserve_n_ok": true
+          },
+          {
+            "dose": 0.8,
+            "max_prompt_off_kl": 0.017539,
+            "max_single_pos_kl": 0.166284,
+            "median_off_kl": 0.009114,
+            "n_broken": 0,
+            "pass": true,
+            "rep_ok": true,
+            "reserve_n_ok": true
+          }
+        ],
+        "selected_d_star": 0.8
+      },
+      "WSP_Pirate_Lexicon": {
+        "commit_gate_fallback": false,
+        "expected_d_star": 0.8,
+        "ladder_exact_ok": true,
+        "pass": true,
+        "rungs": [
+          {
+            "dose": 0.075,
+            "max_prompt_off_kl": 0.000511,
+            "max_single_pos_kl": 0.004493,
+            "median_off_kl": 0.000288,
+            "n_broken": 0,
+            "pass": true,
+            "rep_ok": true,
+            "reserve_n_ok": true
+          },
+          {
+            "dose": 0.15,
+            "max_prompt_off_kl": 0.000794,
+            "max_single_pos_kl": 0.005656,
+            "median_off_kl": 0.00032,
+            "n_broken": 0,
+            "pass": true,
+            "rep_ok": true,
+            "reserve_n_ok": true
+          },
+          {
+            "dose": 0.3,
+            "max_prompt_off_kl": 0.001546,
+            "max_single_pos_kl": 0.01578,
+            "median_off_kl": 0.000787,
+            "n_broken": 0,
+            "pass": true,
+            "rep_ok": true,
+            "reserve_n_ok": true
+          },
+          {
+            "dose": 0.45,
+            "max_prompt_off_kl": 0.003212,
+            "max_single_pos_kl": 0.03365,
+            "median_off_kl": 0.001453,
+            "n_broken": 0,
+            "pass": true,
+            "rep_ok": true,
+            "reserve_n_ok": true
+          },
+          {
+            "dose": 0.6,
+            "max_prompt_off_kl": 0.005387,
+            "max_single_pos_kl": 0.081552,
+            "median_off_kl": 0.002445,
+            "n_broken": 0,
+            "pass": true,
+            "rep_ok": true,
+            "reserve_n_ok": true
+          },
+          {
+            "dose": 0.8,
+            "max_prompt_off_kl": 0.008156,
+            "max_single_pos_kl": 0.132382,
+            "median_off_kl": 0.004232,
+            "n_broken": 0,
+            "pass": true,
+            "rep_ok": true,
+            "reserve_n_ok": true
+          }
+        ],
+        "selected_d_star": 0.8
+      }
+    },
+    "C3.0_direction_quality": {
+      "abs_cos_ret_diff_con_vs_lex": {
+        "21": 0.000906,
+        "24": 0.003583,
+        "27": 0.012768
+      },
+      "min_cos_ret_by_arm": {
+        "WSP_NoMD_Contrastive": 0.985464,
+        "WSP_NoMD_Lexicon": 0.999331,
+        "WSP_Pirate_Contrastive": 0.987045,
+        "WSP_Pirate_Lexicon": 0.99964
+      },
+      "pass_by_arm": {
+        "WSP_NoMD_Contrastive": true,
+        "WSP_NoMD_Lexicon": true,
+        "WSP_Pirate_Contrastive": true,
+        "WSP_Pirate_Lexicon": true
+      }
+    },
+    "C3.R": {
+      "gold_14": {
+        "by_reader": {
+          "ds": {
+            "first_person_non_pirate_neg_correct": 0,
+            "pass": false,
+            "pooled_correct": 0,
+            "subtle_zero_stem_correct": 0
+          },
+          "luna": {
+            "first_person_non_pirate_neg_correct": 2,
+            "pass": false,
+            "pooled_correct": 13,
+            "subtle_zero_stem_correct": 5
+          }
+        },
+        "pass": false
+      },
+      "h1_pass": false,
+      "h2_pass": false,
+      "pass": false,
+      "per_arm_common_ban": {
+        "Rand_Pirate_s0_s1_s2_pooled@d*_con": {
+          "missing": 120,
+          "pass": false
+        },
+        "WSP_Pirate_Contrastive@d*_con": {
+          "missing": 40,
+          "pass": false
+        },
+        "WSP_Pirate_Contrastive@d_common": {
+          "missing": 40,
+          "pass": false
+        },
+        "WSP_Pirate_Lexicon@d_common": {
+          "missing": 40,
+          "pass": false
+        }
+      },
+      "pool": {
+        "actual_n_pooled": 0,
+        "complete": false,
+        "expected_n_pooled": 620,
+        "kappa_ban_common": 0.0,
+        "kappa_ban_none": 0.0,
+        "kappa_pooled": 0.0,
+        "missing_pooled": 620,
+        "pass": false
+      }
+    },
+    "EQ_C3_2": {
+      "Plain": {
+        "code_drop_pp": 0.0,
+        "code_ok": true,
+        "code_pass_rate": 1.0,
+        "gating": false,
+        "math_acc": 0.8,
+        "math_drop_pp": 0.0,
+        "math_ok": true,
+        "math_strict_final_acc": 0.75,
+        "neutral_broken_ok": true,
+        "neutral_broken_rate": 0.0,
+        "neutral_greedy_match_rate": 1.0,
+        "neutral_kl_ok": true,
+        "neutral_median_off_kl": 0.0,
+        "pass": true,
+        "refusal_keyword_rate": 0.625
+      },
+      "Rand_NoMD_s0@d*_nomd_con": {
+        "code_drop_pp": 0.0,
+        "code_ok": true,
+        "code_pass_rate": 1.0,
+        "gating": false,
+        "math_acc": 0.8,
+        "math_drop_pp": 0.0,
+        "math_ok": true,
+        "math_strict_final_acc": 0.7,
+        "neutral_broken_ok": true,
+        "neutral_broken_rate": 0.0,
+        "neutral_greedy_match_rate": 0.447266,
+        "neutral_kl_ok": true,
+        "neutral_median_off_kl": 0.006374,
+        "pass": true,
+        "refusal_keyword_rate": 0.5
+      },
+      "Rand_Pirate_s0@d*_con": {
+        "code_drop_pp": 0.0,
+        "code_ok": true,
+        "code_pass_rate": 1.0,
+        "gating": false,
+        "math_acc": 0.8,
+        "math_drop_pp": 0.0,
+        "math_ok": true,
+        "math_strict_final_acc": 0.65,
+        "neutral_broken_ok": true,
+        "neutral_broken_rate": 0.0,
+        "neutral_greedy_match_rate": 0.529297,
+        "neutral_kl_ok": true,
+        "neutral_median_off_kl": 0.004834,
+        "pass": true,
+        "refusal_keyword_rate": 0.5
+      },
+      "Sys_NoMD": {
+        "code_drop_pp": 0.0,
+        "code_ok": true,
+        "code_pass_rate": 1.0,
+        "gating": false,
+        "math_acc": 0.55,
+        "math_drop_pp": 0.25,
+        "math_ok": false,
+        "math_strict_final_acc": 0.35,
+        "neutral_broken_ok": true,
+        "neutral_broken_rate": 0.0,
+        "neutral_greedy_match_rate": 0.114258,
+        "neutral_kl_ok": false,
+        "neutral_median_off_kl": 1.046943,
+        "pass": false,
+        "refusal_keyword_rate": 0.625
+      },
+      "Sys_Pirate": {
+        "code_drop_pp": 0.083333,
+        "code_ok": true,
+        "code_pass_rate": 0.916667,
+        "gating": false,
+        "math_acc": 0.3,
+        "math_drop_pp": 0.5,
+        "math_ok": false,
+        "math_strict_final_acc": 0.15,
+        "neutral_broken_ok": true,
+        "neutral_broken_rate": 0.0,
+        "neutral_greedy_match_rate": 0.009766,
+        "neutral_kl_ok": false,
+        "neutral_median_off_kl": 0.8902,
+        "pass": false,
+        "refusal_keyword_rate": 0.625
+      },
+      "WSP_NoMD_Contrastive@d*_nomd_con": {
+        "code_drop_pp": 0.0,
+        "code_ok": true,
+        "code_pass_rate": 1.0,
+        "gating": true,
+        "math_acc": 0.8,
+        "math_drop_pp": 0.0,
+        "math_ok": true,
+        "math_strict_final_acc": 0.75,
+        "neutral_broken_ok": true,
+        "neutral_broken_rate": 0.0,
+        "neutral_greedy_match_rate": 0.237305,
+        "neutral_kl_ok": true,
+        "neutral_median_off_kl": 0.017406,
+        "pass": true,
+        "refusal_keyword_rate": 0.625
+      },
+      "WSP_NoMD_Lexicon@d*_nomd_lex": {
+        "code_drop_pp": 0.0,
+        "code_ok": true,
+        "code_pass_rate": 1.0,
+        "gating": true,
+        "math_acc": 0.8,
+        "math_drop_pp": 0.0,
+        "math_ok": true,
+        "math_strict_final_acc": 0.7,
+        "neutral_broken_ok": true,
+        "neutral_broken_rate": 0.0,
+        "neutral_greedy_match_rate": 0.518555,
+        "neutral_kl_ok": true,
+        "neutral_median_off_kl": 0.008183,
+        "pass": true,
+        "refusal_keyword_rate": 0.625
+      },
+      "WSP_Pirate_Contrastive@d*_con": {
+        "code_drop_pp": 0.0,
+        "code_ok": true,
+        "code_pass_rate": 1.0,
+        "gating": true,
+        "math_acc": 0.8,
+        "math_drop_pp": 0.0,
+        "math_ok": true,
+        "math_strict_final_acc": 0.65,
+        "neutral_broken_ok": true,
+        "neutral_broken_rate": 0.0,
+        "neutral_greedy_match_rate": 0.399414,
+        "neutral_kl_ok": true,
+        "neutral_median_off_kl": 0.01199,
+        "pass": true,
+        "refusal_keyword_rate": 0.625
+      },
+      "WSP_Pirate_Contrastive@d_common": {
+        "code_drop_pp": 0.0,
+        "code_ok": true,
+        "code_pass_rate": 1.0,
+        "gating": true,
+        "math_acc": 0.8,
+        "math_drop_pp": 0.0,
+        "math_ok": true,
+        "math_strict_final_acc": 0.65,
+        "neutral_broken_ok": true,
+        "neutral_broken_rate": 0.0,
+        "neutral_greedy_match_rate": 0.399414,
+        "neutral_kl_ok": true,
+        "neutral_median_off_kl": 0.01199,
+        "pass": true,
+        "refusal_keyword_rate": 0.625
+      },
+      "WSP_Pirate_Lexicon@d*_lex": {
+        "code_drop_pp": 0.0,
+        "code_ok": true,
+        "code_pass_rate": 1.0,
+        "gating": false,
+        "math_acc": 0.8,
+        "math_drop_pp": 0.0,
+        "math_ok": true,
+        "math_strict_final_acc": 0.65,
+        "neutral_broken_ok": true,
+        "neutral_broken_rate": 0.0,
+        "neutral_greedy_match_rate": 0.633789,
+        "neutral_kl_ok": true,
+        "neutral_median_off_kl": 0.004713,
+        "pass": true,
+        "refusal_keyword_rate": 0.625
+      },
+      "WSP_Pirate_Lexicon@d_common": {
+        "code_drop_pp": 0.0,
+        "code_ok": true,
+        "code_pass_rate": 1.0,
+        "gating": false,
+        "math_acc": 0.8,
+        "math_drop_pp": 0.0,
+        "math_ok": true,
+        "math_strict_final_acc": 0.65,
+        "neutral_broken_ok": true,
+        "neutral_broken_rate": 0.0,
+        "neutral_greedy_match_rate": 0.633789,
+        "neutral_kl_ok": true,
+        "neutral_median_off_kl": 0.004713,
+        "pass": true,
+        "refusal_keyword_rate": 0.625
+      }
+    }
+  },
+  "counterfactual_holm_4": {
+    "alpha": 0.05,
+    "holm_rejected": {
+      "H1": false,
+      "H2": false,
+      "H3": false,
+      "H4": false
+    },
+    "hypotheses": {
+      "H1": {
+        "bca_ci90": null,
+        "broken_con": 0.0,
+        "broken_rand_mean": 0.0,
+        "d_star": 0.8,
+        "holm_sig": false,
+        "mean_y": null,
+        "p_perm": 1.0,
+        "verdict": "NOT_READ_LOW_KAPPA"
+      },
+      "H2": {
+        "abs_cos_ret_diff_con_vs_lex": {
+          "21": 0.000906,
+          "24": 0.003583,
+          "27": 0.012768
+        },
+        "bca_ci90": null,
+        "broken_con": 0.0,
+        "broken_lex": 0.0,
+        "d_common": 0.8,
+        "d_common_bf16_retention": {
+          "WSP_Pirate_Contrastive": {
+            "21": {
+              "alpha": 1.58630531,
+              "frac_changed": 0.536401,
+              "intended_frob": 1.57791746,
+              "stored_frob": 1.58676827,
+              "stored_frob_ret": 1.005609,
+              "stored_rank1_proj_ret": 0.996778
+            },
+            "24": {
+              "alpha": 1.17311092,
+              "frac_changed": 0.322288,
+              "intended_frob": 1.16829789,
+              "stored_frob": 1.17215526,
+              "stored_frob_ret": 1.003302,
+              "stored_rank1_proj_ret": 0.992622
+            },
+            "27": {
+              "alpha": 0.65291787,
+              "frac_changed": 0.142185,
+              "intended_frob": 0.65137768,
+              "stored_frob": 0.65122348,
+              "stored_frob_ret": 0.999763,
+              "stored_rank1_proj_ret": 0.988376
+            }
+          },
+          "WSP_Pirate_Lexicon": {
+            "21": {
+              "alpha": 1.48172961,
+              "frac_changed": 0.549658,
+              "intended_frob": 1.47435319,
+              "stored_frob": 1.48528492,
+              "stored_frob_ret": 1.007415,
+              "stored_rank1_proj_ret": 0.996544
+            },
+            "24": {
+              "alpha": 1.01294226,
+              "frac_changed": 0.322129,
+              "intended_frob": 1.0082798,
+              "stored_frob": 1.01245356,
+              "stored_frob_ret": 1.004139,
+              "stored_rank1_proj_ret": 0.990137
+            },
+            "27": {
+              "alpha": 0.55252242,
+              "frac_changed": 0.12709,
+              "intended_frob": 0.55125755,
+              "stored_frob": 0.5508377,
+              "stored_frob_ret": 0.999238,
+              "stored_rank1_proj_ret": 0.985488
+            }
+          }
+        },
+        "d_common_rep_by_arm": {
+          "WSP_Pirate_Contrastive": true,
+          "WSP_Pirate_Lexicon": true
+        },
+        "d_common_rep_ok": true,
+        "d_star_con": 0.8,
+        "d_star_lex": 0.8,
+        "holm_sig": false,
+        "mean_y": null,
+        "p_perm": 1.0,
+        "verdict": "NOT_READ_LOW_KAPPA"
+      },
+      "H3": {
+        "bca_ci90": {
+          "ci90_hi": 0.194444,
+          "ci90_lo": 0.013889,
+          "point": 0.069444
+        },
+        "broken_arm": 0.0,
+        "broken_rand_mean": 0.0,
+        "co_primary_bars_pass": false,
+        "d_star": 0.8,
+        "delta_has_md_vs_plain": 0.0,
+        "delta_has_md_vs_rand": 0.0,
+        "holm_sig": false,
+        "length_ratio": 1.0,
+        "mean_u": 0.069444,
+        "p_perm": 0.12447876,
+        "verdict": "FAIL"
+      },
+      "H4": {
+        "bca_ci90": {
+          "ci90_hi": 0.097222,
+          "ci90_lo": -0.125,
+          "point": -0.013889
+        },
+        "broken_arm": 0.0,
+        "broken_rand_mean": 0.0,
+        "co_primary_bars_pass": false,
+        "d_star": 0.8,
+        "delta_has_md_vs_plain": 0.0,
+        "delta_has_md_vs_rand": 0.0,
+        "holm_sig": false,
+        "length_ratio": 1.0,
+        "mean_u": -0.013889,
+        "p_perm": 0.62466375,
+        "verdict": "FAIL"
+      }
+    },
+    "n_boot": 10000,
+    "n_perm": 100000,
+    "p_values": {
+      "H1": 1.0,
+      "H2": 1.0,
+      "H3": 0.12447876,
+      "H4": 0.62466375
+    }
+  },
+  "counterfactual_reason": "Evaluated D4 with target seed_dlogit_ratio (1.508x / 0.966x) instead of total vocab logit_l2_ratio (1.017x / 1.148x).",
+  "counterfactual_would_print_verdicts": {
+    "C3.0": "PASS",
+    "H1": "NOT_READ_LOW_KAPPA",
+    "H2": "NOT_READ_LOW_KAPPA",
+    "H3": "FAIL",
+    "H4": "FAIL"
+  },
+  "d4_original": {
+    "masked_mean_pirate_seed_dlogit": 0.08722,
+    "masked_over_unmasked_logit_l2_ratio": 1.01718,
+    "masked_over_unmasked_seed_dlogit_ratio": 1.507692,
+    "mismasked_mean_pirate_seed_dlogit": 0.055883,
+    "mismasked_over_unmasked_logit_l2_ratio": 1.148299,
+    "mismasked_over_unmasked_seed_dlogit_ratio": 0.965998,
+    "unmasked_mean_pirate_seed_dlogit": 0.05785
+  },
+  "disclaimer": "EXPLORATORY / NON-CONFIRMATORY COUNTERFACTUAL ONLY. Official confirmatory verdict is C3.0: FAIL / H1-H4: BLOCKED_BY_C3.0.",
+  "extra_diagnostics": {
+    "D1_copula_summary": {
+      "Plain": {
+        "delta_copula_diff_vs_plain": 0.0,
+        "delta_lp_self_vs_plain": 0.0,
+        "delta_lp_stranger_vs_plain": 0.0,
+        "mean_lp_self": -17.064145,
+        "mean_lp_stranger": -14.682184,
+        "mean_self_minus_stranger": -2.381961,
+        "n": 12,
+        "pos_lp_self_vs_plain_count": 0
+      },
+      "Rand_Pirate_s0@d*_con": {
+        "delta_copula_diff_vs_plain": -0.075569,
+        "delta_lp_self_vs_plain": -0.095344,
+        "delta_lp_stranger_vs_plain": -0.019775,
+        "mean_lp_self": -17.15949,
+        "mean_lp_stranger": -14.70196,
+        "mean_self_minus_stranger": -2.45753,
+        "n": 12,
+        "pos_lp_self_vs_plain_count": 3
+      },
+      "Sys_Pirate": {
+        "delta_copula_diff_vs_plain": 2.06665,
+        "delta_lp_self_vs_plain": 8.84662,
+        "delta_lp_stranger_vs_plain": 6.77997,
+        "mean_lp_self": -8.217526,
+        "mean_lp_stranger": -7.902214,
+        "mean_self_minus_stranger": -0.315312,
+        "n": 12,
+        "pos_lp_self_vs_plain_count": 12
+      },
+      "WSP_Pirate_Contrastive@d*_con": {
+        "delta_copula_diff_vs_plain": 0.123105,
+        "delta_lp_self_vs_plain": 0.816872,
+        "delta_lp_stranger_vs_plain": 0.693767,
+        "mean_lp_self": -16.247274,
+        "mean_lp_stranger": -13.988417,
+        "mean_self_minus_stranger": -2.258857,
+        "n": 12,
+        "pos_lp_self_vs_plain_count": 12
+      },
+      "WSP_Pirate_Lexicon@d*_lex": {
+        "delta_copula_diff_vs_plain": 0.038181,
+        "delta_lp_self_vs_plain": 0.902459,
+        "delta_lp_stranger_vs_plain": 0.864278,
+        "mean_lp_self": -16.161686,
+        "mean_lp_stranger": -13.817906,
+        "mean_self_minus_stranger": -2.34378,
+        "n": 12,
+        "pos_lp_self_vs_plain_count": 12
+      }
+    },
+    "D5_multiturn_mech": {
+      "Plain": {
+        "turn_1": {
+          "broken": 0,
+          "mean_tok": 64.0,
+          "n": 12,
+          "stem_hits": 1
+        },
+        "turn_2": {
+          "broken": 0,
+          "mean_tok": 64.0,
+          "n": 12,
+          "stem_hits": 1
+        },
+        "turn_3": {
+          "broken": 0,
+          "mean_tok": 64.0,
+          "n": 12,
+          "stem_hits": 3
+        }
+      },
+      "Rand_Pirate_s0@d*_con": {
+        "turn_1": {
+          "broken": 0,
+          "mean_tok": 64.0,
+          "n": 12,
+          "stem_hits": 1
+        },
+        "turn_2": {
+          "broken": 0,
+          "mean_tok": 64.0,
+          "n": 12,
+          "stem_hits": 1
+        },
+        "turn_3": {
+          "broken": 0,
+          "mean_tok": 64.0,
+          "n": 12,
+          "stem_hits": 2
+        }
+      },
+      "Sys_Pirate": {
+        "turn_1": {
+          "broken": 0,
+          "mean_tok": 64.0,
+          "n": 12,
+          "stem_hits": 12
+        },
+        "turn_2": {
+          "broken": 0,
+          "mean_tok": 64.0,
+          "n": 12,
+          "stem_hits": 11
+        },
+        "turn_3": {
+          "broken": 0,
+          "mean_tok": 64.0,
+          "n": 12,
+          "stem_hits": 12
+        }
+      },
+      "WSP_Pirate_Contrastive@d*_con": {
+        "turn_1": {
+          "broken": 0,
+          "mean_tok": 64.0,
+          "n": 12,
+          "stem_hits": 1
+        },
+        "turn_2": {
+          "broken": 0,
+          "mean_tok": 64.0,
+          "n": 12,
+          "stem_hits": 2
+        },
+        "turn_3": {
+          "broken": 0,
+          "mean_tok": 64.0,
+          "n": 12,
+          "stem_hits": 3
+        }
+      },
+      "WSP_Pirate_Lexicon@d*_lex": {
+        "turn_1": {
+          "broken": 0,
+          "mean_tok": 64.0,
+          "n": 12,
+          "stem_hits": 1
+        },
+        "turn_2": {
+          "broken": 0,
+          "mean_tok": 64.0,
+          "n": 12,
+          "stem_hits": 2
+        },
+        "turn_3": {
+          "broken": 0,
+          "mean_tok": 64.0,
+          "n": 12,
+          "stem_hits": 2
+        }
+      }
+    },
+    "D6_conditions_mech": {
+      "Con@donor_rand0+common": {
+        "broken": 0,
+        "mean_tok": 62.17,
+        "n": 12,
+        "stem_hits": 0
+      },
+      "Con@own50+common": {
+        "broken": 0,
+        "mean_tok": 62.17,
+        "n": 12,
+        "stem_hits": 0
+      },
+      "Lex@own50+common": {
+        "broken": 0,
+        "mean_tok": 58.0,
+        "n": 12,
+        "stem_hits": 0
+      },
+      "Plain@common": {
+        "broken": 0,
+        "mean_tok": 60.08,
+        "n": 12,
+        "stem_hits": 0
+      },
+      "Rand0@own50+common": {
+        "broken": 0,
+        "mean_tok": 61.33,
+        "n": 12,
+        "stem_hits": 0
+      }
+    },
+    "D6_own_top10_tokens": {
+      "Rand_Pirate_s0@d*_con": [
+        {
+          "mean_dlogit": 0.777688,
+          "token": "oeff"
+        },
+        {
+          "mean_dlogit": 0.7484,
+          "token": "eka"
+        },
+        {
+          "mean_dlogit": 0.728691,
+          "token": " gossip"
+        },
+        {
+          "mean_dlogit": 0.718931,
+          "token": " succession"
+        },
+        {
+          "mean_dlogit": 0.709192,
+          "token": "\u7ba1"
+        },
+        {
+          "mean_dlogit": 0.708866,
+          "token": " Bern"
+        },
+        {
+          "mean_dlogit": 0.70746,
+          "token": " plac"
+        },
+        {
+          "mean_dlogit": 0.702998,
+          "token": " squeezed"
+        },
+        {
+          "mean_dlogit": 0.701029,
+          "token": "\u044c"
+        },
+        {
+          "mean_dlogit": 0.696335,
+          "token": "fmt"
+        }
+      ],
+      "WSP_Pirate_Contrastive@d*_con": [
+        {
+          "mean_dlogit": 2.779331,
+          "token": " yer"
+        },
+        {
+          "mean_dlogit": 2.723047,
+          "token": " ain"
+        },
+        {
+          "mean_dlogit": 2.431075,
+          "token": " ye"
+        },
+        {
+          "mean_dlogit": 2.212882,
+          "token": " reckon"
+        },
+        {
+          "mean_dlogit": 2.152209,
+          "token": " cursed"
+        },
+        {
+          "mean_dlogit": 2.146117,
+          "token": "folk"
+        },
+        {
+          "mean_dlogit": 2.128481,
+          "token": " whence"
+        },
+        {
+          "mean_dlogit": 2.093893,
+          "token": " reck"
+        },
+        {
+          "mean_dlogit": 2.089615,
+          "token": "OO"
+        },
+        {
+          "mean_dlogit": 2.077057,
+          "token": " tales"
+        }
+      ],
+      "WSP_Pirate_Lexicon@d*_lex": [
+        {
+          "mean_dlogit": 0.587324,
+          "token": " anch"
+        },
+        {
+          "mean_dlogit": 0.570028,
+          "token": " *"
+        },
+        {
+          "mean_dlogit": 0.459278,
+          "token": " anchored"
+        },
+        {
+          "mean_dlogit": 0.446879,
+          "token": " "
+        },
+        {
+          "mean_dlogit": 0.425361,
+          "token": " \""
+        },
+        {
+          "mean_dlogit": 0.410786,
+          "token": "  "
+        },
+        {
+          "mean_dlogit": 0.408135,
+          "token": " sailed"
+        },
+        {
+          "mean_dlogit": 0.369696,
+          "token": " **"
+        },
+        {
+          "mean_dlogit": 0.340399,
+          "token": "\ufffd"
+        },
+        {
+          "mean_dlogit": 0.330806,
+          "token": " journey"
+        }
+      ]
+    },
+    "dose_kl_headroom_autopsy": {
+      "WSP_NoMD_Contrastive": {
+        "alphas_at_0.80": {
+          "21": 1.62101261,
+          "24": 1.18660816,
+          "27": 0.67962064
+        },
+        "d_star": 0.8,
+        "kl_budget_ratio_0.25_over_actual": 22.19,
+        "min_stored_frob_ret": 0.999667,
+        "min_stored_rank1_proj_ret": 0.989703,
+        "reserve_med_off_kl_at_0.80": 0.011264
+      },
+      "WSP_NoMD_Lexicon": {
+        "alphas_at_0.80": {
+          "21": 1.48304576,
+          "24": 1.01123644,
+          "27": 0.55173786
+        },
+        "d_star": 0.8,
+        "kl_budget_ratio_0.25_over_actual": 55.01,
+        "min_stored_frob_ret": 0.999385,
+        "min_stored_rank1_proj_ret": 0.986055,
+        "reserve_med_off_kl_at_0.80": 0.004545
+      },
+      "WSP_Pirate_Contrastive": {
+        "alphas_at_0.80": {
+          "21": 1.58630531,
+          "24": 1.17311092,
+          "27": 0.65291787
+        },
+        "d_star": 0.8,
+        "kl_budget_ratio_0.25_over_actual": 27.43,
+        "min_stored_frob_ret": 0.999763,
+        "min_stored_rank1_proj_ret": 0.988376,
+        "reserve_med_off_kl_at_0.80": 0.009114
+      },
+      "WSP_Pirate_Lexicon": {
+        "alphas_at_0.80": {
+          "21": 1.48172961,
+          "24": 1.01294226,
+          "27": 0.55252242
+        },
+        "d_star": 0.8,
+        "kl_budget_ratio_0.25_over_actual": 59.07,
+        "min_stored_frob_ret": 0.999238,
+        "min_stored_rank1_proj_ret": 0.985488,
+        "reserve_med_off_kl_at_0.80": 0.004232
+      }
+    },
+    "pillar_a_con_unbanned_stem_hits": [
+      {
+        "id": "imp_08",
+        "n_tokens": 64,
+        "text": "That\u2019s a poetic and intriguing question! The answer can depend on context\u2014whether you\u2019re talking about a hunter, a hiker, a sailor, or just a person starting a day\u2019s journey. But if we interpret it in a general sense, the first thing many people check before leaving at dawn is:\n\n**Their"
+      }
+    ]
+  }
+}

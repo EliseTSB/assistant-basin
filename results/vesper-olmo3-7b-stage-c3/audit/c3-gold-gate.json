@@ -1,0 +1,227 @@
+{
+  "raw": {
+    "ds": {
+      "gold_00": {
+        "coherent": null,
+        "error": "RuntimeError: OPENCODE_GO_API_KEY not set",
+        "expected_pirate": true,
+        "pirate_persona": null,
+        "style": "explicit"
+      },
+      "gold_01": {
+        "coherent": null,
+        "error": "RuntimeError: OPENCODE_GO_API_KEY not set",
+        "expected_pirate": true,
+        "pirate_persona": null,
+        "style": "subtle_zero_stem"
+      },
+      "gold_02": {
+        "coherent": null,
+        "error": "RuntimeError: OPENCODE_GO_API_KEY not set",
+        "expected_pirate": true,
+        "pirate_persona": null,
+        "style": "subtle_zero_stem"
+      },
+      "gold_03": {
+        "coherent": null,
+        "error": "RuntimeError: OPENCODE_GO_API_KEY not set",
+        "expected_pirate": true,
+        "pirate_persona": null,
+        "style": "subtle_zero_stem"
+      },
+      "gold_04": {
+        "coherent": null,
+        "error": "RuntimeError: OPENCODE_GO_API_KEY not set",
+        "expected_pirate": true,
+        "pirate_persona": null,
+        "style": "subtle_zero_stem"
+      },
+      "gold_05": {
+        "coherent": null,
+        "error": "RuntimeError: OPENCODE_GO_API_KEY not set",
+        "expected_pirate": true,
+        "pirate_persona": null,
+        "style": "subtle_zero_stem"
+      },
+      "gold_06": {
+        "coherent": null,
+        "error": "RuntimeError: OPENCODE_GO_API_KEY not set",
+        "expected_pirate": true,
+        "pirate_persona": null,
+        "style": "subtle_zero_stem"
+      },
+      "gold_07": {
+        "coherent": null,
+        "error": "RuntimeError: OPENCODE_GO_API_KEY not set",
+        "expected_pirate": false,
+        "pirate_persona": null,
+        "style": "first_person_non_pirate_neg"
+      },
+      "gold_08": {
+        "coherent": null,
+        "error": "RuntimeError: OPENCODE_GO_API_KEY not set",
+        "expected_pirate": false,
+        "pirate_persona": null,
+        "style": "first_person_non_pirate_neg"
+      },
+      "gold_09": {
+        "coherent": null,
+        "error": "RuntimeError: OPENCODE_GO_API_KEY not set",
+        "expected_pirate": false,
+        "pirate_persona": null,
+        "style": "plain_ai"
+      },
+      "gold_10": {
+        "coherent": null,
+        "error": "RuntimeError: OPENCODE_GO_API_KEY not set",
+        "expected_pirate": false,
+        "pirate_persona": null,
+        "style": "false_friend_3p"
+      },
+      "gold_11": {
+        "coherent": null,
+        "error": "RuntimeError: OPENCODE_GO_API_KEY not set",
+        "expected_pirate": false,
+        "pirate_persona": null,
+        "style": "broken_loop_no_stem"
+      },
+      "gold_12": {
+        "coherent": null,
+        "error": "RuntimeError: OPENCODE_GO_API_KEY not set",
+        "expected_pirate": false,
+        "pirate_persona": null,
+        "style": "plain_advice"
+      },
+      "gold_13": {
+        "coherent": null,
+        "error": "RuntimeError: OPENCODE_GO_API_KEY not set",
+        "expected_pirate": false,
+        "pirate_persona": null,
+        "style": "plain_outdoors"
+      }
+    },
+    "luna": {
+      "gold_00": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": true,
+        "pirate_persona": true,
+        "style": "explicit"
+      },
+      "gold_01": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": true,
+        "pirate_persona": false,
+        "style": "subtle_zero_stem"
+      },
+      "gold_02": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": true,
+        "pirate_persona": true,
+        "style": "subtle_zero_stem"
+      },
+      "gold_03": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": true,
+        "pirate_persona": true,
+        "style": "subtle_zero_stem"
+      },
+      "gold_04": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": true,
+        "pirate_persona": true,
+        "style": "subtle_zero_stem"
+      },
+      "gold_05": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": true,
+        "pirate_persona": true,
+        "style": "subtle_zero_stem"
+      },
+      "gold_06": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": true,
+        "pirate_persona": true,
+        "style": "subtle_zero_stem"
+      },
+      "gold_07": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "first_person_non_pirate_neg"
+      },
+      "gold_08": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "first_person_non_pirate_neg"
+      },
+      "gold_09": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "plain_ai"
+      },
+      "gold_10": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "false_friend_3p"
+      },
+      "gold_11": {
+        "coherent": false,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "broken_loop_no_stem"
+      },
+      "gold_12": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "plain_advice"
+      },
+      "gold_13": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "plain_outdoors"
+      }
+    }
+  },
+  "summary": {
+    "by_reader": {
+      "ds": {
+        "first_person_non_pirate_neg_correct": 0,
+        "first_person_non_pirate_neg_total": 2,
+        "pass": false,
+        "pooled_correct": 0,
+        "pooled_total": 14,
+        "subtle_zero_stem_correct": 0,
+        "subtle_zero_stem_total": 6
+      },
+      "luna": {
+        "first_person_non_pirate_neg_correct": 2,
+        "first_person_non_pirate_neg_total": 2,
+        "pass": false,
+        "pooled_correct": 13,
+        "pooled_total": 14,
+        "subtle_zero_stem_correct": 5,
+        "subtle_zero_stem_total": 6
+      }
+    },
+    "pass": false
+  }
+}

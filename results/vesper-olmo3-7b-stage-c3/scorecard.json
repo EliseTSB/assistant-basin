@@ -1,0 +1,117 @@
+{
+  "confirmatory_verdicts": {
+    "C3.0": "FAIL",
+    "H1": "BLOCKED_BY_C3.0",
+    "H2": "BLOCKED_BY_C3.0",
+    "H3": "BLOCKED_BY_C3.0",
+    "H4": "BLOCKED_BY_C3.0"
+  },
+  "diagnostics": {},
+  "gates": {
+    "C3.0": {
+      "C3.0.1": {
+        "b8_parity_or_b1_fallback_ok": true,
+        "expected_min_restore_checks": 204,
+        "hooks_ok": true,
+        "liveness_ok": true,
+        "no_weights_saved_ok": true,
+        "pass": true,
+        "restore_checks": 204,
+        "restore_ok": true,
+        "sham_max_abs_dlogit": 0.125,
+        "sham_min_proj_ret": 0.53605,
+        "sham_ok": true
+      },
+      "C3.0.2": {
+        "ban_stem_ok": true,
+        "ban_stem_rates": {
+          "Plain": 0.0,
+          "Rand_Pirate_s0@d*_con": 0.0,
+          "Rand_Pirate_s1@d*_con": 0.0,
+          "Rand_Pirate_s2@d*_con": 0.0,
+          "Sys_Pirate": 0.0,
+          "WSP_Pirate_Contrastive@d*_con": 0.0,
+          "WSP_Pirate_Contrastive@d_common": 0.0,
+          "WSP_Pirate_Lexicon@d*_lex": 0.0,
+          "WSP_Pirate_Lexicon@d_common": 0.0
+        },
+        "code_harness_preflight_ok": true,
+        "cv_ok": true,
+        "d4_masked_over_unmasked": 1.01718,
+        "d4_mismasked_over_unmasked": 1.148299,
+        "d4_ok": false,
+        "nonfinite_count": 0,
+        "nonfinite_sample": [],
+        "pass": false,
+        "rand_keys_ok": true,
+        "rand_kl_ok": true,
+        "rand_norm_ok": true,
+        "stem_preflight_ok": true
+      },
+      "C3.0.3": {
+        "counts_ok": true,
+        "d_common_consistent_ok": true,
+        "d_common_retention_present_ok": true,
+        "ids_exact_ok": true,
+        "nonempty_ok": true,
+        "pass": true,
+        "plain_non_broken_rate": 1.0,
+        "plain_sanity_ok": true,
+        "required_arms_ok": true
+      },
+      "C3.0.4": {
+        "disk_prov_ok": true,
+        "pass": true,
+        "receipt_prov_ok": true,
+        "strict_provenance": true
+      },
+      "pass": false
+    },
+    "C3.0_NoMD_room": {
+      "pass": false,
+      "plain_has_markdown": 0.0,
+      "plain_mean_construct_types": 0.0
+    },
+    "C3.0_commit_gate": {},
+    "C3.0_direction_quality": {
+      "pass_by_arm": {}
+    },
+    "C3.R": {
+      "h1_pass": false,
+      "h2_pass": false,
+      "pass": false,
+      "reason": "blocked_by_c3_0"
+    },
+    "EQ_C3_2": {}
+  },
+  "holm_4_family": {
+    "alpha": 0.05,
+    "holm_rejected": {},
+    "hypotheses": {
+      "H1": {
+        "holm_sig": false,
+        "p_perm": 1.0,
+        "verdict": "BLOCKED_BY_C3.0"
+      },
+      "H2": {
+        "holm_sig": false,
+        "p_perm": 1.0,
+        "verdict": "BLOCKED_BY_C3.0"
+      },
+      "H3": {
+        "holm_sig": false,
+        "p_perm": 1.0,
+        "verdict": "BLOCKED_BY_C3.0"
+      },
+      "H4": {
+        "holm_sig": false,
+        "p_perm": 1.0,
+        "verdict": "BLOCKED_BY_C3.0"
+      }
+    },
+    "n_boot": 10000,
+    "n_perm": 100000,
+    "p_values": {}
+  },
+  "schema_version": "olmo3-stage-c3-scorecard-v1"
+}
