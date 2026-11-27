@@ -177,6 +177,7 @@ class WeightMaster:
             self.check_hooks(model)
             yield metrics
         finally:
+            restore_failures: list[int] = []
             for L in touched_layers:
                 param = model.model.layers[L].mlp.down_proj.weight
                 param.data.copy_(self.clean_bf16[L].to(device=param.device, dtype=param.dtype))
@@ -185,8 +186,12 @@ class WeightMaster:
                 self.restore_checks += 1
                 if not ok:
                     self.restore_exact_all = False
-                    raise RuntimeError(f"C3.0.1 VIOLATION: bitwise weight restore failed at layer {L}")
-            self.check_hooks(model)
+                    restore_failures.append(L)
+            in_exc = sys.exc_info()[0] is not None
+            if restore_failures:
+                raise RuntimeError(f"C3.0.1 VIOLATION: bitwise weight restore failed at layers {restore_failures}")
+            if not in_exc:
+                self.check_hooks(model)
 
 
 # ---------------------------------------------------------------------------
@@ -363,7 +368,8 @@ def greedy_decode_batch(
             input_ids[b, max_len - L :] = torch.tensor(ids, dtype=torch.long, device=device)
             attention_mask[b, max_len - L :] = 1
 
-        histories: list[list[int]] = [list(ids) for ids in prompt_ids_list]
+        # Seed multi-token ban histories from GENERATED tokens only (matches HF bad_words_ids semantics, GLM F6)
+        histories: list[list[int]] = [[] for _ in range(bsz)]
         gen_ids: list[list[int]] = [[] for _ in range(bsz)]
         finished = [False] * bsz
         past_key_values = None
@@ -675,12 +681,13 @@ def run_stage_c3_experiment(
     if requested_batch_size > 1 and len(res_plain_id_lists) > 1:
         b8_logits = forward_next_logits_batch(model, res_plain_id_lists, pad_id, device)
         counts["preflight_fwds"] += 1
-        b8_parity_max_dlogit = float((b8_logits - b1_logits).abs().max().item())
-        b8_parity_passed = b8_parity_max_dlogit <= 0.05
+        b8_parity_max_dlogit: float | None = float((b8_logits - b1_logits).abs().max().item())
+        b8_parity_passed: bool | None = b8_parity_max_dlogit <= 0.05
         gen_batch_size = requested_batch_size if b8_parity_passed else 1
     else:
-        b8_parity_max_dlogit = 0.0
-        b8_parity_passed = True
+        # DS F2: never record a skipped C3.0.1 preflight as passed!
+        b8_parity_max_dlogit = None
+        b8_parity_passed = None
         gen_batch_size = 1
 
     # ------------------------------------------------------------------
@@ -1253,8 +1260,10 @@ def run_stage_c3_experiment(
         cal_plain_tf_logits.append(teacher_forced_gen_logits_b1(model, p_ids, g["gen_ids"], device))
         counts["teacher_forced_b1_fwds"] += 1
 
+    # GLM F7: exclude both 95 single-token ban IDs and all token IDs inside 380 multi-token ban sequences
     common_single_set = set(ban_single_ids)
-    excluded_d6_ids = common_single_set | special_ids
+    common_multi_member_set = {tid for seq in ban_multi_seqs for tid in seq}
+    excluded_d6_ids = common_single_set | common_multi_member_set | special_ids
     top_k_d6 = int(c3_constants["lexicons"]["secondary_d6_own_top_k_bias"])
 
     def _compute_own_top_k(arm_label: str) -> list[dict[str, Any]]:
@@ -1513,7 +1522,7 @@ def run_stage_c3_experiment(
             "target_layers": layers,
             "requested_gen_batch_size": requested_batch_size,
             "effective_gen_batch_size": gen_batch_size,
-            "b8_parity_max_abs_dlogit": round(b8_parity_max_dlogit, 6),
+            "b8_parity_max_abs_dlogit": None if b8_parity_max_dlogit is None else round(b8_parity_max_dlogit, 6),
             "b8_parity_passed": b8_parity_passed,
             "active_hooks_max_seen": master.max_hooks_seen,
             "restore_exact_all": master.restore_exact_all,

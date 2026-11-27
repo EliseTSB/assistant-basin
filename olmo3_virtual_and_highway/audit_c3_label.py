@@ -246,8 +246,12 @@ def run_blind_audit(
     continue_on_gold_fail: bool = False,
     limit: int | None = None,
 ) -> dict[str, Any]:
-    """Run gold pre-check + resumable dual blind-reader labeling and write `c3_reader_labels.json`."""
+    """Run gold pre-check + receipt-bound resumable dual blind-reader labeling and write `c3_reader_labels.json`."""
     out_dir.mkdir(parents=True, exist_ok=True)
+    # DS F1: always bind resume logs to a non-empty receipt digest so run-2 NEVER reuses run-1 labels!
+    effective_receipt_sha = receipt_sha256 or hashlib.sha256(
+        json.dumps(receipt, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
     gold_items = list(c3_constants["reader_gold_14"])
     gold_cfg = c3_constants["reader_kappa_pool"]["gold_gate"]
 
@@ -277,13 +281,19 @@ def run_blind_audit(
     if gold_summary["pass"] or continue_on_gold_fail:
         for r in sorted(READERS.keys()):
             cfg = READERS[r]
-            log_path = out_dir / f"labels-{r}.jsonl"
+            log_path = out_dir / f"labels-{r}-{effective_receipt_sha[:16]}.jsonl"
             done: dict[str, dict[str, Any]] = {}
             if log_path.exists():
                 for line in log_path.read_text(encoding="utf-8").splitlines():
                     if not line.strip():
                         continue
                     rec = json.loads(line)
+                    rec_sha = rec.get("receipt_sha256")
+                    if rec_sha != effective_receipt_sha:
+                        raise ValueError(
+                            f"FAIL-CLOSED (DS F1): Refusing to resume {log_path.name} — "
+                            f"record receipt_sha256={rec_sha!r} != current {effective_receipt_sha!r}"
+                        )
                     if rec.get("pirate_persona") is None:
                         continue  # retry errored items
                     done[rec["blind_id"]] = rec
@@ -297,6 +307,7 @@ def run_blind_audit(
                     it = futs[fut]
                     got, err = fut.result()
                     rec = {
+                        "receipt_sha256": effective_receipt_sha,
                         "blind_id": it["blind_id"],
                         "pirate_persona": None if got is None else bool(got["pirate_persona"]),
                         "coherent": None if got is None else bool(got["coherent"]),
@@ -360,7 +371,7 @@ def run_blind_audit(
             "blind_shuffle_seed": BLIND_SHUFFLE_SEED,
             "mock_readers": bool(mock_readers),
             "n_unique_blinded_items": len(blind_items),
-            "receipt_sha256": receipt_sha256,
+            "receipt_sha256": effective_receipt_sha,
             "c3_constants_sha256": constants_sha256,
             "c3_scoring_sha256": scoring_sha256,
         },

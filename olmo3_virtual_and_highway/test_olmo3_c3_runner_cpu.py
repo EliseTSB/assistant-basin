@@ -228,6 +228,14 @@ def test_3_common_ban_processor_single_and_multitoken_b1_and_b8() -> None:
     proc.apply(s8, histories)
     assert all(torch.isneginf(s8[b, 10]) for b in range(8))
     assert torch.argmax(s8, dim=-1).tolist() == [31, 22, 22, 31, 22, 22, 31, 22]
+    # GLM F6: prompt ending with banned multi-token prefix [20, 21] must NOT ban token 22 on step 0
+    # (generated-token-only bad_words_ids semantics)!
+    s_step0 = torch.zeros((1, 50), dtype=torch.float32)
+    s_step0[0, 10] = 9.0
+    s_step0[0, 22] = 8.0
+    proc.apply(s_step0, [[]])  # step 0 generated history is empty even if prompt ended with [20, 21]
+    assert torch.isneginf(s_step0[0, 10]) and (not torch.isneginf(s_step0[0, 22]))
+    assert int(torch.argmax(s_step0[0]).item()) == 22
     print("PASS test_3_common_ban_processor_single_and_multitoken_b1_and_b8")
 
 
@@ -295,6 +303,19 @@ def test_5_end_to_end_smoke_and_d4_and_scorer_refusal() -> None:
     assert receipt["meta"]["restore_exact_all"] is True
     assert receipt["meta"]["weight_checkpoints_saved"] == 0
     assert receipt["meta"]["b8_parity_passed"] is True
+
+    # DS F2: when requested_batch_size=1, preflight is skipped -> MUST record None (never True!)
+    receipt_b1 = runner.run_stage_c3_experiment(
+        model, tok, c3_constants, bank, hashes,
+        smoke=True,
+        device_name="cpu-tiny-olmo3",
+        target_layers=[1, 2, 3],
+        requested_batch_size=1,
+        max_new_tokens_override={k: 2 for k in ("calib", "reserve", "pillar_a", "pillar_b", "multiturn", "d6", "math", "code", "refusal", "neutral")},
+    )
+    assert receipt_b1["meta"]["b8_parity_passed"] is None
+    assert receipt_b1["meta"]["b8_parity_max_abs_dlogit"] is None
+    assert receipt_b1["meta"]["effective_gen_batch_size"] == 1
 
     # D4 masked vs unmasked vs mis-masked on planted near-zero gamma_ff!
     d4 = receipt["preflights"]["D4_L24_mask_mismask"]
