@@ -1,0 +1,13 @@
+{
+  "c3b_receipt.json": {
+    "bytes": 960185,
+    "sha256": "1171e5374bc465aa037502af3b082b80d24ad85237fd92ca04979a671e2a0432"
+  },
+  "c3b_receipt.json.gz": {
+    "bytes": 179011,
+    "sha256": "ae1d4f3aada93615b55bde622820883abb1bbebc5fe5e29a8a502605f91d84a4"
+  },
+  "elapsed_total_sec": 6412.13,
+  "git_commit": "258ba6a299213e75b55de7bb29f2aca774502641",
+  "runner_sha256": "7196656760baff75fa44aea1f03a9cecc9b00892cc9480562edc33404551f8db"
+}

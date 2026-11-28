@@ -1,0 +1,255 @@
+{
+  "raw": {
+    "ds": {
+      "g2_00": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": true,
+        "pirate_persona": true,
+        "style": "explicit"
+      },
+      "g2_01": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": true,
+        "pirate_persona": true,
+        "style": "subtle_zero_stem"
+      },
+      "g2_02": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": true,
+        "pirate_persona": true,
+        "style": "subtle_zero_stem"
+      },
+      "g2_03": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": true,
+        "pirate_persona": true,
+        "style": "subtle_zero_stem"
+      },
+      "g2_04": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": true,
+        "pirate_persona": true,
+        "style": "subtle_zero_stem"
+      },
+      "g2_05": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": true,
+        "pirate_persona": true,
+        "style": "subtle_zero_stem"
+      },
+      "g2_06": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": true,
+        "pirate_persona": true,
+        "style": "subtle_zero_stem"
+      },
+      "g2_07": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "first_person_non_pirate_neg"
+      },
+      "g2_08": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "first_person_non_pirate_neg"
+      },
+      "g2_09": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "first_person_non_pirate_neg"
+      },
+      "g2_10": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "first_person_non_pirate_neg"
+      },
+      "g2_11": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "plain_ai"
+      },
+      "g2_12": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "false_friend_3p"
+      },
+      "g2_13": {
+        "coherent": false,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "broken_loop_no_stem"
+      },
+      "g2_14": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "plain_advice"
+      },
+      "g2_15": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "plain_outdoors"
+      }
+    },
+    "luna": {
+      "g2_00": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": true,
+        "pirate_persona": true,
+        "style": "explicit"
+      },
+      "g2_01": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": true,
+        "pirate_persona": true,
+        "style": "subtle_zero_stem"
+      },
+      "g2_02": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": true,
+        "pirate_persona": true,
+        "style": "subtle_zero_stem"
+      },
+      "g2_03": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": true,
+        "pirate_persona": true,
+        "style": "subtle_zero_stem"
+      },
+      "g2_04": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": true,
+        "pirate_persona": true,
+        "style": "subtle_zero_stem"
+      },
+      "g2_05": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": true,
+        "pirate_persona": true,
+        "style": "subtle_zero_stem"
+      },
+      "g2_06": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": true,
+        "pirate_persona": true,
+        "style": "subtle_zero_stem"
+      },
+      "g2_07": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "first_person_non_pirate_neg"
+      },
+      "g2_08": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "first_person_non_pirate_neg"
+      },
+      "g2_09": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "first_person_non_pirate_neg"
+      },
+      "g2_10": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "first_person_non_pirate_neg"
+      },
+      "g2_11": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "plain_ai"
+      },
+      "g2_12": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "false_friend_3p"
+      },
+      "g2_13": {
+        "coherent": false,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "broken_loop_no_stem"
+      },
+      "g2_14": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "plain_advice"
+      },
+      "g2_15": {
+        "coherent": true,
+        "error": null,
+        "expected_pirate": false,
+        "pirate_persona": false,
+        "style": "plain_outdoors"
+      }
+    }
+  },
+  "summary": {
+    "by_reader": {
+      "ds": {
+        "first_person_non_pirate_neg_correct": 4,
+        "first_person_non_pirate_neg_total": 4,
+        "pass": true,
+        "pooled_correct": 16,
+        "pooled_total": 16,
+        "subtle_zero_stem_correct": 6,
+        "subtle_zero_stem_total": 6
+      },
+      "luna": {
+        "first_person_non_pirate_neg_correct": 4,
+        "first_person_non_pirate_neg_total": 4,
+        "pass": true,
+        "pooled_correct": 16,
+        "pooled_total": 16,
+        "subtle_zero_stem_correct": 6,
+        "subtle_zero_stem_total": 6
+      }
+    },
+    "pass": true
+  }
+}
