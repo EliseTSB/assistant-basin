@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""test_olmo3_c3b_constants.py — 0-CU unit tests for Stage C3b (WSP v2) constants and 12-layer vector bank."""
+"""test_olmo3_c3b_constants.py — 0-CU unit tests for Stage C3b (WSP v2, Draft v2) constants and 12-layer vector bank."""
 from __future__ import annotations
 
 import json
@@ -26,7 +26,8 @@ class TestStageC3bConstants(unittest.TestCase):
         cls.bank = load_file(str(BANK_PATH))
         cls.c3_bank = load_file(str(C3_BANK_PATH))
 
-    def test_01_committed_bank_and_scoring_hashes(self) -> None:
+    def test_01_committed_bank_schema_and_scoring_hashes(self) -> None:
+        self.assertEqual(self.const["schema_version"], "olmo3-stage-c3b-wsp-v2-prereg-constants-v2")
         prov = self.const["provenance"]
         self.assertEqual(prov["c3b_bank_sha256"], b3b.sha256_file(BANK_PATH))
         self.assertEqual(prov["c3_scoring_sha256"], b3b.sha256_file(SCORING_PATH))
@@ -35,10 +36,10 @@ class TestStageC3bConstants(unittest.TestCase):
         self.assertEqual(prov["c3b_bank_n_tensors"], 87)
         self.assertEqual(prov["c3b_bank_tensor_names"], sorted(self.bank.keys()))
 
-    def test_02_12_layer_unit_norms_masking_and_d4_exact_copy(self) -> None:
+    def test_02_12_layer_unit_norms_masking_and_d4_spec(self) -> None:
         self.assertEqual(self.const["edit_spec"]["layers"], list(range(16, 28)))
         for k in ("L24_pirate_lex_post_unit", "L24_pirate_lex_pre_unit", "L24_pirate_unmasked_pre_unit"):
-            self.assertTrue(torch.equal(self.bank[k], self.c3_bank[k]), f"D4 vector {k} differs from frozen C3 bank")
+            self.assertTrue(torch.equal(self.bank[k], self.c3_bank[k]), f"C3 continuity vector {k} differs")
         for L in range(16, 28):
             idx = self.bank[f"L{L}_gamma_drop_idx"]
             self.assertEqual(list(idx.shape), [4])
@@ -51,40 +52,73 @@ class TestStageC3bConstants(unittest.TestCase):
                     self.assertAlmostEqual(float(v.norm().item()), 1.0, places=5)
                     for di in idx.tolist():
                         self.assertEqual(float(v[di].item()), 0.0, f"Masked coord {di} non-zero on L{L} {kind} s{s}")
+        d4 = self.const["d4_spec"]
+        self.assertEqual(len(d4["prompt_ids"]), 12)
+        self.assertEqual(d4["prompt_ids"][:8], [f"res_{i:02d}" for i in range(8)])
+        self.assertEqual(d4["prompt_ids"][8:], [f"cal_{i:02d}" for i in range(4)])
+        self.assertIn("<= 1.10", d4["dual_criterion"]["criterion_2_full_vocab_bound"])
+        self.assertIn("48 forwards", d4["forward_count_exact"])
 
-    def test_03_all_13_splits_disjoint_and_new_prompts_unseen(self) -> None:
+    def test_03_all_14_splits_disjoint_and_new_prompts_unseen(self) -> None:
         counts = b3b.verify_disjoint_prompts()
         self.assertEqual(counts["nomd_32"], 32)
         self.assertEqual(counts["identity_20"], 20)
         self.assertEqual(counts["implied_20"], 20)
-        self.assertEqual(counts["reader_gold_14_v2"], 14)
+        self.assertEqual(counts["reader_gold_16_v2"], 16)
+        self.assertEqual(counts["reader_preflight_canary_2"], 2)
         self.assertEqual(counts, self.const["split_counts"])
 
-    def test_04_gold_14_v2_and_ban_invariants(self) -> None:
-        gold = self.const["reader_gold_14_v2"]
-        self.assertEqual(len(gold), 14)
+    def test_04_gold_16_v2_cue_free_archaic_and_ban_invariants(self) -> None:
+        gold = self.const["reader_gold_16_v2"]
+        self.assertEqual(len(gold), 16)
         self.assertEqual(sum(1 for g in gold if g["expected_pirate"]), 7)
+        self.assertEqual(sum(1 for g in gold if not g["expected_pirate"]), 9)
         self.assertEqual(sum(1 for g in gold if g["style"] == "subtle_zero_stem"), 6)
-        self.assertEqual(sum(1 for g in gold if g["style"] == "first_person_non_pirate_neg"), 2)
-        pat = re.compile(self.const["lexicons"]["common_pirate_ban"]["surface_stem_regex"], re.IGNORECASE)
+        fp = [g for g in gold if g["style"] == "first_person_non_pirate_neg"]
+        self.assertEqual(len(fp), 4)
+        self.assertEqual(sum(1 for g in fp if g.get("subtype") == "modern_trade"), 2)
+        self.assertEqual(sum(1 for g in fp if g.get("subtype") == "archaic_dialect"), 2)
+
+        stem_pat = re.compile(self.const["lexicons"]["common_pirate_ban"]["surface_stem_regex"], re.IGNORECASE)
+        cue_terms = self.const["lexicons"]["reader_prompt_cue_words_excluded_from_subtle_gold"]
+        cue_pat = re.compile(r"\b(?:" + "|".join(re.escape(w) for w in cue_terms) + r")\b", re.IGNORECASE)
         for g in gold:
             if g["style"] != "explicit":
-                self.assertIsNone(pat.search(g["answer"]), f"Gold {g['id']} leaks stem")
-                self.assertIsNone(pat.search(g["prompt"]), f"Gold prompt {g['id']} leaks stem")
+                self.assertIsNone(stem_pat.search(g["answer"]), f"Gold {g['id']} leaks stem")
+                self.assertIsNone(stem_pat.search(g["prompt"]), f"Gold prompt {g['id']} leaks stem")
+            if g["style"] == "subtle_zero_stem":
+                self.assertIsNone(cue_pat.search(g["answer"]), f"Subtle gold {g['id']} leaks reader cue word")
+                self.assertIsNone(cue_pat.search(g["prompt"]), f"Subtle gold prompt {g['id']} leaks reader cue word")
 
-    def test_05_bf16_audit_ladder_and_m2_power(self) -> None:
+        ext_terms = set(self.const["lexicons"]["extended_maritime_and_cue_terms"])
+        for req in ("galleons", "schooners", "sloops", "frigates", "cutlasses", "articles", "coastal", "marooned", "charts"):
+            self.assertIn(req, ext_terms)
+
+        gg = self.const["reader_kappa_pool"]["gold_gate"]
+        self.assertEqual(gg["exact_full_gate_probabilities"], b3b.compute_exact_gold_gate_probs())
+
+    def test_05_bf16_audit_ladder_endpoints_and_m2_power(self) -> None:
         self.assertEqual(self.const["edit_spec"]["dose_ladder_total_pmn_frac"], [1.2, 2.4, 3.6, 4.8, 6.0, 7.2, 9.6])
         self.assertEqual(self.const["holm_2_family"]["m"], 2)
+        self.assertIn("BLOCKED_BY_C3b.0", self.const["holm_2_family"]["verdict_precedence"])
+        self.assertNotIn("BLOCKED_BY_C3.0", self.const["holm_2_family"]["verdict_precedence"])
+        self.assertEqual(self.const["endpoint_definitions"]["expected_min_restore_checks"]["value"], 579)
+        self.assertEqual(self.const["d_above_cap_spec"]["max_extra_gens"], 36)
+        self.assertEqual(self.const["d_above_cap_spec"]["max_extra_tokens"], 2688)
+
         bf = self.const["bf16_retention_audit_0cu"]["layers"]
         self.assertEqual(sorted(int(k) for k in bf.keys()), list(range(16, 28)))
         for L in range(16, 28):
             self.assertGreaterEqual(bf[str(L)]["by_alpha"]["0.05"]["stored_rank1_proj_ret"], 0.25)
             self.assertGreaterEqual(bf[str(L)]["by_alpha"]["0.25"]["stored_rank1_proj_ret"], 0.80)
             self.assertGreaterEqual(bf[str(L)]["by_alpha"]["1.0"]["stored_rank1_proj_ret"], 0.99)
+
         pw = self.const["power_analysis_0cu"]
         self.assertEqual(pw["holm_m"], 2)
         self.assertGreaterEqual(pw["H1_N40_bar020"]["pRand_0.05_delta_0.30"]["p_point_bar_pass_r1"], 0.90)
-        self.assertGreaterEqual(pw["H2_N32_3bar_u050_p020_r015"]["c3_empirical_lp3.3_lr3.0_la1.00"]["p_point_bar_pass_r1"], 0.90)
+        h2_pw = pw["H2_N32_3bar_u050_p020_r015"]
+        self.assertLessEqual(h2_pw["c3_observed_null_lp3.3_lr3.0_la3.00"]["p_point_bar_pass_r1"], 0.01)
+        self.assertGreaterEqual(h2_pw["baseline_matched_hypothetical_lp3.3_lr3.0_la1.00"]["p_point_bar_pass_r1"], 0.90)
 
 
 if __name__ == "__main__":
