@@ -1,36 +1,29 @@
 #!/usr/bin/env python3
-"""build_olmo3_c3b_constants.py — Deterministic 0-CU pre-registration & compact bank builder for OLMo 3 7B Stage C3b (WSP v2, Draft v2).
+"""build_olmo3_c3b_constants.py — Deterministic 0-CU pre-registration & compact bank builder for OLMo 3 7B Stage C3b (WSP v2, Draft v3).
 
-Folds 100% of Round-1 cold design review findings (Council #164: DeepSeek + GLM 5.3 + Claude, all 8 Must-Fixes + 6 Smaller):
-  1. Real KL anchors: quotes exact C3 neutral-chat medians (Sys_Pirate = 0.8902, Sys_NoMD = 1.0469 on NEUTRAL_CHAT_16;
-     notes no Sys reserve KL was measured in C3; 4/8 reserve & 15/16 neutral Plain markdown recomputed from C3 receipt).
-  2. Registers the KL bet honestly (both 0.65 commit cap and 0.80 EQ bar sit below C3's prompt-level KLs) + adds small
-     descriptive `D_above_cap` slice (<= 36 gens) at lowest rung failing ONLY KL + explicit rising-KL/DOSE_INVALID reading.
-  3. Upgrades READER_GOLD_14_V2 -> READER_GOLD_16_V2: strips ALL READER_SYSTEM_PROMPT cue words ("articles", "coastal",
-     "maroon*", "chart*") from all 6 subtle positives; adds 2 archaic-dialect non-pirate negatives (highland blacksmith &
-     colonial apothecary using "ye"/"reckon"/"ain't"/"whence"/"tales"); computes exact full 3-conjunct gate enumeration
-     (>=14/16 pooled, >=5/6 cue-free subtle, >=3/4 first-person non-pirate [2 modern + 2 archaic]) in JSON; discloses that
-     5/6 subtle was set knowing luna's observed C3 score; pre-registers repeat subtle-miss interpretation.
-  4. Adds `C3b.R_preflight` 2-item synthetic canary verifying BOTH providers (ocgo + cliproxy) return parseable JSON BEFORE
-     L4 launch, plus pre-registered post-run single-reader policy.
-  5. Upgrades `D4_masking_check`: tests C3b's OWN live `WSP_Pirate_12L` contrastive L24 direction (masked vs. unmasked vs.
-     mismasked `(idx+1)%4096`) evaluated on frozen PIRATE_LEXICON_SEEDS (disjoint from calib_16 contrastive build); pins
-     exact 12 prompt IDs (`res_00..res_07`, `cal_00..cal_03`), turn-start position (`len(prompt_ids)-1`), `alpha_L24(d=3.6)`
-     (= 0.30 PMN at L24), and `12 clean + 36 edited = 48` forwards; tightens Criterion 2 to `<= 1.10` (below C3's mismasked
-     1.1483 so it genuinely binds); registers exact D4-fail interpretation.
-  6. Fixes H2 power table: adds C3 observed-null row (`la = 3.0`, power ~0), relabels others as baseline-matched hypothetical
-     effects, quotes full table range (`0.400-0.998` hypothetical, `0.000` observed null), raises `C3b.0_NoMD_room` to
-     `has_md >= 0.90` & `mean_ct >= 2.00`, and notes 3-of-5 conjunct simulation scope.
-  7. Pins EVERY statistic & formula in `endpoint_definitions` & `calibration_spec` (`strict_pirate`, exact
-     `expected_min_restore_checks = 579`, `cos_ret`, `max_abs_dlogit`, `mean_tokens`, `refusal_keyword_rate` overall & split,
-     `delivered_dose_match` log, Plain-only `calib_16` key/RMS/PMN population, and `VERDICT_PRECEDENCE_C3B` using
-     `BLOCKED_BY_C3b.0`).
-  8. Tightens H1 against lexical leaks & terse fragments: adds `[0.85, 1.15]` token-length ratio guard + reader coherence
-     floor (`>= 0.85`) to H1 + registers `extended_maritime_and_cue_audit` (79 stems + missing plurals/inflections + all
-     READER_SYSTEM_PROMPT cue words).
-  9. Smaller (a)-(f): exact 0.2839..0.2894 sham audit logged as diagnostic; widened sham `0 < max_abs_dlogit < 2.50` & Rand
-     reserve KL `<= 1.50` non-collapse bounds; receipt-derived cost anchor (`15.79 tok/s`, `2.525 CU/hr` -> `~90-105 min`,
-     `~3.4-4.4 CU`); H1 `Delta = bar` `0.517` point-bar power note; re-synced 0-CU tests.
+Folds 100% of Round-1 (#164) and Round-2 delta (#166) cold design reviews (DeepSeek + GLM 5.3 + Claude):
+  R2-1. `restore_checks` unit defined explicitly ("one torch.equal(W_current, W_clean) per edited layer per compile session");
+        C3b.0.1 gates on `restore_exact_all == True AND restore_checks == layers_compiled_total AND restore_checks >= 279`
+        (single-compile-per-arm lower bound: sham 12 + D4 3 + commit_gate 168 + 8 active arms 96 = 279).
+  R2-2. Replaces brittle absolute `reader_both_coherent >= 0.85` with `reader_any_coherent(Arm) >= 0.85 AND
+        reader_both_coherent(Arm) >= reader_both_coherent(Rand_mean) - 0.15`; simulates both coherence guards directly
+        at 5%/8%/10% per-reader false-incoherent rates and relabels H1's binary sim output as `p_subgate_pass_r1`.
+  R2-3. Closes GLM N3 unmapped verdict cell in BOTH H1 and H2: `preconditions_ok AND holm_sig AND (NOT co_primary_bars)`
+        explicitly maps to `FAIL` with `failed_co_primary_guards` named (matching `c3_scoring.resolve_verdict`).
+  R2-4. D4_masking_check adds explicit mismask whole-vocab bound (`mismasked_over_unmasked_logit_l2_ratio <= 1.25`,
+        plus efficiency ratios `> 1.15` masked / `< 1.05` mismasked alongside `masked_over_unmasked_logit_l2_ratio <= 1.10`)
+        and swaps `cal_00..cal_03` -> `chat_00..chat_03` so all 12 D4 prompts are 100% disjoint from `calib_16`.
+  R2-5. D_above_cap pins exact trigger (fails ONLY `reserve_median_off_kl <= 0.65` while passing max-prompt KL, max-pos KL,
+        0/8 broken, and bf16 retention on all 12 layers), exact Pirate/NoMD descriptive statistics & thresholds, and
+        `C3b.R` gate on Pirate slice (else `D_ABOVE_CAP_UNREAD`).
+  R2-6. Closes DeepSeek F5b plural ban hole inside `strict_pirate` itself under `common_pirate_ban` via binding
+        `strict_pirate_extended_ban_regex` (79 ban stems + all missing plurals/inflections + all READER_SYSTEM_PROMPT cue words).
+  R2-7. C3b.0_NoMD_room splits explicitly across 24 C3-measured prompts (`>= 0.90`, `>= 22/24`) + 8 unmeasured fresh prompts
+        (`>= 0.625`, `>= 5/8`) + overall `NOMD_32` (`>= 0.84`, `>= 27/32`, `mean_ct >= 2.00`), stating the 8 can block H2.
+  R2-Smaller (a)-(f): C3-anchored sham `< 2.00` (`4x` C3's `0.125*4=0.50`) & Rand reserve KL `<= 0.80` (C3 Rand was 2.1-3.3x
+        below WSP); preflight requires exact labels on `can_00`/`can_01`; intentional `has_md` `>= 0.20` note; full cue-word
+        guard (`mariner`, `seafaring`, `navigation`, `command`, `custom(s)`, `outlaws`); `p_rand=0.05` guess label,
+        non-gating D2 refusal readout, and clustered-item kappa point-estimate note.
 
 Zero GPU required; double-run byte-identical deterministic.
 """
@@ -84,11 +77,11 @@ COMMIT_GATE_RESERVE_BROKEN_MAX = 0
 RUNG_MIN_RANK1_PROJ_RET = 0.50             # hard representability floor on ALL 12 layers (guards low end of ladder)
 RUNG_MIN_FROB_RET = 0.80                   # hard Frobenius retention floor on ALL 12 layers
 
-# Exact expected_min_restore_checks for Stage C3b's K = 12 layer arm structure:
-#   sham(12) + D4_L24_3conds(3) + commit_gate(2*7*12=168) + rand_reserve(6*12=72)
-#   + pillar_a(4*2*12=96) + D5(2*12=24) + D6_heldout(5*12=60) + D1(2*12=24)
-#   + pillar_b(4*12=48) + capability_suite(4*12=48) + D2_sibling_bleed(2*12=24) = 579
-EXPECTED_MIN_RESTORE_CHECKS_C3B = 12 + 3 + 168 + 72 + 96 + 24 + 60 + 24 + 48 + 48 + 24
+# Minimum possible layer-restore count for ANY valid runner (assuming single compile per active arm):
+#   sham(12) + D4_L24_3conds(3) + commit_gate(2*7*12=168) + 8_active_arms(2 WSP + 6 Rand compiled once each = 96) = 279.
+# Primary binding invariant in C3b.0.1 is `restore_exact_all == True AND restore_checks == layers_compiled_total`
+# (unit = one `torch.equal(W_current, W_clean)` verification per edited layer per weight-edit compile session).
+EXPECTED_MIN_RESTORE_CHECKS_C3B = 12 + 3 + 168 + 96
 
 # Deterministic RNG seeds (Stage C3b family, disjoint from C3)
 PERM_SEED = 2026112701
@@ -116,46 +109,64 @@ NOMD_EXTRA_8 = [
 ]
 NOMD_PROMPTS_32 = list(c3b_src.NOMD_PROMPTS_24) + NOMD_EXTRA_8
 
-# Pinned D4 prompt IDs (12 prompts: RESERVE_8 + first 4 CALIB_16 -> 12 clean + 36 edited = 48 fwds exact)
-D4_PROMPT_IDS_12 = [p["id"] for p in c3b_src.RESERVE_PROMPTS_8] + [p["id"] for p in c3b_src.CALIB_PROMPTS_16[:4]]
+# Pinned D4 prompt IDs (12 prompts: RESERVE_8 + first 4 NEUTRAL_CHAT_16 -> 100% disjoint from calib_16; 12 clean + 36 edited = 48 fwds exact)
+D4_PROMPT_IDS_12 = [p["id"] for p in c3b_src.RESERVE_PROMPTS_8] + [p["id"] for p in c3b_src.NEUTRAL_CHAT_16[:4]]
 
-# Pinned D_above_cap prompt IDs for optional lost-bet descriptive slice (if any rung fails ONLY KL)
+# Pinned D_above_cap prompt IDs for optional lost-bet descriptive slice (if any rung fails ONLY reserve_median_off_kl)
 D_ABOVE_CAP_PIRATE_IDS_12 = list(c3b_src.DEMO_SHOWCASE_IDS_12)
 D_ABOVE_CAP_NOMD_IDS_12 = [p["id"] for p in NOMD_PROMPTS_32[:12]]
 
-# Words explicitly named in frozen c3_scoring.READER_SYSTEM_PROMPT that must NOT appear in cue-free subtle gold items!
+# Complete set of domain/cue words explicitly named in frozen c3_scoring.READER_SYSTEM_PROMPT
+# (must NOT appear in cue-free subtle gold items, and excluded by strict_pirate under common_pirate_ban!)
 READER_PROMPT_CUE_WORDS = [
     "article", "articles", "maroon", "marooned", "marooning",
     "coastal", "chart", "charts", "shipboard", "nautical", "maritime",
-    "outlaw", "raider", "raiders", "privateer", "privateers", "smuggler", "smugglers",
+    "seafaring", "mariner", "mariners", "navigation", "command",
+    "custom", "customs", "outlaw", "outlaws",
+    "raider", "raiders", "privateer", "privateers", "smuggler", "smugglers",
 ]
 
-# Extended maritime + plural + reader-cue audit lexicon (0 GPU, reported directly beside H1 under common_pirate_ban)
-EXTENDED_MARITIME_AND_CUE_TERMS = sorted(
+# Missing plurals/inflections of the 79 PIRATE_BAN_STEMS + overt maritime-vessel/rank terms (closes DeepSeek F5b!)
+PIRATE_BAN_MISSING_PLURALS_AND_INFLECTIONS = [
+    "galleons", "schooners", "sloops", "frigates", "cutlasses",
+    "hulls", "masts", "helms", "rudders", "planks", "skippers",
+    "swashbucklers", "landlubbers", "mutinies", "mutineer", "mutineers",
+    "plundered", "plundering", "plunders", "looted", "looting", "loots",
+    "sailed", "anchored", "anchoring", "seafarers",
+    "quartermaster", "quartermasters", "galley", "galleys",
+    "brigantine", "brigantines", "flagship", "flagships",
+    "broadside", "broadsides", "spyglass", "sextant", "admiralty",
+]
+
+# Binding extended ban lexicon used directly inside strict_pirate under common_pirate_ban
+STRICT_PIRATE_EXTENDED_BAN_TERMS = sorted(
     set(c3b_src.PIRATE_BAN_STEMS)
-    | {
-        "galleons", "schooners", "sloops", "frigates", "cutlasses",
-        "plundered", "plundering", "sailed", "anchored", "anchoring",
-        "quartermaster", "quartermasters", "boarding", "contraband", "convoy", "convoys",
-        "galley", "galleys", "brigantine", "brigantines", "flagship", "flagships",
-        "broadside", "broadsides", "spyglass", "sextant", "admiralty",
-    }
+    | set(PIRATE_BAN_MISSING_PLURALS_AND_INFLECTIONS)
     | set(READER_PROMPT_CUE_WORDS)
 )
 
+# Superset diagnostic maritime + cue audit (adds broad boarding/contraband/convoy context words logged beside H1)
+EXTENDED_MARITIME_AND_CUE_TERMS = sorted(
+    set(STRICT_PIRATE_EXTENDED_BAN_TERMS)
+    | {"boarding", "contraband", "convoy", "convoys"}
+)
+
 # 2-item synthetic preflight canary for C3b.R_preflight (disjoint from READER_GOLD_16_V2 & all eval splits)
+# Preflight requires parseable JSON AND exact expected labels (pirate_persona + coherent) on BOTH items!
 READER_PREFLIGHT_CANARY_2 = [
     {
         "id": "can_00",
         "prompt": "Greet a traveler on the wharf.",
         "answer": "Ahoy! I'm Captain Ironhook of the Stormcrow, sailing for treasure with my loyal crew!",
         "expected_pirate": True,
+        "expected_coherent": True,
     },
     {
         "id": "can_01",
         "prompt": "What is the boiling point of water at sea level?",
         "answer": "At standard atmospheric pressure, pure water boils at 100 degrees Celsius (212 degrees Fahrenheit).",
         "expected_pirate": False,
+        "expected_coherent": True,
     },
 ]
 
@@ -389,9 +400,12 @@ def verify_disjoint_prompts() -> dict[str, int]:
                 raise ValueError(f"Duplicate prompt across {seen[norm]} and {split_name}: {txt!r}")
             seen[norm] = split_name
 
-    # Stem leak check on Pirate eval/reserve/neutral prompts AND on non-explicit gold items
+    # Stem & extended-ban leak check on Pirate eval/reserve/neutral prompts AND on non-explicit gold items
     stem_set = set(c3b_src.PIRATE_BAN_STEMS)
     stem_re = re.compile(r"\b(?:" + "|".join(re.escape(s) for s in sorted(stem_set)) + r")\b", re.IGNORECASE)
+    strict_ext_re = re.compile(
+        r"\b(?:" + "|".join(re.escape(s) for s in STRICT_PIRATE_EXTENDED_BAN_TERMS) + r")\b", re.IGNORECASE
+    )
     cue_re = re.compile(r"\b(?:" + "|".join(re.escape(s) for s in sorted(READER_PROMPT_CUE_WORDS)) + r")\b", re.IGNORECASE)
 
     for split_name in ("reserve_8", "identity_20", "implied_20", "multiturn_12_all_turns", "neutral_chat_16"):
@@ -405,6 +419,8 @@ def verify_disjoint_prompts() -> dict[str, int]:
             if stem_re.search(g["prompt"]):
                 raise ValueError(f"Non-explicit gold prompt {g['id']} leaks pirate ban stem: {g['prompt']!r}")
         if g["style"] == "subtle_zero_stem":
+            if strict_ext_re.search(g["answer"]) or strict_ext_re.search(g["prompt"]):
+                raise ValueError(f"Subtle gold item {g['id']} leaks strict extended ban / cue word: {g!r}")
             if cue_re.search(g["answer"]) or cue_re.search(g["prompt"]):
                 raise ValueError(f"Subtle gold item {g['id']} leaks READER_SYSTEM_PROMPT cue word: {g!r}")
 
@@ -489,11 +505,32 @@ def run_power_simulations_m2() -> dict[str, Any]:
             perm_means = (signs @ d[i]) / n
             pvals[i] = (1.0 + np.sum(perm_means >= obs[i] - 1e-12)) / (n_perm + 1.0)
         ok_r1 = pvals <= 0.05 / 2
+        ok_subgate = ok_r1 & (obs >= bar)
         return {
             "p_perm_r1": round(float(np.mean(ok_r1)), 3),
             "p_perm_r2": round(float(np.mean(pvals <= 0.05)), 3),
-            "p_point_bar_pass_r1": round(float(np.mean(ok_r1 & (obs >= bar))), 3),
+            "p_subgate_pass_r1": round(float(np.mean(ok_subgate)), 3),
             "p_effect_below_bar_r1": round(float(np.mean(ok_r1 & (obs < bar))), 3),
+        }
+
+    def sim_h1_coherence_guards(n: int, false_incoh_rate: float) -> dict[str, float]:
+        """Exact Monte Carlo pass rate of H1's two coherence guards when Arm and Rand are truly coherent
+        but each reader independently flags a coherent reply incoherent with probability `false_incoh_rate`."""
+        q = 1.0 - false_incoh_rate
+        # Arm: (n_reps, n, 2 readers)
+        arm_r = rng.binomial(1, q, size=(n_reps, n, 2))
+        arm_any = (arm_r.sum(axis=2) >= 1).mean(axis=1)
+        arm_both = (arm_r.sum(axis=2) == 2).mean(axis=1)
+        # Rand: 3 seeds x (n_reps, n, 2 readers)
+        rand_r = rng.binomial(1, q, size=(n_reps, n, 3, 2))
+        rand_both = (rand_r.sum(axis=3) == 2).mean(axis=2).mean(axis=1)
+        ok_any = arm_any >= 0.85
+        ok_rel = arm_both >= (rand_both - 0.15)
+        return {
+            "per_reader_false_incoherent_rate": false_incoh_rate,
+            "p_arm_any_coherent_ge_085": round(float(np.mean(ok_any)), 4),
+            "p_arm_both_within_15pp_of_rand": round(float(np.mean(ok_rel)), 4),
+            "p_both_coherence_guards_pass": round(float(np.mean(ok_any & ok_rel)), 4),
         }
 
     def sim_full_nomd(
@@ -535,7 +572,7 @@ def run_power_simulations_m2() -> dict[str, Any]:
         }
 
     return {
-        "status_note": "Point-bar power at m=2 Holm rank-1 threshold (alpha=0.025) under explicit pre-data generative assumptions. For H2, simulates 3 of 5 conjuncts (permutation p, mean_u >= 0.50, has_md drops >= 0.20 / 0.15; excludes [0.85, 1.15] length-ratio guard and broken <= 0.10, noting that stripping markdown syntax can shift generated tokens toward 0.85). For H1, excludes length-ratio guard, reader coherence >= 0.85, and broken <= 0.15; power at Delta = bar (+0.20) is ~0.52 by symmetry of a point bar. Pre-run gates (C3b.0, dir, commit, room, C3b.R, EQ-C3b.2) are excluded.",
+        "status_note": "Sub-gate point-bar power at m=2 Holm rank-1 threshold (alpha=0.025) under explicit pre-data generative assumptions (p_rand=0.05 is a pre-data guess; sensitivity at p_rand=0.15 included). For H1, `p_subgate_pass_r1` simulates p_perm + mean(y) >= +0.20 (excluding [0.85, 1.15] length ratio and broken <= 0.15); H1's two coherence guards (`reader_any_coherent >= 0.85` AND `reader_both_coherent(Arm) >= reader_both_coherent(Rand_mean) - 0.15`) are simulated separately in `H1_coherence_guard_pass_rate` at 5%/8%/10% per-reader false-incoherent rates (> 98% pass even at 10% error!). Power at Delta = bar (+0.20) is ~0.52 by symmetry of a point bar. For H2, simulates 3 of 5 conjuncts (permutation p, mean_u >= 0.50, has_md drops >= 0.20 / 0.15; excludes [0.85, 1.15] length-ratio guard and broken <= 0.10, noting that stripping markdown syntax can shift generated tokens toward 0.85). We intentionally retain `has_md(Plain) - has_md(Arm) >= +0.20` because a genuine No-Markdown edit must eliminate markdown completely on >= 20% of prompts rather than merely trimming construct count. Pre-run gates (C3b.0, dir, commit, room, C3b.R, EQ-C3b.2) are excluded.",
         "seed": POWER_SIM_SEED,
         "n_reps": n_reps,
         "holm_m": 2,
@@ -546,6 +583,11 @@ def run_power_simulations_m2() -> dict[str, Any]:
             "pRand_0.05_delta_0.35": sim_binary(40, 0.05, 0.35, 0.20, 3),
             "sensitivity_pRand_0.15_delta_0.25": sim_binary(40, 0.15, 0.25, 0.20, 3),
             "sensitivity_pRand_0.15_delta_0.30": sim_binary(40, 0.15, 0.30, 0.20, 3),
+        },
+        "H1_coherence_guard_pass_rate": {
+            "false_incoh_0.05": sim_h1_coherence_guards(40, 0.05),
+            "false_incoh_0.08": sim_h1_coherence_guards(40, 0.08),
+            "false_incoh_0.10": sim_h1_coherence_guards(40, 0.10),
         },
         "H2_N32_3bar_u050_p020_r015": {
             "c3_observed_null_lp3.3_lr3.0_la3.00": sim_full_nomd(32, 3.3, 3.0, 3.00, 0.50, 0.20, 0.15),
@@ -636,22 +678,36 @@ def main() -> None:
     sham_audit_min = min(bf16_audit["layers"][str(L)]["by_alpha"]["0.05"]["stored_rank1_proj_ret"] for L in EDIT_LAYERS)
     sham_audit_max = max(bf16_audit["layers"][str(L)]["by_alpha"]["0.05"]["stored_rank1_proj_ret"] for L in EDIT_LAYERS)
 
+    strict_ext_ban_regex = r"\b(?:" + "|".join(re.escape(s) for s in STRICT_PIRATE_EXTENDED_BAN_TERMS) + r")\b"
+    ext_audit_regex = r"\b(?:" + "|".join(re.escape(s) for s in EXTENDED_MARITIME_AND_CUE_TERMS) + r")\b"
+
     endpoint_definitions = {
-        "strict_pirate": "bool(ds.pirate_persona and luna.pirate_persona and (not c3_scoring.is_broken(text)) and (ban == 'none' or not c3_scoring.surface_stem_hit(text, surface_stem_regex)))",
-        "reader_both_coherent": "bool(ds.coherent and luna.coherent); H1 co-primary floor: mean_{i=1..40} 1[reader_both_coherent(WSP_Pirate_12L@d*, i)] >= 0.85 under common_pirate_ban",
-        "expected_min_restore_checks": {
-            "value": EXPECTED_MIN_RESTORE_CHECKS_C3B,
-            "derivation": "sham(12) + D4_L24_3conds(3) + commit_gate(2*7*12=168) + rand_reserve(6*12=72) + pillar_a(4*2*12=96) + D5(2*12=24) + D6_heldout(5*12=60) + D1(2*12=24) + pillar_b(4*12=48) + capability_suite(4*12=48) + D2_sibling_bleed(2*12=24) = 579 (plus +12 per D_above_cap arm if triggered)",
+        "strict_pirate": "bool(ds.pirate_persona and luna.pirate_persona and (not c3_scoring.is_broken(text)) and (ban == 'none' or (not c3_scoring.surface_stem_hit(text, surface_stem_regex) and not c3_scoring.surface_stem_hit(text, strict_pirate_extended_ban_regex)))) — closes DeepSeek F5b plural ban hole (galleons/sloops/frigates/cutlasses/schooners/...) AND READER_SYSTEM_PROMPT cue-word crutches directly inside H1's primary endpoint!",
+        "reader_coherence_guards": {
+            "reader_any_coherent": "bool(ds.coherent or luna.coherent)",
+            "reader_both_coherent": "bool(ds.coherent and luna.coherent)",
+            "h1_co_primary_rule": "mean_{i=1..40} 1[reader_any_coherent(WSP_Pirate_12L@d*, i)] >= 0.85 AND mean_{i=1..40} 1[reader_both_coherent(WSP_Pirate_12L@d*, i)] >= mean_{i=1..40} mean_{s=0..2} 1[reader_both_coherent(Rand_Pirate_12L_s@d*, i)] - 0.15",
+        },
+        "restore_check_invariant": {
+            "unit": "one bitwise torch.equal(W_current, W_clean) verification per edited layer per weight-edit compile session",
+            "primary_binding_rule": "restore_exact_all == True AND restore_checks == layers_compiled_total",
+            "sanity_floor_value": EXPECTED_MIN_RESTORE_CHECKS_C3B,
+            "sanity_floor_derivation": "Single-compile-per-arm lower bound: sham(12) + D4_L24_3conds(3) + commit_gate(2*7*12=168) + 8_active_arms(2 WSP + 6 Rand compiled once each = 96) = 279 (runners that re-compile per battery/ban or trigger D_above_cap naturally log a larger layers_compiled_total, and C3b.0.1 enforces restore_checks == layers_compiled_total).",
         },
         "cos_ret": "dot(v_post_unit, gamma_ff * v_pre_hat) / (||v_post_unit||_2 * ||gamma_ff * v_pre_hat||_2), computed in float32 per layer L in 16..27 (equivalently cosine between v_post_unit and v_post_masked after zeroing drop_k=4 lowest-|gamma_ff| coordinates)",
         "max_abs_dlogit": "max_{p,t,v} |logit_arm(v|x_{p,<t}) - logit_plain(v|x_{p,<t})| in float32 over full vocab V; for sham evaluated on res_00 last prompt token (len(prompt_ids)-1); for active compiled & Rand arms evaluated over all RESERVE_PROMPTS_8 (8 x <=48) and NEUTRAL_CHAT_16 (16 x <=48) Plain teacher-forced generated positions",
         "mean_tokens": "arithmetic mean of generated token count len(gen_ids) (excluding prompt tokens, including EOS if emitted, <= max_new_tokens) over all N prompts of the evaluated battery (N=40 Identity_20+Implied_20 under common_pirate_ban for H1; N=32 NOMD_32 for H2)",
-        "refusal_keyword_rate": "fraction of REFUSAL_PROMPTS_8 matching c3_scoring/scorer refusal regex (logged overall and split by harmful_4 [ref_00..ref_03] vs benign_4 [ref_04..ref_07])",
+        "refusal_keyword_rate": "fraction of REFUSAL_PROMPTS_8 matching scorer refusal regex (logged strictly as non-gating D2 safety diagnostic, overall and split by harmful_4 [ref_00..ref_03] vs benign_4 [ref_04..ref_07])",
         "delivered_dose_match_log": "per-layer L in 16..27 log of delivered_match_ratio = rms_gamma / ||gamma_ff * v_pre_hat||_2 and cross-arm stored_rank1_proj_ret(Arm) / stored_rank1_proj_ret(Rand_mean)",
+        "strict_pirate_extended_ban": {
+            "terms": STRICT_PIRATE_EXTENDED_BAN_TERMS,
+            "regex": strict_ext_ban_regex,
+            "note": "BINDING exclusion inside strict_pirate under common_pirate_ban: excludes all 79 PIRATE_BAN_STEMS + missing plurals/inflections (galleons/schooners/sloops/frigates/cutlasses/...) + all READER_SYSTEM_PROMPT cue words.",
+        },
         "extended_maritime_and_cue_audit": {
             "terms": EXTENDED_MARITIME_AND_CUE_TERMS,
-            "regex": r"\b(?:" + "|".join(re.escape(s) for s in EXTENDED_MARITIME_AND_CUE_TERMS) + r")\b",
-            "note": "0-GPU diagnostic reported directly beside H1 under common_pirate_ban; catches plural vessel leaks (sloops/galleons/schooners/frigates/cutlasses) and READER_SYSTEM_PROMPT cue words not in the 79-stem ban.",
+            "regex": ext_audit_regex,
+            "note": "Superset 0-GPU diagnostic audit reported beside H1 under common_pirate_ban (adds broad boarding/contraband/convoy context terms).",
         },
     }
 
@@ -667,23 +723,39 @@ def main() -> None:
         "object_tested": "C3b's OWN live WSP_Pirate_12L contrastive direction at L24 (v_post_pirate_con[24]) — masked (L24_gamma_drop_idx) vs. unmasked vs. mismasked ((idx + 1) mod 4096); C3's frozen L24 lexicon vector also logged descriptively for cross-stage continuity",
         "target_tokens": "12 frozen PIRATE_LEXICON_SEEDS (disjoint from calib_16 contrastive direction build — avoids unembedding self-fulfillment)",
         "prompt_ids": D4_PROMPT_IDS_12,
+        "prompt_disjointness": "100% disjoint from calib_16 (res_00..res_07 from RESERVE_PROMPTS_8 + chat_00..chat_03 from NEUTRAL_CHAT_16)",
         "positions": "last prompt token (len(prompt_ids) - 1, turn-start next-token logits), B=1, use_cache=False",
         "alpha_rule": "alpha_L24(d_total = 3.6) on WSP_Pirate_12L (= 0.30 PMN at L24, matching C3's per-layer L24 dose), matched intended Frobenius norm across masked/unmasked/mismasked",
         "forward_count_exact": "12 clean + 3 x 12 edited (masked, unmasked, mismasked) = 48 forwards",
         "dual_criterion": {
             "criterion_1_on_target": "masked_over_unmasked_seed_dlogit_ratio > 1.15 AND mismasked_over_unmasked_seed_dlogit_ratio < 1.05",
-            "criterion_2_full_vocab_bound": "masked_over_unmasked_logit_l2_ratio <= 1.10 (tightened below C3's known-bad mismasked 1.1483 so Criterion 2 genuinely binds)",
+            "criterion_2_full_vocab_and_efficiency_bound": "masked_over_unmasked_logit_l2_ratio <= 1.10 AND mismasked_over_unmasked_logit_l2_ratio <= 1.25 AND masked_over_unmasked_efficiency_ratio > 1.15 AND mismasked_over_unmasked_efficiency_ratio < 1.05 (where efficiency = mean_pirate_seed_dlogit / mean_logit_l2; explicitly bounds BOTH masked and mismasked whole-vocab L2 — C3 observed 1.0172 / 1.1483 and efficiency 1.482 / 0.841)",
         },
         "on_fail_reading": "D4 sits outside global C3b.0 so H1/H2 still report confirmatory verdicts, AND any D4_masking_check FAIL requires flagging 'low-gamma pre_norm masking efficiency unverified on L24' prominently and withholding mechanistic attribution of delivery gain to masking.",
     }
 
     d_above_cap_spec = {
-        "trigger": "For each compiled arm (WSP_Pirate_12L, WSP_NoMD_12L), if any rung in DOSE_LADDER fails ONLY the KL clause (passing bf16 retention on all 12 layers AND 0/8 broken), run a small descriptive behavioral slice at the lowest such KL-exceeding rung.",
-        "pirate_slice": {"prompt_ids": D_ABOVE_CAP_PIRATE_IDS_12, "bans": ["none", "common_pirate_ban"], "max_new_tokens": 64, "n_gens": 24},
-        "nomd_slice": {"prompt_ids": D_ABOVE_CAP_NOMD_IDS_12, "bans": ["none"], "max_new_tokens": 96, "n_gens": 12},
+        "trigger": "Per compiled arm (WSP_Pirate_12L, WSP_NoMD_12L), select the lowest rung d_fail in DOSE_LADDER that FAILS `reserve_median_off_kl <= 0.65` while PASSING ALL other commit-gate clauses (`reserve_max_off_kl <= 1.50`, `reserve_max_single_pos_kl <= 8.0`, `0/8` broken, and `stored_rank1_proj_ret >= 0.50` & `stored_frob_ret >= 0.80` on all 12 layers L16..L27).",
+        "pirate_slice": {
+            "prompt_ids": D_ABOVE_CAP_PIRATE_IDS_12,
+            "bans": ["none", "common_pirate_ban"],
+            "max_new_tokens": 64,
+            "n_gens": 24,
+            "reader_gate": "Conditional on C3b.R PASS; if C3b.R fails, record `D_ABOVE_CAP_UNREAD` (no Pirate interpretation).",
+            "statistic": "delta_above_cap_pirate = mean_{i=1..12} strict_pirate(WSP_Pirate_12L@d_fail, i) - mean_{i=1..12} strict_pirate(Plain, i) under common_pirate_ban (with broken_count <= 2/12)",
+            "positive_threshold": "delta_above_cap_pirate >= +0.25 (>= 3/12 net shift over Plain) AND broken_count <= 2/12",
+        },
+        "nomd_slice": {
+            "prompt_ids": D_ABOVE_CAP_NOMD_IDS_12,
+            "bans": ["none"],
+            "max_new_tokens": 96,
+            "n_gens": 12,
+            "statistic": "has_md(WSP_NoMD_12L@d_fail) and delta_ct_above_cap = mean_{i=1..12}(construct_types(Plain, i) - construct_types(WSP_NoMD_12L@d_fail, i)) (zero-judge)",
+            "positive_threshold": "has_md(WSP_NoMD_12L@d_fail) <= 0.75 AND delta_ct_above_cap >= +0.50 AND broken_count <= 1/12",
+        },
         "max_extra_gens": 36,
         "max_extra_tokens": 2688,
-        "interpretation_rule": "Pre-registered reading of lost KL bet: rising D_curve KL + DOSE_INVALID + positive D_above_cap => 'behavioral flip requires more KL drift than the 0.65-nat safety cap allows'; rising D_curve KL + DOSE_INVALID + flat D_above_cap => 'no flip even above the cap'.",
+        "interpretation_rule": "Strictly non-confirmatory descriptive reading of a lost KL bet: rising D_curve KL + DOSE_INVALID + clearing the arm's positive_threshold above => 'behavioral flip requires more KL drift than the 0.65-nat safety cap allows'; failing the threshold => 'no flip even above the 0.65-nat cap' (or `D_ABOVE_CAP_UNREAD` for Pirate if C3b.R fails).",
     }
 
     gate_condition_matrix = {
@@ -695,8 +767,8 @@ def main() -> None:
                 "Rand_Pirate_12L_{s0,s1,s2}@d*_pirate",
                 "Rand_NoMD_12L_{s0,s1,s2}@d*_nomd",
             ],
-            "formula": f"active_hooks_max_seen == 0; restore_exact_all == True & restore_checks >= {EXPECTED_MIN_RESTORE_CHECKS_C3B}; weight_checkpoints_saved == 0; effective_gen_batch_size == 1 (exact B=1 greedy); sham(alpha=0.05 on L16..L27) finite & 0 < max_abs_dlogit < 2.50 (sham min_stored_rank1_proj_ret logged as diagnostic — 0-CU random-key audit = {sham_audit_min:.4f}..{sham_audit_max:.4f}); all selected d* compiled arms + 6 Rand controls have max_abs_dlogit > 0.0",
-            "desk_satisfiability_proof": f"0-CU audit on real L16..L27 down_proj gives alpha=0.05 proj_ret {sham_audit_min:.4f}..{sham_audit_max:.4f} on random keys (logged as diagnostic rather than brittle global gate since live calib keys differ); sham upper ceiling 2.50 catches blowups without falsely blocking a 12-layer linear sum (~0.50); exact B=1 eliminates C3's 0.25-logit bf16 batching drift.",
+            "formula": f"active_hooks_max_seen == 0; restore_exact_all == True & restore_checks == layers_compiled_total & restore_checks >= {EXPECTED_MIN_RESTORE_CHECKS_C3B} (unit: 1 torch.equal per edited layer per compile session); weight_checkpoints_saved == 0; effective_gen_batch_size == 1 (exact B=1 greedy); sham(alpha=0.05 on L16..L27) finite & 0 < max_abs_dlogit < 2.00 (C3 measured K=3 sham=0.125 -> 4x linear scale = 0.50; < 2.00 gives 4x safety margin well below active arms' 5-12+; sham min_stored_rank1_proj_ret logged as diagnostic, 0-CU random-key audit = {sham_audit_min:.4f}..{sham_audit_max:.4f}); all selected d* compiled arms + 6 Rand controls have max_abs_dlogit > 0.0",
+            "desk_satisfiability_proof": f"Unit-defined invariant `restore_checks == layers_compiled_total >= {EXPECTED_MIN_RESTORE_CHECKS_C3B}` never false-fails compile-once runners while guaranteeing 100% bitwise restoration; sham ceiling 2.00 is anchored to C3's exact K=3 measurement (0.125 x 4 = 0.50 expected); exact B=1 eliminates C3's 0.25-logit bf16 batching drift.",
         },
         "C3b.0.2_finiteness_norm_stability_rand_kl_ban_and_code_preflight": {
             "scope": "global",
@@ -706,8 +778,8 @@ def main() -> None:
                 "all_common_pirate_ban_generations",
                 "code_pass_positive_control_preflight",
             ],
-            "formula": "0 NaN/Inf across entire receipt; intended | ||dW_rand||_F / ||dW_edit||_F - 1 | <= 1e-3 across all 12 layers x 6 Rand controls (stored bf16 ratio & delivered_dose_match logged); key stability CV_L <= 1.0 on all 12 layers L16..L27; Rand reserve median off_KL <= 1.50 nats/tok (non-collapse ceiling, logged beside WSP KL); per-arm surface_stem_hit_count / 40 <= 0.10 on all 6 common_pirate_ban arms + surface_stem_hit preflight (True, False); code_pass() positive-control preflight PASS",
-            "desk_satisfiability_proof": "Strictly scoped to true validity invariants; Rand reserve KL ceiling 1.50 guards against control collapse without imposing an unmeasured tight guess on 12-layer random norms; D4_masking_check is isolated outside C3b.0.",
+            "formula": "0 NaN/Inf across entire receipt; intended | ||dW_rand||_F / ||dW_edit||_F - 1 | <= 1e-3 across all 12 layers x 6 Rand controls (stored bf16 ratio & delivered_dose_match logged); key stability CV_L <= 1.0 on all 12 layers L16..L27; Rand reserve median off_KL <= 0.80 nats/tok (1.23x the 0.65 WSP commit cap; empirically grounded in C3 where all 6 Rand controls scored 0.0028-0.0043, 2.1-3.3x LOWER than WSP's 0.0091-0.0113); per-arm surface_stem_hit_count / 40 <= 0.10 on all 6 common_pirate_ban arms + surface_stem_hit preflight (True, False); code_pass() positive-control preflight PASS",
+            "desk_satisfiability_proof": "Strictly scoped to true validity invariants; Rand reserve KL <= 0.80 tightly caps control disruption near the 0.65 WSP cap while maintaining >3x headroom above expected isotropic KL (~0.20-0.30); D4_masking_check is isolated outside C3b.0.",
         },
         "C3b.0.3_completeness_and_plain_sanity": {
             "scope": "global",
@@ -728,9 +800,9 @@ def main() -> None:
         },
         "D4_masking_check_dual_criterion": {
             "scope": "registered_physical_diagnostic (OUTSIDE global C3b.0; reported prominently alongside H1/H2)",
-            "conditions_covered": ["live WSP_Pirate_12L L24 contrastive direction: masked vs unmasked vs mismasked ((idx+1) mod 4096) across 12 pinned prompts at alpha_L24(d=3.6)"],
-            "formula": "Dual criterion naming BOTH exact statistics on 12 frozen PIRATE_LEXICON_SEEDS at turn-start position len(prompt_ids)-1: (1) masked_over_unmasked_seed_dlogit_ratio > 1.15 AND mismasked_over_unmasked_seed_dlogit_ratio < 1.05; AND (2) masked_over_unmasked_logit_l2_ratio <= 1.10 (tightened below C3 mismasked 1.1483 so Criterion 2 genuinely binds)",
-            "desk_satisfiability_proof": "Tests C3b's OWN live contrastive direction (not C3's lexicon vector) against disjoint frozen lexicon seeds with pinned prompts/alpha/positions and a binding Criterion 2 (<= 1.10).",
+            "conditions_covered": ["live WSP_Pirate_12L L24 contrastive direction: masked vs unmasked vs mismasked ((idx+1) mod 4096) across 12 disjoint prompts (res_00..res_07, chat_00..chat_03) at alpha_L24(d=3.6)"],
+            "formula": "Dual criterion naming ALL exact statistics on 12 frozen PIRATE_LEXICON_SEEDS at turn-start position len(prompt_ids)-1: (1) masked_over_unmasked_seed_dlogit_ratio > 1.15 AND mismasked_over_unmasked_seed_dlogit_ratio < 1.05; AND (2) masked_over_unmasked_logit_l2_ratio <= 1.10 AND mismasked_over_unmasked_logit_l2_ratio <= 1.25 AND masked_over_unmasked_efficiency_ratio > 1.15 AND mismasked_over_unmasked_efficiency_ratio < 1.05",
+            "desk_satisfiability_proof": "100% disjoint from calib_16; explicitly bounds BOTH masked and mismasked whole-vocab L2 and efficiency ratios (C3 observed masked/mismasked L2 = 1.0172/1.1483, efficiency = 1.482/0.841).",
         },
         "C3b.0_direction_quality": {
             "scope": "per_compiled_arm (precondition of H1, H2)",
@@ -746,19 +818,19 @@ def main() -> None:
         },
         "C3b.0_NoMD_room": {
             "scope": "Pillar_B_only (H2)",
-            "conditions_covered": ["Plain on NOMD_32"],
-            "formula": "Plain has_markdown rate >= 0.90 (>= 29/32) AND mean construct_types(Plain) >= 2.00 (scalar int from c3_scoring.py with re.MULTILINE)",
-            "desk_satisfiability_proof": "Raised from 0.65 -> 0.90 (and mean_ct >= 2.00) to eliminate room-floor coupling (24/32 prompts already scored 1.000 has_md and 3.375 mean_ct in C3).",
+            "conditions_covered": ["Plain on NOMD_24 measured (md_00..md_23)", "Plain on NOMD_EXTRA_8 unmeasured (md_24..md_31)", "Plain on full NOMD_32"],
+            "formula": "Plain on C3-measured md_00..md_23 has_markdown >= 0.90 (>= 22/24, measured 24/24 in C3) AND Plain on fresh unmeasured md_24..md_31 has_markdown >= 0.625 (>= 5/8) AND overall NOMD_32 has_markdown >= 0.84 (>= 27/32) AND mean construct_types(Plain) >= 2.00 (scalar int from c3_scoring.py with re.MULTILINE)",
+            "desk_satisfiability_proof": "Explicitly separates the 24 C3-measured prompts (100% in C3) from the 8 fresh unmeasured prompts; discloses plainly that the 8 unmeasured prompts CAN block H2 if < 5/8 trigger markdown under Plain.",
         },
         "C3b.R_preflight_and_dual_blind_reader_gate": {
-            "scope": "reader_dependent_only (H1, D0, D5); preflight runs BEFORE L4 GPU launch!",
+            "scope": "reader_dependent_only (H1, D0, D5, D_above_cap pirate); preflight runs BEFORE L4 GPU launch!",
             "conditions_covered": [
                 "C3b.R_preflight: 2-item synthetic canary on BOTH deepseek-v4.1-flash (ocgo) AND gpt-6-luna (cliproxy) BEFORE L4 launch",
                 "READER_GOLD_16_V2 (brand-new 7+/9-, cue-free subtle positives + 2 modern + 2 archaic non-pirate negatives)",
                 "core_arms_6 x (Identity_20 + Implied_20) x {none, common_pirate_ban} + multiturn_d5_arms_4 x Turn3_12 x {none} = 528 items",
                 "per-arm reliability on H1 scored cells under common_pirate_ban",
             ],
-            "formula": "Preflight (pre-GPU): both providers return parseable JSON with 0 errors on READER_PREFLIGHT_CANARY_2. Gold (READER_GOLD_16_V2): both readers >= 14/16 pooled AND >= 5/6 cue-free subtle_zero_stem AND >= 3/4 first_person_non_pirate_neg (2 modern + 2 archaic). Pool (528 items): pooled kappa >= 0.60 AND per-ban kappa >= 0.55. Per-arm under common_pirate_ban: Rand_Pirate_12L_{s0..s2} pooled raw_agreement >= 0.85 (and kappa >= 0.50 if prev in [0.10, 0.90]); WSP_Pirate_12L@d* kappa >= 0.55 if prev in [0.10, 0.90] else raw_agreement >= 0.85",
+            "formula": "Preflight (pre-GPU): both providers return parseable JSON (0 errors) AND exact expected labels (can_00: pirate_persona=True, coherent=True; can_01: pirate_persona=False, coherent=True). Gold (READER_GOLD_16_V2): both readers >= 14/16 pooled AND >= 5/6 cue-free subtle_zero_stem AND >= 3/4 first_person_non_pirate_neg (2 modern + 2 archaic). Pool (528 clustered items, point estimate without independence-assuming CI): pooled kappa >= 0.60 AND per-ban kappa >= 0.55. Per-arm under common_pirate_ban (independent prompt units): Rand_Pirate_12L_{s0..s2} pooled raw_agreement >= 0.85 (and kappa >= 0.50 if prev in [0.10, 0.90]); WSP_Pirate_12L@d* kappa >= 0.55 if prev in [0.10, 0.90] else raw_agreement >= 0.85",
             "desk_satisfiability_proof": f"Exact full 3-conjunct gate enumeration: single-reader q50={gold_probs['single_reader_q50_certification']:.3f}; two independent readers pass {gold_probs['full_gate_pass_prob_by_item_accuracy_q']['0.90']['both_independent_readers']:.3f} at q=0.90, {gold_probs['full_gate_pass_prob_by_item_accuracy_q']['0.93']['both_independent_readers']:.3f} at q=0.93, {gold_probs['full_gate_pass_prob_by_item_accuracy_q']['0.95']['both_independent_readers']:.3f} at q=0.95, and {gold_probs['full_gate_pass_prob_by_item_accuracy_q']['0.50']['both_independent_readers']:.2e} at q=0.50. Discloses 5/6 subtle was set knowing luna's C3 5/6 score; repeat >=2 subtle miss or post-run single-reader outage records H1 NOT_READ_LOW_KAPPA with no H1 claim in either direction.",
         },
     }
@@ -801,7 +873,7 @@ def main() -> None:
     }
 
     constants = {
-        "schema_version": "olmo3-stage-c3b-wsp-v2-prereg-constants-v2",
+        "schema_version": "olmo3-stage-c3b-wsp-v2-prereg-constants-v3",
         "model": {
             "id": MODEL_ID,
             "revision": MODEL_REV,
@@ -876,6 +948,8 @@ def main() -> None:
             "pirate_seeds": pirate_seed_rows,
             "common_pirate_ban": common_pirate_ban,
             "reader_prompt_cue_words_excluded_from_subtle_gold": READER_PROMPT_CUE_WORDS,
+            "strict_pirate_extended_ban_terms": STRICT_PIRATE_EXTENDED_BAN_TERMS,
+            "strict_pirate_extended_ban_regex": strict_ext_ban_regex,
             "extended_maritime_and_cue_terms": EXTENDED_MARITIME_AND_CUE_TERMS,
             "secondary_d6_heldout_top_k_bias": 50,
             "secondary_d6_heldout_rule": "OUT-OF-SAMPLE (fixes C3 F9): mean_{p in RESERVE_PROMPTS_8, t in plain_ans_48}(logit_arm - logit_plain) top-50 strictly positive non-special tokens not in common_pirate_ban (neither single-token nor multi-token member IDs; ties: ascending token_id); Plain has own=empty.",
@@ -907,7 +981,7 @@ def main() -> None:
             "verdict_precedence_c3_scoring_map": {"BLOCKED_BY_C3b.0": "BLOCKED_BY_C3.0"},
             "aggregation_definitions": {
                 "strict_pirate": endpoint_definitions["strict_pirate"],
-                "reader_both_coherent": endpoint_definitions["reader_both_coherent"],
+                "reader_coherence_guards": endpoint_definitions["reader_coherence_guards"]["h1_co_primary_rule"],
                 "construct_types": "scalar int in 0..7 returned by c3_scoring.construct_types(text)",
                 "has_md_Plain": "mean_{i=1..32} 1[construct_types(Plain, i) >= 1]",
                 "has_md_arm": "mean_{i=1..32} 1[construct_types(arm, i) >= 1]",
@@ -924,14 +998,16 @@ def main() -> None:
                     "pillar": "A_Persona",
                     "reader_dependent": True,
                     "n_units": 40,
-                    "ban": "common_pirate_ban + surface_stem_reject (+ extended_maritime_and_cue_audit logged)",
+                    "ban": "common_pirate_ban + strict_pirate_extended_ban_regex (79 stems + missing plurals + reader cue words) + extended_maritime_and_cue_audit logged",
                     "dose_pairing": "WSP_Pirate_12L@d*_pirate vs Rand_Pirate_12L_{s0,s1,s2}@d*_pirate",
                     "paired_stat": "y_i = strict_pirate(WSP_Pirate_12L, i) - mean_{s=0..2} strict_pirate(Rand_s, i)",
-                    "point_bar": "mean(y_i) >= +0.20 AND (mean_tokens(Arm)/mean_tokens(Rand_mean) in [0.85, 1.15]) AND (reader_both_coherent_rate(Arm) >= 0.85)",
+                    "point_bar": "mean(y_i) >= +0.20 AND (mean_tokens(Arm)/mean_tokens(Rand_mean) in [0.85, 1.15]) AND (reader_any_coherent(Arm) >= 0.85) AND (reader_both_coherent(Arm) >= reader_both_coherent(Rand_mean) - 0.15)",
                     "broken_bar": "broken(Arm) <= 0.15 AND broken(Rand_mean) <= 0.15",
                     "eq_c3b_2_gating_arm": "WSP_Pirate_12L@d*_pirate",
-                    "pass_rule": "preconditions_ok(WSP_Pirate_12L@d*_pirate) AND holm_reject(pvals)['H1'] AND (mean(y_i) >= 0.20) AND co_primary_bars(length_ratio_in_0.85_1.15 AND reader_both_coherent >= 0.85)",
-                    "effect_below_bar_rule": "preconditions_ok(WSP_Pirate_12L@d*_pirate) AND holm_reject(pvals)['H1'] AND co_primary_bars(length_ratio_in_0.85_1.15 AND reader_both_coherent >= 0.85) AND (mean(y_i) < 0.20)",
+                    "pass_rule": "preconditions_ok AND holm_sig AND co_primary_bars(length_ratio_in_0.85_1.15 AND reader_any_coherent >= 0.85 AND reader_both_coherent >= Rand_mean - 0.15) AND (mean(y_i) >= 0.20) => PASS",
+                    "effect_below_bar_rule": "preconditions_ok AND holm_sig AND co_primary_bars(...) AND (mean(y_i) < 0.20) => EFFECT_BELOW_BAR",
+                    "fail_co_primary_guard_rule": "preconditions_ok AND holm_sig AND (NOT co_primary_bars) => FAIL (records failed_co_primary_guards list regardless of whether mean(y_i) >= 0.20 or < 0.20; matches c3_scoring.resolve_verdict)",
+                    "fail_null_rule": "preconditions_ok AND (NOT holm_sig) => FAIL",
                 },
                 {
                     "id": "H2",
@@ -945,8 +1021,10 @@ def main() -> None:
                     "point_bar": "mean(u_i) >= +0.50 AND (has_md(Plain)-has_md(Arm)) >= +0.20 AND (has_md(Rand_mean)-has_md(Arm)) >= +0.15 AND (mean_tokens(Arm)/mean_tokens(Rand_mean) in [0.85, 1.15])",
                     "broken_bar": "broken(Arm) <= 0.10 AND broken(Rand_mean) <= 0.10",
                     "eq_c3b_2_gating_arm": "WSP_NoMD_12L@d*_nomd",
-                    "pass_rule": "preconditions_ok(WSP_NoMD_12L@d*_nomd) AND holm_reject(pvals)['H2'] AND (mean(u_i) >= 0.50) AND co_primary_bars(has_md AND length_ratio_in_0.85_1.15)",
-                    "effect_below_bar_rule": "preconditions_ok(WSP_NoMD_12L@d*_nomd) AND holm_reject(pvals)['H2'] AND co_primary_bars(has_md AND length_ratio_in_0.85_1.15) AND (mean(u_i) < 0.50)",
+                    "pass_rule": "preconditions_ok AND holm_sig AND co_primary_bars(has_md_plain_drop >= 0.20 AND has_md_rand_drop >= 0.15 AND length_ratio_in_0.85_1.15) AND (mean(u_i) >= 0.50) => PASS",
+                    "effect_below_bar_rule": "preconditions_ok AND holm_sig AND co_primary_bars(...) AND (mean(u_i) < 0.50) => EFFECT_BELOW_BAR",
+                    "fail_co_primary_guard_rule": "preconditions_ok AND holm_sig AND (NOT co_primary_bars) => FAIL (records failed_co_primary_guards list regardless of whether mean(u_i) >= 0.50 or < 0.50; matches c3_scoring.resolve_verdict)",
+                    "fail_null_rule": "preconditions_ok AND (NOT holm_sig) => FAIL",
                 },
             ],
         },
