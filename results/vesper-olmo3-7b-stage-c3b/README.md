@@ -3,16 +3,16 @@
 - **Report:** [../../olmo3_virtual_and_highway/OLMO3-WSP-C3B-REPORT.md](../../olmo3_virtual_and_highway/OLMO3-WSP-C3B-REPORT.md)
 - **Frozen Registered Design:** [../../olmo3_virtual_and_highway/OLMO3-WSP-C3B-DESIGN.md](../../olmo3_virtual_and_highway/OLMO3-WSP-C3B-DESIGN.md) (registered on public `main` @ `28fc5dfb`; code public on `main` @ `258ba6a2` == `c68bf3c0` before launch)
 - **Target Model:** `allenai/Olmo-3-7B-Instruct@6e5971d9eba42665f5bd5a0fcf047f299ce1dccc`
-- **Compute:** **`4.08 CU`** (`159.40 -> 155.32 CU`, settled, `0 active`, `6,271.79 s` / `104.5 min` on 1 ephemeral NVIDIA L4 via `colab run --gpu L4 --timeout 0`; **`0` edited weight checkpoints saved** per Policy `11-07`).
+- **Compute:** **`4.08 CU`** (`159.40 -> 155.32 CU`, settled, `0 active`, `6,271.79 s` / `104.5 min` GPU run [`sha256sums.json` `elapsed_total_sec = 6,412.13 s` with wrapper overhead] on 1 ephemeral NVIDIA L4 via `colab run --gpu L4 --timeout 0`; **`0` edited weight checkpoints saved** per Policy `11-07`).
 
 ## Official Pre-Registered Confirmatory Verdicts
 
 | Gate / Hypothesis | Official Verdict | Notes |
 |---|---|---|
 | **Global `C3b.0`** | **`PASS`** | `C3b.0.1..4` all `True`; `0` hooks, exact `B=1`, `675/675` bitwise restores, `0` weights saved, `direction_quality` & `commit_gate` `True/True` (`d*_pirate=4.8`, `d*_nomd=2.4`), `NoMD_room` `True` (`100%`, `mean_ct=3.375`). |
-| **`H1`** (Pirate Persona, common+extended ban) | **`NOT_READ_LOW_KAPPA`** | `C3b.R_preflight` `2/2`, `READER_GOLD_16_V2` `16/16` both readers, `528` pool `kappa=0.8976` (`ban_common=0.8205`) PASS; sole `C3b.R` miss on per-arm `WSP_Pirate_12L` (`kappa=0.3564 < 0.55`, `ra=0.675`). Downstream `EQ-C3b.2` also failed (`code_pass=0.750` vs `1.000`) and absolute `reader_any_coherent` was `0.175` (Plain `0.225` at `64`-token truncation). |
-| **`H2`** (No-Markdown, `NOMD_32`) | **`FAIL`** | `EQ-C3b.2 PASS` (`math 0.750`, `code 1.000`, `off_KL 0.2925`); Holm-significant reduction `mean_u = +0.4271` (`90% BCa CI [+0.2500, +0.6562]`, `p_perm = 0.000610`), failed co-primary binary `has_md` guards (`Δ = +0.031` vs `0.20/0.15`) and `< +0.50`. |
-| *Isolated `D4_masking_check` (outside `C3b.0`)* | **`FAIL` (flagged)** | `seed_dlogit = 2.153x / 0.960x` (PASS), `eff = 1.276x / 0.932x` (PASS), missed only masked `logit_l2 = 1.687x > 1.10x`. |
+| **`H1`** (Pirate Persona, common+extended ban) | **`NOT_READ_LOW_KAPPA`** | Per-arm `WSP_Pirate_12L` common-ban kappa was `0.3564 < 0.55` (`ra=0.675 < 0.85`), so `H1` is unread (gold `16/16` and pooled `kappa=0.8976` do not substitute for this per-arm gate). Independently, `reader_any_coherent >= 0.85` failed (`0.175` vs. Plain `0.225`) and `EQ-C3b.2` failed (`code_pass=0.750` vs. Plain `1.000`). |
+| **`H2`** (No-Markdown, `NOMD_32`) | **`FAIL`** | Missed the registered `+0.50` bar (`mean_u = +0.4271` vs. `Rand` mean, `p_perm = 0.000610`, 90% BCa CI `[+0.2500, +0.6562]`) and failed both co-primary binary `has_md` guards (`Δ = +0.031` vs. `+0.20 / +0.15`; markdown rate `1.000 -> 0.96875`), while passing `EQ-C3b.2` (`math 0.750`, `code 1.000`, `off_KL 0.2925`). |
+| *Isolated `D4_masking_check` (outside `C3b.0`)* | **`FAIL` (flagged)** | `seed_dlogit = 2.153x / 0.960x` (PASS), `eff = 1.276x / 0.932x` (PASS), missed masked `logit_l2 = 1.687x > 1.10x`; mechanistic attribution of delivery gain to masking withheld. |
 
 ## Files & SHA-256 Checksums
 
