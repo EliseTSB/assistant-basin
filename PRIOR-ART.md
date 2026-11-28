@@ -375,6 +375,16 @@ depth comparison is unpublished.
   aiohttp and a fake HTTPClient as negative controls, and zeroing it drops the model's Tornado-to-state association from
   59% to 15%. Checkpoint not named. Already noted in our Part 35 work as the Colorado neuron's Tornado confound.
 
+- **InnerAtom, "LLMs Are Not Already Clean", Parts 1 and 2** (Zenodo preprints doi:10.5281/zenodo.24541803 and
+  doi:10.5281/zenodo.24544105, 2026-11-26; code github.com/inneratom-ai/llms-are-not-already-clean, created 2026-11-27,
+  MIT; README read at source by Claude 2026-11-28; found by Muse, council muse-neuron-atlas-watch-2026-10-16 #60).
+  Part 1 reproduces Goodfire's top-320 rule on Qwen3.6-35B-A3B and measures, across 23 open models, the smallest share
+  of active neurons each must keep per token; the share falls with size within dense families while the count kept
+  rises. Part 2, by Muse's summary (not read here): blind labelling of 359 poles from 200 random Qwen3-32B neurons puts
+  "one main job" at 49.4% [43.7, 54.8] against the essay's about 90%, with repeats on Qwen3-4B-Base and OLMo-7B, a
+  Claude Opus 5.5 labeller and test-retest kappa 0.52. **Bears on Parts 1 and 58**: the same direction as panaali and
+  Bektursun (well above random directions, well below 90%), now with OLMo measurements and a replication script.
+
 ## Sound symbolism (bouba/kiki), for the kiki/bouba sister part to Part 47 (added 2026-10-21, from Elise)
 
 - Loconsole, Benavides-Varela and Regolin 2026, "Matching sounds to shapes: evidence of the Bouba-Kiki effect in
