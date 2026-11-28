@@ -211,6 +211,21 @@ def test_2_weight_master_edit_and_orth_kwa() -> None:
             assert "C3b.0.1 VIOLATION" in str(exc)
     finally:
         h.remove()
+
+    # Bitwise restore failure MUST flip restore_exact_all=False and raise C3b.0.1 VIOLATION
+    master_fail = runner.WeightMaster(model, [0])
+    orig_equal = torch.equal
+    try:
+        try:
+            with master_fail.apply_edit(model, {0: (1.0, v, k)}):
+                torch.equal = lambda a, b: False  # type: ignore[assignment]
+            raise AssertionError("Expected bitwise restore failure to raise RuntimeError")
+        except RuntimeError as exc:
+            assert "bitwise weight restore failed" in str(exc)
+    finally:
+        torch.equal = orig_equal  # type: ignore[assignment]
+    assert master_fail.restore_exact_all is False
+    assert master_fail.layers_compiled_total == 1 and master_fail.restore_checks == 1
     print("PASS test_2_weight_master_edit_and_orth_kwa")
 
 
@@ -263,6 +278,55 @@ def test_4_ban_em_dash_and_d_align() -> None:
     print("PASS test_4_ban_em_dash_and_d_align")
 
 
+def test_4b_greedy_decode_b1_eos_inclusive_n_tokens() -> None:
+    """Round-1 Must-Fix 1: n_tokens includes EOS if emitted (`<= max_new_tokens`), exact B=1 recorded."""
+
+    class ScriptedDecodeModel(torch.nn.Module):
+        def __init__(self, seq: list[int], vocab_size: int = 32):
+            super().__init__()
+            self.dummy = torch.nn.Parameter(torch.zeros(1))
+            self.seq = list(seq)
+            self.vocab_size = vocab_size
+            self.step = 0
+
+        def forward(self, input_ids, position_ids=None, past_key_values=None, use_cache=True):
+            assert input_ids.shape[0] == 1
+            bsz, seqlen = input_ids.shape
+            logits = torch.full((bsz, seqlen, self.vocab_size), -10.0)
+            tok = self.seq[min(self.step, len(self.seq) - 1)]
+            logits[0, -1, tok] = 10.0
+            self.step += 1
+            return type("Out", (), {"logits": logits, "past_key_values": ("kv", self.step)})()
+
+    tok = ToyWordTokenizer(vocab_size=32)
+    # Case A: emits 2 content tokens + EOS -> n_tokens == 3 (EOS-inclusive!), eos_emitted == True
+    obs_a: set[int] = set()
+    res_a = runner.greedy_decode_b1(
+        ScriptedDecodeModel([5, 6, 1]), tok, ["hello"], max_new_tokens=6, eos_ids=[1], observed_batch_sizes=obs_a
+    )
+    assert res_a[0]["gen_ids"] == [5, 6]
+    assert res_a[0]["eos_emitted"] is True
+    assert res_a[0]["n_tokens"] == 3
+    assert obs_a == {1}
+
+    # Case B: no EOS emitted up to max_new_tokens=4 -> n_tokens == 4, eos_emitted == False
+    res_b = runner.greedy_decode_b1(
+        ScriptedDecodeModel([5, 6, 7, 8, 9]), tok, ["hello"], max_new_tokens=4, eos_ids=[1]
+    )
+    assert res_b[0]["gen_ids"] == [5, 6, 7, 8]
+    assert res_b[0]["eos_emitted"] is False
+    assert res_b[0]["n_tokens"] == 4
+
+    # Case C: immediate EOS on step 1 -> gen_ids == [], eos_emitted == True, n_tokens == 1
+    res_c = runner.greedy_decode_b1(
+        ScriptedDecodeModel([1]), tok, ["hello"], max_new_tokens=6, eos_ids=[1]
+    )
+    assert res_c[0]["gen_ids"] == []
+    assert res_c[0]["eos_emitted"] is True
+    assert res_c[0]["n_tokens"] == 1
+    print("PASS test_4b_greedy_decode_b1_eos_inclusive_n_tokens")
+
+
 def test_5_end_to_end_smoke_12l_and_scorer_refusal() -> None:
     model = build_tiny_olmo3_12l()
     tok = ToyWordTokenizer(vocab_size=model.config.vocab_size)
@@ -310,6 +374,7 @@ def test_5_end_to_end_smoke_12l_and_scorer_refusal() -> None:
 
     assert receipt["meta"]["smoke"] is True
     assert receipt["meta"]["effective_gen_batch_size"] == 1
+    assert receipt["meta"]["observed_gen_batch_sizes"] == [1]
     assert receipt["meta"]["active_hooks_max_seen"] == 0
     assert receipt["meta"]["restore_exact_all"] is True
     assert receipt["meta"]["restore_checks"] == receipt["meta"]["layers_compiled_total"] > 0
@@ -319,6 +384,25 @@ def test_5_end_to_end_smoke_12l_and_scorer_refusal() -> None:
     assert "WSP_NoMD_12L_kWA" in receipt["D_key_ablation"]
     assert "WSP_Pirate_12L_kSparse32" in receipt["D_key_ablation"]
     assert receipt["preflights"]["D4_L24_mask_mismask"]["object_tested"] == "live_WSP_Pirate_12L_contrastive_L24"
+
+    # Prove meta.weight_checkpoints_saved is genuinely derived from disk scan (not hardcoded 0!)
+    with tempfile.TemporaryDirectory() as td2:
+        stray_dir = Path(td2) / "ckpt_stray"
+        stray_dir.mkdir(parents=True, exist_ok=True)
+        (stray_dir / "stray_weights.safetensors").write_bytes(b"0")
+        receipt_stray = runner.run_stage_c3b_experiment(
+            model, tok, c3b_constants, bank, hashes,
+            smoke=True,
+            device_name="cpu-tiny-olmo3-12l",
+            checkpoint_dir=stray_dir,
+            target_layers=layers,
+            max_new_tokens_override={k: 1 for k in (
+                "calib", "reserve", "pillar_a", "pillar_b", "multiturn", "d6",
+                "math", "code", "refusal", "neutral", "d_above_cap_pirate", "d_above_cap_nomd",
+            )},
+            log_progress=False,
+        )
+        assert receipt_stray["meta"]["weight_checkpoints_saved"] == 1
 
     # Scorer MUST refuse smoke=True receipts
     try:
@@ -346,7 +430,7 @@ def test_6_auditor_preflight_and_split_merge() -> None:
 
     with tempfile.TemporaryDirectory() as td:
         out = Path(td)
-        res_ok = auditor.run_preflight_canary(c3b_constants, reader_fn=good_canary, out_dir=out)
+        res_ok = auditor.run_preflight_canary(c3b_constants, reader_fn=good_canary, out_dir=out, mock_readers=True)
         assert res_ok["pass"] is True and res_ok["by_reader"]["ds"]["pass"] and res_ok["by_reader"]["luna"]["pass"]
 
         res_bad_p = auditor.run_preflight_canary(c3b_constants, reader_fn=bad_label_canary)
@@ -355,7 +439,7 @@ def test_6_auditor_preflight_and_split_merge() -> None:
         res_bad_c = auditor.run_preflight_canary(c3b_constants, reader_fn=bad_coh_canary)
         assert res_bad_c["pass"] is False
 
-        # Test split-reader + merge-only + truncated final JSONL line recovery
+        # Test split-reader + merge-only + truncated final JSONL line recovery + C3b.R_preflight enforcement
         first_id = c3b_constants["batteries"]["identity_20"][0]["id"]
         first_mt = c3b_constants["batteries"]["multiturn_12"][0]["id"]
         mini_receipt: dict[str, Any] = {
@@ -377,22 +461,60 @@ def test_6_auditor_preflight_and_split_merge() -> None:
             return {"pirate_persona": False, "coherent": True}, None
 
         sha = "a" * 64
+        audit_dir = out / "audit"
+
+        # Missing preflight canary MUST refuse fail-closed (Round-1 Must-Fix 2)
+        try:
+            auditor.run_blind_audit(
+                mini_receipt, c3b_constants, audit_dir,
+                receipt_sha256=sha, readers=["ds"], reader_fn=mock_reader, mock_readers=True,
+            )
+            raise AssertionError("Expected missing preflight canary to raise ValueError")
+        except ValueError as exc:
+            assert "C3b.R_preflight" in str(exc)
+
+        # Failing preflight canary MUST refuse fail-closed
+        bad_pf_dir = out / "bad_pf"
+        auditor.run_preflight_canary(c3b_constants, reader_fn=bad_label_canary, out_dir=bad_pf_dir, mock_readers=True)
+        try:
+            auditor.run_blind_audit(
+                mini_receipt, c3b_constants, audit_dir,
+                receipt_sha256=sha, preflight_canary_path=bad_pf_dir / "c3b-preflight-canary-both.json",
+                readers=["ds"], reader_fn=mock_reader, mock_readers=True,
+            )
+            raise AssertionError("Expected failing preflight canary to raise ValueError")
+        except ValueError as exc:
+            assert "C3b.R_preflight" in str(exc)
+
+        # Split-reader preflight auto-merge into audit_dir/c3b-preflight-canary-both.json!
+        auditor.run_preflight_canary(c3b_constants, readers=["ds"], reader_fn=good_canary, out_dir=audit_dir, mock_readers=True)
+        assert not (audit_dir / "c3b-preflight-canary-both.json").exists()
+        auditor.run_preflight_canary(c3b_constants, readers=["luna"], reader_fn=good_canary, out_dir=audit_dir, mock_readers=True)
+        both_pf = audit_dir / "c3b-preflight-canary-both.json"
+        assert both_pf.exists()
+        both_doc = json.loads(both_pf.read_text(encoding="utf-8"))
+        assert auditor.verify_preflight_canary_doc(both_doc, c3b_constants, allow_mock_readers=True) == (True, None)
+        assert auditor.verify_preflight_canary_doc(both_doc, c3b_constants, allow_mock_readers=False)[0] is False
+
         auditor.run_blind_audit(
-            mini_receipt, c3b_constants, out / "audit",
+            mini_receipt, c3b_constants, audit_dir,
             receipt_sha256=sha, readers=["ds"], reader_fn=mock_reader, mock_readers=True,
         )
         # Simulate truncated final line in ds JSONL, then run luna + merge
-        ds_log = out / "audit" / f"labels-ds-{sha[:16]}.jsonl"
+        ds_log = audit_dir / f"labels-ds-{sha[:16]}.jsonl"
         with ds_log.open("a", encoding="utf-8") as f:
             f.write('{"receipt_sha256": "truncated')
         auditor.run_blind_audit(
-            mini_receipt, c3b_constants, out / "audit",
+            mini_receipt, c3b_constants, audit_dir,
             receipt_sha256=sha, readers=["luna"], reader_fn=mock_reader, mock_readers=True,
         )
         merged = auditor.run_blind_audit(
-            mini_receipt, c3b_constants, out / "audit",
+            mini_receipt, c3b_constants, audit_dir,
             receipt_sha256=sha, merge_only=True, reader_fn=mock_reader, mock_readers=True,
         )
+        assert merged["meta"]["preflight_canary_pass"] is True
+        assert merged["meta"]["preflight_canary_older_than_labels"] is True
+        assert merged["preflight_canary"]["pass"] is True
         assert merged["gold_16_v2"]["summary"]["pass"] is True
         assert merged["labels"][f"pillar_a|none|Plain|{first_id}"]["ds"]["pirate_persona"] is False
         assert merged["labels"][f"pillar_a|none|Plain|{first_id}"]["luna"]["pirate_persona"] is False
@@ -412,9 +534,10 @@ def main() -> None:
     test_2_weight_master_edit_and_orth_kwa()
     test_3_sparse_topk_key_and_bf16_lift()
     test_4_ban_em_dash_and_d_align()
+    test_4b_greedy_decode_b1_eos_inclusive_n_tokens()
     test_5_end_to_end_smoke_12l_and_scorer_refusal()
     test_6_auditor_preflight_and_split_merge()
-    print("ALL 6 STAGE C3B CPU RUNNER & AUDITOR TESTS PASSED.")
+    print("ALL 7 STAGE C3B CPU RUNNER & AUDITOR TESTS PASSED.")
 
 
 if __name__ == "__main__":

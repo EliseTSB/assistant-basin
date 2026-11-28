@@ -145,6 +145,7 @@ class WeightMaster:
         self.restore_exact_all: bool = True
         self.layers_compiled_total: int = 0
         self.restore_checks: int = 0
+        self.weight_checkpoints_saved: int = 0
         self.max_hooks_seen: int = count_active_hooks(model)
         for L in self.layers:
             w = model.model.layers[L].mlp.down_proj.weight.data.detach().cpu()
@@ -415,8 +416,13 @@ def greedy_decode_b1(
     eos_ids: list[int],
     ban_processor: CommonBanLogitsProcessor | None = None,
     master: WeightMaster | None = None,
+    observed_batch_sizes: set[int] | None = None,
 ) -> list[dict[str, Any]]:
-    """Exact B = 1 deterministic greedy decode (`do_sample=False`, `use_cache=True`, zero padding)."""
+    """Exact B = 1 deterministic greedy decode (`do_sample=False`, `use_cache=True`, zero padding).
+
+    Per frozen `endpoint_definitions.mean_tokens`: `n_tokens = len(gen_ids) + int(eos_emitted)`
+    (excluding prompt tokens, including EOS if emitted, <= max_new_tokens).
+    """
     if master is not None:
         master.check_hooks(model)
     device = next(model.parameters()).device
@@ -427,9 +433,12 @@ def greedy_decode_b1(
         prompt_ids = tokenizer.encode(ptxt, add_special_tokens=False)
         history = list(prompt_ids)
         gen_ids: list[int] = []
+        eos_emitted = False
         past_key_values = None
         cur_input = torch.tensor([prompt_ids], dtype=torch.long, device=device)
         cur_pos = torch.arange(len(prompt_ids), dtype=torch.long, device=device).unsqueeze(0)
+        if observed_batch_sizes is not None:
+            observed_batch_sizes.add(int(cur_input.shape[0]))
 
         for _ in range(max_new_tokens):
             out = model(
@@ -444,6 +453,7 @@ def greedy_decode_b1(
                 scores = ban_processor.apply(scores, [history])
             tid = int(torch.argmax(scores, dim=-1).item())
             if tid in eos_set:
+                eos_emitted = True
                 break
             gen_ids.append(tid)
             history.append(tid)
@@ -451,7 +461,13 @@ def greedy_decode_b1(
             cur_pos = cur_pos[:, -1:] + 1
 
         text = tokenizer.decode(gen_ids, skip_special_tokens=True)
-        results.append({"text": text, "gen_ids": gen_ids, "n_tokens": len(gen_ids)})
+        n_tok = len(gen_ids) + (1 if eos_emitted else 0)
+        results.append({
+            "text": text,
+            "gen_ids": gen_ids,
+            "eos_emitted": eos_emitted,
+            "n_tokens": n_tok,
+        })
     return results
 
 
@@ -771,6 +787,7 @@ def run_stage_c3b_experiment(
         "teacher_forced_b1_fwds": 0,
         "preflight_fwds": 0,
     }
+    observed_gen_batch_sizes: set[int] = set()
     arm_liveness: dict[str, float] = {}
 
     def _note_liveness(key: str, mv: float) -> None:
@@ -795,6 +812,7 @@ def run_stage_c3b_experiment(
         out = greedy_decode_b1(
             model, tokenizer, texts, max_tok, eos_ids,
             ban_processor=ban_proc, master=master,
+            observed_batch_sizes=observed_gen_batch_sizes,
         )
         counts["generations"] += len(out)
         counts["generated_tokens"] += sum(r["n_tokens"] for r in out)
@@ -1860,6 +1878,14 @@ def run_stage_c3b_experiment(
     })
 
     master.check_hooks(model)
+    # Derive effective_gen_batch_size and weight_checkpoints_saved from actual run observations (no literals!)
+    derived_eff_bsz = max(observed_gen_batch_sizes) if observed_gen_batch_sizes else 0
+    saved_weight_files: list[str] = []
+    if checkpoint_dir is not None and checkpoint_dir.exists():
+        for ext in ("*.pt", "*.pth", "*.bin", "*.safetensors"):
+            saved_weight_files.extend(str(p) for p in checkpoint_dir.rglob(ext))
+    derived_weight_ckpts = master.weight_checkpoints_saved + len(saved_weight_files)
+
     elapsed_sec = round(time.time() - t0, 2)
     _log(
         f"DONE in {elapsed_sec}s: gens={counts['generations']}, toks={counts['generated_tokens']}, "
@@ -1876,12 +1902,13 @@ def run_stage_c3b_experiment(
             "elapsed_sec": elapsed_sec,
             "target_layers": layers,
             "requested_gen_batch_size": 1,
-            "effective_gen_batch_size": 1,
+            "effective_gen_batch_size": derived_eff_bsz,
+            "observed_gen_batch_sizes": sorted(observed_gen_batch_sizes),
             "active_hooks_max_seen": master.max_hooks_seen,
             "restore_exact_all": master.restore_exact_all,
             "layers_compiled_total": master.layers_compiled_total,
             "restore_checks": master.restore_checks,
-            "weight_checkpoints_saved": 0,
+            "weight_checkpoints_saved": derived_weight_ckpts,
             "counts": counts,
             "provenance_hashes": provenance_hashes,
         },

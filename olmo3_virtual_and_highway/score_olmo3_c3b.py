@@ -5,23 +5,8 @@ Zero third-party imports (no numpy, scipy, torch, safetensors). Reproducible byt
 `/usr/bin/python3 -I` (`cmp` verified). Imports frozen mechanical scorers, `holm_reject()`,
 `resolve_verdict()`, `cohens_kappa()`, and `raw_agreement()` from `c3_scoring.py`.
 
-Enforces strictly per `OLMO3-WSP-C3B-DESIGN.md` (Draft v4 / public main `28fc5dfb`):
-  - Global Gate `C3b.0` (`C3b.0.1..4`): zero hooks, `restore_exact_all & restore_checks == layers_compiled_total >= 279`,
-    exact `B = 1`, `0 < sham < 2.00` (sham retention logged-only), liveness, finiteness, `M8` Rand intended
-    Frob ratio `<= 1e-3`, `CV_L <= 1.0`, Rand reserve `median_off_kl <= 0.80`, `common_pirate_ban` stem rate `<= 0.10`,
-    `code_pass()` positive control, exact completeness & ID order, `Plain` non-broken `>= 0.90`, and exact 4 SHA-256 pins.
-  - Isolated Physical Diagnostic `D4_masking_check` (OUTSIDE `C3b.0`!): live `WSP_Pirate_12L` contrastive `L24`
-    direction on 12 disjoint prompts (`res_00..07`, `chat_00..03`), dual criterion over ALL 6 ratios (`seed_dlogit`,
-    `logit_l2`, `efficiency`), prominent `on_fail_flag` without blocking `H1`/`H2`.
-  - Per-arm preconditions: `C3b.0_direction_quality` (`cos_ret >= 0.97` on all 12 layers), `C3b.0_commit_gate`
-    (7 rungs, `<= 0.65 / 1.50 / 8.0`, `0/8` broken, `bf16` retention `>= 0.50 / 0.80`), split `C3b.0_NoMD_room`
-    (`md_00..23 >= 0.90`, `md_24..31 >= 0.625`, overall `>= 0.84` & `mean_ct >= 2.00`), `C3b.R` (`READER_GOLD_16_V2`
-    `>= 14/16, >= 5/6, >= 3/4`, 528 pool `kappa >= 0.60 / 0.55`, per-arm common-ban reliability, strict SHA-256 binding),
-    and `EQ-C3b.2` (`math >= Plain - 0.15`, `code >= Plain - 0.17`, `neutral_kl <= 0.80`, `neutral_broken <= 0.10`).
-  - Confirmatory `m = 2` Holm-Bonferroni (`alpha = 0.05`, `PERM_SEED = 2026112701`, `BCA_SEED = 2026112702`),
-    binding `strict_pirate_extended_ban_regex` inside `H1`, exhaustive verdict resolution with `failed_co_primary_guards`,
-    plus all secondaries & exploratories (`D0–D6_heldout`, `D_curve`, `D_above_cap`, `D_align`, `em_dash_per_1k_words`,
-    and `D_key_ablation` [`WSP_NoMD_12L_kWA` + `WSP_Pirate_12L_kSparse32`]).
+Every gate threshold is either read directly from frozen `c3b_prereg_constants.json` or defined once
+in `GATE_BARS` and evaluated via pure gate functions so boundary-table tests cover 100% of bars.
 """
 from __future__ import annotations
 
@@ -44,6 +29,7 @@ import c3_scoring  # noqa: E402
 SCORECARD_SCHEMA_VERSION = "olmo3-stage-c3b-scorecard-v1"
 EXPECTED_RECEIPT_SCHEMA = "olmo3-stage-c3b-receipt-v1"
 EXPECTED_READER_SCHEMA = "olmo3-stage-c3b-reader-labels-v1"
+EXPECTED_PREFLIGHT_SCHEMA = "olmo3-stage-c3b-reader-preflight-v1"
 
 EXPECTED_C3B_DESIGN_SHA256 = "a9ca200dccb19ad3efb3b0cf358c546dfffb10904f673f64667f9b580bdc7c75"
 EXPECTED_C3B_CONSTANTS_SHA256 = "3bb980e579cef2326d5d2adc3c458cca8ba4140da5bb0e7db2f196e3484ca9db"
@@ -54,7 +40,55 @@ PERM_SEED = 2026112701
 BCA_SEED = 2026112702
 DEFAULT_N_PERM = 100_000
 DEFAULT_N_BOOT = 10_000
-EXPECTED_MIN_RESTORE_CHECKS = 279
+EPS = 1e-12
+
+# Single source of truth for Stage C3b thresholds not already stored as numeric fields in JSON
+GATE_BARS: dict[str, Any] = {
+    "sham_dlogit_min": 0.0,
+    "sham_dlogit_max": 2.00,
+    "cv_max": 1.0,
+    "rand_frob_tol": 1e-3,
+    "rand_kl_max": 0.80,
+    "ban_stem_max": 0.10,
+    "ban_arms_min": 6,
+    "plain_sanity_n": 56,
+    "plain_sanity_min": 0.90,
+    "d4_masked_seed_min": 1.15,
+    "d4_mismasked_seed_max": 1.05,
+    "d4_masked_l2_max": 1.10,
+    "d4_mismasked_l2_max": 1.25,
+    "d4_masked_eff_min": 1.15,
+    "d4_mismasked_eff_max": 1.05,
+    "dir_cos_ret_min": 0.97,
+    "nomd_room_24_min": 0.90,
+    "nomd_room_8_min": 0.625,
+    "nomd_room_32_md_min": 0.84,
+    "nomd_room_32_ct_min": 2.00,
+    "pool_kappa_min": 0.60,
+    "pool_ban_kappa_min": 0.55,
+    "arm_prev_lo": 0.10,
+    "arm_prev_hi": 0.90,
+    "arm_ra_min": 0.85,
+    "rand_kap_min": 0.50,
+    "wsp_kap_min": 0.55,
+    "h1_mean_y_min": 0.20,
+    "h1_len_lo": 0.85,
+    "h1_len_hi": 1.15,
+    "h1_any_coh_min": 0.85,
+    "h1_both_coh_drop_max": 0.15,
+    "h1_broken_max": 0.15,
+    "h2_mean_u_min": 0.50,
+    "h2_delta_plain_min": 0.20,
+    "h2_delta_rand_min": 0.15,
+    "h2_len_lo": 0.85,
+    "h2_len_hi": 1.15,
+    "h2_broken_max": 0.10,
+    "dac_pirate_delta_min": 0.25,
+    "dac_pirate_broken_max": 2,
+    "dac_nomd_has_md_max": 0.75,
+    "dac_nomd_delta_ct_min": 0.50,
+    "dac_nomd_broken_max": 1,
+}
 
 REFUSAL_RE = re.compile(
     r"\b(cannot|can't|won't|unable to|sorry|apologize|illegal|unethical|harmful|dangerous|cannot assist|cannot help|cannot provide)\b",
@@ -142,7 +176,7 @@ def paired_sign_flip_p_one_sided(diffs: list[float], *, n_perm: int = DEFAULT_N_
     if not diffs:
         raise ValueError("paired_sign_flip_p_one_sided requires non-empty diffs")
     obs = math.fsum(diffs)
-    tol = 1e-12 * max(1.0, abs(obs))
+    tol = EPS * max(1.0, abs(obs))
     rng = random.Random(seed)
     ge = 0
     for _ in range(n_perm):
@@ -166,7 +200,7 @@ def bca_paired_mean_ci90(diffs: list[float], *, n_boot: int = DEFAULT_N_BOOT, se
         boots.append(s / n)
     boots.sort()
 
-    if boots[0] == boots[-1] and abs(boots[0] - theta_hat) <= 1e-12 * max(1.0, abs(theta_hat)):
+    if boots[0] == boots[-1] and abs(boots[0] - theta_hat) <= EPS * max(1.0, abs(theta_hat)):
         return {"point": theta_hat, "ci90_lo": theta_hat, "ci90_hi": theta_hat}
 
     less = sum(1 for v in boots if v < theta_hat)
@@ -185,12 +219,12 @@ def bca_paired_mean_ci90(diffs: list[float], *, n_boot: int = DEFAULT_N_BOOT, se
     for a in (0.05, 0.95):
         za = norm_ppf(a)
         denom = 1.0 - a_hat * (z0 + za)
-        adj_a = a if abs(denom) < 1e-12 else norm_cdf(z0 + (z0 + za) / denom)
+        adj_a = a if abs(denom) < EPS else norm_cdf(z0 + (z0 + za) / denom)
         adj_a = min(max(adj_a, 0.0), 1.0)
         qs[a] = quantile(boots, adj_a)
 
     lo, hi = qs[0.05], qs[0.95]
-    tol = 1e-12 * max(1.0, abs(theta_hat))
+    tol = EPS * max(1.0, abs(theta_hat))
     if lo > theta_hat + tol or hi < theta_hat - tol:
         lo = min(lo, quantile(boots, 0.05), theta_hat)
         hi = max(hi, quantile(boots, 0.95), theta_hat)
@@ -222,7 +256,231 @@ def map_c3b_verdict(v: str) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Gate Verification Helpers
+# Pure Constant-Driven Gate Evaluators (100% Boundary-Testable, Zero Magic Duplication)
+# ---------------------------------------------------------------------------
+def check_sham_gate(sham_ret_ok: bool, sham_dlogit: float) -> bool:
+    return (
+        sham_ret_ok
+        and math.isfinite(sham_dlogit)
+        and (GATE_BARS["sham_dlogit_min"] < sham_dlogit < GATE_BARS["sham_dlogit_max"])
+    )
+
+
+def check_restore_invariant(
+    restore_exact_all: bool,
+    layers_compiled_total: int,
+    restore_checks: int,
+    min_restore_checks: int,
+) -> bool:
+    return (
+        bool(restore_exact_all)
+        and (layers_compiled_total >= min_restore_checks)
+        and (restore_checks == layers_compiled_total)
+    )
+
+
+def check_cv_gate(cv_values: list[float]) -> bool:
+    return bool(cv_values) and all(v <= GATE_BARS["cv_max"] + EPS for v in cv_values)
+
+
+def check_rand_frob_gate(ratios: list[float]) -> bool:
+    return bool(ratios) and all(abs(r - 1.0) <= GATE_BARS["rand_frob_tol"] + EPS for r in ratios)
+
+
+def check_rand_kl_gate(median_kls: list[float]) -> bool:
+    return bool(median_kls) and all(kl <= GATE_BARS["rand_kl_max"] + EPS for kl in median_kls)
+
+
+def check_ban_stem_gate(rates: list[float]) -> bool:
+    return (len(rates) >= GATE_BARS["ban_arms_min"]) and all(r <= GATE_BARS["ban_stem_max"] + EPS for r in rates)
+
+
+def check_plain_sanity_gate(n_items: int, non_broken_rate: float) -> bool:
+    return (n_items == GATE_BARS["plain_sanity_n"]) and (non_broken_rate >= GATE_BARS["plain_sanity_min"] - EPS)
+
+
+def check_d4_dual_criterion(
+    r_m_seed: float,
+    r_mm_seed: float,
+    r_m_l2: float,
+    r_mm_l2: float,
+    r_m_eff: float,
+    r_mm_eff: float,
+) -> tuple[bool, bool]:
+    c1 = (r_m_seed > GATE_BARS["d4_masked_seed_min"]) and (r_mm_seed < GATE_BARS["d4_mismasked_seed_max"])
+    c2 = (
+        (r_m_l2 <= GATE_BARS["d4_masked_l2_max"] + EPS)
+        and (r_mm_l2 <= GATE_BARS["d4_mismasked_l2_max"] + EPS)
+        and (r_m_eff > GATE_BARS["d4_masked_eff_min"])
+        and (r_mm_eff < GATE_BARS["d4_mismasked_eff_max"])
+    )
+    return c1, c2
+
+
+def check_direction_quality_gate(cos_rets: list[float]) -> bool:
+    return bool(cos_rets) and all(c >= GATE_BARS["dir_cos_ret_min"] - EPS for c in cos_rets)
+
+
+def check_commit_rung_gate(
+    min_proj: float,
+    min_frob: float,
+    reserve_n_ok: bool,
+    med_kl: float,
+    max_kl: float,
+    max_pos: float,
+    n_brk: int,
+    cg_cfg: dict[str, Any],
+) -> dict[str, bool]:
+    rep_ok = (min_proj >= float(cg_cfg["rung_min_rank1_proj_ret"]) - EPS) and (
+        min_frob >= float(cg_cfg["rung_min_frob_ret"]) - EPS
+    )
+    other_ok = (
+        reserve_n_ok
+        and rep_ok
+        and (max_kl <= float(cg_cfg["reserve_max_off_kl_max"]) + EPS)
+        and (max_pos <= float(cg_cfg["reserve_max_single_pos_kl_max"]) + EPS)
+        and (n_brk <= int(cg_cfg["reserve_broken_max"]))
+    )
+    med_ok = med_kl <= float(cg_cfg["reserve_median_off_kl_max"]) + EPS
+    return {
+        "rep_ok": rep_ok,
+        "other_clauses_ok": other_ok,
+        "med_kl_ok": med_ok,
+        "pass": other_ok and med_ok,
+        "above_cap_eligible": other_ok and (not med_ok),
+    }
+
+
+def check_nomd_room_gate(
+    has_md_24: float,
+    has_md_8: float,
+    has_md_32: float,
+    mean_ct_32: float,
+) -> dict[str, bool]:
+    ok_24 = has_md_24 >= GATE_BARS["nomd_room_24_min"] - EPS
+    ok_8 = has_md_8 >= GATE_BARS["nomd_room_8_min"] - EPS
+    ok_32_md = has_md_32 >= GATE_BARS["nomd_room_32_md_min"] - EPS
+    ok_32_ct = mean_ct_32 >= GATE_BARS["nomd_room_32_ct_min"] - EPS
+    return {
+        "measured_24_ok": ok_24,
+        "fresh_8_ok": ok_8,
+        "overall_32_has_markdown_ok": ok_32_md,
+        "overall_32_mean_ct_ok": ok_32_ct,
+        "pass": ok_24 and ok_8 and ok_32_md and ok_32_ct,
+    }
+
+
+def check_gold_reader_counts(pooled_ok: int, subtle_ok: int, fp_ok: int, gold_cfg: dict[str, Any]) -> bool:
+    return (
+        (pooled_ok >= int(gold_cfg["pooled_min_correct"]))
+        and (subtle_ok >= int(gold_cfg["subtle_zero_stem_min_correct"]))
+        and (fp_ok >= int(gold_cfg["first_person_non_pirate_neg_min_correct"]))
+    )
+
+
+def check_reader_pool_gate(pool_complete: bool, kap_pool: float, kap_none: float, kap_ban: float) -> bool:
+    return (
+        pool_complete
+        and (kap_pool >= GATE_BARS["pool_kappa_min"] - EPS)
+        and (kap_none >= GATE_BARS["pool_ban_kappa_min"] - EPS)
+        and (kap_ban >= GATE_BARS["pool_ban_kappa_min"] - EPS)
+    )
+
+
+def check_reader_arm_reliability_bars(ra: float, kap: float, prev: float, *, is_rand_pool: bool) -> tuple[bool, bool]:
+    in_mid = (GATE_BARS["arm_prev_lo"] - EPS <= prev <= GATE_BARS["arm_prev_hi"] + EPS)
+    if is_rand_pool:
+        ok = (ra >= GATE_BARS["arm_ra_min"] - EPS) and ((kap >= GATE_BARS["rand_kap_min"] - EPS) if in_mid else True)
+    else:
+        ok = (kap >= GATE_BARS["wsp_kap_min"] - EPS) if in_mid else (ra >= GATE_BARS["arm_ra_min"] - EPS)
+    return in_mid, ok
+
+
+def check_eq_c3b_2_bars(
+    math_drop: float,
+    code_drop: float,
+    neu_med_kl: float,
+    neu_brk: float,
+    cap_cfg: dict[str, Any],
+) -> dict[str, bool]:
+    math_ok = math_drop <= float(cap_cfg["math_drop_max_pp"]) + EPS
+    code_ok = code_drop <= float(cap_cfg["code_drop_max_pp"]) + EPS
+    kl_ok = neu_med_kl <= float(cap_cfg["neutral_median_off_kl_max"]) + EPS
+    brk_ok = neu_brk <= float(cap_cfg["neutral_broken_max"]) + EPS
+    return {
+        "math_ok": math_ok,
+        "code_ok": code_ok,
+        "neutral_kl_ok": kl_ok,
+        "neutral_broken_ok": brk_ok,
+        "pass": math_ok and code_ok and kl_ok and brk_ok,
+    }
+
+
+def check_h1_bars(
+    mean_y: float,
+    len_ratio: float,
+    any_coh_arm: float | None,
+    both_coh_arm: float | None,
+    both_coh_rand: float | None,
+    brk_arm: float,
+    brk_rand: float,
+) -> dict[str, Any]:
+    failed_guards: list[str] = []
+    if not (GATE_BARS["h1_len_lo"] - EPS <= len_ratio <= GATE_BARS["h1_len_hi"] + EPS):
+        failed_guards.append("length_ratio_in_0.85_1.15")
+    if any_coh_arm is None or float(any_coh_arm) < GATE_BARS["h1_any_coh_min"] - EPS:
+        failed_guards.append("reader_any_coherent_ge_0.85")
+    if (
+        both_coh_arm is None
+        or both_coh_rand is None
+        or float(both_coh_arm) < float(both_coh_rand) - GATE_BARS["h1_both_coh_drop_max"] - EPS
+    ):
+        failed_guards.append("reader_both_coherent_within_15pp_of_rand")
+    return {
+        "primary_effect_bar_pass": mean_y >= GATE_BARS["h1_mean_y_min"] - EPS,
+        "co_primary_bars_pass": len(failed_guards) == 0,
+        "failed_co_primary_guards": failed_guards,
+        "broken_bar_pass": (brk_arm <= GATE_BARS["h1_broken_max"] + EPS) and (brk_rand <= GATE_BARS["h1_broken_max"] + EPS),
+    }
+
+
+def check_h2_bars(
+    mean_u: float,
+    delta_plain: float,
+    delta_rand: float,
+    len_ratio: float,
+    brk_arm: float,
+    brk_rand: float,
+) -> dict[str, Any]:
+    failed_guards: list[str] = []
+    if delta_plain < GATE_BARS["h2_delta_plain_min"] - EPS:
+        failed_guards.append("delta_has_md_vs_plain_ge_0.20")
+    if delta_rand < GATE_BARS["h2_delta_rand_min"] - EPS:
+        failed_guards.append("delta_has_md_vs_rand_ge_0.15")
+    if not (GATE_BARS["h2_len_lo"] - EPS <= len_ratio <= GATE_BARS["h2_len_hi"] + EPS):
+        failed_guards.append("length_ratio_in_0.85_1.15")
+    return {
+        "primary_effect_bar_pass": mean_u >= GATE_BARS["h2_mean_u_min"] - EPS,
+        "co_primary_bars_pass": len(failed_guards) == 0,
+        "failed_co_primary_guards": failed_guards,
+        "broken_bar_pass": (brk_arm <= GATE_BARS["h2_broken_max"] + EPS) and (brk_rand <= GATE_BARS["h2_broken_max"] + EPS),
+    }
+
+
+def check_d_above_cap_pirate_flip(delta_vs_plain: float, broken_count: int) -> bool:
+    return (delta_vs_plain >= GATE_BARS["dac_pirate_delta_min"] - EPS) and (broken_count <= GATE_BARS["dac_pirate_broken_max"])
+
+
+def check_d_above_cap_nomd_flip(has_md: float, delta_ct: float, broken_count: int) -> bool:
+    return (
+        (has_md <= GATE_BARS["dac_nomd_has_md_max"] + EPS)
+        and (delta_ct >= GATE_BARS["dac_nomd_delta_ct_min"] - EPS)
+        and (broken_count <= GATE_BARS["dac_nomd_broken_max"])
+    )
+
+
+# ---------------------------------------------------------------------------
+# Section Gate Evaluators (D4, C3b.R, EQ-C3b.2)
 # ---------------------------------------------------------------------------
 def evaluate_d4_masking_check(
     receipt: dict[str, Any],
@@ -242,11 +500,11 @@ def evaluate_d4_masking_check(
     u_l2 = float(d4["unmasked"]["mean_logit_l2"])
     mm_l2 = float(d4["mismasked"]["mean_logit_l2"])
 
-    m_eff = m_seed / max(m_l2, 1e-12)
-    u_eff = u_seed / max(u_l2, 1e-12)
-    mm_eff = mm_seed / max(mm_l2, 1e-12)
+    m_eff = m_seed / max(m_l2, EPS)
+    u_eff = u_seed / max(u_l2, EPS)
+    mm_eff = mm_seed / max(mm_l2, EPS)
 
-    valid_denom = (u_seed > 1e-9) and (u_l2 > 1e-12) and (u_eff > 1e-12)
+    valid_denom = (u_seed > 1e-9) and (u_l2 > EPS) and (u_eff > EPS)
     if valid_denom:
         r_m_seed = m_seed / u_seed
         r_mm_seed = mm_seed / u_seed
@@ -254,13 +512,7 @@ def evaluate_d4_masking_check(
         r_mm_l2 = mm_l2 / u_l2
         r_m_eff = m_eff / u_eff
         r_mm_eff = mm_eff / u_eff
-        c1_ok = (r_m_seed > 1.15) and (r_mm_seed < 1.05)
-        c2_ok = (
-            (r_m_l2 <= 1.10)
-            and (r_mm_l2 <= 1.25)
-            and (r_m_eff > 1.15)
-            and (r_mm_eff < 1.05)
-        )
+        c1_ok, c2_ok = check_d4_dual_criterion(r_m_seed, r_mm_seed, r_m_l2, r_mm_l2, r_m_eff, r_mm_eff)
     else:
         r_m_seed = r_mm_seed = r_m_l2 = r_mm_l2 = r_m_eff = r_mm_eff = None
         c1_ok = False
@@ -303,11 +555,7 @@ def _eval_reader_arm_reliability(
     ra = c3_scoring.raw_agreement(y1, y2)
     kap = c3_scoring.cohens_kappa(y1, y2)
     prev = 0.5 * (sum(y1) / len(y1) + sum(y2) / len(y2))
-    in_mid = 0.10 <= prev <= 0.90
-    if is_rand_pool:
-        ok = (ra >= 0.85) and ((kap >= 0.50) if in_mid else True)
-    else:
-        ok = (kap >= 0.55) if in_mid else (ra >= 0.85)
+    in_mid, ok = check_reader_arm_reliability_bars(ra, kap, prev, is_rand_pool=is_rand_pool)
     return {
         "n": len(y1),
         "raw_agreement": round(ra, 6),
@@ -318,6 +566,60 @@ def _eval_reader_arm_reliability(
     }
 
 
+def verify_preflight_in_reader_labels(
+    reader_labels: dict[str, Any],
+    c3b_constants: dict[str, Any],
+    *,
+    allow_mock_readers: bool = False,
+    preflight_file_info: dict[str, Any] | None = None,
+) -> tuple[bool, str | None]:
+    """Fail-closed `C3b.R_preflight` verification inside the scorer (Round-1 Must-Fix 2 / DeepSeek F2)."""
+    rmeta = reader_labels.get("meta", {})
+    if rmeta.get("preflight_canary_pass") is not True:
+        return False, "preflight_canary_missing_or_failed"
+    if rmeta.get("preflight_canary_older_than_labels") is not True:
+        return False, "preflight_canary_newer_than_labels"
+    pf_mtime = rmeta.get("preflight_canary_mtime")
+    lbl_epoch = rmeta.get("labels_written_epoch")
+    if not isinstance(pf_mtime, (int, float)) or not isinstance(lbl_epoch, (int, float)) or pf_mtime > lbl_epoch + 1e-6:
+        return False, "preflight_canary_timestamp_invalid_or_newer_than_labels"
+
+    pf_doc = reader_labels.get("preflight_canary")
+    if not isinstance(pf_doc, dict) or pf_doc.get("schema_version") != EXPECTED_PREFLIGHT_SCHEMA:
+        return False, "preflight_canary_doc_missing_or_bad_schema"
+    if pf_doc.get("mock_readers", False) and not allow_mock_readers:
+        return False, "preflight_canary_mock_refused"
+
+    canary_items = list(c3b_constants["reader_kappa_pool"]["preflight_canary_2"])
+    by_reader = pf_doc.get("by_reader", {})
+    if not isinstance(by_reader, dict):
+        return False, "preflight_canary_missing_by_reader"
+    for r in ("ds", "luna"):
+        r_blk = by_reader.get(r)
+        if not isinstance(r_blk, dict):
+            return False, f"preflight_canary_missing_reader_{r}"
+        items = r_blk.get("items", [])
+        if not isinstance(items, list) or len(items) != len(canary_items):
+            return False, f"preflight_canary_bad_items_{r}"
+        by_id = {it.get("id"): it for it in items if isinstance(it, dict)}
+        for exp in canary_items:
+            got = by_id.get(exp["id"])
+            if not got or got.get("error") is not None:
+                return False, f"preflight_canary_error_{r}_{exp['id']}"
+            if got.get("got_pirate") is not bool(exp["expected_pirate"]):
+                return False, f"preflight_canary_wrong_pirate_{r}_{exp['id']}"
+            if got.get("got_coherent") is not bool(exp["expected_coherent"]):
+                return False, f"preflight_canary_wrong_coherent_{r}_{exp['id']}"
+
+    if preflight_file_info is not None:
+        if rmeta.get("preflight_canary_sha256") != preflight_file_info.get("sha256"):
+            return False, "preflight_canary_file_sha256_mismatch"
+        if float(preflight_file_info["mtime"]) > float(preflight_file_info["labels_mtime"]) + 1e-6:
+            return False, "preflight_canary_file_newer_than_labels_file"
+
+    return True, None
+
+
 def evaluate_c3b_r_gate(
     receipt: dict[str, Any],
     c3b_constants: dict[str, Any],
@@ -325,10 +627,11 @@ def evaluate_c3b_r_gate(
     *,
     receipt_sha256: str | None = None,
     disk_hashes: dict[str, str] | None = None,
+    preflight_file_info: dict[str, Any] | None = None,
     strict_provenance: bool = True,
     allow_mock_readers: bool = False,
 ) -> dict[str, Any]:
-    """Evaluate Gate C3b.R (READER_GOLD_16_V2 + 528-item pool + per-arm reliability under common_pirate_ban)."""
+    """Evaluate Gate C3b.R (C3b.R_preflight + READER_GOLD_16_V2 + 528 pool + per-arm reliability)."""
     if reader_labels is None:
         return {"pass": False, "h1_pass": False, "reason": "reader_labels_missing"}
     if reader_labels.get("schema_version") != EXPECTED_READER_SCHEMA:
@@ -336,6 +639,14 @@ def evaluate_c3b_r_gate(
     rmeta = reader_labels.get("meta", {})
     if rmeta.get("mock_readers", False) and not allow_mock_readers:
         return {"pass": False, "h1_pass": False, "reason": "mock_readers_refused"}
+
+    pf_ok, pf_reason = verify_preflight_in_reader_labels(
+        reader_labels, c3b_constants,
+        allow_mock_readers=allow_mock_readers,
+        preflight_file_info=preflight_file_info,
+    )
+    if not pf_ok:
+        return {"pass": False, "h1_pass": False, "reason": pf_reason}
 
     if strict_provenance:
         r_sha = rmeta.get("receipt_sha256")
@@ -351,7 +662,6 @@ def evaluate_c3b_r_gate(
     gold_items = c3b_constants["reader_gold_16_v2"]
     gold_raw = reader_labels.get("gold_16_v2", {}).get("raw", {})
 
-    # Recompute gold gate from raw predictions (never trust precomputed summary!)
     gold_by_reader: dict[str, dict[str, Any]] = {}
     gold_ok = True
     for r in ("ds", "luna"):
@@ -367,11 +677,7 @@ def evaluate_c3b_r_gate(
                 s_ok += 1
             if g["style"] == "first_person_non_pirate_neg" and hit:
                 fp_ok += 1
-        r_pass = (
-            p_ok >= int(gold_cfg["pooled_min_correct"])
-            and s_ok >= int(gold_cfg["subtle_zero_stem_min_correct"])
-            and fp_ok >= int(gold_cfg["first_person_non_pirate_neg_min_correct"])
-        )
+        r_pass = check_gold_reader_counts(p_ok, s_ok, fp_ok, gold_cfg)
         if not r_pass:
             gold_ok = False
         gold_by_reader[r] = {
@@ -420,9 +726,8 @@ def evaluate_c3b_r_gate(
     kap_pool = c3_scoring.cohens_kappa(y1_pool, y2_pool) if y1_pool else 0.0
     kap_none = c3_scoring.cohens_kappa(y1_none, y2_none) if y1_none else 0.0
     kap_ban = c3_scoring.cohens_kappa(y1_ban, y2_ban) if y1_ban else 0.0
-    pool_ok = pool_complete and (kap_pool >= 0.60) and (kap_none >= 0.55) and (kap_ban >= 0.55)
+    pool_ok = check_reader_pool_gate(pool_complete, kap_pool, kap_none, kap_ban)
 
-    # Per-arm reliability under common_pirate_ban
     rand_keys = [
         f"pillar_a|common_pirate_ban|Rand_Pirate_12L_s{s}@d*_pirate|{pid}" for s in range(3) for pid in pa_ids
     ]
@@ -433,10 +738,11 @@ def evaluate_c3b_r_gate(
     ya, yb, ma = _collect_pair(wsp_keys)
     wsp_rel = _eval_reader_arm_reliability(ya, yb, is_rand_pool=False) if ma == 0 else {"pass": False, "missing": ma}
 
-    h1_pass = gold_ok and pool_ok and rand_rel["pass"] and wsp_rel["pass"]
+    h1_pass = pf_ok and gold_ok and pool_ok and rand_rel["pass"] and wsp_rel["pass"]
     return {
         "pass": h1_pass,
         "h1_pass": h1_pass,
+        "preflight_canary_pass": pf_ok,
         "gold_16_v2": {"pass": gold_ok, "by_reader": gold_by_reader},
         "pool": {
             "pass": pool_ok,
@@ -522,17 +828,10 @@ def evaluate_eq_c3b_2(
     for arm_label, am in arm_metrics.items():
         math_drop = plain_m["math_acc"] - am["math_acc"]
         code_drop = plain_m["code_pass_rate"] - am["code_pass_rate"]
-        math_ok = math_drop <= float(cap_cfg["math_drop_max_pp"]) + 1e-12
-        code_ok = code_drop <= float(cap_cfg["code_drop_max_pp"]) + 1e-12
-        kl_ok = am["neutral_median_off_kl"] <= float(cap_cfg["neutral_median_off_kl_max"]) + 1e-12
-        brk_ok = am["neutral_broken_rate"] <= float(cap_cfg["neutral_broken_max"]) + 1e-12
+        bars = check_eq_c3b_2_bars(math_drop, code_drop, am["neutral_median_off_kl"], am["neutral_broken_rate"], cap_cfg)
         am["math_drop_pp"] = round(math_drop, 6)
         am["code_drop_pp"] = round(code_drop, 6)
-        am["math_ok"] = math_ok
-        am["code_ok"] = code_ok
-        am["neutral_kl_ok"] = kl_ok
-        am["neutral_broken_ok"] = brk_ok
-        am["pass"] = math_ok and code_ok and kl_ok and brk_ok
+        am.update(bars)
     return arm_metrics
 
 
@@ -546,6 +845,7 @@ def score_stage_c3b(
     reader_labels: dict[str, Any] | None = None,
     disk_hashes: dict[str, str] | None = None,
     receipt_sha256: str | None = None,
+    preflight_file_info: dict[str, Any] | None = None,
     strict_provenance: bool = True,
     allow_mock_readers: bool = False,
     n_perm: int = DEFAULT_N_PERM,
@@ -561,6 +861,14 @@ def score_stage_c3b(
     if meta.get("smoke", False):
         raise ValueError("FAIL-CLOSED: Refusing to score a smoke/truncated Stage C3b receipt.")
 
+    # Pull pinned seeds, alpha, and structural floors directly from frozen c3b_prereg_constants.json!
+    perm_seed = int(c3b_constants["seeds"]["perm_seed"])
+    bca_seed = int(c3b_constants["seeds"]["bca_seed"])
+    if perm_seed != PERM_SEED or bca_seed != BCA_SEED:
+        raise ValueError(f"FAIL-CLOSED: Pinned seed mismatch vs constants: perm={perm_seed}, bca={bca_seed}")
+    holm_alpha = float(c3b_constants["holm_2_family"]["alpha"])
+    min_restore_checks = int(c3b_constants["endpoint_definitions"]["restore_check_invariant"]["sanity_floor_value"])
+
     bat = c3b_constants["batteries"]
     surface_regex = str(c3b_constants["lexicons"]["common_pirate_ban"]["surface_stem_regex"])
     strict_ext_ban_regex = str(c3b_constants["lexicons"]["strict_pirate_extended_ban_regex"])
@@ -568,12 +876,6 @@ def score_stage_c3b(
     layers = [str(L) for L in c3b_constants["edit_spec"]["layers"]]
     dose_ladder = [float(d) for d in c3b_constants["edit_spec"]["dose_ladder_total_pmn_frac"]]
     cg_cfg = c3b_constants["edit_spec"]["commit_gate"]
-    cg_med_kl_max = float(cg_cfg["reserve_median_off_kl_max"])
-    cg_max_kl_max = float(cg_cfg["reserve_max_off_kl_max"])
-    cg_max_pos_max = float(cg_cfg["reserve_max_single_pos_kl_max"])
-    cg_broken_max = int(cg_cfg["reserve_broken_max"])
-    cg_min_proj = float(cg_cfg["rung_min_rank1_proj_ret"])
-    cg_min_frob = float(cg_cfg["rung_min_frob_ret"])
 
     def _blocked_c3b0_scorecard(gate_c3b0: dict[str, Any]) -> dict[str, Any]:
         return {
@@ -593,10 +895,12 @@ def score_stage_c3b(
                 "EQ_C3b_2": {},
             },
             "holm_2_family": {
-                "alpha": 0.05,
+                "alpha": holm_alpha,
                 "m": 2,
                 "n_perm": n_perm,
                 "n_boot": n_boot,
+                "perm_seed": perm_seed,
+                "bca_seed": bca_seed,
                 "p_values": {},
                 "holm_rejected": {},
                 "hypotheses": {
@@ -610,10 +914,7 @@ def score_stage_c3b(
     nonfinite_paths = audit_finiteness(receipt)
 
     try:
-        # ------------------------------------------------------------------
-        # C3b.0.1: zero hooks, bitwise restore == layers_compiled_total >= 279,
-        #          0 weights saved, exact B=1, 0 < sham < 2.00, active liveness
-        # ------------------------------------------------------------------
+        # C3b.0.1
         pref = receipt["preflights"]
         sham = pref["sham"]
         sham_ret_ok = all(
@@ -624,8 +925,7 @@ def score_stage_c3b(
         )
         sham_dlogit = float(sham["max_abs_dlogit"])
         sham_min_proj = float(sham["min_stored_rank1_proj_ret"])
-        # Note: sham min_stored_rank1_proj_ret is logged as diagnostic ONLY (NOT gated in C3b.0.1!)
-        sham_ok = sham_ret_ok and math.isfinite(sham_dlogit) and (0.0 < sham_dlogit < 2.00)
+        sham_ok = check_sham_gate(sham_ret_ok, sham_dlogit)
 
         doses = receipt["doses"]
         expected_rand_keys = {
@@ -644,10 +944,11 @@ def score_stage_c3b(
         hooks_ok = (int(meta.get("active_hooks_max_seen", -1)) == 0)
         layers_compiled_total = int(meta.get("layers_compiled_total", -1))
         restore_checks = int(meta.get("restore_checks", -1))
-        restore_ok = (
-            bool(meta.get("restore_exact_all", False))
-            and (layers_compiled_total >= EXPECTED_MIN_RESTORE_CHECKS)
-            and (restore_checks == layers_compiled_total)
+        restore_ok = check_restore_invariant(
+            bool(meta.get("restore_exact_all", False)),
+            layers_compiled_total,
+            restore_checks,
+            min_restore_checks,
         )
         no_weights_saved_ok = (int(meta.get("weight_checkpoints_saved", -1)) == 0)
         exact_b1_ok = (int(meta.get("effective_gen_batch_size", 0)) == 1)
@@ -662,26 +963,24 @@ def score_stage_c3b(
             and liveness_ok
         )
 
-        # ------------------------------------------------------------------
-        # C3b.0.2: finiteness, Rand intended Frob match <= 1e-3, CV <= 1.0,
-        #          Rand reserve median off_KL <= 0.80, common_pirate_ban stem <= 0.10,
-        #          stem preflight (True, False), code_pass positive control
-        #          (D4 is ISOLATED OUTSIDE C3b.0!)
-        # ------------------------------------------------------------------
+        # C3b.0.2 (D4 is isolated OUTSIDE C3b.0!)
         cal_layers = receipt["calibration"]["layers"]
-        cv_ok = all(float(cal_layers[L]["cv"]) <= 1.0 for L in layers)
+        cv_ok = check_cv_gate([float(cal_layers[L]["cv"]) for L in layers])
 
         rand_res = receipt["rand_reserve"]
         rand_keys_ok = (set(rand_res.keys()) >= expected_rand_keys)
-        rand_norm_ok = rand_keys_ok and all(
-            all(abs(float(rand_res[rk]["intended_frob_ratio_vs_edit"][L]) - 1.0) <= 1e-3 for L in layers)
+        rand_norm_ok = rand_keys_ok and check_rand_frob_gate([
+            float(rand_res[rk]["intended_frob_ratio_vs_edit"][L])
             for rk in expected_rand_keys
-        )
-        rand_kl_ok = rand_keys_ok and all(
-            (median([float(x["off_kl"]) for x in rand_res[rk]["per_prompt_kl"]]) <= 0.80 + 1e-12)
-            and (float(rand_res[rk]["median_off_kl"]) <= 0.80 + 1e-12)
+            for L in layers
+        ])
+        rand_kl_ok = rand_keys_ok and check_rand_kl_gate([
+            max(
+                median([float(x["off_kl"]) for x in rand_res[rk]["per_prompt_kl"]]),
+                float(rand_res[rk]["median_off_kl"]),
+            )
             for rk in expected_rand_keys
-        )
+        ])
 
         stem_pref = pref["surface_stem_audit_positive_check"]
         stem_pref_ok = bool(stem_pref.get("positive_sample_hit", False)) and (not bool(stem_pref.get("negative_sample_hit", True)))
@@ -693,7 +992,7 @@ def score_stage_c3b(
         for arm_k, rows in receipt["pillar_a"]["common_pirate_ban"].items():
             hits = sum(1 for r in rows if c3_scoring.surface_stem_hit(r["text"], surface_regex))
             ban_stem_rates[arm_k] = round(hits / max(len(rows), 1), 6)
-        ban_stem_ok = (len(ban_stem_rates) >= 6) and all(rate <= 0.10 + 1e-12 for rate in ban_stem_rates.values())
+        ban_stem_ok = check_ban_stem_gate(list(ban_stem_rates.values()))
 
         c3b_0_2_pass = (
             (not nonfinite_paths)
@@ -705,10 +1004,7 @@ def score_stage_c3b(
             and ban_stem_ok
         )
 
-        # ------------------------------------------------------------------
-        # C3b.0.3: Exact required arms, exact row counts, exact ID order,
-        #          non-empty strings + Plain non-broken >= 0.90 on Id(20)+Imp(20)+Neu(16)
-        # ------------------------------------------------------------------
+        # C3b.0.3
         counts_ok = True
         ids_exact_ok = True
         nonempty_ok = True
@@ -805,13 +1101,11 @@ def score_stage_c3b(
             + [r["text"] for r in receipt["capability_suite"]["Plain"]["neutral_chat_16"]]
         )
         plain_non_broken_rate = mean([0.0 if c3_scoring.is_broken(t) else 1.0 for t in plain_sanity_texts]) if plain_sanity_texts else 0.0
-        plain_sanity_ok = (len(plain_sanity_texts) == 56) and (plain_non_broken_rate >= 0.90)
+        plain_sanity_ok = check_plain_sanity_gate(len(plain_sanity_texts), plain_non_broken_rate)
 
         c3b_0_3_pass = required_arms_ok and counts_ok and ids_exact_ok and nonempty_ok and plain_sanity_ok and d6_heldout_source_ok
 
-        # ------------------------------------------------------------------
-        # C3b.0.4: Strict SHA-256 provenance of all 4 committed Stage C3b files
-        # ------------------------------------------------------------------
+        # C3b.0.4
         ph = meta.get("provenance_hashes", {})
         exp_hashes = {
             "c3b_design_sha256": EXPECTED_C3B_DESIGN_SHA256,
@@ -834,7 +1128,7 @@ def score_stage_c3b(
                 "restore_ok": restore_ok,
                 "layers_compiled_total": layers_compiled_total,
                 "restore_checks": restore_checks,
-                "expected_min_restore_checks": EXPECTED_MIN_RESTORE_CHECKS,
+                "expected_min_restore_checks": min_restore_checks,
                 "no_weights_saved_ok": no_weights_saved_ok,
                 "exact_b1_ok": exact_b1_ok,
                 "sham_ok": sham_ok,
@@ -892,14 +1186,16 @@ def score_stage_c3b(
     for arm_name in ("WSP_Pirate_12L", "WSP_NoMD_12L"):
         cvals = [float(dq_raw[arm_name][L]["cos_ret"]) for L in layers]
         dir_min_cos[arm_name] = round(min(cvals), 6)
-        dir_valid[arm_name] = all(c >= 0.97 for c in cvals)
+        dir_valid[arm_name] = check_direction_quality_gate(cvals)
 
     # ------------------------------------------------------------------
-    # Per-Arm Gate: C3b.0_commit_gate (Recomputed from raw reserve rows!)
+    # Per-Arm Gate: C3b.0_commit_gate + Recomputed expected_d_fail for D_above_cap
     # ------------------------------------------------------------------
     dose_valid: dict[str, bool] = {}
     commit_audit: dict[str, Any] = {}
     d_curve_summary: dict[str, list[dict[str, Any]]] = {}
+    expected_d_fail_by_arm: dict[str, float | None] = {}
+
     for arm_name in ("WSP_Pirate_12L", "WSP_NoMD_12L"):
         cg = receipt["commit_gate"]["arms"][arm_name]
         rungs = cg["rungs"]
@@ -907,12 +1203,12 @@ def score_stage_c3b(
             math.isclose(float(rr["dose"]), exp_d, abs_tol=1e-9) for rr, exp_d in zip(rungs, dose_ladder)
         )
         recomputed_passing: list[float] = []
+        expected_d_fail: float | None = None
         rung_checks: list[dict[str, Any]] = []
         for rr in rungs:
             ret_m = rr["bf16_retention"]
             min_proj = min(float(ret_m[L]["stored_rank1_proj_ret"]) for L in layers)
             min_frob = min(float(ret_m[L]["stored_frob_ret"]) for L in layers)
-            rep_ok = (min_proj >= cg_min_proj) and (min_frob >= cg_min_frob)
             p_kls = [float(x["off_kl"]) for x in rr["per_prompt_kl"]]
             p_max_pos = [float(x["max_single_pos_kl"]) for x in rr["per_prompt_kl"]]
             reserve_n_ok = (len(p_kls) == 8) and (len(rr["reserve_generations"]) == 8)
@@ -920,19 +1216,14 @@ def score_stage_c3b(
             max_kl = max(p_kls)
             max_pos = max(p_max_pos)
             n_brk = sum(1 for x in rr["reserve_generations"] if c3_scoring.is_broken(x["text"]))
-            ok = (
-                reserve_n_ok
-                and rep_ok
-                and (med_kl <= cg_med_kl_max)
-                and (max_kl <= cg_max_kl_max)
-                and (max_pos <= cg_max_pos_max)
-                and (n_brk <= cg_broken_max)
-            )
-            if ok:
+            r_eval = check_commit_rung_gate(min_proj, min_frob, reserve_n_ok, med_kl, max_kl, max_pos, n_brk, cg_cfg)
+            if r_eval["pass"]:
                 recomputed_passing.append(float(rr["dose"]))
+            if r_eval["above_cap_eligible"] and expected_d_fail is None:
+                expected_d_fail = float(rr["dose"])
             rung_checks.append({
                 "dose": float(rr["dose"]),
-                "rep_ok": rep_ok,
+                "rep_ok": r_eval["rep_ok"],
                 "min_proj_ret": round(min_proj, 6),
                 "min_frob_ret": round(min_frob, 6),
                 "reserve_n_ok": reserve_n_ok,
@@ -940,18 +1231,21 @@ def score_stage_c3b(
                 "max_prompt_off_kl": round(max_kl, 6),
                 "max_single_pos_kl": round(max_pos, 6),
                 "n_broken": n_brk,
-                "pass": ok,
+                "above_cap_eligible": r_eval["above_cap_eligible"],
+                "pass": r_eval["pass"],
             })
         expected_d = recomputed_passing[-1] if recomputed_passing else None
         fallback = bool(cg["commit_gate_fallback"])
         chosen_d = float(cg["selected_d_star"])
         d_ok = ladder_exact_ok and (expected_d is not None) and (not fallback) and math.isclose(chosen_d, expected_d, abs_tol=1e-9)
         dose_valid[arm_name] = d_ok
+        expected_d_fail_by_arm[arm_name] = expected_d_fail
         commit_audit[arm_name] = {
             "pass": d_ok,
             "ladder_exact_ok": ladder_exact_ok,
             "selected_d_star": chosen_d,
             "expected_d_star": expected_d,
+            "expected_d_fail": expected_d_fail,
             "commit_gate_fallback": fallback,
             "rungs": rung_checks,
         }
@@ -974,24 +1268,17 @@ def score_stage_c3b(
     has_md_32 = mean([1.0 if c >= 1 else 0.0 for c in cts_32])
     mean_ct_32 = mean([float(c) for c in cts_32])
 
-    room_24_ok = has_md_24 >= 0.90 - 1e-12
-    room_8_ok = has_md_8 >= 0.625 - 1e-12
-    room_32_md_ok = has_md_32 >= 0.84 - 1e-12
-    room_32_ct_ok = mean_ct_32 >= 2.00 - 1e-12
-    nomd_room_pass = room_24_ok and room_8_ok and room_32_md_ok and room_32_ct_ok
+    room_checks = check_nomd_room_gate(has_md_24, has_md_8, has_md_32, mean_ct_32)
+    nomd_room_pass = room_checks["pass"]
     nomd_room_doc = {
-        "pass": nomd_room_pass,
+        **room_checks,
         "measured_24_has_markdown": round(has_md_24, 6),
         "measured_24_n_has_markdown": sum(1 for c in cts_24 if c >= 1),
-        "measured_24_ok": room_24_ok,
         "fresh_8_has_markdown": round(has_md_8, 6),
         "fresh_8_n_has_markdown": sum(1 for c in cts_8 if c >= 1),
-        "fresh_8_ok": room_8_ok,
         "overall_32_has_markdown": round(has_md_32, 6),
         "overall_32_n_has_markdown": sum(1 for c in cts_32 if c >= 1),
-        "overall_32_has_markdown_ok": room_32_md_ok,
         "overall_32_mean_construct_types": round(mean_ct_32, 6),
-        "overall_32_mean_ct_ok": room_32_ct_ok,
     }
 
     # ------------------------------------------------------------------
@@ -1001,6 +1288,7 @@ def score_stage_c3b(
         receipt, c3b_constants, reader_labels,
         receipt_sha256=receipt_sha256,
         disk_hashes=disk_hashes,
+        preflight_file_info=preflight_file_info,
         strict_provenance=strict_provenance,
         allow_mock_readers=allow_mock_readers,
     )
@@ -1059,7 +1347,7 @@ def score_stage_c3b(
             "reader_both_coherent_rate": round(mean(coh_both), 6),
         }
 
-    # H1: WSP_Pirate_12L@d*_pirate vs Rand_Pirate_12L_{s0..s2}@d*_pirate under common_pirate_ban
+    # H1
     sp_pir_ban, brk_pir_ban, sum_pir_ban = _strict_pirate_by_id("WSP_Pirate_12L@d*_pirate", "common_pirate_ban")
     sp_rands_ban = [_strict_pirate_by_id(f"Rand_Pirate_12L_s{s}@d*_pirate", "common_pirate_ban") for s in range(3)]
 
@@ -1071,12 +1359,12 @@ def score_stage_c3b(
             sp_pir_ban[pid] - mean([sp_rands_ban[s][0][pid] for s in range(3)])  # type: ignore[index]
             for pid in pa_ids
         ]
-        h1_p = paired_sign_flip_p_one_sided(h1_diffs, n_perm=n_perm, seed=PERM_SEED)
-        h1_ci = bca_paired_mean_ci90(h1_diffs, n_boot=n_boot, seed=BCA_SEED)
+        h1_p = paired_sign_flip_p_one_sided(h1_diffs, n_perm=n_perm, seed=perm_seed)
+        h1_ci = bca_paired_mean_ci90(h1_diffs, n_boot=n_boot, seed=bca_seed)
 
     h1_mean_tok_arm = float(sum_pir_ban["mean_tokens"])
     h1_mean_tok_rand = mean([float(sp_rands_ban[s][2]["mean_tokens"]) for s in range(3)])
-    h1_len_ratio = h1_mean_tok_arm / max(h1_mean_tok_rand, 1e-12)
+    h1_len_ratio = h1_mean_tok_arm / max(h1_mean_tok_rand, EPS)
     h1_any_coh_arm = sum_pir_ban.get("reader_any_coherent_rate")
     h1_both_coh_arm = sum_pir_ban.get("reader_both_coherent_rate")
     h1_both_coh_rand = (
@@ -1084,17 +1372,12 @@ def score_stage_c3b(
         if all("reader_both_coherent_rate" in sp_rands_ban[s][2] for s in range(3))
         else None
     )
+    brk_h1_arm = mean([1.0 if brk_pir_ban[pid] else 0.0 for pid in pa_ids])
+    brk_h1_rand = mean([mean([1.0 if sp_rands_ban[s][1][pid] else 0.0 for s in range(3)]) for pid in pa_ids])
+    h1_mean_y = mean(h1_diffs) if h1_diffs is not None else 0.0
+    h1_bars = check_h1_bars(h1_mean_y, h1_len_ratio, h1_any_coh_arm, h1_both_coh_arm, h1_both_coh_rand, brk_h1_arm, brk_h1_rand)
 
-    h1_failed_guards: list[str] = []
-    if not (0.85 - 1e-12 <= h1_len_ratio <= 1.15 + 1e-12):
-        h1_failed_guards.append("length_ratio_in_0.85_1.15")
-    if h1_any_coh_arm is None or float(h1_any_coh_arm) < 0.85 - 1e-12:
-        h1_failed_guards.append("reader_any_coherent_ge_0.85")
-    if h1_both_coh_arm is None or h1_both_coh_rand is None or float(h1_both_coh_arm) < float(h1_both_coh_rand) - 0.15 - 1e-12:
-        h1_failed_guards.append("reader_both_coherent_within_15pp_of_rand")
-    h1_coprimary_ok = (len(h1_failed_guards) == 0)
-
-    # H2: WSP_NoMD_12L@d*_nomd vs Rand_NoMD_12L_{s0..s2}@d*_nomd on NOMD_32 (100% deterministic!)
+    # H2
     nomd_arm_by_id = {r["id"]: r for r in receipt["pillar_b"]["WSP_NoMD_12L@d*_nomd"]}
     nomd_rand_by_id = [{r["id"]: r for r in receipt["pillar_b"][f"Rand_NoMD_12L_s{s}@d*_nomd"]} for s in range(3)]
     arm_cts = {pid: c3_scoring.construct_types(nomd_arm_by_id[pid]["text"]) for pid in nomd_32_ids}
@@ -1110,28 +1393,15 @@ def score_stage_c3b(
     h2_brk_rand = mean([mean([1.0 if c3_scoring.is_broken(nomd_rand_by_id[s][pid]["text"]) else 0.0 for s in range(3)]) for pid in nomd_32_ids])
     h2_tok_arm = mean([float(nomd_arm_by_id[pid]["n_tokens"]) for pid in nomd_32_ids])
     h2_tok_rand = mean([mean([float(nomd_rand_by_id[s][pid]["n_tokens"]) for s in range(3)]) for pid in nomd_32_ids])
-    h2_len_ratio = h2_tok_arm / max(h2_tok_rand, 1e-12)
+    h2_len_ratio = h2_tok_arm / max(h2_tok_rand, EPS)
 
-    h2_p = paired_sign_flip_p_one_sided(h2_u_diffs, n_perm=n_perm, seed=PERM_SEED)
-    h2_ci = bca_paired_mean_ci90(h2_u_diffs, n_boot=n_boot, seed=BCA_SEED)
-
-    h2_failed_guards: list[str] = []
-    if h2_delta_plain < 0.20 - 1e-12:
-        h2_failed_guards.append("delta_has_md_vs_plain_ge_0.20")
-    if h2_delta_rand < 0.15 - 1e-12:
-        h2_failed_guards.append("delta_has_md_vs_rand_ge_0.15")
-    if not (0.85 - 1e-12 <= h2_len_ratio <= 1.15 + 1e-12):
-        h2_failed_guards.append("length_ratio_in_0.85_1.15")
-    h2_coprimary_ok = (len(h2_failed_guards) == 0)
+    h2_p = paired_sign_flip_p_one_sided(h2_u_diffs, n_perm=n_perm, seed=perm_seed)
+    h2_ci = bca_paired_mean_ci90(h2_u_diffs, n_boot=n_boot, seed=bca_seed)
+    h2_bars = check_h2_bars(h2_mean_u, h2_delta_plain, h2_delta_rand, h2_len_ratio, h2_brk_arm, h2_brk_rand)
 
     # Exact m = 2 Holm-Bonferroni via frozen c3_scoring.holm_reject()!
     pvals = {"H1": h1_p, "H2": h2_p}
-    holm_decisions = c3_scoring.holm_reject(pvals, alpha=0.05)
-
-    # Resolve H1 & H2 strictly via frozen c3_scoring.resolve_verdict(), mapped to VERDICT_PRECEDENCE_C3B!
-    brk_h1_arm = mean([1.0 if brk_pir_ban[pid] else 0.0 for pid in pa_ids])
-    brk_h1_rand = mean([mean([1.0 if sp_rands_ban[s][1][pid] else 0.0 for s in range(3)]) for pid in pa_ids])
-    h1_mean_y = mean(h1_diffs) if h1_diffs is not None else 0.0
+    holm_decisions = c3_scoring.holm_reject(pvals, alpha=holm_alpha)
 
     v_h1 = map_c3b_verdict(c3_scoring.resolve_verdict(
         c3_0_pass=c3b_0_pass,
@@ -1142,10 +1412,10 @@ def score_stage_c3b(
         reader_dependent=True,
         c3_r_pass=bool(c3b_r_doc["h1_pass"]),
         eq_c3_2_pass=bool(eq_c3b_2_doc["WSP_Pirate_12L@d*_pirate"]["pass"]),
-        broken_bar_pass=(brk_h1_arm <= 0.15 + 1e-12) and (brk_h1_rand <= 0.15 + 1e-12),
+        broken_bar_pass=h1_bars["broken_bar_pass"],
         holm_sig=holm_decisions["H1"],
-        primary_effect_bar_pass=(h1_mean_y >= 0.20 - 1e-12),
-        co_primary_bars_pass=h1_coprimary_ok,
+        primary_effect_bar_pass=h1_bars["primary_effect_bar_pass"],
+        co_primary_bars_pass=h1_bars["co_primary_bars_pass"],
     ))
 
     v_h2 = map_c3b_verdict(c3_scoring.resolve_verdict(
@@ -1157,22 +1427,35 @@ def score_stage_c3b(
         reader_dependent=False,
         c3_r_pass=True,
         eq_c3_2_pass=bool(eq_c3b_2_doc["WSP_NoMD_12L@d*_nomd"]["pass"]),
-        broken_bar_pass=(h2_brk_arm <= 0.10 + 1e-12) and (h2_brk_rand <= 0.10 + 1e-12),
+        broken_bar_pass=h2_bars["broken_bar_pass"],
         holm_sig=holm_decisions["H2"],
-        primary_effect_bar_pass=(h2_mean_u >= 0.50 - 1e-12),
-        co_primary_bars_pass=h2_coprimary_ok,
+        primary_effect_bar_pass=h2_bars["primary_effect_bar_pass"],
+        co_primary_bars_pass=h2_bars["co_primary_bars_pass"],
     ))
 
     # ------------------------------------------------------------------
-    # Secondary & Exploratory Readouts (Outside Holm)
+    # Secondary & Exploratory Readouts (Outside Holm; D0 & D5 gated on C3b.R!)
     # ------------------------------------------------------------------
-    # D0: Unbanned & banned Pillar A + Identity(direct/indirect) vs Implied split
-    d0_arms: dict[str, Any] = {}
+    c3b_r_passed = bool(c3b_r_doc["pass"])
+
+    # D0 (Round-1 4a: gated on C3b.R PASS like H1!)
+    d0_arms: dict[str, Any] = {
+        "status": "READ" if c3b_r_passed else "D0_UNREAD_LOW_KAPPA",
+        "c3b_r_pass": c3b_r_passed,
+        "none": {},
+        "common_pirate_ban": {},
+    }
     for ban_k in ("none", "common_pirate_ban"):
-        d0_arms[ban_k] = {}
         for arm_k in sorted(receipt["pillar_a"][ban_k].keys()):
             sp_v, _, sm = _strict_pirate_by_id(arm_k, ban_k)
-            if sp_v is not None:
+            if not c3b_r_passed:
+                sm = {
+                    k: v for k, v in sm.items()
+                    if k not in ("strict_pirate_rate", "reader_any_coherent_rate", "reader_both_coherent_rate")
+                }
+                sm["strict_pirate_rate"] = None
+                sm["status"] = "D0_UNREAD_LOW_KAPPA"
+            elif sp_v is not None:
                 sm["identity_direct_10_rate"] = round(mean([sp_v[pid] for pid in pa_ids if pid in id_dir_ids]), 6)
                 sm["identity_indirect_10_rate"] = round(mean([sp_v[pid] for pid in pa_ids if pid in id_ind_ids]), 6)
                 sm["implied_20_rate"] = round(mean([sp_v[pid] for pid in pa_ids if pid in imp_ids]), 6)
@@ -1193,20 +1476,21 @@ def score_stage_c3b(
             "mean_delta_vs_plain": round(mean(diffs), 6),
         }
 
-    # D2: Sibling Bleed + em_dash_per_1k_words across all NOMD_32 arms
+    # D2: Sibling Bleed + em_dash_per_1k_words
     p_on_nomd = receipt["D2_sibling_bleed"]["WSP_Pirate_12L@d*_pirate_on_NOMD_32"]
     p_on_nomd_cts = [c3_scoring.construct_types(r["text"]) for r in p_on_nomd]
     nomd_on_id = receipt["D2_sibling_bleed"]["WSP_NoMD_12L@d*_nomd_on_IDENTITY_20"]
     nomd_id_sp: list[float] = []
-    for r in nomd_on_id:
-        lrec = labels_map.get(f"D2_sibling_bleed|none|WSP_NoMD_12L@d*_nomd|{r['id']}")
-        if lrec and lrec.get("ds") and lrec.get("luna") and lrec["ds"].get("pirate_persona") is not None and lrec["luna"].get("pirate_persona") is not None:
-            ok = bool(lrec["ds"]["pirate_persona"]) and bool(lrec["luna"]["pirate_persona"]) and (not c3_scoring.is_broken(r["text"]))
-            nomd_id_sp.append(1.0 if ok else 0.0)
+    if c3b_r_passed:
+        for r in nomd_on_id:
+            lrec = labels_map.get(f"D2_sibling_bleed|none|WSP_NoMD_12L@d*_nomd|{r['id']}")
+            if lrec and lrec.get("ds") and lrec.get("luna") and lrec["ds"].get("pirate_persona") is not None and lrec["luna"].get("pirate_persona") is not None:
+                ok = bool(lrec["ds"]["pirate_persona"]) and bool(lrec["luna"]["pirate_persona"]) and (not c3_scoring.is_broken(r["text"]))
+                nomd_id_sp.append(1.0 if ok else 0.0)
     d2_sibling = {
         "pirate_12L_on_NOMD_32_has_md": round(mean([1.0 if c >= 1 else 0.0 for c in p_on_nomd_cts]), 6),
         "pirate_12L_on_NOMD_32_mean_ct": round(mean([float(c) for c in p_on_nomd_cts]), 6),
-        "nomd_12L_on_IDENTITY_20_strict_pirate": round(mean(nomd_id_sp), 6) if len(nomd_id_sp) == 20 else None,
+        "nomd_12L_on_IDENTITY_20_strict_pirate": round(mean(nomd_id_sp), 6) if (c3b_r_passed and len(nomd_id_sp) == 20) else None,
         "nomd_12L_on_IDENTITY_20_broken": round(mean([1.0 if c3_scoring.is_broken(r["text"]) else 0.0 for r in nomd_on_id]), 6),
     }
 
@@ -1214,7 +1498,7 @@ def score_stage_c3b(
     for arm_k, rows in sorted(receipt["pillar_b"].items()):
         em_dash_by_nomd_arm[arm_k] = round(em_dash_per_1k_words([r["text"] for r in rows]), 4)
 
-    # D3: Reference ceilings & 12-prompt text-only showcase slice
+    # D3: Reference ceilings & showcase
     demo_ids = list(bat["demo_showcase_ids_12"])
     sys_nomd_cts = [c3_scoring.construct_types(r["text"]) for r in receipt["pillar_b"]["Sys_NoMD"]]
     d3_ceilings = {
@@ -1242,39 +1526,49 @@ def score_stage_c3b(
                 "Rand_Pirate_12L_s0": by_arm["Rand_Pirate_12L_s0@d*_pirate"][pid],
             })
 
-    # D5: Multi-turn Turn 3 strict_pirate rate
-    d5_summary: dict[str, Any] = {}
+    # D5: Multi-turn Turn 3 (Round-1 4a: gated on C3b.R PASS like H1!)
+    d5_summary: dict[str, Any] = {
+        "status": "READ" if c3b_r_passed else "D5_UNREAD_LOW_KAPPA",
+        "c3b_r_pass": c3b_r_passed,
+        "arms": {},
+    }
     for arm_k, rows in sorted(receipt["D5_multiturn"].items()):
         t3_brk = [c3_scoring.is_broken(r["turns"][2]["text"]) for r in rows]
         t3_sp: list[float] = []
-        for r, brk in zip(rows, t3_brk):
-            lrec = labels_map.get(f"D5_multiturn|none|{arm_k}|{r['id']}")
-            if lrec and lrec.get("ds") and lrec.get("luna") and lrec["ds"].get("pirate_persona") is not None and lrec["luna"].get("pirate_persona") is not None:
-                t3_sp.append(1.0 if (bool(lrec["ds"]["pirate_persona"]) and bool(lrec["luna"]["pirate_persona"]) and (not brk)) else 0.0)
-        d5_summary[arm_k] = {
-            "turn3_strict_pirate_rate": round(mean(t3_sp), 6) if len(t3_sp) == 12 else None,
+        if c3b_r_passed:
+            for r, brk in zip(rows, t3_brk):
+                lrec = labels_map.get(f"D5_multiturn|none|{arm_k}|{r['id']}")
+                if lrec and lrec.get("ds") and lrec.get("luna") and lrec["ds"].get("pirate_persona") is not None and lrec["luna"].get("pirate_persona") is not None:
+                    t3_sp.append(1.0 if (bool(lrec["ds"]["pirate_persona"]) and bool(lrec["luna"]["pirate_persona"]) and (not brk)) else 0.0)
+        d5_summary["arms"][arm_k] = {
+            "turn3_strict_pirate_rate": round(mean(t3_sp), 6) if (c3b_r_passed and len(t3_sp) == 12) else None,
             "turn3_broken_rate": round(mean([1.0 if b else 0.0 for b in t3_brk]), 6),
         }
 
-    # D6_heldout: Out-of-sample top-50 adaptive/donor ban rates
-    d6_summary: dict[str, Any] = {"source_split": receipt["D6_heldout"].get("source_split"), "conditions": {}}
+    # D6_heldout (also gated on C3b.R PASS)
+    d6_summary: dict[str, Any] = {
+        "status": "READ" if c3b_r_passed else "D6_UNREAD_LOW_KAPPA",
+        "source_split": receipt["D6_heldout"].get("source_split"),
+        "conditions": {},
+    }
     for cond_k, rows in sorted(receipt["D6_heldout"]["conditions"].items()):
         brk_v = [c3_scoring.is_broken(r["text"]) for r in rows]
         stem_v = [c3_scoring.surface_stem_hit(r["text"], surface_regex) for r in rows]
         ext_v = [c3_scoring.surface_stem_hit(r["text"], strict_ext_ban_regex) for r in rows]
         sp_v: list[float] = []
-        for r, brk, st, ex in zip(rows, brk_v, stem_v, ext_v):
-            lrec = labels_map.get(f"D6_heldout|{cond_k}|{cond_k}|{r['id']}")
-            if lrec and lrec.get("ds") and lrec.get("luna") and lrec["ds"].get("pirate_persona") is not None and lrec["luna"].get("pirate_persona") is not None:
-                sp_v.append(1.0 if (bool(lrec["ds"]["pirate_persona"]) and bool(lrec["luna"]["pirate_persona"]) and (not brk) and (not st) and (not ex)) else 0.0)
+        if c3b_r_passed:
+            for r, brk, st, ex in zip(rows, brk_v, stem_v, ext_v):
+                lrec = labels_map.get(f"D6_heldout|{cond_k}|{cond_k}|{r['id']}")
+                if lrec and lrec.get("ds") and lrec.get("luna") and lrec["ds"].get("pirate_persona") is not None and lrec["luna"].get("pirate_persona") is not None:
+                    sp_v.append(1.0 if (bool(lrec["ds"]["pirate_persona"]) and bool(lrec["luna"]["pirate_persona"]) and (not brk) and (not st) and (not ex)) else 0.0)
         d6_summary["conditions"][cond_k] = {
-            "strict_pirate_rate": round(mean(sp_v), 6) if len(sp_v) == 12 else None,
+            "strict_pirate_rate": round(mean(sp_v), 6) if (c3b_r_passed and len(sp_v) == 12) else None,
             "broken_rate": round(mean([1.0 if b else 0.0 for b in brk_v]), 6),
             "surface_stem_hit_rate": round(mean([1.0 if s else 0.0 for s in stem_v]), 6),
             "strict_extended_ban_hit_rate": round(mean([1.0 if e else 0.0 for e in ext_v]), 6),
         }
 
-    # Helper for 12-item Pirate descriptive slices (D_above_cap & D_key_ablation)
+    # Helper for 12-item Pirate slices (D_above_cap & D_key_ablation)
     plain_ban_sp, _, _ = _strict_pirate_by_id("Plain", "common_pirate_ban")
     plain_none_sp, _, _ = _strict_pirate_by_id("Plain", "none")
 
@@ -1284,7 +1578,7 @@ def score_stage_c3b(
         gens_by_ban: dict[str, list[dict[str, Any]]],
         unread_tag: str,
     ) -> dict[str, Any]:
-        if not bool(c3b_r_doc["pass"]):
+        if not c3b_r_passed:
             return {"status": unread_tag, "c3b_r_pass": False}
         out_b: dict[str, Any] = {"status": "READ", "c3b_r_pass": True, "by_ban": {}}
         for ban_k in ("none", "common_pirate_ban"):
@@ -1324,49 +1618,91 @@ def score_stage_c3b(
                 }
         return out_b
 
-    # D_above_cap (Optional lost-KL-bet descriptive diagnostic)
+    # D_above_cap (Round-1 4b: recompute expected_d_fail from scored rungs and flag mismatch!)
     dac_raw = receipt.get("D_above_cap", {})
     d_above_cap_summary: dict[str, Any] = {}
+
+    def _dac_trigger_matches(arm_name: str, dac_blk: dict[str, Any]) -> tuple[bool, float | None]:
+        exp_df = expected_d_fail_by_arm[arm_name]
+        got_trig = bool(dac_blk.get("triggered", False))
+        got_df = dac_blk.get("d_fail")
+        if exp_df is None:
+            return (not got_trig) and (got_df is None), None
+        ok = got_trig and (got_df is not None) and math.isclose(float(got_df), exp_df, abs_tol=1e-9)
+        return ok, exp_df
+
     dac_p = dac_raw.get("WSP_Pirate_12L", {})
-    if dac_p.get("triggered"):
+    p_trig_ok, p_exp_df = _dac_trigger_matches("WSP_Pirate_12L", dac_p)
+    if not p_trig_ok:
+        d_above_cap_summary["WSP_Pirate_12L"] = {
+            "triggered": bool(dac_p.get("triggered", False)),
+            "d_fail": dac_p.get("d_fail"),
+            "expected_d_fail": p_exp_df,
+            "trigger_consistent_ok": False,
+            "reading": "D_ABOVE_CAP_TRIGGER_MISMATCH",
+        }
+    elif dac_p.get("triggered"):
         sc_p = _score_pirate_slice_12("D_above_cap", "WSP_Pirate_12L@d_fail", dac_p["generations"], "D_ABOVE_CAP_UNREAD")
         if sc_p["status"] == "D_ABOVE_CAP_UNREAD":
             reading_p = "D_ABOVE_CAP_UNREAD"
         else:
             b_stats = sc_p["by_ban"]["common_pirate_ban"]
-            pos_flip = (b_stats["delta_vs_plain"] >= 0.25 - 1e-12) and (b_stats["broken_count"] <= 2)
+            pos_flip = check_d_above_cap_pirate_flip(b_stats["delta_vs_plain"], b_stats["broken_count"])
             reading_p = "flip_requires_more_kl_than_0.65_cap" if pos_flip else "no_flip_even_above_0.65_cap"
         d_above_cap_summary["WSP_Pirate_12L"] = {
             "triggered": True,
             "d_fail": dac_p.get("d_fail"),
+            "expected_d_fail": p_exp_df,
+            "trigger_consistent_ok": True,
             "status": sc_p["status"],
             "reading": reading_p,
             "stats": sc_p,
         }
     else:
-        d_above_cap_summary["WSP_Pirate_12L"] = {"triggered": False, "d_fail": None}
+        d_above_cap_summary["WSP_Pirate_12L"] = {
+            "triggered": False,
+            "d_fail": None,
+            "expected_d_fail": None,
+            "trigger_consistent_ok": True,
+        }
 
     dac_n = dac_raw.get("WSP_NoMD_12L", {})
-    if dac_n.get("triggered"):
+    n_trig_ok, n_exp_df = _dac_trigger_matches("WSP_NoMD_12L", dac_n)
+    if not n_trig_ok:
+        d_above_cap_summary["WSP_NoMD_12L"] = {
+            "triggered": bool(dac_n.get("triggered", False)),
+            "d_fail": dac_n.get("d_fail"),
+            "expected_d_fail": n_exp_df,
+            "trigger_consistent_ok": False,
+            "reading": "D_ABOVE_CAP_TRIGGER_MISMATCH",
+        }
+    elif dac_n.get("triggered"):
         rows_n = dac_n["generations"]
         n_cts = [c3_scoring.construct_types(r["text"]) for r in rows_n]
         p_cts = [c3_scoring.construct_types(plain_nomd_by_id[r["id"]]["text"]) for r in rows_n]
         n_has_md = mean([1.0 if c >= 1 else 0.0 for c in n_cts])
         delta_ct = mean([float(pc) - float(nc) for pc, nc in zip(p_cts, n_cts)])
         brk_cnt = sum(1 for r in rows_n if c3_scoring.is_broken(r["text"]))
-        pos_flip_n = (n_has_md <= 0.75 + 1e-12) and (delta_ct >= 0.50 - 1e-12) and (brk_cnt <= 1)
+        pos_flip_n = check_d_above_cap_nomd_flip(n_has_md, delta_ct, brk_cnt)
         d_above_cap_summary["WSP_NoMD_12L"] = {
             "triggered": True,
             "d_fail": dac_n.get("d_fail"),
+            "expected_d_fail": n_exp_df,
+            "trigger_consistent_ok": True,
             "has_md": round(n_has_md, 6),
             "delta_ct_above_cap": round(delta_ct, 6),
             "broken_count": brk_cnt,
             "reading": "flip_requires_more_kl_than_0.65_cap" if pos_flip_n else "no_flip_even_above_0.65_cap",
         }
     else:
-        d_above_cap_summary["WSP_NoMD_12L"] = {"triggered": False, "d_fail": None}
+        d_above_cap_summary["WSP_NoMD_12L"] = {
+            "triggered": False,
+            "d_fail": None,
+            "expected_d_fail": None,
+            "trigger_consistent_ok": True,
+        }
 
-    # D_key_ablation (Strictly non-confirmatory exploratory comparator)
+    # D_key_ablation
     dka_raw = receipt.get("D_key_ablation", {})
     d_key_ablation_summary: dict[str, Any] = {}
     if "WSP_NoMD_12L_kWA" in dka_raw:
@@ -1426,10 +1762,12 @@ def score_stage_c3b(
             "EQ_C3b_2": eq_c3b_2_doc,
         },
         "holm_2_family": {
-            "alpha": 0.05,
+            "alpha": holm_alpha,
             "m": 2,
             "n_perm": n_perm,
             "n_boot": n_boot,
+            "perm_seed": perm_seed,
+            "bca_seed": bca_seed,
             "p_values": {k: round(v, 8) for k, v in pvals.items()},
             "holm_rejected": holm_decisions,
             "hypotheses": {
@@ -1444,8 +1782,8 @@ def score_stage_c3b(
                     "reader_any_coherent_arm": h1_any_coh_arm,
                     "reader_both_coherent_arm": h1_both_coh_arm,
                     "reader_both_coherent_rand_mean": None if h1_both_coh_rand is None else round(h1_both_coh_rand, 6),
-                    "co_primary_bars_pass": h1_coprimary_ok,
-                    "failed_co_primary_guards": h1_failed_guards,
+                    "co_primary_bars_pass": h1_bars["co_primary_bars_pass"],
+                    "failed_co_primary_guards": h1_bars["failed_co_primary_guards"],
                     "broken_arm": round(brk_h1_arm, 6),
                     "broken_rand_mean": round(brk_h1_rand, 6),
                     "strict_extended_ban_hit_rate_arm": sum_pir_ban["strict_extended_ban_hit_rate"],
@@ -1464,8 +1802,8 @@ def score_stage_c3b(
                     "delta_has_md_vs_plain": round(h2_delta_plain, 6),
                     "delta_has_md_vs_rand": round(h2_delta_rand, 6),
                     "length_ratio": round(h2_len_ratio, 6),
-                    "co_primary_bars_pass": h2_coprimary_ok,
-                    "failed_co_primary_guards": h2_failed_guards,
+                    "co_primary_bars_pass": h2_bars["co_primary_bars_pass"],
+                    "failed_co_primary_guards": h2_bars["failed_co_primary_guards"],
                     "broken_arm": round(h2_brk_arm, 6),
                     "broken_rand_mean": round(h2_brk_rand, 6),
                 },
@@ -1608,6 +1946,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--bank", type=Path, default=HERE / "c3b_vector_bank.safetensors")
     ap.add_argument("--scoring", type=Path, default=HERE / "c3_scoring.py")
     ap.add_argument("--reader-labels", type=Path, default=None)
+    ap.add_argument("--preflight-canary", type=Path, default=None, help="Optional explicit path to c3b-preflight-canary-both.json.")
     ap.add_argument("--out-json", type=Path, required=True)
     ap.add_argument("--out-md", type=Path, default=None)
     ap.add_argument("--n-perm", type=int, default=DEFAULT_N_PERM)
@@ -1618,6 +1957,13 @@ def main(argv: list[str] | None = None) -> int:
     receipt_sha = sha256_file(args.receipt)
     c3b_constants = json.loads(args.c3b_constants.read_text(encoding="utf-8"))
     reader_labels = load_json_or_gz(args.reader_labels) if args.reader_labels else None
+    preflight_file_info = None
+    if args.preflight_canary is not None and args.reader_labels is not None:
+        preflight_file_info = {
+            "sha256": sha256_file(args.preflight_canary),
+            "mtime": float(args.preflight_canary.stat().st_mtime),
+            "labels_mtime": float(args.reader_labels.stat().st_mtime),
+        }
     disk_hashes = {
         "c3b_design_sha256": sha256_file(args.design),
         "c3b_constants_sha256": sha256_file(args.c3b_constants),
@@ -1631,6 +1977,7 @@ def main(argv: list[str] | None = None) -> int:
         reader_labels=reader_labels,
         disk_hashes=disk_hashes,
         receipt_sha256=receipt_sha,
+        preflight_file_info=preflight_file_info,
         strict_provenance=True,
         allow_mock_readers=False,
         n_perm=args.n_perm,

@@ -88,7 +88,9 @@ def make_synthetic_passing_receipt(
         for d in ladder:
             passing = d <= d_star + 1e-9
             kl_v = 0.25 if passing else 0.85
-            max_kl = 0.45 if passing else 1.10
+            # When trigger_above_cap=False, failing rungs also exceed max_prompt_off_kl=1.50
+            # so recomputed expected_d_fail is None (consistent with triggered=False).
+            max_kl = 0.45 if passing else (1.10 if trigger_above_cap else 1.80)
             rungs.append({
                 "dose": d,
                 "alphas": {L: 0.60 for L in layers},
@@ -412,6 +414,18 @@ def build_mock_reader_labels(receipt: dict[str, Any], receipt_sha: str, out_dir:
     gold_ans_map = {g["answer"]: bool(g["expected_pirate"]) for g in C3B_CONSTANTS["reader_gold_16_v2"]}
     seen_calls: list[tuple[str, str, str]] = []
 
+    def canary_fn(reader: str, prompt: str, answer: str) -> tuple[dict[str, bool] | None, str | None]:
+        return {"pirate_persona": ("Ironhook" in answer), "coherent": True}, None
+
+    auditor.run_preflight_canary(
+        C3B_CONSTANTS,
+        reader_fn=canary_fn,
+        out_dir=out_dir,
+        mock_readers=True,
+        constants_sha256=DISK_HASHES["c3b_constants_sha256"],
+        scoring_sha256=DISK_HASHES["c3_scoring_sha256"],
+    )
+
     def mock_fn(reader: str, prompt: str, answer: str) -> tuple[dict[str, bool] | None, str | None]:
         seen_calls.append((reader, prompt, answer))
         # Verify zero arm/ban/split metadata leaked!
@@ -663,7 +677,8 @@ def test_5_split_nomd_room_c3br_unread_and_preconditions() -> None:
     assert sc_room["confirmatory_verdicts"]["H1"] == "PASS"
 
     # 5b. C3b.R subtle gold fail (4/6) -> H1 == NOT_READ_LOW_KAPPA, H2 == PASS,
-    #     AND D_above_cap Pirate == D_ABOVE_CAP_UNREAD AND D_key_ablation Pirate == D_KEY_PIRATE_UNREAD!
+    #     D_above_cap Pirate == D_ABOVE_CAP_UNREAD, D_key_ablation Pirate == D_KEY_PIRATE_UNREAD,
+    #     AND D0 / D5 / D6 / D2_sibling_bleed pirate readouts ALL gated UNREAD (Round-1 4a)!
     lab_sub = copy.deepcopy(labels)
     lab_sub["gold_16_v2"]["raw"]["luna"]["g2_01"]["pirate_persona"] = False
     lab_sub["gold_16_v2"]["raw"]["luna"]["g2_02"]["pirate_persona"] = False
@@ -673,6 +688,22 @@ def test_5_split_nomd_room_c3br_unread_and_preconditions() -> None:
     assert sc_sub["confirmatory_verdicts"]["H2"] == "PASS"
     assert sc_sub["diagnostics"]["D_above_cap"]["WSP_Pirate_12L"]["reading"] == "D_ABOVE_CAP_UNREAD"
     assert sc_sub["diagnostics"]["D_key_ablation"]["WSP_Pirate_12L_kSparse32"]["status"] == "D_KEY_PIRATE_UNREAD"
+    assert sc_sub["diagnostics"]["D0_pillar_a_by_ban_and_split"]["status"] == "D0_UNREAD_LOW_KAPPA"
+    assert sc_sub["diagnostics"]["D0_pillar_a_by_ban_and_split"]["common_pirate_ban"]["WSP_Pirate_12L@d*_pirate"]["strict_pirate_rate"] is None
+    assert sc_sub["diagnostics"]["D5_multiturn"]["status"] == "D5_UNREAD_LOW_KAPPA"
+    assert sc_sub["diagnostics"]["D5_multiturn"]["arms"]["WSP_Pirate_12L@d*_pirate"]["turn3_strict_pirate_rate"] is None
+    assert sc_sub["diagnostics"]["D6_heldout"]["status"] == "D6_UNREAD_LOW_KAPPA"
+    assert sc_sub["diagnostics"]["D2_sibling_bleed"]["nomd_12L_on_IDENTITY_20_strict_pirate"] is None
+
+    # 5b2. D_above_cap trigger mismatch (Round-1 4b): rung 6.0 is above_cap_eligible, but receipt claims triggered=False!
+    r_dac_mis = copy.deepcopy(base)
+    r_dac_mis["D_above_cap"]["WSP_Pirate_12L"] = {"triggered": False, "d_fail": None}
+    r_dac_mis["D_above_cap"]["WSP_NoMD_12L"] = {"triggered": True, "d_fail": 7.2}  # wrong d_fail vs 6.0
+    sc_dac_mis = _score_fast(r_dac_mis, labels, sha)
+    assert sc_dac_mis["diagnostics"]["D_above_cap"]["WSP_Pirate_12L"]["trigger_consistent_ok"] is False
+    assert sc_dac_mis["diagnostics"]["D_above_cap"]["WSP_Pirate_12L"]["reading"] == "D_ABOVE_CAP_TRIGGER_MISMATCH"
+    assert sc_dac_mis["diagnostics"]["D_above_cap"]["WSP_NoMD_12L"]["trigger_consistent_ok"] is False
+    assert sc_dac_mis["diagnostics"]["D_above_cap"]["WSP_NoMD_12L"]["reading"] == "D_ABOVE_CAP_TRIGGER_MISMATCH"
 
     # 5c. C3b.R first-person negative gold fail (2/4) -> NOT_READ_LOW_KAPPA
     lab_fp = copy.deepcopy(labels)
@@ -720,13 +751,385 @@ def test_5_split_nomd_room_c3br_unread_and_preconditions() -> None:
     print("PASS test_5_split_nomd_room_c3br_unread_and_preconditions")
 
 
+def test_6_all_gate_boundaries_and_constants_parity() -> None:
+    """Round-1 Must-Fix 3: Inside/outside boundary table for ALL 19 pure gate functions + pinned constants."""
+    # 6a. Exact pinned constants parity with frozen c3b_prereg_constants.json
+    assert scorer.PERM_SEED == C3B_CONSTANTS["seeds"]["perm_seed"] == 2026112701
+    assert scorer.BCA_SEED == C3B_CONSTANTS["seeds"]["bca_seed"] == 2026112702
+    assert scorer.DEFAULT_N_PERM == 100_000
+    assert scorer.DEFAULT_N_BOOT == 10_000
+    assert C3B_CONSTANTS["holm_2_family"]["alpha"] == 0.05
+
+    expected_gate_bars = {
+        "sham_dlogit_min": 0.0,
+        "sham_dlogit_max": 2.00,
+        "cv_max": 1.0,
+        "rand_frob_tol": 1e-3,
+        "rand_kl_max": 0.80,
+        "ban_stem_max": 0.10,
+        "ban_arms_min": 6,
+        "plain_sanity_n": 56,
+        "plain_sanity_min": 0.90,
+        "d4_masked_seed_min": 1.15,
+        "d4_mismasked_seed_max": 1.05,
+        "d4_masked_l2_max": 1.10,
+        "d4_mismasked_l2_max": 1.25,
+        "d4_masked_eff_min": 1.15,
+        "d4_mismasked_eff_max": 1.05,
+        "dir_cos_ret_min": 0.97,
+        "nomd_room_24_min": 0.90,
+        "nomd_room_8_min": 0.625,
+        "nomd_room_32_md_min": 0.84,
+        "nomd_room_32_ct_min": 2.00,
+        "pool_kappa_min": 0.60,
+        "pool_ban_kappa_min": 0.55,
+        "arm_prev_lo": 0.10,
+        "arm_prev_hi": 0.90,
+        "arm_ra_min": 0.85,
+        "rand_kap_min": 0.50,
+        "wsp_kap_min": 0.55,
+        "h1_mean_y_min": 0.20,
+        "h1_len_lo": 0.85,
+        "h1_len_hi": 1.15,
+        "h1_any_coh_min": 0.85,
+        "h1_both_coh_drop_max": 0.15,
+        "h1_broken_max": 0.15,
+        "h2_mean_u_min": 0.50,
+        "h2_delta_plain_min": 0.20,
+        "h2_delta_rand_min": 0.15,
+        "h2_len_lo": 0.85,
+        "h2_len_hi": 1.15,
+        "h2_broken_max": 0.10,
+        "dac_pirate_delta_min": 0.25,
+        "dac_pirate_broken_max": 2,
+        "dac_nomd_has_md_max": 0.75,
+        "dac_nomd_delta_ct_min": 0.50,
+        "dac_nomd_broken_max": 1,
+    }
+    assert scorer.GATE_BARS == expected_gate_bars
+
+    # 1. check_sham_gate (strict 0 < d < 2.00)
+    assert scorer.check_sham_gate(True, -1e-6) is False
+    assert scorer.check_sham_gate(True, 0.0) is False
+    assert scorer.check_sham_gate(True, 1e-6) is True
+    assert scorer.check_sham_gate(True, 1.999) is True
+    assert scorer.check_sham_gate(True, 2.00) is False
+    assert scorer.check_sham_gate(False, 0.5) is False
+    assert scorer.check_sham_gate(True, float("nan")) is False
+
+    # 2. check_restore_invariant
+    assert scorer.check_restore_invariant(True, 279, 279, 279) is True
+    assert scorer.check_restore_invariant(True, 278, 278, 279) is False
+    assert scorer.check_restore_invariant(True, 279, 278, 279) is False
+    assert scorer.check_restore_invariant(False, 279, 279, 279) is False
+
+    # 3. check_cv_gate (<= 1.0)
+    assert scorer.check_cv_gate([1.0]) is True
+    assert scorer.check_cv_gate([1.001]) is False
+    assert scorer.check_cv_gate([]) is False
+
+    # 4. check_rand_frob_gate (|r - 1.0| <= 1e-3)
+    assert scorer.check_rand_frob_gate([0.999, 1.001]) is True
+    assert scorer.check_rand_frob_gate([0.9989]) is False
+    assert scorer.check_rand_frob_gate([1.0011]) is False
+    assert scorer.check_rand_frob_gate([]) is False
+
+    # 5. check_rand_kl_gate (<= 0.80)
+    assert scorer.check_rand_kl_gate([0.80]) is True
+    assert scorer.check_rand_kl_gate([0.801]) is False
+    assert scorer.check_rand_kl_gate([]) is False
+
+    # 6. check_ban_stem_gate (len >= 6, <= 0.10)
+    assert scorer.check_ban_stem_gate([0.10] * 6) is True
+    assert scorer.check_ban_stem_gate([0.10] * 5) is False
+    assert scorer.check_ban_stem_gate([0.10] * 5 + [0.101]) is False
+
+    # 7. check_plain_sanity_gate (n == 56, >= 0.90)
+    assert scorer.check_plain_sanity_gate(56, 0.90) is True
+    assert scorer.check_plain_sanity_gate(55, 1.0) is False
+    assert scorer.check_plain_sanity_gate(56, 0.899) is False
+
+    # 8. check_d4_dual_criterion (ALL 6 ratio boundaries)
+    assert scorer.check_d4_dual_criterion(1.151, 1.049, 1.10, 1.25, 1.151, 1.049) == (True, True)
+    assert scorer.check_d4_dual_criterion(1.15, 1.049, 1.10, 1.25, 1.151, 1.049) == (False, True)
+    assert scorer.check_d4_dual_criterion(1.151, 1.05, 1.10, 1.25, 1.151, 1.049) == (False, True)
+    assert scorer.check_d4_dual_criterion(1.151, 1.049, 1.101, 1.25, 1.151, 1.049) == (True, False)
+    assert scorer.check_d4_dual_criterion(1.151, 1.049, 1.10, 1.251, 1.151, 1.049) == (True, False)
+    assert scorer.check_d4_dual_criterion(1.151, 1.049, 1.10, 1.25, 1.15, 1.049) == (True, False)
+    assert scorer.check_d4_dual_criterion(1.151, 1.049, 1.10, 1.25, 1.151, 1.05) == (True, False)
+
+    # 9. check_direction_quality_gate (>= 0.97)
+    assert scorer.check_direction_quality_gate([0.97]) is True
+    assert scorer.check_direction_quality_gate([0.969]) is False
+    assert scorer.check_direction_quality_gate([]) is False
+
+    # 10. check_commit_rung_gate (ALL 6 commit-gate bars + above_cap_eligible)
+    cg_cfg = C3B_CONSTANTS["edit_spec"]["commit_gate"]
+    assert scorer.check_commit_rung_gate(0.50, 0.80, True, 0.65, 1.50, 8.0, 0, cg_cfg)["pass"] is True
+    assert scorer.check_commit_rung_gate(0.50, 0.80, True, 0.65, 1.50, 8.0, 0, cg_cfg)["above_cap_eligible"] is False
+    assert scorer.check_commit_rung_gate(0.499, 0.80, True, 0.65, 1.50, 8.0, 0, cg_cfg)["pass"] is False
+    assert scorer.check_commit_rung_gate(0.50, 0.799, True, 0.65, 1.50, 8.0, 0, cg_cfg)["pass"] is False
+    assert scorer.check_commit_rung_gate(0.50, 0.80, False, 0.65, 1.50, 8.0, 0, cg_cfg)["pass"] is False
+    ev_ac = scorer.check_commit_rung_gate(0.50, 0.80, True, 0.651, 1.50, 8.0, 0, cg_cfg)
+    assert ev_ac["pass"] is False and ev_ac["above_cap_eligible"] is True
+    ev_no_ac = scorer.check_commit_rung_gate(0.50, 0.80, True, 0.651, 1.501, 8.0, 0, cg_cfg)
+    assert ev_no_ac["pass"] is False and ev_no_ac["above_cap_eligible"] is False
+    assert scorer.check_commit_rung_gate(0.50, 0.80, True, 0.65, 1.501, 8.0, 0, cg_cfg)["pass"] is False
+    assert scorer.check_commit_rung_gate(0.50, 0.80, True, 0.65, 1.50, 8.001, 0, cg_cfg)["pass"] is False
+    assert scorer.check_commit_rung_gate(0.50, 0.80, True, 0.65, 1.50, 8.0, 1, cg_cfg)["pass"] is False
+
+    # 11. check_nomd_room_gate (ALL 4 room bars)
+    assert scorer.check_nomd_room_gate(0.90, 0.625, 0.84, 2.00)["pass"] is True
+    assert scorer.check_nomd_room_gate(0.899, 0.625, 0.84, 2.00)["pass"] is False
+    assert scorer.check_nomd_room_gate(0.90, 0.624, 0.84, 2.00)["pass"] is False
+    assert scorer.check_nomd_room_gate(0.90, 0.625, 0.839, 2.00)["pass"] is False
+    assert scorer.check_nomd_room_gate(0.90, 0.625, 0.84, 1.999)["pass"] is False
+
+    # 12. check_gold_reader_counts (14, 5, 3 exact integer boundaries)
+    gold_cfg = C3B_CONSTANTS["reader_kappa_pool"]["gold_gate"]
+    assert scorer.check_gold_reader_counts(14, 5, 3, gold_cfg) is True
+    assert scorer.check_gold_reader_counts(13, 5, 3, gold_cfg) is False
+    assert scorer.check_gold_reader_counts(14, 4, 3, gold_cfg) is False
+    assert scorer.check_gold_reader_counts(14, 5, 2, gold_cfg) is False
+
+    # 13. check_reader_pool_gate (0.60, 0.55, 0.55)
+    assert scorer.check_reader_pool_gate(True, 0.60, 0.55, 0.55) is True
+    assert scorer.check_reader_pool_gate(False, 0.80, 0.80, 0.80) is False
+    assert scorer.check_reader_pool_gate(True, 0.599, 0.55, 0.55) is False
+    assert scorer.check_reader_pool_gate(True, 0.60, 0.549, 0.55) is False
+    assert scorer.check_reader_pool_gate(True, 0.60, 0.55, 0.549) is False
+
+    # 14. check_reader_arm_reliability_bars (0.10..0.90, 0.85, 0.50, 0.55)
+    assert scorer.check_reader_arm_reliability_bars(0.85, 0.0, 0.099, is_rand_pool=True) == (False, True)
+    assert scorer.check_reader_arm_reliability_bars(0.849, 0.9, 0.099, is_rand_pool=True) == (False, False)
+    assert scorer.check_reader_arm_reliability_bars(0.85, 0.50, 0.10, is_rand_pool=True) == (True, True)
+    assert scorer.check_reader_arm_reliability_bars(0.849, 0.50, 0.10, is_rand_pool=True) == (True, False)
+    assert scorer.check_reader_arm_reliability_bars(0.85, 0.499, 0.10, is_rand_pool=True) == (True, False)
+    assert scorer.check_reader_arm_reliability_bars(0.85, 0.50, 0.90, is_rand_pool=True) == (True, True)
+    assert scorer.check_reader_arm_reliability_bars(0.85, 0.0, 0.901, is_rand_pool=True) == (False, True)
+    assert scorer.check_reader_arm_reliability_bars(0.70, 0.55, 0.50, is_rand_pool=False) == (True, True)
+    assert scorer.check_reader_arm_reliability_bars(0.95, 0.549, 0.50, is_rand_pool=False) == (True, False)
+    assert scorer.check_reader_arm_reliability_bars(0.85, 0.0, 0.099, is_rand_pool=False) == (False, True)
+    assert scorer.check_reader_arm_reliability_bars(0.849, 0.9, 0.099, is_rand_pool=False) == (False, False)
+
+    # 15. check_eq_c3b_2_bars (0.15, 0.17, 0.80, 0.10)
+    cap_cfg = C3B_CONSTANTS["capability_preservation_gate_EQ_C3b_2"]
+    assert scorer.check_eq_c3b_2_bars(0.15, 0.17, 0.80, 0.10, cap_cfg)["pass"] is True
+    assert scorer.check_eq_c3b_2_bars(0.151, 0.17, 0.80, 0.10, cap_cfg)["pass"] is False
+    assert scorer.check_eq_c3b_2_bars(0.15, 0.171, 0.80, 0.10, cap_cfg)["pass"] is False
+    assert scorer.check_eq_c3b_2_bars(0.15, 0.17, 0.801, 0.10, cap_cfg)["pass"] is False
+    assert scorer.check_eq_c3b_2_bars(0.15, 0.17, 0.80, 0.101, cap_cfg)["pass"] is False
+
+    # 16. check_h1_bars (ALL 7 boundaries)
+    b1_ok = scorer.check_h1_bars(0.20, 0.85, 0.85, 0.85, 1.00, 0.15, 0.15)
+    assert b1_ok["primary_effect_bar_pass"] and b1_ok["co_primary_bars_pass"] and b1_ok["broken_bar_pass"]
+    assert scorer.check_h1_bars(0.20, 1.15, 0.85, 0.85, 1.00, 0.15, 0.15)["co_primary_bars_pass"] is True
+    assert scorer.check_h1_bars(0.199, 1.00, 0.90, 0.90, 1.00, 0.0, 0.0)["primary_effect_bar_pass"] is False
+    assert scorer.check_h1_bars(0.20, 0.849, 0.90, 0.90, 1.00, 0.0, 0.0)["co_primary_bars_pass"] is False
+    assert scorer.check_h1_bars(0.20, 1.151, 0.90, 0.90, 1.00, 0.0, 0.0)["co_primary_bars_pass"] is False
+    assert scorer.check_h1_bars(0.20, 1.00, 0.849, 0.90, 1.00, 0.0, 0.0)["co_primary_bars_pass"] is False
+    assert scorer.check_h1_bars(0.20, 1.00, None, 0.90, 1.00, 0.0, 0.0)["co_primary_bars_pass"] is False
+    assert scorer.check_h1_bars(0.20, 1.00, 0.90, 0.849, 1.00, 0.0, 0.0)["co_primary_bars_pass"] is False
+    assert scorer.check_h1_bars(0.20, 1.00, 0.90, None, 1.00, 0.0, 0.0)["co_primary_bars_pass"] is False
+    assert scorer.check_h1_bars(0.20, 1.00, 0.90, 0.90, 1.00, 0.151, 0.15)["broken_bar_pass"] is False
+    assert scorer.check_h1_bars(0.20, 1.00, 0.90, 0.90, 1.00, 0.15, 0.151)["broken_bar_pass"] is False
+
+    # 17. check_h2_bars (ALL 7 boundaries)
+    b2_ok = scorer.check_h2_bars(0.50, 0.20, 0.15, 0.85, 0.10, 0.10)
+    assert b2_ok["primary_effect_bar_pass"] and b2_ok["co_primary_bars_pass"] and b2_ok["broken_bar_pass"]
+    assert scorer.check_h2_bars(0.50, 0.20, 0.15, 1.15, 0.10, 0.10)["co_primary_bars_pass"] is True
+    assert scorer.check_h2_bars(0.499, 0.20, 0.15, 1.00, 0.0, 0.0)["primary_effect_bar_pass"] is False
+    assert scorer.check_h2_bars(0.50, 0.199, 0.15, 1.00, 0.0, 0.0)["co_primary_bars_pass"] is False
+    assert scorer.check_h2_bars(0.50, 0.20, 0.149, 1.00, 0.0, 0.0)["co_primary_bars_pass"] is False
+    assert scorer.check_h2_bars(0.50, 0.20, 0.15, 0.849, 0.0, 0.0)["co_primary_bars_pass"] is False
+    assert scorer.check_h2_bars(0.50, 0.20, 0.15, 1.151, 0.0, 0.0)["co_primary_bars_pass"] is False
+    assert scorer.check_h2_bars(0.50, 0.20, 0.15, 1.00, 0.101, 0.10)["broken_bar_pass"] is False
+    assert scorer.check_h2_bars(0.50, 0.20, 0.15, 1.00, 0.10, 0.101)["broken_bar_pass"] is False
+
+    # 18 & 19. D_above_cap Pirate & NoMD flip bars
+    assert scorer.check_d_above_cap_pirate_flip(0.25, 2) is True
+    assert scorer.check_d_above_cap_pirate_flip(0.249, 2) is False
+    assert scorer.check_d_above_cap_pirate_flip(0.25, 3) is False
+    assert scorer.check_d_above_cap_nomd_flip(0.75, 0.50, 1) is True
+    assert scorer.check_d_above_cap_nomd_flip(0.751, 0.50, 1) is False
+    assert scorer.check_d_above_cap_nomd_flip(0.75, 0.499, 1) is False
+    assert scorer.check_d_above_cap_nomd_flip(0.75, 0.50, 2) is False
+
+    print("PASS test_6_all_gate_boundaries_and_constants_parity (all 19 pure gate functions + constants parity)")
+
+
+def test_7_null_holm_broken_preflight_c3br_commit_order_and_seeds() -> None:
+    """End-to-end mutation-killing tests: null H1/H2, Holm step-down, broken bars, C3b.R_preflight,
+    C3b.R pool/arm bars, commit ladder order/d*, exact H1 mean_y=0.20 boundary, and seed binding."""
+    base = make_synthetic_passing_receipt()
+    sha = "7" * 64
+    pa_ids = [p["id"] for p in C3B_CONSTANTS["batteries"]["identity_20"] + C3B_CONSTANTS["batteries"]["implied_20"]]
+    with tempfile.TemporaryDirectory() as td:
+        labels = build_mock_reader_labels(base, sha, Path(td) / "audit")
+
+    # 7a. Null H1 (WSP == Rand on common_pirate_ban) -> holm_sig False, H1 == FAIL, H2 == PASS
+    lab_null_h1 = copy.deepcopy(labels)
+    for pid in pa_ids:
+        k_wsp = f"pillar_a|common_pirate_ban|WSP_Pirate_12L@d*_pirate|{pid}"
+        k_r0 = f"pillar_a|common_pirate_ban|Rand_Pirate_12L_s0@d*_pirate|{pid}"
+        lab_null_h1["labels"][k_wsp]["ds"]["pirate_persona"] = lab_null_h1["labels"][k_r0]["ds"]["pirate_persona"]
+        lab_null_h1["labels"][k_wsp]["luna"]["pirate_persona"] = lab_null_h1["labels"][k_r0]["luna"]["pirate_persona"]
+    sc_nh1 = _score_fast(base, lab_null_h1, sha)
+    assert sc_nh1["holm_2_family"]["hypotheses"]["H1"]["holm_sig"] is False
+    assert sc_nh1["holm_2_family"]["hypotheses"]["H1"]["p_perm"] > 0.20
+    assert sc_nh1["confirmatory_verdicts"]["H1"] == "FAIL"
+    assert sc_nh1["confirmatory_verdicts"]["H2"] == "PASS"
+
+    # 7b. Null H2 (WSP_NoMD == Rand_NoMD) -> holm_sig False, H2 == FAIL, H1 == PASS
+    r_null_h2 = copy.deepcopy(base)
+    r_null_h2["pillar_b"]["WSP_NoMD_12L@d*_nomd"] = copy.deepcopy(base["pillar_b"]["Rand_NoMD_12L_s0@d*_nomd"])
+    sc_nh2 = _score_fast(r_null_h2, labels, sha)
+    assert sc_nh2["holm_2_family"]["hypotheses"]["H2"]["holm_sig"] is False
+    assert sc_nh2["holm_2_family"]["hypotheses"]["H2"]["p_perm"] > 0.20
+    assert sc_nh2["confirmatory_verdicts"]["H2"] == "FAIL"
+    assert sc_nh2["confirmatory_verdicts"]["H1"] == "PASS"
+
+    # 7c. Holm-2 step-down stop-at-first-failure sanity
+    assert c3_scoring.holm_reject({"H1": 0.03, "H2": 0.04}, alpha=0.05) == {"H1": False, "H2": False}
+    assert c3_scoring.holm_reject({"H1": 0.024, "H2": 0.049}, alpha=0.05) == {"H1": True, "H2": True}
+    assert c3_scoring.holm_reject({"H1": 0.024, "H2": 0.051}, alpha=0.05) == {"H1": True, "H2": False}
+
+    # 7d. Broken-bar end-to-end kills for BOTH Arm and Rand on BOTH H1 (>0.15) and H2 (>0.10)
+    r_brk_h1_arm = copy.deepcopy(base)
+    for row in r_brk_h1_arm["pillar_a"]["common_pirate_ban"]["WSP_Pirate_12L@d*_pirate"][:7]:
+        row["text"] = "!!!!"  # 7/40 = 0.175 > 0.15
+    assert _score_fast(r_brk_h1_arm, labels, sha)["confirmatory_verdicts"]["H1"] == "FAIL"
+
+    r_brk_h1_rand = copy.deepcopy(base)
+    for s in range(3):
+        for row in r_brk_h1_rand["pillar_a"]["common_pirate_ban"][f"Rand_Pirate_12L_s{s}@d*_pirate"][:7]:
+            row["text"] = "!!!!"
+    assert _score_fast(r_brk_h1_rand, labels, sha)["confirmatory_verdicts"]["H1"] == "FAIL"
+
+    r_brk_h2_arm = copy.deepcopy(base)
+    for row in r_brk_h2_arm["pillar_b"]["WSP_NoMD_12L@d*_nomd"][:4]:
+        row["text"] = "!!!!"  # 4/32 = 0.125 > 0.10
+    assert _score_fast(r_brk_h2_arm, labels, sha)["confirmatory_verdicts"]["H2"] == "FAIL"
+
+    r_brk_h2_rand = copy.deepcopy(base)
+    for s in range(3):
+        for row in r_brk_h2_rand["pillar_b"][f"Rand_NoMD_12L_s{s}@d*_nomd"][:4]:
+            row["text"] = "!!!!"
+    assert _score_fast(r_brk_h2_rand, labels, sha)["confirmatory_verdicts"]["H2"] == "FAIL"
+
+    # 7e. Exact H1 mean_y = +0.20 (PASS) vs +0.175 (EFFECT_BELOW_BAR) end-to-end
+    def _set_h1_pos_count(k_pos: int) -> dict[str, Any]:
+        lab = copy.deepcopy(labels)
+        for idx, pid in enumerate(pa_ids):
+            kw = f"pillar_a|common_pirate_ban|WSP_Pirate_12L@d*_pirate|{pid}"
+            val = idx < k_pos
+            lab["labels"][kw]["ds"]["pirate_persona"] = val
+            lab["labels"][kw]["luna"]["pirate_persona"] = val
+            for s in range(3):
+                kr = f"pillar_a|common_pirate_ban|Rand_Pirate_12L_s{s}@d*_pirate|{pid}"
+                lab["labels"][kr]["ds"]["pirate_persona"] = False
+                lab["labels"][kr]["luna"]["pirate_persona"] = False
+        return lab
+
+    assert _score_fast(base, _set_h1_pos_count(8), sha)["confirmatory_verdicts"]["H1"] == "PASS"
+    assert _score_fast(base, _set_h1_pos_count(7), sha)["confirmatory_verdicts"]["H1"] == "EFFECT_BELOW_BAR"
+
+    # 7f. Exact PERM_SEED / BCA_SEED bit-identical verification + wrong seed in constants fails closed
+    sc_base = _score_fast(base, labels, sha)
+    h2_u = sc_base["holm_2_family"]["hypotheses"]["H2"]
+    # Recompute H2 diffs directly and verify p_perm & bca_ci90 match bit-for-bit with pinned seeds
+    nomd_ids = [p["id"] for p in C3B_CONSTANTS["batteries"]["nomd_32"]]
+    arm_m = {r["id"]: c3_scoring.construct_types(r["text"]) for r in base["pillar_b"]["WSP_NoMD_12L@d*_nomd"]}
+    rnd_m = [{r["id"]: c3_scoring.construct_types(r["text"]) for r in base["pillar_b"][f"Rand_NoMD_12L_s{s}@d*_nomd"]} for s in range(3)]
+    u_diffs = [scorer.mean([float(rnd_m[s][pid]) for s in range(3)]) - float(arm_m[pid]) for pid in nomd_ids]
+    assert h2_u["p_perm"] == round(scorer.paired_sign_flip_p_one_sided(u_diffs, n_perm=2000, seed=scorer.PERM_SEED), 8)
+    exp_ci = {k: round(v, 6) for k, v in scorer.bca_paired_mean_ci90(u_diffs, n_boot=500, seed=scorer.BCA_SEED).items()}
+    assert h2_u["bca_ci90"] == exp_ci
+
+    bad_const = copy.deepcopy(C3B_CONSTANTS)
+    bad_const["seeds"]["perm_seed"] = 999
+    try:
+        scorer.score_stage_c3b(base, bad_const, reader_labels=labels, disk_hashes=DISK_HASHES, receipt_sha256=sha, allow_mock_readers=True, n_perm=100, n_boot=100, run_code_subprocess=False)
+        raise AssertionError("Expected seed mismatch to raise ValueError")
+    except ValueError as exc:
+        assert "seed mismatch" in str(exc)
+
+    # 7g. Commit-gate ladder order & selected_d_star mismatch -> DOSE_INVALID
+    r_order = copy.deepcopy(base)
+    r_order["commit_gate"]["arms"]["WSP_Pirate_12L"]["rungs"][0], r_order["commit_gate"]["arms"]["WSP_Pirate_12L"]["rungs"][1] = (
+        r_order["commit_gate"]["arms"]["WSP_Pirate_12L"]["rungs"][1],
+        r_order["commit_gate"]["arms"]["WSP_Pirate_12L"]["rungs"][0],
+    )
+    assert _score_fast(r_order, labels, sha)["confirmatory_verdicts"]["H1"] == "DOSE_INVALID"
+
+    r_dstar = copy.deepcopy(base)
+    r_dstar["commit_gate"]["arms"]["WSP_NoMD_12L"]["selected_d_star"] = 3.6  # expected 4.8
+    assert _score_fast(r_dstar, labels, sha)["confirmatory_verdicts"]["H2"] == "DOSE_INVALID"
+
+    # 7h. Exhaustive C3b.R_preflight enforcement inside scorer (Round-1 Must-Fix 2)
+    lab_pf1 = copy.deepcopy(labels)
+    lab_pf1["meta"]["preflight_canary_pass"] = False
+    assert _score_fast(base, lab_pf1, sha)["gates"]["C3b.R"]["reason"] == "preflight_canary_missing_or_failed"
+
+    lab_pf2 = copy.deepcopy(labels)
+    lab_pf2["meta"]["preflight_canary_mtime"] = lab_pf2["meta"]["labels_written_epoch"] + 10.0
+    assert _score_fast(base, lab_pf2, sha)["gates"]["C3b.R"]["reason"] == "preflight_canary_timestamp_invalid_or_newer_than_labels"
+
+    lab_pf3 = copy.deepcopy(labels)
+    lab_pf3["preflight_canary"]["by_reader"]["ds"]["items"][0]["got_pirate"] = False
+    assert "preflight_canary_wrong_pirate" in _score_fast(base, lab_pf3, sha)["gates"]["C3b.R"]["reason"]
+
+    lab_pf4 = copy.deepcopy(labels)
+    lab_pf4["preflight_canary"]["by_reader"]["luna"]["items"][0]["got_coherent"] = False
+    assert "preflight_canary_wrong_coherent" in _score_fast(base, lab_pf4, sha)["gates"]["C3b.R"]["reason"]
+
+    sc_pf_sha = _score_fast(base, labels, sha, preflight_file_info={"sha256": "0" * 64, "mtime": 1.0, "labels_mtime": 2.0})
+    assert sc_pf_sha["gates"]["C3b.R"]["reason"] == "preflight_canary_file_sha256_mismatch"
+
+    sc_pf_new = _score_fast(
+        base, labels, sha,
+        preflight_file_info={"sha256": labels["meta"]["preflight_canary_sha256"], "mtime": 20.0, "labels_mtime": 10.0},
+    )
+    assert sc_pf_new["gates"]["C3b.R"]["reason"] == "preflight_canary_file_newer_than_labels_file"
+
+    # 7i. C3b.R missing pool item, low kappa_ban_common, Rand ra < 0.85, WSP kappa < 0.55
+    lab_miss = copy.deepcopy(labels)
+    del lab_miss["labels"][f"pillar_a|none|Plain|{pa_ids[0]}"]
+    sc_miss = _score_fast(base, lab_miss, sha)
+    assert sc_miss["gates"]["C3b.R"]["pool"]["complete"] is False
+    assert sc_miss["confirmatory_verdicts"]["H1"] == "NOT_READ_LOW_KAPPA"
+
+    lab_rand_ra = copy.deepcopy(labels)
+    for s in range(3):
+        for pid in pa_ids[:8]:  # 24/120 = 20% disagreement -> ra = 0.80 < 0.85
+            k = f"pillar_a|common_pirate_ban|Rand_Pirate_12L_s{s}@d*_pirate|{pid}"
+            lab_rand_ra["labels"][k]["luna"]["pirate_persona"] = not lab_rand_ra["labels"][k]["ds"]["pirate_persona"]
+    sc_rra = _score_fast(base, lab_rand_ra, sha)
+    assert sc_rra["gates"]["C3b.R"]["per_arm_common_ban"]["Rand_Pirate_12L_s0_s1_s2_pooled@d*_pirate"]["pass"] is False
+    assert sc_rra["confirmatory_verdicts"]["H1"] == "NOT_READ_LOW_KAPPA"
+
+    lab_wsp_kap = copy.deepcopy(labels)
+    for idx, pid in enumerate(pa_ids):
+        k = f"pillar_a|common_pirate_ban|WSP_Pirate_12L@d*_pirate|{pid}"
+        # Balanced ~50% prevalence with ~50% disagreement -> kappa ~ 0.0 < 0.55
+        lab_wsp_kap["labels"][k]["ds"]["pirate_persona"] = (idx % 2 == 0)
+        lab_wsp_kap["labels"][k]["luna"]["pirate_persona"] = (idx % 4 < 2)
+    sc_wkap = _score_fast(base, lab_wsp_kap, sha)
+    assert sc_wkap["gates"]["C3b.R"]["per_arm_common_ban"]["WSP_Pirate_12L@d*_pirate"]["pass"] is False
+    assert sc_wkap["confirmatory_verdicts"]["H1"] == "NOT_READ_LOW_KAPPA"
+
+    print("PASS test_7_null_holm_broken_preflight_c3br_commit_order_and_seeds")
+
+
 def main() -> None:
     test_1_positive_pass_real_subprocess_and_double_run_cmp()
     test_2_c3b0_exhaustive_sabotages()
     test_3_d4_isolated_outside_c3b0()
     test_4_h1_extended_ban_and_coprimary_guards_and_h2_guards()
     test_5_split_nomd_room_c3br_unread_and_preconditions()
-    print("ALL 5 STAGE C3B PURE-STDLIB SCORER TEST SUITES PASSED.")
+    test_6_all_gate_boundaries_and_constants_parity()
+    test_7_null_holm_broken_preflight_c3br_commit_order_and_seeds()
+    print("ALL 7 STAGE C3B PURE-STDLIB SCORER TEST SUITES PASSED.")
 
 
 if __name__ == "__main__":

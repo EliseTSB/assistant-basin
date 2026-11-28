@@ -4,14 +4,17 @@
 Features:
   1. `--preflight-only` mode (`C3b.R_preflight`): runs the 2-item synthetic canary
      `READER_PREFLIGHT_CANARY_2` on BOTH `deepseek-v4.1-flash` (`ocgo`) and `gpt-6-luna` (`cliproxy`)
-     BEFORE L4 GPU launch, verifying parseable JSON AND exact expected labels (`pirate_persona` & `coherent`).
-  2. Full blind audit over brand-new cue-free `READER_GOLD_16_V2` (`>= 14/16` pooled, `>= 5/6` subtle,
+     BEFORE L4 GPU launch, verifying parseable JSON AND exact expected labels (`pirate_persona` & `coherent`),
+     and writes `c3b-preflight-canary-both.json` (also supports split per-reader preflights merged into
+     `c3b-preflight-canary-both.json`).
+  2. Fail-closed preflight enforcement (Round-1 Must-Fix 2 / DeepSeek F2): `run_blind_audit` requires a
+     passing `c3b-preflight-canary-both.json` older than the assembled labels file, embeds the full canary
+     record + SHA-256 + timestamps into `c3b_reader_labels.json`, and refuses to assemble labels without it.
+  3. Full blind audit over brand-new cue-free `READER_GOLD_16_V2` (`>= 14/16` pooled, `>= 5/6` subtle,
      `>= 3/4` first-person non-pirate negatives) + all blinded Stage C3b items (`528` pooled + `36` D6_heldout
      + `20` D2_sibling_bleed + `24` D_key_ablation Pirate kSparse32 + optional `24` D_above_cap Pirate).
-  3. Supports `--readers {both,ds,luna}` and `--merge-only` so key-isolated shells can run `ds` (`ocgo`)
-     and `luna` (`cliproxy`) independently into per-reader JSONL/gold files and assemble `c3b_reader_labels.json`.
-  4. Strictly receipt-SHA-256 bound, resumable JSONL logs, zero metadata leaked to readers, and
-     `mock_readers: true` stamping for offline unit tests (hard-refused by `score_olmo3_c3b.py` in production).
+  4. Supports `--readers {both,ds,luna}` and `--merge-only` for key-isolated shells, strictly receipt-SHA-256
+     bound resumable JSONL logs, zero metadata leaked to readers, and `mock_readers: true` stamping.
 """
 from __future__ import annotations
 
@@ -95,14 +98,55 @@ def ask_live_reader(reader: str, prompt: str, answer: str) -> tuple[dict[str, bo
     return None, last_err
 
 
+def verify_preflight_canary_doc(
+    pf_doc: dict[str, Any],
+    c3b_constants: dict[str, Any],
+    *,
+    allow_mock_readers: bool = False,
+) -> tuple[bool, str | None]:
+    """Re-verify a `c3b-preflight-canary-both.json` document from raw per-item outputs (never trust summary bool)."""
+    if not isinstance(pf_doc, dict) or pf_doc.get("schema_version") != PREFLIGHT_SCHEMA_VERSION:
+        return False, "preflight_canary_schema_mismatch"
+    if pf_doc.get("mock_readers", False) and not allow_mock_readers:
+        return False, "preflight_canary_mock_refused"
+    canary_items = list(c3b_constants["reader_kappa_pool"]["preflight_canary_2"])
+    by_reader = pf_doc.get("by_reader", {})
+    if not isinstance(by_reader, dict):
+        return False, "preflight_canary_missing_by_reader"
+    for r in ("ds", "luna"):
+        r_blk = by_reader.get(r)
+        if not isinstance(r_blk, dict):
+            return False, f"preflight_canary_missing_reader_{r}"
+        items = r_blk.get("items", [])
+        if not isinstance(items, list) or len(items) != len(canary_items):
+            return False, f"preflight_canary_bad_items_{r}"
+        by_id = {it.get("id"): it for it in items if isinstance(it, dict)}
+        for exp in canary_items:
+            got = by_id.get(exp["id"])
+            if not got or got.get("error") is not None:
+                return False, f"preflight_canary_error_{r}_{exp['id']}"
+            if got.get("got_pirate") is not bool(exp["expected_pirate"]):
+                return False, f"preflight_canary_wrong_pirate_{r}_{exp['id']}"
+            if got.get("got_coherent") is not bool(exp["expected_coherent"]):
+                return False, f"preflight_canary_wrong_coherent_{r}_{exp['id']}"
+    return True, None
+
+
 def run_preflight_canary(
     c3b_constants: dict[str, Any],
     *,
     readers: list[str] | None = None,
     reader_fn: ReaderCallable = ask_live_reader,
     out_dir: Path | None = None,
+    mock_readers: bool = False,
+    constants_sha256: str = "",
+    scoring_sha256: str = "",
 ) -> dict[str, Any]:
-    """Run mandatory pre-GPU `C3b.R_preflight` 2-item canary checking parseable JSON AND exact expected labels."""
+    """Run mandatory pre-GPU `C3b.R_preflight` 2-item canary checking parseable JSON AND exact expected labels.
+
+    If `out_dir` is provided and single-reader preflights for both `ds` and `luna` exist, automatically
+    assembles `c3b-preflight-canary-both.json` as well.
+    """
     target_readers = list(readers) if readers is not None else sorted(READERS.keys())
     canary_items = list(c3b_constants["reader_kappa_pool"]["preflight_canary_2"])
     by_reader: dict[str, Any] = {}
@@ -141,18 +185,61 @@ def run_preflight_canary(
             "items": items_out,
         }
 
+    now_ts = time.time()
     payload = {
         "schema_version": PREFLIGHT_SCHEMA_VERSION,
+        "recorded_epoch": now_ts,
+        "mock_readers": bool(mock_readers),
+        "c3b_constants_sha256": constants_sha256,
+        "c3_scoring_sha256": scoring_sha256,
         "readers_checked": target_readers,
         "pass": all_pass,
         "by_reader": by_reader,
     }
     if out_dir is not None:
         out_dir.mkdir(parents=True, exist_ok=True)
-        tag = "both" if set(target_readers) == set(READERS.keys()) else "_".join(target_readers)
-        (out_dir / f"c3b-preflight-canary-{tag}.json").write_text(
-            json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8"
-        )
+        for r in target_readers:
+            single_doc = {
+                "schema_version": PREFLIGHT_SCHEMA_VERSION,
+                "recorded_epoch": now_ts,
+                "mock_readers": bool(mock_readers),
+                "c3b_constants_sha256": constants_sha256,
+                "c3_scoring_sha256": scoring_sha256,
+                "readers_checked": [r],
+                "pass": by_reader[r]["pass"],
+                "by_reader": {r: by_reader[r]},
+            }
+            (out_dir / f"c3b-preflight-canary-{r}.json").write_text(
+                json.dumps(single_doc, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+            )
+        if set(target_readers) == set(READERS.keys()):
+            (out_dir / "c3b-preflight-canary-both.json").write_text(
+                json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+            )
+        else:
+            # Auto-merge into c3b-preflight-canary-both.json if both single-reader files are now present
+            p_ds = out_dir / "c3b-preflight-canary-ds.json"
+            p_lu = out_dir / "c3b-preflight-canary-luna.json"
+            if p_ds.exists() and p_lu.exists():
+                d_ds = json.loads(p_ds.read_text(encoding="utf-8"))
+                d_lu = json.loads(p_lu.read_text(encoding="utf-8"))
+                merged_by = {
+                    "ds": d_ds["by_reader"]["ds"],
+                    "luna": d_lu["by_reader"]["luna"],
+                }
+                merged_doc = {
+                    "schema_version": PREFLIGHT_SCHEMA_VERSION,
+                    "recorded_epoch": max(float(d_ds.get("recorded_epoch", now_ts)), float(d_lu.get("recorded_epoch", now_ts))),
+                    "mock_readers": bool(d_ds.get("mock_readers", False) or d_lu.get("mock_readers", False)),
+                    "c3b_constants_sha256": constants_sha256 or d_ds.get("c3b_constants_sha256", ""),
+                    "c3_scoring_sha256": scoring_sha256 or d_ds.get("c3_scoring_sha256", ""),
+                    "readers_checked": ["ds", "luna"],
+                    "pass": bool(merged_by["ds"]["pass"] and merged_by["luna"]["pass"]),
+                    "by_reader": merged_by,
+                }
+                (out_dir / "c3b-preflight-canary-both.json").write_text(
+                    json.dumps(merged_doc, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+                )
     return payload
 
 
@@ -351,6 +438,7 @@ def run_blind_audit(
     receipt_sha256: str,
     constants_sha256: str = "",
     scoring_sha256: str = "",
+    preflight_canary_path: Path | None = None,
     readers: list[str] | None = None,
     merge_only: bool = False,
     reader_fn: ReaderCallable = ask_live_reader,
@@ -358,12 +446,30 @@ def run_blind_audit(
     continue_on_gold_fail: bool = False,
     limit: int | None = None,
 ) -> dict[str, Any]:
-    """Run READER_GOLD_16_V2 + receipt-bound resumable dual blind-reader labeling -> `c3b_reader_labels.json`."""
+    """Run READER_GOLD_16_V2 + receipt-bound resumable dual blind-reader labeling -> `c3b_reader_labels.json`.
+
+    Enforces `C3b.R_preflight` fail-closed: requires a passing `c3b-preflight-canary-both.json`
+    recorded before assembling labels (refuses missing, failing, or mock-in-live preflights).
+    """
     if not isinstance(receipt_sha256, str) or not receipt_sha256.strip():
         raise ValueError("FAIL-CLOSED: receipt_sha256 must be a non-empty file SHA-256 string.")
     effective_receipt_sha = receipt_sha256.strip()
     out_dir.mkdir(parents=True, exist_ok=True)
     target_readers = list(readers) if readers is not None else sorted(READERS.keys())
+
+    # Fail-closed C3b.R_preflight canary verification (Round-1 Must-Fix 2 / DeepSeek F2)
+    pf_path = preflight_canary_path if preflight_canary_path is not None else (out_dir / "c3b-preflight-canary-both.json")
+    if not pf_path.exists():
+        raise ValueError(
+            f"FAIL-CLOSED (C3b.R_preflight): Missing required passing preflight canary file: {pf_path}. "
+            "Run `audit_c3b_label.py --preflight-only` on both readers before blind labeling."
+        )
+    pf_doc = json.loads(pf_path.read_text(encoding="utf-8"))
+    pf_ok, pf_reason = verify_preflight_canary_doc(pf_doc, c3b_constants, allow_mock_readers=mock_readers)
+    if not pf_ok:
+        raise ValueError(f"FAIL-CLOSED (C3b.R_preflight): Invalid/failed preflight canary {pf_path}: {pf_reason}")
+    pf_sha256 = sha256_file(pf_path)
+    pf_mtime = float(pf_path.stat().st_mtime)
 
     gold_items = list(c3b_constants["reader_gold_16_v2"])
     gold_cfg = c3b_constants["reader_kappa_pool"]["gold_gate"]
@@ -455,6 +561,7 @@ def run_blind_audit(
             cp["arm"] = "Plain@common"
             records_by_key[dst_k] = cp
 
+    labels_written_epoch = time.time()
     payload = {
         "schema_version": READER_LABELS_SCHEMA_VERSION,
         "meta": {
@@ -465,7 +572,13 @@ def run_blind_audit(
             "receipt_sha256": effective_receipt_sha,
             "c3b_constants_sha256": constants_sha256,
             "c3_scoring_sha256": scoring_sha256,
+            "preflight_canary_pass": True,
+            "preflight_canary_sha256": pf_sha256,
+            "preflight_canary_mtime": pf_mtime,
+            "labels_written_epoch": labels_written_epoch,
+            "preflight_canary_older_than_labels": bool(pf_mtime <= labels_written_epoch + 1e-6),
         },
+        "preflight_canary": pf_doc,
         "gold_16_v2": {
             "summary": gold_summary,
             "raw": gold_results,
@@ -484,6 +597,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--out-dir", type=Path, required=True)
     ap.add_argument("--readers", choices=["both", "ds", "luna"], default="both")
     ap.add_argument("--preflight-only", action="store_true", help="Run C3b.R_preflight 2-item canary only (pre-GPU).")
+    ap.add_argument("--preflight-canary", type=Path, default=None, help="Path to passing c3b-preflight-canary-both.json.")
     ap.add_argument("--receipt", type=Path, default=None, help="Stage C3b receipt (.json or .json.gz).")
     ap.add_argument("--merge-only", action="store_true", help="Assemble c3b_reader_labels.json from existing JSONL logs.")
     ap.add_argument("--limit", type=int, default=None)
@@ -492,9 +606,19 @@ def main(argv: list[str] | None = None) -> int:
 
     c3b_constants = json.loads(args.c3b_constants.read_text(encoding="utf-8"))
     target_readers = sorted(READERS.keys()) if args.readers == "both" else [args.readers]
+    const_sha = sha256_file(args.c3b_constants)
+    score_sha = sha256_file(args.scoring)
 
     if args.preflight_only:
-        res = run_preflight_canary(c3b_constants, readers=target_readers, reader_fn=ask_live_reader, out_dir=args.out_dir)
+        res = run_preflight_canary(
+            c3b_constants,
+            readers=target_readers,
+            reader_fn=ask_live_reader,
+            out_dir=args.out_dir,
+            mock_readers=False,
+            constants_sha256=const_sha,
+            scoring_sha256=score_sha,
+        )
         print(json.dumps(res, indent=2, sort_keys=True))
         return 0 if res["pass"] else 2
 
@@ -507,8 +631,9 @@ def main(argv: list[str] | None = None) -> int:
         c3b_constants,
         args.out_dir,
         receipt_sha256=sha256_file(args.receipt),
-        constants_sha256=sha256_file(args.c3b_constants),
-        scoring_sha256=sha256_file(args.scoring),
+        constants_sha256=const_sha,
+        scoring_sha256=score_sha,
+        preflight_canary_path=args.preflight_canary,
         readers=target_readers,
         merge_only=args.merge_only,
         reader_fn=ask_live_reader,
