@@ -611,6 +611,12 @@ def verify_preflight_in_reader_labels(
             if got.get("got_coherent") is not bool(exp["expected_coherent"]):
                 return False, f"preflight_canary_wrong_coherent_{r}_{exp['id']}"
 
+    canonical_pf_sha = hashlib.sha256(
+        (json.dumps(pf_doc, indent=2, sort_keys=True) + "\n").encode("utf-8")
+    ).hexdigest()
+    if rmeta.get("preflight_canary_sha256") != canonical_pf_sha:
+        return False, "preflight_canary_embedded_sha256_mismatch"
+
     if preflight_file_info is not None:
         if rmeta.get("preflight_canary_sha256") != preflight_file_info.get("sha256"):
             return False, "preflight_canary_file_sha256_mismatch"
@@ -1501,12 +1507,13 @@ def score_stage_c3b(
     # D3: Reference ceilings & showcase
     demo_ids = list(bat["demo_showcase_ids_12"])
     sys_nomd_cts = [c3_scoring.construct_types(r["text"]) for r in receipt["pillar_b"]["Sys_NoMD"]]
+    sys_nomd_has_md = mean([1.0 if c >= 1 else 0.0 for c in sys_nomd_cts])
     d3_ceilings = {
         "Sys_Pirate_none_strict_pirate": d0_arms["none"]["Sys_Pirate"].get("strict_pirate_rate"),
         "Sys_Pirate_common_ban_strict_pirate": d0_arms["common_pirate_ban"]["Sys_Pirate"].get("strict_pirate_rate"),
-        "Sys_NoMD_has_md": round(mean([1.0 if c >= 1 else 0.0 for c in sys_nomd_cts]), 6),
+        "Sys_NoMD_has_md": round(sys_nomd_has_md, 6),
         "Sys_NoMD_mean_ct": round(mean([float(c) for c in sys_nomd_cts]), 6),
-        "Sys_NoMD_delta_has_md_vs_plain": round(has_md_32 - mean([1.0 if c >= 1 else 0.0 for c in sys_nomd_cts]), 6),
+        "Sys_NoMD_delta_has_md_vs_plain": round(has_md_32 - sys_nomd_has_md, 6),
     }
     pa_prompt_text = {p["id"]: p["text"] for p in bat["identity_20"] + bat["implied_20"]}
     d3_showcase: list[dict[str, Any]] = []

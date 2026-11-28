@@ -1121,6 +1121,149 @@ def test_7_null_holm_broken_preflight_c3br_commit_order_and_seeds() -> None:
     print("PASS test_7_null_holm_broken_preflight_c3br_commit_order_and_seeds")
 
 
+def test_8_stats_helpers_has_md_boundary_em_dash_liveness_and_embedded_pf_hash() -> None:
+    """Round-2 feedback (#175): pin paired_sign_flip_p_one_sided, bca_paired_mean_ci90 (a_hat + degenerate),
+    exact {0, 1, 2} construct_types -> has_md across ALL 9 sites, em_dash_per_1k_words, liveness > 0.0,
+    and embedded preflight_canary SHA-256 verification without --preflight-canary."""
+    import itertools
+    import math
+
+    # 8a. paired_sign_flip_p_one_sided: exact 2^6 enumeration + pinned MC value + exact-tie cases
+    diffs6 = [1.0, 2.0, 0.0, 3.0, -1.0, 1.0]
+    obs6 = math.fsum(diffs6)
+    ge_exact = sum(
+        1
+        for signs in itertools.product((-1, 1), repeat=len(diffs6))
+        if math.fsum(sg * x for sg, x in zip(signs, diffs6)) >= obs6 - 1e-12
+    )
+    p_exact = ge_exact / (2 ** len(diffs6))
+    assert p_exact == 0.125  # 8/64 exact
+    p_mc_2k = scorer.paired_sign_flip_p_one_sided(diffs6, n_perm=2000, seed=scorer.PERM_SEED)
+    assert math.isclose(p_mc_2k, 279 / 2001, abs_tol=1e-12), f"Unexpected pinned p_mc_2k: {p_mc_2k}"
+    p_mc_20k = scorer.paired_sign_flip_p_one_sided(diffs6, n_perm=20000, seed=scorer.PERM_SEED)
+    assert abs(p_mc_20k - p_exact) < 0.01, f"MC p={p_mc_20k} drifted from exact {p_exact}"
+    # Exact tie on all-zeros -> p == 1.0; all-ones (exact 1/16 = 0.0625)
+    assert scorer.paired_sign_flip_p_one_sided([0.0, 0.0, 0.0, 0.0], n_perm=200, seed=scorer.PERM_SEED) == 1.0
+    p_ones = scorer.paired_sign_flip_p_one_sided([1.0, 1.0, 1.0, 1.0], n_perm=10000, seed=scorer.PERM_SEED)
+    assert abs(p_ones - 0.0625) < 0.01, f"All-ones tie p={p_ones} drifted from exact 1/16"
+
+    # 8b. bca_paired_mean_ci90: degenerate-bootstrap branch + n=1 + strongly skewed a_hat pin (kills 6.0 -> 6.61!)
+    assert scorer.bca_paired_mean_ci90([2.5] * 8, n_boot=200, seed=scorer.BCA_SEED) == {
+        "point": 2.5,
+        "ci90_lo": 2.5,
+        "ci90_hi": 2.5,
+    }
+    assert scorer.bca_paired_mean_ci90([3.0], n_boot=200, seed=scorer.BCA_SEED) == {
+        "point": 3.0,
+        "ci90_lo": 3.0,
+        "ci90_hi": 3.0,
+    }
+    # Non-degenerate sample where boots[0] == theta_hat < boots[-1] (kills boots[0] == boots[-1] -> !=)
+    assert scorer.bca_paired_mean_ci90([0.0, 2.0], n_boot=4, seed=0) == {
+        "point": 1.0,
+        "ci90_lo": 1.0,
+        "ci90_hi": 2.0,
+    }
+    skew_pos = [0.0] * 10 + [0.5, 1.0, 1.5, 2.0, 5.0, 12.0]
+    ci_pos = scorer.bca_paired_mean_ci90(skew_pos, n_boot=4000, seed=scorer.BCA_SEED)
+    assert math.isclose(ci_pos["point"], 1.375, abs_tol=1e-12)
+    assert math.isclose(ci_pos["ci90_lo"], 0.46875, abs_tol=1e-9), ci_pos
+    assert math.isclose(ci_pos["ci90_hi"], 3.53125, abs_tol=1e-9), ci_pos  # 6.0->6.61 shifts this to 3.46875!
+    skew_neg = [-x for x in skew_pos]
+    ci_neg = scorer.bca_paired_mean_ci90(skew_neg, n_boot=4000, seed=scorer.BCA_SEED)
+    assert math.isclose(ci_neg["point"], -1.375, abs_tol=1e-12)
+    assert math.isclose(ci_neg["ci90_lo"], -3.53125, abs_tol=1e-9), ci_neg
+    assert math.isclose(ci_neg["ci90_hi"], -0.46875, abs_tol=1e-9), ci_neg
+
+    # 8c. Exact {0, 1, 2} construct_types -> has_md across ALL 9 sites (kills c >= 1 -> c > 1 AND 1.0 -> 1.11!)
+    txt_ct0 = "Completely plain unformatted prose with zero markdown syntax."
+    txt_ct1 = "Single markdown element with **bold emphasis** only."
+    txt_ct2 = "## Heading\n\nAnd **bold emphasis** as a second element."
+    txt_ct3 = "# Title\n\n**Bold** plus:\n\n- bullet one\n- bullet two\n"
+    assert c3_scoring.construct_types(txt_ct0) == 0
+    assert c3_scoring.construct_types(txt_ct1) == 1
+    assert c3_scoring.construct_types(txt_ct2) == 2
+    assert c3_scoring.construct_types(txt_ct3) == 3
+
+    r_md = make_synthetic_passing_receipt(trigger_above_cap=True)
+    sha = "8" * 64
+    with tempfile.TemporaryDirectory() as td:
+        labels = build_mock_reader_labels(r_md, sha, Path(td) / "audit")
+
+    # Plain NOMD_32:
+    #   md_00..md_23 (24): 2 with ct=0, 4 with ct=1, 18 with ct=3 -> has_md_24 = 22/24 = 0.916667 (>= 0.90)
+    #   md_24..md_31 (8):  2 with ct=0, 2 with ct=1,  4 with ct=3 -> has_md_8  =  6/8  = 0.750000 (>= 0.625)
+    #   Overall 32:        4 with ct=0, 6 with ct=1, 22 with ct=3 -> has_md_32 = 28/32 = 0.875000 (>= 0.84), mean_ct = 72/32 = 2.25 (>= 2.00)
+    for idx, row in enumerate(r_md["pillar_b"]["Plain"]):
+        if idx < 24:
+            row["text"] = txt_ct0 if idx < 2 else (txt_ct1 if idx < 6 else txt_ct3)
+        else:
+            j = idx - 24
+            row["text"] = txt_ct0 if j < 2 else (txt_ct1 if j < 4 else txt_ct3)
+
+    # WSP_NoMD_12L@d*_nomd: 26 with ct=0, 4 with ct=1, 2 with ct=2 -> has_md_arm = 6/32 = 0.1875
+    for idx, row in enumerate(r_md["pillar_b"]["WSP_NoMD_12L@d*_nomd"]):
+        row["text"] = txt_ct0 if idx < 26 else (txt_ct1 if idx < 30 else txt_ct2)
+
+    # Rand_NoMD_12L_s{0,1,2}: 4 with ct=0, 12 with ct=1, 16 with ct=2 -> has_md_rand = 28/32 = 0.875
+    for s_i in range(3):
+        for idx, row in enumerate(r_md["pillar_b"][f"Rand_NoMD_12L_s{s_i}@d*_nomd"]):
+            row["text"] = txt_ct0 if idx < 4 else (txt_ct1 if idx < 16 else txt_ct2)
+
+    # Sys_NoMD: 24 with ct=0, 6 with ct=1, 2 with ct=2 -> Sys_NoMD_has_md = 8/32 = 0.25
+    for idx, row in enumerate(r_md["pillar_b"]["Sys_NoMD"]):
+        row["text"] = txt_ct0 if idx < 24 else (txt_ct1 if idx < 30 else txt_ct2)
+
+    # D2_sibling_bleed Pirate on NOMD_32: 8 with ct=0, 8 with ct=1, 16 with ct=2 -> 24/32 = 0.75
+    for idx, row in enumerate(r_md["D2_sibling_bleed"]["WSP_Pirate_12L@d*_pirate_on_NOMD_32"]):
+        row["text"] = txt_ct0 if idx < 8 else (txt_ct1 if idx < 16 else txt_ct2)
+
+    # D_above_cap WSP_NoMD_12L (12 items): 6 with ct=0, 3 with ct=1, 3 with ct=2 -> 6/12 = 0.50
+    for idx, row in enumerate(r_md["D_above_cap"]["WSP_NoMD_12L"]["generations"]):
+        row["text"] = txt_ct0 if idx < 6 else (txt_ct1 if idx < 9 else txt_ct2)
+
+    # D_key_ablation WSP_NoMD_12L_kWA (32 items): 20 with ct=0, 8 with ct=1, 4 with ct=2 -> 12/32 = 0.375
+    for idx, row in enumerate(r_md["D_key_ablation"]["WSP_NoMD_12L_kWA"]["nomd_32"]):
+        row["text"] = txt_ct0 if idx < 20 else (txt_ct1 if idx < 28 else txt_ct2)
+
+    sc_md = _score_fast(r_md, labels, sha)
+    assert sc_md["confirmatory_verdicts"]["C3b.0"] == "PASS"
+    nr = sc_md["gates"]["C3b.0_NoMD_room"]
+    assert nr["pass"] is True
+    assert nr["measured_24_has_markdown"] == round(22 / 24, 6), nr
+    assert nr["fresh_8_has_markdown"] == 0.75, nr
+    assert nr["overall_32_has_markdown"] == 0.875, nr
+    h2_m = sc_md["holm_2_family"]["hypotheses"]["H2"]
+    assert h2_m["has_md_arm"] == 0.1875, h2_m
+    assert h2_m["has_md_rand_mean"] == 0.875, h2_m
+    assert sc_md["diagnostics"]["D2_sibling_bleed"]["pirate_12L_on_NOMD_32_has_md"] == 0.75
+    assert sc_md["diagnostics"]["D3_ceilings"]["Sys_NoMD_has_md"] == 0.25
+    assert sc_md["diagnostics"]["D3_ceilings"]["Sys_NoMD_delta_has_md_vs_plain"] == 0.625
+    assert sc_md["diagnostics"]["D_above_cap"]["WSP_NoMD_12L"]["has_md"] == 0.5
+    assert sc_md["diagnostics"]["D_key_ablation"]["WSP_NoMD_12L_kWA"]["has_md"] == 0.375
+
+    # 8d. em_dash_per_1k_words scaling (kills 1000.0 -> 1100.0 and --- HR false-positive)
+    assert scorer.em_dash_per_1k_words(["one \u2014 two -- three\n---\nfour"]) == 500.0
+    assert scorer.em_dash_per_1k_words([""]) == 0.0
+
+    # 8e. Liveness > 0.0 strict boundary (0.0 & -0.5 FAIL, 1e-6 PASS)
+    r_live_neg = copy.deepcopy(r_md)
+    r_live_neg["preflights"]["active_arm_max_abs_dlogit"]["WSP_Pirate_12L@d=4.8"] = -0.5
+    assert _score_fast(r_live_neg, labels, sha)["confirmatory_verdicts"]["C3b.0"] == "FAIL"
+    r_live_tiny = copy.deepcopy(r_md)
+    r_live_tiny["preflights"]["active_arm_max_abs_dlogit"]["WSP_Pirate_12L@d=4.8"] = 1e-6
+    assert _score_fast(r_live_tiny, labels, sha)["confirmatory_verdicts"]["C3b.0"] == "PASS"
+
+    # 8f. Embedded preflight_canary doc hash-checked against meta.preflight_canary_sha256 without --preflight-canary!
+    lab_tamper = copy.deepcopy(labels)
+    lab_tamper["preflight_canary"]["recorded_epoch"] = 12345.0
+    sc_t = _score_fast(r_md, lab_tamper, sha)
+    assert sc_t["gates"]["C3b.R"]["pass"] is False
+    assert sc_t["gates"]["C3b.R"]["reason"] == "preflight_canary_embedded_sha256_mismatch"
+
+    print("PASS test_8_stats_helpers_has_md_boundary_em_dash_liveness_and_embedded_pf_hash")
+
+
 def main() -> None:
     test_1_positive_pass_real_subprocess_and_double_run_cmp()
     test_2_c3b0_exhaustive_sabotages()
@@ -1129,7 +1272,8 @@ def main() -> None:
     test_5_split_nomd_room_c3br_unread_and_preconditions()
     test_6_all_gate_boundaries_and_constants_parity()
     test_7_null_holm_broken_preflight_c3br_commit_order_and_seeds()
-    print("ALL 7 STAGE C3B PURE-STDLIB SCORER TEST SUITES PASSED.")
+    test_8_stats_helpers_has_md_boundary_em_dash_liveness_and_embedded_pf_hash()
+    print("ALL 8 STAGE C3B PURE-STDLIB SCORER TEST SUITES PASSED.")
 
 
 if __name__ == "__main__":
