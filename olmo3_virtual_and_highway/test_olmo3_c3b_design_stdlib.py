@@ -154,7 +154,13 @@ class TestStageC3bDesignStdlib(unittest.TestCase):
         self.assertIn("Zero edited model weight checkpoints saved", self.design)
         self.assertEqual(self.const["model"]["generation_batch_size"], 1)
         self.assertEqual(self.const["endpoint_definitions"]["restore_check_invariant"]["sanity_floor_value"], 279)
-        for tok in ("279", "layers_compiled_total", "1,464", "97,792", "D_above_cap", "D6_heldout", "RESERVE_PROMPTS_8", "15.79", "2.525"):
+        for tok in (
+            "279", "layers_compiled_total", "1,464", "97,792",
+            "D_above_cap", "D6_heldout", "D_key_ablation", "WSP_NoMD_12L_kWA",
+            "WSP_Pirate_12L_kSparse32", "D_KEY_PIRATE_UNREAD", "D_align",
+            "em_dash_per_1k_words", "20/40", "blow-up guard",
+            "RESERVE_PROMPTS_8", "15.79", "2.525",
+        ):
             self.assertIn(tok, self.design, f"Expected token {tok!r} missing from design")
 
 

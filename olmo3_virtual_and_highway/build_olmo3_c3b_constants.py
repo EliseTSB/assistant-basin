@@ -1,29 +1,19 @@
 #!/usr/bin/env python3
-"""build_olmo3_c3b_constants.py — Deterministic 0-CU pre-registration & compact bank builder for OLMo 3 7B Stage C3b (WSP v2, Draft v3).
+"""build_olmo3_c3b_constants.py — Deterministic 0-CU pre-registration & compact bank builder for OLMo 3 7B Stage C3b (WSP v2, Draft v4).
 
-Folds 100% of Round-1 (#164) and Round-2 delta (#166) cold design reviews (DeepSeek + GLM 5.3 + Claude):
-  R2-1. `restore_checks` unit defined explicitly ("one torch.equal(W_current, W_clean) per edited layer per compile session");
-        C3b.0.1 gates on `restore_exact_all == True AND restore_checks == layers_compiled_total AND restore_checks >= 279`
-        (single-compile-per-arm lower bound: sham 12 + D4 3 + commit_gate 168 + 8 active arms 96 = 279).
-  R2-2. Replaces brittle absolute `reader_both_coherent >= 0.85` with `reader_any_coherent(Arm) >= 0.85 AND
-        reader_both_coherent(Arm) >= reader_both_coherent(Rand_mean) - 0.15`; simulates both coherence guards directly
-        at 5%/8%/10% per-reader false-incoherent rates and relabels H1's binary sim output as `p_subgate_pass_r1`.
-  R2-3. Closes GLM N3 unmapped verdict cell in BOTH H1 and H2: `preconditions_ok AND holm_sig AND (NOT co_primary_bars)`
-        explicitly maps to `FAIL` with `failed_co_primary_guards` named (matching `c3_scoring.resolve_verdict`).
-  R2-4. D4_masking_check adds explicit mismask whole-vocab bound (`mismasked_over_unmasked_logit_l2_ratio <= 1.25`,
-        plus efficiency ratios `> 1.15` masked / `< 1.05` mismasked alongside `masked_over_unmasked_logit_l2_ratio <= 1.10`)
-        and swaps `cal_00..cal_03` -> `chat_00..chat_03` so all 12 D4 prompts are 100% disjoint from `calib_16`.
-  R2-5. D_above_cap pins exact trigger (fails ONLY `reserve_median_off_kl <= 0.65` while passing max-prompt KL, max-pos KL,
-        0/8 broken, and bf16 retention on all 12 layers), exact Pirate/NoMD descriptive statistics & thresholds, and
-        `C3b.R` gate on Pirate slice (else `D_ABOVE_CAP_UNREAD`).
-  R2-6. Closes DeepSeek F5b plural ban hole inside `strict_pirate` itself under `common_pirate_ban` via binding
-        `strict_pirate_extended_ban_regex` (79 ban stems + all missing plurals/inflections + all READER_SYSTEM_PROMPT cue words).
-  R2-7. C3b.0_NoMD_room splits explicitly across 24 C3-measured prompts (`>= 0.90`, `>= 22/24`) + 8 unmeasured fresh prompts
-        (`>= 0.625`, `>= 5/8`) + overall `NOMD_32` (`>= 0.84`, `>= 27/32`, `mean_ct >= 2.00`), stating the 8 can block H2.
-  R2-Smaller (a)-(f): C3-anchored sham `< 2.00` (`4x` C3's `0.125*4=0.50`) & Rand reserve KL `<= 0.80` (C3 Rand was 2.1-3.3x
-        below WSP); preflight requires exact labels on `can_00`/`can_01`; intentional `has_md` `>= 0.20` note; full cue-word
-        guard (`mariner`, `seafaring`, `navigation`, `command`, `custom(s)`, `outlaws`); `p_rand=0.05` guess label,
-        non-gating D2 refusal readout, and clustered-item kappa point-estimate note.
+Folds 100% of Round-1 (#164), Round-2 delta (#166), Claude DESIGN PASS prose notes (#168), AND Elise's Gemini Deep Research
+prior-art sweep (`SteeringVectorWeightCompilation.html`, Option 2) prior to public registration:
+  - Confirmatory m = 2 Holm family (H1, H2), C3b.0, C3b.R, EQ-C3b.2, D4, and D_above_cap are 100% UNCHANGED from DESIGN PASS 60c77900.
+  - Adds Claude #168 descriptive notes: C3 empirical audit of `strict_pirate_extended_ban_regex` (`Sys_Pirate` hits 20/40 on missed
+    plurals -> ~0.50 reference ceiling calibrating H1's +0.20 bar; Plain 0/40, Rand 0-2, WSP 0-1) + naming `mismasked L2 <= 1.25`
+    explicitly as a blow-up guard while efficiency ratios discriminate.
+  - Adds zero-GPU diagnostics outside Holm: `D_align` (12x12 pairwise cosine alignment of v_post[L16..L27], CircuitSteer) and
+    `em_dash_per_1k_words` on NOMD_32 (RLHF dual-register punctuation leakage check).
+  - Adds strictly non-confirmatory exploratory comparator `D_key_ablation` (outside Holm, C3b.0, EQ-C3b.2; ~80 gens, ~0.23 CU):
+      (1) `WSP_NoMD_12L_kWA`: rank-1 weight-aligned orthogonalization `dW_L = -beta * v_pre_L (v_pre_L^T W_clean_L)` across L16..L27
+          (beta in [0.25, 0.50, 1.00] on RESERVE_8, evaluated on NOMD_32, zero-judge — Steer2Edit/NEEDLE suppression comparator);
+      (2) `WSP_Pirate_12L_kSparse32`: sparse top-32 |m_bar_L| key (0.29% support -> ~18.5x BF16 amplitude boost, Weight-Space LP
+          comparator) evaluated on DEMO_SHOWCASE_IDS_12 x {none, common_pirate_ban} (C3b.R-gated else `D_KEY_PIRATE_UNREAD`).
 
 Zero GPU required; double-run byte-identical deterministic.
 """
@@ -453,9 +443,17 @@ def run_bf16_retention_audit_12l(get_raw_tensor: Any, bank_tensors: dict[str, to
     k_np = rng.standard_normal(11008).astype(np.float64)
     k_np /= float(np.linalg.norm(k_np))
     k_hat = torch.from_numpy(k_np.astype(np.float32))
+    # Also construct top-32 sparse key from the same random draw (0.29% support -> ~18.5x BF16 amplitude boost)
+    k_sp32 = k_hat.clone()
+    top32_idx = torch.topk(k_sp32.abs(), 32, largest=True).indices
+    mask32 = torch.zeros_like(k_sp32)
+    mask32[top32_idx] = 1.0
+    k_sp32 = k_sp32 * mask32
+    k_sp32 = k_sp32 / k_sp32.norm()
 
     alphas = [0.05, 0.25, 0.50, 1.0, 2.0, 4.0]
     layers_out: dict[str, Any] = {}
+    sp32_alpha005_ret: dict[str, float] = {}
     for L in EDIT_LAYERS:
         W_bf16 = get_raw_tensor(f"model.layers.{L}.mlp.down_proj.weight")
         W_f32 = W_bf16.float()
@@ -474,6 +472,10 @@ def run_bf16_retention_audit_12l(get_raw_tensor: Any, bank_tensors: dict[str, to
                 "stored_frob_ret": round(frob_ret, 4),
                 "stored_rank1_proj_ret": round(proj_ret, 4),
             }
+        # Sparse top-32 audit at alpha=0.05 (verifies BF16 dead-zone escape predicted by prior-art sweep §4)
+        dW_sp = 0.05 * torch.outer(v_hat, k_sp32)
+        dW_sp_stored = (W_f32 + dW_sp).to(torch.bfloat16).float() - W_f32
+        sp32_alpha005_ret[str(L)] = round(float(torch.dot(dW_sp_stored @ k_sp32, v_hat) / 0.05), 4)
         layers_out[str(L)] = {
             "abs_mean": round(float(W_f32.abs().mean()), 5),
             "rms": round(float(W_f32.pow(2).mean().sqrt()), 5),
@@ -483,6 +485,7 @@ def run_bf16_retention_audit_12l(get_raw_tensor: Any, bank_tensors: dict[str, to
     return {
         "key_seed": BF16_AUDIT_KEY_SEED,
         "vector_used": "L{L}_rand_pirate_pre_unit_s0",
+        "sparse_top32_alpha_0.05_proj_ret_by_layer": sp32_alpha005_ret,
         "layers": layers_out,
     }
 
@@ -729,9 +732,34 @@ def main() -> None:
         "forward_count_exact": "12 clean + 3 x 12 edited (masked, unmasked, mismasked) = 48 forwards",
         "dual_criterion": {
             "criterion_1_on_target": "masked_over_unmasked_seed_dlogit_ratio > 1.15 AND mismasked_over_unmasked_seed_dlogit_ratio < 1.05",
-            "criterion_2_full_vocab_and_efficiency_bound": "masked_over_unmasked_logit_l2_ratio <= 1.10 AND mismasked_over_unmasked_logit_l2_ratio <= 1.25 AND masked_over_unmasked_efficiency_ratio > 1.15 AND mismasked_over_unmasked_efficiency_ratio < 1.05 (where efficiency = mean_pirate_seed_dlogit / mean_logit_l2; explicitly bounds BOTH masked and mismasked whole-vocab L2 — C3 observed 1.0172 / 1.1483 and efficiency 1.482 / 0.841)",
+            "criterion_2_full_vocab_and_efficiency_bound": "masked_over_unmasked_logit_l2_ratio <= 1.10 AND mismasked_over_unmasked_logit_l2_ratio <= 1.25 (blow-up guard; C3 observed 1.1483) AND masked_over_unmasked_efficiency_ratio > 1.15 AND mismasked_over_unmasked_efficiency_ratio < 1.05 (efficiency = mean_pirate_seed_dlogit / mean_logit_l2 performs the discrimination; C3 observed L2 1.0172 / 1.1483 and efficiency 1.482 / 0.841)",
         },
         "on_fail_reading": "D4 sits outside global C3b.0 so H1/H2 still report confirmatory verdicts, AND any D4_masking_check FAIL requires flagging 'low-gamma pre_norm masking efficiency unverified on L24' prominently and withholding mechanistic attribution of delivery gain to masking.",
+    }
+
+    d_key_ablation_spec = {
+        "scope": "strictly_non_confirmatory_exploratory_comparator (OUTSIDE Holm m=2, OUTSIDE global C3b.0, OUTSIDE EQ-C3b.2; motivated by prior-art sweep SteeringVectorWeightCompilation.html)",
+        "restore_rule": "Every compiled layer edit in D_key_ablation is bitwise-restored via torch.equal and increments both layers_compiled_total and restore_checks (preserving C3b.0.1 restore_checks == layers_compiled_total).",
+        "d_align_zero_gpu": "Log 12x12 pairwise cosine matrices of v_post_pirate[L16..L27] and v_post_nomd[L16..L27] (mean off-diagonal cosine, min adjacent cosine) + em_dash_per_1k_words across all NOMD_32 arms (0 extra GPU forwards).",
+        "arm_1_nomd_weight_aligned_orth": {
+            "name": "WSP_NoMD_12L_kWA",
+            "formula": "dW_L = -beta * v_pre_hat_L @ (v_pre_hat_L^T @ W_clean_L) across L in 16..27 (stored bf16); exact rank-1 orthogonalization at beta=1.0 zeroing the +-v_pre_hat_L component of mlp.down_proj.weight (Steer2Edit/NEEDLE suppression analogue, zero extra calibration hooks).",
+            "beta_ladder": [0.25, 0.50, 1.00],
+            "dose_selection": "Evaluate beta in [0.25, 0.50, 1.00] on RESERVE_PROMPTS_8 (24 gens x 48 tok + 24 KL fwds, reusing Plain reserve); pick highest beta* clearing median_off_kl <= 0.65, max_prompt <= 1.50, max_pos <= 8.0, 0/8 broken, and bf16 proj_ret >= 0.50 & frob_ret >= 0.80 on all 12 layers (else fallback=True and evaluate beta=0.25 descriptively).",
+            "eval_battery": "NOMD_32 (32 gens x 96 tok, zero-judge) + NEUTRAL_CHAT_16 (16 KL fwds only) — compares has_md, mean(construct_types), em_dash_per_1k_words, broken, mean_tokens, and reserve/neutral KL directly against WSP_NoMD_12L@d* (k_mean).",
+        },
+        "arm_2_pirate_sparse32_key": {
+            "name": "WSP_Pirate_12L_kSparse32",
+            "formula": "Keep top s = 32 coordinates of |m_bar_L| per layer L in 16..27 (0.29% support -> ~18.5x BF16 amplitude boost, Weight-Space LP analogue), zero remaining 10,976 coordinates, unit-normalize to k_sp32_L, recompute c_bar_sp32_L and CV_sp32_L on Plain calib_16, and scale alpha_sp32_L(d) identically to WSP_Pirate_12L.",
+            "dose_selection": "Start at d*_pirate (matched to WSP_Pirate_12L@d*_pirate; 8 reserve KL fwds); if reserve median_off_kl > 0.65, step down through DOSE_LADDER to highest d <= d*_pirate clearing <= 0.65 (else evaluate d=1.2 descriptively).",
+            "eval_battery": "DEMO_SHOWCASE_IDS_12 x {none, common_pirate_ban} (24 gens x 64 tok); reader-scored conditional on C3b.R PASS (else record `D_KEY_PIRATE_UNREAD`).",
+        },
+        "extra_compute_budget": {
+            "extra_gens": 80,
+            "extra_max_tokens": 5760,
+            "extra_kl_fwds_base": 48,
+            "estimated_extra_cu_l4": 0.23,
+        },
     }
 
     d_above_cap_spec = {
@@ -873,7 +901,7 @@ def main() -> None:
     }
 
     constants = {
-        "schema_version": "olmo3-stage-c3b-wsp-v2-prereg-constants-v3",
+        "schema_version": "olmo3-stage-c3b-wsp-v2-prereg-constants-v4",
         "model": {
             "id": MODEL_ID,
             "revision": MODEL_REV,
@@ -925,6 +953,15 @@ def main() -> None:
         "endpoint_definitions": endpoint_definitions,
         "d4_spec": d4_spec,
         "d_above_cap_spec": d_above_cap_spec,
+        "d_key_ablation_spec": d_key_ablation_spec,
+        "c3_extended_ban_ceiling_audit": {
+            "source": "Claude #168 empirical check of strict_pirate_extended_ban_regex on published Stage C3 outputs under common_pirate_ban (N=40)",
+            "sys_pirate_hits": "20/40 (landlubbers 5, cutlasses 4, galleons 2, masts 2, seafarers 2, sailed 2; generic cues chart/command 2)",
+            "plain_hits": "0/40",
+            "rand_hits": "0-2/40",
+            "wsp_hits": "0-1/40",
+            "implication": "A Sys_Pirate-strength reference persona scores at most ~0.50 strict_pirate under the stricter plural/cue-closed rule, calibrating H1's +0.20 point bar.",
+        },
         "seeds": {
             "perm_seed": PERM_SEED,
             "bca_seed": BCA_SEED,

@@ -1410,7 +1410,29 @@
         "rms": 0.02288
       }
     },
+    "sparse_top32_alpha_0.05_proj_ret_by_layer": {
+      "16": 0.9976,
+      "17": 0.9978,
+      "18": 0.9968,
+      "19": 0.9983,
+      "20": 0.9964,
+      "21": 0.9999,
+      "22": 0.9967,
+      "23": 0.9994,
+      "24": 0.996,
+      "25": 0.9953,
+      "26": 0.9959,
+      "27": 0.9969
+    },
     "vector_used": "L{L}_rand_pirate_pre_unit_s0"
+  },
+  "c3_extended_ban_ceiling_audit": {
+    "implication": "A Sys_Pirate-strength reference persona scores at most ~0.50 strict_pirate under the stricter plural/cue-closed rule, calibrating H1's +0.20 point bar.",
+    "plain_hits": "0/40",
+    "rand_hits": "0-2/40",
+    "source": "Claude #168 empirical check of strict_pirate_extended_ban_regex on published Stage C3 outputs under common_pirate_ban (N=40)",
+    "sys_pirate_hits": "20/40 (landlubbers 5, cutlasses 4, galleons 2, masts 2, seafarers 2, sailed 2; generic cues chart/command 2)",
+    "wsp_hits": "0-1/40"
   },
   "calibration_spec": {
     "generation": "exact B=1 greedy, max_new_tokens=32, under Plain, Sys_Pirate, and Sys_NoMD",
@@ -1450,7 +1472,7 @@
     "alpha_rule": "alpha_L24(d_total = 3.6) on WSP_Pirate_12L (= 0.30 PMN at L24, matching C3's per-layer L24 dose), matched intended Frobenius norm across masked/unmasked/mismasked",
     "dual_criterion": {
       "criterion_1_on_target": "masked_over_unmasked_seed_dlogit_ratio > 1.15 AND mismasked_over_unmasked_seed_dlogit_ratio < 1.05",
-      "criterion_2_full_vocab_and_efficiency_bound": "masked_over_unmasked_logit_l2_ratio <= 1.10 AND mismasked_over_unmasked_logit_l2_ratio <= 1.25 AND masked_over_unmasked_efficiency_ratio > 1.15 AND mismasked_over_unmasked_efficiency_ratio < 1.05 (where efficiency = mean_pirate_seed_dlogit / mean_logit_l2; explicitly bounds BOTH masked and mismasked whole-vocab L2 \u2014 C3 observed 1.0172 / 1.1483 and efficiency 1.482 / 0.841)"
+      "criterion_2_full_vocab_and_efficiency_bound": "masked_over_unmasked_logit_l2_ratio <= 1.10 AND mismasked_over_unmasked_logit_l2_ratio <= 1.25 (blow-up guard; C3 observed 1.1483) AND masked_over_unmasked_efficiency_ratio > 1.15 AND mismasked_over_unmasked_efficiency_ratio < 1.05 (efficiency = mean_pirate_seed_dlogit / mean_logit_l2 performs the discrimination; C3 observed L2 1.0172 / 1.1483 and efficiency 1.482 / 0.841)"
     },
     "forward_count_exact": "12 clean + 3 x 12 edited (masked, unmasked, mismasked) = 48 forwards",
     "object_tested": "C3b's OWN live WSP_Pirate_12L contrastive direction at L24 (v_post_pirate_con[24]) \u2014 masked (L24_gamma_drop_idx) vs. unmasked vs. mismasked ((idx + 1) mod 4096); C3's frozen L24 lexicon vector also logged descriptively for cross-stage continuity",
@@ -1526,6 +1548,34 @@
       "statistic": "delta_above_cap_pirate = mean_{i=1..12} strict_pirate(WSP_Pirate_12L@d_fail, i) - mean_{i=1..12} strict_pirate(Plain, i) under common_pirate_ban (with broken_count <= 2/12)"
     },
     "trigger": "Per compiled arm (WSP_Pirate_12L, WSP_NoMD_12L), select the lowest rung d_fail in DOSE_LADDER that FAILS `reserve_median_off_kl <= 0.65` while PASSING ALL other commit-gate clauses (`reserve_max_off_kl <= 1.50`, `reserve_max_single_pos_kl <= 8.0`, `0/8` broken, and `stored_rank1_proj_ret >= 0.50` & `stored_frob_ret >= 0.80` on all 12 layers L16..L27)."
+  },
+  "d_key_ablation_spec": {
+    "arm_1_nomd_weight_aligned_orth": {
+      "beta_ladder": [
+        0.25,
+        0.5,
+        1.0
+      ],
+      "dose_selection": "Evaluate beta in [0.25, 0.50, 1.00] on RESERVE_PROMPTS_8 (24 gens x 48 tok + 24 KL fwds, reusing Plain reserve); pick highest beta* clearing median_off_kl <= 0.65, max_prompt <= 1.50, max_pos <= 8.0, 0/8 broken, and bf16 proj_ret >= 0.50 & frob_ret >= 0.80 on all 12 layers (else fallback=True and evaluate beta=0.25 descriptively).",
+      "eval_battery": "NOMD_32 (32 gens x 96 tok, zero-judge) + NEUTRAL_CHAT_16 (16 KL fwds only) \u2014 compares has_md, mean(construct_types), em_dash_per_1k_words, broken, mean_tokens, and reserve/neutral KL directly against WSP_NoMD_12L@d* (k_mean).",
+      "formula": "dW_L = -beta * v_pre_hat_L @ (v_pre_hat_L^T @ W_clean_L) across L in 16..27 (stored bf16); exact rank-1 orthogonalization at beta=1.0 zeroing the +-v_pre_hat_L component of mlp.down_proj.weight (Steer2Edit/NEEDLE suppression analogue, zero extra calibration hooks).",
+      "name": "WSP_NoMD_12L_kWA"
+    },
+    "arm_2_pirate_sparse32_key": {
+      "dose_selection": "Start at d*_pirate (matched to WSP_Pirate_12L@d*_pirate; 8 reserve KL fwds); if reserve median_off_kl > 0.65, step down through DOSE_LADDER to highest d <= d*_pirate clearing <= 0.65 (else evaluate d=1.2 descriptively).",
+      "eval_battery": "DEMO_SHOWCASE_IDS_12 x {none, common_pirate_ban} (24 gens x 64 tok); reader-scored conditional on C3b.R PASS (else record `D_KEY_PIRATE_UNREAD`).",
+      "formula": "Keep top s = 32 coordinates of |m_bar_L| per layer L in 16..27 (0.29% support -> ~18.5x BF16 amplitude boost, Weight-Space LP analogue), zero remaining 10,976 coordinates, unit-normalize to k_sp32_L, recompute c_bar_sp32_L and CV_sp32_L on Plain calib_16, and scale alpha_sp32_L(d) identically to WSP_Pirate_12L.",
+      "name": "WSP_Pirate_12L_kSparse32"
+    },
+    "d_align_zero_gpu": "Log 12x12 pairwise cosine matrices of v_post_pirate[L16..L27] and v_post_nomd[L16..L27] (mean off-diagonal cosine, min adjacent cosine) + em_dash_per_1k_words across all NOMD_32 arms (0 extra GPU forwards).",
+    "extra_compute_budget": {
+      "estimated_extra_cu_l4": 0.23,
+      "extra_gens": 80,
+      "extra_kl_fwds_base": 48,
+      "extra_max_tokens": 5760
+    },
+    "restore_rule": "Every compiled layer edit in D_key_ablation is bitwise-restored via torch.equal and increments both layers_compiled_total and restore_checks (preserving C3b.0.1 restore_checks == layers_compiled_total).",
+    "scope": "strictly_non_confirmatory_exploratory_comparator (OUTSIDE Holm m=2, OUTSIDE global C3b.0, OUTSIDE EQ-C3b.2; motivated by prior-art sweep SteeringVectorWeightCompilation.html)"
   },
   "edit_spec": {
     "bf16_storage_retention": {
@@ -6898,7 +6948,7 @@
       }
     ]
   },
-  "schema_version": "olmo3-stage-c3b-wsp-v2-prereg-constants-v3",
+  "schema_version": "olmo3-stage-c3b-wsp-v2-prereg-constants-v4",
   "seeds": {
     "bca_seed": 2026112702,
     "bf16_audit_key_seed": 2026112704,

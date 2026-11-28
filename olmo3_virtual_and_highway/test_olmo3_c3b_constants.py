@@ -27,7 +27,7 @@ class TestStageC3bConstants(unittest.TestCase):
         cls.c3_bank = load_file(str(C3_BANK_PATH))
 
     def test_01_committed_bank_schema_and_scoring_hashes(self) -> None:
-        self.assertEqual(self.const["schema_version"], "olmo3-stage-c3b-wsp-v2-prereg-constants-v3")
+        self.assertEqual(self.const["schema_version"], "olmo3-stage-c3b-wsp-v2-prereg-constants-v4")
         prov = self.const["provenance"]
         self.assertEqual(prov["c3b_bank_sha256"], b3b.sha256_file(BANK_PATH))
         self.assertEqual(prov["c3_scoring_sha256"], b3b.sha256_file(SCORING_PATH))
@@ -125,8 +125,17 @@ class TestStageC3bConstants(unittest.TestCase):
         self.assertEqual(self.const["d_above_cap_spec"]["max_extra_gens"], 36)
         self.assertEqual(self.const["d_above_cap_spec"]["max_extra_tokens"], 2688)
         self.assertIn("D_ABOVE_CAP_UNREAD", self.const["d_above_cap_spec"]["pirate_slice"]["reader_gate"])
+        dk = self.const["d_key_ablation_spec"]
+        self.assertEqual(dk["arm_1_nomd_weight_aligned_orth"]["beta_ladder"], [0.25, 0.50, 1.00])
+        self.assertIn("D_KEY_PIRATE_UNREAD", dk["arm_2_pirate_sparse32_key"]["eval_battery"])
+        self.assertEqual(dk["extra_compute_budget"]["extra_gens"], 80)
+        self.assertIn("20/40", self.const["c3_extended_ban_ceiling_audit"]["sys_pirate_hits"])
 
-        bf = self.const["bf16_retention_audit_0cu"]["layers"]
+        bf_top = self.const["bf16_retention_audit_0cu"]
+        sp32 = bf_top["sparse_top32_alpha_0.05_proj_ret_by_layer"]
+        for L in range(16, 28):
+            self.assertGreaterEqual(sp32[str(L)], 0.90, f"Sparse top-32 BF16 retention too low on L{L}")
+        bf = bf_top["layers"]
         self.assertEqual(sorted(int(k) for k in bf.keys()), list(range(16, 28)))
         for L in range(16, 28):
             self.assertGreaterEqual(bf[str(L)]["by_alpha"]["0.05"]["stored_rank1_proj_ret"], 0.25)
