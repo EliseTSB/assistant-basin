@@ -1,0 +1,64 @@
+{
+  "by_reader": {
+    "ds": {
+      "items": [
+        {
+          "error": null,
+          "expected_coherent": true,
+          "expected_pirate": true,
+          "got_coherent": true,
+          "got_pirate": true,
+          "id": "can_00",
+          "pass": true
+        },
+        {
+          "error": null,
+          "expected_coherent": true,
+          "expected_pirate": false,
+          "got_coherent": true,
+          "got_pirate": false,
+          "id": "can_01",
+          "pass": true
+        }
+      ],
+      "model": "deepseek-v4.1-flash",
+      "pass": true,
+      "route": "ocgo"
+    },
+    "luna": {
+      "items": [
+        {
+          "error": null,
+          "expected_coherent": true,
+          "expected_pirate": true,
+          "got_coherent": true,
+          "got_pirate": true,
+          "id": "can_00",
+          "pass": true
+        },
+        {
+          "error": null,
+          "expected_coherent": true,
+          "expected_pirate": false,
+          "got_coherent": true,
+          "got_pirate": false,
+          "id": "can_01",
+          "pass": true
+        }
+      ],
+      "model": "gpt-6-luna",
+      "pass": true,
+      "route": "cliproxy"
+    }
+  },
+  "c3_scoring_sha256": "b2fdfdf480f28554117765caa49126e4567481e6d34d2917ef1287cc0675040f",
+  "c3b_constants_sha256": "3bb980e579cef2326d5d2adc3c458cca8ba4140da5bb0e7db2f196e3484ca9db",
+  "mock_readers": false,
+  "pass": true,
+  "readers_checked": [
+    "ds",
+    "luna"
+  ],
+  "recorded_epoch": 1795847122.1617498,
+  "schema_version": "olmo3-stage-c3b-reader-preflight-v1"
+}
